@@ -5,105 +5,88 @@ import {
   DialogContent,
   Button,
   Typography,
-  Grid,
+  Divider,
+  DialogContentText,
 } from '@mui/material';
 import 'add-to-calendar-button';
-import { format, setDay } from 'date-fns';
+import { format, nextDay } from 'date-fns';
 import styles from './ScheduleDialog.module.css';
 import { STORAGE_COLOR_PREFERENCE_KEY } from 'theme';
-
-const dayArr = ['MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
-
-const formatter = (date, display, isAllDay) => {
-  if (isAllDay) return null;
-
-  return format(new Date(date), display);
-};
+import { courseDayIds, scheduleCalendarResources } from 'services/schedule';
 
 const ScheduleDialog = ({ course, session, onClose }) => {
   if (!course) return null;
-  const recurringDays = course?.meetingDays.map((day) => `${day}`).join(', ');
+
+  const addToCalendarProps = {
+    name: course.title,
+    startDate: format(
+      // setDay counts from Sunday as 0, but courseDayIds start Monday as 0
+      nextDay(new Date(session.SessionBeginDate), courseDayIds.indexOf(course.resourceId) + 1),
+      'yyyy-MM-dd',
+    ),
+    startTime: course.allDay ? null : format(course.start, 'HH:mm'),
+    endTime: course.allDay ? null : format(course.end, 'HH:mm'),
+    description: course.name,
+    Location: course.location,
+    buttonStyle: 'round',
+    lightMode: localStorage.getItem(STORAGE_COLOR_PREFERENCE_KEY) ?? 'system',
+    //Get user theme mode preference
+    Timezone: 'currentBrowser',
+  };
+
   return (
     <Dialog open={Boolean(course)} fullWidth={true} maxWidth="xs">
       <DialogTitle className={styles.dialogTitle} align="center">
         {course.title}
       </DialogTitle>
       <DialogContent>
-        <Typography>Title: {course.name}</Typography>
-        <Typography>Room: {course.location}</Typography>
-        <Typography>
+        <DialogContentText>
+          Title: {course.name}
+          <br />
+          Room: {course.location}
+          <br />
           Time:
-          {formatter(course.start, " hh:mm aaaaa'm' ")}-{formatter(course.end, " hh:mm aaaaa'm' ")}
-        </Typography>
-        <Typography>Week Day(s): {recurringDays}</Typography>
-        <Typography>
-          Term Date: {formatter(session.SessionBeginDate, 'yyyy-MM-dd')} to
-          {formatter(session.SessionEndDate, ' yyyy-MM-dd')}
-        </Typography>
-      </DialogContent>
-      <DialogActions style={{ overflow: 'hidden', flexDirection: 'column' }}>
+          {format(course.start, " hh:mm aaaaa'm' ")}-{format(course.end, " hh:mm aaaaa'm' ")}
+          <br />
+          Week Day{course.meetingDays.length > 1 && <>(s)</>}:{' '}
+          {course.meetingDays
+            .map((resourceId) => scheduleCalendarResources.find((r) => r.id === resourceId).title)
+            .join(', ')}
+          <br />
+          Term Date: {format(new Date(session.SessionBeginDate), 'yyyy-MM-dd')} to
+          {format(new Date(session.SessionEndDate), ' yyyy-MM-dd')}
+        </DialogContentText>
+        <br />
+        <Divider variant="middle" />
+        <br />
+        <Typography>Add as a Recurring Event (only supported by Google Calendar):</Typography>
         {/* There are two separate add-to-calendar button elements because Google calendar is the only
           calendar that supports recurring events, the other add-to-calendar button is for the other
           options that users can choose and manually set the course as recurring */}
-
-        <Grid container lg={12} xs={12}>
-          <Grid item xs={0} lg={1}></Grid>
-          <Grid item lg={2} align="right">
-            <add-to-calendar-button
-              name={course.title}
-              // We had to add 1 to the index for the resourceId because the setDay function
-              // starts at 0 for Sunday which we don't include in the course schedule
-              startDate={formatter(
-                setDay(new Date(session.SessionBeginDate), dayArr.indexOf(course?.resourceId) + 1),
-                'yyyy-MM-dd',
-              )}
-              // By the nature of the add-to-calendar package, we have to set the startTime
-              // and endTime as null if they are all day events.
-              startTime={formatter(course.start, 'HH:mm', course.allDay)}
-              endTime={formatter(course.end, 'HH:mm', course.allDay)}
-              description={course.name}
-              Location={course.location}
-              options="'Google'"
-              buttonsList
-              hideTextLabelButton
-              buttonStyle="round"
-              recurrence={
-                'RRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=' +
-                recurringDays +
-                ';UNTIL=' +
-                formatter(session.SessionEndDate, 'yyyyMMdd')
-              }
-              lightMode={localStorage.getItem(STORAGE_COLOR_PREFERENCE_KEY) ?? 'system'}
-              //Get user theme mode preference
-              Timezone="currentBrowser"
-            ></add-to-calendar-button>
-          </Grid>
-          <Grid item lg={8} align="left">
-            <add-to-calendar-button
-              name={course.title}
-              startDate={format(
-                setDay(new Date(session.SessionBeginDate), dayArr.indexOf(course.resourceId) + 1),
-                'yyyy-MM-dd',
-              )}
-              startTime={formatter(course.start, 'HH:mm', course.allDay)}
-              endTime={formatter(course.end, 'HH:mm', course.allDay)}
-              description={course.name}
-              Location={course.location}
-              options="'Microsoft365|Gordon Outlook','Apple','Outlook.com|Outlook','MicrosoftTeams'"
-              buttonsList
-              hideTextLabelButton
-              buttonStyle="round"
-              lightMode={localStorage.getItem(STORAGE_COLOR_PREFERENCE_KEY) ?? 'system'}
-              //Get user theme mode preference
-              Timezone="currentBrowser"
-            ></add-to-calendar-button>
-          </Grid>
-        </Grid>
-        <Grid className={styles.cancelButton}>
-          <Button onClick={onClose} variant="contained">
-            Cancel
-          </Button>
-        </Grid>
+        <add-to-calendar-button
+          {...addToCalendarProps}
+          labal="Add to Google Calendar"
+          options="'Google'"
+          recurrence={
+            'RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=' +
+            course.meetingDays.join(',') +
+            ';UNTIL=' +
+            format(new Date(session.SessionEndDate), "yyyyMMdd'T000000Z'")
+          }
+        ></add-to-calendar-button>
+        <br />
+        <Divider variant="middle" />
+        <br />
+        <Typography>Add as one-time event:</Typography>
+        <add-to-calendar-button
+          {...addToCalendarProps}
+          options="'Microsoft365|Gordon','Outlook.com|Outlook','MicrosoftTeams','Apple'"
+        ></add-to-calendar-button>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose} variant="outlined">
+          Close
+        </Button>
       </DialogActions>
     </Dialog>
   );
