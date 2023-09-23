@@ -23,6 +23,7 @@ type Props = {
 const ScheduleDialog = ({ course, session, onClose }: Props) => {
   const addToCalendarProps = {
     name: course.title,
+    iCalFileName: course.title,
     startDate: format(
       // nextDay counts from Sunday as 0, but courseDayIds start Monday as 0
       nextDay(
