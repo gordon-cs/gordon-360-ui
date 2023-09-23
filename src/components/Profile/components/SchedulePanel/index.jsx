@@ -10,8 +10,6 @@ import {
   TextField,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import GordonLoader from 'components/Loader';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
 import ScheduleDialog from './components/ScheduleDialog';
@@ -33,10 +31,10 @@ const GordonSchedulePanel = ({ profile, myProf }) => {
       sessionService.getCurrent(),
     ]).then(([allSessionSchedules, currentSession]) => {
       setAllSchedules(allSessionSchedules);
-      // If there is a schedule for the current session, make it d4fault
-      // Otherwise, use the most recent session
       const defaultSchedule =
-        allSessionSchedules.find((s) => s.SessionCode === currentSession.SessionCode) ??
+        // If there is a schedule for the current session, make it d4fault
+        allSessionSchedules.find((s) => s.session.SessionCode === currentSession.SessionCode) ??
+        // Otherwise, use the most recent session
         allSessionSchedules[0];
       setSelectedSchedule(defaultSchedule);
 
@@ -47,13 +45,13 @@ const GordonSchedulePanel = ({ profile, myProf }) => {
   return loading ? (
     <GordonLoader />
   ) : (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <>
       <Accordion TransitionProps={{ unmountOnExit: true }}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon className={styles.expandIcon} />}
           aria-controls="schedule"
           id="schedule-header"
-          className={styles.header}
+          className="gc360_header"
         >
           <CardHeader className={styles.accordionHeader} title={'Schedule'} />
         </AccordionSummary>
@@ -63,17 +61,21 @@ const GordonSchedulePanel = ({ profile, myProf }) => {
               <TextField
                 label="Term"
                 id="schedule-session"
-                value={selectedSchedule.SessionCode}
+                value={selectedSchedule.session.SessionCode}
                 onChange={(e) =>
-                  setSelectedSchedule(allSchedules.find((s) => s.SessionCode === e.target.value))
+                  setSelectedSchedule(
+                    allSchedules.find((s) => s.session.SessionCode === e.target.value),
+                  )
                 }
                 select
               >
-                {allSchedules.map(({ SessionDescription: description, SessionCode: code }) => (
-                  <MenuItem label={description} value={code} key={code}>
-                    {description}
-                  </MenuItem>
-                ))}
+                {allSchedules.map(
+                  ({ session: { SessionDescription: description, SessionCode: code } }) => (
+                    <MenuItem label={description} value={code} key={code}>
+                      {description}
+                    </MenuItem>
+                  ),
+                )}
               </TextField>
             </Grid>
             <Grid lg={7}></Grid>
@@ -97,10 +99,10 @@ const GordonSchedulePanel = ({ profile, myProf }) => {
         <ScheduleDialog
           onClose={() => setSelectedCourse(null)}
           course={selectedCourse}
-          session={selectedSchedule}
+          session={selectedSchedule.session}
         />
       )}
-    </LocalizationProvider>
+    </>
   );
 };
 

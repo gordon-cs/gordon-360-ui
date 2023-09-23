@@ -1,7 +1,8 @@
 import http from './http';
 import { parse } from 'date-fns';
+import { Session } from './session';
 
-type Course = {
+type DbCourse = {
   Username: string;
   SessionCode: string;
   CRS_CDE: string;
@@ -19,6 +20,14 @@ type Course = {
   /** A timespan of the format HH:mm:ss, stringified */
   END_TIME: string;
   Role: string;
+};
+
+type DbSchedule = {
+  SessionBeginDate: string;
+  SessionCode: string;
+  SessionDescription: string;
+  SessionEndDate: string;
+  AllCourses: DbCourse[];
 };
 
 export const scheduleCalendarResources = [
@@ -41,60 +50,41 @@ export const courseDayIds = [
 ] as const satisfies readonly CourseDayID[];
 
 type Schedule = {
-  SessionBeginDate: string;
-  SessionCode: string;
-  SessionDescription: string;
-  SessionEndDate: string;
-  AllCourses: Course[];
+  session: Session;
+  courses: CourseEvent[];
 };
 
-type ScheduleEvent = {
+type CourseEvent = {
+  /**
+   * used by `react-big-calendar` to determine which resource (e.g. `Monday`) this event should display for
+   */
   resourceId: CourseDayID;
   name: string;
   title: string;
   location: string;
   start: Date;
   end: Date;
-  meetingDays: string[];
+  meetingDays: CourseDayID[];
 };
 
 const getCanReadStudentSchedules = (): Promise<boolean> => http.get(`schedule/canreadstudent/`);
 
-const getAllSessionSchedules = (username: string): Promise<Schedule[]> =>
-  http.get(`schedule/${username}/allcourses`);
+const getAllSessionSchedules = async (username: string): Promise<Schedule[]> => {
+  const dbSchedules = await http.get<DbSchedule[]>(`schedule/${username}/allcourses`);
 
-function getMeetingDays(course: Course): CourseDayID[] {
-  let dayArray: CourseDayID[] = [];
+  return dbSchedules.map(({ AllCourses, ...session }) => ({
+    session,
+    courses: formatCoursesFromDb(AllCourses),
+  }));
+};
 
-  if (course.MONDAY_CDE === 'M') {
-    dayArray.push('MO');
-  }
-  if (course.TUESDAY_CDE === 'T') {
-    dayArray.push('TU');
-  }
-  if (course.WEDNESDAY_CDE === 'W') {
-    dayArray.push('WE');
-  }
-  if (course.THURSDAY_CDE === 'R') {
-    dayArray.push('TH');
-  }
-  if (course.FRIDAY_CDE === 'F') {
-    dayArray.push('FR');
-  }
-  if (course.SATURDAY_CDE === 'S') {
-    dayArray.push('SA');
-  }
-
-  return dayArray;
-}
-
-function makeScheduleCourses(schedule: Course[]): ScheduleEvent[] {
+function formatCoursesFromDb(courses: DbCourse[]): CourseEvent[] {
   const today = new Date();
   // Don't show async courses as meeting on saturday
   // Because saturday is only included in the schedule if a non-async course meetst that day
   const asyncMeetingDays = courseDayIds.slice(0, -1);
 
-  const eventArray = schedule.flatMap((course) => {
+  return courses.flatMap((course) => {
     const sharedDetails = {
       name: course.CRS_TITLE.trim(),
       title: course.CRS_CDE.trim(),
@@ -125,12 +115,34 @@ function makeScheduleCourses(schedule: Course[]): ScheduleEvent[] {
       }));
     }
   });
+}
 
-  return eventArray;
+function getMeetingDays(course: DbCourse): CourseDayID[] {
+  let dayArray: CourseDayID[] = [];
+
+  if (course.MONDAY_CDE === 'M') {
+    dayArray.push('MO');
+  }
+  if (course.TUESDAY_CDE === 'T') {
+    dayArray.push('TU');
+  }
+  if (course.WEDNESDAY_CDE === 'W') {
+    dayArray.push('WE');
+  }
+  if (course.THURSDAY_CDE === 'R') {
+    dayArray.push('TH');
+  }
+  if (course.FRIDAY_CDE === 'F') {
+    dayArray.push('FR');
+  }
+  if (course.SATURDAY_CDE === 'S') {
+    dayArray.push('SA');
+  }
+
+  return dayArray;
 }
 
 const scheduleService = {
-  makeScheduleCourses,
   getCanReadStudentSchedules,
   getAllSessionSchedules,
 };

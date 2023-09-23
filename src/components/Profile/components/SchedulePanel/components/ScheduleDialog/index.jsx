@@ -10,7 +10,6 @@ import {
 } from '@mui/material';
 import 'add-to-calendar-button';
 import { format, nextDay } from 'date-fns';
-import styles from './ScheduleDialog.module.css';
 import { STORAGE_COLOR_PREFERENCE_KEY } from 'theme';
 import { courseDayIds, scheduleCalendarResources } from 'services/schedule';
 
@@ -20,7 +19,7 @@ const ScheduleDialog = ({ course, session, onClose }) => {
   const addToCalendarProps = {
     name: course.title,
     startDate: format(
-      // setDay counts from Sunday as 0, but courseDayIds start Monday as 0
+      // nextDay counts from Sunday as 0, but courseDayIds start Monday as 0
       nextDay(new Date(session.SessionBeginDate), courseDayIds.indexOf(course.resourceId) + 1),
       'yyyy-MM-dd',
     ),
@@ -30,15 +29,13 @@ const ScheduleDialog = ({ course, session, onClose }) => {
     Location: course.location,
     buttonStyle: 'round',
     lightMode: localStorage.getItem(STORAGE_COLOR_PREFERENCE_KEY) ?? 'system',
-    //Get user theme mode preference
     Timezone: 'currentBrowser',
+    listStyle: 'modal',
   };
 
   return (
     <Dialog open={Boolean(course)} fullWidth={true} maxWidth="xs">
-      <DialogTitle className={styles.dialogTitle} align="center">
-        {course.title}
-      </DialogTitle>
+      <DialogTitle>{course.title}</DialogTitle>
       <DialogContent>
         <DialogContentText>
           Title: {course.name}
@@ -80,7 +77,7 @@ const ScheduleDialog = ({ course, session, onClose }) => {
         <Typography>Add as one-time event:</Typography>
         <add-to-calendar-button
           {...addToCalendarProps}
-          options="'Microsoft365|Gordon','Outlook.com|Outlook','MicrosoftTeams','Apple'"
+          options="'Microsoft365|Gordon Outlook','Outlook.com|Microsoft Outlook','MicrosoftTeams','Apple'"
         ></add-to-calendar-button>
       </DialogContent>
       <DialogActions>

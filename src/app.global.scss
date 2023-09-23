@@ -63,6 +63,7 @@ a {
 .gc360_header {
   background-color: var(--mui-palette-primary-main);
   color: var(--mui-palette-primary-contrastText);
+  border-radius: 4px;
 }
 
 @media (max-width: $break-md) {
