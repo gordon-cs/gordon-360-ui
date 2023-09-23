@@ -1,9 +1,9 @@
-import Moment from 'moment';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
+import { Calendar, luxonLocalizer } from 'react-big-calendar';
 import { CourseEvent, Schedule, scheduleCalendarResources } from 'services/schedule';
 import './ScheduleCalendar.css';
+import { DateTime } from 'luxon';
 
-const localizer = momentLocalizer(Moment);
+const localizer = luxonLocalizer(DateTime, { firstDayOfWeek: 1 });
 
 type Props = {
   schedule: Schedule;
