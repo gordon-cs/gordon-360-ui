@@ -38,11 +38,9 @@ Here are the steps to setup the frontend for development:
    1. Download and run the installer from [the NodeJS Website](https://nodejs.org/en/download/).  This requires admin (aka "root" or "sudoer") privileges, so if you are on a shared Linux workstation, use one of the options below.
    1. Use a tool that manages Node installations, and use the "lts" version
       (which means "long term support"). Options include:
-      - [Node Version Manager (NVM)]
-        (https://github.com/nvm-sh/nvm),
+      - [Node Version Manager (NVM)](https://github.com/nvm-sh/nvm),
         for Linux and MacOS.  After following the
-        [installation instructions]
-        (https://github.com/nvm-sh/nvm#installing-and-updating),
+        [installation instructions](https://github.com/nvm-sh/nvm#installing-and-updating),
         run these commands:
          - `nvm install --lts`
          - `nvm use --lts`

@@ -35,6 +35,7 @@ const ScottieCyan_opacity10 = '#00AEEF1A';
 //Red used in the old color scheme, good error color
 const ChristmasRed = '#B53228';
 const NauticalRed = '#FF5D53';
+const DarkRed = '#430f0b';
 
 // Success
 const LaVidaGreen = '#006D22';
@@ -143,6 +144,11 @@ export const theme360 = extendTheme({
           dark: Placeholder,
           contrastText: ScottieCyan,
         },
+        Alert: {
+          errorStandardBg: NauticalRed,
+          errorColor: Black,
+          errorIconColor: Black,
+        },
       },
     },
     dark: {
@@ -196,8 +202,8 @@ export const theme360 = extendTheme({
           900: '#014883',
         },
         error: {
-          main: ChristmasRed,
-          light: NauticalRed,
+          main: NauticalRed,
+          light: ChristmasRed,
           contrastText: White,
         },
         success: {
@@ -229,6 +235,11 @@ export const theme360 = extendTheme({
           light: ScottieCyan,
           dark: Placeholder,
           contrastText: ScottieCyan,
+        },
+        Alert: {
+          errorColor: NauticalRed,
+          errorIconColor: NauticalRed,
+          errorStandardBg: DarkRed,
         },
       },
     },
