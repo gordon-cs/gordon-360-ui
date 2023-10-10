@@ -1,0 +1,111 @@
+@import '../../../../vars';
+
+.header {
+  font-size: 0.9rem;
+}
+
+.headerImg {
+  width: 4em;
+}
+
+@media (min-width: $break-sm) {
+  .header {
+    font-size: 1rem;
+  }
+
+  .headerImg {
+    width: 5em;
+  }
+}
+
+.expandMoreIcon {
+  color: var(--mui-palette-primary-contrastText);
+}
+
+.teamHeader {
+  color: var(--mui-palette-neutral-A200);
+  background-color: var(--mui-palette-neutral-A700);
+  border-radius: 0.5rem;
+  margin-top: 1rem;
+  width: 100%;
+  margin-left: 0;
+  padding: 0.5rem;
+}
+
+.teamHeaderMainText {
+  font-weight: bold;
+}
+
+.title {
+  font-weight: bold;
+  color: var(--mui-palette-neutral-800);
+  font-size: 1.5em;
+}
+
+.subtitle {
+  color: var(--mui-palette-neutral-600);
+  font-size: 1em;
+}
+
+.buttonArea {
+  background-color: var(--mui-palette-neutral-200);
+  padding: 16px;
+  margin-top: -1em;
+  margin-bottom: 0.2em;
+  border-bottom-left-radius: 0.5em;
+  border-bottom-right-radius: 0.5em;
+}
+
+.secondaryText {
+  margin-top: 1em;
+  color: var(--mui-palette-neutral-600);
+  text-align: center;
+}
+
+// if desired, this should just be a global change and
+// universally applied to all 360 cards
+.cardHeader {
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
+}
+
+.actionButton {
+  text-transform: none;
+  background-color: var(--mui-palette-secondary-main);
+}
+
+.actionButton:hover {
+  background-color: var(--mui-palette-secondary-600);
+}
+
+.cardHeader :global(.MuiCardHeader-title) {
+  font-size: 1em;
+}
+
+.center {
+  text-align: center;
+}
+
+.grayIcon {
+  color: var(--mui-palette-neutral-600);
+}
+
+.menuTitle {
+  margin-top: 0.5em;
+  margin-bottom: 0.2em;
+  color: var(--mui-palette-neutral-600);
+  text-align: center;
+}
+
+.editIconButton {
+  background-color: var(--mui-palette-warning-main);
+  color: var(--mui-palette-neutral-A100);
+}
+
+.editIconButton:hover {
+  background-color: var(--mui-palette-warning-A100);
+}
+
+.menuButton:hover {
+  background-color: var(--mui-palette-neutral-A700);
+}

@@ -1,0 +1,225 @@
+@use 'sass:color';
+@import '../../../../../vars';
+
+.menuTitle {
+  margin-top: 0.5em;
+  margin-bottom: 0.2em;
+  color: var(--mui-palette-neutral-500);
+  text-align: center;
+}
+
+.listing {
+  @extend %baseListing;
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+  padding: 1em;
+}
+
+//trial new listing look
+.listing:hover {
+  background-color: var(--mui-palette-neutral-300);
+  box-shadow: inset 1px 1px var(--mui-palette-neutral-A700);
+  transition: all 0.3s ease-in-out;
+}
+
+%baseListing {
+  background-color: var(--mui-palette-neutral-50);
+  border-radius: 0.5em;
+  align-items: center;
+  box-shadow: inset -1px -1px var(--mui-palette-neutral-A700);
+  transition: all 0.3s ease-in-out;
+}
+
+.matchHistoryListing {
+  @extend %baseListing;
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+  padding: 0.5em;
+
+  &_winner {
+    @extend %baseListing;
+    margin-top: 0.1em;
+    margin-bottom: 0.1em;
+    padding: 0.5em;
+    box-shadow: inset 3px 0px 0px var(--mui-palette-success-main);
+  }
+
+  &_loser {
+    @extend %baseListing;
+    margin-top: 0.1em;
+    margin-bottom: 0.1em;
+    padding: 0.5em;
+    box-shadow: inset 3px 0px 0px var(--mui-palette-error-light);
+  }
+}
+
+.matchHistoryListing:hover {
+  background-color: var(--mui-palette-neutral-100);
+  box-shadow: inset 1px 1px var(--mui-palette-neutral-A700);
+  transition: all 0.3s ease-in-out;
+}
+
+.attendedListing {
+  outline: solid 1px var(--mui-palette-success-main);
+}
+
+.absentListing {
+  opacity: 0.6;
+  font-style: italic;
+}
+
+:global(.MuiList-padding) {
+  padding: 0;
+}
+
+.redButton {
+  background-color: var(--mui-palette-error-main);
+  color: var(--mui-palette-error-contrastText);
+}
+
+.redButton:hover {
+  background-color: var(--mui-palette-error-dark);
+}
+
+.rejectIcon {
+  width: 2rem;
+  height: 2rem;
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
+}
+
+.rejectIcon:hover {
+  background-color: var(--mui-palette-primary-light);
+}
+
+.acceptIcon {
+  width: 2rem;
+  height: 2rem;
+  background-color: var(--mui-palette-secondary-main);
+  color: var(--mui-palette-secondary-contrastText);
+}
+
+.acceptIcon:hover {
+  background-color: var(--mui-palette-secondary-600);
+}
+
+.avatar {
+  width: 4rem;
+  height: 4rem;
+  margin: 0 1rem 0 0;
+}
+
+.avatarSmall {
+  width: 2rem;
+  height: 2rem;
+}
+
+.listingTitle {
+  color: var(--mui-palette-neutral-800);
+  font-weight: bold;
+  font-size: 0.9em;
+}
+
+.listingSubtitle {
+  color: var(--mui-palette-neutral-500);
+  font-size: 0.8em;
+
+  &_small {
+    color: var(--mui-palette-neutral-500);
+    font-size: 0.7em;
+  }
+}
+
+.listingAdditionalInfo {
+  color: var(--mui-palette-neutral-800);
+  font-style: italic;
+  font-size: 0.8em;
+}
+
+.matchWinner {
+  font-weight: bold;
+  text-decoration: underline 0.2em var(--mui-palette-success-main);
+}
+
+.activityType_league {
+  background-color: var(--mui-palette-error-light);
+}
+
+.activityType_tournament {
+  background-color: var(--mui-palette-success-main);
+}
+
+.activityType_oneoff {
+  background-color: var(--mui-palette-warning-main);
+}
+
+.teamLogo {
+  width: 3rem;
+  height: 3rem;
+  margin: 0 1rem 0 0;
+}
+
+.teamHistoryLogo {
+  width: 4.5em;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.teamHistoryLogoContainer {
+  order: -1;
+}
+
+.cardHeaderSecondary {
+  background-color: var(--mui-palette-neutral-dark);
+  color: var(--mui-palette-primary-contrastText);
+}
+
+@media (min-width: $break-xs) {
+  .rightAlignLarge {
+    text-align: right;
+    justify-content: flex-end;
+  }
+
+  .listingSubtitle {
+    color: var(--mui-palette-neutral-500);
+    font-size: 0.7em;
+
+    &_small {
+      color: var(--mui-palette-neutral-500);
+      font-size: 0.6em;
+    }
+  }
+
+  .listingTitle {
+    color: var(--mui-palette-neutral-800);
+    font-weight: bold;
+    font-size: 1.1em;
+  }
+}
+
+@media (max-width: $break-sm) {
+  .listingWrapper {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+@media (min-width: $break-sm) {
+  .teamLogo {
+    width: 4rem;
+    height: 4rem;
+    margin: 0 1rem 0 0;
+  }
+
+  .rejectIcon {
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: var(--mui-palette-primary-main);
+    color: var(--mui-palette-primary-contrastText);
+  }
+
+  .acceptIcon {
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: var(--mui-palette-secondary-main);
+  }
+}

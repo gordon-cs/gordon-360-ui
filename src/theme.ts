@@ -93,7 +93,7 @@ export const theme360 = extendTheme({
         secondary: {
           main: ScottieCyan,
           dark: ScottieCyan_opacity75,
-          contrastText: White,
+          contrastText: Black,
           50: ScottieCyan_opacity10,
           100: '#B0E2F9',
           200: '#7BD0F5',
@@ -172,6 +172,7 @@ export const theme360 = extendTheme({
         // May be used later, gives us the flexibility to change tooltip colors if needed for dark
         // mode.
         // Tooltip: {
+
         //   bg: Placeholder, // Tooltip background color
         // },
         primary: {
@@ -211,17 +212,17 @@ export const theme360 = extendTheme({
           dark: Athletics,
           light: Gray,
           contrastText: White,
-          50: '#000000',
-          100: '#1D1C1C',
-          200: '#353535',
-          300: '#5C5B5B',
-          400: '#706F6F',
-          500: '#989797',
-          600: '#B8B7B7',
-          700: '#DCDBDB',
-          800: '#EBEAEA',
-          900: '#F4F3F3',
-          A100: '#FAF9F9',
+          50: '#1D1C1C',
+          100: '#353535',
+          200: '#5C5B5B',
+          300: '#706F6F',
+          400: '#989797',
+          500: '#B8B7B7',
+          600: '#DCDBDB',
+          700: '#EBEAEA',
+          800: '#F4F3F3',
+          900: '#FAF9F9',
+          A100: White,
         },
         link: {
           main: LinkBlue,
@@ -229,6 +230,18 @@ export const theme360 = extendTheme({
           dark: Placeholder,
           contrastText: ScottieCyan,
         },
+      },
+    },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        outlinedPrimary: ({ theme }) => ({
+          '[data-mui-color-scheme="dark"] &': {
+            color: theme.vars.palette.neutral.contrastText,
+            borderColor: theme.vars.palette.neutral.contrastText,
+          },
+        }),
       },
     },
   },

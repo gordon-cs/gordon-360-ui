@@ -7,8 +7,7 @@ import {
   DialogProps,
   DialogTitle,
 } from '@mui/material';
-import { Alert, AlertTitle } from '@mui/material';
-import { PropsWithChildren } from 'react';
+import { KeyboardEvent, PropsWithChildren } from 'react';
 
 type Props = {
   open: boolean;
@@ -35,49 +34,54 @@ const GordonDialogBox = ({
   severity,
   children,
   ...otherProps
-}: PropsWithChildren<Props>) => (
-  <Dialog
-    {...otherProps}
-    aria-labelledby="alert-dialog-title"
-    aria-describedby="alert-dialog-description"
-  >
-    <DialogTitle id="alert-dialog-title">
-      {severity ? (
-        <Alert variant="filled" severity={severity}>
-          <AlertTitle>
-            <strong>{title}</strong>
-          </AlertTitle>
-        </Alert>
-      ) : (
-        title
-      )}
-    </DialogTitle>
-    <DialogContent sx={{ padding: '1rem' }} id="alert-dialog-description">
-      {children}
-    </DialogContent>
-    <DialogActions>
-      {cancelButtonClicked && (
-        <Button variant="contained" color="neutral" onClick={cancelButtonClicked}>
-          {cancelButtonName ?? 'Cancel'}
-        </Button>
-      )}
-      {closeButtonClicked && (
-        <Button variant="contained" color="neutral" onClick={closeButtonClicked}>
-          {closeButtonName ?? 'Close'}
-        </Button>
-      )}
-      {buttonClicked && (
-        <Button
-          variant="contained"
-          onClick={buttonClicked}
-          color="primary"
-          disabled={isButtonDisabled}
-        >
-          {buttonName ?? 'Okay'}
-        </Button>
-      )}
-    </DialogActions>
-  </Dialog>
-);
+}: PropsWithChildren<Props>) => {
+  const handleKeyPress = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (
+      !isButtonDisabled &&
+      event.key === 'Enter' &&
+      event.currentTarget.classList.contains('MuiDialog-root')
+    ) {
+      buttonClicked(event);
+    }
+  };
+
+  return (
+    <Dialog
+      {...otherProps}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+      onKeyDown={(event) => handleKeyPress(event)}
+    >
+      <DialogTitle
+        id="alert-dialog-title"
+        sx={
+          severity
+            ? { bgcolor: `${severity}.main`, color: `${severity}.contrastText` }
+            : { bgcolor: 'primary.main', color: 'primary.contrastText' }
+        }
+      >
+        {title}
+      </DialogTitle>
+      <DialogContent id="alert-dialog-description">{children}</DialogContent>
+      <DialogActions>
+        {cancelButtonClicked && (
+          <Button variant="outlined" onClick={cancelButtonClicked}>
+            {cancelButtonName ?? 'Cancel'}
+          </Button>
+        )}
+        {buttonClicked && (
+          <Button
+            variant="contained"
+            onClick={buttonClicked}
+            color={severity ?? 'primary'}
+            disabled={isButtonDisabled}
+          >
+            {buttonName ?? 'Okay'}
+          </Button>
+        )}
+      </DialogActions>
+    </Dialog>
+  );
+};
 
 export default GordonDialogBox;
