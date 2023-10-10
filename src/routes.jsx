@@ -20,6 +20,7 @@ import ProfileNotFound from './views/ProfileNotFound';
 import PublicProfile from './views/PublicProfile';
 import Timesheets from './views/Timesheets';
 import WellnessCheck from './views/WellnessCheck';
+import RecIM from './views/RecIM';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
 const routes = [
@@ -127,6 +128,11 @@ const routes = [
     name: 'News',
     path: '/news',
     element: <News />,
+  },
+  {
+    name: 'Rec-IM',
+    path: '/recim/*',
+    element: <RecIM />,
   },
   {
     name: 'Page Not Found',

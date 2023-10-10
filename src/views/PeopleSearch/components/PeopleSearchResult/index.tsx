@@ -13,7 +13,7 @@ import styles from './PeopleSearchResult.module.css';
  * well with both light and dark mode.
  */
 const COLOR_80808026_1X1 =
- 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNsUAMAASwAqHb28sMAAAAASUVORK5CYII=';
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNsUAMAASwAqHb28sMAAAAASUVORK5CYII=';
 const JPG_BASE64_HEADER = 'data:image/jpg;base64,';
 const breakpointWidth = 810;
 

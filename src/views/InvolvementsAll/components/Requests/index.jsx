@@ -51,7 +51,7 @@ const Requests = ({ profile, session }) => {
           <Accordion>
             <AccordionSummary
               aria-controls="received-requests-content"
-              expandIcon={<ExpandMore />}
+              expandIcon={<ExpandMore className={styles.requests_expand_icon} />}
               className={styles.requests_header}
             >
               <Typography variant="h6">Requests Received</Typography>
@@ -69,7 +69,7 @@ const Requests = ({ profile, session }) => {
           <Accordion>
             <AccordionSummary
               aria-controls="sent-requests-content"
-              expandIcon={<ExpandMore />}
+              expandIcon={<ExpandMore className={styles.requests_expand_icon} />}
               className={styles.requests_header}
             >
               <Typography variant="h6">Requests Sent</Typography>
@@ -101,7 +101,7 @@ const Requests = ({ profile, session }) => {
         <Accordion defaultExpanded>
           <AccordionSummary
             aria-controls="received-requests-content"
-            expandIcon={<ExpandMore />}
+            expandIcon={<ExpandMore className={styles.requests_expand_icon} />}
             className={styles.requests_header}
           >
             <CardHeader

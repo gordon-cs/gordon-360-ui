@@ -1,50 +1,48 @@
 import { useIsAuthenticated } from '@azure/msal-react';
 import {
   Event as EventIcon,
-  Home as HomeIcon,
   LocalActivity as LocalActivityIcon,
   Menu as MenuIcon,
   People as PeopleIcon,
   Work as WorkIcon,
 } from '@mui/icons-material';
-import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Typography, Link } from '@mui/material';
+import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Link } from '@mui/material';
+import RecIMIcon from '@mui/icons-material/SportsFootball';
 import GordonDialogBox from 'components/GordonDialogBox';
-import { useDocumentTitle, useNetworkStatus, useWindowSize } from 'hooks';
-import { projectName } from 'project-name';
+import { useNetworkStatus } from 'hooks';
 import { forwardRef, useEffect, useState } from 'react';
-import { NavLink, Route, Routes, useLocation } from 'react-router-dom';
-import routes from 'routes';
+import { useNavigate, NavLink, useLocation } from 'react-router-dom';
 import { authenticate } from 'services/auth';
-import { windowBreakWidths } from 'theme';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
-import GordonNavButtonsRightCorner from './components/NavButtonsRightCorner';
 import GordonQuickSearch from './components/QuickSearch';
 import styles from './Header.module.css';
 
 // Define header logo image - special image for Pi Day
 const todaysDate = new Date(); // Months: 0 = Jan, 1 = Feb, 2 = Mar, etc.
 const isPiDay = todaysDate.getMonth() === 2 && todaysDate.getDate() === 14; // March 14 (3/14)
-const angleMode = isPiDay ? "2pi" : "360";
-const headerLogo72dpi = "images/gc_" + angleMode + "_yellow_logo_72.png";
-const headerLogo64dpi = "images/gc_" + angleMode + "_yellow_logo_64.png";
-const headerLogo56dpi = "images/gc_" + angleMode + "_yellow_logo_56.png";
+const angleMode = isPiDay ? '2pi' : '360';
+const headerLogo72dpi = 'images/gc_' + angleMode + '_yellow_logo_72.png';
+const headerLogo64dpi = 'images/gc_' + angleMode + '_yellow_logo_64.png';
+const headerLogo56dpi = 'images/gc_' + angleMode + '_yellow_logo_56.png';
+const headerLogo56dpiNoText = 'images/gc_' + angleMode + '_yellow_logo_56_vert.png';
 
 const ForwardNavLink = forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
 
 // Tab url regular expressions must be listed in the same order as the tabs, since the
 // indices of the elements in the array on the next line are mapped to the indices of the tabs
 const TabUrlPatterns = [
-  /^\/$/,
   /^\/involvements\/?$|^\/activity/,
   /^\/events\/?$/,
   /^\/people$|^\/myprofile|^\/profile/,
   /^\/timesheets$/,
+  /^\/recim$/,
 ];
 
 /**
  * Update the tab highlight indicator based on the url
  *
  * The checks use regular expressions to check for matches in the url.
+ * @returns the index of the tab to highlight
  */
 const useTabHighlight = () => {
   const location = useLocation();
@@ -59,20 +57,15 @@ const useTabHighlight = () => {
 };
 
 const GordonHeader = ({ onDrawerToggle }) => {
+  const navigate = useNavigate();
   const [dialog, setDialog] = useState('');
-  const [width] = useWindowSize();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [anchorElement, setAnchorElement] = useState(null);
   const isOnline = useNetworkStatus();
-  const setDocumentTitle = useDocumentTitle();
   const isAuthenticated = useIsAuthenticated();
   const tabIndex = useTabHighlight();
 
-  useEffect(() => {
-    if (width < windowBreakWidths.breakMD) {
-      setIsMenuOpen(false);
-    }
-  }, [width]);
+  const handleOpenProfile = () => {
+    navigate('/myprofile');
+  };
 
   const createDialogBox = () => {
     const isOffline = dialog === 'offline';
@@ -111,7 +104,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
         />
       );
     } else {
-      const route = `/${name.toLowerCase()}`;
+      const route = `/${name.toLowerCase().replace('-', '')}`;
       return (
         <Tab
           className={styles.tab}
@@ -122,16 +115,6 @@ const GordonHeader = ({ onDrawerToggle }) => {
         />
       );
     }
-  };
-
-  const handleOpenMenu = (event) => {
-    setAnchorElement(event.currentTarget);
-    setIsMenuOpen(true);
-  };
-
-  const handleCloseMenu = () => {
-    setAnchorElement(null);
-    setIsMenuOpen(false);
   };
 
   const loginButton = (
@@ -146,83 +129,62 @@ const GordonHeader = ({ onDrawerToggle }) => {
   );
 
   return (
-    <section className={styles.gordon_header}>
-      <AppBar className={styles.app_bar} position="static">
-        <Toolbar>
+    <AppBar className={styles.app_bar} position="static">
+      <Toolbar className={styles.toolbar}>
+        <div className={styles.side_container}>
           <IconButton
-            className={styles.menu_button}
+            className={styles.hamburger_menu_button}
             color="primary"
             aria-label="open drawer"
             onClick={onDrawerToggle}
             size="large"
           >
-            <MenuIcon className={styles.menu_button_icon} />
+            <MenuIcon className={styles.hamburger_menu_button_icon} />
           </IconButton>
           <Link to="/" component={ForwardNavLink} value={tabIndex}>
             <picture>
+              {/* pick a different image as the screen gets smaller.*/}
               <source srcset={headerLogo72dpi} media="(min-width: 900px)" />
               <source srcset={headerLogo64dpi} media="(min-width: 600px)" />
+              <source srcSet={headerLogo56dpiNoText} media="(max-width: 375px)" />
               <img src={headerLogo56dpi} alt="Gordon 360 Logo"></img>
             </picture>
           </Link>
-          <Typography className={`disable_select ${styles.title}`} variant="h6" color="inherit">
-            <Routes>
-              {routes.map((route) => (
-                <Route
-                  key={route.path}
-                  path={route.path}
-                  element={() => {
-                    setDocumentTitle(route.name || projectName);
-                    return <span>{route.name || projectName}</span>;
-                  }}
-                />
-              ))}
-            </Routes>
-          </Typography>
-          <div className={styles.center_container}>
-            <Tabs textColor="inherit" indicatorColor="secondary" centered value={tabIndex}>
-              <Tab
-                className={styles.tab}
-                icon={<HomeIcon />}
-                label="Home"
-                component={ForwardNavLink}
-                to="/"
-              />
-              <Tab
-                className={styles.tab}
-                icon={<LocalActivityIcon />}
-                label="Involvements"
-                component={ForwardNavLink}
-                to="/involvements"
-              />
-              <Tab
-                className={styles.tab}
-                icon={<EventIcon />}
-                label="Events"
-                component={ForwardNavLink}
-                to="/events"
-              />
-              {requiresAuthTab('People', <PeopleIcon />)}
-              {requiresAuthTab('Timesheets', <WorkIcon />)}
-            </Tabs>
-          </div>
-          <div className={styles.people_search_container_container}>
-            {/* Width is dynamic */}
-            <div className={styles.people_search_container}>
-              {isAuthenticated ? <GordonQuickSearch /> : loginButton}
-            </div>
-          </div>
-          <GordonNavAvatarRightCorner onClick={handleOpenMenu} menuOpened={isMenuOpen} />
-          <GordonNavButtonsRightCorner
-            open={isMenuOpen}
-            openDialogBox={setDialog}
-            anchorEl={anchorElement}
-            onClose={handleCloseMenu}
+        </div>
+        <Tabs
+          textColor="inherit"
+          indicatorColor="secondary"
+          className={styles.center_container}
+          centered
+          value={tabIndex}
+        >
+          <Tab
+            className={styles.tab}
+            icon={<LocalActivityIcon />}
+            label="Involvements"
+            component={ForwardNavLink}
+            to="/involvements"
           />
-          {createDialogBox()}
-        </Toolbar>
-      </AppBar>
-    </section>
+          <Tab
+            className={styles.tab}
+            icon={<EventIcon />}
+            label="Events"
+            component={ForwardNavLink}
+            to="/events"
+          />
+          {requiresAuthTab('People', <PeopleIcon />)}
+          {requiresAuthTab('Timesheets', <WorkIcon />)}
+          {requiresAuthTab('Rec-IM', <RecIMIcon />)}
+        </Tabs>
+        <div className={styles.side_container}>
+          <div className={styles.people_search_container}>
+            {isAuthenticated ? <GordonQuickSearch /> : loginButton}
+          </div>
+          <GordonNavAvatarRightCorner onClick={handleOpenProfile} />
+        </div>
+        {createDialogBox()}
+      </Toolbar>
+    </AppBar>
   );
 };
 

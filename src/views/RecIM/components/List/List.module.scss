@@ -1,0 +1,13 @@
+@import '../../../../vars';
+
+.secondaryText {
+  margin-top: 1em;
+  color: var(--mui-palette-neutral-500);
+  text-align: center;
+}
+
+.scrollableCenteredTabs {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}

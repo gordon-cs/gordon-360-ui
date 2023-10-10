@@ -308,7 +308,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
 
   const handleSliderChange = (event: Event, newValue: number | number[]) => {
     setGraduationYearRange(newValue as number[]);
-    let values = graduationYearRange.toString().split(',');
+    let values = newValue.toString().split(',');
     setSearchParams((sp) => ({
       ...sp,
       initial_year: values[0],
@@ -321,13 +321,12 @@ const SearchFieldList = ({ onSearch }: Props) => {
   };
 
   const handleSwitchChange = () => {
-    if (switchYearRange) {
-      setSearchParams((sp) => ({
-        ...sp,
-        initial_year: '',
-        final_year: '',
-      }));
-    }
+    setSearchParams((sp) => ({
+      ...sp,
+      initial_year: '',
+      final_year: '',
+      graduation_year: '',
+    }));
     setSwitchYearRange((prev) => !prev);
   };
 
