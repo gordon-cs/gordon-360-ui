@@ -57,9 +57,9 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
           expandIcon={<ExpandMoreIcon className={styles.expandIcon} />}
           aria-controls="schedule"
           id="schedule-header"
-          className="gc360_header"
+          className={`gc360_header ${styles.accordionHeader}`}
         >
-          <CardHeader className={styles.accordionHeader} title={'Schedule'} />
+          <CardHeader title={'Schedule'} />
         </AccordionSummary>
         <AccordionDetails>
           <Grid container justifyContent="center" spacing={4}>
