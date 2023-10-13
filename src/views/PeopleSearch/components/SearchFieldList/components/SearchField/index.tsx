@@ -1,4 +1,4 @@
-import { Grid, MenuItem, TextField, useMediaQuery } from '@mui/material';
+import { InputAdornment, MenuItem, TextField, TextFieldProps, useMediaQuery } from '@mui/material';
 import { ChangeEvent } from 'react';
 import { IconType } from 'react-icons';
 import { toTitleCase } from 'services/utils';
@@ -9,82 +9,70 @@ export interface SelectOption {
   value: string;
 }
 
-interface CommonProps {
+type BaseProps = TextFieldProps & {
   name: string;
-  value: string;
   updateValue: (event: ChangeEvent<HTMLInputElement>) => void;
   Icon?: IconType;
-  disabled?: boolean;
-  select?: boolean;
-  options?: string[] | SelectOption[];
-}
+};
 
-interface SelectProps extends CommonProps {
+type SelectProps = BaseProps & {
   select: true;
-  options: string[] | SelectOption[];
-}
+  options: readonly string[] | readonly SelectOption[];
+};
 
-interface TextProps extends CommonProps {
+type TextInputProps = BaseProps & {
   select?: false;
   options?: undefined;
-}
+};
 
-type SearchFieldProps = SelectProps | TextProps;
-
-const defaultMenuItem = (
-  <MenuItem value="" key="default">
-    <em>All</em>
-  </MenuItem>
-);
-
-const mapOptionsToMenuItems = (options: string[] | SelectOption[]) =>
-  options.map((option) =>
-    typeof option === 'string' ? (
-      <MenuItem value={option} key={option}>
-        {option}
-      </MenuItem>
-    ) : (
-      <MenuItem value={option.value} key={option.value}>
-        {option.label}
-      </MenuItem>
-    ),
-  );
+type Props = SelectProps | TextInputProps;
 
 const SearchField = ({
   name,
-  value,
   updateValue,
   Icon,
-  disabled = false,
   select = false,
   options = undefined,
-}: SearchFieldProps) => {
+  ...otherProps
+}: Props) => {
   const isLargeScreen = useMediaQuery('(min-width: 600px)');
 
   return (
-    <Grid item container spacing={2} alignItems="center">
-      {isLargeScreen && Icon && (
-        <Grid item>
-          <Icon className={styles.icon} />
-        </Grid>
-      )}
-      <Grid item xs>
-        <TextField
-          id={name}
-          name={name}
-          label={toTitleCase(name, '_')}
-          value={value}
-          onChange={updateValue}
-          fullWidth
-          variant="filled"
-          type={!select ? 'search' : undefined}
-          select={select}
-          disabled={disabled}
-        >
-          {select && options && [defaultMenuItem, mapOptionsToMenuItems(options)]}
-        </TextField>
-      </Grid>
-    </Grid>
+    <TextField
+      id={name}
+      name={name}
+      label={toTitleCase(name, '_')}
+      onChange={updateValue}
+      fullWidth
+      variant="filled"
+      type={!select ? 'search' : undefined}
+      select={select}
+      InputProps={{
+        startAdornment:
+          isLargeScreen && Icon ? (
+            <InputAdornment position="start">
+              <Icon className={styles.icon} />
+            </InputAdornment>
+          ) : undefined,
+      }}
+      {...otherProps}
+    >
+      {select &&
+        options && [
+          <MenuItem value="" key="default">
+            <em>All</em>
+          </MenuItem>,
+          ...options.map((option) => {
+            const { label, value } =
+              typeof option === 'string' ? { label: option, value: option } : option;
+            return (
+              <MenuItem value={value} key={value}>
+                {label}
+              </MenuItem>
+            );
+          }),
+        ]}
+    </TextField>
   );
 };
 
