@@ -153,6 +153,74 @@ export const searchParamSerializerFactory = <
   return { serializeSearchParams, deserializeSearchParams };
 };
 
+type SearchParamValue = string | number | boolean | string[];
+export class SearchParamHandler<TSearchParams extends Record<string, SearchParamValue>> {
+  #initialParams: TSearchParams;
+
+  constructor(initialParams: TSearchParams) {
+    this.#initialParams = initialParams;
+  }
+
+  serialize(searchParams: TSearchParams): URLSearchParams {
+    // Convert {key: value} object into array of [key, value] pairs
+    const paramsArray = Object.entries(searchParams);
+
+    // Filter out unchanged items
+    const updatedParams = paramsArray.filter(([key, value]) => value !== this.#initialParams[key]);
+
+    // append each updated param to the output
+    const serializedParams = new URLSearchParams();
+    updatedParams.forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        value.forEach((v) => serializedParams.append(key, encodeURIComponent(v)));
+      } else {
+        serializedParams.set(key, encodeURIComponent(value));
+      }
+    });
+
+    console.log(serializedParams);
+
+    // Return URLSearchParams containing serialized value for each param
+    return serializedParams;
+  }
+
+  deserialize(searchParams: URLSearchParams): TSearchParams {
+    return Object.entries(this.#initialParams).reduce((params, [key, originalValue]) => {
+      if (Array.isArray(originalValue)) {
+        const value = searchParams.getAll(key);
+        if (
+          value.length === originalValue.length &&
+          value.every((v, i) => v === originalValue[i])
+        ) {
+          return { ...params, [key]: value };
+        }
+      } else {
+        const stringValue = searchParams.get(key);
+        let value: typeof originalValue;
+        if (stringValue !== null) {
+          switch (typeof originalValue) {
+            case 'string':
+              value = decodeURIComponent(stringValue);
+              break;
+            case 'number':
+              value = Number(stringValue);
+              break;
+            case 'boolean':
+              value = stringValue === 'true';
+              break;
+            default:
+              throw new Error('invalid type in SearchParamHandler.deserialize');
+          }
+          if (value !== originalValue) {
+            return { ...params, [key]: value };
+          }
+        }
+      }
+      return params;
+    }, this.#initialParams);
+  }
+}
+
 /**
  * Removes the specified domain name from an email.
  *

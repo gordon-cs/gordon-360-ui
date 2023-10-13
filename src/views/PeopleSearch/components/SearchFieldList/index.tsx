@@ -44,7 +44,7 @@ import { useNavigate } from 'react-router-dom';
 import addressService from 'services/address';
 import { AuthGroup } from 'services/auth';
 import peopleSearchService, { Class, PeopleSearchQuery, SearchResult } from 'services/peopleSearch';
-import { compareByProperty, searchParamSerializerFactory } from 'services/utils';
+import { SearchParamHandler, compareByProperty } from 'services/utils';
 import styles from './SearchFieldList.module.css';
 import SearchField, { SelectOption } from './components/SearchField';
 import Slider from '@mui/material/Slider';
@@ -100,8 +100,7 @@ const defaultSearchParams: PeopleSearchQuery = {
   involvement: '',
 };
 
-const { serializeSearchParams, deserializeSearchParams } =
-  searchParamSerializerFactory(defaultSearchParams);
+const searchParamHandler = new SearchParamHandler(defaultSearchParams);
 
 const isTodayAprilFools = () => {
   const todaysDate = new Date();
@@ -198,7 +197,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
 
         await peopleSearchService.search(params).then(onSearch);
 
-        const newQueryString = serializeSearchParams(params).toString();
+        const newQueryString = searchParamHandler.serialize(params).toString();
 
         // If search params are new since last search, add search to history
         if (window.location.search !== `?${newQueryString}`) {
@@ -239,7 +238,9 @@ const SearchFieldList = ({ onSearch }: Props) => {
   }, []);
   useEffect(() => {
     const readSearchParamsFromURL = (): void => {
-      const newSearchParams = deserializeSearchParams(new URLSearchParams(window.location.search));
+      const newSearchParams = searchParamHandler.deserialize(
+        new URLSearchParams(window.location.search),
+      );
 
       setSearchParams(newSearchParams);
       search(newSearchParams);
