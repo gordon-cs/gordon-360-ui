@@ -66,95 +66,9 @@ export const toTitleCase = (string: string, separator = ' ') =>
     .map((word) => word.replace(word[0], word[0].toUpperCase()))
     .join(' ');
 
-/**
- * Create functions to serialize and deserialize an object of the given type to/from a query string.
- * Properties that haven't changed from their initial value are excluded from the query string during serialization.
- * Properties are converted to their type in `initialSearchParams` during deserialization.
- *
- * @param initialSearchParams The shape and initial state of the search params.
- * @returns Functions to:
- *  1) serialize `searchParams` into a query string containing all the properties of `searchParams` that have changed from `initialSearchParams`
- *  2) deserialize a `URLSearchParams` into an object of the same type as `initialSearchParams`.
- */
-export const searchParamSerializerFactory = <
-  TSearchParams extends Record<string, string | number | boolean>,
->(
-  initialSearchParams: TSearchParams,
-) => {
-  /**
-   * Convert an object of search params into a query string.
-   *
-   * @param searchParams search params object
-   * @returns search params serialized as strings into a URLSearchParams object
-   */
-  const serializeSearchParams = (searchParams: TSearchParams): URLSearchParams => {
-    // Convert {key: value} object into array of [key, value] pairs
-    const paramsArray = Object.entries(searchParams);
-
-    // Filter out unchanged items
-    const updatedParams = paramsArray.filter(([key, value]) => value !== initialSearchParams[key]);
-
-    // append each updated param to the output
-    const serializedParams = new URLSearchParams();
-    updatedParams.forEach(([key, value]) =>
-      serializedParams.append(key, encodeURIComponent(value)),
-    );
-
-    // Return URLSearchParams containing serialized value for each param
-    return serializedParams;
-  };
-
-  /**
-   * Deserialize a string value to its type in `TSearchParams` for the given key.
-   *
-   * @param key The key of `TSearchParams` that the value corresponds to.
-   * @param encodedValue The value as a string to deserialize
-   * @returns value converted to its type in `TSearchParams`
-   */
-  const deserializeSearchValue = (key: keyof TSearchParams, encodedValue: string) => {
-    let value: string = decodeURIComponent(encodedValue);
-    switch (typeof initialSearchParams[key]) {
-      case 'string':
-        return value;
-      case 'boolean':
-        return value === 'true';
-      case 'number':
-        return parseInt(value);
-      default:
-        return value;
-    }
-  };
-
-  /**
-   * Deserialize a URLSearchParams object into a `TSearchParams` object.
-   *
-   * Any search params that aren't in `TSearchParams` are discarded.
-   * If any key of `TSearchParams` is unspecified, it default to the initial value.
-   *
-   * @param queryString query string to deserialize to search params
-   * @returns object of search params, defaulting to initial values for any unspecified params
-   */
-  const deserializeSearchParams = (queryString: URLSearchParams): TSearchParams => {
-    const queryParams = Array.from(queryString);
-
-    if (queryParams.length === 0) {
-      return initialSearchParams;
-    }
-
-    return queryParams.reduce((state, [key, value]) => {
-      if (key in initialSearchParams) {
-        return { ...state, [key]: deserializeSearchValue(key, value) };
-      } else {
-        return state;
-      }
-    }, initialSearchParams);
-  };
-
-  return { serializeSearchParams, deserializeSearchParams };
-};
-
-type SearchParamValue = string | number | boolean | string[];
-export class SearchParamHandler<TSearchParams extends Record<string, SearchParamValue>> {
+export class SearchParamHandler<
+  TSearchParams extends Record<string, string | number | boolean | string[]>,
+> {
   #initialParams: TSearchParams;
 
   constructor(initialParams: TSearchParams) {
@@ -172,13 +86,11 @@ export class SearchParamHandler<TSearchParams extends Record<string, SearchParam
     const serializedParams = new URLSearchParams();
     updatedParams.forEach(([key, value]) => {
       if (Array.isArray(value)) {
-        value.forEach((v) => serializedParams.append(key, encodeURIComponent(v)));
+        value.forEach((v) => serializedParams.append(key, v));
       } else {
-        serializedParams.set(key, encodeURIComponent(value));
+        serializedParams.set(key, value.toString());
       }
     });
-
-    console.log(serializedParams);
 
     // Return URLSearchParams containing serialized value for each param
     return serializedParams;
