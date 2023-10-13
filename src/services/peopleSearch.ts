@@ -57,10 +57,9 @@ export type SearchResult = SearchResultBase &
       }
   );
 
+export type AccountType = 'student' | 'facstaff' | 'alumni';
 export type PeopleSearchQuery = {
-  includeStudent: boolean;
-  includeFacStaff: boolean;
-  includeAlumni: boolean;
+  types: AccountType[];
   first_name: string;
   last_name: string;
   major: string;
@@ -112,22 +111,12 @@ const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
     building: searchFields.building,
     involvement: searchFields.involvement,
   })
-    .filter(([_key, value]) => Boolean(value))
-    .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
-    .join('&');
+    .filter(([_key, value]) => value !== '')
+    .map(([key, value]) => `${key}=${encodeURIComponent(value)}`);
 
-  if (searchFields.includeStudent) {
-    params += '&accountTypes=student';
-  }
+  params = params.concat(searchFields.types.map((t) => `accountTypes=${t}`));
 
-  if (searchFields.includeFacStaff) {
-    params += '&accountTypes=facstaff';
-  }
-
-  if (searchFields.includeAlumni) {
-    params += '&accountTypes=alumni';
-  }
-  return http.get(`accounts/advanced-people-search?${params}`);
+  return http.get(`accounts/advanced-people-search?${params.join('&')}`);
 };
 
 const getMajors = (): Promise<string[]> => http.get(`advancedsearch/majors`);

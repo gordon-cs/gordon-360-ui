@@ -2,6 +2,8 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Autocomplete,
+  Box,
   Button,
   Card,
   CardActions,
@@ -9,8 +11,8 @@ import {
   CardHeader,
   Checkbox,
   FormControlLabel,
-  FormLabel,
   Grid,
+  TextField,
   Typography,
 } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
@@ -43,7 +45,12 @@ import {
 import { useNavigate } from 'react-router-dom';
 import addressService from 'services/address';
 import { AuthGroup } from 'services/auth';
-import peopleSearchService, { Class, PeopleSearchQuery, SearchResult } from 'services/peopleSearch';
+import peopleSearchService, {
+  AccountType,
+  Class,
+  PeopleSearchQuery,
+  SearchResult,
+} from 'services/peopleSearch';
 import { SearchParamHandler, compareByProperty } from 'services/utils';
 import styles from './SearchFieldList.module.css';
 import SearchField, { SelectOption } from './components/SearchField';
@@ -80,9 +87,7 @@ const searchPageTitle = (
 );
 
 const defaultSearchParams: PeopleSearchQuery = {
-  includeStudent: true,
-  includeFacStaff: true,
-  includeAlumni: false,
+  types: ['student', 'facstaff'],
   first_name: '',
   last_name: '',
   major: '',
@@ -100,8 +105,6 @@ const defaultSearchParams: PeopleSearchQuery = {
   involvement: '',
 };
 
-const searchParamHandler = new SearchParamHandler(defaultSearchParams);
-
 const isTodayAprilFools = () => {
   const todaysDate = new Date();
   return todaysDate.getMonth() === 3 && todaysDate.getDate() === 1;
@@ -112,18 +115,18 @@ type Props = {
 };
 
 const AdvancedOptionsColumn = ({ children, ...otherProps }: { children: ReactNode }) => (
-  <Grid
-    container
-    spacing={2}
-    direction="column"
-    justifyContent="flex-start"
-    alignItems="center"
-    item
-    xs={12}
-    md={4}
-    {...otherProps}
-  >
-    {children}
+  <Grid item xs={12} md={4} {...otherProps}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        gap: '1rem',
+        alignItems: 'center',
+      }}
+    >
+      {children}
+    </Box>
   </Grid>
 );
 
@@ -135,13 +138,13 @@ const AdvancedOptionsColumn = ({ children, ...otherProps }: { children: ReactNod
  * @returns whether the user is allowed to search using the given params
  */
 const canSearch = (params: PeopleSearchQuery) => {
-  const { includeStudent, includeFacStaff, includeAlumni, ...criteria } = params;
+  const { types, ...otherCriteria } = params;
 
   // Must search some cohort of people
-  const includesSomeone = includeStudent || includeFacStaff || includeAlumni;
+  const includesSomeone = types.length > 0;
 
   // Must search for some non-empty criteria
-  const anySearchCriteria = Object.values(criteria).some((c) => containsLetterRegExp.test(c));
+  const anySearchCriteria = Object.values(otherCriteria).some((c) => containsLetterRegExp.test(c));
 
   return includesSomeone && anySearchCriteria;
 };
@@ -175,15 +178,22 @@ const SearchFieldList = ({ onSearch }: Props) => {
   /**
    * Default search params adjusted for the user's identity.
    */
-  const initialSearchParams: PeopleSearchQuery = useMemo(
-    () => ({
+  const initialSearchParams: PeopleSearchQuery = useMemo(() => {
+    let initialTypes = Array.from(defaultSearchParams.types);
+    // Only students and facstaff search students by default - alumni aren't allowed to search students
+    if (!isStudent && !isFacStaff) initialTypes.shift();
+    // Only alumni search alumni by default
+    if (isAlumni && !isStudent && !isFacStaff) initialTypes.push('alumni');
+
+    return {
       ...defaultSearchParams,
-      // Only students and facstaff search students by default - alumni aren't allowed to search students
-      includeStudent: isStudent || isFacStaff,
-      // Only alumni search alumni by default
-      includeAlumni: isAlumni && !isStudent && !isFacStaff,
-    }),
-    [isAlumni, isFacStaff, isStudent],
+      types: initialTypes,
+    };
+  }, [isAlumni, isFacStaff, isStudent]);
+
+  const searchParamHandler = useMemo(
+    () => new SearchParamHandler(initialSearchParams),
+    [initialSearchParams],
   );
   const [searchParams, setSearchParams] = useState(initialSearchParams);
 
@@ -195,19 +205,20 @@ const SearchFieldList = ({ onSearch }: Props) => {
       if (canSearch(params)) {
         setLoadingSearch(true);
 
-        await peopleSearchService.search(params).then(onSearch);
+        const results = await peopleSearchService.search(params);
+        onSearch(results);
 
         const newQueryString = searchParamHandler.serialize(params).toString();
 
-        // If search params are new since last search, add search to history
+        // If search params are new since last search, add search to history and save results
         if (window.location.search !== `?${newQueryString}`) {
-          navigate({ search: newQueryString });
+          navigate({ search: newQueryString }, { state: results });
         }
 
         setLoadingSearch(false);
       }
     },
-    [onSearch, navigate],
+    [onSearch, navigate, searchParamHandler],
   );
 
   useEffect(() => {
@@ -236,64 +247,70 @@ const SearchFieldList = ({ onSearch }: Props) => {
 
     loadPage();
   }, []);
-  useEffect(() => {
-    const readSearchParamsFromURL = (): void => {
-      const newSearchParams = searchParamHandler.deserialize(
-        new URLSearchParams(window.location.search),
-      );
 
+  useEffect(() => {
+    const onTraverseHistory = (event: PopStateEvent | undefined = undefined): void => {
+      const urlSearchString = window.location.search;
+      const newSearchParams = searchParamHandler.deserialize(new URLSearchParams(urlSearchString));
       setSearchParams(newSearchParams);
-      search(newSearchParams);
+
+      if (urlSearchString === '') {
+        // If no params are present, reset results
+        onSearch(null);
+      } else {
+        const savedResults: SearchResult[] | null = event?.state?.usr;
+
+        // use saved results if present
+        if (savedResults) {
+          onSearch(savedResults);
+        } else {
+          //otherwise perform search using params from url
+          search(newSearchParams);
+        }
+      }
     };
 
     // Read search params from URL when SearchFieldList mounts (or initialSearchParams changes)
-    readSearchParamsFromURL();
+    onTraverseHistory();
 
     // Read search params from URL on 'popstate' (back/forward navigation) events
-    window.addEventListener('popstate', readSearchParamsFromURL);
-    return () => window.removeEventListener('popstate', readSearchParamsFromURL);
-  }, [search]);
+    window.addEventListener('popstate', onTraverseHistory);
+    return () => window.removeEventListener('popstate', onTraverseHistory);
+  }, [onSearch, search, searchParamHandler]);
 
   const handleUpdate = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.name === 'graduation_year') {
-      setSearchParams((sp) => ({
-        ...sp,
-        class_standing: '',
-        minor: '',
-      }));
-    } else if (event.target.name === 'class_standing') {
-      setSearchParams((sp) => ({
-        ...sp,
-        initial_year: '',
-        final_year: '',
-        graduation_year: '',
-      }));
-    }
+    const { name, value } = event.target;
+    setSearchParams((sp) => {
+      if (name === 'graduation_year') {
+        sp.class_standing = '';
+        sp.minor = '';
+      }
+      if (name === 'class_standing') {
+        sp.initial_year = '';
+        sp.final_year = '';
+        sp.graduation_year = '';
+      }
 
-    setSearchParams((sp) => ({
-      ...sp,
-      [event.target.name]:
-        event.target.type === 'checkbox' ? event.target.checked : event.target.value,
-    }));
-    if (event.target.name === 'includeFacStaff' && !event.target.checked) {
-      setSearchParams((sp) => ({
+      if (name === 'types') {
+        if (!value.includes('facstaff')) {
+          sp.building = '';
+          sp.department = '';
+        }
+        if (!value.includes('student')) {
+          sp.major = '';
+          sp.minor = '';
+          sp.class_standing = '';
+        }
+        if (!value.includes('alumni')) {
+          sp.graduation_year = '';
+        }
+      }
+
+      return {
         ...sp,
-        building: '',
-        department: '',
-      }));
-    } else if (event.target.name === 'includeStudent' && !event.target.checked) {
-      setSearchParams((sp) => ({
-        ...sp,
-        major: '',
-        minor: '',
-        class_year: '',
-      }));
-    } else if (event.target.name === 'includeAlumni' && !event.target.checked) {
-      setSearchParams((sp) => ({
-        ...sp,
-        graduation_year: '',
-      }));
-    }
+        [name]: value,
+      };
+    });
   };
 
   const handleEnterKeyPress = (event: KeyboardEvent<HTMLDivElement>) => {
@@ -330,63 +347,6 @@ const SearchFieldList = ({ onSearch }: Props) => {
     return <GordonLoader />;
   }
 
-  const PeopleSearchCheckbox = (
-    <Grid item xs={12} md={6} className={styles.search_field_list_people_text}>
-      <FormLabel component="label" color="primary">
-        Include: &nbsp;
-      </FormLabel>
-      {loading ? (
-        <GordonLoader size={20} />
-      ) : (
-        <>
-          {
-            // Only students and FacStaff can search students
-            (isStudent || isFacStaff) && (
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={searchParams.includeStudent}
-                    name="includeStudent"
-                    onChange={handleUpdate}
-                    color="secondary"
-                  />
-                }
-                label="Student"
-              />
-            )
-          }
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={searchParams.includeFacStaff}
-                name="includeFacStaff"
-                onChange={handleUpdate}
-                color="secondary"
-              />
-            }
-            label="Faculty/Staff"
-          />
-          {
-            // Only Alumni and FacStaff can search students
-            (isAlumni || isFacStaff) && (
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={searchParams.includeAlumni}
-                    name="includeAlumni"
-                    onChange={handleUpdate}
-                    color="secondary"
-                  />
-                }
-                label="Alumni"
-              />
-            )
-          }
-        </>
-      )}
-    </Grid>
-  );
-
   return (
     <Card className={styles.search_field_list_gordon_text}>
       <CardHeader
@@ -414,7 +374,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
             />
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={6}>
             <SearchField
               name="residence_hall"
               value={searchParams.residence_hall}
@@ -424,6 +384,33 @@ const SearchFieldList = ({ onSearch }: Props) => {
               select
             />
           </Grid>
+          <Grid item xs={12} sm={6}>
+            <Autocomplete
+              multiple
+              options={allowedAccountTypes(isStudent, isFacStaff, isAlumni)}
+              disableCloseOnSelect
+              renderOption={(props, option, { selected }) => (
+                <li {...props}>
+                  <Checkbox style={{ marginRight: 8 }} checked={selected} />
+                  {option}
+                </li>
+              )}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Account Types"
+                  placeholder="Select account types to include..."
+                />
+              )}
+              value={searchParams.types}
+              onChange={(_event, value) =>
+                setSearchParams((sp) => ({
+                  ...sp,
+                  types: value,
+                }))
+              }
+            />
+          </Grid>
 
           {isTodayAprilFools() ? (
             <Grid item xs={12}>
@@ -431,203 +418,229 @@ const SearchFieldList = ({ onSearch }: Props) => {
                 name="relationship_status"
                 value={searchParams.relationship_status ?? ''}
                 updateValue={handleUpdate}
+                select
                 options={relationship_statuses.sort()}
                 Icon={FaHeart}
-                select
               />
             </Grid>
           ) : null}
-
-          {PeopleSearchCheckbox}
-        </Grid>
-
-        {/* Advanced Filtering */}
-        <Grid container alignItems="center">
-          <Accordion style={{ flexGrow: 1 }} elevation={3}>
-            <AccordionSummary
-              expandIcon={<ExpandMore className={styles.search_field_list_accordion_arrow} />}
-              id="more-search-options-header"
-              aria-controls="more-search-options-controls"
-            >
-              <Typography
-                variant="h6"
-                align="center"
-                className={styles.search_field_list_people_text}
+          <Grid item xs={12}>
+            {/* Advanced Filtering */}
+            <Accordion elevation={3}>
+              <AccordionSummary
+                expandIcon={<ExpandMore className={styles.search_field_list_accordion_arrow} />}
+                id="more-search-options-header"
+                aria-controls="more-search-options-controls"
               >
-                More Search Options
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Grid container spacing={4} direction="row">
-                {/* Advanced Search Filters: Student/Alumni */}
-                <AdvancedOptionsColumn>
-                  <Typography align="center" gutterBottom color="neutral">
-                    {profile?.PersonType === 'stu' ? 'Student' : 'Student/Alumni'}
-                  </Typography>
-                  <SearchField
-                    name="major"
-                    value={searchParams.major}
-                    updateValue={handleUpdate}
-                    options={majors.sort()}
-                    Icon={FaBook}
-                    select
-                    disabled={!searchParams.includeStudent && !searchParams.includeAlumni}
-                  />
-                  <SearchField
-                    name="minor"
-                    value={searchParams.minor}
-                    updateValue={handleUpdate}
-                    options={minors.sort()}
-                    Icon={FaBook}
-                    select
-                    disabled={!searchParams.includeStudent}
-                  />
-                  <SearchField
-                    name="class_standing"
-                    value={searchParams.class_standing}
-                    updateValue={handleUpdate}
-                    options={
-                      Object.values(Class).filter((value) => typeof value !== 'number') as string[]
-                    }
-                    Icon={FaSchool}
-                    select
-                    disabled={!searchParams.includeStudent}
-                  />
-                  <SearchField
-                    name="involvement"
-                    value={searchParams.involvement}
-                    updateValue={handleUpdate}
-                    options={involvements.sort()}
-                    Icon={FaPaperPlane}
-                    select
-                    disabled={!searchParams.includeStudent && !searchParams.includeAlumni}
-                  />
-
-                  {(isAlumni || isFacStaff) && switchYearRange ? (
+                <Typography
+                  variant="h6"
+                  align="center"
+                  className={styles.search_field_list_people_text}
+                >
+                  More Search Options
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Grid container spacing={4} direction="row">
+                  {/* Advanced Search Filters: Student/Alumni */}
+                  <AdvancedOptionsColumn>
+                    <Typography align="center" gutterBottom color="neutral">
+                      {profile?.PersonType === 'stu' ? 'Student' : 'Student/Alumni'}
+                    </Typography>
                     <SearchField
-                      name="graduation_year"
-                      value={searchParams.graduation_year}
+                      name="major"
+                      value={searchParams.major}
                       updateValue={handleUpdate}
-                      options={Array.from({ length: currentYear - 1889 + 1 }, (_, i) => ({
-                        value: (currentYear - i).toString(),
-                        label: (currentYear - i).toString(),
-                      }))}
-                      Icon={FaCalendarTimes}
-                      disabled={!searchParams.includeAlumni}
+                      options={majors.sort()}
+                      Icon={FaBook}
+                      select
+                      disabled={
+                        !searchParams.types.includes('student') &&
+                        !searchParams.types.includes('alumni')
+                      }
+                    />
+                    <SearchField
+                      name="minor"
+                      value={searchParams.minor}
+                      updateValue={handleUpdate}
+                      options={minors.sort()}
+                      Icon={FaBook}
+                      select
+                      disabled={!searchParams.types.includes('facstaff')}
+                    />
+                    <SearchField
+                      name="class_standing"
+                      value={searchParams.class_standing}
+                      updateValue={handleUpdate}
+                      options={
+                        Object.values(Class).filter(
+                          (value) => typeof value !== 'number',
+                        ) as string[]
+                      }
+                      Icon={FaSchool}
+                      select
+                      disabled={!searchParams.types.includes('student')}
+                    />
+                    <SearchField
+                      name="involvement"
+                      value={searchParams.involvement}
+                      updateValue={handleUpdate}
+                      options={involvements.sort()}
+                      Icon={FaPaperPlane}
+                      select
+                      disabled={
+                        !searchParams.types.includes('student') &&
+                        !searchParams.types.includes('alumni')
+                      }
+                    />
+
+                    {(isAlumni || isFacStaff) && switchYearRange ? (
+                      <SearchField
+                        name="graduation_year"
+                        value={searchParams.graduation_year}
+                        updateValue={handleUpdate}
+                        select
+                        options={Array.from({ length: currentYear - 1889 + 1 }, (_, i) => ({
+                          value: (currentYear - i).toString(),
+                          label: (currentYear - i).toString(),
+                        }))}
+                        Icon={FaCalendarTimes}
+                        disabled={!searchParams.types.includes('alumni')}
+                      />
+                    ) : (
+                      <Grid item width={225}>
+                        <Slider
+                          getAriaLabel={() => 'graduationYearRange'}
+                          value={graduationYearRange}
+                          onChange={handleSliderChange}
+                          valueLabelDisplay="auto"
+                          getAriaValueText={toString}
+                          min={1889}
+                          max={currentYear}
+                          disabled={!searchParams.types.includes('alumni')}
+                          color="secondary"
+                        />
+                        <Typography fontSize={15} align="center">
+                          {graduationYearRange[0]}-{graduationYearRange[1]}
+                        </Typography>
+                      </Grid>
+                    )}
+                    {(isAlumni || isFacStaff) && (
+                      <FormControlLabel
+                        control={<Switch onChange={handleSwitchChange} color="secondary" />}
+                        label={
+                          switchYearRange ? 'Search by Year Range' : 'Search by Graduation Year'
+                        }
+                        labelPlacement="end"
+                      />
+                    )}
+                  </AdvancedOptionsColumn>
+
+                  {/* Advanced Search Filters: Faculty/Staff */}
+                  <AdvancedOptionsColumn>
+                    <Typography align="center" gutterBottom color="neutral">
+                      Faculty/Staff
+                    </Typography>
+                    <SearchField
+                      name="department"
+                      value={searchParams.department}
+                      updateValue={handleUpdate}
+                      options={departments.sort(compareByProperty('label'))}
+                      Icon={FaBriefcase}
+                      select
+                      disabled={!searchParams.types.includes('facstaff')}
+                    />
+                    <SearchField
+                      name="building"
+                      value={searchParams.building}
+                      updateValue={handleUpdate}
+                      options={buildings.sort()}
+                      Icon={FaBuilding}
+                      select
+                      disabled={!searchParams.types.includes('facstaff')}
+                    />
+                  </AdvancedOptionsColumn>
+
+                  {/* Advanced Search Filters: Everyone */}
+                  <AdvancedOptionsColumn>
+                    <Typography align="center" color="neutral">
+                      Everyone
+                    </Typography>
+                    <SearchField
+                      name="home_town"
+                      value={searchParams.home_town}
+                      updateValue={handleUpdate}
+                      Icon={Home}
+                    />
+                    <SearchField
+                      name="state"
+                      value={searchParams.state}
+                      updateValue={handleUpdate}
+                      options={states.sort(compareByProperty('label'))}
+                      Icon={LocationCity}
                       select
                     />
-                  ) : (
-                    <Grid item width={225}>
-                      <Slider
-                        getAriaLabel={() => 'graduationYearRange'}
-                        value={graduationYearRange}
-                        onChange={handleSliderChange}
-                        valueLabelDisplay="auto"
-                        getAriaValueText={toString}
-                        min={1889}
-                        max={currentYear}
-                        disabled={!searchParams.includeAlumni}
-                        color="secondary"
-                      />
-                      <Typography fontSize={15} align="center">
-                        {graduationYearRange[0]}-{graduationYearRange[1]}
-                      </Typography>
-                    </Grid>
-                  )}
-                  {(isAlumni || isFacStaff) && (
-                    <FormControlLabel
-                      control={<Switch onChange={handleSwitchChange} color="secondary" />}
-                      label={switchYearRange ? 'Search by Year Range' : 'Search by Graduation Year'}
-                      labelPlacement="end"
+                    <SearchField
+                      name="country"
+                      value={searchParams.country}
+                      updateValue={handleUpdate}
+                      options={countries.sort()}
+                      Icon={FaGlobeAmericas}
+                      select
                     />
-                  )}
-                </AdvancedOptionsColumn>
-
-                {/* Advanced Search Filters: Faculty/Staff */}
-                <AdvancedOptionsColumn>
-                  <Typography align="center" gutterBottom color="neutral">
-                    Faculty/Staff
-                  </Typography>
-                  <SearchField
-                    name="department"
-                    value={searchParams.department}
-                    updateValue={handleUpdate}
-                    options={departments.sort(compareByProperty('label'))}
-                    Icon={FaBriefcase}
-                    select
-                    disabled={!searchParams.includeFacStaff}
-                  />
-                  <SearchField
-                    name="building"
-                    value={searchParams.building}
-                    updateValue={handleUpdate}
-                    options={buildings.sort()}
-                    Icon={FaBuilding}
-                    select
-                    disabled={!searchParams.includeFacStaff}
-                  />
-                </AdvancedOptionsColumn>
-
-                {/* Advanced Search Filters: Everyone */}
-                <AdvancedOptionsColumn>
-                  <Typography align="center" color="neutral">
-                    Everyone
-                  </Typography>
-                  <SearchField
-                    name="home_town"
-                    value={searchParams.home_town}
-                    updateValue={handleUpdate}
-                    Icon={Home}
-                  />
-                  <SearchField
-                    name="state"
-                    value={searchParams.state}
-                    updateValue={handleUpdate}
-                    options={states.sort(compareByProperty('label'))}
-                    Icon={LocationCity}
-                    select
-                  />
-                  <SearchField
-                    name="country"
-                    value={searchParams.country}
-                    updateValue={handleUpdate}
-                    options={countries.sort()}
-                    Icon={FaGlobeAmericas}
-                    select
-                  />
-                </AdvancedOptionsColumn>
-              </Grid>
-            </AccordionDetails>
-          </Accordion>
+                  </AdvancedOptionsColumn>
+                </Grid>
+              </AccordionDetails>
+            </Accordion>
+          </Grid>
         </Grid>
       </CardContent>
 
-      <Grid container spacing={2} alignItems="center" justifyContent="center">
-        <CardActions>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => setSearchParams(initialSearchParams)}
-          >
-            CLEAR
-          </Button>
+      <CardActions sx={{ justifyContent: 'center' }}>
+        <Button
+          variant="contained"
+          color="error"
+          onClick={() => setSearchParams(defaultSearchParams)}
+        >
+          Clear
+        </Button>
+        <Button
+          color="secondary"
+          onClick={() => search(searchParams)}
+          className={styles.search_field_list_search_width}
+          variant="contained"
+          disabled={!canSearch || loadingSearch}
+          size="large"
+        >
           {loadingSearch ? (
-            <GordonLoader />
+            <>
+              Loading...
+              <GordonLoader size={24} />
+            </>
           ) : (
-            <Button
-              color="secondary"
-              onClick={() => search(searchParams)}
-              className={styles.search_field_list_search_width}
-              variant="contained"
-              disabled={!canSearch}
-            >
-              SEARCH
-            </Button>
+            'Search'
           )}
-        </CardActions>
-      </Grid>
+        </Button>
+      </CardActions>
     </Card>
   );
+};
+
+const allowedAccountTypes = (
+  isStudent: boolean,
+  isFacStaff: boolean,
+  isAlumni: boolean,
+): AccountType[] => {
+  // anyone can search facstaff
+  const allowedTypes: AccountType[] = ['facstaff'];
+
+  // Only students and facstaff can search students
+  if (isStudent || isFacStaff) allowedTypes.unshift('student');
+
+  // only facstaff and alumni can search alumni
+  if (isFacStaff || isAlumni) allowedTypes.push('alumni');
+
+  return allowedTypes;
 };
 
 export default SearchFieldList;
