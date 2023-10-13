@@ -20,12 +20,7 @@ const AppRedirect = () => {
     }
   }, [isAuthenticated, location]);
 
-  if (
-    isAuthenticated &&
-    !enrollmentCheckinComplete &&
-    location.pathname !== '/enrollmentcheckin' &&
-    location.pathname !== '/wellness'
-  ) {
+  if (isAuthenticated && !enrollmentCheckinComplete && location.pathname !== '/enrollmentcheckin') {
     return <Navigate to="/enrollmentcheckin" />;
   }
 
