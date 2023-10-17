@@ -98,6 +98,11 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
                   <GordonScheduleCalendar
                     schedule={selectedSchedule}
                     onSelectEvent={setSelectedCourse}
+                    activeDays={scheduleResources.filter(
+                      (r) =>
+                        (r.id !== 'S' && r.id !== 'U') ||
+                        selectedSchedule.Courses.some((c) => c.resourceId === r.id),
+                    )}
                   />
                 </Grid>
               </>
@@ -106,11 +111,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
         </AccordionDetails>
       </Accordion>
       {myProf && selectedCourse && selectedSchedule && (
-        <ScheduleDialog
-          onClose={() => setSelectedCourse(null)}
-          course={selectedCourse}
-          session={selectedSchedule?.Session}
-        />
+        <ScheduleDialog onClose={() => setSelectedCourse(null)} course={selectedCourse} />
       )}
     </>
   );
