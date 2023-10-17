@@ -9,33 +9,24 @@ import {
   DialogContentText,
 } from '@mui/material';
 import 'add-to-calendar-button';
-import { format, nextDay } from 'date-fns';
+import { format } from 'date-fns';
 import { STORAGE_COLOR_PREFERENCE_KEY } from 'theme';
-import { CourseEvent, courseDayIds, scheduleCalendarResources } from 'services/schedule';
-import { Session } from 'services/session';
+import { CourseEvent, scheduleResources } from 'services/schedule';
 
 type Props = {
   course: CourseEvent;
-  session: Session;
   onClose: () => void;
 };
 
-const ScheduleDialog = ({ course, session, onClose }: Props) => {
+const ScheduleDialog = ({ course, onClose }: Props) => {
   const addToCalendarProps = {
     name: course.title,
     iCalFileName: course.title,
-    startDate: format(
-      // nextDay counts from Sunday as 0, but courseDayIds start Monday as 0
-      nextDay(
-        new Date(session.SessionBeginDate),
-        (courseDayIds.indexOf(course.resourceId) + 1) as Day,
-      ),
-      'yyyy-MM-dd',
-    ),
+    startDate: format(course.BeginDate, 'yyyy-MM-dd'),
     startTime: course.allDay ? null : format(course.start, 'HH:mm'),
     endTime: course.allDay ? null : format(course.end, 'HH:mm'),
     description: course.name,
-    Location: course.location,
+    Location: course.Location,
     buttonStyle: 'round',
     lightMode: localStorage.getItem(STORAGE_COLOR_PREFERENCE_KEY) ?? 'system',
     Timezone: 'currentBrowser',
@@ -49,18 +40,18 @@ const ScheduleDialog = ({ course, session, onClose }: Props) => {
         <DialogContentText>
           Title: {course.name}
           <br />
-          Room: {course.location}
+          Room: {course.Location}
           <br />
           Time:
           {format(course.start, " hh:mm aaaaa'm' ")}-{format(course.end, " hh:mm aaaaa'm' ")}
           <br />
-          Week Day{course.meetingDays.length > 1 && <>(s)</>}:{' '}
-          {course.meetingDays
-            .map((resourceId) => scheduleCalendarResources.find((r) => r.id === resourceId)?.title)
-            .join(', ')}
+          Week Day{course.MeetingDays.length > 1 && <>(s)</>}:{' '}
+          {course.MeetingDays.map((day) => scheduleResources.find((r) => r.id === day)!.title).join(
+            ', ',
+          )}
           <br />
-          Term Date: {format(new Date(session.SessionBeginDate), 'yyyy-MM-dd')} to
-          {format(new Date(session.SessionEndDate), ' yyyy-MM-dd')}
+          Course Dates: {format(course.BeginDate, 'yyyy-MM-dd')} to
+          {format(course.EndDate, ' yyyy-MM-dd')}
         </DialogContentText>
         <br />
         <Divider variant="middle" />
@@ -79,9 +70,9 @@ const ScheduleDialog = ({ course, session, onClose }: Props) => {
           options="'Google','iCal'"
           recurrence={
             'RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=' +
-            course.meetingDays.join(',') +
+            course.MeetingDays.join(',') +
             ';UNTIL=' +
-            format(new Date(session.SessionEndDate), "yyyyMMdd'T000000Z'")
+            format(course.EndDate, "yyyyMMdd'T000000Z'")
           }
         >
           {/* @ts-ignore */}

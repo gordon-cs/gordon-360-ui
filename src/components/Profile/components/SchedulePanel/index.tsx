@@ -14,7 +14,7 @@ import GordonLoader from 'components/Loader';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
 import ScheduleDialog from './components/ScheduleDialog';
 import styles from './ScheduleHeader.module.css';
-import scheduleService, { CourseEvent, Schedule } from 'services/schedule';
+import scheduleService, { Schedule, CourseEvent, scheduleResources } from 'services/schedule';
 import sessionService from 'services/session';
 import { Profile } from 'services/user';
 
@@ -33,20 +33,20 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
     setLoading(true);
 
     Promise.all([
-      scheduleService.getAllSessionSchedules(profile.AD_Username),
+      scheduleService.getSchedules(myProf ? undefined : profile.AD_Username),
       sessionService.getCurrent(),
     ]).then(([allSessionSchedules, currentSession]) => {
       setAllSchedules(allSessionSchedules);
       const defaultSchedule =
         // If there is a schedule for the current session, make it d4fault
-        allSessionSchedules.find((s) => s.session.SessionCode === currentSession.SessionCode) ??
+        allSessionSchedules.find((s) => s.Session.SessionCode === currentSession.SessionCode) ??
         // Otherwise, use the most recent session
         allSessionSchedules[0];
       setSelectedSchedule(defaultSchedule);
 
       setLoading(false);
     });
-  }, [profile.AD_Username]);
+  }, [profile.AD_Username, myProf]);
 
   return loading ? (
     <GordonLoader />
@@ -67,16 +67,16 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
               <TextField
                 label="Term"
                 id="schedule-session"
-                value={selectedSchedule?.session.SessionCode ?? ''}
+                value={selectedSchedule?.Session.SessionCode ?? ''}
                 onChange={(e) =>
                   setSelectedSchedule(
-                    allSchedules.find((s) => s.session.SessionCode === e.target.value) ?? null,
+                    allSchedules.find((s) => s.Session.SessionCode === e.target.value) ?? null,
                   )
                 }
                 select
               >
                 {allSchedules.map(
-                  ({ session: { SessionDescription: description, SessionCode: code } }) => (
+                  ({ Session: { SessionDescription: description, SessionCode: code } }) => (
                     <MenuItem value={code} key={code}>
                       {description}
                     </MenuItem>
@@ -109,7 +109,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
         <ScheduleDialog
           onClose={() => setSelectedCourse(null)}
           course={selectedCourse}
-          session={selectedSchedule?.session}
+          session={selectedSchedule?.Session}
         />
       )}
     </>

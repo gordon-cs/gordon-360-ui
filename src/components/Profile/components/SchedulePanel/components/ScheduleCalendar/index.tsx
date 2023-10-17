@@ -1,5 +1,5 @@
 import { Calendar, luxonLocalizer } from 'react-big-calendar';
-import { CourseEvent, Schedule, scheduleCalendarResources } from 'services/schedule';
+import { Schedule, ScheduleCourse, scheduleResources } from 'services/schedule';
 import './ScheduleCalendar.css';
 import { DateTime } from 'luxon';
 
@@ -7,7 +7,7 @@ const localizer = luxonLocalizer(DateTime, { firstDayOfWeek: 1 });
 
 type Props = {
   schedule: Schedule;
-  onSelectEvent: (event: CourseEvent) => void;
+  onSelectEvent: (event: ScheduleCourse) => void;
 };
 
 const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
@@ -19,16 +19,16 @@ const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
 
   return (
     <Calendar
-      events={schedule.courses}
+      events={schedule.Courses}
       localizer={localizer}
       min={dayStart}
       max={dayEnd}
       step={15}
       timeslots={4}
       defaultView="day"
-      resources={scheduleCalendarResources as unknown as object[]}
+      resources={scheduleResources as unknown as object[]}
       formats={{
-        dayHeaderFormat: () => schedule.session.SessionDescription,
+        dayHeaderFormat: () => schedule.Session.SessionDescription,
       }}
       onSelectEvent={onSelectEvent}
     />

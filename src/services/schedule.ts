@@ -2,150 +2,127 @@ import http from './http';
 import { parse } from 'date-fns';
 import { Session } from './session';
 
-type DbCourse = {
-  Username: string;
-  SessionCode: string;
-  CRS_CDE: string;
-  CRS_TITLE: string;
-  BLDG_CDE: string;
-  ROOM_CDE: string;
-  MONDAY_CDE: string;
-  TUESDAY_CDE: string;
-  WEDNESDAY_CDE: string;
-  THURSDAY_CDE: string;
-  FRIDAY_CDE: string;
-  SATURDAY_CDE: string;
-  /** A timespan of the format HH:mm:ss, stringified */
-  BEGIN_TIME: string;
-  /** A timespan of the format HH:mm:ss, stringified */
-  END_TIME: string;
-  Role: string;
-};
+interface DbScheduleCourse {
+  Code: string;
+  Title: string;
+  Role: 'Student' | 'Instructor';
+  Location?: string;
+  MeetingDays: CourseDayID[];
+  /** A time of the format HH:mm:ss, stringified */
+  BeginTime?: string;
+  /** A time of the format HH:mm:ss, stringified */
+  EndTime?: string;
+  /** A date of the format yyyy-MM-dd, stringified */
+  BeginDate?: string;
+  /** A date of the format yyyy-MM-dd, stringified */
+  EndDate?: string;
+  YearTermCode: string;
+}
 
-type DbSchedule = {
-  SessionBeginDate: string;
-  SessionCode: string;
-  SessionDescription: string;
-  SessionEndDate: string;
-  AllCourses: DbCourse[];
-};
-
-export const scheduleCalendarResources = [
-  { id: 'MO', title: 'Monday' },
-  { id: 'TU', title: 'Tuesday' },
-  { id: 'WE', title: 'Wednesday' },
-  { id: 'TH', title: 'Thursday' },
-  { id: 'FR', title: 'Friday' },
-  { id: 'SA', title: 'Saturday' },
-] as const;
-
-type CourseDayID = (typeof scheduleCalendarResources)[number]['id'];
-export const courseDayIds = [
-  'MO',
-  'TU',
-  'WE',
-  'TH',
-  'FR',
-  'SA',
-] as const satisfies readonly CourseDayID[];
-
-export type Schedule = {
-  session: Session;
-  courses: CourseEvent[];
-};
-
-export type CourseEvent = {
+export interface CourseEvent {
+  name: string;
+  title: string;
+  start: Date;
+  end: Date;
+  Location?: string;
+  MeetingDays: CourseDayID[];
+  BeginDate: Date;
+  EndDate: Date;
   /**
    * used by `react-big-calendar` to determine which resource (e.g. `Monday`) this event should display for
    */
   resourceId: CourseDayID;
-  name: string;
-  title: string;
-  location: string;
-  start: Date;
-  end: Date;
-  meetingDays: CourseDayID[];
+  /**
+   * used by `react-big-calendar` to determine whether this event lasts all day
+   */
   allDay?: boolean;
+}
+
+type DbSchedule = {
+  Session: Session;
+  Courses: DbScheduleCourse[];
+};
+
+export type Schedule = {
+  Session: Session;
+  Courses: CourseEvent[];
+};
+
+export type ScheduleResource = {
+  id: CourseDayID;
+  title: string;
+};
+
+export const scheduleResources = [
+  { id: 'M', title: 'Monday' },
+  { id: 'T', title: 'Tuesday' },
+  { id: 'W', title: 'Wednesday' },
+  { id: 'R', title: 'Thursday' },
+  { id: 'F', title: 'Friday' },
+  { id: 'S', title: 'Saturday' },
+  { id: 'U', title: 'Sunday' },
+] as const;
+type CourseDayID = (typeof scheduleResources)[number]['id'];
+
+const getSchedules = async (username: string | undefined): Promise<Schedule[]> => {
+  const params = username ? http.toQueryString({ username }) : '';
+  const schedules = await http.get<DbSchedule[]>(`schedule${params}`);
+  return schedules.map(({ Session, Courses }) => ({
+    Session,
+    Courses: formatCoursesFromDb(Courses),
+  }));
 };
 
 const getCanReadStudentSchedules = (): Promise<boolean> => http.get(`schedule/canreadstudent/`);
 
-const getAllSessionSchedules = async (username: string): Promise<Schedule[]> => {
-  const dbSchedules = await http.get<DbSchedule[]>(`schedule/${username}/allcourses`);
-
-  return dbSchedules.map(({ AllCourses, ...session }) => ({
-    session,
-    courses: formatCoursesFromDb(AllCourses),
-  }));
-};
-
-function formatCoursesFromDb(courses: DbCourse[]): CourseEvent[] {
+function formatCoursesFromDb(courses: DbScheduleCourse[]): CourseEvent[] {
   const today = new Date();
   // Don't show async courses as meeting on saturday
   // Because saturday is only included in the schedule if a non-async course meetst that day
-  const asyncMeetingDays = courseDayIds.slice(0, -1);
+  const asyncMeetingDays = scheduleResources.slice(0, -1).map((r) => r.id);
 
   return courses.flatMap((course) => {
+    const BeginDate = parse(course.BeginDate ?? '', 'yyyy-MM-dd', 0);
+    const EndDate = parse(course.EndDate ?? '', 'yyyy-MM-dd', 0);
+
     const sharedDetails = {
-      name: course.CRS_TITLE.trim(),
-      title: course.CRS_CDE.trim(),
-      location: course.BLDG_CDE + ' ' + course.ROOM_CDE,
+      name: course.Title,
+      title: course.Code,
+      BeginDate,
+      EndDate,
     };
 
-    const meetingDays = getMeetingDays(course);
-
-    if (course.ROOM_CDE === 'ASY') {
+    if (course.Location?.endsWith(' ASY')) {
       return asyncMeetingDays.map((day) => ({
         ...sharedDetails,
         resourceId: day,
         start: today,
         end: today,
-        meetingDays: asyncMeetingDays,
+        BeginDate,
+        EndDate,
+        MeetingDays: asyncMeetingDays,
         allDay: true,
       }));
     } else {
-      const beginning = parse(course.BEGIN_TIME, 'HH:mm:ss', today);
-      const end = parse(course.END_TIME, 'HH:mm:ss', today);
+      const beginning = parse(course.BeginTime ?? '', 'HH:mm:ss', today);
+      const end = parse(course.EndTime ?? '', 'HH:mm:ss', today);
 
-      return meetingDays.map((day) => ({
+      return course.MeetingDays.map((day) => ({
         ...sharedDetails,
         resourceId: day,
         start: beginning,
         end: end,
-        meetingDays: meetingDays,
+        BeginDate,
+        EndDate,
+        MeetingDays: course.MeetingDays,
       }));
     }
   });
 }
 
-function getMeetingDays(course: DbCourse): CourseDayID[] {
-  let dayArray: CourseDayID[] = [];
-
-  if (course.MONDAY_CDE === 'M') {
-    dayArray.push('MO');
-  }
-  if (course.TUESDAY_CDE === 'T') {
-    dayArray.push('TU');
-  }
-  if (course.WEDNESDAY_CDE === 'W') {
-    dayArray.push('WE');
-  }
-  if (course.THURSDAY_CDE === 'R') {
-    dayArray.push('TH');
-  }
-  if (course.FRIDAY_CDE === 'F') {
-    dayArray.push('FR');
-  }
-  if (course.SATURDAY_CDE === 'S') {
-    dayArray.push('SA');
-  }
-
-  return dayArray;
-}
-
 const scheduleService = {
+  getSchedules,
   getCanReadStudentSchedules,
-  getAllSessionSchedules,
 };
 
 export default scheduleService;
