@@ -87,13 +87,13 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
             <Grid lg={7}></Grid>
             {selectedSchedule && (
               <>
-                <Grid item className={styles.addCalendarInfoText}>
-                  {myProf && (
+                {myProf && (
+                  <Grid item className={styles.addCalendarInfoText}>
                     <Typography className={styles.addCalendarInfoText}>
                       Click on Course to add Schedule to Personal Calendar
                     </Typography>
-                  )}
-                </Grid>
+                  </Grid>
+                )}
                 <Grid item xs={12} lg={10}>
                   <GordonScheduleCalendar
                     schedule={selectedSchedule}
@@ -110,8 +110,12 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
           </Grid>
         </AccordionDetails>
       </Accordion>
-      {myProf && selectedCourse && selectedSchedule && (
-        <ScheduleDialog onClose={() => setSelectedCourse(null)} course={selectedCourse} />
+      {selectedCourse && selectedSchedule && (
+        <ScheduleDialog
+          onClose={() => setSelectedCourse(null)}
+          course={selectedCourse}
+          myProf={myProf}
+        />
       )}
     </>
   );
