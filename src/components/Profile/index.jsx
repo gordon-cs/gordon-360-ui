@@ -60,7 +60,12 @@ const Profile = ({ profile, myProf }) => {
         </Grid>
       </Grid>
 
-      {(myProf || !profileIsStudent || canReadStudentSchedules) && (
+      {/* Schedule is visible when:
+          1. on my profile
+          2. profile belongs to fac/staff
+          3. the viewer has permission to view other's schedules
+      */}
+      {(myProf || profile.PersonType?.includes('fac') || canReadStudentSchedules) && (
         <Grid item xs={12} lg={10} align="center">
           <SchedulePanel profile={profile} myProf={myProf} isOnline={isOnline} />
         </Grid>
