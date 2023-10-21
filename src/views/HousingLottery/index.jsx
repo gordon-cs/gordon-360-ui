@@ -1,6 +1,15 @@
-import { Card, CardContent, CardHeader, Grid, Input, TextField, Typography } from '@mui/material';
+import { 
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Input,
+  TextField,
+} from '@mui/material';
 import { useState } from 'react';
 import housingService from 'services/housing';
+import styles from './HousingLottery.module.css';
 
 const HousingLottery = () => {
   const [rank, setRank] = useState('');
@@ -40,13 +49,12 @@ const HousingLottery = () => {
                   id="standard-basic"
                   variant="standard"
                   label="Rank"
-                  inputProps={{inputMode:'numeric'}}
                   value={search}
                   onChange={handleSearch}
                   fullWidth
               />
               </Grid>
-              <Grid item xs={5}>
+              <Grid item xs={6}>
               <TextField
                   id="standard-basic"
                   variant="standard"
@@ -56,6 +64,12 @@ const HousingLottery = () => {
                   fullWidth
               />
               </Grid>
+              <Button 
+                variant='contained'
+                className={styles.submit_button}
+              >
+                Submit
+              </Button>
             </Grid>
           </CardContent>  
         </Card>
