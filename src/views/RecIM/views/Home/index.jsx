@@ -343,7 +343,7 @@ const Home = () => {
           variant="outlined"
           className={styles.alertButton}
           onClick={() => {
-            window.open('https://gordon.jotform.com/232353329449056', '_blank');
+            window.open('https://forms.gordon.edu/232353329449056', '_blank');
           }}
         >
           Sign Waiver
