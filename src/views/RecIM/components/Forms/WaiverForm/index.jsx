@@ -18,7 +18,7 @@ const WaiverForm = ({ username, createSnackbar, openWaiverForm, setOpenWaiverFor
       open={openWaiverForm}
       buttonName="Sign Waiver"
       buttonClicked={() => {
-        window.open('https://gordon.jotform.com/232353329449056', '_blank');
+        window.open('https://forms.gordon.edu/232353329449056', '_blank');
       }}
       cancelButtonName="Cancel"
       cancelButtonClicked={handleCancel}
