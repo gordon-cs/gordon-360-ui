@@ -61,7 +61,7 @@ jobs:
           name: build-prod
           path: dist
 
-      - name: Upload master build artifacts for deployment
+      - name: Upload senior-project build artifacts for deployment
         if: ${{ github.ref == 'refs/heads/senior-project' }}
         uses: actions/upload-artifact@v3
         with:
