@@ -61,6 +61,7 @@ const getApartmentSelectionDate = async (): Promise<string> => {
 };
 
 const getApartmentHalls = (): Promise<ApartmentHall[]> => http.get('housing/halls/apartments');
+const getTraditionalHalls = (): Promise<ApartmentHall[]> => http.get('housing/halls/traditionals');
 
 const getCurrentApplicationID = (username: string = ''): Promise<number> =>
   http.get(username ? `housing/apartment/${username}/` : 'housing/apartment/');
@@ -171,6 +172,7 @@ const addHall = (rank: number, hall: string) =>
 const housingService = {
   getApartmentSelectionDate,
   getApartmentHalls,
+  getTraditionalHalls,
   getCurrentApplicationID,
   saveApartmentApplication,
   deleteApartmentApplication,
