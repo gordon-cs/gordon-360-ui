@@ -9,38 +9,43 @@ import SearchField from 'views/PeopleSearch/components/SearchFieldList/component
  * @param {number} rank
  * @returns
  */
-const HallSlot = ({ rank }) => {
+const HallSlot = ({ rank, hallList, func }) => {
   console.log('rank ' + rank);
   const [hall, setHall] = useState('');
-  const [hallList, setHallList] = useState([]);
+  //const [hallList, setHallList] = useState([]);
 
-  useEffect(() => {
-    housingService.getTraditionalHalls().then(setHallList);
-  }, []);
+  // useEffect(() => {
+  //   housingService.getTraditionalHalls().then(setHallList);
+  // }, []);
 
-  const handleClick = async () => {
-    await housingService.addHall(rank, hall);
+  // const handleClick = async () => {
+  //   await housingService.addHall(rank, hall);
+  // };
+
+  const selectPreferredHall = (event) => {
+    setHall(event.target.value);
+    func(rank, event.target.value);
   };
 
   return (
     <Grid container spacing={5}>
       <Grid item xs={3}>
-        {rank[0]}
+        {rank}
       </Grid>
 
       <Grid item xs={3}>
         <SearchField
           name="building"
           value={hall}
-          updateValue={(event) => setHall(event.target.value)}
+          updateValue={(event) => selectPreferredHall(event)}
           options={hallList}
           select
           size={200}
         />
       </Grid>
-      <Button variant="contained" className={styles.submit_button} onClick={handleClick}>
+      {/* <Button variant="contained" className={styles.submit_button} onClick={handleClick}>
         Submit
-      </Button>
+      </Button> */}
     </Grid>
   );
 };

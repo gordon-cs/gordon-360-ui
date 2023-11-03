@@ -166,8 +166,7 @@ const submitApplication = (applicationID: number): Promise<boolean> =>
   http.put(`housing/apartment/applications/${applicationID}/submit`);
 
 const addRoommate = (value: string) => http.put(`housing/housing_lottery/roommate/${value}`);
-const addHall = (rank: number, hall: string) =>
-  http.put(`housing/housing_lottery/hall/${rank}`, hall);
+const addHall = (hallList: string[]) => http.put(`housing/housing_lottery/hall`, hallList);
 
 const housingService = {
   getApartmentSelectionDate,
