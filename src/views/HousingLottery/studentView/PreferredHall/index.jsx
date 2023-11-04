@@ -6,23 +6,13 @@ import styles from '../../HousingLottery.module.css';
 
 const PreferredHallsCard = () => {
   const [count, setCount] = useState(1);
-  // let rankList = [];
-  // const [preferredHallList, setPreferredHallList] = useState([]); // map or dictionary
-  let preferredHallList = [];
-  const searchHallTitle = <div align="left">Preferred Halls</div>;
   const [hallList, setHallList] = useState([]);
+  const searchHallTitle = <div align="left">Preferred Halls</div>;
+  let preferredHallList = [];
 
   useEffect(() => {
     housingService.getTraditionalHalls().then(setHallList);
   }, []);
-
-  // useEffect(() => { }, [count]);
-
-  // const addHall = () => {
-  //   rankList.push(count);
-  //   console.log("count: " + count + ", list: " + rankList);
-  //   setCount(count + 1);
-  // }
 
   function updatePreferredHallList(rank, hall) {
     preferredHallList[rank - 1] = hall;
@@ -30,14 +20,13 @@ const PreferredHallsCard = () => {
 
   const addPreferredHall = () => {
     setCount(count + 1);
-    console.log(count);
-    let html = `<HallSlot rank={2} hallList={hallList} func={updatePreferredHallList} />`;
-    document.getElementById('hallSlots').insertAdjacentHTML('beforeend', html.outerHTML);
   };
 
   const handleClick = async () => {
     await housingService.addHall(preferredHallList);
   };
+
+  const hallArray = Array(count).fill(0);
 
   return (
     <Grid container justifyContent="center">
@@ -46,18 +35,26 @@ const PreferredHallsCard = () => {
           <CardHeader title={searchHallTitle} className="gc360_header" />
           <CardContent height="500">
             <Grid id="hallSlots">
-              <HallSlot rank={1} hallList={hallList} func={updatePreferredHallList} />
-              {/* <HallSlot rank={2} hallList={hallList} func={updatePreferredHallList} />
-              <HallSlot rank={3} hallList={hallList} func={updatePreferredHallList} /> */}
-              {/* {Array(count).fill(<HallSlot rank={count} hallList={hallList} func={updatePreferredHallList} />)} */}
+              {hallArray.map((value, index) => (
+                <HallSlot rank={index + 1} hallList={hallList} func={updatePreferredHallList} />
+              ))}
             </Grid>
             <Grid item xs={12}>
-              <Button variant="outlined" color="primary" onClick={addPreferredHall}>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  setCount(count + 1);
+                }}
+              >
                 Add a Hall
               </Button>
             </Grid>
+            <Grid item xs={12}>
+              <Button variant="contained" onClick={handleClick}>
+                Submit
+              </Button>
+            </Grid>
           </CardContent>
-          <Button onClick={handleClick}>Submit</Button>
         </Card>
       </Grid>
     </Grid>
