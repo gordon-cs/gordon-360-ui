@@ -43,9 +43,6 @@ const HallSlot = ({ rank, hallList, func }) => {
           size={200}
         />
       </Grid>
-      {/* <Button variant="contained" className={styles.submit_button} onClick={handleClick}>
-        Submit
-      </Button> */}
     </Grid>
   );
 };

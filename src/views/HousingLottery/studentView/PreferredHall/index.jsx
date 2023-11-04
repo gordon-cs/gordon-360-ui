@@ -7,20 +7,32 @@ import styles from '../../HousingLottery.module.css';
 const PreferredHallsCard = () => {
   const [count, setCount] = useState(1);
   const [hallList, setHallList] = useState([]);
+  const [preferredHallList, setPreferredHallList] = useState([]);
+  let myPreferredHallList = [];
   const searchHallTitle = <div align="left">Preferred Halls</div>;
-  let preferredHallList = [];
 
   useEffect(() => {
     housingService.getTraditionalHalls().then(setHallList);
   }, []);
 
-  function updatePreferredHallList(rank, hall) {
-    preferredHallList[rank - 1] = hall;
-  }
+  // useEffect(() => {
+  //   setPreferredHallList(myPreferredHallList);
+  // }, [myPreferredHallList]);
 
-  const addPreferredHall = () => {
-    setCount(count + 1);
-  };
+  // function updatePreferredHallList(rank, hall) {
+  //   myPreferredHallList[rank - 1] = hall;
+  //   // setPreferredHallList(myPreferredHallList);
+  //   console.log("myPreferredHallList: " + myPreferredHallList)
+  //   console.log("preferredHallList: " + preferredHallList)
+  // }
+
+  function updatePreferredHallList(rank, hall) {
+    let newList = preferredHallList;
+    console.log('newList before ' + newList);
+    newList[rank - 1] = hall;
+    console.log('newList after ' + newList);
+    setPreferredHallList(newList);
+  }
 
   const handleClick = async () => {
     await housingService.addHall(preferredHallList);
