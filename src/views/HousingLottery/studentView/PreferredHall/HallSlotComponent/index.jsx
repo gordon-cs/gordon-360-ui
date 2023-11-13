@@ -1,31 +1,56 @@
-import { FormControl, Button, Card, CardContent, CardHeader, Grid, TextField } from '@mui/material';
+import {
+  FormControl,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  TextField,
+  ListItemSecondaryAction,
+  IconButton,
+} from '@mui/material';
 import { useState, useEffect } from 'react';
-import housingService from 'services/housing';
-import styles from '../../../HousingLottery.module.css';
+import ClearIcon from '@mui/icons-material/Clear';
 import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
+import GordonSnackbar from 'components/Snackbar';
 
 /**
  *
  * @param {number} rank
  * @returns
  */
-const HallSlot = ({ rank, hallList, func }) => {
+const HallSlot = ({
+  rank,
+  hallList,
+  preferredHallList,
+  updatePreferredHallList,
+  deletePreferHall,
+}) => {
   console.log('rank ' + rank);
   const [hall, setHall] = useState('');
-  //const [hallList, setHallList] = useState([]);
-
-  // useEffect(() => {
-  //   housingService.getTraditionalHalls().then(setHallList);
-  // }, []);
-
-  // const handleClick = async () => {
-  //   await housingService.addHall(rank, hall);
-  // };
+  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
 
   const selectPreferredHall = (event) => {
+    if (preferredHallList.length > 0) {
+      for (let i = 0; i < preferredHallList.length; i++) {
+        if (event.target.value == preferredHallList[i]) {
+          setSnackbar({
+            message: 'You have already selected this hall.',
+            severity: 'error',
+            open: true,
+          });
+          return;
+        }
+      }
+    }
     setHall(event.target.value);
-    func(rank, event.target.value);
+    updatePreferredHallList(rank, event.target.value);
   };
+  console.log('preferredHallList ' + preferredHallList);
+
+  function myFuc() {
+    alert('yeah');
+  }
 
   return (
     <Grid container spacing={5}>
@@ -42,7 +67,23 @@ const HallSlot = ({ rank, hallList, func }) => {
           select
           size={200}
         />
+        {/* <IconButton
+          style={{ marginBottom: '0.5rem' }}
+          onclick={deletePreferHall(rank-1)}
+          edge="end"
+          aria-label="delete"
+          size="large"
+        >
+          <ClearIcon style={{ fontSize: 20 }}/>
+        </IconButton> */}
       </Grid>
+
+      <GordonSnackbar
+        open={snackbar.open}
+        severity={snackbar.severity}
+        text={snackbar.message}
+        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+      />
     </Grid>
   );
 };

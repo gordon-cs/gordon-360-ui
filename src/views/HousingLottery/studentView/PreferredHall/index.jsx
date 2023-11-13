@@ -8,30 +8,17 @@ const PreferredHallsCard = () => {
   const [count, setCount] = useState(1);
   const [hallList, setHallList] = useState([]);
   const [preferredHallList, setPreferredHallList] = useState([]);
-  let myPreferredHallList = [];
   const searchHallTitle = <div align="left">Preferred Halls</div>;
 
   useEffect(() => {
     housingService.getTraditionalHalls().then(setHallList);
   }, []);
 
-  // useEffect(() => {
-  //   setPreferredHallList(myPreferredHallList);
-  // }, [myPreferredHallList]);
-
-  // function updatePreferredHallList(rank, hall) {
-  //   myPreferredHallList[rank - 1] = hall;
-  //   // setPreferredHallList(myPreferredHallList);
-  //   console.log("myPreferredHallList: " + myPreferredHallList)
-  //   console.log("preferredHallList: " + preferredHallList)
-  // }
-
   function updatePreferredHallList(rank, hall) {
     let newList = preferredHallList;
-    console.log('newList before ' + newList);
     newList[rank - 1] = hall;
-    console.log('newList after ' + newList);
     setPreferredHallList(newList);
+    return newList;
   }
 
   const handleClick = async () => {
@@ -39,6 +26,12 @@ const PreferredHallsCard = () => {
   };
 
   const hallArray = Array(count).fill(0);
+
+  function deletePreferHall(myNum) {
+    debugger;
+    hallArray.splice(myNum, 1);
+    console.log('deletePreferHall' + hallArray);
+  }
 
   return (
     <Grid container justifyContent="center">
@@ -48,7 +41,13 @@ const PreferredHallsCard = () => {
           <CardContent height="500">
             <Grid id="hallSlots">
               {hallArray.map((value, index) => (
-                <HallSlot rank={index + 1} hallList={hallList} func={updatePreferredHallList} />
+                <HallSlot
+                  rank={index + 1}
+                  hallList={hallList}
+                  preferredHallList={preferredHallList}
+                  updatePreferredHallList={updatePreferredHallList}
+                  deletePreferHall={deletePreferHall}
+                />
               ))}
             </Grid>
             <Grid item xs={12}>
