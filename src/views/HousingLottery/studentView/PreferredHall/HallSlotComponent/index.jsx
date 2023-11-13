@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import { useState, useEffect } from 'react';
 import ClearIcon from '@mui/icons-material/Clear';
-import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
+import { HallSearchField } from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
 import GordonSnackbar from 'components/Snackbar';
 
 /**
@@ -59,7 +59,7 @@ const HallSlot = ({
       </Grid>
 
       <Grid item xs={3}>
-        <SearchField
+        <HallSearchField
           name="building"
           value={hall}
           updateValue={(event) => selectPreferredHall(event)}
