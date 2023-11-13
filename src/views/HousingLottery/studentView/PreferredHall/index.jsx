@@ -41,8 +41,13 @@ const PreferredHallsCard = () => {
           <CardContent height="500">
             <div className={styles.rankLabel}>Rank</div>
             {preferredHallList.map((hall, index) => (
-            <HallSlot key={index + 1} rank={index + 1} hallList={hallList} func={updatePreferredHallList} />
-              ))}
+              <HallSlot
+                key={index + 1}
+                rank={index + 1}
+                hallList={hallList}
+                func={updatePreferredHallList}
+              />
+            ))}
             <Grid id="hallSlots">
               {hallArray.map((value, index) => (
                 <HallSlot
@@ -56,7 +61,7 @@ const PreferredHallsCard = () => {
             </Grid>
             <Grid item xs={12}>
               <Button
-              className={styles.addHall_button}
+                className={styles.addHall_button}
                 variant="contained"
                 onClick={() => {
                   setCount(count + 1);
@@ -64,11 +69,7 @@ const PreferredHallsCard = () => {
               >
                 Add a Hall
               </Button>
-            </Grid>
-            <Grid item xs={12}>
-              <Button 
-              className ={styles.submit_button}
-              variant="contained" onClick={handleClick}>
+              <Button className={styles.submit_button} variant="contained" onClick={handleClick}>
                 Submit
               </Button>
             </Grid>
