@@ -39,6 +39,10 @@ const PreferredHallsCard = () => {
         <Card>
           <CardHeader title={searchHallTitle} className="gc360_header" />
           <CardContent height="500">
+            <div className={styles.rankLabel}>Rank</div>
+            {preferredHallList.map((hall, index) => (
+            <HallSlot key={index + 1} rank={index + 1} hallList={hallList} func={updatePreferredHallList} />
+              ))}
             <Grid id="hallSlots">
               {hallArray.map((value, index) => (
                 <HallSlot
@@ -52,6 +56,7 @@ const PreferredHallsCard = () => {
             </Grid>
             <Grid item xs={12}>
               <Button
+              className={styles.addHall_button}
                 variant="contained"
                 onClick={() => {
                   setCount(count + 1);
@@ -61,7 +66,9 @@ const PreferredHallsCard = () => {
               </Button>
             </Grid>
             <Grid item xs={12}>
-              <Button variant="contained" onClick={handleClick}>
+              <Button 
+              className ={styles.submit_button}
+              variant="contained" onClick={handleClick}>
                 Submit
               </Button>
             </Grid>
