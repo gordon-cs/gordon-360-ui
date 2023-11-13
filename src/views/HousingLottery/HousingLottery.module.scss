@@ -1,12 +1,33 @@
+.addHall_button {
+  margin-right: 10px; 
+  position: "absolute";
+  margin: "auto";
+  top: 15px;
+  bottom: 40px;
+  left: 10px;
+  right: 10px;
+  height: 45px;
+  width: 120px;
+}
+
 .submit_button {
 //   padding: 5px;
 //   height: 40px;
 //   width: 100px;
   position: "absolute";
   margin: "auto";
-  top: 45px;
-  bottom: 0;
-  left: 70px;
+  top: 25px;
+  bottom: 40px;
+  left: 10px;
+  right: 10px;
   height: 45px;
   width: 120px;
 }
+
+.rankLabel {
+  text-align: left;
+  font-weight: bold;
+  margin-top: 10px; 
+}
+
+
