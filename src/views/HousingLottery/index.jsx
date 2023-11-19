@@ -10,19 +10,24 @@ import housingService from 'services/housing';
 
 const HousingLottery = () => {
   const [message, setMessage] = useState('');
-  const [selectedOption, setSelectedOption] = useState('');
+  const [morningOrNight, setMorningOrNight] = useState('');
+  const [loudOrQuiet, setLoudOrQuiet] = useState('');
 
   const handleChange = (event) => {
     setMessage(event.target.value);
   };
 
-  const handleOptionChange = (event) => {
-    setSelectedOption(event.target.value);
+  const handleMorningOrNightChange = (event) => {
+    setMorningOrNight(event.target.value);
+  };
+
+  const handleLoudOrQuietChange = (event) => {
+    setLoudOrQuiet(event.target.value);
   };
 
   const handleClick = async () => {
-    // You can access both the message and selectedOption to submit to your housing service
-    await housingService.addRoommate({ message, selectedOption });
+    // You can access message, morningOrNight, and loudOrQuiet to submit to your housing service
+    await housingService.addRoommate({ message, morningOrNight, loudOrQuiet });
   };
 
   return (
@@ -34,8 +39,8 @@ const HousingLottery = () => {
         <RadioGroup
           aria-label="morning-or-night"
           name="morning-or-night"
-          value={selectedOption}
-          onChange={handleOptionChange}
+          value={morningOrNight}
+          onChange={handleMorningOrNightChange}
         >
           <FormControlLabel
             value="night-owl"
@@ -48,14 +53,17 @@ const HousingLottery = () => {
             label="Morning Bird"
           />
         </RadioGroup>
+      </div>
+
+      <div>
         <label>
-          Are you think yourself quiet or loud in the dorm?
+          Do you consider yourself quiet or loud in the dorm?
         </label>
         <RadioGroup
           aria-label="loud-or-quiet"
           name="loud-or-quiet"
-          value={selectedOption}
-          onChange={handleOptionChange}
+          value={loudOrQuiet}
+          onChange={handleLoudOrQuietChange}
         >
           <FormControlLabel
             value="quiet"

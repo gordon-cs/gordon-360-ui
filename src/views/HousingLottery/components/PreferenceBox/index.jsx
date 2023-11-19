@@ -49,6 +49,23 @@ function SurveyQuestionBox() {
                 label="Morning Bird"
               />
             </RadioGroup>
+            <RadioGroup
+              aria-label="quiet-or-loud"
+              name="quiet-or-loud"
+              value={selectedOption}
+              onChange={handleOptionChange}
+            >
+              <FormControlLabel
+                value="quiet"
+                control={<Radio />}
+                label="Quiet"
+              />
+              <FormControlLabel
+                value="loud"
+                control={<Radio />}
+                label="Loud"
+              />
+            </RadioGroup>
           </FormControl>
         </CardContent>
       </Card>
