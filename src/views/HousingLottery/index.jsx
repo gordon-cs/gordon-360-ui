@@ -48,6 +48,26 @@ const HousingLottery = () => {
             label="Morning Bird"
           />
         </RadioGroup>
+        <label>
+          Are you think yourself quiet or loud in the dorm?
+        </label>
+        <RadioGroup
+          aria-label="loud-or-quiet"
+          name="loud-or-quiet"
+          value={selectedOption}
+          onChange={handleOptionChange}
+        >
+          <FormControlLabel
+            value="quiet"
+            control={<Radio />}
+            label="Quiet"
+          />
+          <FormControlLabel
+            value="loud"
+            control={<Radio />}
+            label="Loud"
+          />
+        </RadioGroup>
       </div>
 
       <Input onChange={handleChange} placeholder="Enter your message" />
