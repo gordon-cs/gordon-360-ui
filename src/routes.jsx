@@ -1,5 +1,5 @@
 import About from './views/About';
-import HousingLottery from './views/HousingLottery/HousingLottery.jsx';
+import HousingLottery from './views/HousingLottery';
 import Admin from './views/Admin';
 import ApartmentApp from './views/ApartmentApp';
 import BannerSubmission from './views/BannerSubmission';
