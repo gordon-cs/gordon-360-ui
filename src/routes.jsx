@@ -1,4 +1,5 @@
 import About from './views/About';
+import HousingLottery from './views/HousingLottery';
 import Admin from './views/Admin';
 import ApartmentApp from './views/ApartmentApp';
 import BannerSubmission from './views/BannerSubmission';
@@ -33,6 +34,11 @@ const routes = [
     name: 'About',
     path: '/about',
     element: <About />,
+  },
+  {
+    name: 'HousingLottery',
+    path: '/housingLottery',
+    element: <HousingLottery />,
   },
   {
     name: 'Wellness',
