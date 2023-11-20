@@ -28,9 +28,9 @@ const PreferredHallsCard = () => {
   const hallArray = Array(count).fill(0);
 
   function deletePreferHall(myNum) {
-    debugger;
     hallArray.splice(myNum, 1);
-    console.log('deletePreferHall' + hallArray);
+    console.log('deletePreferHall ' + hallArray);
+    console.log('deletePreferHall ' + HallSlot);
   }
 
   return (
@@ -40,14 +40,6 @@ const PreferredHallsCard = () => {
           <CardHeader title={searchHallTitle} className="gc360_header" />
           <CardContent height="500">
             <div className={styles.rankLabel}>Rank</div>
-            {preferredHallList.map((hall, index) => (
-              <HallSlot
-                key={index + 1}
-                rank={index + 1}
-                hallList={hallList}
-                func={updatePreferredHallList}
-              />
-            ))}
             <Grid id="hallSlots">
               {hallArray.map((value, index) => (
                 <HallSlot

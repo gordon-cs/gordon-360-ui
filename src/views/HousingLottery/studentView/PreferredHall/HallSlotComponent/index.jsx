@@ -67,15 +67,21 @@ const HallSlot = ({
           select
           size={200}
         />
-        {/* <IconButton
+      </Grid>
+
+      <Grid item xs={3}>
+        <IconButton
           style={{ marginBottom: '0.5rem' }}
-          onclick={deletePreferHall(rank-1)}
+          onClick={() => {
+            console.log('onclick');
+            deletePreferHall(rank - 1);
+          }}
           edge="end"
           aria-label="delete"
           size="large"
         >
-          <ClearIcon style={{ fontSize: 20 }}/>
-        </IconButton> */}
+          <ClearIcon style={{ fontSize: 20 }} />
+        </IconButton>
       </Grid>
 
       <GordonSnackbar
