@@ -1,5 +1,6 @@
 import { Button, Card, CardContent, CardHeader, Grid, TextField } from '@mui/material';
 import { useState, useEffect } from 'react';
+import AddIcon from '@mui/icons-material/Add';
 import HallSlot from './HallSlotComponent';
 import housingService from 'services/housing';
 import styles from '../../HousingLottery.module.css';
@@ -42,19 +43,22 @@ const PreferredHallsCard = () => {
             <div className={styles.rankLabel}>Rank</div>
             <Grid id="hallSlots">
               {hallArray.map((value, index) => (
-                <HallSlot
-                  rank={index + 1}
-                  hallList={hallList}
-                  preferredHallList={preferredHallList}
-                  updatePreferredHallList={updatePreferredHallList}
-                  deletePreferHall={deletePreferHall}
-                />
+                <div key={index} className={styles.hallSlotWrapper}>
+                  <HallSlot
+                    rank={index + 1}
+                    hallList={hallList}
+                    preferredHallList={preferredHallList}
+                    updatePreferredHallList={updatePreferredHallList}
+                    deletePreferHall={deletePreferHall}
+                  />
+                </div>
               ))}
             </Grid>
-            <Grid item xs={12}>
+            <Grid container justifyContent="flex-end" alignItems="flex-end" style={{ marginTop: 'auto' }}>
               <Button
                 className={styles.addHall_button}
-                variant="contained"
+                variant="outlined"
+                startIcon={<AddIcon fontSize="inherit" />}
                 onClick={() => {
                   setCount(count + 1);
                 }}

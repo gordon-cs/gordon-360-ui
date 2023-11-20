@@ -1,27 +1,6 @@
-.addHall_button {
-  position: 'absolute';
-  margin: 'auto';
-  top: 15px;
-  bottom: 40px;
-  left: 10px;
-  right: 10px;
+.addHall_button, .submit_button {
   height: 45px;
-  width: 120px;
-}
-
-.submit_button {
-  //   padding: 5px;
-  //   height: 40px;
-  //   width: 100px;
-  position: 'absolute';
-  margin: 'auto';
-  top: 15px;
-  bottom: 40px;
-  left: 10px;
-  right: 10px;
-  height: 45px;
-  width: 120px;
-  float: right;
+  margin-left: 10px;
 }
 
 .rankLabel {
@@ -31,5 +10,12 @@
 }
 
 #hallSlots {
+  position: relative;
   padding: 10px;
+}
+
+.hallSlotWrapper {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
 }
