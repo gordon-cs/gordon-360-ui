@@ -9,8 +9,7 @@ import {
   ListItemSecondaryAction,
   IconButton,
 } from '@mui/material';
-import { useState, useEffect } from 'react';
-import ClearIcon from '@mui/icons-material/Clear';
+import { useState } from 'react';
 import { HallSearchField } from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
 import GordonSnackbar from 'components/Snackbar';
 
@@ -19,13 +18,7 @@ import GordonSnackbar from 'components/Snackbar';
  * @param {number} rank
  * @returns
  */
-const HallSlot = ({
-  rank,
-  hallList,
-  preferredHallList,
-  updatePreferredHallList,
-  deletePreferHall,
-}) => {
+const HallSlot = ({ rank, hallList, preferredHallList, updatePreferredHallList }) => {
   console.log('rank ' + rank);
   const [hall, setHall] = useState('');
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
@@ -48,17 +41,8 @@ const HallSlot = ({
   };
   console.log('preferredHallList ' + preferredHallList);
 
-  function myFuc() {
-    alert('yeah');
-  }
-
   return (
     <Grid container spacing={5}>
-      {/* <Grid item xs={3}> */}
-      {/* {rank} */}
-      {/* </Grid> */}
-
-      {/* <Grid item xs={3}> */}
       <HallSearchField
         name="building"
         value={hall}
@@ -67,23 +51,6 @@ const HallSlot = ({
         select
         size={200}
       />
-      {/* </Grid> */}
-
-      {/* <Grid item xs={3}>
-        <IconButton
-          style={{ marginBottom: '0.5rem' }}
-          onClick={() => {
-            console.log('onclick');
-            deletePreferHall(rank - 1);
-          }}
-          edge="end"
-          aria-label="delete"
-          size="large"
-        >
-          <ClearIcon style={{ fontSize: 20 }} />
-        </IconButton>
-      </Grid> */}
-
       <GordonSnackbar
         open={snackbar.open}
         severity={snackbar.severity}

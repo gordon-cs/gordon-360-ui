@@ -28,27 +28,7 @@ const PreferredHallsCard = () => {
     await housingService.addHall(preferredHallList);
   };
 
-  // const hallSlotArray = Array(count).fill(0);
-  // const [hallSlotArray, sethallSlotArray] = useState(initialhallSlotArray);
-
-  function deletePreferHall(myNum) {
-    setHallSlotArray(hallSlotArray.filter((a) => a.id !== myNum));
-  }
-
-  // const addHallSlot = () => {
-  //   setCount(count + 1);
-  //   sethallSlotArray([
-  //     ...hallSlotArray,
-  //     { id: count, name: "preferredHallList" }
-  //   ])
-  //   console.log("hallSlotArray" + hallSlotArray);
-  // }
-
-  // useEffect(() => {
-  //   sethallSlotArray(myhallSlotArray);
-  // }, [count]);
-
-  const handleIncrementClick = (index) => {
+  const handleChangeRank = (index) => {
     const updatedHallSlotArray = hallSlotArray.map((h) => {
       var temp = Object.assign({}, h);
       if (temp.id > index) {
@@ -71,15 +51,6 @@ const PreferredHallsCard = () => {
           <CardContent height="500">
             <div className={styles.rankLabel}>Rank</div>
             <Grid id="hallSlots">
-              {/* {hallSlotArray.map((value, index) => (
-                <HallSlot
-                  rank={index + 1}
-                  hallList={hallList}
-                  preferredHallList={preferredHallList}
-                  updatePreferredHallList={updatePreferredHallList}
-                  deletePreferHall={deletePreferHall}
-                />
-              ))} */}
               {hallSlotArray.map((h) => (
                 <Grid container spacing={5} key={h.id}>
                   <Grid item xs={3}>
@@ -92,10 +63,9 @@ const PreferredHallsCard = () => {
                     <IconButton
                       style={{ marginBottom: '0.5rem' }}
                       onClick={() => {
-                        const temp = h.id;
                         setHallSlotArray(hallSlotArray.filter((a) => a.id !== h.id));
                         console.log(hallSlotArray);
-                        handleIncrementClick(temp);
+                        handleChangeRank(h.id);
                         console.log('delete working ' + h.id);
                       }}
                       edge="end"
@@ -130,7 +100,6 @@ const PreferredHallsCard = () => {
                           hallList={hallList}
                           preferredHallList={preferredHallList}
                           updatePreferredHallList={updatePreferredHallList}
-                          deletePreferHall={deletePreferHall}
                         />
                       ),
                     },
