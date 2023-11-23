@@ -1,13 +1,15 @@
-import { Button, Card, CardContent, CardHeader, Grid, TextField } from '@mui/material';
+import { Button, Card, CardContent, CardHeader, Grid, TextField, IconButton } from '@mui/material';
 import { useState, useEffect } from 'react';
 import HallSlot from './HallSlotComponent';
 import housingService from 'services/housing';
 import styles from '../../HousingLottery.module.css';
+import ClearIcon from '@mui/icons-material/Clear';
 
 const PreferredHallsCard = () => {
   const [count, setCount] = useState(1);
   const [hallList, setHallList] = useState([]);
   const [preferredHallList, setPreferredHallList] = useState([]);
+  const [hallSlotArray, setHallSlotArray] = useState([]);
   const searchHallTitle = <div align="left">Preferred Halls</div>;
 
   useEffect(() => {
@@ -25,13 +27,40 @@ const PreferredHallsCard = () => {
     await housingService.addHall(preferredHallList);
   };
 
-  const hallArray = Array(count).fill(0);
+  // const hallSlotArray = Array(count).fill(0);
+  // const [hallSlotArray, sethallSlotArray] = useState(initialhallSlotArray);
 
   function deletePreferHall(myNum) {
-    hallArray.splice(myNum, 1);
-    console.log('deletePreferHall ' + hallArray);
-    console.log('deletePreferHall ' + HallSlot);
+    setHallSlotArray(hallSlotArray.filter((a) => a.id !== myNum));
   }
+
+  // const addHallSlot = () => {
+  //   setCount(count + 1);
+  //   sethallSlotArray([
+  //     ...hallSlotArray,
+  //     { id: count, name: "preferredHallList" }
+  //   ])
+  //   console.log("hallSlotArray" + hallSlotArray);
+  // }
+
+  // useEffect(() => {
+  //   sethallSlotArray(myhallSlotArray);
+  // }, [count]);
+
+  const handleIncrementClick = (index) => {
+    const updatedHallSlotArray = hallSlotArray.map((h) => {
+      var temp = Object.assign({}, h);
+      if (temp.id > index) {
+        console.log('h.id > index before ' + temp.id);
+        temp.id = temp.id - 1;
+        console.log('h.id > index after ' + temp.id);
+      }
+      console.log('before return ' + temp.id);
+      return temp;
+    });
+    setHallSlotArray(updatedHallSlotArray);
+    setCount(count - 1);
+  };
 
   return (
     <Grid container justifyContent="center">
@@ -41,7 +70,7 @@ const PreferredHallsCard = () => {
           <CardContent height="500">
             <div className={styles.rankLabel}>Rank</div>
             <Grid id="hallSlots">
-              {hallArray.map((value, index) => (
+              {/* {hallSlotArray.map((value, index) => (
                 <HallSlot
                   rank={index + 1}
                   hallList={hallList}
@@ -49,6 +78,33 @@ const PreferredHallsCard = () => {
                   updatePreferredHallList={updatePreferredHallList}
                   deletePreferHall={deletePreferHall}
                 />
+              ))} */}
+              {hallSlotArray.map((h) => (
+                <Grid container spacing={5} key={h.id}>
+                  <Grid item xs={3}>
+                    {h.id}
+                  </Grid>
+                  <Grid item xs={3}>
+                    {h.name}
+                  </Grid>
+                  <Grid item xs={3}>
+                    <IconButton
+                      style={{ marginBottom: '0.5rem' }}
+                      onClick={() => {
+                        const temp = h.id;
+                        setHallSlotArray(hallSlotArray.filter((a) => a.id !== h.id));
+                        console.log(hallSlotArray);
+                        handleIncrementClick(temp);
+                        console.log('delete working ' + h.id);
+                      }}
+                      edge="end"
+                      aria-label="delete"
+                      size="large"
+                    >
+                      <ClearIcon style={{ fontSize: 20 }} />
+                    </IconButton>
+                  </Grid>
+                </Grid>
               ))}
             </Grid>
             <Grid item xs={12}>
@@ -57,6 +113,21 @@ const PreferredHallsCard = () => {
                 variant="contained"
                 onClick={() => {
                   setCount(count + 1);
+                  setHallSlotArray([
+                    ...hallSlotArray,
+                    {
+                      id: count,
+                      name: (
+                        <HallSlot
+                          rank={count}
+                          hallList={hallList}
+                          preferredHallList={preferredHallList}
+                          updatePreferredHallList={updatePreferredHallList}
+                          deletePreferHall={deletePreferHall}
+                        />
+                      ),
+                    },
+                  ]);
                 }}
               >
                 Add a Hall

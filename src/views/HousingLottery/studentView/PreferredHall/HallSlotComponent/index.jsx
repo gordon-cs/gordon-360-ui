@@ -54,22 +54,22 @@ const HallSlot = ({
 
   return (
     <Grid container spacing={5}>
-      <Grid item xs={3}>
-        {rank}
-      </Grid>
+      {/* <Grid item xs={3}> */}
+      {/* {rank} */}
+      {/* </Grid> */}
 
-      <Grid item xs={3}>
-        <HallSearchField
-          name="building"
-          value={hall}
-          updateValue={(event) => selectPreferredHall(event)}
-          options={hallList}
-          select
-          size={200}
-        />
-      </Grid>
+      {/* <Grid item xs={3}> */}
+      <HallSearchField
+        name="building"
+        value={hall}
+        updateValue={(event) => selectPreferredHall(event)}
+        options={hallList}
+        select
+        size={200}
+      />
+      {/* </Grid> */}
 
-      <Grid item xs={3}>
+      {/* <Grid item xs={3}>
         <IconButton
           style={{ marginBottom: '0.5rem' }}
           onClick={() => {
@@ -82,7 +82,7 @@ const HallSlot = ({
         >
           <ClearIcon style={{ fontSize: 20 }} />
         </IconButton>
-      </Grid>
+      </Grid> */}
 
       <GordonSnackbar
         open={snackbar.open}
