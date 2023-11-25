@@ -1,14 +1,4 @@
-import {
-  FormControl,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Grid,
-  TextField,
-  ListItemSecondaryAction,
-  IconButton,
-} from '@mui/material';
+import { Grid } from '@mui/material';
 import { useState } from 'react';
 import { HallSearchField } from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
 import GordonSnackbar from 'components/Snackbar';
@@ -19,7 +9,6 @@ import GordonSnackbar from 'components/Snackbar';
  * @returns
  */
 const HallSlot = ({ rank, hallList, preferredHallList, updatePreferredHallList }) => {
-  console.log('rank ' + rank);
   const [hall, setHall] = useState('');
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
 
@@ -39,7 +28,7 @@ const HallSlot = ({ rank, hallList, preferredHallList, updatePreferredHallList }
     setHall(event.target.value);
     updatePreferredHallList(rank, event.target.value);
   };
-  console.log('preferredHallList ' + preferredHallList);
+  console.log(preferredHallList);
 
   return (
     <Grid container spacing={5}>

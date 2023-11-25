@@ -5,12 +5,14 @@ import HallSlot from './HallSlotComponent';
 import housingService from 'services/housing';
 import styles from '../../HousingLottery.module.css';
 import ClearIcon from '@mui/icons-material/Clear';
+import GordonSnackbar from 'components/Snackbar';
 
 const PreferredHallsCard = () => {
   const [count, setCount] = useState(1);
   const [hallList, setHallList] = useState([]);
   const [preferredHallList, setPreferredHallList] = useState([]);
   const [hallSlotArray, setHallSlotArray] = useState([]);
+  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const searchHallTitle = <div align="left">Preferred Halls</div>;
 
   useEffect(() => {
@@ -21,8 +23,19 @@ const PreferredHallsCard = () => {
     let newList = preferredHallList;
     newList[rank - 1] = hall;
     setPreferredHallList(newList);
-    return newList;
   }
+
+  // const updatePreferredHallList = (rank, hall) => {
+  //   setPreferredHallList([
+  //     ...preferredHallList,
+  //     {
+  //       id: rank,
+  //       name: hall
+  //     },
+  //   ]);
+  //   console.log("rank " + rank + " preferredHallList " + preferredHallList.length)
+  //   return preferredHallList;
+  // }
 
   const handleClick = async () => {
     await housingService.addHall(preferredHallList);
@@ -32,11 +45,8 @@ const PreferredHallsCard = () => {
     const updatedHallSlotArray = filteredArray.map((h) => {
       var temp = Object.assign({}, h);
       if (temp.id > index) {
-        console.log('h.id > index before ' + temp.id);
         temp.id = temp.id - 1;
-        console.log('h.id > index after ' + temp.id);
       }
-      console.log('before return ' + temp.id);
       return temp;
     });
     setHallSlotArray(updatedHallSlotArray);
@@ -64,7 +74,12 @@ const PreferredHallsCard = () => {
                       style={{ marginBottom: '0.5rem' }}
                       onClick={() => {
                         let filteredArray = hallSlotArray.filter((a) => a.id !== h.id);
+                        let temp = preferredHallList;
+                        setPreferredHallList(temp.splice(h.id - 1, 1));
+                        console.log(preferredHallList);
+                        console.log(filteredArray);
                         handleChangeRank(h.id, filteredArray);
+                        setHallSlotArray(hallSlotArray.filter((a) => a.id !== h.id));
                       }}
                       edge="end"
                       aria-label="delete"
@@ -83,25 +98,35 @@ const PreferredHallsCard = () => {
               style={{ marginTop: 'auto' }}
             >
               <Button
+                id="add_hall"
                 className={styles.addHall_button}
                 variant="outlined"
                 startIcon={<AddIcon fontSize="inherit" />}
                 onClick={() => {
-                  setCount(count + 1);
-                  setHallSlotArray([
-                    ...hallSlotArray,
-                    {
-                      id: count,
-                      name: (
-                        <HallSlot
-                          rank={count}
-                          hallList={hallList}
-                          preferredHallList={preferredHallList}
-                          updatePreferredHallList={updatePreferredHallList}
-                        />
-                      ),
-                    },
-                  ]);
+                  if (count <= 6) {
+                    setCount(count + 1);
+                    setHallSlotArray([
+                      ...hallSlotArray,
+                      {
+                        id: count,
+                        name: (
+                          <HallSlot
+                            rank={count}
+                            hallList={hallList}
+                            preferredHallList={preferredHallList}
+                            updatePreferredHallList={updatePreferredHallList}
+                          />
+                        ),
+                      },
+                    ]);
+                  }
+                  if (count > 6) {
+                    setSnackbar({
+                      message: 'You can select up to six halls.',
+                      severity: 'error',
+                      open: true,
+                    });
+                  }
                 }}
               >
                 Add a Hall
@@ -113,6 +138,12 @@ const PreferredHallsCard = () => {
           </CardContent>
         </Card>
       </Grid>
+      <GordonSnackbar
+        open={snackbar.open}
+        severity={snackbar.severity}
+        text={snackbar.message}
+        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+      />
     </Grid>
   );
 };
