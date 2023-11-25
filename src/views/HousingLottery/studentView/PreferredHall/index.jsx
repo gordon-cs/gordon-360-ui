@@ -1,17 +1,13 @@
-import { Button, Card, CardContent, CardHeader, Grid, TextField, IconButton } from '@mui/material';
+import { Button, Card, CardContent, CardHeader, Grid } from '@mui/material';
 import { useState, useEffect } from 'react';
-import AddIcon from '@mui/icons-material/Add';
 import HallSlot from './HallSlotComponent';
 import housingService from 'services/housing';
 import styles from '../../HousingLottery.module.css';
-import ClearIcon from '@mui/icons-material/Clear';
 import GordonSnackbar from 'components/Snackbar';
 
 const PreferredHallsCard = () => {
-  const [count, setCount] = useState(1);
   const [hallList, setHallList] = useState([]);
-  const [preferredHallList, setPreferredHallList] = useState([]);
-  const [hallSlotArray, setHallSlotArray] = useState([]);
+  const [preferredHallList, setPreferredHallList] = useState(['', '', '', '', '', '']);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const searchHallTitle = <div align="left">Preferred Halls</div>;
 
@@ -25,32 +21,8 @@ const PreferredHallsCard = () => {
     setPreferredHallList(newList);
   }
 
-  // const updatePreferredHallList = (rank, hall) => {
-  //   setPreferredHallList([
-  //     ...preferredHallList,
-  //     {
-  //       id: rank,
-  //       name: hall
-  //     },
-  //   ]);
-  //   console.log("rank " + rank + " preferredHallList " + preferredHallList.length)
-  //   return preferredHallList;
-  // }
-
   const handleClick = async () => {
     await housingService.addHall(preferredHallList);
-  };
-
-  const handleChangeRank = (index, filteredArray) => {
-    const updatedHallSlotArray = filteredArray.map((h) => {
-      var temp = Object.assign({}, h);
-      if (temp.id > index) {
-        temp.id = temp.id - 1;
-      }
-      return temp;
-    });
-    setHallSlotArray(updatedHallSlotArray);
-    setCount(count - 1);
   };
 
   return (
@@ -61,35 +33,84 @@ const PreferredHallsCard = () => {
           <CardContent height="500">
             <div className={styles.rankLabel}>Rank</div>
             <Grid id="hallSlots">
-              {hallSlotArray.map((h) => (
-                <Grid container spacing={5} key={h.id}>
-                  <Grid item xs={3}>
-                    {h.id}
-                  </Grid>
-                  <Grid item xs={3}>
-                    {h.name}
-                  </Grid>
-                  <Grid item xs={3}>
-                    <IconButton
-                      style={{ marginBottom: '0.5rem' }}
-                      onClick={() => {
-                        let filteredArray = hallSlotArray.filter((a) => a.id !== h.id);
-                        let temp = preferredHallList;
-                        setPreferredHallList(temp.splice(h.id - 1, 1));
-                        console.log(preferredHallList);
-                        console.log(filteredArray);
-                        handleChangeRank(h.id, filteredArray);
-                        setHallSlotArray(hallSlotArray.filter((a) => a.id !== h.id));
-                      }}
-                      edge="end"
-                      aria-label="delete"
-                      size="large"
-                    >
-                      <ClearIcon style={{ fontSize: 20 }} />
-                    </IconButton>
-                  </Grid>
+              <Grid container spacing={5}>
+                <Grid item xs={3}>
+                  1
                 </Grid>
-              ))}
+                <Grid item xs={3}>
+                  <HallSlot
+                    rank={1}
+                    hallList={hallList}
+                    preferredHallList={preferredHallList}
+                    updatePreferredHallList={updatePreferredHallList}
+                  />
+                </Grid>
+              </Grid>
+              <Grid container spacing={5}>
+                <Grid item xs={3}>
+                  2
+                </Grid>
+                <Grid item xs={3}>
+                  <HallSlot
+                    rank={2}
+                    hallList={hallList}
+                    preferredHallList={preferredHallList}
+                    updatePreferredHallList={updatePreferredHallList}
+                  />
+                </Grid>
+              </Grid>
+              <Grid container spacing={5}>
+                <Grid item xs={3}>
+                  3
+                </Grid>
+                <Grid item xs={3}>
+                  <HallSlot
+                    rank={3}
+                    hallList={hallList}
+                    preferredHallList={preferredHallList}
+                    updatePreferredHallList={updatePreferredHallList}
+                  />
+                </Grid>
+              </Grid>
+              <Grid container spacing={5}>
+                <Grid item xs={3}>
+                  4
+                </Grid>
+                <Grid item xs={3}>
+                  <HallSlot
+                    rank={4}
+                    hallList={hallList}
+                    preferredHallList={preferredHallList}
+                    updatePreferredHallList={updatePreferredHallList}
+                  />
+                </Grid>
+              </Grid>
+              <Grid container spacing={5}>
+                <Grid item xs={3}>
+                  5
+                </Grid>
+                <Grid item xs={3}>
+                  <HallSlot
+                    rank={5}
+                    hallList={hallList}
+                    preferredHallList={preferredHallList}
+                    updatePreferredHallList={updatePreferredHallList}
+                  />
+                </Grid>
+              </Grid>
+              <Grid container spacing={5}>
+                <Grid item xs={3}>
+                  6
+                </Grid>
+                <Grid item xs={3}>
+                  <HallSlot
+                    rank={6}
+                    hallList={hallList}
+                    preferredHallList={preferredHallList}
+                    updatePreferredHallList={updatePreferredHallList}
+                  />
+                </Grid>
+              </Grid>
             </Grid>
             <Grid
               container
@@ -97,40 +118,6 @@ const PreferredHallsCard = () => {
               alignItems="flex-end"
               style={{ marginTop: 'auto' }}
             >
-              <Button
-                id="add_hall"
-                className={styles.addHall_button}
-                variant="outlined"
-                startIcon={<AddIcon fontSize="inherit" />}
-                onClick={() => {
-                  if (count <= 6) {
-                    setCount(count + 1);
-                    setHallSlotArray([
-                      ...hallSlotArray,
-                      {
-                        id: count,
-                        name: (
-                          <HallSlot
-                            rank={count}
-                            hallList={hallList}
-                            preferredHallList={preferredHallList}
-                            updatePreferredHallList={updatePreferredHallList}
-                          />
-                        ),
-                      },
-                    ]);
-                  }
-                  if (count > 6) {
-                    setSnackbar({
-                      message: 'You can select up to six halls.',
-                      severity: 'error',
-                      open: true,
-                    });
-                  }
-                }}
-              >
-                Add a Hall
-              </Button>
               <Button className={styles.submit_button} variant="contained" onClick={handleClick}>
                 Submit
               </Button>

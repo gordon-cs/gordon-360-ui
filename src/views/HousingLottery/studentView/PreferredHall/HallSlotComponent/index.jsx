@@ -15,7 +15,7 @@ const HallSlot = ({ rank, hallList, preferredHallList, updatePreferredHallList }
   const selectPreferredHall = (event) => {
     if (preferredHallList.length > 0) {
       for (let i = 0; i < preferredHallList.length; i++) {
-        if (event.target.value == preferredHallList[i]) {
+        if (event.target.value == preferredHallList[i] && event.target.value != '') {
           setSnackbar({
             message: 'You have already selected this hall.',
             severity: 'error',
@@ -28,7 +28,6 @@ const HallSlot = ({ rank, hallList, preferredHallList, updatePreferredHallList }
     setHall(event.target.value);
     updatePreferredHallList(rank, event.target.value);
   };
-  console.log(preferredHallList);
 
   return (
     <Grid container spacing={5}>
