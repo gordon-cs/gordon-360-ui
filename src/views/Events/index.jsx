@@ -19,7 +19,6 @@ import EventList from 'components/EventList';
 import GordonLoader from 'components/Loader';
 import { useWindowSize } from 'hooks';
 import { useEffect, useMemo, useState } from 'react';
-import Media from 'react-media';
 import gordonEvent, { EVENT_FILTERS } from 'services/event';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './Events.module.css';
@@ -148,14 +147,9 @@ const Events = () => {
               <Grid container spacing={2} direction="row">
                 <Grid item xs={12}>
                   <Grid container spacing={1.5} alignItems="center">
-                    <Media
-                      query="(min-width: 600px)"
-                      render={() => (
-                        <Grid item>
-                          <EventIcon className={styles.events_icon} />
-                        </Grid>
-                      )}
-                    />
+                    <Grid item>
+                      <EventIcon className={styles.events_icon} />
+                    </Grid>
                     <Grid item xs={true}>
                       <TextField
                         id="search"
@@ -203,14 +197,9 @@ const Events = () => {
                 <Grid item xs={12}>
                   <Collapse in={open} timeout="auto" unmountOnExit>
                     <Grid container spacing={2} alignItems="center">
-                      <Media
-                        query="(min-width: 600px)"
-                        render={() => (
-                          <Grid item>
-                            <FilterListIcon className={styles.events_icon} />
-                          </Grid>
-                        )}
-                      />
+                      <Grid item>
+                        <FilterListIcon className={styles.events_icon} />
+                      </Grid>
 
                       <Grid item xs={8}>
                         <Autocomplete
@@ -267,14 +256,11 @@ const Events = () => {
               {/* Search Bar and Filters */}
               <Grid container spacing={2} direction="row">
                 <Grid item xs={12} container spacing={2} alignItems="center">
-                  <Media
-                    query="(min-width: 600px)"
-                    render={() => (
-                      <Grid item>
-                        <EventIcon className={styles.events_icon} />
-                      </Grid>
-                    )}
-                  />
+                  {width > 600 && (
+                    <Grid item>
+                      <EventIcon className={styles.events_icon} />
+                    </Grid>
+                  )}
                   <Grid item xs={11}>
                     <TextField
                       id="search"
@@ -337,14 +323,11 @@ const Events = () => {
                     />
                   </Grid>
                   <Grid container spacing={2} alignItems="center">
-                    <Media
-                      query="(min-width: 600px)"
-                      render={() => (
-                        <Grid item>
-                          <FilterListIcon className={styles.events_icon} />
-                        </Grid>
-                      )}
-                    />
+                    {width > 600 && (
+                      <Grid item>
+                        <FilterListIcon className={styles.events_icon} />
+                      </Grid>
+                    )}
                     <Grid item xs={11}>
                       <Autocomplete
                         id="event-filters"
