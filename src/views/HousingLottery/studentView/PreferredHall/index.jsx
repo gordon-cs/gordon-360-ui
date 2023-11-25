@@ -28,8 +28,8 @@ const PreferredHallsCard = () => {
     await housingService.addHall(preferredHallList);
   };
 
-  const handleChangeRank = (index) => {
-    const updatedHallSlotArray = hallSlotArray.map((h) => {
+  const handleChangeRank = (index, filteredArray) => {
+    const updatedHallSlotArray = filteredArray.map((h) => {
       var temp = Object.assign({}, h);
       if (temp.id > index) {
         console.log('h.id > index before ' + temp.id);
@@ -63,10 +63,8 @@ const PreferredHallsCard = () => {
                     <IconButton
                       style={{ marginBottom: '0.5rem' }}
                       onClick={() => {
-                        setHallSlotArray(hallSlotArray.filter((a) => a.id !== h.id));
-                        console.log(hallSlotArray);
-                        handleChangeRank(h.id);
-                        console.log('delete working ' + h.id);
+                        let filteredArray = hallSlotArray.filter((a) => a.id !== h.id);
+                        handleChangeRank(h.id, filteredArray);
                       }}
                       edge="end"
                       aria-label="delete"
