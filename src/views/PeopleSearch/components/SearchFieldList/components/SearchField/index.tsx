@@ -37,6 +37,12 @@ const defaultMenuItem = (
   </MenuItem>
 );
 
+const HalldefaultMenuItem = (
+  <MenuItem value="" key="default">
+    <em>None</em>
+  </MenuItem>
+);
+
 const mapOptionsToMenuItems = (options: string[] | SelectOption[]) =>
   options.map((option) =>
     typeof option === 'string' ? (
@@ -82,6 +88,44 @@ const SearchField = ({
           disabled={disabled}
         >
           {select && options && [defaultMenuItem, mapOptionsToMenuItems(options)]}
+        </TextField>
+      </Grid>
+    </Grid>
+  );
+};
+
+export const HallSearchField = ({
+  name,
+  value,
+  updateValue,
+  Icon,
+  disabled = false,
+  select = false,
+  options = undefined,
+}: SearchFieldProps) => {
+  const isLargeScreen = useMediaQuery('(min-width: 600px)');
+
+  return (
+    <Grid item container spacing={2} alignItems="center">
+      {isLargeScreen && Icon && (
+        <Grid item>
+          <Icon className={styles.icon} />
+        </Grid>
+      )}
+      <Grid item xs>
+        <TextField
+          id={name}
+          name={name}
+          label={toTitleCase(name, '_')}
+          value={value}
+          onChange={updateValue}
+          fullWidth
+          variant="filled"
+          type={!select ? 'search' : undefined}
+          select={select}
+          disabled={disabled}
+        >
+          {select && options && [HalldefaultMenuItem, mapOptionsToMenuItems(options)]}
         </TextField>
       </Grid>
     </Grid>
