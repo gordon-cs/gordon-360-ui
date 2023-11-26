@@ -1,7 +1,7 @@
 import { parse } from 'date-fns';
 import http from './http';
 
-type Session = {
+export type Session = {
   SessionBeginDate: string;
   SessionCode: string;
   SessionDescription: string;

@@ -1,48 +1,49 @@
-import { useNavigate } from 'react-router-dom';
-import GordonUnauthenticated from 'components/GordonUnauthenticated';
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import SettingsIcon from '@mui/icons-material/Settings';
 import {
-  Grid,
-  Typography,
-  Card,
-  CardHeader,
-  CardContent,
-  Button,
-  Tabs,
-  Tab,
-  Menu,
-  MenuItem,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Alert,
   Badge,
   Box,
-  IconButton,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
   Checkbox,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
+  Grid,
+  IconButton,
+  Menu,
+  MenuItem,
+  Tab,
+  Tabs,
+  Typography,
 } from '@mui/material';
-import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import ActivityForm from '../../components/Forms/ActivityForm';
-import WaiverForm from 'views/RecIM/components/Forms/WaiverForm';
-import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
-import { useUser } from 'hooks';
-import { useState, useEffect, useCallback } from 'react';
+import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import GordonLoader from 'components/Loader';
 import GordonSnackbar from 'components/Snackbar';
-import Header from '../../components/Header';
-import styles from './Home.module.css';
-import { ActivityList, TeamList } from './../../components/List';
+import { isFuture } from 'date-fns';
+import { useUser } from 'hooks';
+import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getActivities } from 'services/recim/activity';
 import {
-  getParticipantTeams,
-  getParticipantByUsername,
   editParticipantAllowEmails,
+  getParticipantByUsername,
+  getParticipantTeams,
 } from 'services/recim/participant';
 import { getTeamInvites } from 'services/recim/team';
-import recimLogo from 'views/RecIM/recim_logo.png';
-import { isFuture } from 'date-fns';
+import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
+import WaiverForm from 'views/RecIM/components/Forms/WaiverForm';
 import { TabPanel } from 'views/RecIM/components/TabPanel';
-import SettingsIcon from '@mui/icons-material/Settings';
+import recimLogo from 'views/RecIM/recim_logo.png';
+import ActivityForm from '../../components/Forms/ActivityForm';
+import Header from '../../components/Header';
+import { ActivityList, TeamList } from './../../components/List';
 import AffiliationsChart from './components/AffiliationsChart';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import styles from './Home.module.css';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -333,15 +334,38 @@ const Home = () => {
     </Card>
   );
 
-  if (!profile) {
-    return loading ? <GordonLoader /> : <GordonUnauthenticated feature={'the Rec-IM page'} />;
-  } else {
-    return (
-      <>
-        <Header>{headerContents}</Header>
-        {loading ? (
-          <GordonLoader />
-        ) : (
+  let headerAlert = participant?.Status === 'Pending' && (
+    <Alert
+      severity="error"
+      sx={{ mb: '1rem' }}
+      action={
+        <Button
+          variant="outlined"
+          className={styles.alertButton}
+          onClick={() => {
+            window.open('https://forms.gordon.edu/232353329449056', '_blank');
+          }}
+        >
+          Sign Waiver
+        </Button>
+      }
+    >
+      You must sign the Bennett Center Waiver before participating in any Rec/IM activities.
+    </Alert>
+  );
+
+  return loading ? (
+    <GordonLoader />
+  ) : !profile ? (
+    <GordonUnauthenticated feature={'the Rec-IM page'} />
+  ) : (
+    <>
+      <Header>{headerContents}</Header>
+      {loading ? (
+        <GordonLoader />
+      ) : (
+        <>
+          {headerAlert}
           <Grid container spacing={2}>
             <Grid item xs={12}>
               {affiliationsCard}
@@ -382,46 +406,46 @@ const Home = () => {
               setOpenWaiverForm={(bool) => setOpenWaiver(bool)}
             />
           </Grid>
-        )}
-        <Menu
-          open={openHomeSettings}
-          onClose={handleMenuClose}
-          anchorEl={homeMenuAnchorEl}
-          className={styles.menu}
-        >
-          <Typography className={styles.menuTitle}>Options</Typography>
-          <MenuItem sx={[{ '&:hover': { backgroundColor: 'transparent' }, fontSize: '0.875rem' }]}>
-            <Checkbox
-              color="secondary"
-              inputProps={{ 'aria-label': 'toggle' }}
-              checked={allowEmails}
-              defaultChecked={participant?.AllowEmails}
-              onChange={(e) => handleAllowEmails(e.target.checked)}
-            />
-            Allow Emails
+        </>
+      )}
+      <Menu
+        open={openHomeSettings}
+        onClose={handleMenuClose}
+        anchorEl={homeMenuAnchorEl}
+        className={styles.menu}
+      >
+        <Typography className={styles.menuTitle}>Options</Typography>
+        <MenuItem sx={[{ '&:hover': { backgroundColor: 'transparent' }, fontSize: '0.875rem' }]}>
+          <Checkbox
+            color="secondary"
+            inputProps={{ 'aria-label': 'toggle' }}
+            checked={allowEmails}
+            defaultChecked={participant?.AllowEmails}
+            onChange={(e) => handleAllowEmails(e.target.checked)}
+          />
+          Allow Emails
+        </MenuItem>
+        {participant?.IsAdmin && <Typography className={styles.menuTitle}>Admin</Typography>}
+        {participant?.IsAdmin && (
+          <MenuItem
+            dense
+            onClick={() => {
+              navigate('/recim/admin');
+            }}
+            className={styles.menuButton}
+          >
+            Admin Command Center
           </MenuItem>
-          {participant?.IsAdmin && <Typography className={styles.menuTitle}>Admin</Typography>}
-          {participant?.IsAdmin && (
-            <MenuItem
-              dense
-              onClick={() => {
-                navigate('/recim/admin');
-              }}
-              className={styles.menuButton}
-            >
-              Admin Command Center
-            </MenuItem>
-          )}
-        </Menu>
-        <GordonSnackbar
-          open={snackbar.open}
-          text={snackbar.message}
-          severity={snackbar.severity}
-          onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
-        />
-      </>
-    );
-  }
+        )}
+      </Menu>
+      <GordonSnackbar
+        open={snackbar.open}
+        text={snackbar.message}
+        severity={snackbar.severity}
+        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+      />
+    </>
+  );
 };
 
 export default Home;

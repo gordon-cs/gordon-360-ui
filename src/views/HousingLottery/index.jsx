@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import {
   Input,
@@ -12,6 +13,7 @@ import {
 } from '@mui/material';
 import housingService from 'services/housing';
 import styles from './HousingLottery.module.css';
+import PreferredHall from './studentView/PreferredHall';
 
 const HousingLottery = () => {
   const [message, setMessage] = useState('');
@@ -78,6 +80,4 @@ const HousingLottery = () => {
       </Grid>
     </Grid>
   );
-};
-
 export default HousingLottery;

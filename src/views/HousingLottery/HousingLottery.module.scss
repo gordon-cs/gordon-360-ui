@@ -20,6 +20,28 @@
   width: 11em;
 }
 
+.addHall_button,
+.submit_button {
+  height: 45px;
+  margin-left: 10px;
+}
+
+.rankLabel {
+  text-align: left;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.hallSlots {
+  position: relative;
+  padding: 10px;
+}
+
+.hallSlotWrapper {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+}
 
 //Imported from ApartmentApp.module.scss
 .people_search_parent {
@@ -131,4 +153,4 @@ strong.over_emphasized {
   &_icon {
     margin-right: 0.75rem;
   }
-}
+
