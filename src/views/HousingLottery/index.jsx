@@ -94,5 +94,9 @@ const HousingLottery = () => {
       </Grid>
     </Grid>
   );
+<<<<<<< HEAD
   };
+=======
+};
+>>>>>>> 82c7ca5679481a24c2da5d44931bf7652f14176a
 export default HousingLottery;
