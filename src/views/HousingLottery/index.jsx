@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
   Input,
@@ -19,6 +18,8 @@ const HousingLottery = () => {
   const [message, setMessage] = useState('');
   const [morningOrNight, setMorningOrNight] = useState('');
   const [loudOrQuiet, setLoudOrQuiet] = useState('');
+  const [preferences, setPreferences] = useState([]); 
+  
 
   const handleChange = (event) => {
     setMessage(event.target.value);
@@ -32,9 +33,22 @@ const HousingLottery = () => {
     setLoudOrQuiet(event.target.value);
   };
 
+  const handlePreferenceChange = (event) => {
+    // Update preferences based on the selected radio button
+    const newPreferences = event.target.value;
+    setPreferences((prevPreferences) => {
+      if (prevPreferences.includes(newPreference)) {
+        // Remove the preference if it's already in the array
+        return prevPreferences.filter((pref) => pref !== newPreference);
+      } else {
+        // Add the preference if it's not in the array
+        return [...prevPreferences, newPreference];
+      }
+    });
+  };
   const handleClick = async () => {
     // You can access message, morningOrNight, and loudOrQuiet to submit to your housing service
-    await housingService.addRoommate({ message, morningOrNight, loudOrQuiet });
+    await housingService.addRoommate({ message, preferences});
   };
 
   return (
@@ -80,4 +94,5 @@ const HousingLottery = () => {
       </Grid>
     </Grid>
   );
+  };
 export default HousingLottery;
