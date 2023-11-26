@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Input,
   Button,
@@ -20,6 +20,16 @@ const HousingLottery = () => {
   const [loudOrQuiet, setLoudOrQuiet] = useState('');
   const [preferences, setPreferences] = useState([]); 
   
+    useEffect(() => {
+     const storedPreferences = localStorage.getItem('preferences');
+      if (storedPreferences) {
+        setPreferences(JSON.parse(storedPreferences));
+      }
+    }, []);
+
+    useEffect(() => {
+      localStorage.setItem('preferences', JSON.stringify(preferences));
+    }, [preferences]);
 
   const handleChange = (event) => {
     setMessage(event.target.value);
@@ -35,7 +45,7 @@ const HousingLottery = () => {
 
   const handlePreferenceChange = (event) => {
     // Update preferences based on the selected radio button
-    const newPreferences = event.target.value;
+    const newPreference = event.target.value;
     setPreferences((prevPreferences) => {
       if (prevPreferences.includes(newPreference)) {
         // Remove the preference if it's already in the array
@@ -48,6 +58,7 @@ const HousingLottery = () => {
   };
   const handleClick = async () => {
     // You can access message, morningOrNight, and loudOrQuiet to submit to your housing service
+    console.log(preferences);
     await housingService.addRoommate({ message, preferences});
   };
 
@@ -62,8 +73,8 @@ const HousingLottery = () => {
               <RadioGroup
                 aria-label="morning-or-night"
                 name="morning-or-night"
-                value={morningOrNight}
-                onChange={handleMorningOrNightChange}
+                value={preferences}
+                onChange={handlePreferenceChange}
               >
                 <FormControlLabel value="night-owl" control={<Radio />} label="Night Owl" />
                 <FormControlLabel value="morning-bird" control={<Radio />} label="Morning Bird" />
@@ -75,8 +86,8 @@ const HousingLottery = () => {
               <RadioGroup
                 aria-label="loud-or-quiet"
                 name="loud-or-quiet"
-                value={loudOrQuiet}
-                onChange={handleLoudOrQuietChange}
+                value={preferences}
+                onChange={handlePreferenceChange}
               >
                 <FormControlLabel value="quiet" control={<Radio />} label="Quiet" />
                 <FormControlLabel value="loud" control={<Radio />} label="Loud" />
@@ -94,9 +105,5 @@ const HousingLottery = () => {
       </Grid>
     </Grid>
   );
-<<<<<<< HEAD
   };
-=======
-};
->>>>>>> 82c7ca5679481a24c2da5d44931bf7652f14176a
 export default HousingLottery;
