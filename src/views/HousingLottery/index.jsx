@@ -80,4 +80,5 @@ const HousingLottery = () => {
       </Grid>
     </Grid>
   );
+};
 export default HousingLottery;
