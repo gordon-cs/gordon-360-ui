@@ -18,18 +18,23 @@ const HousingLottery = () => {
   const [message, setMessage] = useState('');
   const [morningOrNight, setMorningOrNight] = useState('');
   const [loudOrQuiet, setLoudOrQuiet] = useState('');
-  const [preferences, setPreferences] = useState([]); 
+
   
     useEffect(() => {
-     const storedPreferences = localStorage.getItem('preferences');
+     const storedPreferences = localStorage.getItem('userPreferences');
       if (storedPreferences) {
-        setPreferences(JSON.parse(storedPreferences));
+        const { morningOrNight, loudOrQuiet } = storedPreferences;
+        setMorningOrNight(morningOrNight || '');
+        setLoudOrQuiet(loudOrQuiet || '');
       }
     }, []);
 
     useEffect(() => {
-      localStorage.setItem('preferences', JSON.stringify(preferences));
-    }, [preferences]);
+      // Save preferences to local storage
+      const storedPreferences = JSON.stringify({ morningOrNight, loudOrQuiet });
+      localStorage.setItem('userPreferences', storedPreferences);
+      }, [morningOrNight, loudOrQuiet]);
+    
 
   const handleChange = (event) => {
     setMessage(event.target.value);
@@ -43,23 +48,10 @@ const HousingLottery = () => {
     setLoudOrQuiet(event.target.value);
   };
 
-  const handlePreferenceChange = (event) => {
-    // Update preferences based on the selected radio button
-    const newPreference = event.target.value;
-    setPreferences((prevPreferences) => {
-      if (prevPreferences.includes(newPreference)) {
-        // Remove the preference if it's already in the array
-        return prevPreferences.filter((pref) => pref !== newPreference);
-      } else {
-        // Add the preference if it's not in the array
-        return [...prevPreferences, newPreference];
-      }
-    });
-  };
   const handleClick = async () => {
     // You can access message, morningOrNight, and loudOrQuiet to submit to your housing service
-    console.log(preferences);
-    await housingService.addRoommate({ message, preferences});
+    console.log({message, morningOrNight, loudOrQuiet});
+    await housingService.addRoommate({ message, morningOrNight, loudOrQuiet});
   };
 
   return (
@@ -73,8 +65,8 @@ const HousingLottery = () => {
               <RadioGroup
                 aria-label="morning-or-night"
                 name="morning-or-night"
-                value={preferences}
-                onChange={handlePreferenceChange}
+                value={morningOrNight}
+                onChange={handleMorningOrNightChange}
               >
                 <FormControlLabel value="night-owl" control={<Radio />} label="Night Owl" />
                 <FormControlLabel value="morning-bird" control={<Radio />} label="Morning Bird" />
@@ -86,8 +78,8 @@ const HousingLottery = () => {
               <RadioGroup
                 aria-label="loud-or-quiet"
                 name="loud-or-quiet"
-                value={preferences}
-                onChange={handlePreferenceChange}
+                value={loudOrQuiet}
+                onChange={handleLoudOrQuietChange}
               >
                 <FormControlLabel value="quiet" control={<Radio />} label="Quiet" />
                 <FormControlLabel value="loud" control={<Radio />} label="Loud" />
