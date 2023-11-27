@@ -20,3 +20,31 @@
   margin-bottom: 10px;
   margin-left: 10px;
 }
+
+.applicants_card_header {
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
+
+  :global {
+    .MuiTypography-colorTextSecondary {
+      color: var(--mui-palette-primary-contrastText);
+      font-size: 1.25rem;
+    }
+
+    .MuiCardHeader-subheader {
+      color: var(--mui-palette-primary-contrastText);
+    }
+  }
+}
+
+.applicants_name {
+  display: flexbox;
+  width: 10em;
+  margin-left: 1em;
+}
+
+.applicants_email {
+  display: flexbox;
+  width: 24em;
+  margin-left: 1em;
+}
