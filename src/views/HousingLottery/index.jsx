@@ -36,10 +36,6 @@ const HousingLottery = () => {
       }, [morningOrNight, loudOrQuiet]);
     
 
-  const handleChange = (event) => {
-    setMessage(event.target.value);
-  };
-
   const handleMorningOrNightChange = (event) => {
     setMorningOrNight(event.target.value);
   };
@@ -49,7 +45,7 @@ const HousingLottery = () => {
   };
 
   const handleClick = async () => {
-    // You can access message, morningOrNight, and loudOrQuiet to submit to your housing service
+    // You can access morningOrNight, and loudOrQuiet to submit to your housing service
     console.log({ morningOrNight, loudOrQuiet});
     await housingService.addRoommate({morningOrNight, loudOrQuiet});
   };
