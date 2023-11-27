@@ -50,8 +50,8 @@ const HousingLottery = () => {
 
   const handleClick = async () => {
     // You can access message, morningOrNight, and loudOrQuiet to submit to your housing service
-    console.log({message, morningOrNight, loudOrQuiet});
-    await housingService.addRoommate({ message, morningOrNight, loudOrQuiet});
+    console.log({ morningOrNight, loudOrQuiet});
+    await housingService.addRoommate({morningOrNight, loudOrQuiet});
   };
 
   return (
