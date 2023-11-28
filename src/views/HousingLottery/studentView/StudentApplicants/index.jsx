@@ -24,7 +24,15 @@ const StudentApplicants = () => {
       <CardContent>
         <Grid container justifyContent="space-between" spacing={2}>
           {applicants.map((applicant, index) => (
-            <Grid item xs={12} key={index}>
+            <Grid item xs={12} key={index} >
+              <div className={styles.applicant_field} >
+                <ApplicantFields
+                  applicant={applicant}
+                  onApplicantChange={handleApplicantChange}
+                  index={index}
+                />
+              </div>
+              <Divider/>
               <div className={styles.applicant_field} >
                 <ApplicantFields
                   applicant={applicant}
