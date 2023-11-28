@@ -37,14 +37,19 @@
   }
 }
 
-.applicants_name {
+.applicant_name {
   display: flexbox;
   width: 10em;
   margin-left: 1em;
 }
 
-.applicants_email {
+.applicant_email {
   display: flexbox;
   width: 24em;
   margin-left: 1em;
+}
+
+.applicant_field {
+  padding-top: 1em;
+  padding-bottom: 1em;
 }
