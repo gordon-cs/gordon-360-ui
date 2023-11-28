@@ -13,7 +13,7 @@ import {
 import housingService from 'services/housing';
 import styles from './HousingLottery.module.css';
 import PreferredHall from './studentView/PreferredHall';
-import Preference from './components/PreferenceBox';
+import Preference from './studentView/PreferenceBox';
 
 const HousingLottery = () => {
   
