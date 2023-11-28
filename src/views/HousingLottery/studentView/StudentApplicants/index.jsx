@@ -7,15 +7,25 @@ import styles from '../../HousingLottery.module.css';
 
 const StudentApplicants = () => {
   const [applicants, setApplicants] = useState([{ firstName: '', lastName: '', email: '' }]);
+  const [emails, setEmails] = useState([]);
 
   const handleApplicantChange = (index, updatedApplicant) => {
     const newApplicants = [...applicants];
     newApplicants[index] = updatedApplicant;
     setApplicants(newApplicants);
+
+    const newEmails = [...emails];
+    newEmails[index] = updatedApplicant.email;
+    setApplicants(newEmails);
   };
 
   const addApplicant = () => {
     setApplicants([...applicants, { firstName: '', lastName: '', email: '' }]);
+    setEmails([...emails, '']);
+  };
+
+  const handleSubmit = () => {
+    console.log(emails);
   };
 
   return (
@@ -58,15 +68,28 @@ const StudentApplicants = () => {
               </div>
             </Grid>
           ))}
-          <Grid item xs={12}>
-            <Button
-              style={{ margin: 'auto', display: 'flex' }}
+          <Grid 
+            item xs={12} 
+            container
+            justifyContent="flex-end"
+            alignItems="flex-end"
+            style={{ marginTop: 'auto' }}
+          >
+            {/* <Button
+              style={{ marginRight:20}}
               variant="outlined"
               color="primary"
               startIcon={<AddIcon fontSize="inherit" />}
               onClick={addApplicant}
             >
               Add Applicant
+            </Button> */}
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSubmit}
+            >
+              Submit
             </Button>
           </Grid>
         </Grid>
