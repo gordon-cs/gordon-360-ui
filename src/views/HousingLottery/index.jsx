@@ -1,7 +1,28 @@
+import React, { useEffect, useState } from 'react';
+import {
+  Input,
+  Button,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  Card,
+  CardHeader,
+  CardContent,
+  Grid,
+} from '@mui/material';
+import housingService from 'services/housing';
+import styles from './HousingLottery.module.css';
 import PreferredHall from './studentView/PreferredHall';
+import Preference from './studentView/PreferenceBox';
 
 const HousingLottery = () => {
-  return <PreferredHall />;
-};
+  
 
+  return (
+    <Grid>
+    <PreferredHall />
+    <Preference />
+    </Grid>
+  );
+  };
 export default HousingLottery;
