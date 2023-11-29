@@ -24,12 +24,6 @@ const StudentApplicants = () => {
     setEmails(newEmails);
   };
 
-  //   We will be having set number of applicants for the MVP and for now.
-  // const addApplicant = () => {
-  //   setApplicants([...applicants, { firstName: '', lastName: '', email: '' }]);
-  //   setEmails([...emails, '']);
-  // };
-
   const handleSubmit = () => {
     console.log(emails);
   };
@@ -52,15 +46,6 @@ const StudentApplicants = () => {
             </Grid>
           ))}
           <Grid item xs={12} container justifyContent="flex-end" style={{ marginTop: 'auto' }}>
-            {/* <Button
-              style={{ marginRight:20}}
-              variant="outlined"
-              color="primary"
-              startIcon={<AddIcon fontSize="inherit" />}
-              onClick={addApplicant}
-            >
-              Add Applicant
-            </Button> */}
             <Button
               variant="contained"
               color="primary"

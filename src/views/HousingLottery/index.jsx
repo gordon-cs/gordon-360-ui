@@ -12,7 +12,7 @@ const HousingLottery = () => {
   return (
     <Grid container spacing={2} justifyContent="center">
       <Grid item xs={12} lg={10}>
-        <PreferredHallsCard/>
+        <PreferredHall />
       </Grid>
       <Grid item xs={12} lg={5}>
         <StudentApplicants/>

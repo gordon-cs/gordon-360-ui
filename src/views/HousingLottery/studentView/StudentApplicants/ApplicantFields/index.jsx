@@ -40,8 +40,8 @@ const ApplicantFields = ({ applicant, onApplicantChange, index }) => {
         onChange={(e) => handleFieldChange('email', e.target.value)}
         value={applicant.email}
         required
-        error={!applicant.email.endsWith('@gordon.edu')}
-        helperText={!applicant.email.endsWith('@gordon.edu') ? 'Not a Valid Gordon Email' : '*Required'}
+        error={applicant.email !== '' && !applicant.email.endsWith('@gordon.edu')}
+        helperText={applicant.email === '' || applicant.email.endsWith('@gordon.edu') ? '*Required' : 'Not a Valid Gordon Email'}
         className={styles.applicant_email}
       />
     </>
