@@ -10,19 +10,29 @@ import {
   CardContent,
   Grid,
 } from '@mui/material';
+import PreferredHallsCard from './studentView/PreferredHall';
+import PreferredHall from './studentView/PreferredHall';
+import StudentApplicants from './studentView/StudentApplicants/index.jsx';
+import Preference from './studentView/PreferenceBox';
 import housingService from 'services/housing';
 import styles from './HousingLottery.module.css';
-import PreferredHall from './studentView/PreferredHall';
-import Preference from './studentView/PreferenceBox';
+
 
 const HousingLottery = () => {
   
-
   return (
-    <Grid>
-    <PreferredHall />
-    <Preference />
+    <Grid container spacing={2} justifyContent="center">
+      <Grid item xs={12} lg={10}>
+        <PreferredHall />
+      </Grid>
+      <Grid item xs={12} lg={10}>
+        <Preference/>
+      </Grid>
+      <Grid item xs={12} lg={5}>
+        <StudentApplicants/>
+      </Grid> 
     </Grid>
   );
-  };
+};
+
 export default HousingLottery;

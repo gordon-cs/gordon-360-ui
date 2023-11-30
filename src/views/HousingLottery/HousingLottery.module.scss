@@ -43,6 +43,8 @@
   margin-left: 10px;
 }
 
+
+.applicants_card_header,
 //Imported from ApartmentApp.module.scss
 .people_search_parent {
   @extend %list_item;
@@ -77,6 +79,23 @@ strong.over_emphasized {
       color: var(--mui-palette-primary-contrastText);
     }
   }
+}
+
+.applicant_name {
+  display: flexbox;
+  width: 10em;
+  margin-left: 1em;
+}
+
+.applicant_email {
+  display: flexbox;
+  width: 24em;
+  margin-left: 1em;
+}
+
+.applicant_field {
+  padding-top: 1em;
+  padding-bottom: 1em;
 }
 
 .apartment_instructions {
