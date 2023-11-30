@@ -25,12 +25,12 @@ const HousingLottery = () => {
       <Grid item xs={12} lg={10}>
         <PreferredHall />
       </Grid>
-      <Grid item xs={12} lg={10}>
-        <Preference/>
-      </Grid>
       <Grid item xs={12} lg={5}>
         <StudentApplicants/>
       </Grid> 
+      <Grid item xs={12} lg={10}>
+        <Preference/>
+      </Grid>
     </Grid>
   );
 };
