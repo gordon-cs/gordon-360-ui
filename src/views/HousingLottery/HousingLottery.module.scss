@@ -1,23 +1,11 @@
 .submit_preference_button {
-  position: "absolute";
-  margin: "auto";
-  top: 15px;
-  bottom: 0;
-  left: 45em;
-  right: 20em;
-  height: 3em;
-  width: 9em;
+  height: 45px;
+  margin-left: 10px;
 }
 
 .add_applicant_button {
-  position: "absolute";
-  margin: "auto";
-  top: 15px;
-  bottom: 0;
-  left: 43em;
-  right: 5em;
-  height: 3em;
-  width: 11em;
+  height: 45px;
+  margin-left: 10px;
 }
 
 .addHall_button,
@@ -42,7 +30,6 @@
   margin-bottom: 10px;
   margin-left: 10px;
 }
-
 
 .applicants_card_header,
 //Imported from ApartmentApp.module.scss

@@ -165,8 +165,13 @@ const getSubmittedApartmentApplications = async (): Promise<ApplicationDetails[]
 const submitApplication = (applicationID: number): Promise<boolean> =>
   http.put(`housing/apartment/applications/${applicationID}/submit`);
 
-const addRoommate = (value: string) => http.put(`housing/housing_lottery/roommate/${value}`);
+const addApplicant = (emailList: string[]) =>
+  http.put(`housing/housing_lottery/roommate`, emailList);
+
 const addHall = (hallList: string[]) => http.put(`housing/housing_lottery/hall`, hallList);
+
+const addPreference = (morningOrNight: string, loudOrQuiet: string) =>
+  http.put(`housing/housing_lottery/preference/${morningOrNight}/${loudOrQuiet}`);
 
 const housingService = {
   getApartmentSelectionDate,
@@ -179,8 +184,9 @@ const housingService = {
   getApartmentApplication,
   getSubmittedApartmentApplications,
   submitApplication,
-  addRoommate,
+  addApplicant,
   addHall,
+  addPreference,
 };
 
 export default housingService;

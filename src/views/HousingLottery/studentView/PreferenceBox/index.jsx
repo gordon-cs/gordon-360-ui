@@ -24,22 +24,20 @@ const Preference = () => {
   const [morningOrNight, setMorningOrNight] = useState('');
   const [loudOrQuiet, setLoudOrQuiet] = useState('');
 
-  
-    useEffect(() => {
-     const storedPreferences = localStorage.getItem('userPreferences');
-      if (storedPreferences) {
-        const { morningOrNight, loudOrQuiet } = storedPreferences;
-        setMorningOrNight(morningOrNight || '');
-        setLoudOrQuiet(loudOrQuiet || '');
-      }
-    }, []);
+  useEffect(() => {
+    const storedPreferences = localStorage.getItem('userPreferences');
+    if (storedPreferences) {
+      const { morningOrNight, loudOrQuiet } = storedPreferences;
+      setMorningOrNight(morningOrNight || '');
+      setLoudOrQuiet(loudOrQuiet || '');
+    }
+  }, []);
 
-    useEffect(() => {
-      // Save preferences to local storage
-      const storedPreferences = JSON.stringify({ morningOrNight, loudOrQuiet });
-      localStorage.setItem('userPreferences', storedPreferences);
-      }, [morningOrNight, loudOrQuiet]);
-    
+  useEffect(() => {
+    // Save preferences to local storage
+    const storedPreferences = JSON.stringify({ morningOrNight, loudOrQuiet });
+    localStorage.setItem('userPreferences', storedPreferences);
+  }, [morningOrNight, loudOrQuiet]);
 
   const handleMorningOrNightChange = (event) => {
     setMorningOrNight(event.target.value);
@@ -51,12 +49,12 @@ const Preference = () => {
 
   const handleClick = async () => {
     // You can access morningOrNight, and loudOrQuiet to submit to your housing service
-    console.log({ morningOrNight, loudOrQuiet});
-    await housingService.addRoommate({morningOrNight, loudOrQuiet});
+    console.log({ morningOrNight, loudOrQuiet });
+    await housingService.addPreference(morningOrNight, loudOrQuiet);
   };
 
   return (
-<Grid container justifyContent="center">
+    <Grid container justifyContent="center">
       <Grid item xs={12} lg={6} style={{ maxWidth: '500px' }}>
         <Card>
           <CardHeader title="Preferences" className={styles.apartment_card_header} />
@@ -89,7 +87,11 @@ const Preference = () => {
           </CardContent>
           <Grid container justifyContent="flex-end" style={{ padding: '0 16px 16px 0' }}>
             <Grid item>
-              <Button className={styles.submit_preference_button} variant="contained" onClick={handleClick}>
+              <Button
+                className={styles.submit_preference_button}
+                variant="contained"
+                onClick={handleClick}
+              >
                 Submit
               </Button>
             </Grid>
@@ -98,6 +100,6 @@ const Preference = () => {
       </Grid>
     </Grid>
   );
-}
+};
 
 export default Preference;
