@@ -61,14 +61,6 @@ const Preference = ({ setPreferenceResult }) => {
     }
   };
 
-  const handleClick = async () => {
-    // You can access the list of preferences and selected values
-    console.log('Preferences:', preferences);
-    console.log('Morning or Night:', morningOrNight);
-    console.log('Loud or Quiet:', loudOrQuiet);
-    await housingService.addRoommate({ morningOrNight, loudOrQuiet });
-  };
-
   return (
     <Grid container justifyContent="center">
       <Grid item xs={12} lg={6} style={{ maxWidth: '500px' }}>
@@ -101,17 +93,6 @@ const Preference = ({ setPreferenceResult }) => {
               </RadioGroup>
             </div>
           </CardContent>
-          <Grid container justifyContent="flex-end" style={{ padding: '0 16px 16px 0' }}>
-            <Grid item>
-              <Button
-                className={styles.submit_preference_button}
-                variant="contained"
-                onClick={handleClick}
-              >
-                Submit
-              </Button>
-            </Grid>
-          </Grid>
         </Card>
       </Grid>
     </Grid>

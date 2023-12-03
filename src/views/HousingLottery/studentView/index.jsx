@@ -6,18 +6,28 @@ import Preference from './PreferenceBox';
 import housingService from 'services/housing';
 import styles from '../HousingLottery.module.css';
 import { nanoid } from 'nanoid';
+import GordonSnackbar from 'components/Snackbar';
 
 const StudentView = () => {
   const [preferredHallResult, setPreferredHallResult] = useState([]);
   const [studentApplicantResult, setStudentApplicantResult] = useState([]);
   const [preferenceResult, setPreferenceResult] = useState([]);
   const applicantion_id = nanoid(8);
+  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
 
   const handleClick = async () => {
-    console.log(applicantion_id);
-    await housingService.addHall(applicantion_id, preferredHallResult);
-    await housingService.addApplicant(applicantion_id, studentApplicantResult);
-    await housingService.addPreference(applicantion_id, preferenceResult);
+    try {
+      console.log(applicantion_id);
+      await housingService.addApplicant(applicantion_id, studentApplicantResult);
+      await housingService.addHall(applicantion_id, preferredHallResult);
+      await housingService.addPreference(applicantion_id, preferenceResult);
+    } catch {
+      setSnackbar({
+        message: 'Application fail to submit. Please check your information or contact CTS.',
+        severity: 'error',
+        open: true,
+      });
+    }
   };
 
   return (
@@ -34,6 +44,12 @@ const StudentView = () => {
       <Button className={styles.submit_button} variant="contained" onClick={handleClick}>
         Submit
       </Button>
+      <GordonSnackbar
+        open={snackbar.open}
+        severity={snackbar.severity}
+        text={snackbar.message}
+        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+      />
     </Grid>
   );
 };
