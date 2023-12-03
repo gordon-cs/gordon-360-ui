@@ -1,12 +1,11 @@
 import http from './http';
 
-type SearchResult = {
+export type SearchResult = {
   FirstName: string;
   NickName: string;
   LastName: string;
   MaidenName: string;
   UserName: string;
-  ConcatonatedInfo: string;
 };
 
 const search = async (

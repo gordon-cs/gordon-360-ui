@@ -1,4 +1,4 @@
-.submit_button {
+.submit_preference_button {
   position: "absolute";
   margin: "auto";
   top: 15px;
@@ -18,6 +18,46 @@
   right: 5em;
   height: 3em;
   width: 11em;
+}
+
+.addHall_button,
+.submit_button {
+  height: 45px;
+  margin-left: 10px;
+}
+
+.rankLabel {
+  text-align: left;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.hallSlots {
+  position: relative;
+  padding: 10px;
+}
+
+.hallSlotWrapper {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+}
+
+
+.applicants_card_header {
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
+
+  :global {
+    .MuiTypography-colorTextSecondary {
+      color: var(--mui-palette-primary-contrastText);
+      font-size: 1.25rem;
+    }
+
+    .MuiCardHeader-subheader {
+      color: var(--mui-palette-primary-contrastText);
+    }
+  }
 }
 
 
@@ -55,6 +95,23 @@ strong.over_emphasized {
       color: var(--mui-palette-primary-contrastText);
     }
   }
+}
+
+.applicant_name {
+  display: flexbox;
+  width: 10em;
+  margin-left: 1em;
+}
+
+.applicant_email {
+  display: flexbox;
+  width: 24em;
+  margin-left: 1em;
+}
+
+.applicant_field {
+  padding-top: 1em;
+  padding-bottom: 1em;
 }
 
 .apartment_instructions {
