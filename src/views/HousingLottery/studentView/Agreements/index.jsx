@@ -16,7 +16,7 @@ import housing from 'services/housing';
 import styles from '../../HousingLottery.module.css';
 
 /**
- * Renders a card displaying the apartment application instructions
+ * Renders a card displaying the housing application instructions
  *
  * @param {Object} props The React component props
  * @param {boolean | string} props.deleting Status of delete operation
@@ -100,7 +100,7 @@ const Agreements = ({ deleting, onChange }) => {
   const AgreementChecklistItem = ({ checked, index, label, onChange }) => (
     <Fragment>
       <FormControlLabel
-        className={styles.apartment_agreements_form_control_option}
+        className={styles.housing_agreements_form_control_option}
         control={
           <Checkbox
             checked={checked}
@@ -119,13 +119,13 @@ const Agreements = ({ deleting, onChange }) => {
 
   return (
     <Card>
-      <CardHeader title="Agreements" className={styles.apartment_card_header} />
+      <CardHeader title="Agreements" className={styles.housing_card_header} />
       <CardContent>
-        <FormControl component="fieldset" className={styles.apartment_agreements_form_control}>
+        <FormControl component="fieldset" className={styles.housing_agreements_form_control}>
           {error && (
             <FormLabel
               component="legend"
-              className={styles.apartment_agreements_form_control_label}
+              className={styles.housing_agreements_form_control_label}
             >
               Use the checkboxes next to each statement to indicate your group's understanding
               and/or affirmative answer. Failure to complete this section will result in the
