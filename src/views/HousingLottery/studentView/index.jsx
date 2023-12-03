@@ -10,12 +10,14 @@ import { nanoid } from 'nanoid';
 const StudentView = () => {
   const [preferredHallResult, setPreferredHallResult] = useState([]);
   const [studentApplicantResult, setStudentApplicantResult] = useState([]);
+  const [preferenceResult, setPreferenceResult] = useState([]);
   const applicantion_id = nanoid(8);
 
   const handleClick = async () => {
     console.log(applicantion_id);
     await housingService.addHall(applicantion_id, preferredHallResult);
     await housingService.addApplicant(applicantion_id, studentApplicantResult);
+    await housingService.addPreference(applicantion_id, preferenceResult);
   };
 
   return (
@@ -24,7 +26,7 @@ const StudentView = () => {
         <PreferredHall setPreferredHallResult={setPreferredHallResult} />
       </Grid>
       <Grid item xs={12} lg={10}>
-        <Preference />
+        <Preference setPreferenceResult={setPreferenceResult} />
       </Grid>
       <Grid item xs={12} lg={5}>
         <StudentApplicants setStudentApplicantResult={setStudentApplicantResult} />

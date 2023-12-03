@@ -19,7 +19,7 @@ import housingService from 'services/housing';
 import housing from 'services/housing';
 import styles from '../../HousingLottery.module.css';
 
-const Preference = () => {
+const Preference = ({ setPreferenceResult }) => {
   const [preferences, setPreferences] = useState([]); // Store preferences as an array
   const [morningOrNight, setMorningOrNight] = useState(''); // Store the selected morning or night
   const [loudOrQuiet, setLoudOrQuiet] = useState(''); // Store the selected loud or quiet
@@ -53,9 +53,11 @@ const Preference = () => {
     if (preferences.includes(type)) {
       // If the preference type is already in the list, remove it
       setPreferences((prevPreferences) => prevPreferences.filter((pref) => pref !== type));
+      setPreferenceResult((prevPreferences) => prevPreferences.filter((pref) => pref !== type));
     } else {
       // If the preference type is not in the list, add it
       setPreferences((prevPreferences) => [...prevPreferences, type]);
+      setPreferenceResult((prevPreferences) => [...prevPreferences, type]);
     }
   };
 
