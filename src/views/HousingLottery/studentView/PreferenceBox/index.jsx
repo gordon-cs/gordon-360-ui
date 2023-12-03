@@ -63,7 +63,9 @@ const Preference = () => {
 
   const handleClick = async () => {
     // You can access the list of preferences and selected values
-    console.log({ preferences, morningOrNight, loudOrQuiet });
+  console.log('Preferences:', preferences);
+  console.log('Morning or Night:', morningOrNight);
+  console.log('Loud or Quiet:', loudOrQuiet);
     await housingService.addRoommate({ morningOrNight, loudOrQuiet });
   };
 
