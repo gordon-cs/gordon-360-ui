@@ -38,7 +38,23 @@
 }
 
 
-.applicants_card_header,
+.applicants_card_header {
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
+
+  :global {
+    .MuiTypography-colorTextSecondary {
+      color: var(--mui-palette-primary-contrastText);
+      font-size: 1.25rem;
+    }
+
+    .MuiCardHeader-subheader {
+      color: var(--mui-palette-primary-contrastText);
+    }
+  }
+}
+
+
 //Imported from ApartmentApp.module.scss
 .people_search_parent {
   @extend %list_item;
@@ -59,7 +75,7 @@ strong.over_emphasized {
   text-decoration: underline;
 }
 
-.apartment_card_header {
+.housing_card_header {
   background-color: var(--mui-palette-primary-main);
   color: var(--mui-palette-primary-contrastText);
 
@@ -92,7 +108,7 @@ strong.over_emphasized {
   padding-bottom: 1em;
 }
 
-.apartment_instructions {
+.housing_instructions {
   & :global(.MuiTypography-root) {
     padding: 0.25rem 0.75rem;
   }
@@ -140,7 +156,7 @@ strong.over_emphasized {
   }
 }
 
-.apartment_agreements_form_control {
+.housing_agreements_form_control {
   text-align: left;
 
   &_label {

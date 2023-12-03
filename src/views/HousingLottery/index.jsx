@@ -14,6 +14,7 @@ import PreferredHallsCard from './studentView/PreferredHall';
 import PreferredHall from './studentView/PreferredHall';
 import StudentApplicants from './studentView/StudentApplicants/index.jsx';
 import Preference from './studentView/PreferenceBox';
+import Agreements from './studentView/Agreements';
 import housingService from 'services/housing';
 import styles from './HousingLottery.module.css';
 
@@ -26,11 +27,14 @@ const HousingLottery = () => {
         <PreferredHall />
       </Grid>
       <Grid item xs={12} lg={10}>
-        <Preference/>
+        <Agreements/>
       </Grid>
       <Grid item xs={12} lg={5}>
         <StudentApplicants/>
       </Grid> 
+      <Grid item xs={12} lg={10}>
+        <Preference/>
+      </Grid>
     </Grid>
   );
 };
