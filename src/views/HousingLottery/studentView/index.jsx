@@ -5,14 +5,17 @@ import StudentApplicants from './StudentApplicants/index.jsx';
 import Preference from './PreferenceBox';
 import housingService from 'services/housing';
 import styles from '../HousingLottery.module.css';
+import { nanoid } from 'nanoid';
 
 const StudentView = () => {
   const [preferredHallResult, setPreferredHallResult] = useState([]);
   const [studentApplicantResult, setStudentApplicantResult] = useState([]);
+  const applicantion_id = nanoid(8);
 
   const handleClick = async () => {
-    await housingService.addHall(preferredHallResult);
-    await housingService.addApplicant(studentApplicantResult);
+    console.log(applicantion_id);
+    await housingService.addHall(applicantion_id, preferredHallResult);
+    await housingService.addApplicant(applicantion_id, studentApplicantResult);
   };
 
   return (
