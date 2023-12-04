@@ -1,21 +1,11 @@
 .submit_preference_button {
-  margin: auto;
-  top: 15px;
-  bottom: 0;
-  left: 45em;
-  right: 20em;
-  height: 3em;
-  width: 9em;
+  height: 45px;
+  margin-left: 10px;
 }
 
 .add_applicant_button {
-  margin: auto;
-  top: 15px;
-  bottom: 0;
-  left: 43em;
-  right: 5em;
-  height: 3em;
-  width: 11em;
+  height: 45px;
+  margin-left: 10px;
 }
 
 .addHall_button,
@@ -41,6 +31,7 @@
   margin-left: 10px;
 }
 
+.preferences_card_header,
 .applicants_card_header {
   background-color: var(--mui-palette-primary-main);
   color: var(--mui-palette-primary-contrastText);
