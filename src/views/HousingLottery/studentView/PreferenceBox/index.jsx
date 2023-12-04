@@ -25,6 +25,7 @@ const Preference = () => {
   const [loudOrQuiet, setLoudOrQuiet] = useState(''); // Store the selected loud or quiet
 
   useEffect(() => {
+    // Check for stored preferences in localStorage
     const storedPreferences = localStorage.getItem('userPreferences');
     if (storedPreferences) {
       const { morningOrNight, loudOrQuiet } = JSON.parse(storedPreferences);
@@ -32,12 +33,6 @@ const Preference = () => {
       setLoudOrQuiet(loudOrQuiet || '');
     }
   }, []);
-
-  useEffect(() => {
-    // Save preferences to local storage
-    const storedPreferences = JSON.stringify({ morningOrNight, loudOrQuiet });
-    localStorage.setItem('userPreferences', storedPreferences);
-  }, [morningOrNight, loudOrQuiet]);
 
   const handleMorningOrNightChange = (event) => {
     setMorningOrNight(event.target.value);
@@ -51,15 +46,19 @@ const Preference = () => {
 
   const updatePreferences = (type, value) => {
     setPreferences((prevPreferences) => {
-      // If the preference type is already in the list, remove it
-      if (prevPreferences.includes(type)) {
-        return prevPreferences.filter((pref) => pref !== type);
+      // Check if the preference type is already in the list
+      const existingPrefIndex = prevPreferences.findIndex((pref) => Object.keys(pref)[0] === type);
+  
+      // If it exists, update the value, otherwise add it
+      if (existingPrefIndex !== -1) {
+        prevPreferences[existingPrefIndex][type] = value;
+        return [...prevPreferences];
       } else {
-        // If the preference type is not in the list, add it along with the selected value
         return [...prevPreferences, { [type]: value }];
       }
     });
   };
+  
   
 
   const handleClick = async () => {
@@ -69,6 +68,27 @@ const Preference = () => {
   console.log('Loud or Quiet:', loudOrQuiet);
     await housingService.addRoommate({ morningOrNight, loudOrQuiet });
   };
+
+  useEffect(() => {
+    // Save preferences to local storage
+    const storedPreferences = JSON.stringify({ morningOrNight, loudOrQuiet });
+    localStorage.setItem('userPreferences', storedPreferences);
+  }, [morningOrNight, loudOrQuiet]);
+
+  useEffect(() => {
+    // Check if both morningOrNight and loudOrQuiet are empty, clear localStorage
+    if (!morningOrNight && !loudOrQuiet) {
+      localStorage.removeItem('userPreferences');
+    }
+  }, [morningOrNight, loudOrQuiet]);
+
+  useEffect(() => {
+    // Clear selected radio buttons when the page is refreshed
+    if (!localStorage.getItem('userPreferences')) {
+      setMorningOrNight('');
+      setLoudOrQuiet('');
+    }
+  }, []);
 
   return (
     <Grid container justifyContent="center">
