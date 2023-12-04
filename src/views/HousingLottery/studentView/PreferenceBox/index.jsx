@@ -50,16 +50,17 @@ const Preference = () => {
   };
 
   const updatePreferences = (type, value) => {
-    if (preferences.includes(type)) {
+    setPreferences((prevPreferences) => {
       // If the preference type is already in the list, remove it
-      setPreferences((prevPreferences) =>
-        prevPreferences.filter((pref) => pref !== type)
-      );
-    } else {
-      // If the preference type is not in the list, add it
-      setPreferences((prevPreferences) => [...prevPreferences, type]);
-    }
+      if (prevPreferences.includes(type)) {
+        return prevPreferences.filter((pref) => pref !== type);
+      } else {
+        // If the preference type is not in the list, add it along with the selected value
+        return [...prevPreferences, { [type]: value }];
+      }
+    });
   };
+  
 
   const handleClick = async () => {
     // You can access the list of preferences and selected values
@@ -73,7 +74,7 @@ const Preference = () => {
     <Grid container justifyContent="center">
       <Grid item xs={12} lg={6} style={{ maxWidth: '500px' }}>
         <Card>
-          <CardHeader title="Preferences" className={styles.apartment_card_header} />
+          <CardHeader title="Preferences" className={styles.preferences_card_header} />
           <CardContent>
             <div>
               <label>Are you a night owl or a morning bird?</label>
