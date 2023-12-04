@@ -189,7 +189,6 @@ strong.over_emphasized {
 .apartment_card_header {
   background-color: var(--mui-palette-primary-main);
   color: var(--mui-palette-primary-contrastText);
-
   :global {
     .MuiTypography-colorTextSecondary {
       color: var(--mui-palette-primary-contrastText);

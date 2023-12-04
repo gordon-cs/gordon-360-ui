@@ -52,9 +52,7 @@ const Preference = () => {
   const updatePreferences = (type, value) => {
     if (preferences.includes(type)) {
       // If the preference type is already in the list, remove it
-      setPreferences((prevPreferences) =>
-        prevPreferences.filter((pref) => pref !== type)
-      );
+      setPreferences((prevPreferences) => prevPreferences.filter((pref) => pref !== type));
     } else {
       // If the preference type is not in the list, add it
       setPreferences((prevPreferences) => [...prevPreferences, type]);
@@ -63,15 +61,15 @@ const Preference = () => {
 
   const handleClick = async () => {
     // You can access the list of preferences and selected values
-  console.log('Preferences:', preferences);
-  console.log('Morning or Night:', morningOrNight);
-  console.log('Loud or Quiet:', loudOrQuiet);
+    console.log('Preferences:', preferences);
+    console.log('Morning or Night:', morningOrNight);
+    console.log('Loud or Quiet:', loudOrQuiet);
     await housingService.addRoommate({ morningOrNight, loudOrQuiet });
   };
 
   return (
     <Grid container justifyContent="center">
-      <Grid item xs={12} lg={6} style={{ maxWidth: '500px' }}>
+      <Grid item xs={12}>
         <Card>
           <CardHeader title="Preferences" className={styles.apartment_card_header} />
           <CardContent>
@@ -103,7 +101,11 @@ const Preference = () => {
           </CardContent>
           <Grid container justifyContent="flex-end" style={{ padding: '0 16px 16px 0' }}>
             <Grid item>
-              <Button className={styles.submit_preference_button} variant="contained" onClick={handleClick}>
+              <Button
+                className={styles.submit_preference_button}
+                variant="contained"
+                onClick={handleClick}
+              >
                 Submit
               </Button>
             </Grid>
@@ -112,6 +114,6 @@ const Preference = () => {
       </Grid>
     </Grid>
   );
-}
+};
 
 export default Preference;

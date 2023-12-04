@@ -22,20 +22,20 @@ import styles from './HousingLottery.module.css';
 const HousingLottery = () => {
   return (
     <Grid container spacing={2} justifyContent="center">
-      <Grid item xs={12} lg={6}>
+      <Grid item xs={12}>
         <Instructions />
       </Grid>
-      <Grid item xs={12} lg={10}>
+      <Grid item xs={12} lg={5}>
         <PreferredHall />
-      </Grid>
-      <Grid item xs={12} lg={10}>
-        <Agreements />
       </Grid>
       <Grid item xs={12} lg={5}>
         <StudentApplicants />
       </Grid>
-      <Grid item xs={12} lg={10}>
+      <Grid item xs={12} lg={5}>
         <Preference />
+      </Grid>
+      <Grid item xs={12} lg={5}>
+        <Agreements />
       </Grid>
     </Grid>
   );

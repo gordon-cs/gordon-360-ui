@@ -55,7 +55,7 @@ const Instructions = () => {
         aria-controls="instructions-panel-content"
         id="instructions-panel-header"
       >
-        <Typography variant="h6">On-Campus Apartments - Information and Guidelines</Typography>
+        <Typography variant="h5">On-Campus Apartments - Information and Guidelines</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Typography variant="body1" paragraph>

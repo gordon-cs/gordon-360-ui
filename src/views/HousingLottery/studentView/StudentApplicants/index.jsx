@@ -8,11 +8,11 @@ const StudentApplicants = () => {
     { firstName: '', lastName: '', email: '' },
     { firstName: '', lastName: '', email: '' },
     { firstName: '', lastName: '', email: '' },
-    { firstName: '', lastName: '', email: '' }
+    { firstName: '', lastName: '', email: '' },
   ];
 
   const [applicants, setApplicants] = useState(initialApplicants);
-  const [emails, setEmails] = useState(initialApplicants.map(applicant => applicant.email));
+  const [emails, setEmails] = useState(initialApplicants.map((applicant) => applicant.email));
 
   const handleApplicantChange = (index, updatedApplicant) => {
     const newApplicants = [...applicants];
@@ -42,15 +42,11 @@ const StudentApplicants = () => {
                   index={index}
                 />
               </div>
-              <Divider/>
+              <Divider />
             </Grid>
           ))}
           <Grid item xs={12} container justifyContent="flex-end" style={{ marginTop: 'auto' }}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleSubmit}
-            >
+            <Button variant="contained" color="primary" onClick={handleSubmit}>
               Submit
             </Button>
           </Grid>
