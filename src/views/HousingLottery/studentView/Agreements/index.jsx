@@ -123,10 +123,7 @@ const Agreements = ({ deleting, onChange }) => {
       <CardContent>
         <FormControl component="fieldset" className={styles.housing_agreements_form_control}>
           {error && (
-            <FormLabel
-              component="legend"
-              className={styles.housing_agreements_form_control_label}
-            >
+            <FormLabel component="legend" className={styles.housing_agreements_form_control_label}>
               Use the checkboxes next to each statement to indicate your group's understanding
               and/or affirmative answer. Failure to complete this section will result in the
               disqualification of the application.
