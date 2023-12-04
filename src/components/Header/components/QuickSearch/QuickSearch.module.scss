@@ -1,45 +1,29 @@
 @use 'sass:color';
 @import '../../../../vars';
 
-.quick_search {
-  width: inherit;
-}
-
 .root {
-  align-self: flex-end;
   color: var(--mui-palette-primary-contrastText);
   transition: box-shadow 0.3s, width 0.3s;
   border-radius: 4px;
   border: 1px solid var(--mui-palette-primary-contrastText);
-  padding: 2px 10px;
   max-width: 15rem;
+
   &:focus-within {
     box-shadow: 0 4px 10px 2px var(--mui-palette-neutral-A400);
     max-width: 15rem;
   }
+
   &:hover:not(:focus-within) {
     box-shadow: 0 3px 10px 2px var(--mui-palette-neutral-A400);
   }
 
-  & :global(.MuiInputBase-input) {
-    padding: 7px 0px;
+  & :global(.MuiInputBase-root) {
+    padding: 2px 10px;
   }
-
 }
+
 .searchIcon {
   color: var(--mui-palette-primary-contrastText);
-}
-
-.dropdown {
-  position: absolute;
-  max-height: 60vh;
-  width: inherit;
-  // max-width: 15rem;
-  overflow-y: auto; // make this to scroll
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  border-radius: 4px;
-  z-index: 10;
 }
 
 .matched_text {
@@ -49,84 +33,8 @@
   background-color: var(--mui-palette-secondary-50);
 }
 
-.suggestion_selected {
-  background-color: var(--mui-palette-neutral-main);
-}
-
-.suggestion,
-.suggestion_selected {
+.suggestion {
   display: block;
   text-align: start;
   white-space: normal; // wrap long names
-}
-
-.suggestion_no_results {
-  display: block;
-  text-align: start;
-  white-space: normal; // wrap long names
-  padding-bottom: '5px';
-}
-
-.suggestion_selected:hover {
-  background-color: var(--mui-palette-neutral-main) !important;
-}
-
-.dropdown:hover .suggestion_selected {
-  background-color: var(--mui-palette-neutral-light);
-}
-
-// .loading is shown first. After 350ms, .loading opacity and font-size go to 0. This is done
-// to give space for .no-results to increase in font size and change to normal opacity.
-.no_results {
-  font-style: italic;
-  color: var(--mui-palette-neutral-500);
-  animation: show-no-results 1500ms;
-}
-
-@keyframes show-no-results {
-  0% {
-    font-size: 0;
-    opacity: 0;
-  }
-  99% {
-    font-size: 0;
-    opacity: 0;
-  }
-  100% {
-    font-size: 90%;
-    opacity: 1;
-  }
-}
-
-.loading {
-  font-size: 0;
-  opacity: 0;
-  font-style: italic;
-  color: var(--mui-palette-neutral-500);
-  animation: show-loading 1500ms;
-}
-
-@keyframes show-loading {
-  0% {
-    font-size: 90%;
-    opacity: 1;
-  }
-  99% {
-    font-size: 90%;
-    opacity: 1;
-  }
-  100% {
-    font-size: 0;
-    opacity: 0;
-  }
-}
-
-@media (min-width: $break-sm) {
-  .root {
-    align-self: flex-end;
-  }
-}
-
-:global(hr.MuiDivider-root).suggestion_divider {
-  margin: 0px;
 }

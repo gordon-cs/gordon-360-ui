@@ -31,7 +31,7 @@ import ApplicantListItem from './components/ApplicantListItem';
 /**
  * Renders the list of applicants, displayed by name, username, and class standing.
  *
- * @param {Object} props The React component props
+ * @param {object} props The React component props
  * @param {boolean} props.disabled boolean to disable the interactive elements of this list
  * @param {StudentProfileInfo} props.editorProfile The StudentProfileInfo of the application editor
  * @param {ApartmentApplicant[]} props.applicants Array of applicant info
@@ -121,8 +121,8 @@ const ApplicantList = ({
             <Grid item xs={9} sm={5} className={styles.people_search_parent}>
               <GordonQuickSearch
                 disableLink
-                customPlaceholderText={'Add Applicant'}
-                onSearchSubmit={(selectedUsername) => disabled || onSearchSubmit(selectedUsername)}
+                customPlaceholderText="Add Applicant"
+                onSearchSubmit={(selectedUser) => disabled || onSearchSubmit(selectedUser.UserName)}
               />
             </Grid>
           </Grid>

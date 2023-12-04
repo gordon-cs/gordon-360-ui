@@ -109,3 +109,12 @@
 .menuButton:hover {
   background-color: var(--mui-palette-neutral-A700);
 }
+
+.alertButton.alertButton {
+  border-color: var(--mui-palette-Alert-errorColor);
+  color: var(--mui-palette-Alert-errorColor);
+  :hover {
+    background-color: var(--mui-palette-error-contrastText);
+    color: var(--mui-palette-error-contrastText);
+  }
+}

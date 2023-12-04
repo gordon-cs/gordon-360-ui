@@ -19,7 +19,6 @@ import PeopleSearch from './views/PeopleSearch';
 import ProfileNotFound from './views/ProfileNotFound';
 import PublicProfile from './views/PublicProfile';
 import Timesheets from './views/Timesheets';
-import WellnessCheck from './views/WellnessCheck';
 import RecIM from './views/RecIM';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
@@ -33,11 +32,6 @@ const routes = [
     name: 'About',
     path: '/about',
     element: <About />,
-  },
-  {
-    name: 'Wellness',
-    path: '/wellness',
-    element: <WellnessCheck />,
   },
   {
     name: 'Apartment Application',
