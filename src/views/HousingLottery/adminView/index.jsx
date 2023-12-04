@@ -16,7 +16,7 @@ const AdminView = () => {
 
   return (
     <Button className={styles.submit_button} variant="contained" onClick={handleClick}>
-      Json Array
+      click to see Json Array (transitory button)
     </Button>
   );
 };

@@ -3,6 +3,8 @@ import { Button, Grid } from '@mui/material';
 import PreferredHall from './PreferredHall';
 import StudentApplicants from './StudentApplicants/index.jsx';
 import Preference from './PreferenceBox';
+import Agreements from './Agreements';
+import Instructions from './Instructions';
 import housingService from 'services/housing';
 import styles from '../HousingLottery.module.css';
 import { nanoid } from 'nanoid';
@@ -32,14 +34,20 @@ const StudentView = () => {
 
   return (
     <Grid container spacing={2} justifyContent="center">
+      <Grid item xs={12} lg={6}>
+        <Instructions />
+      </Grid>
       <Grid item xs={12} lg={10}>
         <PreferredHall setPreferredHallResult={setPreferredHallResult} />
       </Grid>
       <Grid item xs={12} lg={10}>
-        <Preference setPreferenceResult={setPreferenceResult} />
+        <Agreements />
       </Grid>
       <Grid item xs={12} lg={5}>
         <StudentApplicants setStudentApplicantResult={setStudentApplicantResult} />
+      </Grid>
+      <Grid item xs={12} lg={10}>
+        <Preference setPreferenceResult={setPreferenceResult} />
       </Grid>
       <Button className={styles.submit_button} variant="contained" onClick={handleClick}>
         Submit

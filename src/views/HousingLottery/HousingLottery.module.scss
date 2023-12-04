@@ -1,6 +1,11 @@
 .submit_preference_button {
-  height: 45px;
-  margin-left: 10px;
+  margin: auto;
+  top: 15px;
+  bottom: 0;
+  left: 45em;
+  right: 20em;
+  height: 3em;
+  width: 9em;
 }
 
 .add_applicant_button {
@@ -173,5 +178,51 @@ strong.over_emphasized {
 
   &_icon {
     margin-right: 0.75rem;
+  }
+}
+
+.apartment_card_header {
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
+
+  :global {
+    .MuiTypography-colorTextSecondary {
+      color: var(--mui-palette-primary-contrastText);
+      font-size: 1.25rem;
+    }
+
+    .MuiCardHeader-subheader {
+      color: var(--mui-palette-primary-contrastText);
+    }
+  }
+}
+
+.apartment_instructions {
+  & :global(.MuiTypography-root) {
+    padding: 0.25rem 0.75rem;
+  }
+
+  & :global(.MuiTypography-paragraph) {
+    text-align: left;
+  }
+
+  & :global(.MuiTableContainer-root) {
+    border: 1px solid var(--mui-palette-neutral-700);
+    border-radius: 4px;
+  }
+}
+
+.apartment_agreements_form_control {
+  text-align: left;
+
+  &_label {
+    color: var(--mui-palette-neutral-700);
+  }
+
+  // (CSSMODULES - fix mui overrides - disable no-descending-specificity)
+  /* stylelint-disable-next-line */
+  & :global(.MuiDivider-root) {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
   }
 }
