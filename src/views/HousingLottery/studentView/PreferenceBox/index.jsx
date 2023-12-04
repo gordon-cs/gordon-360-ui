@@ -19,15 +19,15 @@ import housingService from 'services/housing';
 import housing from 'services/housing';
 import styles from '../../HousingLottery.module.css';
 
-const Preference = () => {
-  const [message, setMessage] = useState('');
-  const [morningOrNight, setMorningOrNight] = useState('');
-  const [loudOrQuiet, setLoudOrQuiet] = useState('');
+const Preference = ({ setPreferenceResult }) => {
+  const [preferences, setPreferences] = useState([]); // Store preferences as an array
+  const [morningOrNight, setMorningOrNight] = useState(''); // Store the selected morning or night
+  const [loudOrQuiet, setLoudOrQuiet] = useState(''); // Store the selected loud or quiet
 
   useEffect(() => {
     const storedPreferences = localStorage.getItem('userPreferences');
     if (storedPreferences) {
-      const { morningOrNight, loudOrQuiet } = storedPreferences;
+      const { morningOrNight, loudOrQuiet } = JSON.parse(storedPreferences);
       setMorningOrNight(morningOrNight || '');
       setLoudOrQuiet(loudOrQuiet || '');
     }
@@ -41,16 +41,24 @@ const Preference = () => {
 
   const handleMorningOrNightChange = (event) => {
     setMorningOrNight(event.target.value);
+    updatePreferences('morningOrNight', event.target.value);
   };
 
   const handleLoudOrQuietChange = (event) => {
     setLoudOrQuiet(event.target.value);
+    updatePreferences('loudOrQuiet', event.target.value);
   };
 
-  const handleClick = async () => {
-    // You can access morningOrNight, and loudOrQuiet to submit to your housing service
-    console.log({ morningOrNight, loudOrQuiet });
-    await housingService.addPreference(morningOrNight, loudOrQuiet);
+  const updatePreferences = (type, value) => {
+    if (preferences.includes(type)) {
+      // If the preference type is already in the list, remove it
+      setPreferences((prevPreferences) => prevPreferences.filter((pref) => pref !== type));
+      setPreferenceResult((prevPreferences) => prevPreferences.filter((pref) => pref !== type));
+    } else {
+      // If the preference type is not in the list, add it
+      setPreferences((prevPreferences) => [...prevPreferences, type]);
+      setPreferenceResult((prevPreferences) => [...prevPreferences, type]);
+    }
   };
 
   return (
@@ -85,17 +93,6 @@ const Preference = () => {
               </RadioGroup>
             </div>
           </CardContent>
-          <Grid container justifyContent="flex-end" style={{ padding: '0 16px 16px 0' }}>
-            <Grid item>
-              <Button
-                className={styles.submit_preference_button}
-                variant="contained"
-                onClick={handleClick}
-              >
-                Submit
-              </Button>
-            </Grid>
-          </Grid>
         </Card>
       </Grid>
     </Grid>
