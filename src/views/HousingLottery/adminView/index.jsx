@@ -9,6 +9,7 @@ import {
   Paper,
   Button,
   Grid,
+  Typography,
 } from '@mui/material';
 import housingService from 'services/housing';
 import styles from '../HousingLottery.module.css';
@@ -24,12 +25,24 @@ const AdminView = () => {
       const schoolYear = await housingService.getAllSchoolYear();
 
       // Combine the fetched data into a single array of objects
-      const combinedData = applicants.map((applicant, index) => ({
-        lotteryNumber: index + 1,
-        applicantEmails: applicant.emails.join(', '), // Assuming emails is an array
-        preferredHalls: preferredHall[index].halls.join(', '), // Assuming halls is an array
-        preference: preference[index], // Assuming preference is an object
-      }));
+      const combinedData = applicants.map((applicant, index) => {
+        const rowData = {
+          lotteryNumber: index + 1,
+          preference: JSON.stringify(preference[index]), // Assuming preference is an object
+        };
+
+        // Add columns for applicant's emails
+        for (let i = 0; i < 5; i++) {
+          rowData[`Applicant ${i + 1}'s Email`] = applicant.emails[i] || '';
+        }
+
+        // Add columns for preferred halls
+        for (let i = 0; i < 6; i++) {
+          rowData[`Preferred Hall ${i + 1}`] = preferredHall[index].halls[i] || '';
+        }
+
+        return rowData;
+      });
 
       setData(combinedData);
     };
@@ -38,51 +51,52 @@ const AdminView = () => {
   }, []);
 
   return (
-    <div>
-      <Button className={styles.submit_button} variant="contained">
-        Export as Spreadsheet
-      </Button>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Lottery Number</TableCell>
-              <TableCell>Applicant 1’s Email</TableCell>
-              <TableCell>Applicant 2’s Email</TableCell>
-              <TableCell>Applicant 3’s Email</TableCell>
-              <TableCell>Applicant 4’s Email</TableCell>
-              <TableCell>Applicant 5’s Email</TableCell>
-              <TableCell>Preferred Hall 1</TableCell>
-              <TableCell>Preferred Hall 2</TableCell>
-              <TableCell>Preferred Hall 3</TableCell>
-              <TableCell>Preferred Hall 4</TableCell>
-              <TableCell>Preferred Hall 5</TableCell>
-              <TableCell>Preferred Hall 6</TableCell>
-              <TableCell>Preference</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data.map((row) => (
-              <TableRow key={row.lotteryNumber}>
-                <TableCell>{row.lotteryNumber}</TableCell>
-                <TableCell>{row.applicantEmails}</TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell>{row.preferredHalls}</TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell>{JSON.stringify(row.preference)}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </div>
+    <Grid container justifyContent="center">
+      <Grid item xs={12} lg={8}>
+        <Paper elevation={3} className={styles.AdminCard}> 
+          <Typography variant="h5" className={styles.pageTitle}>
+            Admin Interface
+          </Typography>
+          <Button className={styles.exportButton} variant="contained">
+            Export as Spreadsheet
+          </Button>
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Lottery Number</TableCell>
+                  {Array.from({ length: 5 }, (_, i) => (
+                    <TableCell key={`ApplicantEmailHeader${i}`}>
+                      Applicant {i + 1}'s Email
+                    </TableCell>
+                  ))}
+                  {Array.from({ length: 6 }, (_, i) => (
+                    <TableCell key={`PreferredHallHeader${i}`}>
+                      Preferred Hall {i + 1}
+                    </TableCell>
+                  ))}
+                  <TableCell>Preference</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {data.map((row) => (
+                  <TableRow key={row.lotteryNumber}>
+                    <TableCell>{row.lotteryNumber}</TableCell>
+                    {Array.from({ length: 5 }, (_, i) => (
+                      <TableCell key={`ApplicantEmail${i}`}>{row[`Applicant ${i + 1}'s Email`]}</TableCell>
+                    ))}
+                    {Array.from({ length: 6 }, (_, i) => (
+                      <TableCell key={`PreferredHall${i}`}>{row[`Preferred Hall ${i + 1}`]}</TableCell>
+                    ))}
+                    <TableCell>{row.preference}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Paper>
+      </Grid>
+    </Grid>
   );
 };
 
