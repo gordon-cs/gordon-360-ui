@@ -5,7 +5,7 @@ import housingService from 'services/housing';
 import styles from '../../HousingLottery.module.css';
 import GordonSnackbar from 'components/Snackbar';
 
-const PreferredHallsCard = () => {
+const PreferredHallsCard = ({ setPreferredHallResult }) => {
   const [hallList, setHallList] = useState([]);
   const [preferredHallList, setPreferredHallList] = useState(['', '', '', '', '', '']);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
@@ -19,11 +19,8 @@ const PreferredHallsCard = () => {
     let newList = preferredHallList;
     newList[rank - 1] = hall;
     setPreferredHallList(newList);
+    setPreferredHallResult(newList);
   }
-
-  const handleClick = async () => {
-    await housingService.addHall(preferredHallList);
-  };
 
   return (
     <Grid container>
@@ -111,16 +108,6 @@ const PreferredHallsCard = () => {
                   />
                 </Grid>
               </Grid>
-            </Grid>
-            <Grid
-              container
-              justifyContent="flex-end"
-              alignItems="flex-end"
-              style={{ marginTop: 'auto' }}
-            >
-              <Button className={styles.submit_button} variant="contained" onClick={handleClick}>
-                Submit
-              </Button>
             </Grid>
           </CardContent>
         </Card>

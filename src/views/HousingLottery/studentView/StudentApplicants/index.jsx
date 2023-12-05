@@ -2,8 +2,9 @@ import { Button, Card, CardContent, CardHeader, Divider, Grid, TextField } from 
 import { useState } from 'react';
 import ApplicantFields from './ApplicantFields';
 import styles from '../../HousingLottery.module.css';
+import housingService from 'services/housing';
 
-const StudentApplicants = () => {
+const StudentApplicants = ({ setStudentApplicantResult }) => {
   const initialApplicants = [
     { firstName: '', lastName: '', email: '' },
     { firstName: '', lastName: '', email: '' },
@@ -22,10 +23,7 @@ const StudentApplicants = () => {
     const newEmails = [...emails];
     newEmails[index] = updatedApplicant.email;
     setEmails(newEmails);
-  };
-
-  const handleSubmit = () => {
-    console.log(emails);
+    setStudentApplicantResult(newEmails);
   };
 
   return (
@@ -45,11 +43,6 @@ const StudentApplicants = () => {
               <Divider />
             </Grid>
           ))}
-          <Grid item xs={12} container justifyContent="flex-end" style={{ marginTop: 'auto' }}>
-            <Button variant="contained" color="primary" onClick={handleSubmit}>
-              Submit
-            </Button>
-          </Grid>
         </Grid>
       </CardContent>
     </Card>
