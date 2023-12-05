@@ -34,20 +34,20 @@ const StudentView = () => {
 
   return (
     <Grid container spacing={2} justifyContent="center">
-      <Grid item xs={12} lg={6}>
+      <Grid item xs={10}>
         <Instructions />
-      </Grid>
-      <Grid item xs={12} lg={10}>
-        <PreferredHall setPreferredHallResult={setPreferredHallResult} />
-      </Grid>
-      <Grid item xs={12} lg={10}>
-        <Agreements />
       </Grid>
       <Grid item xs={12} lg={5}>
         <StudentApplicants setStudentApplicantResult={setStudentApplicantResult} />
       </Grid>
+      <Grid item xs={12} lg={5}>
+        <PreferredHall setPreferredHallResult={setPreferredHallResult} />
+      </Grid>
       <Grid item xs={12} lg={10}>
         <Preference setPreferenceResult={setPreferenceResult} />
+      </Grid>
+      <Grid item xs={10}>
+        <Agreements />
       </Grid>
       <Button className={styles.submit_button} variant="contained" onClick={handleClick}>
         Submit
