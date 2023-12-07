@@ -8,6 +8,7 @@
     "@date-io/date-fns": "^2.16.0",
     "@emotion/react": "^11.10.8",
     "@emotion/styled": "^11.10.8",
+    "@esbuild/darwin-x64": "^0.19.8",
     "@mui/icons-material": "^5.14.9",
     "@mui/material": "^5.14.10",
     "@mui/x-date-pickers": "^5.0.20",
