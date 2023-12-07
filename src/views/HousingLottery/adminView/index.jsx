@@ -32,12 +32,12 @@ const AdminView = () => {
         };
 
         // Add columns for applicant's emails
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 4; i++) {
           rowData[`Applicant ${i + 1}'s Email`] = applicant.emails[i] || '';
         }
 
         // Add columns for preferred halls
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < 3; i++) {
           rowData[`Preferred Hall ${i + 1}`] = preferredHall[index].halls[i] || '';
         }
 
@@ -65,12 +65,12 @@ const AdminView = () => {
               <TableHead>
                 <TableRow>
                   <TableCell>Lottery Number</TableCell>
-                  {Array.from({ length: 5 }, (_, i) => (
+                  {Array.from({ length: 4 }, (_, i) => (
                     <TableCell key={`ApplicantEmailHeader${i}`}>
                       Applicant {i + 1}'s Email
                     </TableCell>
                   ))}
-                  {Array.from({ length: 6 }, (_, i) => (
+                  {Array.from({ length: 3 }, (_, i) => (
                     <TableCell key={`PreferredHallHeader${i}`}>
                       Preferred Hall {i + 1}
                     </TableCell>
@@ -82,10 +82,10 @@ const AdminView = () => {
                 {data.map((row) => (
                   <TableRow key={row.lotteryNumber}>
                     <TableCell>{row.lotteryNumber}</TableCell>
-                    {Array.from({ length: 5 }, (_, i) => (
+                    {Array.from({ length: 4 }, (_, i) => (
                       <TableCell key={`ApplicantEmail${i}`}>{row[`Applicant ${i + 1}'s Email`]}</TableCell>
                     ))}
-                    {Array.from({ length: 6 }, (_, i) => (
+                    {Array.from({ length: 3 }, (_, i) => (
                       <TableCell key={`PreferredHall${i}`}>{row[`Preferred Hall ${i + 1}`]}</TableCell>
                     ))}
                     <TableCell>{row.preference}</TableCell>
