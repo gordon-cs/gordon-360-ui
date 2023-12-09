@@ -34,24 +34,28 @@ const StudentView = () => {
 
   return (
     <Grid container spacing={2} justifyContent="center">
-      <Grid item xs={12} lg={6}>
+      <Grid item xs={10}>
         <Instructions />
-      </Grid>
-      <Grid item xs={12} lg={10}>
-        <PreferredHall setPreferredHallResult={setPreferredHallResult} />
-      </Grid>
-      <Grid item xs={12} lg={10}>
-        <Agreements />
       </Grid>
       <Grid item xs={12} lg={5}>
         <StudentApplicants setStudentApplicantResult={setStudentApplicantResult} />
       </Grid>
-      <Grid item xs={12} lg={10}>
-        <Preference setPreferenceResult={setPreferenceResult} />
+      <Grid container item xs={12} lg={5} spacing={2} direction="row" alignItems="flex-start">
+        <Grid item xs={12}>
+          <PreferredHall setPreferredHallResult={setPreferredHallResult} />
+        </Grid>
+        <Grid item xs={12}>
+          <Preference setPreferenceResult={setPreferenceResult} />
+        </Grid>
       </Grid>
-      <Button className={styles.submit_button} variant="contained" onClick={handleClick}>
-        Submit
-      </Button>
+      <Grid item xs={10}>
+        <Agreements />
+      </Grid>
+      <Grid item xs={10} container justifyContent="flex-end">
+        <Button className={styles.submit_button} variant="contained" onClick={handleClick}>
+          Submit
+        </Button>
+      </Grid>
       <GordonSnackbar
         open={snackbar.open}
         severity={snackbar.severity}

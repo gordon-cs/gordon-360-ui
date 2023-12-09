@@ -23,8 +23,8 @@ const PreferredHallsCard = ({ setPreferredHallResult }) => {
   }
 
   return (
-    <Grid container justifyContent="center">
-      <Grid item xs={12} lg={6}>
+    <Grid container>
+      <Grid item xs={12} lg={12}>
         <Card>
           <CardHeader title={searchHallTitle} className="gc360_header" />
           <CardContent height="500">

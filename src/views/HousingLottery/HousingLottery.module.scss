@@ -180,7 +180,6 @@ strong.over_emphasized {
 .apartment_card_header {
   background-color: var(--mui-palette-primary-main);
   color: var(--mui-palette-primary-contrastText);
-
   :global {
     .MuiTypography-colorTextSecondary {
       color: var(--mui-palette-primary-contrastText);
@@ -221,4 +220,18 @@ strong.over_emphasized {
     margin-top: 0.5em;
     margin-bottom: 0.5em;
   }
+}
+
+.flexContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* This will align children to the top */
+}
+
+.flexContainer > :first-child {
+  flex-shrink: 0; /* This ensures the 'Preferred Halls' doesn't shrink */
+}
+
+.flexContainer > :last-child {
+  flex-grow: 1; /* This allows the 'Preferences' to grow and fill available space */
 }
