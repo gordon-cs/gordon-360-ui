@@ -221,3 +221,17 @@ strong.over_emphasized {
     margin-bottom: 0.5em;
   }
 }
+
+.flexContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* This will align children to the top */
+}
+
+.flexContainer > :first-child {
+  flex-shrink: 0; /* This ensures the 'Preferred Halls' doesn't shrink */
+}
+
+.flexContainer > :last-child {
+  flex-grow: 1; /* This allows the 'Preferences' to grow and fill available space */
+}

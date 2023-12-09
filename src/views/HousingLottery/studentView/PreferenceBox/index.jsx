@@ -90,7 +90,7 @@ const Preference = () => {
 
   return (
     <Grid container justifyContent="flex-end">
-      <Grid item xs={12} lg={6} style={{ marginLeft: 'auto' }}>
+      <Grid item xs={12} lg={12} style={{ marginLeft: 'auto' }}>
         <Card>
           <CardHeader title="Preferences" className={styles.preferences_card_header} />
           <CardContent>
