@@ -34,6 +34,7 @@ const AdminView = () => {
         const rowData = {
           lotteryNumber: index + 1,
           preference: JSON.stringify(preference[index]), // Assuming preference is an object
+          standing: applicant.standing || '', // Add class standing
         };
 
         // Limit the number of applicants to 4
@@ -65,6 +66,7 @@ const AdminView = () => {
     'Preferred Hall 2': row['Preferred Hall 2'],
     'Preferred Hall 3': row['Preferred Hall 3'],
     'Preference': row.preference,
+    'Class Standing': row.standing, // Add class standing to the CSV
   }));
 
   const csvHeaders = [
@@ -77,6 +79,7 @@ const AdminView = () => {
     'Preferred Hall 2',
     'Preferred Hall 3',
     'Preference',
+    'Class Standing', // Add class standing header
   ];
 
   return (
@@ -85,6 +88,15 @@ const AdminView = () => {
         <Card>
           <CardHeader title="Admin Interface" className={styles.admin_card_header} />
           <CardContent>
+            <Button className={styles.exportButton} variant="contained">
+              <CSVLink
+                data={[csvHeaders, ...csvData]}
+                filename={'admin_data.csv'}
+                className={styles.csvLink}
+              >
+                Export as CSV
+              </CSVLink>
+            </Button>
             <TableContainer>
               <Table>
                 <TableHead>
@@ -101,6 +113,7 @@ const AdminView = () => {
                       </TableCell>
                     ))}
                     <TableCell>Preference</TableCell>
+                    <TableCell>Class Standing</TableCell> {/* Add class standing column header */}
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -114,20 +127,12 @@ const AdminView = () => {
                         <TableCell key={`PreferredHall${i}`}>{row[`Preferred Hall ${i + 1}`]}</TableCell>
                       ))}
                       <TableCell>{row.preference}</TableCell>
+                      <TableCell>{row.standing}</TableCell> {/* Add class standing data */}
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             </TableContainer>
-            <Button className={styles.exportButton} variant="contained">
-              <CSVLink
-                data={[csvHeaders, ...csvData]}
-                filename={'admin_data.csv'}
-                className={styles.csvLink}
-              >
-                Export as CSV
-              </CSVLink>
-            </Button>
           </CardContent>
         </Card>
       </Grid>
