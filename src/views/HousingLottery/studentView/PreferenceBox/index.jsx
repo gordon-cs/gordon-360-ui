@@ -120,17 +120,7 @@ const Preference = () => {
               </RadioGroup>
             </div>
           </CardContent>
-          <Grid container justifyContent="flex-end" style={{ padding: '0 16px 16px 0' }}>
-            <Grid item>
-              <Button
-                className={styles.submit_preference_button}
-                variant="contained"
-                onClick={handleClick}
-              >
-                Submit
-              </Button>
-            </Grid>
-          </Grid>
+          <Grid container justifyContent="flex-end" style={{ padding: '0 16px 16px 0' }}></Grid>
         </Card>
       </Grid>
     </Grid>
