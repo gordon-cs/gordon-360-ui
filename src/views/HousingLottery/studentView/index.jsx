@@ -20,6 +20,13 @@ const StudentView = () => {
   console.log('Student Applicant Result:', studentApplicantResult);
   console.log('Preference Result:', preferenceResult);
 
+  const handleAgreementsChange = (allChecked) => {
+    setPreferenceResult((prevResult) => ({
+      ...prevResult,
+      allAgreementsChecked: allChecked,
+    }));
+  };
+
   const handleClick = async () => {
     if (preferredHallResult.includes('')) {
       setSnackbar({
@@ -65,10 +72,15 @@ const StudentView = () => {
         </Grid>
       </Grid>
       <Grid item xs={10}>
-        <Agreements />
+        <Agreements onChange={handleAgreementsChange} />
       </Grid>
       <Grid item xs={10} container justifyContent="flex-end">
-        <Button className={styles.submit_button} variant="contained" onClick={handleClick}>
+        <Button 
+          className={styles.submit_button}
+          variant="contained"
+          onClick={handleClick}
+          disabled={!preferenceResult.allAgreementsChecked} 
+        >
           Submit
         </Button>
       </Grid>
