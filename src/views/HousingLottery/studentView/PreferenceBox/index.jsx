@@ -46,29 +46,6 @@ const Preference = ({onPreferenceChange}) => {
     onPreferenceChange({ morningOrNight, loudOrQuiet: newLoudOrQuiet });
   };
 
-  // const updatePreferences = (type, value) => {
-  //   setPreferences((prevPreferences) => {
-  //     // Check if the preference type is already in the list
-  //     const existingPrefIndex = prevPreferences.findIndex((pref) => Object.keys(pref)[0] === type);
-
-  //     // If it exists, update the value, otherwise add it
-  //     if (existingPrefIndex !== -1) {
-  //       prevPreferences[existingPrefIndex][type] = value;
-  //       return [...prevPreferences];
-  //     } else {
-  //       return [...prevPreferences, { [type]: value }];
-  //     }
-  //   });
-  // };
-
-  // const handleClick = async () => {
-  //   // You can access the list of preferences and selected values
-  //   console.log('Preferences:', preferences);
-  //   console.log('Morning or Night:', morningOrNight);
-  //   console.log('Loud or Quiet:', loudOrQuiet);
-  //   await housingService.addRoommate({ morningOrNight, loudOrQuiet });
-  // };
-
   useEffect(() => {
     // Save preferences to local storage
     const storedPreferences = JSON.stringify({ morningOrNight, loudOrQuiet });
