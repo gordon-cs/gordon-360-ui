@@ -44,6 +44,10 @@ const StudentView = () => {
     }
   };
 
+  const handlePreferenceChange = (newPreferences) => {
+    setPreferenceResult(newPreferences);
+  };
+
   return (
     <Grid container spacing={2} justifyContent="center">
       <Grid item xs={10}>
@@ -57,7 +61,7 @@ const StudentView = () => {
           <PreferredHall setPreferredHallResult={setPreferredHallResult} />
         </Grid>
         <Grid item xs={12}>
-          <Preference setPreferenceResult={setPreferenceResult} />
+          <Preference onPreferenceChange={handlePreferenceChange} />
         </Grid>
       </Grid>
       <Grid item xs={10}>

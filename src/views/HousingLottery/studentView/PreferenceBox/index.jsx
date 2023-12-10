@@ -19,7 +19,7 @@ import housingService from 'services/housing';
 import housing from 'services/housing';
 import styles from '../../HousingLottery.module.css';
 
-const Preference = () => {
+const Preference = ({onPreferenceChange}) => {
   const [preferences, setPreferences] = useState([]); // Store preferences as an array
   const [morningOrNight, setMorningOrNight] = useState(''); // Store the selected morning or night
   const [loudOrQuiet, setLoudOrQuiet] = useState(''); // Store the selected loud or quiet
@@ -35,37 +35,39 @@ const Preference = () => {
   }, []);
 
   const handleMorningOrNightChange = (event) => {
-    setMorningOrNight(event.target.value);
-    updatePreferences('morningOrNight', event.target.value);
+    const newMorningOrNight = event.target.value;
+    setMorningOrNight(newMorningOrNight);
+    onPreferenceChange({ morningOrNight: newMorningOrNight, loudOrQuiet });
   };
 
   const handleLoudOrQuietChange = (event) => {
-    setLoudOrQuiet(event.target.value);
-    updatePreferences('loudOrQuiet', event.target.value);
+    const newLoudOrQuiet = event.target.value;
+    setLoudOrQuiet(newLoudOrQuiet);
+    onPreferenceChange({ morningOrNight, loudOrQuiet: newLoudOrQuiet });
   };
 
-  const updatePreferences = (type, value) => {
-    setPreferences((prevPreferences) => {
-      // Check if the preference type is already in the list
-      const existingPrefIndex = prevPreferences.findIndex((pref) => Object.keys(pref)[0] === type);
+  // const updatePreferences = (type, value) => {
+  //   setPreferences((prevPreferences) => {
+  //     // Check if the preference type is already in the list
+  //     const existingPrefIndex = prevPreferences.findIndex((pref) => Object.keys(pref)[0] === type);
 
-      // If it exists, update the value, otherwise add it
-      if (existingPrefIndex !== -1) {
-        prevPreferences[existingPrefIndex][type] = value;
-        return [...prevPreferences];
-      } else {
-        return [...prevPreferences, { [type]: value }];
-      }
-    });
-  };
+  //     // If it exists, update the value, otherwise add it
+  //     if (existingPrefIndex !== -1) {
+  //       prevPreferences[existingPrefIndex][type] = value;
+  //       return [...prevPreferences];
+  //     } else {
+  //       return [...prevPreferences, { [type]: value }];
+  //     }
+  //   });
+  // };
 
-  const handleClick = async () => {
-    // You can access the list of preferences and selected values
-    console.log('Preferences:', preferences);
-    console.log('Morning or Night:', morningOrNight);
-    console.log('Loud or Quiet:', loudOrQuiet);
-    await housingService.addRoommate({ morningOrNight, loudOrQuiet });
-  };
+  // const handleClick = async () => {
+  //   // You can access the list of preferences and selected values
+  //   console.log('Preferences:', preferences);
+  //   console.log('Morning or Night:', morningOrNight);
+  //   console.log('Loud or Quiet:', loudOrQuiet);
+  //   await housingService.addRoommate({ morningOrNight, loudOrQuiet });
+  // };
 
   useEffect(() => {
     // Save preferences to local storage
