@@ -16,7 +16,7 @@ const PreferredHallsCard = ({ setPreferredHallResult }) => {
   }, []);
 
   function updatePreferredHallList(rank, hall) {
-    let newList = preferredHallList;
+    let newList = [...preferredHallList];
     newList[rank - 1] = hall;
     setPreferredHallList(newList);
     setPreferredHallResult(newList);

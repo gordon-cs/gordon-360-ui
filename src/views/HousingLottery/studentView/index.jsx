@@ -14,15 +14,27 @@ const StudentView = () => {
   const [preferredHallResult, setPreferredHallResult] = useState([]);
   const [studentApplicantResult, setStudentApplicantResult] = useState([]);
   const [preferenceResult, setPreferenceResult] = useState([]);
-  const applicantion_id = nanoid(8);
+  const application_id = nanoid(8);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
+  console.log('Preferred Hall Result:', preferredHallResult);
+  console.log('Student Applicant Result:', studentApplicantResult);
+  console.log('Preference Result:', preferenceResult);
 
   const handleClick = async () => {
+    if (preferredHallResult.includes('')) {
+      setSnackbar({
+        message: 'Please complete all hall preferences before submitting.',
+        severity: 'warning',
+        open: true,
+      });
+      return;
+    }
+
     try {
-      console.log(applicantion_id);
-      await housingService.addApplicant(applicantion_id, studentApplicantResult);
-      await housingService.addHall(applicantion_id, preferredHallResult);
-      await housingService.addPreference(applicantion_id, preferenceResult);
+      console.log(application_id);
+      await housingService.addApplicant(application_id, studentApplicantResult);
+      await housingService.addHall(application_id, preferredHallResult);
+      await housingService.addPreference(application_id, preferenceResult);
     } catch {
       setSnackbar({
         message: 'Application fail to submit. Please check your information or contact CTS.',
