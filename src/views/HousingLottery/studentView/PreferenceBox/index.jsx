@@ -19,8 +19,8 @@ import housingService from 'services/housing';
 import housing from 'services/housing';
 import styles from '../../HousingLottery.module.css';
 
-const Preference = () => {
-  const [preferences, setPreferences] = useState([]); // Store preferences as an array
+const Preference = ({ onPreferenceChange }) => {
+  const [preferences, setPreferences] = useState(['', '']); // Store preferences as an array
   const [morningOrNight, setMorningOrNight] = useState(''); // Store the selected morning or night
   const [loudOrQuiet, setLoudOrQuiet] = useState(''); // Store the selected loud or quiet
 
@@ -35,38 +35,21 @@ const Preference = () => {
   }, []);
 
   const handleMorningOrNightChange = (event) => {
-    setMorningOrNight(event.target.value);
-    updatePreferences('morningOrNight', event.target.value);
+    const newMorningOrNight = event.target.value;
+    let newList = [...preferences];
+    newList[0] = newMorningOrNight;
+    setMorningOrNight(newMorningOrNight);
+    setPreferences(newList);
+    onPreferenceChange(newList);
   };
 
   const handleLoudOrQuietChange = (event) => {
-    setLoudOrQuiet(event.target.value);
-    updatePreferences('loudOrQuiet', event.target.value);
-  };
-
-  const updatePreferences = (type, value) => {
-    setPreferences((prevPreferences) => {
-      // Check if the preference type is already in the list
-      const existingPrefIndex = prevPreferences.findIndex((pref) => Object.keys(pref)[0] === type);
-  
-      // If it exists, update the value, otherwise add it
-      if (existingPrefIndex !== -1) {
-        prevPreferences[existingPrefIndex][type] = value;
-        return [...prevPreferences];
-      } else {
-        return [...prevPreferences, { [type]: value }];
-      }
-    });
-  };
-  
-  
-
-  const handleClick = async () => {
-    // You can access the list of preferences and selected values
-  console.log('Preferences:', preferences);
-  console.log('Morning or Night:', morningOrNight);
-  console.log('Loud or Quiet:', loudOrQuiet);
-    await housingService.addRoommate({ morningOrNight, loudOrQuiet });
+    const newLoudOrQuiet = event.target.value;
+    let newList = [...preferences];
+    newList[1] = newLoudOrQuiet;
+    setLoudOrQuiet(newLoudOrQuiet);
+    setPreferences(newList);
+    onPreferenceChange(newList);
   };
 
   useEffect(() => {
@@ -91,8 +74,8 @@ const Preference = () => {
   }, []);
 
   return (
-    <Grid container justifyContent="center">
-      <Grid item xs={12} lg={6} style={{ maxWidth: '500px' }}>
+    <Grid container justifyContent="flex-end">
+      <Grid item xs={12} lg={12} style={{ marginLeft: 'auto' }}>
         <Card>
           <CardHeader title="Preferences" className={styles.preferences_card_header} />
           <CardContent>
@@ -122,17 +105,11 @@ const Preference = () => {
               </RadioGroup>
             </div>
           </CardContent>
-          <Grid container justifyContent="flex-end" style={{ padding: '0 16px 16px 0' }}>
-            <Grid item>
-              <Button className={styles.submit_preference_button} variant="contained" onClick={handleClick}>
-                Submit
-              </Button>
-            </Grid>
-          </Grid>
+          <Grid container justifyContent="flex-end" style={{ padding: '0 16px 16px 0' }}></Grid>
         </Card>
       </Grid>
     </Grid>
   );
-}
+};
 
 export default Preference;

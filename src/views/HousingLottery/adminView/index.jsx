@@ -22,50 +22,32 @@ import { CSVLink } from 'react-csv';
 const AdminView = () => {
   const [data, setData] = useState([]);
 
+  const [preference, setPreference] = useState([]);
+  const [preferredHall, setPreferredHall] = useState([]);
+  const [applicant, setApplicant] = useState([]);
+  const [schoolYear, setSchoolYear] = useState([]);
+
   useEffect(() => {
-    const fetchData = async () => {
-      const preference = await housingService.getAllPreference();
-      const preferredHall = await housingService.getAllPreferredHall();
-      const applicants = await housingService.getAllApplicants();
-      const schoolYear = await housingService.getAllSchoolYear();
-
-      // Combine the fetched data into a single array of objects
-      const combinedData = applicants.map((applicant, index) => {
-        const rowData = {
-          lotteryNumber: index + 1,
-          preference: JSON.stringify(preference[index]), // Assuming preference is an object
-          standing: applicant.standing || '', // Add class standing
-        };
-
-        // Limit the number of applicants to 4
-        for (let i = 0; i < 4; i++) {
-          rowData[`Applicant ${i + 1}'s Email`] = applicant.emails[i] || '';
-        }
-
-        // Limit the number of preferred halls to 3
-        for (let i = 0; i < 3; i++) {
-          rowData[`Preferred Hall ${i + 1}`] = preferredHall[index].halls[i] || '';
-        }
-
-        return rowData;
-      });
-
-      setData(combinedData);
-    };
-
-    fetchData();
+    housingService.getAllPreference().then(setPreference);
+    housingService.getAllPreferredHall().then(setPreferredHall);
+    housingService.getAllApplicant().then(setApplicant);
+    housingService.getAllSchoolYear().then(setSchoolYear);
   }, []);
 
   const csvData = data.map((row) => ({
     'Lottery Number': row.lotteryNumber,
-    'Applicant 1’s Email': row['Applicant 1\'s Email'],
-    'Applicant 2’s Email': row['Applicant 2\'s Email'],
-    'Applicant 3’s Email': row['Applicant 3\'s Email'],
-    'Applicant 4’s Email': row['Applicant 4\'s Email'],
+    'Applicant 1’s Email': row["Applicant 1's Email"],
+    'Applicant 2’s Email': row["Applicant 2's Email"],
+    'Applicant 3’s Email': row["Applicant 3's Email"],
+    'Applicant 4’s Email': row["Applicant 4's Email"],
     'Preferred Hall 1': row['Preferred Hall 1'],
     'Preferred Hall 2': row['Preferred Hall 2'],
     'Preferred Hall 3': row['Preferred Hall 3'],
-    'Preference': row.preference,
+    'Preferred Hall 4': row['Preferred Hall 4'],
+    'Preferred Hall 5': row['Preferred Hall 5'],
+    'Preferred Hall 6': row['Preferred Hall 6'],
+    'Preference 1': row['Preference 1'],
+    'Preference 2': row['Preference 2'],
     'Class Standing': row.standing, // Add class standing to the CSV
   }));
 
@@ -78,9 +60,20 @@ const AdminView = () => {
     'Preferred Hall 1',
     'Preferred Hall 2',
     'Preferred Hall 3',
-    'Preference',
+    'Preferred Hall 4',
+    'Preferred Hall 5',
+    'Preferred Hall 6',
+    'Preference 1',
+    'Preference 2',
     'Class Standing', // Add class standing header
   ];
+
+  const handleClick = async () => {
+    console.log('preference' + preference);
+    console.log('preferredHall' + preferredHall);
+    console.log('applicant' + applicant);
+    console.log('schoolYear' + schoolYear);
+  };
 
   return (
     <Grid container justifyContent="center">
@@ -107,34 +100,35 @@ const AdminView = () => {
                         Applicant {i + 1}'s Email
                       </TableCell>
                     ))}
-                    {Array.from({ length: 3 }, (_, i) => (
-                      <TableCell key={`PreferredHallHeader${i}`}>
-                        Preferred Hall {i + 1}
-                      </TableCell>
+                    {Array.from({ length: 6 }, (_, i) => (
+                      <TableCell key={`PreferredHallHeader${i}`}>Preferred Hall {i + 1}</TableCell>
                     ))}
-                    <TableCell>Preference</TableCell>
-                    <TableCell>Class Standing</TableCell> {/* Add class standing column header */}
+                    {Array.from({ length: 2 }, (_, i) => (
+                      <TableCell key={`PreferredHallHeader${i}`}>Preference {i + 1}</TableCell>
+                    ))}
+                    <TableCell>Class Standing</TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>
-                  {data.map((row) => (
-                    <TableRow key={row.lotteryNumber}>
-                      <TableCell>{row.lotteryNumber}</TableCell>
+                {/* <TableBody>
+                    <TableRow key={applicant.ApplicationID}>
+                      <TableCell>{applicant.ApplicationID}</TableCell>
                       {Array.from({ length: 4 }, (_, i) => (
                         <TableCell key={`ApplicantEmail${i}`}>{row[`Applicant ${i + 1}'s Email`]}</TableCell>
                       ))}
-                      {Array.from({ length: 3 }, (_, i) => (
+                      {Array.from({ length: 6 }, (_, i) => (
                         <TableCell key={`PreferredHall${i}`}>{row[`Preferred Hall ${i + 1}`]}</TableCell>
                       ))}
                       <TableCell>{row.preference}</TableCell>
-                      <TableCell>{row.standing}</TableCell> {/* Add class standing data */}
+                      <TableCell>{row.standing}</TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
+                </TableBody> */}
               </Table>
             </TableContainer>
           </CardContent>
         </Card>
+        <Button className={styles.submit_button} variant="contained" onClick={handleClick}>
+          click to see Json Array (transitory button)
+        </Button>
       </Grid>
     </Grid>
   );

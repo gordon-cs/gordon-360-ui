@@ -50,12 +50,12 @@ const Instructions = () => {
   return (
     <Accordion>
       <AccordionSummary
-        className={styles.apartment_card_header}
+        className={styles.housing_card_header}
         expandIcon={<ExpandMoreIcon style={{ color: 'white' }} />}
         aria-controls="instructions-panel-content"
         id="instructions-panel-header"
       >
-        <Typography variant="h6">On-Campus Apartments - Information and Guidelines</Typography>
+        <Typography variant="h5">On-Campus Apartments - Information and Guidelines</Typography>
       </AccordionSummary>
       <AccordionDetails>
         <Typography variant="body1" paragraph>

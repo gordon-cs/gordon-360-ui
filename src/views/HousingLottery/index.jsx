@@ -14,7 +14,6 @@ import { useEffect, useState } from 'react'; // eslint disabled because it doesn
 import { AuthGroup } from 'services/auth';
 import styles from './HousingLottery.module.css';
 
-
 const HousingLottery = () => {
   const [loading, setLoading] = useState(true);
   const { profile, loading: loadingProfile } = useUser();
@@ -43,7 +42,6 @@ const HousingLottery = () => {
       setLoading(false);
     }
   }, [profile]);
-
 
   if (loading || loadingProfile) {
     return <GordonLoader />;
