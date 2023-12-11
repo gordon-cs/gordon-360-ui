@@ -19,8 +19,8 @@ import housingService from 'services/housing';
 import housing from 'services/housing';
 import styles from '../../HousingLottery.module.css';
 
-const Preference = ({onPreferenceChange}) => {
-  const [preferences, setPreferences] = useState([]); // Store preferences as an array
+const Preference = ({ onPreferenceChange }) => {
+  const [preferences, setPreferences] = useState(['', '']); // Store preferences as an array
   const [morningOrNight, setMorningOrNight] = useState(''); // Store the selected morning or night
   const [loudOrQuiet, setLoudOrQuiet] = useState(''); // Store the selected loud or quiet
 
@@ -36,14 +36,20 @@ const Preference = ({onPreferenceChange}) => {
 
   const handleMorningOrNightChange = (event) => {
     const newMorningOrNight = event.target.value;
+    let newList = [...preferences];
+    newList[0] = newMorningOrNight;
     setMorningOrNight(newMorningOrNight);
-    onPreferenceChange({ morningOrNight: newMorningOrNight, loudOrQuiet });
+    setPreferences(newList);
+    onPreferenceChange(newList);
   };
 
   const handleLoudOrQuietChange = (event) => {
     const newLoudOrQuiet = event.target.value;
+    let newList = [...preferences];
+    newList[1] = newLoudOrQuiet;
     setLoudOrQuiet(newLoudOrQuiet);
-    onPreferenceChange({ morningOrNight, loudOrQuiet: newLoudOrQuiet });
+    setPreferences(newList);
+    onPreferenceChange(newList);
   };
 
   useEffect(() => {

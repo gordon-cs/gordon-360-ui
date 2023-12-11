@@ -19,7 +19,7 @@ const StudentView = () => {
   const [areAllAgreementsChecked, setAreAllAgreementsChecked] = useState(false);
   console.log('Preferred Hall Result:', preferredHallResult);
   console.log('Student Applicant Result:', studentApplicantResult);
-  console.log('Preference Result:', preferenceResult);  
+  console.log('Preference Result:', preferenceResult);
 
   const handleAgreementsChange = (allChecked) => {
     const agreementData = [allChecked];
@@ -28,20 +28,11 @@ const StudentView = () => {
   };
 
   const handlePreferenceChange = (newPreferences) => {
-    const preferenceData = [newPreferences.morningOrNight, newPreferences.loudOrQuiet];
-    console.log('Preference Data:', preferenceData);
+    setPreferenceResult(newPreferences);
+    console.log('Preference Data:', newPreferences);
   };
 
   const handleClick = async () => {
-    if (preferredHallResult.includes('')) {
-      setSnackbar({
-        message: 'Please complete all hall preferences before submitting.',
-        severity: 'warning',
-        open: true,
-      });
-      return;
-    }
-
     try {
       console.log(application_id);
       await housingService.addApplicant(application_id, studentApplicantResult);
@@ -55,7 +46,6 @@ const StudentView = () => {
       });
     }
   };
-
 
   return (
     <Grid container spacing={2} justifyContent="center">
@@ -77,7 +67,7 @@ const StudentView = () => {
         <Agreements onChange={handleAgreementsChange} />
       </Grid>
       <Grid item xs={10} container justifyContent="flex-end">
-        <Button 
+        <Button
           className={styles.submit_button}
           variant="contained"
           onClick={handleClick}
