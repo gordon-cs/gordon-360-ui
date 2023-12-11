@@ -14,15 +14,30 @@ const StudentView = () => {
   const [preferredHallResult, setPreferredHallResult] = useState([]);
   const [studentApplicantResult, setStudentApplicantResult] = useState([]);
   const [preferenceResult, setPreferenceResult] = useState([]);
-  const applicantion_id = nanoid(8);
+  const application_id = nanoid(8);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
+  const [areAllAgreementsChecked, setAreAllAgreementsChecked] = useState(false);
+  console.log('Preferred Hall Result:', preferredHallResult);
+  console.log('Student Applicant Result:', studentApplicantResult);
+  console.log('Preference Result:', preferenceResult);
+
+  const handleAgreementsChange = (allChecked) => {
+    const agreementData = [allChecked];
+    console.log('Agreement Data:', agreementData);
+    setAreAllAgreementsChecked(allChecked);
+  };
+
+  const handlePreferenceChange = (newPreferences) => {
+    setPreferenceResult(newPreferences);
+    console.log('Preference Data:', newPreferences);
+  };
 
   const handleClick = async () => {
     try {
-      console.log(applicantion_id);
-      await housingService.addApplicant(applicantion_id, studentApplicantResult);
-      await housingService.addHall(applicantion_id, preferredHallResult);
-      await housingService.addPreference(applicantion_id, preferenceResult);
+      console.log(application_id);
+      await housingService.addApplicant(application_id, studentApplicantResult);
+      await housingService.addHall(application_id, preferredHallResult);
+      await housingService.addPreference(application_id, preferenceResult);
     } catch {
       setSnackbar({
         message: 'Application fail to submit. Please check your information or contact CTS.',
@@ -45,14 +60,19 @@ const StudentView = () => {
           <PreferredHall setPreferredHallResult={setPreferredHallResult} />
         </Grid>
         <Grid item xs={12}>
-          <Preference setPreferenceResult={setPreferenceResult} />
+          <Preference onPreferenceChange={handlePreferenceChange} />
         </Grid>
       </Grid>
       <Grid item xs={10}>
-        <Agreements />
+        <Agreements onChange={handleAgreementsChange} />
       </Grid>
       <Grid item xs={10} container justifyContent="flex-end">
-        <Button className={styles.submit_button} variant="contained" onClick={handleClick}>
+        <Button
+          className={styles.submit_button}
+          variant="contained"
+          onClick={handleClick}
+          disabled={!areAllAgreementsChecked}
+        >
           Submit
         </Button>
       </Grid>
