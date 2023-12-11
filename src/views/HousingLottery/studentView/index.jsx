@@ -16,15 +16,20 @@ const StudentView = () => {
   const [preferenceResult, setPreferenceResult] = useState([]);
   const application_id = nanoid(8);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
+  const [areAllAgreementsChecked, setAreAllAgreementsChecked] = useState(false);
   console.log('Preferred Hall Result:', preferredHallResult);
   console.log('Student Applicant Result:', studentApplicantResult);
-  console.log('Preference Result:', preferenceResult);
+  console.log('Preference Result:', preferenceResult);  
 
   const handleAgreementsChange = (allChecked) => {
-    setPreferenceResult((prevResult) => ({
-      ...prevResult,
-      allAgreementsChecked: allChecked,
-    }));
+    const agreementData = [allChecked];
+    console.log('Agreement Data:', agreementData);
+    setAreAllAgreementsChecked(allChecked);
+  };
+
+  const handlePreferenceChange = (newPreferences) => {
+    const preferenceData = [newPreferences.morningOrNight, newPreferences.loudOrQuiet];
+    console.log('Preference Data:', preferenceData);
   };
 
   const handleClick = async () => {
@@ -51,9 +56,6 @@ const StudentView = () => {
     }
   };
 
-  const handlePreferenceChange = (newPreferences) => {
-    setPreferenceResult(newPreferences);
-  };
 
   return (
     <Grid container spacing={2} justifyContent="center">
@@ -79,7 +81,7 @@ const StudentView = () => {
           className={styles.submit_button}
           variant="contained"
           onClick={handleClick}
-          disabled={!preferenceResult.allAgreementsChecked} 
+          disabled={!areAllAgreementsChecked}
         >
           Submit
         </Button>
