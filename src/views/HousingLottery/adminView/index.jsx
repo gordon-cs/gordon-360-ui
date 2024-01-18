@@ -69,10 +69,10 @@ const AdminView = () => {
   ];
 
   const handleClick = async () => {
-    console.log('preference' + preference);
-    console.log('preferredHall' + preferredHall);
-    console.log('applicant' + applicant);
-    console.log('schoolYear' + schoolYear);
+    console.log(preference);
+    console.log(preferredHall);
+    console.log(applicant);
+    console.log(schoolYear);
   };
 
   return (
