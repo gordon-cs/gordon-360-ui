@@ -84,7 +84,7 @@ function formatCoursesFromDb(courses: DbCourse[]): CourseEvent[] {
   // Because saturday is only included in the schedule if a non-async course meetst that day
   const asyncMeetingDays = courseDayIds.slice(0, -1);
 
-  return courses.flatMap((course) => {
+  return courses.map((course) => {
     const sharedDetails = {
       name: course.CRS_TITLE.trim(),
       title: course.CRS_CDE.trim(),
