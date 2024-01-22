@@ -23,8 +23,8 @@ const msalConfig = {
   },
 };
 
-export const msalInstance = new PublicClientApplication(msalConfig);
-await msalInstance.initialize()
+export const msalInstance = await PublicClientApplication.createPublicClientApplication(msalConfig);
+
 if (!msalInstance.getActiveAccount() && msalInstance.getAllAccounts().length > 0) {
   msalInstance.setActiveAccount(msalInstance.getAllAccounts()[0]);
 }
