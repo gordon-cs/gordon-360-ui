@@ -16,9 +16,9 @@ type DbCourse = {
   FRIDAY_CDE: string;
   SATURDAY_CDE: string;
   /** A timespan of the format HH:mm:ss, stringified */
-  BEGIN_TIME: string;
+  BEGIN_TIME?: string;
   /** A timespan of the format HH:mm:ss, stringified */
-  END_TIME: string;
+  END_TIME?: string;
   Role: string;
 };
 
@@ -101,8 +101,8 @@ function formatCoursesFromDb(courses: DbCourse[]): CourseEvent[] {
       };
     } else {
       const meetingDays = getMeetingDays(course);
-      const beginning = parse(course.BEGIN_TIME, 'HH:mm:ss', today);
-      const end = parse(course.END_TIME, 'HH:mm:ss', today);
+      const beginning = parse(course.BEGIN_TIME ?? '', 'HH:mm:ss', today);
+      const end = parse(course.END_TIME ?? '', 'HH:mm:ss', today);
 
       return {
         ...sharedDetails,

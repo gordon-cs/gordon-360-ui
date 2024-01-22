@@ -9,7 +9,7 @@ import {
   DialogContentText,
 } from '@mui/material';
 import 'add-to-calendar-button';
-import { format, nextDay } from 'date-fns';
+import { Day, format, nextDay } from 'date-fns';
 import { STORAGE_COLOR_PREFERENCE_KEY } from 'theme';
 import { CourseEvent, courseDayIds, scheduleCalendarResources } from 'services/schedule';
 import { Session } from 'services/session';
