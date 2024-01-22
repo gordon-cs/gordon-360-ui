@@ -1,4 +1,4 @@
-import { format, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 import { StudentEmployment } from 'services/transcript';
 import styles from './Experience.module.css';
 
