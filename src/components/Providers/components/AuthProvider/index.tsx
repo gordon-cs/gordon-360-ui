@@ -24,6 +24,7 @@ const msalConfig = {
 };
 
 export const msalInstance = new PublicClientApplication(msalConfig);
+await msalInstance.initialize()
 if (!msalInstance.getActiveAccount() && msalInstance.getAllAccounts().length > 0) {
   msalInstance.setActiveAccount(msalInstance.getAllAccounts()[0]);
 }
