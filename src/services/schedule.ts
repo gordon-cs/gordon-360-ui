@@ -58,13 +58,12 @@ export type CourseEvent = {
   /**
    * used by `react-big-calendar` to determine which resource (e.g. `Monday`) this event should display for
    */
-  resourceId: CourseDayID;
+  resourceId: CourseDayID[];
   name: string;
   title: string;
   location: string;
   start: Date;
   end: Date;
-  meetingDays: CourseDayID[];
   allDay?: boolean;
 };
 
@@ -92,28 +91,25 @@ function formatCoursesFromDb(courses: DbCourse[]): CourseEvent[] {
       location: course.BLDG_CDE + ' ' + course.ROOM_CDE,
     };
 
-    const meetingDays = getMeetingDays(course);
-
     if (course.ROOM_CDE === 'ASY') {
-      return asyncMeetingDays.map((day) => ({
+      return {
         ...sharedDetails,
-        resourceId: day,
+        resourceId: asyncMeetingDays,
         start: today,
         end: today,
-        meetingDays: asyncMeetingDays,
         allDay: true,
-      }));
+      };
     } else {
+      const meetingDays = getMeetingDays(course);
       const beginning = parse(course.BEGIN_TIME, 'HH:mm:ss', today);
       const end = parse(course.END_TIME, 'HH:mm:ss', today);
 
-      return meetingDays.map((day) => ({
+      return {
         ...sharedDetails,
-        resourceId: day,
+        resourceId: meetingDays,
         start: beginning,
         end: end,
-        meetingDays: meetingDays,
-      }));
+      };
     }
   });
 }
