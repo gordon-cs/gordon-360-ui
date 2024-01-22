@@ -172,7 +172,7 @@ const StudentApplication = ({ userProfile }) => {
   useEffect(
     () =>
       setCanEditApplication(
-        userProfile?.AD_Username === applicationDetails?.EditorProfile?.AD_Username ?? false,
+        userProfile?.AD_Username === applicationDetails?.EditorProfile?.AD_Username,
       ),
     [applicationDetails?.EditorProfile?.AD_Username, userProfile?.AD_Username],
   );
