@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@azure/msal-browser": "^2.35.0",
-    "@azure/msal-react": "^1.5.5",
+    "@azure/msal-browser": "^3.7.0",
+    "@azure/msal-react": "^2.0.9",
     "@date-io/date-fns": "^2.16.0",
     "@emotion/react": "^11.10.8",
     "@emotion/styled": "^11.10.8",
