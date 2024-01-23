@@ -12,9 +12,7 @@ const StudentApplicants = ({ setStudentApplicantResult }) => {
   useEffect(() => {
     const loadCurrentUser = async () => {
       try {
-        // Assuming that 'user.getProfileInfo' is a function that returns the current user's profile
         const profile = await user.getProfileInfo();
-        // Now we have the user's profile, set the first applicant's data
         const initialApplicants = [
           { firstName: profile.FirstName, lastName: profile.LastName, email: profile.Email },
           { firstName: '', lastName: '', email: '' },
@@ -22,13 +20,11 @@ const StudentApplicants = ({ setStudentApplicantResult }) => {
           { firstName: '', lastName: '', email: '' },
         ];
         setApplicants(initialApplicants);
-        // Set the emails for the applicant result
         setEmails(initialApplicants.map((a) => a.email));
       } catch (error) {
         console.error('Error fetching user data', error);
       }
     };
-
     loadCurrentUser();
   }, []);
 
