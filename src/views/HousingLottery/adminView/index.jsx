@@ -80,13 +80,19 @@ const AdminView = () => {
   
     applicants.forEach(item => {
       if (!normalizedData[item.ApplicationID]) {
-        normalizedData[item.ApplicationID] = { applicants: [], preferences: [], year: null };
+        normalizedData[item.ApplicationID] = {
+          applicants: [],
+          preferredHalls: [],
+          preferences: [],
+          year: null
+        };
       }
       normalizedData[item.ApplicationID].applicants.push(item.Applicant1);
     });
+  
     preferredHalls.forEach(item => {
       if (normalizedData[item.ApplicationID]) {
-        normalizedData[item.ApplicationID].preferences.push(item.PreferredHall1);
+        normalizedData[item.ApplicationID].preferredHalls[item.Rank - 1] = item.HallName;
       }
     });
   
@@ -103,9 +109,9 @@ const AdminView = () => {
     });
   
     return normalizedData;
-  };
+  };  
   
-  const combinedData = combineData(applicant, preferredHall,preference,schoolYear);
+  const combinedData = combineData(applicant,preferredHall,preference,schoolYear);
   
 
   return (
@@ -154,10 +160,10 @@ const AdminView = () => {
           </TableCell>
         ))}
         {Array.from({ length: 6 }, (_, i) => (
-          <TableCell key={`PreferredHall${i}`}>
+       <TableCell key={`PreferredHall${i}`}>
             {appData.preferredHalls && appData.preferredHalls.length > i ? appData.preferredHalls[i] : ''}
           </TableCell>
-        ))}
+        ))} 
         {Array.from({ length: 2 }, (_, i) => (
           <TableCell key={`Preference${i}`}>
             {appData.preferences && appData.preferences.length > i ? appData.preferences[i] : ''}
