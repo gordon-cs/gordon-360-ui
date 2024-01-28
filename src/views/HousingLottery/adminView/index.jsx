@@ -75,6 +75,39 @@ const AdminView = () => {
     console.log(schoolYear);
   };
 
+  const combineData = (applicants, preferredHalls, preferences, schoolYears) => {
+    const normalizedData = {};
+  
+    applicants.forEach(item => {
+      if (!normalizedData[item.ApplicationID]) {
+        normalizedData[item.ApplicationID] = { applicants: [], preferences: [], year: null };
+      }
+      normalizedData[item.ApplicationID].applicants.push(item.Applicant1);
+    });
+    preferredHalls.forEach(item => {
+      if (normalizedData[item.ApplicationID]) {
+        normalizedData[item.ApplicationID].preferences.push(item.PreferredHall1);
+      }
+    });
+  
+    preferences.forEach(item => {
+      if (normalizedData[item.ApplicationID]) {
+        normalizedData[item.ApplicationID].preferences.push(item.Preference1);
+      }
+    });
+  
+    schoolYears.forEach(item => {
+      if (normalizedData[item.ApplicationID]) {
+        normalizedData[item.ApplicationID].year = item.Year1;
+      }
+    });
+  
+    return normalizedData;
+  };
+  
+  const combinedData = combineData(applicant, preferredHall,preference,schoolYear);
+  
+
   return (
     <Grid container justifyContent="center">
       <Grid item xs={12} lg={8}>
@@ -91,39 +124,53 @@ const AdminView = () => {
               </CSVLink>
             </Button>
             <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Lottery Number</TableCell>
-                    {Array.from({ length: 4 }, (_, i) => (
-                      <TableCell key={`ApplicantEmailHeader${i}`}>
-                        Applicant {i + 1}'s Email
-                      </TableCell>
-                    ))}
-                    {Array.from({ length: 6 }, (_, i) => (
-                      <TableCell key={`PreferredHallHeader${i}`}>Preferred Hall {i + 1}</TableCell>
-                    ))}
-                    {Array.from({ length: 2 }, (_, i) => (
-                      <TableCell key={`PreferredHallHeader${i}`}>Preference {i + 1}</TableCell>
-                    ))}
-                    <TableCell>Class Standing</TableCell>
-                  </TableRow>
-                </TableHead>
-                {/* <TableBody>
-                    <TableRow key={applicant.ApplicationID}>
-                      <TableCell>{applicant.ApplicationID}</TableCell>
-                      {Array.from({ length: 4 }, (_, i) => (
-                        <TableCell key={`ApplicantEmail${i}`}>{row[`Applicant ${i + 1}'s Email`]}</TableCell>
-                      ))}
-                      {Array.from({ length: 6 }, (_, i) => (
-                        <TableCell key={`PreferredHall${i}`}>{row[`Preferred Hall ${i + 1}`]}</TableCell>
-                      ))}
-                      <TableCell>{row.preference}</TableCell>
-                      <TableCell>{row.standing}</TableCell>
-                    </TableRow>
-                </TableBody> */}
-              </Table>
-            </TableContainer>
+  <Table>
+    <TableHead>
+      <TableRow>
+        <TableCell>Lottery Number</TableCell>
+        {Array.from({ length: 4 }, (_, i) => (
+          <TableCell key={`ApplicantEmailHeader${i}`}>
+            Applicant {i + 1}'s Email
+          </TableCell>
+        ))}
+        {Array.from({ length: 6 }, (_, i) => (
+          <TableCell key={`PreferredHallHeader${i}`}>Preferred Hall {i + 1}</TableCell>
+        ))}
+        {Array.from({ length: 2 }, (_, i) => (
+          <TableCell key={`PreferenceHeader${i}`}>Preference {i + 1}</TableCell>
+        ))}
+        <TableCell>Class Standing</TableCell>
+      </TableRow>
+    </TableHead>
+    <TableBody>
+  {Object.keys(combinedData).map((applicationId, index) => {
+    const appData = combinedData[applicationId];
+    return (
+      <TableRow key={applicationId}>
+        <TableCell>{index + 1}</TableCell>
+        {Array.from({ length: 4 }, (_, i) => (
+          <TableCell key={`ApplicantEmail${i}`}>
+            {appData.applicants && appData.applicants.length > i ? appData.applicants[i] : ''}
+          </TableCell>
+        ))}
+        {Array.from({ length: 6 }, (_, i) => (
+          <TableCell key={`PreferredHall${i}`}>
+            {appData.preferredHalls && appData.preferredHalls.length > i ? appData.preferredHalls[i] : ''}
+          </TableCell>
+        ))}
+        {Array.from({ length: 2 }, (_, i) => (
+          <TableCell key={`Preference${i}`}>
+            {appData.preferences && appData.preferences.length > i ? appData.preferences[i] : ''}
+          </TableCell>
+        ))}
+        <TableCell>{appData.year || ''}</TableCell>
+      </TableRow>
+    );
+  })}
+</TableBody>
+  </Table>
+</TableContainer>
+
           </CardContent>
         </Card>
         <Button className={styles.submit_button} variant="contained" onClick={handleClick}>
