@@ -26,8 +26,10 @@ const AdminView = () => {
   const [preferredHall, setPreferredHall] = useState([]);
   const [applicant, setApplicant] = useState([]);
   const [schoolYear, setSchoolYear] = useState([]);
+  const [ApplicationID, setApplicationID] = useState([]);
 
   useEffect(() => {
+    housingService.getCurrentApplicationID().then(setApplicationID);
     housingService.getAllPreference().then(setPreference);
     housingService.getAllPreferredHall().then(setPreferredHall);
     housingService.getAllApplicant().then(setApplicant);
@@ -149,11 +151,11 @@ const AdminView = () => {
       </TableRow>
     </TableHead>
     <TableBody>
-  {Object.keys(combinedData).map((applicationId, index) => {
-    const appData = combinedData[applicationId];
+  {Object.keys(combinedData).map((ApplicationID, index) => {
+    const appData = combinedData[ApplicationID];
     return (
-      <TableRow key={applicationId}>
-        <TableCell>{index + 1}</TableCell>
+      <TableRow key={ApplicationID}>
+        <TableCell>{ApplicationID}</TableCell>
         {Array.from({ length: 4 }, (_, i) => (
           <TableCell key={`ApplicantEmail${i}`}>
             {appData.applicants && appData.applicants.length > i ? appData.applicants[i] : ''}
