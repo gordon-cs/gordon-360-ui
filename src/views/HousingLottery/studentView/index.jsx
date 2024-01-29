@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Grid } from '@mui/material';
 import PreferredHall from './PreferredHall';
 import StudentApplicants from './StudentApplicants/index.jsx';
@@ -9,10 +9,17 @@ import housingService from 'services/housing';
 import styles from '../HousingLottery.module.css';
 import { nanoid } from 'nanoid';
 import GordonSnackbar from 'components/Snackbar';
+import user from '../../../services/user';
 
 const StudentView = () => {
-  const [preferredHallResult, setPreferredHallResult] = useState([]);
+  const [email, setEmail] = useState('');
   const [studentApplicantResult, setStudentApplicantResult] = useState([]);
+  useEffect(async () => {
+    const profile = await user.getProfileInfo();
+    setEmail(profile.Email);
+    setStudentApplicantResult([email]);
+  }, [email]);
+  const [preferredHallResult, setPreferredHallResult] = useState([]);
   const [preferenceResult, setPreferenceResult] = useState([]);
   const application_id = nanoid(8);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
