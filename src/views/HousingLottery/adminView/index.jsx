@@ -6,14 +6,11 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
   Button,
   Grid,
-  Typography,
   Card,
   CardHeader,
   CardContent,
-  Link,
 } from '@mui/material';
 import housingService from 'services/housing';
 import styles from '../HousingLottery.module.css';
@@ -35,40 +32,6 @@ const AdminView = () => {
     housingService.getAllApplicant().then(setApplicant);
     housingService.getAllSchoolYear().then(setSchoolYear);
   }, []);
-
-  const csvData = data.map((row) => ({
-    'Lottery Number': row.lotteryNumber,
-    'Applicant 1’s Email': row["Applicant 1's Email"],
-    'Applicant 2’s Email': row["Applicant 2's Email"],
-    'Applicant 3’s Email': row["Applicant 3's Email"],
-    'Applicant 4’s Email': row["Applicant 4's Email"],
-    'Preferred Hall 1': row['Preferred Hall 1'],
-    'Preferred Hall 2': row['Preferred Hall 2'],
-    'Preferred Hall 3': row['Preferred Hall 3'],
-    'Preferred Hall 4': row['Preferred Hall 4'],
-    'Preferred Hall 5': row['Preferred Hall 5'],
-    'Preferred Hall 6': row['Preferred Hall 6'],
-    'Preference 1': row['Preference 1'],
-    'Preference 2': row['Preference 2'],
-    'Class Standing': row.standing, // Add class standing to the CSV
-  }));
-
-  const csvHeaders = [
-    'Lottery Number',
-    'Applicant 1’s Email',
-    'Applicant 2’s Email',
-    'Applicant 3’s Email',
-    'Applicant 4’s Email',
-    'Preferred Hall 1',
-    'Preferred Hall 2',
-    'Preferred Hall 3',
-    'Preferred Hall 4',
-    'Preferred Hall 5',
-    'Preferred Hall 6',
-    'Preference 1',
-    'Preference 2',
-    'Class Standing', // Add class standing header
-  ];
 
   const handleClick = async () => {
     console.log(preference);
@@ -115,22 +78,65 @@ const AdminView = () => {
   
   const combinedData = combineData(applicant,preferredHall,preference,schoolYear);
   
+  const csvData = Object.keys(combinedData).map((applicationId) => {
+    const appData = combinedData[applicationId];
+    return {
+      'Lottery Number': applicationId, 
+      //Jan 28: Now we still treat ApplicationID is used as Lottery Number
+      'Applicant 1’s Email': appData.applicants[0] || '',
+      'Applicant 2’s Email': appData.applicants[1] || '',
+      'Applicant 3’s Email': appData.applicants[2] || '',
+      'Applicant 4’s Email': appData.applicants[3] || '',
+      'Preferred Hall 1': appData.preferredHalls[0] || '',
+      'Preferred Hall 2': appData.preferredHalls[1] || '',
+      'Preferred Hall 3': appData.preferredHalls[2] || '',
+      'Preferred Hall 4': appData.preferredHalls[3] || '',
+      'Preferred Hall 5': appData.preferredHalls[4] || '',
+      'Preferred Hall 6': appData.preferredHalls[5] || '',
+      'Preference 1': appData.preferences[0] || '',
+      'Preference 2': appData.preferences[1] || '',
+      'Class Standing': appData.year || '',
+    };
+  });
 
+  const csvHeaders = [
+    'Lottery Number',
+    'Applicant 1’s Email',
+    'Applicant 2’s Email',
+    'Applicant 3’s Email',
+    'Applicant 4’s Email',
+    'Preferred Hall 1',
+    'Preferred Hall 2',
+    'Preferred Hall 3',
+    'Preferred Hall 4',
+    'Preferred Hall 5',
+    'Preferred Hall 6',
+    'Preference 1',
+    'Preference 2',
+    'Class Standing', // Add class standing header
+  ];
+
+const csvHeadersObject = csvHeaders.reduce((obj, header) => {
+  obj[header] = header;
+  return obj;
+}, {});
+
+const csvDataForExport = [csvHeadersObject, ...csvData];
   return (
     <Grid container justifyContent="center">
       <Grid item xs={12} lg={8}>
         <Card>
           <CardHeader title="Admin Interface" className={styles.admin_card_header} />
           <CardContent>
-            <Button className={styles.exportButton} variant="contained">
-              <CSVLink
-                data={[csvHeaders, ...csvData]}
-                filename={'admin_data.csv'}
-                className={styles.csvLink}
-              >
-                Export as CSV
-              </CSVLink>
-            </Button>
+          <Button className={styles.exportButton} variant="contained">
+      <CSVLink
+        data={csvDataForExport}
+        filename={'admin_data.csv'}
+        className={styles.csvLink}
+      >
+        Export as CSV
+      </CSVLink>
+    </Button>
             <TableContainer>
   <Table>
     <TableHead>
