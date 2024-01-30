@@ -30,6 +30,7 @@ import CliftonStrengthsService from 'services/cliftonStrengths';
 import SLock from './Salsbury.png';
 import DPLock from './DandP.png';
 import DDLock from './DandD.png';
+import UpdateUserPrivacy from './UpdateUserPrivacyDropDownMenu';
 
 const PRIVATE_INFO = 'Private as requested.';
 
@@ -114,12 +115,17 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       await userService.setMobilePhonePrivacy(!isMobilePhonePrivate);
       setIsMobilePhonePrivate(!isMobilePhonePrivate);
 
-      createSnackbar(
-        isMobilePhonePrivate ? 'Mobile Phone Visible' : 'Mobile Phone Hidden',
-        'success',
-      );
+      setSnackbar({
+        message: 'Your privacy setting will update within a couple hours.',
+        severity: 'success',
+        open: true,
+      });
     } catch {
-      createSnackbar('Privacy Change Failed', 'error');
+      setSnackbar({
+        message: 'Your privacy setting failed to update. Please contact CTS.',
+        severity: 'error',
+        open: true,
+      });
     }
   };
 
@@ -159,13 +165,16 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       title="Home Phone:"
       contentText={
         myProf ? (
-          formatPhone(profile.HomePhone)
+          <Grid className={styles.not_private}>{formatPhone(profile.HomePhone)}</Grid>
+        ) : profile.HomePhone === PRIVATE_INFO ? (
+          PRIVATE_INFO
         ) : (
           <a href={`tel:${profile.HomePhone}`} className="gc360_text_link">
             {formatPhone(profile.HomePhone)}
           </a>
         )
       }
+      ContentIcon={myProf && UpdateUserPrivacy(profile.AD_Username, ['HomePhone'])}
       privateInfo={isHomePhonePrivate}
       myProf={myProf}
     />
@@ -176,11 +185,9 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       title="Mobile Phone:"
       contentText={
         myProf ? (
-          <Grid container spacing={0} alignItems="center">
+          <Grid container spacing={0} alignItems="center" className={styles.not_private}>
             <Grid item>{formatPhone(profile.MobilePhone)}</Grid>
-            <Grid item>
-              <UpdatePhone />
-            </Grid>
+            <Grid item>{isStudent ? <UpdatePhone /> : null}</Grid>
           </Grid>
         ) : profile.MobilePhone === PRIVATE_INFO ? (
           PRIVATE_INFO
@@ -190,22 +197,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </a>
         )
       }
-      ContentIcon={
-        myProf && (
-          <FormControlLabel
-            control={
-              <Switch
-                onChange={handleChangeMobilePhonePrivacy}
-                color="secondary"
-                checked={!isMobilePhonePrivate}
-              />
-            }
-            label={isMobilePhonePrivate ? 'Private' : 'Public'}
-            labelPlacement="bottom"
-            disabled={!isOnline}
-          />
-        )
-      }
+      ContentIcon={myProf && UpdateUserPrivacy(profile.AD_Username, ['MobilePhone'])}
       privateInfo={isMobilePhonePrivate}
       myProf={myProf}
     />
@@ -213,14 +205,19 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
 
   let streetAddr = profile.HomeStreet2 ? <span>{profile.HomeStreet2},&nbsp;</span> : null;
 
+  let combineHomeLocation =
+    profile.Country === 'United States of America' || !profile.Country
+      ? ['HomeCity', 'HomeState']
+      : ['Country', 'HomeCountry'];
+
   const home = (
     <ProfileInfoListItem
       title="Home:"
       contentText={
         <>
           {streetAddr}
-          <span className={keepPrivate ? null : styles.not_private}>
-            {profile.HomeCity === PRIVATE_INFO
+          <span className={styles.not_private}>
+            {profile.HomeCity === PRIVATE_INFO || profile.Country === PRIVATE_INFO
               ? PRIVATE_INFO
               : profile.Country === 'United States of America' || !profile.Country
               ? `${profile.HomeCity}, ${profile.HomeState}`
@@ -228,6 +225,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </span>
         </>
       }
+      ContentIcon={myProf && UpdateUserPrivacy(profile.AD_Username, combineHomeLocation)}
       privateInfo={isAddressPrivate}
       myProf={myProf}
     />
@@ -359,7 +357,6 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
             control={
               <Switch
                 onChange={handleChangeCliftonStrengthsPrivacy}
-                color="secondary"
                 checked={!isCliftonStrengthsPrivate}
               />
             }
@@ -396,13 +393,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
             <Grid container item xs={5} alignItems="center">
               <Typography>{'Mailbox:'}</Typography>
             </Grid>
-            <Grid
-              container
-              item
-              xs={myProf && mailCombo ? 2.5 : 5}
-              lg={myProf && mailCombo ? 2.4 : 5}
-              alignItems="center"
-            >
+            <Grid container item xs={myProf && mailCombo ? 2.5 : 5} alignItems="center">
               <Typography>{`#${profile.Mail_Location}`}</Typography>
             </Grid>
             {myProf && mailCombo && (
@@ -434,7 +425,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                 </Grid>
                 <Button
                   variant="contained"
-                  color="secondary"
+                  color="primary"
                   onClick={() => setIsJoinDialogOpen(true)}
                 >
                   Instructions
@@ -448,7 +439,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                   <Grid container>
                     <Typography sx={{ fontSize: '0.8rem' }}>
                       <Link
-                        className={`gc360_text_link ${styles.salsbury_link}`}
+                        className={styles.salsbury_link}
                         href="https://m.youtube.com/shorts/FxE5PPS94sc"
                         underline="always"
                         target="_blank"
@@ -473,7 +464,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                       <br />
                       <br />
                       <Link
-                        className={`gc360_text_link ${styles.dp_link}`}
+                        className={styles.dp_link}
                         href="https://m.youtube.com/shorts/47402r3FqSs"
                         underline="always"
                         target="_blank"
@@ -501,7 +492,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                       <br />
                       <br />
                       <Link
-                        className={`gc360_text_link ${styles.dd_link}`}
+                        className={styles.dd_link}
                         href="https://m.youtube.com/shorts/0VuTFs1Iwnw"
                         underline="always"
                         target="_blank"
@@ -586,6 +577,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       <ProfileInfoListItem
         title="Spouse:"
         contentText={profile.SpouseName}
+        ContentIcon={isFacStaff && myProf && UpdateUserPrivacy(profile.AD_Username, ['SpouseName'])}
         privateInfo={(keepPrivate && myProf) || isSpousePrivate}
       />
     ) : null;
@@ -606,18 +598,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </li>
           <li>
             <Typography>
-              To add/update your mail forwarding address, fill out this{' '}
-              <a
-                href="https://forms.office.com/r/98eR7TUXg6"
-                className={`gc360_text_link ${styles.note_link}`}
-              >
-                Forward Request Form.
-              </a>
-            </Typography>
-          </li>
-          <li>
-            <Typography>
-              To update your On-Campus Address, please contact{' '}
+              To update your On Campus Address, please contact{' '}
               <a
                 href="mailto: housing@gordon.edu"
                 className={`gc360_text_link ${styles.note_link}`}
@@ -669,26 +650,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           alignItems="center"
           className={styles.personal_info_list_header}
         >
-          <Grid item xs={8}>
+          <Grid item xs={12}>
             <CardHeader title="Personal Information" />
-          </Grid>
-          <Grid item xs={4} align="right">
-            {/* visible only for fac/staff on their profile */}
-            {/* isHomePhonePrivate is a misleading name for determining if personal information should be shown */}
-            {isFacStaff && myProf ? (
-              <FormControlLabel
-                control={
-                  <Switch
-                    onChange={handleChangeHomePhonePrivacy}
-                    color="secondary"
-                    checked={!isHomePhonePrivate}
-                  />
-                }
-                label={isHomePhonePrivate ? 'Private' : 'Public'}
-                labelPlacement="right"
-                disabled={!isOnline}
-              />
-            ) : null}
           </Grid>
         </Grid>
         <CardContent>

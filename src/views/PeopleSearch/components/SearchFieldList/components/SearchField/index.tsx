@@ -31,12 +31,6 @@ interface TextProps extends CommonProps {
 
 type SearchFieldProps = SelectProps | TextProps;
 
-const defaultMenuItem = (
-  <MenuItem value="" key="default">
-    <em>All</em>
-  </MenuItem>
-);
-
 const mapOptionsToMenuItems = (options: string[] | SelectOption[]) =>
   options.map((option) =>
     typeof option === 'string' ? (
@@ -81,7 +75,7 @@ const SearchField = ({
           select={select}
           disabled={disabled}
         >
-          {select && options && [defaultMenuItem, mapOptionsToMenuItems(options)]}
+          {select && options && mapOptionsToMenuItems(options)}
         </TextField>
       </Grid>
     </Grid>
