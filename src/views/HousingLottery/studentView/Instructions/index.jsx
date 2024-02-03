@@ -25,6 +25,7 @@ import styles from '../../HousingLottery.module.css';
 const Instructions = () => {
   const [apartmentSelectionDate, setApartmentSelectionDate] = useState();
   const [thisYear, setThisYear] = useState();
+  const [isAccordionExpanded, setIsAccordionExpanded] = useState(true);
 
   useEffect(() => {
     const loadSelectionDate = async () =>
@@ -34,6 +35,10 @@ const Instructions = () => {
 
     setThisYear(new Date().getFullYear());
   }, []);
+
+  const handleAccordionToggle = () => {
+    setIsAccordionExpanded(!isAccordionExpanded);
+  };
 
   const rows = [
     { description: 'Current Freshman', points: 1 },
@@ -48,7 +53,7 @@ const Instructions = () => {
   ];
 
   return (
-    <Accordion>
+    <Accordion expanded={isAccordionExpanded} onChange={handleAccordionToggle}>
       <AccordionSummary
         className={styles.housing_card_header}
         expandIcon={<ExpandMoreIcon style={{ color: 'white' }} />}
