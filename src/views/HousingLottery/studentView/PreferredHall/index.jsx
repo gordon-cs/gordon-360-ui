@@ -30,7 +30,7 @@ const PreferredHallsCard = ({ setPreferredHallResult }) => {
           <CardContent height="500">
             <div className={styles.rankLabel}>Rank</div>
             <Grid id="hallSlots">
-              <Grid container spacing={5}>
+              <Grid container spacing={5} className={styles.hallSlotGridItem}>
                 <Grid item xs={3}>
                   1
                 </Grid>
@@ -43,7 +43,7 @@ const PreferredHallsCard = ({ setPreferredHallResult }) => {
                   />
                 </Grid>
               </Grid>
-              <Grid container spacing={5}>
+              <Grid container spacing={5} className={styles.hallSlotGridItem}>
                 <Grid item xs={3}>
                   2
                 </Grid>
@@ -56,7 +56,7 @@ const PreferredHallsCard = ({ setPreferredHallResult }) => {
                   />
                 </Grid>
               </Grid>
-              <Grid container spacing={5}>
+              <Grid container spacing={5} className={styles.hallSlotGridItem}>
                 <Grid item xs={3}>
                   3
                 </Grid>
@@ -69,7 +69,7 @@ const PreferredHallsCard = ({ setPreferredHallResult }) => {
                   />
                 </Grid>
               </Grid>
-              <Grid container spacing={5}>
+              <Grid container spacing={5} className={styles.hallSlotGridItem}>
                 <Grid item xs={3}>
                   4
                 </Grid>
@@ -82,7 +82,7 @@ const PreferredHallsCard = ({ setPreferredHallResult }) => {
                   />
                 </Grid>
               </Grid>
-              <Grid container spacing={5}>
+              <Grid container spacing={5} className={styles.hallSlotGridItem}>
                 <Grid item xs={3}>
                   5
                 </Grid>
@@ -95,7 +95,7 @@ const PreferredHallsCard = ({ setPreferredHallResult }) => {
                   />
                 </Grid>
               </Grid>
-              <Grid container spacing={5}>
+              <Grid container spacing={5} className={styles.hallSlotGridItem}>
                 <Grid item xs={3}>
                   6
                 </Grid>
