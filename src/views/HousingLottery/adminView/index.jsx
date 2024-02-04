@@ -13,6 +13,7 @@ import {
   Card,
   CardHeader,
   CardContent,
+  TextField,
   Link,
 } from '@mui/material';
 import housingService from 'services/housing';
@@ -26,12 +27,14 @@ const AdminView = () => {
   const [preferredHall, setPreferredHall] = useState([]);
   const [applicant, setApplicant] = useState([]);
   const [schoolYear, setSchoolYear] = useState([]);
+  const [dueDate, setDueDate] = useState('');
 
   useEffect(() => {
     housingService.getAllPreference().then(setPreference);
     housingService.getAllPreferredHall().then(setPreferredHall);
     housingService.getAllApplicant().then(setApplicant);
     housingService.getAllSchoolYear().then(setSchoolYear);
+    housingService.getDueDate().then(setDueDate);
   }, []);
 
   const csvData = data.map((row) => ({
@@ -75,9 +78,26 @@ const AdminView = () => {
     console.log(schoolYear);
   };
 
+  const submitDueDate = async () => {
+    await housingService.addDueDate(dueDate);
+  };
+
   return (
     <Grid container justifyContent="center">
       <Grid item xs={12} lg={8}>
+        <Grid>
+          <TextField
+            type="text"
+            variant="outlined"
+            color="secondary"
+            label="Due Date"
+            value={dueDate}
+            onChange={(event) => setDueDate(event.target.value)}
+          />
+          <Button className={styles.submit_button} variant="contained" onClick={submitDueDate}>
+            Submit
+          </Button>
+        </Grid>
         <Card>
           <CardHeader title="Admin Interface" className={styles.admin_card_header} />
           <CardContent>
