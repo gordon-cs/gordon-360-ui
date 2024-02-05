@@ -24,6 +24,7 @@ const StudentView = () => {
   const application_id = nanoid(8);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [areAllAgreementsChecked, setAreAllAgreementsChecked] = useState(false);
+  const [areAllHallsSelected, setAreAllHallsSelected] = useState(false);
   console.log('Preferred Hall Result:', preferredHallResult);
   console.log('Student Applicant Result:', studentApplicantResult);
   console.log('Preference Result:', preferenceResult);
@@ -40,6 +41,24 @@ const StudentView = () => {
   };
 
   const handleClick = async () => {
+    if (!areAllAgreementsChecked) {
+      setSnackbar({
+        message: 'Please agree to all terms before submitting.',
+        severity: 'error',
+        open: true,
+      });
+      return;
+    }
+
+    if (!areAllHallsSelected) {
+      setSnackbar({
+        message: 'Please select all preferred halls before submitting.',
+        severity: 'error',
+        open: true,
+      });
+      return;
+    }
+
     try {
       console.log(application_id);
       await housingService.addApplicant(application_id, studentApplicantResult);
@@ -54,6 +73,10 @@ const StudentView = () => {
     }
   };
 
+  const handleHallSelectionChange = (areSelected) => {
+    setAreAllHallsSelected(areSelected);
+  };
+
   return (
     <Grid container spacing={2} justifyContent="center">
       <Grid item xs={10}>
@@ -64,7 +87,11 @@ const StudentView = () => {
       </Grid>
       <Grid container item xs={12} lg={5} spacing={2} direction="row" alignItems="flex-start">
         <Grid item xs={12}>
-          <PreferredHall setPreferredHallResult={setPreferredHallResult} />
+          <PreferredHall
+            setPreferredHallResult={setPreferredHallResult}
+            onHallSelectionChange={handleHallSelectionChange}
+            onValidationChange={handleHallSelectionChange}
+          />
         </Grid>
         <Grid item xs={12}>
           <Preference onPreferenceChange={handlePreferenceChange} />

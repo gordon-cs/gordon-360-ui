@@ -1,19 +1,26 @@
 import { Button, Card, CardContent, CardHeader, Grid } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import HallSlot from './HallSlotComponent';
 import housingService from 'services/housing';
 import styles from '../../HousingLottery.module.css';
 import GordonSnackbar from 'components/Snackbar';
 
-const PreferredHallsCard = ({ setPreferredHallResult }) => {
+const PreferredHallsCard = ({ setPreferredHallResult, onValidationChange }) => {
   const [hallList, setHallList] = useState([]);
   const [preferredHallList, setPreferredHallList] = useState(['', '', '', '', '', '']);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const searchHallTitle = <div align="left">Preferred Halls</div>;
+  const areAllHallsSelected = useCallback(() => {
+    return preferredHallList.every((hall) => hall !== '');
+  }, [preferredHallList]);
 
   useEffect(() => {
     housingService.getTraditionalHalls().then(setHallList);
   }, []);
+
+  useEffect(() => {
+    onValidationChange(areAllHallsSelected());
+  }, [preferredHallList, onValidationChange, areAllHallsSelected]);
 
   function updatePreferredHallList(rank, hall) {
     let newList = [...preferredHallList];
