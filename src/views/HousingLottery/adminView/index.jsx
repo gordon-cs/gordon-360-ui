@@ -19,6 +19,7 @@ import {
 import housingService from 'services/housing';
 import styles from '../HousingLottery.module.css';
 import { CSVLink } from 'react-csv';
+import { setDate } from 'date-fns';
 
 const AdminView = () => {
   const [data, setData] = useState([]);
@@ -77,6 +78,20 @@ const AdminView = () => {
     console.log(applicant);
     console.log(schoolYear);
   };
+  
+  const handleDateChange = (event) => {
+    let input = event.target.value.replace(/\D/g, '');
+
+    if (/^\d+$/.test(input)) {
+      if (input.length <= 2) {
+        setDueDate(input);
+      } else if (input.length <= 4) {
+        setDueDate(`${input.slice(0, 2)}/${input.slice(2)}`);
+      } else {
+        setDueDate(`${input.slice(0, 2)}/${input.slice(2, 4)}/${input.slice(4, 8)}`);
+      }
+    }
+  };
 
   const submitDueDate = async () => {
     await housingService.addDueDate(dueDate);
@@ -92,9 +107,15 @@ const AdminView = () => {
             color="secondary"
             label="Due Date"
             value={dueDate}
-            onChange={(event) => setDueDate(event.target.value)}
+            onChange={handleDateChange}
+            margin="normal"
+            helperText="* MM/DD/YYYY"
           />
-          <Button className={styles.submit_button} variant="contained" onClick={submitDueDate}>
+          <Button
+            className={styles.submit_button}
+            variant="contained"
+            onClick={submitDueDate}
+          >
             Submit
           </Button>
         </Grid>
