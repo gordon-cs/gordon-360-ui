@@ -7,6 +7,9 @@ const config = ({ mode }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
 
   return defineConfig({
+    build: {
+      target: 'es2022',
+    },
     plugins: [react(), viteTsconfigPaths(), splitVendorChunkPlugin()],
     server: {
       port: parseInt(process.env.VITE_PORT ?? '5173'),
