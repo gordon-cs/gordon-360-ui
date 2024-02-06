@@ -1,7 +1,7 @@
 import AppRedirect from 'components/AppRedirect';
 import BirthdayMessage from 'components/BirthdayMessage';
 import { createBrowserHistory } from 'history';
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './app.global.css';
 import styles from './app.module.css';
@@ -11,6 +11,7 @@ import GordonNav from './components/Nav';
 import routes from './routes';
 import analytics from './services/analytics';
 import { useWatchSystemColorScheme } from 'hooks';
+import GordonLoader from 'components/Loader';
 
 const App = () => {
   useWatchSystemColorScheme();
@@ -40,11 +41,13 @@ const App = () => {
         <main className={styles.app_main}>
           <BirthdayMessage />
           <AppRedirect />
-          <Routes>
-            {routes.map((route) => (
-              <Route key={route.path} path={route.path} element={route.element} />
-            ))}
-          </Routes>
+          <Suspense fallback={<GordonLoader />}>
+            <Routes>
+              {routes.map((route) => (
+                <Route key={route.path} path={route.path} element={route.element} />
+              ))}
+            </Routes>
+          </Suspense>
         </main>
       </Router>
     </ErrorBoundary>

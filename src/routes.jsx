@@ -1,25 +1,27 @@
-import About from './views/About';
-import Admin from './views/Admin';
-import ApartmentApp from './views/ApartmentApp';
-import BannerSubmission from './views/BannerSubmission';
-import CoCurricularTranscript from './views/CoCurricularTranscript';
-import EnrollmentCheckIn from './views/EnrollmentCheckIn';
-import Events from './views/Events';
-import EventsAttended from './views/EventsAttended';
-import Feedback from './views/Feedback';
-import Help from './views/Help';
-import Home from './views/Home';
-import IDUploader from './views/IDUploader';
-import InvolvementProfile from './views/InvolvementProfile';
-import InvolvementsAll from './views/InvolvementsAll';
-import MyProfile from './views/MyProfile';
-import News from './views/News';
-import Page404 from './views/Page404';
-import PeopleSearch from './views/PeopleSearch';
-import ProfileNotFound from './views/ProfileNotFound';
-import PublicProfile from './views/PublicProfile';
-import Timesheets from './views/Timesheets';
-import RecIM from './views/RecIM';
+import { lazy } from 'react';
+
+const ApartmentApp = lazy(() => import('./views/ApartmentApp'));
+const BannerSubmission = lazy(() => import('./views/BannerSubmission'));
+const CoCurricularTranscript = lazy(() => import('./views/CoCurricularTranscript'));
+const EnrollmentCheckIn = lazy(() => import('./views/EnrollmentCheckIn'));
+const Events = lazy(() => import('./views/Events'));
+const EventsAttended = lazy(() => import('./views/EventsAttended'));
+const Feedback = lazy(() => import('./views/Feedback'));
+const Help = lazy(() => import('./views/Help'));
+const Home = lazy(() => import('./views/Home'));
+const IDUploader = lazy(() => import('./views/IDUploader'));
+const InvolvementProfile = lazy(() => import('./views/InvolvementProfile'));
+const InvolvementsAll = lazy(() => import('./views/InvolvementsAll'));
+const MyProfile = lazy(() => import('./views/MyProfile'));
+const News = lazy(() => import('./views/News'));
+const Page404 = lazy(() => import('./views/Page404'));
+const PeopleSearch = lazy(() => import('./views/PeopleSearch'));
+const ProfileNotFound = lazy(() => import('./views/ProfileNotFound'));
+const PublicProfile = lazy(() => import('./views/PublicProfile'));
+const Timesheets = lazy(() => import('./views/Timesheets'));
+const RecIM = lazy(() => import('./views/RecIM'));
+const Admin = lazy(() => import('./views/Admin'));
+const About = lazy(() => import('./views/About'));
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
 const routes = [

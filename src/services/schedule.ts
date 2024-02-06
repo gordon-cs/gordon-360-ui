@@ -16,9 +16,9 @@ type DbCourse = {
   FRIDAY_CDE: string;
   SATURDAY_CDE: string;
   /** A timespan of the format HH:mm:ss, stringified */
-  BEGIN_TIME: string;
+  BEGIN_TIME?: string;
   /** A timespan of the format HH:mm:ss, stringified */
-  END_TIME: string;
+  END_TIME?: string;
   Role: string;
 };
 
@@ -58,13 +58,12 @@ export type CourseEvent = {
   /**
    * used by `react-big-calendar` to determine which resource (e.g. `Monday`) this event should display for
    */
-  resourceId: CourseDayID;
+  resourceId: CourseDayID[];
   name: string;
   title: string;
   location: string;
   start: Date;
   end: Date;
-  meetingDays: CourseDayID[];
   allDay?: boolean;
 };
 
@@ -85,35 +84,32 @@ function formatCoursesFromDb(courses: DbCourse[]): CourseEvent[] {
   // Because saturday is only included in the schedule if a non-async course meetst that day
   const asyncMeetingDays = courseDayIds.slice(0, -1);
 
-  return courses.flatMap((course) => {
+  return courses.map((course) => {
     const sharedDetails = {
       name: course.CRS_TITLE.trim(),
       title: course.CRS_CDE.trim(),
       location: course.BLDG_CDE + ' ' + course.ROOM_CDE,
     };
 
-    const meetingDays = getMeetingDays(course);
-
     if (course.ROOM_CDE === 'ASY') {
-      return asyncMeetingDays.map((day) => ({
+      return {
         ...sharedDetails,
-        resourceId: day,
+        resourceId: asyncMeetingDays,
         start: today,
         end: today,
-        meetingDays: asyncMeetingDays,
         allDay: true,
-      }));
+      };
     } else {
-      const beginning = parse(course.BEGIN_TIME, 'HH:mm:ss', today);
-      const end = parse(course.END_TIME, 'HH:mm:ss', today);
+      const meetingDays = getMeetingDays(course);
+      const beginning = parse(course.BEGIN_TIME ?? '', 'HH:mm:ss', today);
+      const end = parse(course.END_TIME ?? '', 'HH:mm:ss', today);
 
-      return meetingDays.map((day) => ({
+      return {
         ...sharedDetails,
-        resourceId: day,
+        resourceId: meetingDays,
         start: beginning,
         end: end,
-        meetingDays: meetingDays,
-      }));
+      };
     }
   });
 }
