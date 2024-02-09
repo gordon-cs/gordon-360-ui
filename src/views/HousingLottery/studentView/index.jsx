@@ -47,7 +47,7 @@ const StudentView = () => {
   const handleClick = async () => {
     try {
       let application_id = nanoid(8),
-        timeTarget = new Date(dueDate + ' 11:24:00 PM').getTime(),
+        timeTarget = new Date(dueDate + ' 11:59:59 PM').getTime(),
         timeNow = new Date().getTime();
       if (timeNow > timeTarget) {
         application_id = 'zzz' + timeNow;
