@@ -13,11 +13,13 @@ import {
   Card,
   CardHeader,
   CardContent,
+  TextField,
   Link,
 } from '@mui/material';
 import housingService from 'services/housing';
 import styles from '../HousingLottery.module.css';
 import { CSVLink } from 'react-csv';
+import { setDate } from 'date-fns';
 
 const AdminView = () => {
   const [data, setData] = useState([]);
@@ -26,12 +28,14 @@ const AdminView = () => {
   const [preferredHall, setPreferredHall] = useState([]);
   const [applicant, setApplicant] = useState([]);
   const [schoolYear, setSchoolYear] = useState([]);
+  const [dueDate, setDueDate] = useState('');
 
   useEffect(() => {
     housingService.getAllPreference().then(setPreference);
     housingService.getAllPreferredHall().then(setPreferredHall);
     housingService.getAllApplicant().then(setApplicant);
     housingService.getAllSchoolYear().then(setSchoolYear);
+    housingService.getDueDate().then(setDueDate);
   }, []);
 
   const csvData = data.map((row) => ({
@@ -74,10 +78,47 @@ const AdminView = () => {
     console.log(applicant);
     console.log(schoolYear);
   };
+  
+  const handleDateChange = (event) => {
+    let input = event.target.value.replace(/\D/g, '');
+
+    if (/^\d+$/.test(input)) {
+      if (input.length <= 2) {
+        setDueDate(input);
+      } else if (input.length <= 4) {
+        setDueDate(`${input.slice(0, 2)}/${input.slice(2)}`);
+      } else {
+        setDueDate(`${input.slice(0, 2)}/${input.slice(2, 4)}/${input.slice(4, 8)}`);
+      }
+    }
+  };
+
+  const submitDueDate = async () => {
+    await housingService.addDueDate(dueDate);
+  };
 
   return (
     <Grid container justifyContent="center">
       <Grid item xs={12} lg={8}>
+        <Grid>
+          <TextField
+            type="text"
+            variant="outlined"
+            color="secondary"
+            label="Due Date"
+            value={dueDate}
+            onChange={handleDateChange}
+            margin="normal"
+            helperText="* MM/DD/YYYY"
+          />
+          <Button
+            className={styles.submit_button}
+            variant="contained"
+            onClick={submitDueDate}
+          >
+            Submit
+          </Button>
+        </Grid>
         <Card>
           <CardHeader title="Admin Interface" className={styles.admin_card_header} />
           <CardContent>

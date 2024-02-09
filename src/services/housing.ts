@@ -70,6 +70,7 @@ const getAllApplicant = (): Promise<ApartmentHall[]> =>
   http.get('housing/housing_lottery/all_applicant');
 const getAllSchoolYear = (): Promise<ApartmentHall[]> =>
   http.get('housing/housing_lottery/all_school_year');
+const getDueDate = (): Promise<ApartmentHall[]> => http.get('housing/housing_lottery/get_due_date');
 
 const getCurrentApplicationID = (username: string = ''): Promise<number> =>
   http.get(username ? `housing/apartment/${username}/` : 'housing/apartment/');
@@ -182,6 +183,8 @@ const addHall = (applicantion_id: string, hallList: string[]) =>
 const addPreference = (applicantion_id: string, preferenceList: string[]) =>
   http.put(`housing/housing_lottery/preference/${applicantion_id}`, preferenceList);
 
+const addDueDate = (dueDate: string) => http.put(`housing/housing_lottery/due_date/`, dueDate);
+
 const housingService = {
   getApartmentSelectionDate,
   getApartmentHalls,
@@ -190,6 +193,7 @@ const housingService = {
   getAllPreferredHall,
   getAllApplicant,
   getAllSchoolYear,
+  getDueDate,
   getCurrentApplicationID,
   saveApartmentApplication,
   deleteApartmentApplication,
@@ -200,6 +204,7 @@ const housingService = {
   addApplicant,
   addHall,
   addPreference,
+  addDueDate,
 };
 
 export default housingService;
