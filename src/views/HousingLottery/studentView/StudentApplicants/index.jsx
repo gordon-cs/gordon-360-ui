@@ -2,18 +2,31 @@ import { Button, Card, CardContent, CardHeader, Divider, Grid, TextField } from 
 import { useState } from 'react';
 import ApplicantFields from './ApplicantFields';
 import styles from '../../HousingLottery.module.css';
-import housingService from 'services/housing';
+import { useEffect } from 'react';
+import user from '../../../../services/user';
 
 const StudentApplicants = ({ setStudentApplicantResult }) => {
-  const initialApplicants = [
-    { firstName: '', lastName: '', email: '' },
-    { firstName: '', lastName: '', email: '' },
-    { firstName: '', lastName: '', email: '' },
-    { firstName: '', lastName: '', email: '' },
-  ];
+  const [applicants, setApplicants] = useState([]);
+  const [emails, setEmails] = useState([]);
 
-  const [applicants, setApplicants] = useState(initialApplicants);
-  const [emails, setEmails] = useState(initialApplicants.map((applicant) => applicant.email));
+  useEffect(() => {
+    const loadCurrentUser = async () => {
+      try {
+        const profile = await user.getProfileInfo();
+        const initialApplicants = [
+          { firstName: profile.FirstName, lastName: profile.LastName, email: profile.Email },
+          { firstName: '', lastName: '', email: '' },
+          { firstName: '', lastName: '', email: '' },
+          { firstName: '', lastName: '', email: '' },
+        ];
+        setApplicants(initialApplicants);
+        setEmails(initialApplicants.map((a) => a.email));
+      } catch (error) {
+        console.error('Error fetching user data', error);
+      }
+    };
+    loadCurrentUser();
+  }, []);
 
   const handleApplicantChange = (index, updatedApplicant) => {
     const newApplicants = [...applicants];
@@ -40,7 +53,7 @@ const StudentApplicants = ({ setStudentApplicantResult }) => {
                   index={index}
                 />
               </div>
-              <Divider />
+              {index < applicants.length - 1 && <Divider />}
             </Grid>
           ))}
         </Grid>
