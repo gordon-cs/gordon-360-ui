@@ -18,7 +18,6 @@ import { CSVLink } from 'react-csv';
 
 const AdminView = () => {
   const [data, setData] = useState([]);
-
   const [preference, setPreference] = useState([]);
   const [preferredHall, setPreferredHall] = useState([]);
   const [applicant, setApplicant] = useState([]);
@@ -83,10 +82,10 @@ const AdminView = () => {
     return {
       'Lottery Number': applicationId, 
       //Jan 28: Now we still treat ApplicationID is used as Lottery Number
-      'Applicant 1’s Email': appData.applicants[0] || '',
-      'Applicant 2’s Email': appData.applicants[1] || '',
-      'Applicant 3’s Email': appData.applicants[2] || '',
-      'Applicant 4’s Email': appData.applicants[3] || '',
+      'Applicant 1`s Email': appData.applicants[0] || '',
+      'Applicant 2`s Email': appData.applicants[1] || '',
+      'Applicant 3`s Email': appData.applicants[2] || '',
+      'Applicant 4`s Email': appData.applicants[3] || '',
       'Preferred Hall 1': appData.preferredHalls[0] || '',
       'Preferred Hall 2': appData.preferredHalls[1] || '',
       'Preferred Hall 3': appData.preferredHalls[2] || '',
@@ -100,28 +99,23 @@ const AdminView = () => {
   });
 
   const csvHeaders = [
-    'Lottery Number',
-    'Applicant 1’s Email',
-    'Applicant 2’s Email',
-    'Applicant 3’s Email',
-    'Applicant 4’s Email',
-    'Preferred Hall 1',
-    'Preferred Hall 2',
-    'Preferred Hall 3',
-    'Preferred Hall 4',
-    'Preferred Hall 5',
-    'Preferred Hall 6',
-    'Preference 1',
-    'Preference 2',
-    'Class Standing', // Add class standing header
+    {label:'Lottery Number',key:'Lottery Number'},
+    {label:'Applicant 1`s Email',key:'Applicant 1`s Email'},
+    {label:'Applicant 2`s Email',key:'Applicant 2`s Email'},
+    {label:'Applicant 3`s Email',key:'Applicant 3`s Email'},
+    {label:'Applicant 4`s Email',key:'Applicant 4`s Email'},
+    {label:'Preferred Hall 1',key:'Preferred Hall 1'},
+    {label:'Preferred Hall 2',key:'Preferred Hall 2'},
+    {label:'Preferred Hall 3',key:'Preferred Hall 3'},
+    {label:'Preferred Hall 4',key:'Preferred Hall 4'},
+    {label:'Preferred Hall 5',key:'Preferred Hall 5'},
+    {label:'Preferred Hall 6',key:'Preferred Hall 6'},
+    {label:'Preference 1',key:'Preference 1'},
+    {label:'Preference 2',key:'Preference 2'},
+    {label:'Class Standing',key:'Class Standing'},
   ];
 
-const csvHeadersObject = csvHeaders.reduce((obj, header) => {
-  obj[header] = header;
-  return obj;
-}, {});
 
-const csvDataForExport = [csvHeadersObject, ...csvData];
   return (
     <Grid container justifyContent="center">
       <Grid item xs={12} lg={8}>
@@ -130,9 +124,11 @@ const csvDataForExport = [csvHeadersObject, ...csvData];
           <CardContent>
           <Button className={styles.exportButton} variant="contained">
       <CSVLink
-        data={csvDataForExport}
+        data={csvData}
+        headers={csvHeaders}
         filename={'admin_data.csv'}
         className={styles.csvLink}
+
       >
         Export as CSV
       </CSVLink>
