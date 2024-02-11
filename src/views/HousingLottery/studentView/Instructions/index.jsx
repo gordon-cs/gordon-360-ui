@@ -1,138 +1,52 @@
+import React from 'react';
 import {
-  Grid,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
   Typography,
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Link,
 } from '@mui/material/';
-import { useEffect, useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import housing from 'services/housing';
-// @TODO CSSMODULES - outside directory
 import styles from '../../HousingLottery.module.css';
 
-/**
- * Renders a card displaying the apartment application instructions
- *
- * @returns {JSX.Element} JSX Element for the instructions card
- */
 const Instructions = () => {
-  const [apartmentSelectionDate, setApartmentSelectionDate] = useState();
-  const [thisYear, setThisYear] = useState();
-
-  useEffect(() => {
-    const loadSelectionDate = async () =>
-      setApartmentSelectionDate(await housing.getApartmentSelectionDate());
-
-    loadSelectionDate();
-
-    setThisYear(new Date().getFullYear());
-  }, []);
-
-  const rows = [
-    { description: 'Current Freshman', points: 1 },
-    { description: 'Current Sophomore', points: 2 },
-    { description: 'Current Junior', points: 3 },
-    { description: 'Current Senior', points: 4 },
-    { description: '23+ years old', points: 1 },
-    { description: 'Full-time, off-campus program credit', points: 1 },
-    { description: 'Academic/Chapel probation', points: -1 },
-    { description: 'Possible academic suspension', points: -2 },
-    { description: `${thisYear - 1}-${thisYear} Disciplinary Probation`, points: -3 },
-  ];
-
   return (
-    <Accordion>
-      <AccordionSummary
-        className={styles.housing_card_header}
-        expandIcon={<ExpandMoreIcon style={{ color: 'white' }} />}
-        aria-controls="instructions-panel-content"
-        id="instructions-panel-header"
-      >
-        <Typography variant="h5">On-Campus Housing - Information and Guidelines</Typography>
-      </AccordionSummary>
-      <AccordionDetails>
-        <Typography variant="body1" paragraph>
-          Apartments provide an alternative to the traditional residence hall setting and offer a
-          unique community experience. To be eligible to live in an apartment, students must be at
-          least 20 years old as of Sept. 1, {thisYear} <strong>or</strong> have junior or senior
-          academic standing. Students who were on disciplinary probation at any time during the{' '}
-          {thisYear - 1}-{thisYear} academic year must also receive approval from the Dean of
-          Student Life or the Assistant Dean of Student Life to be eligible to apply for an
-          apartment. Each applicant must be registered as a full-time student by{' '}
-          {apartmentSelectionDate}.
-        </Typography>
-        <Typography variant="body1" paragraph>
-          Each group of students desiring to live in a Tavilla or Bromley apartment or in The
-          Village must submit an application. Your application can include a student who is studying
-          abroad or not enrolled for the Spring {thisYear} semester &ndash; simply list their name
-          on the application.
-        </Typography>
-        <Typography variant="body1" paragraph>
-          <strong>Full-time, off-campus program credit:</strong> Students fulfilling academic
-          program requirements through student teaching or a full-time internship will qualify for
-          the full-time, off-campus program credit. It is the responsibility of applicants to claim
-          this credit on the application.
-        </Typography>
-        <Typography variant="body1" paragraph>
-          <strong>Applications must be for a full apartment:</strong> If applying for a six-person
-          apartment, there must be six people on the application who will be here for the{' '}
-          <strong className={styles.over_emphasized}>fall semester</strong> (four people on a
-          four-person application, etc.). Applications with an incorrect number of applicants will
-          not be considered.
-        </Typography>
-        <Typography variant="subtitle1" gutterBottom>
-          <strong>An application is not a guarantee!</strong>
-        </Typography>
-        <Typography variant="body1" paragraph>
-          Due to the large number of applications typically received for apartments, not all
-          applications will be awarded an apartment. If you do not receive an apartment, you will
-          need to secure housing through the housing lottery.
-        </Typography>
-        <Typography variant="subtitle1" gutterBottom>
-          <strong>How are apartments awarded?</strong>
-        </Typography>
-        <Typography variant="body1" paragraph>
-          Apartments are awarded in order of point total for each type of apartment (4-person,
-          6-person, etc.). Each individual on an application will have points given/taken away using
-          the following scale:
-        </Typography>
-        <Grid container justifyContent="center" spacing={3}>
-          <Grid item xs={11} lg={9}>
-            <TableContainer component={Paper}>
-              <Table size="small">
-                <TableBody>
-                  {rows.map((row) => (
-                    <TableRow key={row.description}>
-                      <TableCell>{row.description}</TableCell>
-                      <TableCell>{row.points}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Grid>
-        </Grid>
-        <br />
-        <Typography variant="subtitle1" gutterBottom>
-          <strong>If You Are Approved...</strong>
-        </Typography>
-        <Typography variant="body1" paragraph>
-          You will be notified of your placement in an apartment/Village{' '}
-          <strong>
-            <em>building</em>
-          </strong>{' '}
-          no later than Apr. 13. Further information about specific apartment/room selection will be
-          communicated in that email.
-        </Typography>
-      </AccordionDetails>
-    </Accordion>
+    <div>
+      <Typography variant="h4" gutterBottom>
+        Instructions (As easy as 1, 2, 3!)
+      </Typography>
+      <Typography variant="body1" paragraph>
+        1. Review FAQs
+      </Typography>
+      <Typography variant="body1" paragraph>
+        2. Access questionnaire
+      </Typography>
+      <Typography variant="body1" paragraph>
+        3. Complete questionnaire by providing name(s), email(s), and housing preferences by Friday, Apr. 21 at noon.
+      </Typography>
+
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="housing-lottery-faq-content"
+          id="housing-lottery-faq-header"
+        >
+          <Typography variant="h5">Housing Lottery FAQ</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography variant="body1" paragraph>
+            <strong>1. Who should complete the questionnaire?</strong><br/>
+            Anyone who has not yet secured housing for the Fall 2022 semester should participate in the lottery by completing the questionnaire.
+          </Typography>
+          {/* Repeat for other questions */}
+          <Typography variant="body1" paragraph>
+            <strong>3. How can I learn more about my housing options?</strong><br/>
+            Please visit <Link href="https://www.gordon.edu/residencehalls">our residence halls</Link> for information about our residence halls. Room cost information can be obtained by visiting <Link href="https://www.gordon.edu/roomcosts">room costs</Link>.
+          </Typography>
+          {/* Include all other FAQ items in a similar manner */}
+        </AccordionDetails>
+      </Accordion>
+    </div>
   );
 };
 
