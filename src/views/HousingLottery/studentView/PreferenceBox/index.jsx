@@ -40,7 +40,7 @@ const Preference = ({ onPreferenceChange }) => {
     newList[0] = newMorningOrNight;
     setMorningOrNight(newMorningOrNight);
     setPreferences(newList);
-    onPreferenceChange(newList);
+    onPreferenceChange(newList, newMorningOrNight && loudOrQuiet);
   };
 
   const handleLoudOrQuietChange = (event) => {
@@ -49,7 +49,7 @@ const Preference = ({ onPreferenceChange }) => {
     newList[1] = newLoudOrQuiet;
     setLoudOrQuiet(newLoudOrQuiet);
     setPreferences(newList);
-    onPreferenceChange(newList);
+    onPreferenceChange(newList, morningOrNight && newLoudOrQuiet);
   };
 
   useEffect(() => {
@@ -72,6 +72,11 @@ const Preference = ({ onPreferenceChange }) => {
       setLoudOrQuiet('');
     }
   }, []);
+
+  useEffect(() => {
+    const isValid = morningOrNight && loudOrQuiet;
+    onPreferenceChange(preferences, isValid);
+  }, [preferences, morningOrNight, loudOrQuiet, onPreferenceChange]);
 
   return (
     <Grid container justifyContent="flex-end">
