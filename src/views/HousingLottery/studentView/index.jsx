@@ -59,12 +59,29 @@ const StudentView = () => {
       return;
     }
 
+    const invalidEmail = studentApplicantResult.some((email) => !email.endsWith('@gordon.edu'));
+    if (invalidEmail) {
+      setSnackbar({
+        message:
+          'One or more emails are not valid Gordon emails. Please correct them before submitting.',
+        severity: 'error',
+        open: true,
+      });
+      return; // Stop the submission process if there's an invalid email
+    }
+
     try {
       console.log(application_id);
       await housingService.addApplicant(application_id, studentApplicantResult);
       await housingService.addHall(application_id, preferredHallResult);
       await housingService.addPreference(application_id, preferenceResult);
-    } catch {
+      setSnackbar({
+        message: 'Application submitted successfully!',
+        severity: 'success',
+        open: true,
+      });
+    } catch (error) {
+      console.error('Error submitting application:', error);
       setSnackbar({
         message: 'Application fail to submit. Please check your information or contact CTS.',
         severity: 'error',
