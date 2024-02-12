@@ -59,7 +59,9 @@ const StudentView = () => {
       return;
     }
 
-    const invalidEmail = studentApplicantResult.some((email) => !email.endsWith('@gordon.edu'));
+    const invalidEmail = studentApplicantResult.some(
+      (applicant) => applicant.email && !applicant.email.endsWith('@gordon.edu'),
+    );
     if (invalidEmail) {
       setSnackbar({
         message:
