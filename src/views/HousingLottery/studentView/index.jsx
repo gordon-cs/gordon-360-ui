@@ -67,7 +67,7 @@ const StudentView = () => {
         severity: 'error',
         open: true,
       });
-      return; // Stop the submission process if there's an invalid email
+      return;
     }
 
     try {
