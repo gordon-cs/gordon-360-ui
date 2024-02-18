@@ -18,7 +18,7 @@ const ApplicantFields = ({ applicant, onApplicantChange, index }) => {
         fullWidth
         required
         className={styles.applicant_name}
-        helperText={'*Required'}
+        disabled={index === 0}
       />
       <TextField
         type="text"
@@ -30,7 +30,7 @@ const ApplicantFields = ({ applicant, onApplicantChange, index }) => {
         fullWidth
         required
         className={styles.applicant_name}
-        helperText={'*Required'}
+        disabled={index === 0}
       />
       <TextField
         type="email"
@@ -41,8 +41,10 @@ const ApplicantFields = ({ applicant, onApplicantChange, index }) => {
         value={applicant.email}
         required
         error={applicant.email !== '' && !applicant.email.endsWith('@gordon.edu')}
-        helperText={applicant.email === '' || applicant.email.endsWith('@gordon.edu') ? '*Required' : 'Not a Valid Gordon Email'}
+        helperText={applicant.email === '' || applicant.email.endsWith('@gordon.edu') ? '' : 'Not a Valid Gordon Email'}
         className={styles.applicant_email}
+        disabled={index === 0}
+        
       />
     </>
   );
