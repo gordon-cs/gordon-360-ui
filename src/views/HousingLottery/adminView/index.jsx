@@ -12,11 +12,16 @@ import {
   CardHeader,
   CardContent,
   TextField,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
   Link,
 } from '@mui/material';
 import housingService from 'services/housing';
 import styles from '../HousingLottery.module.css';
 import { CSVLink } from 'react-csv';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { setDate } from 'date-fns';
 
 const AdminView = () => {
@@ -200,16 +205,29 @@ const AdminView = () => {
     return (
       <TableRow key={ApplicationID}>
         <TableCell>{ApplicationID}</TableCell>
-        {Array.from({ length: 4 }, (_, i) => (
-          <TableCell key={`ApplicantEmail${i}`}>
-            {appData.applicants && appData.applicants.length > i ? appData.applicants[i] : ''}
-          </TableCell>
-        ))}
+        <TableCell>
+        <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls={`panel1a-content-${index}`}
+              id={`panel1a-header-${index}`}
+            >
+              <Typography>View Applicants</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              {appData.applicants.map((email, idx) => (
+                <Typography key={idx} component="div">
+                  {email}
+                </Typography>
+              ))}
+            </AccordionDetails>
+          </Accordion>
+        </TableCell>
         {Array.from({ length: 6 }, (_, i) => (
-       <TableCell key={`PreferredHall${i}`}>
+          <TableCell key={`PreferredHall${i}`}>
             {appData.preferredHalls && appData.preferredHalls.length > i ? appData.preferredHalls[i] : ''}
           </TableCell>
-        ))} 
+        ))}
         {Array.from({ length: 2 }, (_, i) => (
           <TableCell key={`Preference${i}`}>
             {appData.preferences && appData.preferences.length > i ? appData.preferences[i] : ''}
@@ -220,6 +238,7 @@ const AdminView = () => {
     );
   })}
 </TableBody>
+
   </Table>
 </TableContainer>
 
