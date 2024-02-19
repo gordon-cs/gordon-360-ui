@@ -61,13 +61,14 @@ const StudentView = () => {
       return;
     }
 
-    const invalidEmail = studentApplicantResult.some(
-      (applicant) => applicant.email && !applicant.email.endsWith('@gordon.edu'),
-    );
+    const emailInputs = document.querySelectorAll('input[type="email"]');
+    const invalidEmail = Array.from(emailInputs).some((input) => {
+      return input.value && !input.value.endsWith('@gordon.edu');
+    });
     if (invalidEmail) {
       setSnackbar({
         message:
-          'One or more emails are not valid Gordon emails. Please correct them before submitting.',
+          'One or more entered emails are not valid Gordon emails. Please correct them before submitting.',
         severity: 'error',
         open: true,
       });
@@ -93,8 +94,7 @@ const StudentView = () => {
         severity: 'success',
         open: true,
       });
-    } catch (error) {
-      console.error('Error submitting application:', error);
+    } catch {
       setSnackbar({
         message: 'Application fail to submit. Please check your information or contact CTS.',
         severity: 'error',
