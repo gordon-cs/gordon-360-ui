@@ -9,30 +9,6 @@ const ApplicantFields = ({ applicant, onApplicantChange, index }) => {
   return (
     <>
       <TextField
-        type="text"
-        variant='outlined'
-        color='secondary'
-        label="First Name"
-        onChange={(e) => handleFieldChange('firstName', e.target.value)}
-        value={applicant.firstName}
-        fullWidth
-        required
-        className={styles.applicant_name}
-        disabled={index === 0}
-      />
-      <TextField
-        type="text"
-        variant='outlined'
-        color='secondary'
-        label="Last Name"
-        onChange={(e) => handleFieldChange('lastName', e.target.value)}
-        value={applicant.lastName}
-        fullWidth
-        required
-        className={styles.applicant_name}
-        disabled={index === 0}
-      />
-      <TextField
         type="email"
         variant='outlined'
         color='secondary'
