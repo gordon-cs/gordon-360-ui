@@ -52,7 +52,7 @@
     "eslint-plugin-jsdoc": "^48.0.2",
     "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-react": "^7.33.2",
-    "husky": "^8.0.3",
+    "husky": "^9.0.11",
     "jsdoc": "^4.0.2",
     "lint-staged": "^15.2.0",
     "prettier": "^3.2.4",
@@ -73,7 +73,7 @@
     "lint": "npm run --silent lint-js && npm run --silent lint-scss",
     "lint-js": "eslint --ext .js,.ts,.tsx src",
     "lint-scss": "stylelint 'src/**/*.scss'",
-    "prepare": "husky install",
+    "prepare": "husky",
     "lint-staged": "lint-staged",
     "serve": "vite preview"
   },
