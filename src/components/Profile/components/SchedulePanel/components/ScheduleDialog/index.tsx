@@ -9,7 +9,7 @@ import {
   DialogContentText,
 } from '@mui/material';
 import 'add-to-calendar-button';
-import { format, nextDay } from 'date-fns';
+import { Day, format, nextDay } from 'date-fns';
 import { STORAGE_COLOR_PREFERENCE_KEY } from 'theme';
 import { CourseEvent, courseDayIds, scheduleCalendarResources } from 'services/schedule';
 import { Session } from 'services/session';
@@ -28,7 +28,7 @@ const ScheduleDialog = ({ course, session, onClose }: Props) => {
       // nextDay counts from Sunday as 0, but courseDayIds start Monday as 0
       nextDay(
         new Date(session.SessionBeginDate),
-        (courseDayIds.indexOf(course.resourceId) + 1) as Day,
+        (courseDayIds.indexOf(course.resourceId[0]) + 1) as Day,
       ),
       'yyyy-MM-dd',
     ),
@@ -54,8 +54,8 @@ const ScheduleDialog = ({ course, session, onClose }: Props) => {
           Time:
           {format(course.start, " hh:mm aaaaa'm' ")}-{format(course.end, " hh:mm aaaaa'm' ")}
           <br />
-          Week Day{course.meetingDays.length > 1 && <>(s)</>}:{' '}
-          {course.meetingDays
+          Week Day{course.resourceId.length > 1 && <>(s)</>}:{' '}
+          {course.resourceId
             .map((resourceId) => scheduleCalendarResources.find((r) => r.id === resourceId)?.title)
             .join(', ')}
           <br />
@@ -79,7 +79,7 @@ const ScheduleDialog = ({ course, session, onClose }: Props) => {
           options="'Google','iCal'"
           recurrence={
             'RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=' +
-            course.meetingDays.join(',') +
+            course.resourceId.join(',') +
             ';UNTIL=' +
             format(new Date(session.SessionEndDate), "yyyyMMdd'T000000Z'")
           }
