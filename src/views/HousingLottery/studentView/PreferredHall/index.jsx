@@ -39,7 +39,7 @@ const PreferredHallsCard = ({ setPreferredHallResult, onValidationChange }) => {
             <Grid id="hallSlots">
               <Grid container spacing={5} className={styles.hallSlotGridItem}>
                 <Grid item xs={3}>
-                  1
+                  1<span className={styles.rankAsterisk}>*</span>
                 </Grid>
                 <Grid item xs={3}>
                   <HallSlot
@@ -52,7 +52,7 @@ const PreferredHallsCard = ({ setPreferredHallResult, onValidationChange }) => {
               </Grid>
               <Grid container spacing={5} className={styles.hallSlotGridItem}>
                 <Grid item xs={3}>
-                  2
+                  2<span className={styles.rankAsterisk}>*</span>
                 </Grid>
                 <Grid item xs={3}>
                   <HallSlot
@@ -65,7 +65,7 @@ const PreferredHallsCard = ({ setPreferredHallResult, onValidationChange }) => {
               </Grid>
               <Grid container spacing={5} className={styles.hallSlotGridItem}>
                 <Grid item xs={3}>
-                  3
+                  3<span className={styles.rankAsterisk}>*</span>
                 </Grid>
                 <Grid item xs={3}>
                   <HallSlot
@@ -78,7 +78,7 @@ const PreferredHallsCard = ({ setPreferredHallResult, onValidationChange }) => {
               </Grid>
               <Grid container spacing={5} className={styles.hallSlotGridItem}>
                 <Grid item xs={3}>
-                  4
+                  4<span className={styles.rankAsterisk}>*</span>
                 </Grid>
                 <Grid item xs={3}>
                   <HallSlot
@@ -91,7 +91,7 @@ const PreferredHallsCard = ({ setPreferredHallResult, onValidationChange }) => {
               </Grid>
               <Grid container spacing={5} className={styles.hallSlotGridItem}>
                 <Grid item xs={3}>
-                  5
+                  5<span className={styles.rankAsterisk}>*</span>
                 </Grid>
                 <Grid item xs={3}>
                   <HallSlot
@@ -104,7 +104,7 @@ const PreferredHallsCard = ({ setPreferredHallResult, onValidationChange }) => {
               </Grid>
               <Grid container spacing={5} className={styles.hallSlotGridItem}>
                 <Grid item xs={3}>
-                  6
+                  6<span className={styles.rankAsterisk}>*</span>
                 </Grid>
                 <Grid item xs={3}>
                   <HallSlot
