@@ -182,66 +182,99 @@ const AdminView = () => {
     </Button>
             <TableContainer>
   <Table>
-    <TableHead>
-      <TableRow>
-        <TableCell>Lottery Number</TableCell>
-        {Array.from({ length: 4 }, (_, i) => (
-          <TableCell key={`ApplicantEmailHeader${i}`}>
-            Applicant {i + 1}'s Email
-          </TableCell>
-        ))}
-        {Array.from({ length: 6 }, (_, i) => (
-          <TableCell key={`PreferredHallHeader${i}`}>Preferred Hall {i + 1}</TableCell>
-        ))}
-        {Array.from({ length: 2 }, (_, i) => (
-          <TableCell key={`PreferenceHeader${i}`}>Preference {i + 1}</TableCell>
-        ))}
-        <TableCell>Class Standing</TableCell>
-      </TableRow>
-    </TableHead>
-    <TableBody>
-  {Object.keys(combinedData).map((ApplicationID, index) => {
-    const appData = combinedData[ApplicationID];
+  <TableHead>
+  <TableRow>
+    <TableCell>Lottery Number</TableCell>
+    <TableCell>Applicants</TableCell>
+    <TableCell>Preferred Halls</TableCell>
+    <TableCell>Preferences</TableCell>
+    <TableCell>Class Standing</TableCell>
+  </TableRow>
+</TableHead> 
+<TableBody>
+  {Object.keys(combinedData).map((applicationId, index) => {
+    const appData = combinedData[applicationId];
+    const hasMultipleApplicants = appData.applicants.length > 1;
+    const hasMultipleHalls = appData.preferredHalls.length > 1;
+    const hasMultiplePreferences = appData.preferences.length >1;
+
     return (
-      <TableRow key={ApplicationID}>
-        <TableCell>{ApplicationID}</TableCell>
+      <TableRow key={applicationId}>
+        <TableCell>{applicationId}</TableCell>
+        
+        {/* Applicants Cell */}
         <TableCell>
-        <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls={`panel1a-content-${index}`}
-              id={`panel1a-header-${index}`}
-            >
-              <Typography>View Applicants</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              {appData.applicants.map((email, idx) => (
-                <Typography key={idx} component="div">
-                  {email}
+          {hasMultipleApplicants ? (
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls={`panel-applicants-content-${index}`}
+                id={`panel-applicants-header-${index}`}
+              >
+                <Typography>{appData.applicants[0]}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography component="div">
+                  {appData.applicants.slice(1).map((email, idx) => (
+                    <div key={idx}>{email}</div>
+                  ))}
                 </Typography>
-              ))}
-            </AccordionDetails>
-          </Accordion>
+              </AccordionDetails>
+            </Accordion>
+          ) : (
+            <Typography>{appData.applicants[0]}</Typography>
+          )}
         </TableCell>
-        {Array.from({ length: 6 }, (_, i) => (
-          <TableCell key={`PreferredHall${i}`}>
-            {appData.preferredHalls && appData.preferredHalls.length > i ? appData.preferredHalls[i] : ''}
-          </TableCell>
-        ))}
-        {Array.from({ length: 2 }, (_, i) => (
-          <TableCell key={`Preference${i}`}>
-            {appData.preferences && appData.preferences.length > i ? appData.preferences[i] : ''}
-          </TableCell>
-        ))}
+        <TableCell>
+          {hasMultipleHalls ? (
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls={`panel-halls-content-${index}`}
+                id={`panel-halls-header-${index}`}
+              >
+                <Typography>{appData.preferredHalls[0]}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography component="div">
+                  {appData.preferredHalls.slice(1).map((hall, idx) => (
+                    <div key={idx}>{hall}</div>
+                  ))}
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+          ) : (
+            <Typography>{appData.preferredHalls[0]}</Typography>
+          )}
+        </TableCell>
+         {/* Preferences Cell */}
+         <TableCell>
+          {hasMultiplePreferences ? (
+            <Accordion>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                aria-controls={`panel-preferences-content-${index}`}
+                id={`panel-preferences-header-${index}`}
+              >
+                <Typography>{appData.preferences[0]}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                {appData.preferences.slice(1).map((preference, idx) => (
+                  <Typography key={idx}>{preference}</Typography>
+                ))}
+              </AccordionDetails>
+            </Accordion>
+          ) : (
+            <Typography>{appData.preferences[0]}</Typography>
+          )}
+        </TableCell>
         <TableCell>{appData.year || ''}</TableCell>
       </TableRow>
     );
   })}
-</TableBody>
-
-  </Table>
-</TableContainer>
-
+        </TableBody>
+        </Table>
+        </TableContainer>
           </CardContent>
         </Card>
         <Button className={styles.submit_button} variant="contained" onClick={handleClick}>
