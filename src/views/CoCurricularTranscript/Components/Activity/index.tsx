@@ -1,4 +1,4 @@
-import { compareAsc, differenceInCalendarMonths, format } from 'date-fns';
+import { compareAsc } from 'date-fns';
 import { Participation } from 'services/membership';
 import sessionService from 'services/session';
 import { MembershipInterval } from 'services/transcript';
