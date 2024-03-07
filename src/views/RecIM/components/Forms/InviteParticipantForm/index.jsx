@@ -1,13 +1,14 @@
 import { Grid } from '@mui/material';
-import { useState, useEffect } from 'react';
 import GordonDialogBox from 'components/GordonDialogBox';
-import { ParticipantList } from './../../List';
-import RecIMQuickSearch from 'views/RecIM/components/RecIMQuickSearch';
-import { addParticipantToTeam, createTeam, deleteTeamParticipant } from 'services/recim/team';
+import GordonQuickSearch from 'components/Header/components/QuickSearch';
 import GordonLoader from 'components/Loader';
-import styles from './InviteParticipantForm.module.css';
-import userService from 'services/user';
 import { useUser } from 'hooks';
+import { useEffect, useState } from 'react';
+import { getAccountsBasicInfo } from 'services/recim/participant';
+import { addParticipantToTeam, createTeam, deleteTeamParticipant } from 'services/recim/team';
+import userService from 'services/user';
+import { ParticipantList } from './../../List';
+import styles from './InviteParticipantForm.module.css';
 
 const InviteParticipantForm = ({
   createSnackbar,
@@ -27,9 +28,9 @@ const InviteParticipantForm = ({
     setDisableUpdateButton(!inviteList || !inviteList.length);
   }, [inviteList]);
 
-  const onSearchSubmit = (username, firstName, lastName) => {
+  const onSearchSubmit = (person) => {
     // Check if participant exists in invite list
-    if (inviteList.find((p) => p.Username === username)) {
+    if (inviteList.find((p) => p.Username === person.UserName)) {
       createSnackbar('Participant already in list', 'error');
       return;
     }
@@ -37,10 +38,10 @@ const InviteParticipantForm = ({
     setInviteList([
       ...inviteList,
       {
-        Username: username,
-        FirstName: firstName,
-        LastName: lastName,
-        IsCustom: username.split('.').at(-1) === 'custom',
+        Username: person.UserName,
+        FirstName: person.FirstName,
+        LastName: person.LastName,
+        IsCustom: person.Username?.split('.').at(-1) === 'custom',
       },
     ]);
   };
@@ -134,12 +135,11 @@ const InviteParticipantForm = ({
           </Grid>
           {!saving && (
             <Grid item>
-              <RecIMQuickSearch
-                customPlaceholderText={'Search for people'}
+              <GordonQuickSearch
+                customPlaceholderText="Search for people"
                 disableLink
-                onSearchSubmit={(selectedUsername, firstName, lastName) =>
-                  onSearchSubmit(selectedUsername, firstName, lastName)
-                }
+                onSearchSubmit={onSearchSubmit}
+                searchFunction={getAccountsBasicInfo}
               />
             </Grid>
           )}
