@@ -50,7 +50,7 @@ const AdminView = () => {
     console.log(applicant);
     console.log(schoolYear);
   };
-  
+
   const handleDateChange = (event) => {
     let input = event.target.value.replace(/\D/g, '');
 
@@ -69,9 +69,14 @@ const AdminView = () => {
     await housingService.addDueDate(dueDate);
   };
 
-  const combineData = (applicants, preferredHalls, preferences, schoolYears) => {
+  const combineData = (
+    applicants,
+    preferredHalls,
+    preferences,
+    schoolYears
+  ) => {
     const normalizedData = {};
-  
+
     applicants.forEach(item => {
       if (!normalizedData[item.ApplicationID]) {
         normalizedData[item.ApplicationID] = {
@@ -83,30 +88,35 @@ const AdminView = () => {
       }
       normalizedData[item.ApplicationID].applicants.push(item.Applicant1);
     });
-  
+
     preferredHalls.forEach(item => {
       if (normalizedData[item.ApplicationID]) {
         normalizedData[item.ApplicationID].preferredHalls[item.Rank - 1] = item.HallName;
       }
     });
-  
+
     preferences.forEach(item => {
       if (normalizedData[item.ApplicationID]) {
         normalizedData[item.ApplicationID].preferences.push(item.Preference1);
       }
     });
-  
+
     schoolYears.forEach(item => {
       if (normalizedData[item.ApplicationID]) {
         normalizedData[item.ApplicationID].year = item.Year1;
       }
     });
-  
+
     return normalizedData;
-  };  
-  
-  const combinedData = combineData(applicant,preferredHall,preference,schoolYear);
-  
+  };
+
+  const combinedData = combineData(
+    applicant,
+    preferredHall,
+    preference,
+    schoolYear
+  );
+
   const csvData = Object.keys(combinedData).map((applicationId) => {
     const appData = combinedData[applicationId];
     return {
@@ -178,7 +188,10 @@ const AdminView = () => {
           </Button>
         </Grid>
         <Card>
-          <CardHeader title="Admin Interface" className={styles.admin_card_header} />
+          <CardHeader
+            title="Admin Interface"
+            className={styles.admin_card_header}
+          />
           <CardContent>
           <Button className={styles.exportButton} variant="contained">
       <CSVLink
