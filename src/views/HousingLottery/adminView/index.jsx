@@ -17,6 +17,8 @@ import {
   AccordionDetails,
   Typography,
   Link,
+  styled,
+  Paper,
 } from '@mui/material';
 import housingService from 'services/housing';
 import styles from '../HousingLottery.module.css';
@@ -76,7 +78,7 @@ const AdminView = () => {
           applicants: [],
           preferredHalls: [],
           preferences: [],
-          year: null
+          year: null,
         };
       }
       normalizedData[item.ApplicationID].applicants.push(item.Applicant1);
@@ -143,6 +145,15 @@ const AdminView = () => {
     {label:'Class Standing',key:'Class Standing'},
   ];
 
+  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    "&:nth-of-type(odd)": {
+      backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    "&:last-child td, &:last-child th": {
+      border: 0,
+    },
+  }));
 
   return (
     <Grid container justifyContent="center">
@@ -180,16 +191,27 @@ const AdminView = () => {
         Export as CSV
       </CSVLink>
     </Button>
-            <TableContainer>
-  <Table>
+  <TableContainer
+  component={Paper}
+  style={{ maxHeight: 800, overflow: "auto" }}
+  >
+  <Table stickyHeader aria-label="sticky table">
   <TableHead>
-  <TableRow>
-    <TableCell>Lottery Number</TableCell>
-    <TableCell>Applicants</TableCell>
-    <TableCell>Preferred Halls</TableCell>
-    <TableCell>Preferences</TableCell>
-    <TableCell>Class Standing</TableCell>
-  </TableRow>
+        <TableRow
+           sx={{
+             "&:nth-of-type(odd)": {backgroundColor: "theme.palette.common.black",
+                      },
+                      "&:last-child td, &:last-child th": {
+                        border: 0,
+                      },
+                    }}
+                  >
+            <TableCell>Lottery Number</TableCell>
+            <TableCell>Applicants</TableCell>
+            <TableCell>Preferred Halls</TableCell>
+            <TableCell>Preferences</TableCell>
+            <TableCell>Class Standing</TableCell>
+        </TableRow>
 </TableHead> 
 <TableBody>
   {Object.keys(combinedData).map((applicationId, index) => {
@@ -199,7 +221,16 @@ const AdminView = () => {
     const hasMultiplePreferences = appData.preferences.length >1;
 
     return (
-      <TableRow key={applicationId}>
+      <TableRow key={applicationId}
+        sx={{
+        "&:nth-of-type(odd)": {
+          backgroundColor: "action.hover",
+        },
+        "&:last-child td, &:last-child th": {
+          border: 0,
+        },
+      }}
+    >
         <TableCell>{applicationId}</TableCell>
         
         {/* Applicants Cell */}
