@@ -25,14 +25,16 @@ const Instructions = () => {
             Instructions (As easy as 1, 2, 3!)
           </Typography>
           <Typography variant="body1" paragraph>
-            1. Review FAQs
+            <strong>1. Review FAQs</strong>
           </Typography>
           <Typography variant="body1" paragraph>
-            2. Access questionnaire
+            <strong>2. Access questionnaire</strong>
           </Typography>
           <Typography variant="body1" paragraph>
-            3. Complete questionnaire by providing name(s), email(s), and housing preferences by
-            Friday, Apr. 21 at noon.
+            <strong>
+              3. Complete questionnaire by providing name(s), email(s), and housing preferences by
+              Friday, Apr. 21 at noon.
+            </strong>
           </Typography>
           <br />
           <Typography variant="body1" paragraph>

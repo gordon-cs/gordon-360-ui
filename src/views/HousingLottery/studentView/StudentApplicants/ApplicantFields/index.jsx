@@ -35,7 +35,7 @@ const ApplicantFields = ({ applicant, onApplicantChange, index }) => {
         disabled={disabled}
         required
         InputProps={{
-          style: { color: displayPlaceholder ? '#aaa' : 'black' }, // Placeholder color
+          style: { color: displayPlaceholder ? '#aaa' : 'black' },
           endAdornment: displayPlaceholder && <span style={{ color: '#aaa' }}>{domain}</span>,
         }}
         error={applicant.email !== '' && !applicant.email.endsWith('@gordon.edu')}
