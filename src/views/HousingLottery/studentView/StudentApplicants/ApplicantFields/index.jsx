@@ -9,30 +9,6 @@ const ApplicantFields = ({ applicant, onApplicantChange, index }) => {
   return (
     <>
       <TextField
-        type="text"
-        variant='outlined'
-        color='secondary'
-        label="First Name"
-        onChange={(e) => handleFieldChange('firstName', e.target.value)}
-        value={applicant.firstName}
-        fullWidth
-        required
-        className={styles.applicant_name}
-        helperText={'*Required'}
-      />
-      <TextField
-        type="text"
-        variant='outlined'
-        color='secondary'
-        label="Last Name"
-        onChange={(e) => handleFieldChange('lastName', e.target.value)}
-        value={applicant.lastName}
-        fullWidth
-        required
-        className={styles.applicant_name}
-        helperText={'*Required'}
-      />
-      <TextField
         type="email"
         variant='outlined'
         color='secondary'
@@ -41,8 +17,10 @@ const ApplicantFields = ({ applicant, onApplicantChange, index }) => {
         value={applicant.email}
         required
         error={applicant.email !== '' && !applicant.email.endsWith('@gordon.edu')}
-        helperText={applicant.email === '' || applicant.email.endsWith('@gordon.edu') ? '*Required' : 'Not a Valid Gordon Email'}
+        helperText={applicant.email === '' || applicant.email.endsWith('@gordon.edu') ? '' : 'Not a Valid Gordon Email'}
         className={styles.applicant_email}
+        disabled={index === 0}
+        
       />
     </>
   );

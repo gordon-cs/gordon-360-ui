@@ -14,10 +14,10 @@ const StudentApplicants = ({ setStudentApplicantResult }) => {
       try {
         const profile = await user.getProfileInfo();
         const initialApplicants = [
-          { firstName: profile.FirstName, lastName: profile.LastName, email: profile.Email },
-          { firstName: '', lastName: '', email: '' },
-          { firstName: '', lastName: '', email: '' },
-          { firstName: '', lastName: '', email: '' },
+          { email: profile.Email },
+          { email: '' },
+          { email: '' },
+          { email: '' },
         ];
         setApplicants(initialApplicants);
         setEmails(initialApplicants.map((a) => a.email));
