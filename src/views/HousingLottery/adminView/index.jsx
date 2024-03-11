@@ -12,11 +12,18 @@ import {
   CardHeader,
   CardContent,
   TextField,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
   Link,
+  styled,
+  Paper,
 } from '@mui/material';
 import housingService from 'services/housing';
 import styles from '../HousingLottery.module.css';
 import { CSVLink } from 'react-csv';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { setDate } from 'date-fns';
 
 const AdminView = () => {
@@ -138,6 +145,16 @@ const AdminView = () => {
     { label: 'Class Standing', key: 'Class Standing' },
   ];
 
+  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+      border: 0,
+    },
+  }));
+
   return (
     <Grid container justifyContent="center">
       <Grid item xs={12} lg={8}>
@@ -169,52 +186,111 @@ const AdminView = () => {
                 Export as CSV
               </CSVLink>
             </Button>
-            <TableContainer>
-              <Table>
+            <TableContainer component={Paper} style={{ maxHeight: 800, overflow: 'auto' }}>
+              <Table stickyHeader aria-label="sticky table">
                 <TableHead>
-                  <TableRow>
+                  <TableRow
+                    sx={{
+                      '&:nth-of-type(odd)': { backgroundColor: 'theme.palette.common.black' },
+                      '&:last-child td, &:last-child th': {
+                        border: 0,
+                      },
+                    }}
+                  >
                     <TableCell>Lottery Number</TableCell>
-                    {Array.from({ length: 4 }, (_, i) => (
-                      <TableCell key={`ApplicantEmailHeader${i}`}>
-                        Applicant {i + 1}'s Email
-                      </TableCell>
-                    ))}
-                    {Array.from({ length: 6 }, (_, i) => (
-                      <TableCell key={`PreferredHallHeader${i}`}>Preferred Hall {i + 1}</TableCell>
-                    ))}
-                    {Array.from({ length: 2 }, (_, i) => (
-                      <TableCell key={`PreferenceHeader${i}`}>Preference {i + 1}</TableCell>
-                    ))}
+                    <TableCell>Applicants</TableCell>
+                    <TableCell>Preferred Halls</TableCell>
+                    <TableCell>Preferences</TableCell>
                     <TableCell>Class Standing</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {Object.keys(combinedData).map((ApplicationID, index) => {
-                    const appData = combinedData[ApplicationID];
+                  {Object.keys(combinedData).map((applicationId, index) => {
+                    const appData = combinedData[applicationId];
+                    const hasMultipleApplicants = appData.applicants.length > 1;
+                    const hasMultipleHalls = appData.preferredHalls.length > 1;
+                    const hasMultiplePreferences = appData.preferences.length > 1;
+
                     return (
-                      <TableRow key={ApplicationID}>
-                        <TableCell>{ApplicationID}</TableCell>
-                        {Array.from({ length: 4 }, (_, i) => (
-                          <TableCell key={`ApplicantEmail${i}`}>
-                            {appData.applicants && appData.applicants.length > i
-                              ? appData.applicants[i]
-                              : ''}
-                          </TableCell>
-                        ))}
-                        {Array.from({ length: 6 }, (_, i) => (
-                          <TableCell key={`PreferredHall${i}`}>
-                            {appData.preferredHalls && appData.preferredHalls.length > i
-                              ? appData.preferredHalls[i]
-                              : ''}
-                          </TableCell>
-                        ))}
-                        {Array.from({ length: 2 }, (_, i) => (
-                          <TableCell key={`Preference${i}`}>
-                            {appData.preferences && appData.preferences.length > i
-                              ? appData.preferences[i]
-                              : ''}
-                          </TableCell>
-                        ))}
+                      <TableRow
+                        key={applicationId}
+                        sx={{
+                          '&:nth-of-type(odd)': {
+                            backgroundColor: 'action.hover',
+                          },
+                          '&:last-child td, &:last-child th': {
+                            border: 0,
+                          },
+                        }}
+                      >
+                        <TableCell>{applicationId}</TableCell>
+
+                        {/* Applicants Cell */}
+                        <TableCell>
+                          {hasMultipleApplicants ? (
+                            <Accordion>
+                              <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls={`panel-applicants-content-${index}`}
+                                id={`panel-applicants-header-${index}`}
+                              >
+                                <Typography>{appData.applicants[0]}</Typography>
+                              </AccordionSummary>
+                              <AccordionDetails>
+                                <Typography component="div">
+                                  {appData.applicants.slice(1).map((email, idx) => (
+                                    <div key={idx}>{email}</div>
+                                  ))}
+                                </Typography>
+                              </AccordionDetails>
+                            </Accordion>
+                          ) : (
+                            <Typography>{appData.applicants[0]}</Typography>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {hasMultipleHalls ? (
+                            <Accordion>
+                              <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls={`panel-halls-content-${index}`}
+                                id={`panel-halls-header-${index}`}
+                              >
+                                <Typography>{appData.preferredHalls[0]}</Typography>
+                              </AccordionSummary>
+                              <AccordionDetails>
+                                <Typography component="div">
+                                  {appData.preferredHalls.slice(1).map((hall, idx) => (
+                                    <div key={idx}>{hall}</div>
+                                  ))}
+                                </Typography>
+                              </AccordionDetails>
+                            </Accordion>
+                          ) : (
+                            <Typography>{appData.preferredHalls[0]}</Typography>
+                          )}
+                        </TableCell>
+                        {/* Preferences Cell */}
+                        <TableCell>
+                          {hasMultiplePreferences ? (
+                            <Accordion>
+                              <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls={`panel-preferences-content-${index}`}
+                                id={`panel-preferences-header-${index}`}
+                              >
+                                <Typography>{appData.preferences[0]}</Typography>
+                              </AccordionSummary>
+                              <AccordionDetails>
+                                {appData.preferences.slice(1).map((preference, idx) => (
+                                  <Typography key={idx}>{preference}</Typography>
+                                ))}
+                              </AccordionDetails>
+                            </Accordion>
+                          ) : (
+                            <Typography>{appData.preferences[0]}</Typography>
+                          )}
+                        </TableCell>
                         <TableCell>{appData.year || ''}</TableCell>
                       </TableRow>
                     );
