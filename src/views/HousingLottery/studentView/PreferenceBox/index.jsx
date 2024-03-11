@@ -40,7 +40,7 @@ const Preference = ({ onPreferenceChange }) => {
     newList[0] = newMorningOrNight;
     setMorningOrNight(newMorningOrNight);
     setPreferences(newList);
-    onPreferenceChange(newList);
+    onPreferenceChange(newList, newMorningOrNight && loudOrQuiet);
   };
 
   const handleLoudOrQuietChange = (event) => {
@@ -49,7 +49,7 @@ const Preference = ({ onPreferenceChange }) => {
     newList[1] = newLoudOrQuiet;
     setLoudOrQuiet(newLoudOrQuiet);
     setPreferences(newList);
-    onPreferenceChange(newList);
+    onPreferenceChange(newList, morningOrNight && newLoudOrQuiet);
   };
 
   useEffect(() => {
@@ -73,6 +73,11 @@ const Preference = ({ onPreferenceChange }) => {
     }
   }, []);
 
+  useEffect(() => {
+    const isValid = morningOrNight && loudOrQuiet;
+    onPreferenceChange(preferences, isValid);
+  }, [preferences, morningOrNight, loudOrQuiet, onPreferenceChange]);
+
   return (
     <Grid container justifyContent="flex-end">
       <Grid item xs={12} lg={12} style={{ marginLeft: 'auto' }}>
@@ -81,6 +86,7 @@ const Preference = ({ onPreferenceChange }) => {
           <CardContent>
             <div>
               <label>Are you a night owl or a morning bird?</label>
+              <span className={styles.rankAsterisk}>*</span>
               <RadioGroup
                 aria-label="morning-or-night"
                 name="morning-or-night"
@@ -94,6 +100,7 @@ const Preference = ({ onPreferenceChange }) => {
 
             <div>
               <label>Do you consider yourself quiet or loud in the dorm?</label>
+              <span className={styles.rankAsterisk}>*</span>
               <RadioGroup
                 aria-label="loud-or-quiet"
                 name="loud-or-quiet"

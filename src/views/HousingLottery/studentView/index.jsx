@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Button, Grid } from '@mui/material';
 import PreferredHall from './PreferredHall';
 import StudentApplicants from './StudentApplicants/index.jsx';
@@ -24,6 +24,8 @@ const StudentView = () => {
   const [preferenceResult, setPreferenceResult] = useState([]);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [areAllAgreementsChecked, setAreAllAgreementsChecked] = useState(false);
+  const [areAllHallsSelected, setAreAllHallsSelected] = useState(false);
+  const [isPreferenceComplete, setIsPreferenceComplete] = useState(false);
   console.log('Preferred Hall Result:', preferredHallResult);
   console.log('Student Applicant Result:', studentApplicantResult);
   console.log('Preference Result:', preferenceResult);
@@ -39,12 +41,54 @@ const StudentView = () => {
     setAreAllAgreementsChecked(allChecked);
   };
 
-  const handlePreferenceChange = (newPreferences) => {
+  const handlePreferenceChange = (newPreferences, isValid) => {
     setPreferenceResult(newPreferences);
     console.log('Preference Data:', newPreferences);
+    setIsPreferenceComplete(isValid);
   };
 
   const handleClick = async () => {
+    if (!areAllAgreementsChecked) {
+      setSnackbar({
+        message: 'Please agree to all terms before submitting.',
+        severity: 'error',
+        open: true,
+      });
+      return;
+    }
+
+    if (!areAllHallsSelected) {
+      setSnackbar({
+        message: 'Please select all preferred halls before submitting.',
+        severity: 'error',
+        open: true,
+      });
+      return;
+    }
+
+    const emailInputs = document.querySelectorAll('input[type="email"]');
+    const invalidEmail = Array.from(emailInputs).some((input) => {
+      return input.value && !input.value.endsWith('@gordon.edu');
+    });
+    if (invalidEmail) {
+      setSnackbar({
+        message:
+          'One or more entered emails are not valid Gordon emails. Please correct them before submitting.',
+        severity: 'error',
+        open: true,
+      });
+      return;
+    }
+
+    if (!isPreferenceComplete) {
+      setSnackbar({
+        message: 'Please select options for all preference questions before submitting.',
+        severity: 'error',
+        open: true,
+      });
+      return;
+    }
+
     try {
       let application_id = nanoid(8),
         timeTarget = new Date(dueDate + ' 11:59:59 PM').getTime(),
@@ -56,6 +100,11 @@ const StudentView = () => {
       await housingService.addApplicant(application_id, studentApplicantResult);
       await housingService.addHall(application_id, preferredHallResult);
       await housingService.addPreference(application_id, preferenceResult);
+      setSnackbar({
+        message: 'Application submitted successfully!',
+        severity: 'success',
+        open: true,
+      });
     } catch {
       setSnackbar({
         message: 'Application fail to submit. Please check your information or contact CTS.',
@@ -63,6 +112,10 @@ const StudentView = () => {
         open: true,
       });
     }
+  };
+
+  const handleHallSelectionChange = (areSelected) => {
+    setAreAllHallsSelected(areSelected);
   };
 
   return (
@@ -75,7 +128,11 @@ const StudentView = () => {
       </Grid>
       <Grid container item xs={12} lg={5} spacing={2} direction="row" alignItems="flex-start">
         <Grid item xs={12}>
-          <PreferredHall setPreferredHallResult={setPreferredHallResult} />
+          <PreferredHall
+            setPreferredHallResult={setPreferredHallResult}
+            onHallSelectionChange={handleHallSelectionChange}
+            onValidationChange={handleHallSelectionChange}
+          />
         </Grid>
         <Grid item xs={12}>
           <Preference onPreferenceChange={handlePreferenceChange} />

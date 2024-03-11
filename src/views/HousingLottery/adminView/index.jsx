@@ -69,15 +69,10 @@ const AdminView = () => {
     await housingService.addDueDate(dueDate);
   };
 
-  const combineData = (
-    applicants,
-    preferredHalls,
-    preferences,
-    schoolYears
-  ) => {
+  const combineData = (applicants, preferredHalls, preferences, schoolYears) => {
     const normalizedData = {};
 
-    applicants.forEach(item => {
+    applicants.forEach((item) => {
       if (!normalizedData[item.ApplicationID]) {
         normalizedData[item.ApplicationID] = {
           applicants: [],
@@ -89,19 +84,19 @@ const AdminView = () => {
       normalizedData[item.ApplicationID].applicants.push(item.Applicant1);
     });
 
-    preferredHalls.forEach(item => {
+    preferredHalls.forEach((item) => {
       if (normalizedData[item.ApplicationID]) {
         normalizedData[item.ApplicationID].preferredHalls[item.Rank - 1] = item.HallName;
       }
     });
 
-    preferences.forEach(item => {
+    preferences.forEach((item) => {
       if (normalizedData[item.ApplicationID]) {
         normalizedData[item.ApplicationID].preferences.push(item.Preference1);
       }
     });
 
-    schoolYears.forEach(item => {
+    schoolYears.forEach((item) => {
       if (normalizedData[item.ApplicationID]) {
         normalizedData[item.ApplicationID].year = item.Year1;
       }
@@ -110,17 +105,12 @@ const AdminView = () => {
     return normalizedData;
   };
 
-  const combinedData = combineData(
-    applicant,
-    preferredHall,
-    preference,
-    schoolYear
-  );
+  const combinedData = combineData(applicant, preferredHall, preference, schoolYear);
 
   const csvData = Object.keys(combinedData).map((applicationId) => {
     const appData = combinedData[applicationId];
     return {
-      'Lottery Number': applicationId, 
+      'Lottery Number': applicationId,
       //Jan 28: Now we still treat ApplicationID is used as Lottery Number
       'Applicant 1`s Email': appData.applicants[0] || '',
       'Applicant 2`s Email': appData.applicants[1] || '',
@@ -139,28 +129,28 @@ const AdminView = () => {
   });
 
   const csvHeaders = [
-    {label:'Lottery Number',key:'Lottery Number'},
-    {label:'Applicant 1`s Email',key:'Applicant 1`s Email'},
-    {label:'Applicant 2`s Email',key:'Applicant 2`s Email'},
-    {label:'Applicant 3`s Email',key:'Applicant 3`s Email'},
-    {label:'Applicant 4`s Email',key:'Applicant 4`s Email'},
-    {label:'Preferred Hall 1',key:'Preferred Hall 1'},
-    {label:'Preferred Hall 2',key:'Preferred Hall 2'},
-    {label:'Preferred Hall 3',key:'Preferred Hall 3'},
-    {label:'Preferred Hall 4',key:'Preferred Hall 4'},
-    {label:'Preferred Hall 5',key:'Preferred Hall 5'},
-    {label:'Preferred Hall 6',key:'Preferred Hall 6'},
-    {label:'Preference 1',key:'Preference 1'},
-    {label:'Preference 2',key:'Preference 2'},
-    {label:'Class Standing',key:'Class Standing'},
+    { label: 'Lottery Number', key: 'Lottery Number' },
+    { label: 'Applicant 1`s Email', key: 'Applicant 1`s Email' },
+    { label: 'Applicant 2`s Email', key: 'Applicant 2`s Email' },
+    { label: 'Applicant 3`s Email', key: 'Applicant 3`s Email' },
+    { label: 'Applicant 4`s Email', key: 'Applicant 4`s Email' },
+    { label: 'Preferred Hall 1', key: 'Preferred Hall 1' },
+    { label: 'Preferred Hall 2', key: 'Preferred Hall 2' },
+    { label: 'Preferred Hall 3', key: 'Preferred Hall 3' },
+    { label: 'Preferred Hall 4', key: 'Preferred Hall 4' },
+    { label: 'Preferred Hall 5', key: 'Preferred Hall 5' },
+    { label: 'Preferred Hall 6', key: 'Preferred Hall 6' },
+    { label: 'Preference 1', key: 'Preference 1' },
+    { label: 'Preference 2', key: 'Preference 2' },
+    { label: 'Class Standing', key: 'Class Standing' },
   ];
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    "&:nth-of-type(odd)": {
+    '&:nth-of-type(odd)': {
       backgroundColor: theme.palette.action.hover,
     },
     // hide last border
-    "&:last-child td, &:last-child th": {
+    '&:last-child td, &:last-child th': {
       border: 0,
     },
   }));
@@ -179,146 +169,135 @@ const AdminView = () => {
             margin="normal"
             helperText="* MM/DD/YYYY"
           />
-          <Button
-            className={styles.submit_button}
-            variant="contained"
-            onClick={submitDueDate}
-          >
+          <Button className={styles.submit_button} variant="contained" onClick={submitDueDate}>
             Submit
           </Button>
         </Grid>
         <Card>
-          <CardHeader
-            title="Admin Interface"
-            className={styles.admin_card_header}
-          />
+          <CardHeader title="Admin Interface" className={styles.admin_card_header} />
           <CardContent>
-          <Button className={styles.exportButton} variant="contained">
-      <CSVLink
-        data={csvData}
-        headers={csvHeaders}
-        filename={'admin_data.csv'}
-        className={styles.csvLink}
-
-      >
-        Export as CSV
-      </CSVLink>
-    </Button>
-  <TableContainer
-  component={Paper}
-  style={{ maxHeight: 800, overflow: "auto" }}
-  >
-  <Table stickyHeader aria-label="sticky table">
-  <TableHead>
-        <TableRow
-           sx={{
-             "&:nth-of-type(odd)": {backgroundColor: "theme.palette.common.black",
-                      },
-                      "&:last-child td, &:last-child th": {
+            <Button className={styles.exportButton} variant="contained">
+              <CSVLink
+                data={csvData}
+                headers={csvHeaders}
+                filename={'admin_data.csv'}
+                className={styles.csvLink}
+              >
+                Export as CSV
+              </CSVLink>
+            </Button>
+            <TableContainer component={Paper} style={{ maxHeight: 800, overflow: 'auto' }}>
+              <Table stickyHeader aria-label="sticky table">
+                <TableHead>
+                  <TableRow
+                    sx={{
+                      '&:nth-of-type(odd)': { backgroundColor: 'theme.palette.common.black' },
+                      '&:last-child td, &:last-child th': {
                         border: 0,
                       },
                     }}
                   >
-            <TableCell>Lottery Number</TableCell>
-            <TableCell>Applicants</TableCell>
-            <TableCell>Preferred Halls</TableCell>
-            <TableCell>Preferences</TableCell>
-            <TableCell>Class Standing</TableCell>
-        </TableRow>
-</TableHead> 
-<TableBody>
-  {Object.keys(combinedData).map((applicationId, index) => {
-    const appData = combinedData[applicationId];
-    const hasMultipleApplicants = appData.applicants.length > 1;
-    const hasMultipleHalls = appData.preferredHalls.length > 1;
-    const hasMultiplePreferences = appData.preferences.length >1;
+                    <TableCell>Lottery Number</TableCell>
+                    <TableCell>Applicants</TableCell>
+                    <TableCell>Preferred Halls</TableCell>
+                    <TableCell>Preferences</TableCell>
+                    <TableCell>Class Standing</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {Object.keys(combinedData).map((applicationId, index) => {
+                    const appData = combinedData[applicationId];
+                    const hasMultipleApplicants = appData.applicants.length > 1;
+                    const hasMultipleHalls = appData.preferredHalls.length > 1;
+                    const hasMultiplePreferences = appData.preferences.length > 1;
 
-    return (
-      <TableRow key={applicationId}
-        sx={{
-        "&:nth-of-type(odd)": {
-          backgroundColor: "action.hover",
-        },
-        "&:last-child td, &:last-child th": {
-          border: 0,
-        },
-      }}
-    >
-        <TableCell>{applicationId}</TableCell>
-        
-        {/* Applicants Cell */}
-        <TableCell>
-          {hasMultipleApplicants ? (
-            <Accordion>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls={`panel-applicants-content-${index}`}
-                id={`panel-applicants-header-${index}`}
-              >
-                <Typography>{appData.applicants[0]}</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography component="div">
-                  {appData.applicants.slice(1).map((email, idx) => (
-                    <div key={idx}>{email}</div>
-                  ))}
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
-          ) : (
-            <Typography>{appData.applicants[0]}</Typography>
-          )}
-        </TableCell>
-        <TableCell>
-          {hasMultipleHalls ? (
-            <Accordion>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls={`panel-halls-content-${index}`}
-                id={`panel-halls-header-${index}`}
-              >
-                <Typography>{appData.preferredHalls[0]}</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography component="div">
-                  {appData.preferredHalls.slice(1).map((hall, idx) => (
-                    <div key={idx}>{hall}</div>
-                  ))}
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
-          ) : (
-            <Typography>{appData.preferredHalls[0]}</Typography>
-          )}
-        </TableCell>
-         {/* Preferences Cell */}
-         <TableCell>
-          {hasMultiplePreferences ? (
-            <Accordion>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls={`panel-preferences-content-${index}`}
-                id={`panel-preferences-header-${index}`}
-              >
-                <Typography>{appData.preferences[0]}</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                {appData.preferences.slice(1).map((preference, idx) => (
-                  <Typography key={idx}>{preference}</Typography>
-                ))}
-              </AccordionDetails>
-            </Accordion>
-          ) : (
-            <Typography>{appData.preferences[0]}</Typography>
-          )}
-        </TableCell>
-        <TableCell>{appData.year || ''}</TableCell>
-      </TableRow>
-    );
-  })}
-        </TableBody>
-        </Table>
-        </TableContainer>
+                    return (
+                      <TableRow
+                        key={applicationId}
+                        sx={{
+                          '&:nth-of-type(odd)': {
+                            backgroundColor: 'action.hover',
+                          },
+                          '&:last-child td, &:last-child th': {
+                            border: 0,
+                          },
+                        }}
+                      >
+                        <TableCell>{applicationId}</TableCell>
+
+                        {/* Applicants Cell */}
+                        <TableCell>
+                          {hasMultipleApplicants ? (
+                            <Accordion>
+                              <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls={`panel-applicants-content-${index}`}
+                                id={`panel-applicants-header-${index}`}
+                              >
+                                <Typography>{appData.applicants[0]}</Typography>
+                              </AccordionSummary>
+                              <AccordionDetails>
+                                <Typography component="div">
+                                  {appData.applicants.slice(1).map((email, idx) => (
+                                    <div key={idx}>{email}</div>
+                                  ))}
+                                </Typography>
+                              </AccordionDetails>
+                            </Accordion>
+                          ) : (
+                            <Typography>{appData.applicants[0]}</Typography>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {hasMultipleHalls ? (
+                            <Accordion>
+                              <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls={`panel-halls-content-${index}`}
+                                id={`panel-halls-header-${index}`}
+                              >
+                                <Typography>{appData.preferredHalls[0]}</Typography>
+                              </AccordionSummary>
+                              <AccordionDetails>
+                                <Typography component="div">
+                                  {appData.preferredHalls.slice(1).map((hall, idx) => (
+                                    <div key={idx}>{hall}</div>
+                                  ))}
+                                </Typography>
+                              </AccordionDetails>
+                            </Accordion>
+                          ) : (
+                            <Typography>{appData.preferredHalls[0]}</Typography>
+                          )}
+                        </TableCell>
+                        {/* Preferences Cell */}
+                        <TableCell>
+                          {hasMultiplePreferences ? (
+                            <Accordion>
+                              <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls={`panel-preferences-content-${index}`}
+                                id={`panel-preferences-header-${index}`}
+                              >
+                                <Typography>{appData.preferences[0]}</Typography>
+                              </AccordionSummary>
+                              <AccordionDetails>
+                                {appData.preferences.slice(1).map((preference, idx) => (
+                                  <Typography key={idx}>{preference}</Typography>
+                                ))}
+                              </AccordionDetails>
+                            </Accordion>
+                          ) : (
+                            <Typography>{appData.preferences[0]}</Typography>
+                          )}
+                        </TableCell>
+                        <TableCell>{appData.year || ''}</TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </CardContent>
         </Card>
         <Button className={styles.submit_button} variant="contained" onClick={handleClick}>
