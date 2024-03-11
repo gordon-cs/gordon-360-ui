@@ -56,6 +56,11 @@ const StudentView = () => {
       await housingService.addApplicant(application_id, studentApplicantResult);
       await housingService.addHall(application_id, preferredHallResult);
       await housingService.addPreference(application_id, preferenceResult);
+      setSnackbar({
+        message: 'The application has been successfully submitted. Congratulations!',
+        severity: 'success',
+        open: true,
+      });
     } catch {
       setSnackbar({
         message: 'Application fail to submit. Please check your information or contact CTS.',
