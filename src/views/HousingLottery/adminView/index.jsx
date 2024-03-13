@@ -23,6 +23,7 @@ import {
 import housingService from 'services/housing';
 import styles from './adminView.module.css';
 import { CSVLink } from 'react-csv';
+import GordonSnackbar from 'components/Snackbar';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { setDate } from 'date-fns';
 
@@ -33,6 +34,7 @@ const AdminView = () => {
   const [applicant, setApplicant] = useState([]);
   const [schoolYear, setSchoolYear] = useState([]);
   const [ApplicationID, setApplicationID] = useState([]);
+  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [dueDate, setDueDate] = useState('');
 
   useEffect(() => {
@@ -66,7 +68,20 @@ const AdminView = () => {
   };
 
   const submitDueDate = async () => {
-    await housingService.addDueDate(dueDate);
+    try {
+      await housingService.addDueDate(dueDate);
+      setSnackbar({
+        message: 'The due date has been successfully submitted. Thank you!',
+        severity: 'success',
+        open: true,
+      });
+    } catch {
+      setSnackbar({
+        message: 'Failure to submit due date. Please check the format or contact CTS.',
+        severity: 'error',
+        open: true,
+      });
+    }
   };
 
   const combineData = (
@@ -76,6 +91,7 @@ const AdminView = () => {
     schoolYears
   ) => {
     const normalizedData = {};
+
 
     applicants.forEach(item => {
       if (!normalizedData[item.ApplicationID]) {
@@ -120,7 +136,7 @@ const AdminView = () => {
   const csvData = Object.keys(combinedData).map((applicationId) => {
     const appData = combinedData[applicationId];
     return {
-      'Lottery Number': applicationId, 
+      'Lottery Number': applicationId,
       //Jan 28: Now we still treat ApplicationID is used as Lottery Number
       'Applicant 1`s Email': appData.applicants[0] || '',
       'Applicant 2`s Email': appData.applicants[1] || '',
@@ -139,20 +155,20 @@ const AdminView = () => {
   });
 
   const csvHeaders = [
-    {label:'Lottery Number',key:'Lottery Number'},
-    {label:'Applicant 1`s Email',key:'Applicant 1`s Email'},
-    {label:'Applicant 2`s Email',key:'Applicant 2`s Email'},
-    {label:'Applicant 3`s Email',key:'Applicant 3`s Email'},
-    {label:'Applicant 4`s Email',key:'Applicant 4`s Email'},
-    {label:'Preferred Hall 1',key:'Preferred Hall 1'},
-    {label:'Preferred Hall 2',key:'Preferred Hall 2'},
-    {label:'Preferred Hall 3',key:'Preferred Hall 3'},
-    {label:'Preferred Hall 4',key:'Preferred Hall 4'},
-    {label:'Preferred Hall 5',key:'Preferred Hall 5'},
-    {label:'Preferred Hall 6',key:'Preferred Hall 6'},
-    {label:'Preference 1',key:'Preference 1'},
-    {label:'Preference 2',key:'Preference 2'},
-    {label:'Class Standing',key:'Class Standing'},
+    { label: 'Lottery Number', key: 'Lottery Number' },
+    { label: 'Applicant 1`s Email', key: 'Applicant 1`s Email' },
+    { label: 'Applicant 2`s Email', key: 'Applicant 2`s Email' },
+    { label: 'Applicant 3`s Email', key: 'Applicant 3`s Email' },
+    { label: 'Applicant 4`s Email', key: 'Applicant 4`s Email' },
+    { label: 'Preferred Hall 1', key: 'Preferred Hall 1' },
+    { label: 'Preferred Hall 2', key: 'Preferred Hall 2' },
+    { label: 'Preferred Hall 3', key: 'Preferred Hall 3' },
+    { label: 'Preferred Hall 4', key: 'Preferred Hall 4' },
+    { label: 'Preferred Hall 5', key: 'Preferred Hall 5' },
+    { label: 'Preferred Hall 6', key: 'Preferred Hall 6' },
+    { label: 'Preference 1', key: 'Preference 1' },
+    { label: 'Preference 2', key: 'Preference 2' },
+    { label: 'Class Standing', key: 'Class Standing' },
   ];
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -179,11 +195,7 @@ const AdminView = () => {
             margin="normal"
             helperText="* MM/DD/YYYY"
           />
-          <Button
-            className={styles.submit_button}
-            variant="contained"
-            onClick={submitDueDate}
-          >
+          <Button className={styles.submit_button} variant="contained" onClick={submitDueDate}>
             Submit
           </Button>
         </Grid>
@@ -325,6 +337,12 @@ const AdminView = () => {
           click to see Json Array (transitory button)
         </Button>
       </Grid>
+      <GordonSnackbar
+        open={snackbar.open}
+        severity={snackbar.severity}
+        text={snackbar.message}
+        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+      />
     </Grid>
   );
 };
