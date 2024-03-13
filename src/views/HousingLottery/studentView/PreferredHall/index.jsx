@@ -2,7 +2,7 @@ import { Button, Card, CardContent, CardHeader, Grid } from '@mui/material';
 import { useState, useEffect } from 'react';
 import HallSlot from './HallSlotComponent';
 import housingService from 'services/housing';
-import styles from '../../HousingLottery.module.css';
+import styles from './preferredHall.module.css';
 import GordonSnackbar from 'components/Snackbar';
 
 const PreferredHallsCard = ({ setPreferredHallResult }) => {
