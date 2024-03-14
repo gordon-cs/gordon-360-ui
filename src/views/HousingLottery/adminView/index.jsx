@@ -21,7 +21,7 @@ import {
   Paper,
 } from '@mui/material';
 import housingService from 'services/housing';
-import styles from '../HousingLottery.module.css';
+import styles from './adminView.module.css';
 import { CSVLink } from 'react-csv';
 import GordonSnackbar from 'components/Snackbar';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -205,7 +205,7 @@ const AdminView = () => {
             className={styles.admin_card_header}
           />
           <CardContent>
-          <Button className={styles.exportButton} variant="contained">
+          <Button variant="contained">
       <CSVLink
         data={csvData}
         headers={csvHeaders}

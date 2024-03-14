@@ -1,0 +1,20 @@
+.applicants_card_header {
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
+
+  :global {
+    .MuiTypography-colorTextSecondary {
+      color: var(--mui-palette-primary-contrastText);
+      font-size: 1.25rem;
+    }
+
+    .MuiCardHeader-subheader {
+      color: var(--mui-palette-primary-contrastText);
+    }
+  }
+}
+
+.applicant_field {
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
