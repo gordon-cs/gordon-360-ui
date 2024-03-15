@@ -31,7 +31,7 @@ import { getParticipantByUsername } from 'services/recim/participant';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { DateTimePicker } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { editParticipantStatus } from 'services/recim/participant';
 
 const ActivityList = ({ activities, showActivityOptions }) => {

@@ -42,7 +42,7 @@ import { useNavigate } from 'react-router';
 import { deleteSport, getAllSports } from 'services/recim/sport';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { getRecIMReport } from 'services/recim/recim';
 import { Print } from '@mui/icons-material';
 import { AuthGroup } from 'services/auth';

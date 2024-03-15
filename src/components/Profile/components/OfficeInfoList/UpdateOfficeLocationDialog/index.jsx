@@ -1,25 +1,21 @@
-import { Autocomplete, Box, IconButton, TextField } from '@mui/material';
+import { FormControl, IconButton, Input, InputLabel } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonSnackbar from 'components/Snackbar';
 import { useState, useEffect } from 'react';
 import userService from 'services/user';
-import peopleSearchService from 'services/peopleSearch';
+import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
 
 const UpdateOffice = () => {
   const [open, setOpen] = useState(false);
   const [room, setRoom] = useState('');
-  const [building, setBuilding] = useState();
+  const [building, setBuilding] = useState('');
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [buildings, setBuildings] = useState([]);
 
-  useEffect(() => {
-    peopleSearchService.getBuildings().then(setBuildings);
-  }, []);
-
   const handleSubmit = async () => {
     try {
-      await userService.updateOfficeLocation({ BuildingCode: building, RoomNumber: room });
+      await userService.updateOfficeLocation({ BuildingDescription: building, RoomNumber: room });
       setSnackbar({
         message: 'Your office location will update within a couple hours.',
         severity: 'success',
@@ -35,8 +31,12 @@ const UpdateOffice = () => {
     setOpen(false);
   };
 
+  useEffect(() => {
+    userService.getBuildings().then(setBuildings);
+  }, []);
+
   return (
-    <>
+    <div>
       <IconButton style={{ marginBottom: '0.5rem' }} onClick={() => setOpen(true)} size="large">
         <EditIcon style={{ fontSize: 20 }} />
       </IconButton>
@@ -50,23 +50,27 @@ const UpdateOffice = () => {
         cancelButtonClicked={() => setOpen(false)}
         handleSubmit
       >
-        <Box
-          sx={{ gap: '1rem', marginBlockStart: '1rem', display: 'flex', flexDirection: 'column' }}
-        >
-          <Autocomplete
+        <FormControl sx={{ m: 1, minWidth: 200 }}>
+          <SearchField
+            name="building"
+            value={building}
+            updateValue={(event) => setBuilding(event.target.value)}
             options={buildings}
-            renderInput={(params) => <TextField {...params} label="Building" />}
-            getOptionLabel={(option) => option.Description}
-            onChange={(_event, value) => setBuilding(value.Code)}
-            required
+            select
+            size={200}
+            required="required"
           />
-          <TextField
-            label="Room"
+        </FormControl>
+        <FormControl sx={{ m: 2, minWidth: 200 }}>
+          <InputLabel htmlFor="formatted-text-mask-input">Room Number</InputLabel>
+          <Input
+            id="room-number-input"
+            name="room"
             value={room}
             onChange={(event) => setRoom(event.target.value)}
-            required
+            required="required"
           />
-        </Box>
+        </FormControl>
       </GordonDialogBox>
       <GordonSnackbar
         open={snackbar.open}
@@ -74,7 +78,7 @@ const UpdateOffice = () => {
         text={snackbar.message}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
       />
-    </>
+    </div>
   );
 };
 

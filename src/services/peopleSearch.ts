@@ -138,12 +138,7 @@ const getHalls = (): Promise<string[]> => http.get(`advancedsearch/halls`);
 
 const getDepartments = (): Promise<string[]> => http.get(`advancedsearch/departments`);
 
-export type Building = {
-  Code: string;
-  Description: string;
-};
-
-const getBuildings = (): Promise<Building[]> => http.get(`advancedsearch/building`);
+const getBuildings = (): Promise<string[]> => http.get(`advancedsearch/buildings`);
 
 const getInvolvements = (): Promise<string[]> => http.get(`advancedsearch/involvements`);
 

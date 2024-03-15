@@ -223,7 +223,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       setStates(states.map((s) => ({ label: s.Name, value: s.Abbreviation })));
       setCountries(countries.map((c) => c.Name));
       setDepartments(departments);
-      setBuildings(buildings.map((b) => b.Description));
+      setBuildings(buildings);
       setInvolvements(involvements);
       setLoading(false);
     };

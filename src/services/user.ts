@@ -177,7 +177,7 @@ type MealPlanComponent = {
 export type ProfileImages = { def: string; pref?: string };
 
 export type OfficeLocationQuery = {
-  BuildingCode: string;
+  BuildingDescription: string;
   RoomNumber: string;
 };
 
@@ -243,12 +243,14 @@ const getAdvisors = (username: string): Promise<StudentAdvisorInfo[]> =>
 
 const getMailboxCombination = () => http.get('profiles/mailbox-combination/');
 
+const getBuildings = (): Promise<string[]> => http.get(`advancedsearch/buildings`);
+
 const getMailStops = (): Promise<string[]> => http.get(`profiles/mailstops`);
 
 const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_number/${value}/`);
 
 const setPlannedGraduationYear = (value: number) => {
-  const body = { plannedGradYear: value };
+  const body = { ['plannedGradYear']: value };
   http.put(`profiles/plannedGradYear`, body);
 };
 
@@ -373,6 +375,7 @@ const userService = {
   getAdvisors,
   getMailboxCombination,
   getMembershipHistory,
+  getBuildings,
   resetImage,
   postImage,
   postIDImage,
