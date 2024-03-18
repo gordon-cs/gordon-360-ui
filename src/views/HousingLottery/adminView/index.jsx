@@ -46,13 +46,6 @@ const AdminView = () => {
     housingService.getDueDate().then(setDueDate);
   }, []);
 
-  const handleClick = async () => {
-    console.log(preference);
-    console.log(preferredHall);
-    console.log(applicant);
-    console.log(schoolYear);
-  };
-
   const handleDateChange = (event) => {
     let input = event.target.value.replace(/\D/g, '');
 
@@ -231,11 +224,11 @@ const AdminView = () => {
                       },
                     }}
                   >
-            <TableCell>Lottery Number</TableCell>
-            <TableCell>Applicants</TableCell>
-            <TableCell>Preferred Halls</TableCell>
-            <TableCell>Preferences</TableCell>
-            <TableCell>Class Standing</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Lottery Number</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Applicants</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Preferred Halls</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Preferences</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Class Standing</TableCell>
         </TableRow>
 </TableHead> 
 <TableBody>
@@ -333,9 +326,6 @@ const AdminView = () => {
         </TableContainer>
           </CardContent>
         </Card>
-        <Button className={styles.submit_button} variant="contained" onClick={handleClick}>
-          click to see Json Array (transitory button)
-        </Button>
       </Grid>
       <GordonSnackbar
         open={snackbar.open}
