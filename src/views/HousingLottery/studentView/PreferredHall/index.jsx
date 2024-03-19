@@ -10,17 +10,38 @@ const PreferredHallsCard = ({ setPreferredHallResult }) => {
   const [preferredHallList, setPreferredHallList] = useState(['', '', '', '', '', '']);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const searchHallTitle = <div align="left">Preferred Halls</div>;
+  const [storedPreferredHallList, setStoredPreferredHallList] = useState();
 
   useEffect(() => {
     housingService.getTraditionalHalls().then(setHallList);
+    housingService.getUserPreferredHall().then(setStoredPreferredHallList);
   }, []);
-
+  console.log(storedPreferredHallList);
+  useEffect(() => {
+    if (storedPreferredHallList) {
+      for (let i = 1; i <= storedPreferredHallList.length; i++) {
+        const hallName = storedPreferredHallList.find((r) => r.Rank === i)?.HallName;
+        console.log("I'm here! 1");
+        updatePreferredHallList(i, hallName);
+        console.log("I'm here! 2");
+      }
+    }
+  }, [storedPreferredHallList]);
   function updatePreferredHallList(rank, hall) {
-    let newList = [...preferredHallList];
-    newList[rank - 1] = hall;
-    setPreferredHallList(newList);
-    setPreferredHallResult(newList);
+    setPreferredHallList((oldList) => {
+      let newList = [...oldList];
+      newList[rank - 1] = hall;
+      console.log(newList);
+      return newList;
+    });
+    setPreferredHallResult((oldList) => {
+      let newList = [...oldList];
+      newList[rank - 1] = hall;
+      console.log(newList);
+      return newList;
+    });
   }
+  console.log(preferredHallList);
 
   return (
     <Grid container>
@@ -40,6 +61,7 @@ const PreferredHallsCard = ({ setPreferredHallResult }) => {
                     hallList={hallList}
                     preferredHallList={preferredHallList}
                     updatePreferredHallList={updatePreferredHallList}
+                    storedPreferredHallList={storedPreferredHallList}
                   />
                 </Grid>
               </Grid>
@@ -53,6 +75,7 @@ const PreferredHallsCard = ({ setPreferredHallResult }) => {
                     hallList={hallList}
                     preferredHallList={preferredHallList}
                     updatePreferredHallList={updatePreferredHallList}
+                    storedPreferredHallList={storedPreferredHallList}
                   />
                 </Grid>
               </Grid>
@@ -66,6 +89,7 @@ const PreferredHallsCard = ({ setPreferredHallResult }) => {
                     hallList={hallList}
                     preferredHallList={preferredHallList}
                     updatePreferredHallList={updatePreferredHallList}
+                    storedPreferredHallList={storedPreferredHallList}
                   />
                 </Grid>
               </Grid>
@@ -79,6 +103,7 @@ const PreferredHallsCard = ({ setPreferredHallResult }) => {
                     hallList={hallList}
                     preferredHallList={preferredHallList}
                     updatePreferredHallList={updatePreferredHallList}
+                    storedPreferredHallList={storedPreferredHallList}
                   />
                 </Grid>
               </Grid>
@@ -92,6 +117,7 @@ const PreferredHallsCard = ({ setPreferredHallResult }) => {
                     hallList={hallList}
                     preferredHallList={preferredHallList}
                     updatePreferredHallList={updatePreferredHallList}
+                    storedPreferredHallList={storedPreferredHallList}
                   />
                 </Grid>
               </Grid>
@@ -105,6 +131,7 @@ const PreferredHallsCard = ({ setPreferredHallResult }) => {
                     hallList={hallList}
                     preferredHallList={preferredHallList}
                     updatePreferredHallList={updatePreferredHallList}
+                    storedPreferredHallList={storedPreferredHallList}
                   />
                 </Grid>
               </Grid>

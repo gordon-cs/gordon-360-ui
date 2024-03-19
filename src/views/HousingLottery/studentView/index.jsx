@@ -12,6 +12,21 @@ import GordonSnackbar from 'components/Snackbar';
 import user from '../../../services/user';
 
 const StudentView = () => {
+  const [myPreference, setMyPreference] = useState([]);
+  const [myPreferredHall, setMyPreferredHall] = useState([]);
+  const [myRoommate, setMyRoommate] = useState([]);
+  useEffect(() => {
+    housingService.getUserPreference().then(setMyPreference);
+    housingService.getUserPreferredHall().then(setMyPreferredHall);
+    housingService.getUserRoommate().then(setMyRoommate);
+  }, []);
+  console.log('myPreference:');
+  console.log(myPreference);
+  console.log('myPreferredHall:');
+  console.log(myPreferredHall);
+  console.log('myApplicant:');
+  console.log(myRoommate);
+
   const [email, setEmail] = useState('');
   const [studentApplicantResult, setStudentApplicantResult] = useState([]);
   useEffect(async () => {
@@ -27,6 +42,39 @@ const StudentView = () => {
   console.log('Preferred Hall Result:', preferredHallResult);
   console.log('Student Applicant Result:', studentApplicantResult);
   console.log('Preference Result:', preferenceResult);
+
+  // const combineData = (applicants, preferredHalls, preferences, schoolYears) => {
+  //   const normalizedData = {};
+  //   applicants.forEach(item => {
+  //     if (!normalizedData[item.ApplicationID]) {
+  //       normalizedData[item.ApplicationID] = {
+  //         applicants: [],
+  //         preferredHalls: [],
+  //         preferences: [],
+  //         year: null
+  //       };
+  //     }
+  //     normalizedData[item.ApplicationID].applicants.push(item.Applicant1);
+  //   });
+  //   preferredHalls.forEach(item => {
+  //     if (normalizedData[item.ApplicationID]) {
+  //       normalizedData[item.ApplicationID].preferredHalls[item.Rank - 1] = item.HallName;
+  //     }
+  //   });
+  //   preferences.forEach(item => {
+  //     if (normalizedData[item.ApplicationID]) {
+  //       normalizedData[item.ApplicationID].preferences.push(item.Preference1);
+  //     }
+  //   });
+  //   schoolYears.forEach(item => {
+  //     if (normalizedData[item.ApplicationID]) {
+  //       normalizedData[item.ApplicationID].year = item.Year1;
+  //     }
+  //   });
+  //   return normalizedData;
+  // };
+  // const combinedData = combineData(applicant, preferredHall, preference, schoolYear);
+  // console.log(combinedData);
 
   const [dueDate, setDueDate] = useState('');
   useEffect(() => {
