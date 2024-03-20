@@ -28,39 +28,6 @@ const StudentView = () => {
   console.log('Student Applicant Result:', studentApplicantResult);
   console.log('Preference Result:', preferenceResult);
 
-  // const combineData = (applicants, preferredHalls, preferences, schoolYears) => {
-  //   const normalizedData = {};
-  //   applicants.forEach(item => {
-  //     if (!normalizedData[item.ApplicationID]) {
-  //       normalizedData[item.ApplicationID] = {
-  //         applicants: [],
-  //         preferredHalls: [],
-  //         preferences: [],
-  //         year: null
-  //       };
-  //     }
-  //     normalizedData[item.ApplicationID].applicants.push(item.Applicant1);
-  //   });
-  //   preferredHalls.forEach(item => {
-  //     if (normalizedData[item.ApplicationID]) {
-  //       normalizedData[item.ApplicationID].preferredHalls[item.Rank - 1] = item.HallName;
-  //     }
-  //   });
-  //   preferences.forEach(item => {
-  //     if (normalizedData[item.ApplicationID]) {
-  //       normalizedData[item.ApplicationID].preferences.push(item.Preference1);
-  //     }
-  //   });
-  //   schoolYears.forEach(item => {
-  //     if (normalizedData[item.ApplicationID]) {
-  //       normalizedData[item.ApplicationID].year = item.Year1;
-  //     }
-  //   });
-  //   return normalizedData;
-  // };
-  // const combinedData = combineData(applicant, preferredHall, preference, schoolYear);
-  // console.log(combinedData);
-
   const [dueDate, setDueDate] = useState('');
   useEffect(() => {
     housingService.getDueDate().then(setDueDate);
