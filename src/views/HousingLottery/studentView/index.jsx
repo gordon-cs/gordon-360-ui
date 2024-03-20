@@ -12,21 +12,6 @@ import GordonSnackbar from 'components/Snackbar';
 import user from '../../../services/user';
 
 const StudentView = () => {
-  const [myPreference, setMyPreference] = useState([]);
-  const [myPreferredHall, setMyPreferredHall] = useState([]);
-  const [myRoommate, setMyRoommate] = useState([]);
-  useEffect(() => {
-    housingService.getUserPreference().then(setMyPreference);
-    housingService.getUserPreferredHall().then(setMyPreferredHall);
-    housingService.getUserRoommate().then(setMyRoommate);
-  }, []);
-  console.log('myPreference:');
-  console.log(myPreference);
-  console.log('myPreferredHall:');
-  console.log(myPreferredHall);
-  console.log('myApplicant:');
-  console.log(myRoommate);
-
   const [email, setEmail] = useState('');
   const [studentApplicantResult, setStudentApplicantResult] = useState([]);
   useEffect(async () => {
