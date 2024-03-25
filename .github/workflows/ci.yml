@@ -8,6 +8,7 @@ on:
     branches:
       - develop
       - master
+      - senior-project
 
 jobs:
   build:
@@ -58,4 +59,11 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: build-prod
+          path: dist
+
+      - name: Upload senior-project build artifacts for deployment
+        if: ${{ github.ref == 'refs/heads/senior-project' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-senior-project
           path: dist

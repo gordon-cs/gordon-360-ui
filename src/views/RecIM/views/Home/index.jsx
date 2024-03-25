@@ -334,8 +334,8 @@ const Home = () => {
     </Card>
   );
 
-  let headerAlert = (
-    participant?.Status === 'Pending' && <Alert
+  let headerAlert = participant?.Status === 'Pending' && (
+    <Alert
       severity="error"
       sx={{ mb: '1rem' }}
       action={

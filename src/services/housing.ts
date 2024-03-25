@@ -61,6 +61,16 @@ const getApartmentSelectionDate = async (): Promise<string> => {
 };
 
 const getApartmentHalls = (): Promise<ApartmentHall[]> => http.get('housing/halls/apartments');
+const getTraditionalHalls = (): Promise<ApartmentHall[]> => http.get('housing/halls/traditionals');
+const getAllPreference = (): Promise<ApartmentHall[]> =>
+  http.get('housing/housing_lottery/all_preference');
+const getAllPreferredHall = (): Promise<ApartmentHall[]> =>
+  http.get('housing/housing_lottery/all_preferred_hall');
+const getAllApplicant = (): Promise<ApartmentHall[]> =>
+  http.get('housing/housing_lottery/all_applicant');
+const getAllSchoolYear = (): Promise<ApartmentHall[]> =>
+  http.get('housing/housing_lottery/all_school_year');
+const getDueDate = (): Promise<ApartmentHall[]> => http.get('housing/housing_lottery/get_due_date');
 
 const getCurrentApplicationID = (username: string = ''): Promise<number> =>
   http.get(username ? `housing/apartment/${username}/` : 'housing/apartment/');
@@ -164,9 +174,26 @@ const getSubmittedApartmentApplications = async (): Promise<ApplicationDetails[]
 const submitApplication = (applicationID: number): Promise<boolean> =>
   http.put(`housing/apartment/applications/${applicationID}/submit`);
 
+const addApplicant = (applicantion_id: string, emailList: string[]) =>
+  http.put(`housing/housing_lottery/roommate/${applicantion_id}`, emailList);
+
+const addHall = (applicantion_id: string, hallList: string[]) =>
+  http.put(`housing/housing_lottery/hall/${applicantion_id}`, hallList);
+
+const addPreference = (applicantion_id: string, preferenceList: string[]) =>
+  http.put(`housing/housing_lottery/preference/${applicantion_id}`, preferenceList);
+
+const addDueDate = (dueDate: string) => http.put(`housing/housing_lottery/due_date/`, dueDate);
+
 const housingService = {
   getApartmentSelectionDate,
   getApartmentHalls,
+  getTraditionalHalls,
+  getAllPreference,
+  getAllPreferredHall,
+  getAllApplicant,
+  getAllSchoolYear,
+  getDueDate,
   getCurrentApplicationID,
   saveApartmentApplication,
   deleteApartmentApplication,
@@ -174,6 +201,10 @@ const housingService = {
   getApartmentApplication,
   getSubmittedApartmentApplications,
   submitApplication,
+  addApplicant,
+  addHall,
+  addPreference,
+  addDueDate,
 };
 
 export default housingService;

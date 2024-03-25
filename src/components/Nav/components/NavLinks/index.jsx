@@ -148,6 +148,15 @@ const GordonNavLinks = ({ onLinkClick }) => {
     />
   );
 
+  const housingLotteryButton = (
+    <GordonNavButton
+      onLinkClick={onLinkClick}
+      linkName={'Housing Lottery'}
+      linkPath={'/housingLottery'}
+      divider={false}
+    />
+  );
+
   const helpButton = (
     <GordonNavButton
       onLinkClick={onLinkClick}
@@ -210,6 +219,7 @@ const GordonNavLinks = ({ onLinkClick }) => {
         {linksButton}
         {helpButton}
         {aboutButton}
+        {housingLotteryButton}
         {paletteOptionsButton}
         {feedbackButton}
         {adminButton}
