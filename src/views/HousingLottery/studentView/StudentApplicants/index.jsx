@@ -1,4 +1,14 @@
-import { Button, Card, CardContent, CardHeader, Divider, Grid, TextField } from '@mui/material';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Divider,
+  Grid,
+  TextField,
+  List,
+  ListItem,
+} from '@mui/material';
 import { useState } from 'react';
 import ApplicantFields from './ApplicantFields';
 import styles from '../../HousingLottery.module.css';
@@ -43,20 +53,22 @@ const StudentApplicants = ({ setStudentApplicantResult }) => {
     <Card>
       <CardHeader title="Student Applicants" className={styles.applicants_card_header} />
       <CardContent>
-        <Grid container justifyContent="space-between" spacing={2}>
+        <List>
           {applicants.map((applicant, index) => (
-            <Grid item xs={12} key={index}>
-              <div className={styles.applicant_field}>
-                <ApplicantFields
-                  applicant={applicant}
-                  onApplicantChange={handleApplicantChange}
-                  index={index}
-                />
-              </div>
-              {index < applicants.length - 1 && <Divider />}
-            </Grid>
+            <>
+              <ListItem key={index}>
+                <div className={styles.applicant_field} style={{ width: '100%' }}>
+                  <ApplicantFields
+                    applicant={applicant}
+                    onApplicantChange={handleApplicantChange}
+                    index={index}
+                  />
+                </div>
+              </ListItem>
+              {index < applicants.length - 1 && <Divider component="li" />}
+            </>
           ))}
-        </Grid>
+        </List>
       </CardContent>
     </Card>
   );
