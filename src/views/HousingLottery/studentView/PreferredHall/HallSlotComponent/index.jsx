@@ -13,6 +13,13 @@ const HallSlot = ({ rank, hallList, preferredHallList, updatePreferredHallList }
     setFilteredHallList(updatedHallList);
   }, [preferredHallList, hallList, hall]);
 
+  const hallName = preferredHallList[rank - 1];
+  useEffect(() => {
+    if (hallName) {
+      setHall(hallName);
+    }
+  });
+
   const selectPreferredHall = (event) => {
     const newHall = event.target.value;
     if (newHall !== '' && preferredHallList.includes(newHall)) {

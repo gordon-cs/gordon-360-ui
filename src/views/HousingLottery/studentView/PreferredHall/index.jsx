@@ -10,16 +10,32 @@ const PreferredHallsCard = ({ setPreferredHallResult }) => {
   const [preferredHallList, setPreferredHallList] = useState(['', '', '', '', '', '']);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const searchHallTitle = <div align="left">Preferred Halls</div>;
+  const [storedPreferredHallList, setStoredPreferredHallList] = useState();
 
   useEffect(() => {
     housingService.getTraditionalHalls().then(setHallList);
+    housingService.getUserPreferredHall().then(setStoredPreferredHallList);
   }, []);
+  useEffect(() => {
+    if (storedPreferredHallList) {
+      for (let i = 1; i <= storedPreferredHallList.length; i++) {
+        const hallName = storedPreferredHallList.find((r) => r.Rank === i)?.HallName;
+        updatePreferredHallList(i, hallName);
+      }
+    }
+  }, [storedPreferredHallList]);
 
   function updatePreferredHallList(rank, hall) {
-    let newList = [...preferredHallList];
-    newList[rank - 1] = hall;
-    setPreferredHallList(newList);
-    setPreferredHallResult(newList);
+    setPreferredHallList((oldList) => {
+      let newList = [...oldList];
+      newList[rank - 1] = hall;
+      return newList;
+    });
+    setPreferredHallResult((oldList) => {
+      let newList = [...oldList];
+      newList[rank - 1] = hall;
+      return newList;
+    });
   }
 
   return (
