@@ -13,19 +13,6 @@ const Instructions = () => {
   return (
     
     <div>
-      <Typography variant="h4" gutterBottom className={styles.instructionsHeading}>
-         Instructions (As easy as 1, 2, 3!)
-      </Typography>
-      <Typography variant="body1" paragraph className={styles.instructionsContent}>
-        1. Review FAQs
-      </Typography>
-      <Typography variant="body1" paragraph className={styles.instructionsContent}>
-        2. Access questionnaire
-      </Typography>
-      <Typography variant="body1" paragraph className={styles.instructionsContent}>
-        3. Complete questionnaire by providing name(s), email(s), and housing preferences by Friday, Apr. 21 at noon.
-      </Typography>
-
       <Accordion>
         <AccordionSummary
           className={styles.housing_card_header} 
