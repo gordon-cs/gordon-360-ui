@@ -49,7 +49,10 @@ const AdminView = () => {
   const handleDateChange = (event) => {
     let input = event.target.value.replace(/\D/g, '');
 
-    if (/^\d+$/.test(input)) {
+    if (input === '') {
+      setDueDate('');
+    }
+    else if (/^\d+$/.test(input)) {
       if (input.length <= 2) {
         setDueDate(input);
       } else if (input.length <= 4) {
@@ -204,7 +207,6 @@ const AdminView = () => {
         headers={csvHeaders}
         filename={'admin_data.csv'}
         className={styles.csvLink}
-
       >
         Export as CSV
       </CSVLink>
