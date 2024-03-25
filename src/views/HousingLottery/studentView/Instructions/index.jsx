@@ -7,25 +7,12 @@ import {
   Link,
 } from '@mui/material/';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import styles from '../../HousingLottery.module.css';
+import styles from './instructions.module.css';
 
 const Instructions = () => {
   return (
     
     <div>
-      <Typography variant="h4" gutterBottom className={styles.instructionsHeading}>
-         Instructions (As easy as 1, 2, 3!)
-      </Typography>
-      <Typography variant="body1" paragraph>
-        1. Review FAQs
-      </Typography>
-      <Typography variant="body1" paragraph>
-        2. Access questionnaire
-      </Typography>
-      <Typography variant="body1" paragraph>
-        3. Complete questionnaire by providing name(s), email(s), and housing preferences by Friday, Apr. 21 at noon.
-      </Typography>
-
       <Accordion>
         <AccordionSummary
           className={styles.housing_card_header} 
