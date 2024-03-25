@@ -13,7 +13,7 @@ import {
 import { Fragment, useEffect, useState } from 'react';
 import housing from 'services/housing';
 // @TODO CSSMODULES - outside directory
-import styles from '../../HousingLottery.module.css';
+import styles from './agreements.module.css';
 
 /**
  * Renders a card displaying the housing application instructions

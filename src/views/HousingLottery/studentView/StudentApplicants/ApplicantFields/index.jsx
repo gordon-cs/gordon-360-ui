@@ -1,5 +1,5 @@
 import { TextField } from '@mui/material';
-import styles from '../../../HousingLottery.module.css';
+import styles from './applicantFields.module.css';
 
 const ApplicantFields = ({ applicant, onApplicantChange, index }) => {
   const handleFieldChange = (field, value) => {

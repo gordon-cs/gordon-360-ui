@@ -6,7 +6,7 @@ import Preference from './PreferenceBox';
 import Agreements from './Agreements';
 import Instructions from './Instructions';
 import housingService from 'services/housing';
-import styles from '../HousingLottery.module.css';
+import styles from './studentView.module.css';
 import { nanoid } from 'nanoid';
 import GordonSnackbar from 'components/Snackbar';
 import user from '../../../services/user';

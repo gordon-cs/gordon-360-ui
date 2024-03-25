@@ -12,7 +12,6 @@ import { Card, CardContent, Grid, Button, Link } from '@mui/material';
 // eslint-disable-next-line no-unused-vars
 import { useEffect, useState } from 'react'; // eslint disabled because it doesn't recognise type imports that ARE used in JSDoc comments
 import { AuthGroup } from 'services/auth';
-import styles from './HousingLottery.module.css';
 
 const HousingLottery = () => {
   const [loading, setLoading] = useState(true);
@@ -51,26 +50,24 @@ const HousingLottery = () => {
   } else if (isOnline) {
     if (isHousingAdmin) {
       return (
-        <div className={styles.staff_apartment_application}>
-          <AdminView userProfile={profile} />
-        </div>
+        <AdminView userProfile={profile} />
       );
     } else if (isUserStudent) {
       return (
-        <div className={'student_apartment_application'}>
+        <div className={'student_housing_application'}>
           <StudentView userProfile={profile} />
         </div>
       );
     } else {
       return (
         <GordonLimitedAvailability
-          pageName="Apartment Application"
+          pageName="Housing Application"
           availableTo="students or housing staff"
         />
       );
     }
   } else {
-    return <GordonOffline feature="Apartment Applications" />;
+    return <GordonOffline feature="Housing Applications" />;
   }
 };
 

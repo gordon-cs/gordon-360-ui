@@ -21,7 +21,7 @@ import {
   Paper,
 } from '@mui/material';
 import housingService from 'services/housing';
-import styles from '../HousingLottery.module.css';
+import styles from './adminView.module.css';
 import { CSVLink } from 'react-csv';
 import GordonSnackbar from 'components/Snackbar';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -45,13 +45,6 @@ const AdminView = () => {
     housingService.getAllSchoolYear().then(setSchoolYear);
     housingService.getDueDate().then(setDueDate);
   }, []);
-
-  const handleClick = async () => {
-    console.log(preference);
-    console.log(preferredHall);
-    console.log(applicant);
-    console.log(schoolYear);
-  };
 
   const handleDateChange = (event) => {
     let input = event.target.value.replace(/\D/g, '');
@@ -205,7 +198,7 @@ const AdminView = () => {
             className={styles.admin_card_header}
           />
           <CardContent>
-          <Button className={styles.exportButton} variant="contained">
+          <Button variant="contained">
       <CSVLink
         data={csvData}
         headers={csvHeaders}
@@ -231,11 +224,11 @@ const AdminView = () => {
                       },
                     }}
                   >
-            <TableCell>Lottery Number</TableCell>
-            <TableCell>Applicants</TableCell>
-            <TableCell>Preferred Halls</TableCell>
-            <TableCell>Preferences</TableCell>
-            <TableCell>Class Standing</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Lottery Number</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Applicants</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Preferred Halls</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Preferences</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Class Standing</TableCell>
         </TableRow>
 </TableHead> 
 <TableBody>
@@ -333,9 +326,6 @@ const AdminView = () => {
         </TableContainer>
           </CardContent>
         </Card>
-        <Button className={styles.submit_button} variant="contained" onClick={handleClick}>
-          click to see Json Array (transitory button)
-        </Button>
       </Grid>
       <GordonSnackbar
         open={snackbar.open}
