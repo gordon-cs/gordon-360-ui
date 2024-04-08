@@ -15,24 +15,13 @@ import {
   Radio,
   Grid,
 } from '@mui/material';
-import housingService from 'services/housing';
-import housing from 'services/housing';
+import housing from '../../../../services/housing';
 import styles from './preferenceBox.module.css';
 
 const Preference = ({ onPreferenceChange }) => {
   const [preferences, setPreferences] = useState(['', '']); // Store preferences as an array
   const [morningOrNight, setMorningOrNight] = useState(''); // Store the selected morning or night
   const [loudOrQuiet, setLoudOrQuiet] = useState(''); // Store the selected loud or quiet
-
-  useEffect(() => {
-    // Check for stored preferences in localStorage
-    const storedPreferences = localStorage.getItem('userPreferences');
-    if (storedPreferences) {
-      const { morningOrNight, loudOrQuiet } = JSON.parse(storedPreferences);
-      setMorningOrNight(morningOrNight || '');
-      setLoudOrQuiet(loudOrQuiet || '');
-    }
-  }, []);
 
   const handleMorningOrNightChange = (event) => {
     const newMorningOrNight = event.target.value;
@@ -51,19 +40,6 @@ const Preference = ({ onPreferenceChange }) => {
     setPreferences(newList);
     onPreferenceChange(newList);
   };
-
-  useEffect(() => {
-    // Save preferences to local storage
-    const storedPreferences = JSON.stringify({ morningOrNight, loudOrQuiet });
-    localStorage.setItem('userPreferences', storedPreferences);
-  }, [morningOrNight, loudOrQuiet]);
-
-  useEffect(() => {
-    // Check if both morningOrNight and loudOrQuiet are empty, clear localStorage
-    if (!morningOrNight && !loudOrQuiet) {
-      localStorage.removeItem('userPreferences');
-    }
-  }, [morningOrNight, loudOrQuiet]);
 
   useEffect(() => {
     // Clear selected radio buttons when the page is refreshed
