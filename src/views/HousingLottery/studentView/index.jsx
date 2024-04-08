@@ -44,10 +44,10 @@ const StudentView = () => {
     console.log('Preference Data:', newPreferences);
   };
 
-  const handleClick = async () => {
+  const handleSubmit = async () => {
     try {
       let application_id = nanoid(8),
-        timeTarget = new Date(dueDate + ' 11:59:59 PM').getTime(),
+        timeTarget = new Date(dueDate).getTime(),
         timeNow = new Date().getTime();
       if (timeNow > timeTarget) {
         application_id = 'zzz' + timeNow;
@@ -64,6 +64,18 @@ const StudentView = () => {
     } catch {
       setSnackbar({
         message: 'Application fail to submit. Please check your information or contact CTS.',
+        severity: 'error',
+        open: true,
+      });
+    }
+  };
+
+  const handleRemove = async () => {
+    try {
+      await housingService.removeUser();
+    } catch {
+      setSnackbar({
+        message: 'Applicant fail to remove. Please try again or contact CTS.',
         severity: 'error',
         open: true,
       });
@@ -90,10 +102,13 @@ const StudentView = () => {
         <Agreements onChange={handleAgreementsChange} />
       </Grid>
       <Grid item xs={10} container justifyContent="flex-end">
+        <Button className={styles.submit_button} variant="contained" onClick={handleRemove}>
+          Remove Myself
+        </Button>
         <Button
           className={styles.submit_button}
           variant="contained"
-          onClick={handleClick}
+          onClick={handleSubmit}
           disabled={!areAllAgreementsChecked}
         >
           Submit
