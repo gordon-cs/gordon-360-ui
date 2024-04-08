@@ -43,6 +43,8 @@ const HallSlot = ({ rank, hallList, preferredHallList, updatePreferredHallList }
         options={filteredHallList}
         select
         size={200}
+        required
+        helperText={hall ? '' : '*Required'}
       />
       <GordonSnackbar
         open={snackbar.open}
