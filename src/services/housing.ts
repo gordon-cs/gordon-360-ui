@@ -77,7 +77,6 @@ const getUserPreferredHall = (): Promise<ApartmentHall[]> =>
   http.get('housing/lottery/user_preferred_hall');
 const getUserRoommate = (): Promise<ApartmentHall[]> => http.get('housing/lottery/user_roommate');
 const removeUser = (): Promise<ApartmentHall[]> => http.del('housing/lottery/remove_user');
-
 const getCurrentApplicationID = (username: string = ''): Promise<number> =>
   http.get(username ? `housing/apartment/${username}/` : 'housing/apartment/');
 
