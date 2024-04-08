@@ -6,7 +6,7 @@ import Preference from './PreferenceBox';
 import Agreements from './Agreements';
 import Instructions from './Instructions';
 import housingService from 'services/housing';
-import styles from '../HousingLottery.module.css';
+import styles from './studentView.module.css';
 import { nanoid } from 'nanoid';
 import GordonSnackbar from 'components/Snackbar';
 import user from '../../../services/user';
@@ -47,7 +47,7 @@ const StudentView = () => {
   const handleSubmit = async () => {
     try {
       let application_id = nanoid(8),
-        timeTarget = new Date(dueDate + ' 11:59:59 PM').getTime(),
+        timeTarget = new Date(dueDate).getTime(),
         timeNow = new Date().getTime();
       if (timeNow > timeTarget) {
         application_id = 'zzz' + timeNow;
@@ -56,6 +56,11 @@ const StudentView = () => {
       await housingService.addApplicant(application_id, studentApplicantResult);
       await housingService.addHall(application_id, preferredHallResult);
       await housingService.addPreference(application_id, preferenceResult);
+      setSnackbar({
+        message: 'The application has been successfully submitted. Congratulations!',
+        severity: 'success',
+        open: true,
+      });
     } catch {
       setSnackbar({
         message: 'Application fail to submit. Please check your information or contact CTS.',
