@@ -4,39 +4,45 @@ import ApplicantFields from './ApplicantFields';
 import styles from './studentApplicants.module.css';
 import { useEffect } from 'react';
 import user from '../../../../services/user';
+import housing from '../../../../services/housing';
 
 const StudentApplicants = ({ setStudentApplicantResult }) => {
   const [applicants, setApplicants] = useState([]);
   const [emails, setEmails] = useState([]);
 
   useEffect(() => {
-    const loadCurrentUser = async () => {
+    const loadApplicants = async () => {
       try {
         const profile = await user.getProfileInfo();
-        const initialApplicants = [
-          { email: profile.Email },
-          { email: '' },
-          { email: '' },
-          { email: '' },
-        ];
+        const storedRoommatesData = await housing.getUserRoommate();
+        const roommateEmails = storedRoommatesData
+          .map((data) => data.Applicant1)
+          .filter((email) => email !== profile.Email)
+          .reverse();
+        const initialApplicants = [{ email: profile.Email }];
+        roommateEmails.forEach((email) => {
+          initialApplicants.push({ email });
+        });
+        while (initialApplicants.length < 4) {
+          initialApplicants.push({ email: '' });
+        }
         setApplicants(initialApplicants);
-        setEmails(initialApplicants.map((a) => a.email));
+        setEmails(initialApplicants.map((applicant) => applicant.email));
       } catch (error) {
-        console.error('Error fetching user data', error);
+        console.error('Error fetching user data:', error);
       }
     };
-    loadCurrentUser();
+    loadApplicants();
   }, []);
 
-  const handleApplicantChange = (index, updatedApplicant) => {
-    const newApplicants = [...applicants];
-    newApplicants[index] = updatedApplicant;
-    setApplicants(newApplicants);
-
-    const newEmails = [...emails];
-    newEmails[index] = updatedApplicant.email;
-    setEmails(newEmails);
-    setStudentApplicantResult(newEmails);
+  const handleApplicantChange = (index, email) => {
+    setApplicants((currentApplicants) => {
+      const newApplicants = currentApplicants.map((applicant, idx) =>
+        idx === index ? { ...applicant, email: email } : applicant,
+      );
+      setStudentApplicantResult(newApplicants.map((a) => a.email));
+      return newApplicants;
+    });
   };
 
   return (

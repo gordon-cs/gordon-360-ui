@@ -14,7 +14,7 @@ const ApplicantFields = ({ applicant, onApplicantChange, index }) => {
         color="secondary"
         label="Email"
         onChange={(e) => handleFieldChange('email', e.target.value)}
-        value={applicant.email}
+        value={applicant.email || ''}
         required
         error={applicant.email !== '' && !applicant.email.endsWith('@gordon.edu')}
         helperText={
