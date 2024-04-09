@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardHeader, Divider, Grid, TextField } from '@mui/material';
+import { Button, Card, CardContent, CardHeader, Divider, Grid, List, TextField } from '@mui/material';
 import { useState } from 'react';
 import ApplicantFields from './ApplicantFields';
 import styles from './studentApplicants.module.css';
@@ -29,23 +29,21 @@ const StudentApplicants = ({ setStudentApplicantResult }) => {
   }, []);
 
   const handleApplicantChange = (index, updatedApplicant) => {
-    const newApplicants = [...applicants];
-    newApplicants[index] = updatedApplicant;
-    setApplicants(newApplicants);
-
-    const newEmails = [...emails];
-    newEmails[index] = updatedApplicant.email;
-    setEmails(newEmails);
-    setStudentApplicantResult(newEmails);
+    setApplicants(currentApplicants => {
+      const newApplicants = currentApplicants.with(index, updatedApplicant);
+      
+      setStudentApplicantResult(newApplicants.map(a => a.email));
+      return newApplicants;
+    });
   };
 
   return (
     <Card>
       <CardHeader title="Student Applicants" className={styles.applicants_card_header} />
       <CardContent>
-        <Grid container justifyContent="space-between" spacing={2}>
+        <List container justifyContent="space-between" spacing={2}>
           {applicants.map((applicant, index) => (
-            <Grid item xs={12} key={index}>
+            <List item xs={12} key={index}>
               <div className={styles.applicant_field}>
                 <ApplicantFields
                   applicant={applicant}
@@ -54,9 +52,9 @@ const StudentApplicants = ({ setStudentApplicantResult }) => {
                 />
               </div>
               {index < applicants.length - 1 && <Divider />}
-            </Grid>
+            </List>
           ))}
-        </Grid>
+        </List>
       </CardContent>
     </Card>
   );
