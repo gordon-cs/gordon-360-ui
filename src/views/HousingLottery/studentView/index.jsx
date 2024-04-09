@@ -12,15 +12,13 @@ import GordonSnackbar from 'components/Snackbar';
 import user from '../../../services/user';
 
 const StudentView = () => {
-  const {profile, loadingProfile} = useUser();
+  const [email, setEmail] = useState('');
   const [studentApplicantResult, setStudentApplicantResult] = useState([]);
-  useEffect(() => {
-    if (profile) {
-      setStudentApplicantResult([profile.Email]);
-    } else {
-      setStudentApplicantResult([]);
-    }
-  }, [profile]);
+  useEffect(async () => {
+    const profile = await user.getProfileInfo();
+    setEmail(profile.Email);
+    setStudentApplicantResult([email]);
+  }, [email]);
 
   const [preferredHallResult, setPreferredHallResult] = useState([]);
   const [preferenceResult, setPreferenceResult] = useState([]);
