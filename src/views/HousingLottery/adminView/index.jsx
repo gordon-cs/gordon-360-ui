@@ -21,10 +21,13 @@ import {
   Paper,
 } from '@mui/material';
 import housingService from 'services/housing';
-import styles from '../HousingLottery.module.css';
+import styles from './adminView.module.css';
 import { CSVLink } from 'react-csv';
+import GordonSnackbar from 'components/Snackbar';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { setDate } from 'date-fns';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
 
 const AdminView = () => {
   const [data, setData] = useState([]);
@@ -33,7 +36,9 @@ const AdminView = () => {
   const [applicant, setApplicant] = useState([]);
   const [schoolYear, setSchoolYear] = useState([]);
   const [ApplicationID, setApplicationID] = useState([]);
-  const [dueDate, setDueDate] = useState('');
+  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
+  const [dueDate, setDueDate] = useState(null);
+
 
   useEffect(() => {
     housingService.getCurrentApplicationID().then(setApplicationID);
@@ -44,29 +49,26 @@ const AdminView = () => {
     housingService.getDueDate().then(setDueDate);
   }, []);
 
-  const handleClick = async () => {
-    console.log(preference);
-    console.log(preferredHall);
-    console.log(applicant);
-    console.log(schoolYear);
-  };
 
-  const handleDateChange = (event) => {
-    let input = event.target.value.replace(/\D/g, '');
-
-    if (/^\d+$/.test(input)) {
-      if (input.length <= 2) {
-        setDueDate(input);
-      } else if (input.length <= 4) {
-        setDueDate(`${input.slice(0, 2)}/${input.slice(2)}`);
-      } else {
-        setDueDate(`${input.slice(0, 2)}/${input.slice(2, 4)}/${input.slice(4, 8)}`);
-      }
-    }
+  const handleDateChange = (newValue) => {
+    setDueDate(newValue);
   };
 
   const submitDueDate = async () => {
-    await housingService.addDueDate(dueDate);
+    try {
+      await housingService.addDueDate(dueDate);
+      setSnackbar({
+        message: 'The due date has been successfully submitted. Thank you!',
+        severity: 'success',
+        open: true,
+      });
+    } catch {
+      setSnackbar({
+        message: 'Failure to submit due date. Please check the format or contact CTS.',
+        severity: 'error',
+        open: true,
+      });
+    }
   };
 
   const combineData = (
@@ -76,6 +78,7 @@ const AdminView = () => {
     schoolYears
   ) => {
     const normalizedData = {};
+
 
     applicants.forEach(item => {
       if (!normalizedData[item.ApplicationID]) {
@@ -120,7 +123,7 @@ const AdminView = () => {
   const csvData = Object.keys(combinedData).map((applicationId) => {
     const appData = combinedData[applicationId];
     return {
-      'Lottery Number': applicationId, 
+      'Lottery Number': applicationId,
       //Jan 28: Now we still treat ApplicationID is used as Lottery Number
       'Applicant 1`s Email': appData.applicants[0] || '',
       'Applicant 2`s Email': appData.applicants[1] || '',
@@ -139,20 +142,20 @@ const AdminView = () => {
   });
 
   const csvHeaders = [
-    {label:'Lottery Number',key:'Lottery Number'},
-    {label:'Applicant 1`s Email',key:'Applicant 1`s Email'},
-    {label:'Applicant 2`s Email',key:'Applicant 2`s Email'},
-    {label:'Applicant 3`s Email',key:'Applicant 3`s Email'},
-    {label:'Applicant 4`s Email',key:'Applicant 4`s Email'},
-    {label:'Preferred Hall 1',key:'Preferred Hall 1'},
-    {label:'Preferred Hall 2',key:'Preferred Hall 2'},
-    {label:'Preferred Hall 3',key:'Preferred Hall 3'},
-    {label:'Preferred Hall 4',key:'Preferred Hall 4'},
-    {label:'Preferred Hall 5',key:'Preferred Hall 5'},
-    {label:'Preferred Hall 6',key:'Preferred Hall 6'},
-    {label:'Preference 1',key:'Preference 1'},
-    {label:'Preference 2',key:'Preference 2'},
-    {label:'Class Standing',key:'Class Standing'},
+    { label: 'Lottery Number', key: 'Lottery Number' },
+    { label: 'Applicant 1`s Email', key: 'Applicant 1`s Email' },
+    { label: 'Applicant 2`s Email', key: 'Applicant 2`s Email' },
+    { label: 'Applicant 3`s Email', key: 'Applicant 3`s Email' },
+    { label: 'Applicant 4`s Email', key: 'Applicant 4`s Email' },
+    { label: 'Preferred Hall 1', key: 'Preferred Hall 1' },
+    { label: 'Preferred Hall 2', key: 'Preferred Hall 2' },
+    { label: 'Preferred Hall 3', key: 'Preferred Hall 3' },
+    { label: 'Preferred Hall 4', key: 'Preferred Hall 4' },
+    { label: 'Preferred Hall 5', key: 'Preferred Hall 5' },
+    { label: 'Preferred Hall 6', key: 'Preferred Hall 6' },
+    { label: 'Preference 1', key: 'Preference 1' },
+    { label: 'Preference 2', key: 'Preference 2' },
+    { label: 'Class Standing', key: 'Class Standing' },
   ];
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -169,21 +172,15 @@ const AdminView = () => {
     <Grid container justifyContent="center">
       <Grid item xs={12} lg={8}>
         <Grid>
-          <TextField
-            type="text"
-            variant="outlined"
-            color="secondary"
-            label="Due Date"
-            value={dueDate}
-            onChange={handleDateChange}
-            margin="normal"
-            helperText="* MM/DD/YYYY"
-          />
-          <Button
-            className={styles.submit_button}
-            variant="contained"
-            onClick={submitDueDate}
-          >
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DateTimePicker
+              label="Due Date"
+              value={dueDate}
+              onChange={handleDateChange}
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </LocalizationProvider>
+          <Button className={styles.submit_button} variant="contained" onClick={submitDueDate}>
             Submit
           </Button>
         </Grid>
@@ -193,7 +190,7 @@ const AdminView = () => {
             className={styles.admin_card_header}
           />
           <CardContent>
-          <Button className={styles.exportButton} variant="contained">
+          <Button variant="contained">
       <CSVLink
         data={csvData}
         headers={csvHeaders}
@@ -219,11 +216,11 @@ const AdminView = () => {
                       },
                     }}
                   >
-            <TableCell>Lottery Number</TableCell>
-            <TableCell>Applicants</TableCell>
-            <TableCell>Preferred Halls</TableCell>
-            <TableCell>Preferences</TableCell>
-            <TableCell>Class Standing</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Lottery Number</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Applicants</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Preferred Halls</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Preferences</TableCell>
+            <TableCell style={{ fontWeight: 'bold' }}>Class Standing</TableCell>
         </TableRow>
 </TableHead> 
 <TableBody>
@@ -321,10 +318,13 @@ const AdminView = () => {
         </TableContainer>
           </CardContent>
         </Card>
-        <Button className={styles.submit_button} variant="contained" onClick={handleClick}>
-          click to see Json Array (transitory button)
-        </Button>
       </Grid>
+      <GordonSnackbar
+        open={snackbar.open}
+        severity={snackbar.severity}
+        text={snackbar.message}
+        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+      />
     </Grid>
   );
 };

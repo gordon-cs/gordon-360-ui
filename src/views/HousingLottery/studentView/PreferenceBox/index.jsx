@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import housingService from 'services/housing';
 import housing from 'services/housing';
-import styles from '../../HousingLottery.module.css';
+import styles from './preferenceBox.module.css';
 
 const Preference = ({ onPreferenceChange }) => {
   const [preferences, setPreferences] = useState(['', '']); // Store preferences as an array
