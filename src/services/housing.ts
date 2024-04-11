@@ -62,15 +62,12 @@ const getApartmentSelectionDate = async (): Promise<string> => {
 
 const getApartmentHalls = (): Promise<ApartmentHall[]> => http.get('housing/halls/apartments');
 const getTraditionalHalls = (): Promise<ApartmentHall[]> => http.get('housing/halls/traditionals');
-const getAllPreference = (): Promise<ApartmentHall[]> =>
-  http.get('housing/housing_lottery/all_preference');
+const getAllPreference = (): Promise<ApartmentHall[]> => http.get('housing/lottery/preference');
 const getAllPreferredHall = (): Promise<ApartmentHall[]> =>
-  http.get('housing/housing_lottery/all_preferred_hall');
-const getAllApplicant = (): Promise<ApartmentHall[]> =>
-  http.get('housing/housing_lottery/all_applicant');
-const getAllSchoolYear = (): Promise<ApartmentHall[]> =>
-  http.get('housing/housing_lottery/all_school_year');
-const getDueDate = (): Promise<ApartmentHall[]> => http.get('housing/housing_lottery/get_due_date');
+  http.get('housing/lottery/preferred_hall');
+const getAllApplicant = (): Promise<ApartmentHall[]> => http.get('housing/lottery/applicant');
+const getAllSchoolYear = (): Promise<ApartmentHall[]> => http.get('housing/lottery/school_year');
+const getDueDate = (): Promise<ApartmentHall[]> => http.get('housing/lottery/due_date');
 const getUserPreference = (): Promise<ApartmentHall[]> =>
   http.get('housing/lottery/user_preference');
 const getUserPreferredHall = (): Promise<ApartmentHall[]> =>
@@ -179,16 +176,16 @@ const getSubmittedApartmentApplications = async (): Promise<ApplicationDetails[]
 const submitApplication = (applicationID: number): Promise<boolean> =>
   http.put(`housing/apartment/applications/${applicationID}/submit`);
 
-const addApplicant = (applicantion_id: string, emailList: string[]) =>
-  http.put(`housing/housing_lottery/roommate/${applicantion_id}`, emailList);
+const addApplicant = (application_id: string, emailList: string[]) =>
+  http.put(`housing/lottery/${application_id}/roommate`, emailList);
 
-const addHall = (applicantion_id: string, hallList: string[]) =>
-  http.put(`housing/housing_lottery/hall/${applicantion_id}`, hallList);
+const addHall = (application_id: string, hallList: string[]) =>
+  http.put(`housing/lottery/${application_id}/hall`, hallList);
 
-const addPreference = (applicantion_id: string, preferenceList: string[]) =>
-  http.put(`housing/housing_lottery/preference/${applicantion_id}`, preferenceList);
+const addPreference = (application_id: string, preferenceList: string[]) =>
+  http.put(`housing/lottery/${application_id}/preference`, preferenceList);
 
-const addDueDate = (dueDate: string) => http.put(`housing/housing_lottery/due_date/`, dueDate);
+const addDueDate = (dueDate: string) => http.put(`housing/lottery/due_date/${dueDate}`);
 
 const housingService = {
   getApartmentSelectionDate,
