@@ -26,6 +26,8 @@ import { CSVLink } from 'react-csv';
 import GordonSnackbar from 'components/Snackbar';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { setDate } from 'date-fns';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
 
 const AdminView = () => {
   const [data, setData] = useState([]);
@@ -35,7 +37,8 @@ const AdminView = () => {
   const [schoolYear, setSchoolYear] = useState([]);
   const [ApplicationID, setApplicationID] = useState([]);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
-  const [dueDate, setDueDate] = useState('');
+  const [dueDate, setDueDate] = useState(null);
+
 
   useEffect(() => {
     housingService.getCurrentApplicationID().then(setApplicationID);
@@ -46,18 +49,9 @@ const AdminView = () => {
     housingService.getDueDate().then(setDueDate);
   }, []);
 
-  const handleDateChange = (event) => {
-    let input = event.target.value.replace(/\D/g, '');
 
-    if (/^\d+$/.test(input)) {
-      if (input.length <= 2) {
-        setDueDate(input);
-      } else if (input.length <= 4) {
-        setDueDate(`${input.slice(0, 2)}/${input.slice(2)}`);
-      } else {
-        setDueDate(`${input.slice(0, 2)}/${input.slice(2, 4)}/${input.slice(4, 8)}`);
-      }
-    }
+  const handleDateChange = (newValue) => {
+    setDueDate(newValue);
   };
 
   const submitDueDate = async () => {
@@ -178,16 +172,14 @@ const AdminView = () => {
     <Grid container justifyContent="center">
       <Grid item xs={12} lg={8}>
         <Grid>
-          <TextField
-            type="text"
-            variant="outlined"
-            color="secondary"
-            label="Due Date"
-            value={dueDate}
-            onChange={handleDateChange}
-            margin="normal"
-            helperText="* MM/DD/YYYY"
-          />
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DateTimePicker
+              label="Due Date"
+              value={dueDate}
+              onChange={handleDateChange}
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </LocalizationProvider>
           <Button className={styles.submit_button} variant="contained" onClick={submitDueDate}>
             Submit
           </Button>
