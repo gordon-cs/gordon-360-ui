@@ -6,7 +6,7 @@ import Preference from './PreferenceBox';
 import Agreements from './Agreements';
 import Instructions from './Instructions';
 import housingService from 'services/housing';
-import styles from '../HousingLottery.module.css';
+import styles from './studentView.module.css';
 import { nanoid } from 'nanoid';
 import GordonSnackbar from 'components/Snackbar';
 import user from '../../../services/user';
@@ -53,7 +53,7 @@ const StudentView = () => {
     console.log('Preference Data:', newPreferences);
   };
 
-  const handleClick = async () => {
+  const handleSubmit = async () => {
     try {
       let application_id = nanoid(8);
       if (overdue) {
@@ -63,9 +63,26 @@ const StudentView = () => {
       await housingService.addApplicant(application_id, studentApplicantResult);
       await housingService.addHall(application_id, preferredHallResult);
       await housingService.addPreference(application_id, preferenceResult);
+      setSnackbar({
+        message: 'The application has been successfully submitted. Congratulations!',
+        severity: 'success',
+        open: true,
+      });
     } catch {
       setSnackbar({
         message: 'Application fail to submit. Please check your information or contact CTS.',
+        severity: 'error',
+        open: true,
+      });
+    }
+  };
+
+  const handleRemove = async () => {
+    try {
+      await housingService.removeUser();
+    } catch {
+      setSnackbar({
+        message: 'Applicant fail to remove. Please try again or contact CTS.',
         severity: 'error',
         open: true,
       });
@@ -103,10 +120,13 @@ const StudentView = () => {
         <Agreements onChange={handleAgreementsChange} />
       </Grid>
       <Grid item xs={10} container justifyContent="flex-end">
+        <Button className={styles.submit_button} variant="contained" onClick={handleRemove}>
+          Remove Myself
+        </Button>
         <Button
           className={styles.submit_button}
           variant="contained"
-          onClick={handleClick}
+          onClick={handleSubmit}
           disabled={!areAllAgreementsChecked}
         >
           Submit

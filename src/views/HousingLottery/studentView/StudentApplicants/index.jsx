@@ -1,7 +1,7 @@
 import { Button, Card, CardContent, CardHeader, Divider, Grid, TextField } from '@mui/material';
 import { useState } from 'react';
 import ApplicantFields from './ApplicantFields';
-import styles from '../../HousingLottery.module.css';
+import styles from './studentApplicants.module.css';
 import { useEffect } from 'react';
 import user from '../../../../services/user';
 
