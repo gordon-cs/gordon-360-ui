@@ -81,7 +81,7 @@ const AdminView = () => {
           year: null,
         };
       }
-      normalizedData[item.ApplicationID].applicants.push(item.Applicant1);
+      normalizedData[item.ApplicationID].applicants.push(item.Email);
     });
 
     preferredHalls.forEach((item) => {
