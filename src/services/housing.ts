@@ -185,7 +185,7 @@ const addHall = (applicationID: string, hallList: string[]) =>
 const addPreference = (applicationID: string, preferenceList: string[]) =>
   http.put(`housing/lottery/${applicationID}/preference`, preferenceList);
 
-const addDueDate = (dueDate: string) => http.put(`housing/lottery/due_date/${dueDate}`);
+const addDueDate = (dueDate: string) => http.put(`housing/lottery/due_date`, dueDate);
 
 const housingService = {
   getApartmentSelectionDate,
