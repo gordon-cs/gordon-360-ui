@@ -2,7 +2,7 @@ import { Grid } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { HallSearchField } from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
 import GordonSnackbar from 'components/Snackbar';
-import styles from '../preferredHall.module.css';
+import styles from './hallSlotComponent.module.css';
 
 const HallSlot = ({ rank, hallList, preferredHallList, updatePreferredHallList }) => {
   const [hall, setHall] = useState('');
