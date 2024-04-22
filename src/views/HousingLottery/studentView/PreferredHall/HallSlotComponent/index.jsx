@@ -2,6 +2,7 @@ import { Grid } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { HallSearchField } from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
 import GordonSnackbar from 'components/Snackbar';
+import styles from '../preferredHall.module.css';
 
 const HallSlot = ({ rank, hallList, preferredHallList, updatePreferredHallList }) => {
   const [hall, setHall] = useState('');
@@ -35,7 +36,7 @@ const HallSlot = ({ rank, hallList, preferredHallList, updatePreferredHallList }
   };
 
   return (
-    <Grid container spacing={5}>
+    <Grid container spacing={5} className={styles.hallSlotGridItem}>
       <HallSearchField
         name="building"
         value={hall}

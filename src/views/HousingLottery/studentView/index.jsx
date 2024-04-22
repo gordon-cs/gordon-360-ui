@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Button, Grid } from '@mui/material';
 import PreferredHall from './PreferredHall';
 import StudentApplicants from './StudentApplicants/index.jsx';
@@ -25,6 +25,7 @@ const StudentView = () => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [areAllAgreementsChecked, setAreAllAgreementsChecked] = useState(false);
   const [areAllHallsSelected, setAreAllHallsSelected] = useState(false);
+  const [isPreferenceComplete, setIsPreferenceComplete] = useState(false);
   console.log('Preferred Hall Result:', preferredHallResult);
   console.log('Student Applicant Result:', studentApplicantResult);
   console.log('Preference Result:', preferenceResult);
@@ -40,9 +41,10 @@ const StudentView = () => {
     setAreAllAgreementsChecked(allChecked);
   };
 
-  const handlePreferenceChange = (newPreferences) => {
+  const handlePreferenceChange = (newPreferences, isValid) => {
     setPreferenceResult(newPreferences);
     console.log('Preference Data:', newPreferences);
+    setIsPreferenceComplete(isValid);
   };
 
   const handleSubmit = async () => {
@@ -58,6 +60,15 @@ const StudentView = () => {
     if (!areAllHallsSelected) {
       setSnackbar({
         message: 'Please select all preferred halls before submitting.',
+        severity: 'error',
+        open: true,
+      });
+      return;
+    }
+
+    if (!isPreferenceComplete) {
+      setSnackbar({
+        message: 'Please select options for all preference questions before submitting.',
         severity: 'error',
         open: true,
       });
