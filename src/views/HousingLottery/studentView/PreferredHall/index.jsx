@@ -58,7 +58,7 @@ const PreferredHallsCard = ({ setPreferredHallResult, onValidationChange }) => {
                 <Grid item xs={3}>
                   1 <span className={styles.rankAsterisk}>*</span>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={6}>
                   <HallSlot
                     rank={1}
                     hallList={hallList}
@@ -71,7 +71,7 @@ const PreferredHallsCard = ({ setPreferredHallResult, onValidationChange }) => {
                 <Grid item xs={3}>
                   2 <span className={styles.rankAsterisk}>*</span>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={6}>
                   <HallSlot
                     rank={2}
                     hallList={hallList}
@@ -84,7 +84,7 @@ const PreferredHallsCard = ({ setPreferredHallResult, onValidationChange }) => {
                 <Grid item xs={3}>
                   3 <span className={styles.rankAsterisk}>*</span>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={6}>
                   <HallSlot
                     rank={3}
                     hallList={hallList}
@@ -97,7 +97,7 @@ const PreferredHallsCard = ({ setPreferredHallResult, onValidationChange }) => {
                 <Grid item xs={3}>
                   4 <span className={styles.rankAsterisk}>*</span>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={6}>
                   <HallSlot
                     rank={4}
                     hallList={hallList}
@@ -110,7 +110,7 @@ const PreferredHallsCard = ({ setPreferredHallResult, onValidationChange }) => {
                 <Grid item xs={3}>
                   5 <span className={styles.rankAsterisk}>*</span>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={6}>
                   <HallSlot
                     rank={5}
                     hallList={hallList}
@@ -123,7 +123,7 @@ const PreferredHallsCard = ({ setPreferredHallResult, onValidationChange }) => {
                 <Grid item xs={3}>
                   6 <span className={styles.rankAsterisk}>*</span>
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={6}>
                   <HallSlot
                     rank={6}
                     hallList={hallList}
