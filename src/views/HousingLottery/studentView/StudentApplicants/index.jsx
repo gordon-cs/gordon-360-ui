@@ -4,39 +4,40 @@ import ApplicantFields from './ApplicantFields';
 import styles from './studentApplicants.module.css';
 import { useEffect } from 'react';
 import user from '../../../../services/user';
+import housing from '../../../../services/housing';
 
 const StudentApplicants = ({ setStudentApplicantResult }) => {
   const [applicants, setApplicants] = useState([]);
-  const [emails, setEmails] = useState([]);
 
   useEffect(() => {
-    const loadCurrentUser = async () => {
+    const loadApplicants = async () => {
       try {
         const profile = await user.getProfileInfo();
+        const storedRoommatesData = await housing.getUserRoommate();
+        const filteredRoommateEmails = storedRoommatesData
+          .filter((data) => data.Email && data.Email !== profile.Email)
+          .map((data) => data.Email);
         const initialApplicants = [
           { email: profile.Email },
-          { email: '' },
-          { email: '' },
-          { email: '' },
+          ...filteredRoommateEmails.map((email) => ({ email })),
         ];
+        while (initialApplicants.length < 4) {
+          initialApplicants.push({ email: '' });
+        }
         setApplicants(initialApplicants);
-        setEmails(initialApplicants.map((a) => a.email));
+        setStudentApplicantResult(initialApplicants.map((applicant) => applicant.email));
       } catch (error) {
-        console.error('Error fetching user data', error);
+        console.error('Error fetching user data:', error);
       }
     };
-    loadCurrentUser();
+    loadApplicants();
   }, []);
 
-  const handleApplicantChange = (index, updatedApplicant) => {
-    const newApplicants = [...applicants];
-    newApplicants[index] = updatedApplicant;
-    setApplicants(newApplicants);
-
-    const newEmails = [...emails];
-    newEmails[index] = updatedApplicant.email;
-    setEmails(newEmails);
-    setStudentApplicantResult(newEmails);
+  const handleApplicantChange = (index, updatedEmail) => {
+    const updatedApplicants = [...applicants];
+    updatedApplicants[index] = { ...updatedApplicants[index], email: updatedEmail };
+    setApplicants(updatedApplicants);
+    setStudentApplicantResult(updatedApplicants.map((applicant) => applicant.email));
   };
 
   return (
@@ -51,6 +52,7 @@ const StudentApplicants = ({ setStudentApplicantResult }) => {
                   applicant={applicant}
                   onApplicantChange={handleApplicantChange}
                   index={index}
+                  disabled={index === 0}
                 />
               </div>
               {index < applicants.length - 1 && <Divider />}

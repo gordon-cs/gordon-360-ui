@@ -1,13 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
-  Table,
-  TableBody,
-  TableContainer,
-  Typography,
-  FormControl,
   FormControlLabel,
-  Input,
-  Button,
   RadioGroup,
   Card,
   CardContent,
@@ -15,68 +8,51 @@ import {
   Radio,
   Grid,
 } from '@mui/material';
-import housingService from 'services/housing';
-import housing from 'services/housing';
+import housing from '../../../../services/housing';
 import styles from './preferenceBox.module.css';
 
 const Preference = ({ onPreferenceChange }) => {
-  const [preferences, setPreferences] = useState(['', '']); // Store preferences as an array
-  const [morningOrNight, setMorningOrNight] = useState(''); // Store the selected morning or night
-  const [loudOrQuiet, setLoudOrQuiet] = useState(''); // Store the selected loud or quiet
+  const [morningOrNight, setMorningOrNight] = useState('');
+  const [loudOrQuiet, setLoudOrQuiet] = useState('');
 
   useEffect(() => {
-    // Check for stored preferences in localStorage
-    const storedPreferences = localStorage.getItem('userPreferences');
-    if (storedPreferences) {
-      const { morningOrNight, loudOrQuiet } = JSON.parse(storedPreferences);
-      setMorningOrNight(morningOrNight || '');
-      setLoudOrQuiet(loudOrQuiet || '');
-    }
+    const loadPreferences = async () => {
+      try {
+        const savedPreferences = await housing.getUserPreference();
+        const loudOrQuietPreference = savedPreferences.find(
+          (pref) => pref.Preference1 === 'quiet' || pref.Preference1 === 'loud',
+        );
+        const morningOrNightPreference = savedPreferences.find(
+          (pref) => pref.Preference1 === 'night-owl' || pref.Preference1 === 'morning-bird',
+        );
+        if (loudOrQuietPreference) {
+          setLoudOrQuiet(loudOrQuietPreference.Preference1);
+        }
+        if (morningOrNightPreference) {
+          setMorningOrNight(morningOrNightPreference.Preference1);
+        }
+        onPreferenceChange([
+          loudOrQuietPreference ? loudOrQuietPreference.Preference1 : '',
+          morningOrNightPreference ? morningOrNightPreference.Preference1 : '',
+        ]);
+      } catch (error) {
+        console.error('Failed to fetch user preferences:', error);
+      }
+    };
+    loadPreferences();
   }, []);
 
   const handleMorningOrNightChange = (event) => {
     const newMorningOrNight = event.target.value;
-    let newList = [...preferences];
-    newList[0] = newMorningOrNight;
     setMorningOrNight(newMorningOrNight);
-    setPreferences(newList);
-    onPreferenceChange(newList, newMorningOrNight && loudOrQuiet);
+    onPreferenceChange([loudOrQuiet, newMorningOrNight]);
   };
 
   const handleLoudOrQuietChange = (event) => {
     const newLoudOrQuiet = event.target.value;
-    let newList = [...preferences];
-    newList[1] = newLoudOrQuiet;
     setLoudOrQuiet(newLoudOrQuiet);
-    setPreferences(newList);
-    onPreferenceChange(newList, morningOrNight && newLoudOrQuiet);
+    onPreferenceChange([newLoudOrQuiet, morningOrNight]);
   };
-
-  useEffect(() => {
-    // Save preferences to local storage
-    const storedPreferences = JSON.stringify({ morningOrNight, loudOrQuiet });
-    localStorage.setItem('userPreferences', storedPreferences);
-  }, [morningOrNight, loudOrQuiet]);
-
-  useEffect(() => {
-    // Check if both morningOrNight and loudOrQuiet are empty, clear localStorage
-    if (!morningOrNight && !loudOrQuiet) {
-      localStorage.removeItem('userPreferences');
-    }
-  }, [morningOrNight, loudOrQuiet]);
-
-  useEffect(() => {
-    // Clear selected radio buttons when the page is refreshed
-    if (!localStorage.getItem('userPreferences')) {
-      setMorningOrNight('');
-      setLoudOrQuiet('');
-    }
-  }, []);
-
-  useEffect(() => {
-    const isValid = morningOrNight && loudOrQuiet;
-    onPreferenceChange(preferences, isValid);
-  }, [preferences, morningOrNight, loudOrQuiet, onPreferenceChange]);
 
   return (
     <Grid container justifyContent="flex-end">
@@ -97,7 +73,6 @@ const Preference = ({ onPreferenceChange }) => {
                 <FormControlLabel value="morning-bird" control={<Radio />} label="Morning Bird" />
               </RadioGroup>
             </div>
-
             <div>
               <label>Do you consider yourself quiet or loud in the dorm?</label>
               <span className={styles.rankAsterisk}>*</span>
