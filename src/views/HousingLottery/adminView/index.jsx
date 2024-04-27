@@ -25,7 +25,7 @@ import styles from './adminView.module.css';
 import { CSVLink } from 'react-csv';
 import GordonSnackbar from 'components/Snackbar';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { setDate } from 'date-fns';
+import { setDate, format } from 'date-fns';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider, DateTimePicker } from '@mui/x-date-pickers';
 
@@ -54,7 +54,7 @@ const AdminView = () => {
 
   const submitDueDate = async () => {
     try {
-      await housingService.addDueDate(dueDate);
+      await housingService.addDueDate(format(dueDate, 'Pp'));
       setSnackbar({
         message: 'The due date has been successfully submitted. Thank you!',
         severity: 'success',

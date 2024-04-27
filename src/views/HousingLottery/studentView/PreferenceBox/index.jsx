@@ -62,6 +62,7 @@ const Preference = ({ onPreferenceChange }) => {
           <CardContent>
             <div>
               <label>Are you a night owl or a morning bird?</label>
+              <span className={styles.rankAsterisk}>*</span>
               <RadioGroup
                 aria-label="morning-or-night"
                 name="morning-or-night"
@@ -74,6 +75,7 @@ const Preference = ({ onPreferenceChange }) => {
             </div>
             <div>
               <label>Do you consider yourself quiet or loud in the dorm?</label>
+              <span className={styles.rankAsterisk}>*</span>
               <RadioGroup
                 aria-label="loud-or-quiet"
                 name="loud-or-quiet"
