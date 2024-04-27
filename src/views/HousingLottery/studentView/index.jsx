@@ -73,6 +73,11 @@ const StudentView = () => {
   const handleRemove = async () => {
     try {
       await housingService.removeUser();
+      setSnackbar({
+        message: 'The applicant is removed successfully. Please refresh the page.',
+        severity: 'success',
+        open: true,
+      });
     } catch {
       setSnackbar({
         message: 'Applicant fail to remove. Please try again or contact CTS.',
