@@ -19,7 +19,6 @@ const ApplicantFields = ({ applicant, onApplicantChange, index }) => {
         onChange={(e) => handleFieldChange('email', e.target.value)}
         value={applicant.email}
         disabled={disabled}
-        required
         error={applicant.email !== '' && !applicant.email.endsWith('@gordon.edu')}
         helperText={
           applicant.email === '' || applicant.email.endsWith('@gordon.edu')
