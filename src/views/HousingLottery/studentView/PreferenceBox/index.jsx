@@ -14,6 +14,7 @@ import styles from './preferenceBox.module.css';
 const Preference = ({ onPreferenceChange }) => {
   const [morningOrNight, setMorningOrNight] = useState('');
   const [loudOrQuiet, setLoudOrQuiet] = useState('');
+  const [preferences, setPreferences] = useState({ morningOrNight: '', loudOrQuiet: '' });
 
   useEffect(() => {
     const loadPreferences = async () => {
@@ -31,10 +32,13 @@ const Preference = ({ onPreferenceChange }) => {
         if (morningOrNightPreference) {
           setMorningOrNight(morningOrNightPreference.Preference1);
         }
-        onPreferenceChange([
-          loudOrQuietPreference ? loudOrQuietPreference.Preference1 : '',
-          morningOrNightPreference ? morningOrNightPreference.Preference1 : '',
-        ]);
+        onPreferenceChange(
+          [
+            loudOrQuietPreference ? loudOrQuietPreference.Preference1 : '',
+            morningOrNightPreference ? morningOrNightPreference.Preference1 : '',
+          ],
+          loudOrQuietPreference && morningOrNightPreference,
+        );
       } catch (error) {
         console.error('Failed to fetch user preferences:', error);
       }
@@ -45,14 +49,23 @@ const Preference = ({ onPreferenceChange }) => {
   const handleMorningOrNightChange = (event) => {
     const newMorningOrNight = event.target.value;
     setMorningOrNight(newMorningOrNight);
-    onPreferenceChange([loudOrQuiet, newMorningOrNight]);
+    const updatedPreferences = { ...preferences, morningOrNight: newMorningOrNight };
+    setPreferences(updatedPreferences);
+    onPreferenceChange([loudOrQuiet, newMorningOrNight], loudOrQuiet && newMorningOrNight);
   };
 
   const handleLoudOrQuietChange = (event) => {
     const newLoudOrQuiet = event.target.value;
     setLoudOrQuiet(newLoudOrQuiet);
-    onPreferenceChange([newLoudOrQuiet, morningOrNight]);
+    const updatedPreferences = { ...preferences, loudOrQuiet: newLoudOrQuiet };
+    setPreferences(updatedPreferences);
+    onPreferenceChange([newLoudOrQuiet, morningOrNight], newLoudOrQuiet && morningOrNight);
   };
+
+  useEffect(() => {
+    const isValid = preferences.morningOrNight && preferences.loudOrQuiet;
+    onPreferenceChange([preferences.loudOrQuiet, preferences.morningOrNight], isValid);
+  }, [preferences]);
 
   return (
     <Grid container justifyContent="flex-end">
