@@ -1,0 +1,20 @@
+.instructionsHeading,
+.instructionsContent {
+  color: var(--mui-palette-primary-contrastText);
+}
+
+.housing_card_header {
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
+
+  :global {
+    .MuiTypography-colorTextSecondary {
+      color: var(--mui-palette-primary-contrastText);
+      font-size: 1.25rem;
+    }
+
+    .MuiCardHeader-subheader {
+      color: var(--mui-palette-primary-contrastText);
+    }
+  }
+}

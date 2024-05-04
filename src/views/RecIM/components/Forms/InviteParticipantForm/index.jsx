@@ -1,14 +1,14 @@
 import { Grid } from '@mui/material';
+import { useState, useEffect } from 'react';
 import GordonDialogBox from 'components/GordonDialogBox';
-import GordonQuickSearch from 'components/Header/components/QuickSearch';
-import GordonLoader from 'components/Loader';
-import { useUser } from 'hooks';
-import { useEffect, useState } from 'react';
-import { getAccountsBasicInfo } from 'services/recim/participant';
-import { addParticipantToTeam, createTeam, deleteTeamParticipant } from 'services/recim/team';
-import userService from 'services/user';
 import { ParticipantList } from './../../List';
+import { addParticipantToTeam, createTeam, deleteTeamParticipant } from 'services/recim/team';
+import GordonLoader from 'components/Loader';
 import styles from './InviteParticipantForm.module.css';
+import userService from 'services/user';
+import { useUser } from 'hooks';
+import GordonQuickSearch from 'components/Header/components/QuickSearch';
+import { getAccountsBasicInfo } from 'services/recim/participant';
 
 const InviteParticipantForm = ({
   createSnackbar,
@@ -41,7 +41,7 @@ const InviteParticipantForm = ({
         Username: person.UserName,
         FirstName: person.FirstName,
         LastName: person.LastName,
-        IsCustom: person.Username?.split('.').at(-1) === 'custom',
+        IsCustom: person.Username.split('.').at(-1) === 'custom',
       },
     ]);
   };
