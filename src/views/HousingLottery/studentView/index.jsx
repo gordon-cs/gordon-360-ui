@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Button, Grid } from '@mui/material';
 import PreferredHall from './PreferredHall';
 import StudentApplicants from './StudentApplicants/index.jsx';
@@ -6,7 +6,7 @@ import Preference from './PreferenceBox';
 import Agreements from './Agreements';
 import Instructions from './Instructions';
 import housingService from 'services/housing';
-import styles from '../HousingLottery.module.css';
+import styles from './studentView.module.css';
 import { nanoid } from 'nanoid';
 import GordonSnackbar from 'components/Snackbar';
 import user from '../../../services/user';
@@ -24,6 +24,8 @@ const StudentView = () => {
   const [preferenceResult, setPreferenceResult] = useState([]);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [areAllAgreementsChecked, setAreAllAgreementsChecked] = useState(false);
+  const [areAllHallsSelected, setAreAllHallsSelected] = useState(false);
+  const [isPreferenceComplete, setIsPreferenceComplete] = useState(false);
   console.log('Preferred Hall Result:', preferredHallResult);
   console.log('Student Applicant Result:', studentApplicantResult);
   console.log('Preference Result:', preferenceResult);
@@ -39,15 +41,43 @@ const StudentView = () => {
     setAreAllAgreementsChecked(allChecked);
   };
 
-  const handlePreferenceChange = (newPreferences) => {
+  const handlePreferenceChange = (newPreferences, isValid) => {
     setPreferenceResult(newPreferences);
     console.log('Preference Data:', newPreferences);
+    setIsPreferenceComplete(isValid);
   };
 
-  const handleClick = async () => {
+  const handleSubmit = async () => {
+    if (!areAllAgreementsChecked) {
+      setSnackbar({
+        message: 'Please agree to all terms before submitting.',
+        severity: 'error',
+        open: true,
+      });
+      return;
+    }
+
+    if (!areAllHallsSelected) {
+      setSnackbar({
+        message: 'Please select all preferred halls before submitting.',
+        severity: 'error',
+        open: true,
+      });
+      return;
+    }
+
+    if (!isPreferenceComplete) {
+      setSnackbar({
+        message: 'Please select options for all preference questions before submitting.',
+        severity: 'error',
+        open: true,
+      });
+      return;
+    }
+
     try {
       let application_id = nanoid(8),
-        timeTarget = new Date(dueDate + ' 11:59:59 PM').getTime(),
+        timeTarget = new Date(dueDate).getTime(),
         timeNow = new Date().getTime();
       if (timeNow > timeTarget) {
         application_id = 'zzz' + timeNow;
@@ -70,6 +100,27 @@ const StudentView = () => {
     }
   };
 
+  const handleHallSelectionChange = (areSelected) => {
+    setAreAllHallsSelected(areSelected);
+  };
+
+  const handleRemove = async () => {
+    try {
+      await housingService.removeUser();
+      setSnackbar({
+        message: 'The applicant is removed successfully. Please refresh the page.',
+        severity: 'success',
+        open: true,
+      });
+    } catch {
+      setSnackbar({
+        message: 'Applicant fail to remove. Please try again or contact CTS.',
+        severity: 'error',
+        open: true,
+      });
+    }
+  };
+
   return (
     <Grid container spacing={2} justifyContent="center">
       <Grid item xs={10}>
@@ -80,7 +131,11 @@ const StudentView = () => {
       </Grid>
       <Grid container item xs={12} lg={5} spacing={2} direction="row" alignItems="flex-start">
         <Grid item xs={12}>
-          <PreferredHall setPreferredHallResult={setPreferredHallResult} />
+          <PreferredHall
+            setPreferredHallResult={setPreferredHallResult}
+            onHallSelectionChange={handleHallSelectionChange}
+            onValidationChange={handleHallSelectionChange}
+          />
         </Grid>
         <Grid item xs={12}>
           <Preference onPreferenceChange={handlePreferenceChange} />
@@ -90,10 +145,13 @@ const StudentView = () => {
         <Agreements onChange={handleAgreementsChange} />
       </Grid>
       <Grid item xs={10} container justifyContent="flex-end">
+        <Button className={styles.submit_button} variant="contained" onClick={handleRemove}>
+          Remove Myself
+        </Button>
         <Button
           className={styles.submit_button}
           variant="contained"
-          onClick={handleClick}
+          onClick={handleSubmit}
           disabled={!areAllAgreementsChecked}
         >
           Submit

@@ -1,52 +1,34 @@
 import { TextField } from '@mui/material';
-import styles from '../../../HousingLottery.module.css';
+import styles from './applicantFields.module.css';
 
 const ApplicantFields = ({ applicant, onApplicantChange, index }) => {
-  const handleFieldChange = (field, value) => {
-    onApplicantChange(index, { ...applicant, [field]: value });
+  const handleFieldChange = (e) => {
+    onApplicantChange(index, e.target.value);
   };
+
+  const disabled = index === 0;
+  const disabledClass = disabled ? styles.applicant_disabled : '';
 
   return (
     <>
       <TextField
-        type="text"
-        variant='outlined'
-        color='secondary'
-        label="First Name"
-        onChange={(e) => handleFieldChange('firstName', e.target.value)}
-        value={applicant.firstName}
-        fullWidth
-        required
-        className={styles.applicant_name}
-        helperText={'*Required'}
-      />
-      <TextField
-        type="text"
-        variant='outlined'
-        color='secondary'
-        label="Last Name"
-        onChange={(e) => handleFieldChange('lastName', e.target.value)}
-        value={applicant.lastName}
-        fullWidth
-        required
-        className={styles.applicant_name}
-        helperText={'*Required'}
-      />
-      <TextField
         type="email"
-        variant='outlined'
-        color='secondary'
+        variant="outlined"
+        color="secondary"
         label="Email"
-        onChange={(e) => handleFieldChange('email', e.target.value)}
+        onChange={handleFieldChange}
         value={applicant.email}
-        required
+        disabled={disabled}
         error={applicant.email !== '' && !applicant.email.endsWith('@gordon.edu')}
-        helperText={applicant.email === '' || applicant.email.endsWith('@gordon.edu') ? '*Required' : 'Not a Valid Gordon Email'}
-        className={styles.applicant_email}
+        helperText={
+          applicant.email === '' || applicant.email.endsWith('@gordon.edu')
+            ? ''
+            : 'Not a Valid Gordon Email'
+        }
+        className={`${styles.applicant_email} ${disabledClass}`}
       />
     </>
   );
 };
 
 export default ApplicantFields;
-
