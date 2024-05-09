@@ -31,8 +31,17 @@ const StudentView = () => {
   console.log('Preference Result:', preferenceResult);
 
   const [dueDate, setDueDate] = useState('');
+  const [overdue, setOverdue] = useState(false);
   useEffect(() => {
-    housingService.getDueDate().then(setDueDate);
+    housingService.getDueDate().then((dueDate) => {
+      const timeTarget = new Date(dueDate + ' 11:59:59 PM').getTime();
+      const timeNow = new Date().getTime();
+      if (timeNow > timeTarget) {
+        setOverdue(true);
+      }
+
+      setDueDate(dueDate);
+    });
   }, []);
 
   const handleAgreementsChange = (allChecked) => {
@@ -76,11 +85,9 @@ const StudentView = () => {
     }
 
     try {
-      let application_id = nanoid(8),
-        timeTarget = new Date(dueDate).getTime(),
-        timeNow = new Date().getTime();
-      if (timeNow > timeTarget) {
-        application_id = 'zzz' + timeNow;
+      let application_id = nanoid(8);
+      if (overdue) {
+        application_id = 'zzz' + new Date().getTime();
       }
       console.log('application_id ' + application_id);
       await housingService.addApplicant(application_id, studentApplicantResult);
@@ -123,6 +130,17 @@ const StudentView = () => {
 
   return (
     <Grid container spacing={2} justifyContent="center">
+      <Grid item xs={10}>
+        <p>Due Date: {dueDate}</p>
+        {overdue && (
+          <p>
+            You are overdue! Please submit your application form as soon as possible, your
+            application will be placed after all the applications submitted before yours. If you
+            believe the "Due Date" is wrong, please don't submit your application and contact
+            Housing.
+          </p>
+        )}
+      </Grid>
       <Grid item xs={10}>
         <Instructions />
       </Grid>
