@@ -69,6 +69,11 @@ const GordonDialogBox = ({
             {cancelButtonName ?? 'Cancel'}
           </Button>
         )}
+        {closeButtonClicked && (
+          <Button variant="contained" color="neutral" onClick={closeButtonClicked}>
+            {closeButtonName ?? 'Close'}
+          </Button>
+        )}
         {buttonClicked && (
           <Button
             variant="contained"
