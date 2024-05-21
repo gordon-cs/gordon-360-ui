@@ -56,6 +56,10 @@ const otherLinks: ListItemProps[] = [
   { href: 'https://www.gordon.edu/titleix', name: 'Sexual Discrimination and Harassment' },
   { href: 'https://www.gordon.edu/map', name: 'Gordon College Maps' },
   { href: 'https://outlook.office.com/mail/', name: 'Gordon Email' },
+  {
+    href: 'https://gordon.criterionhcm.com/?continue=https://gordon.criterionhcm.com/ui/',
+    name: 'Criterion Timesheets',
+  },
 ];
 
 type Props = {
@@ -68,11 +72,10 @@ const GordonQuickLinksDialog = ({ linkopen, handleLinkClose }: Props) => {
     <GordonDialogBox
       aria-labelledby="useful-links"
       open={linkopen}
-      title=""
+      title="Useful Links"
       buttonClicked={handleLinkClose}
       buttonName="Close"
     >
-      <CardHeader title="Useful Links" className="gc360_header" />
       <List
         component="nav"
         subheader={

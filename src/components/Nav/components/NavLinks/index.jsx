@@ -3,7 +3,6 @@ import EventIcon from '@mui/icons-material/Event';
 import HomeIcon from '@mui/icons-material/Home';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import PeopleIcon from '@mui/icons-material/People';
-import WorkIcon from '@mui/icons-material/Work';
 import { Divider, List } from '@mui/material';
 import RecIMIcon from '@mui/icons-material/SportsFootball';
 import GordonDialogBox from 'components/GordonDialogBox';
@@ -100,18 +99,6 @@ const GordonNavLinks = ({ onLinkClick }) => {
     />
   );
 
-  const timesheetsButton = (
-    <GordonNavButton
-      unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
-      openUnavailableDialog={setDialog}
-      onLinkClick={onLinkClick}
-      linkName={'Timesheets'}
-      linkPath={'/timesheets'}
-      LinkIcon={WorkIcon}
-      divider={false}
-    />
-  );
-
   const recimButton = (
     <GordonNavButton
       unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
@@ -200,7 +187,6 @@ const GordonNavLinks = ({ onLinkClick }) => {
         {involvementsButton}
         {eventsButton}
         {peopleButton}
-        {timesheetsButton}
         {recimButton}
       </List>
 

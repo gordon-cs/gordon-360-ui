@@ -34,7 +34,6 @@ const TabUrlPatterns = [
   /^\/involvements\/?$|^\/activity/,
   /^\/events\/?$/,
   /^\/people$|^\/myprofile|^\/profile/,
-  /^\/timesheets$/,
   /^\/recim$/,
 ];
 
@@ -173,7 +172,6 @@ const GordonHeader = ({ onDrawerToggle }) => {
             to="/events"
           />
           {requiresAuthTab('People', <PeopleIcon />)}
-          {requiresAuthTab('Timesheets', <WorkIcon />)}
           {requiresAuthTab('Rec-IM', <RecIMIcon />)}
         </Tabs>
         <div className={styles.side_container}>
