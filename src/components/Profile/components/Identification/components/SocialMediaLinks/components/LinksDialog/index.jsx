@@ -60,8 +60,8 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
       console.log('Failed Updates: ', failedUpdates);
       createSnackbar('Failed Updating Link(s)', 'error');
     } else {
-      onClose();
       createSnackbar('Social Media Links Updated', 'success');
+      window.location.reload();
     }
   };
 
@@ -86,8 +86,8 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
                 failedUpdates.includes(platform)
                   ? '(failed)'
                   : updatedLinks[platform] !== links[platform]
-                  ? '(updated)'
-                  : 'link'
+                    ? '(updated)'
+                    : 'link'
               }`}
               value={updatedLinks[platform]}
               onChange={(event) => handleLinkUpdated(platform, event.target.value)}
