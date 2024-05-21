@@ -223,8 +223,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
             {profile.HomeCity === PRIVATE_INFO
               ? PRIVATE_INFO
               : profile.Country === 'United States of America' || !profile.Country
-              ? `${profile.HomeCity}, ${profile.HomeState}`
-              : profile.Country}
+                ? `${profile.HomeCity}, ${profile.HomeState}`
+                : profile.Country}
           </span>
         </>
       }
@@ -442,7 +442,9 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                 <GordonDialogBox
                   open={isJoinDialogOpen}
                   title={`Mailbox Instructions`}
-                  closeButtonClicked={() => setIsJoinDialogOpen(false)}
+                  onClose={() => setIsJoinDialogOpen(false)}
+                  cancelButtonClicked={() => setIsJoinDialogOpen(false)}
+                  cancelButtonName="Close"
                   maxWidth="md"
                 >
                   <Grid container>
