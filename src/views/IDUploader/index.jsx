@@ -92,7 +92,7 @@ const IDUploader = () => {
             titleTypographyProps={{ align: 'center' }}
             className={styles.ID_card_header}
           />
-          <CardContent>
+          <CardContent sx={{ padding: 5 }}>
             <List
               component="ol"
               sx={{
