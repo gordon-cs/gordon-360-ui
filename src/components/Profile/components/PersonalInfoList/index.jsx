@@ -443,7 +443,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                   open={isJoinDialogOpen}
                   title={`Mailbox Instructions`}
                   onClose={() => setIsJoinDialogOpen(false)}
-                  closeButtonClicked={() => setIsJoinDialogOpen(false)}
+                  cancelButtonClicked={() => setIsJoinDialogOpen(false)}
+                  cancelButtonName="Close"
                   maxWidth="md"
                 >
                   <Grid container>

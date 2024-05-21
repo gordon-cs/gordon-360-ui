@@ -15,8 +15,6 @@ type Props = {
   buttonClicked: (event: {}) => void;
   buttonName?: string;
   isButtonDisabled?: boolean;
-  closeButtonClicked?: (event: {}) => void;
-  closeButtonName?: string;
   cancelButtonClicked?: (event: {}) => void;
   cancelButtonName?: string;
   severity?: AlertColor;
@@ -27,8 +25,6 @@ const GordonDialogBox = ({
   buttonClicked,
   buttonName,
   isButtonDisabled = false,
-  closeButtonClicked,
-  closeButtonName,
   cancelButtonClicked,
   cancelButtonName,
   severity,
@@ -67,11 +63,6 @@ const GordonDialogBox = ({
         {cancelButtonClicked && (
           <Button variant="outlined" onClick={cancelButtonClicked}>
             {cancelButtonName ?? 'Cancel'}
-          </Button>
-        )}
-        {closeButtonClicked && (
-          <Button variant="contained" color="neutral" onClick={closeButtonClicked}>
-            {closeButtonName ?? 'Close'}
           </Button>
         )}
         {buttonClicked && (
