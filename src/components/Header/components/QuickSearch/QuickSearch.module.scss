@@ -3,7 +3,9 @@
 
 .root {
   color: var(--mui-palette-primary-contrastText);
-  transition: box-shadow 0.3s, width 0.3s;
+  transition:
+    box-shadow 0.3s,
+    width 0.3s;
   border-radius: 4px;
   border: 1px solid var(--mui-palette-primary-contrastText);
   max-width: 15rem;
@@ -19,6 +21,7 @@
 
   & :global(.MuiInputBase-root) {
     padding: 2px 10px;
+    // color: var(--mui-palette-primary-contrastText);
   }
 }
 
