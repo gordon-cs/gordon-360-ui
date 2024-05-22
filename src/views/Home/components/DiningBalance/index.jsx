@@ -157,6 +157,7 @@ const DiningBalance = () => {
                 className={styles.label2}
                 component={Link}
                 href="https://www.gordon.edu/mealplan"
+                target="_blank"
                 size="small"
               >
                 <EditIcon />

@@ -47,7 +47,7 @@ const CLWCreditsDaysLeft = () => {
   let chapelColor = colors.secondary.main;
   let emptyColor = colors.neutral.A700;
 
-  defaults.global.legend.display = false;
+  defaults.global.legend.display = true;
 
   let content;
   if (loading === true) {

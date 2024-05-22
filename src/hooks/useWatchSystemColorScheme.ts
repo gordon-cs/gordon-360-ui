@@ -13,7 +13,6 @@ const useWatchSystemColorScheme = () => {
     const onSystemColorSchemeChange = (e: MediaQueryListEvent) => {
       const storedColorScheme =
         localStorage.getItem(STORAGE_COLOR_PREFERENCE_KEY) ?? ColorSetting.System;
-
       if (storedColorScheme === ColorSetting.System) {
         setMode(e.matches ? ColorMode.Dark : ColorMode.Light);
       }

@@ -69,6 +69,11 @@ const Gray = '#282828';
 const DarkGray = '#151515';
 const LinkBlue = '#0260ad';
 
+// Custom Colors:
+const CustomDark = '#8a0010';
+const CustomMain = '#c40017';
+const PCustomlLight = '#f04f62';
+
 // Theme to use in the CSS vars provider, allowing multiple theme modes
 // This theme can be imported in javascript to reference colors directly
 // See documentation in the docs directory for more information!
@@ -243,6 +248,99 @@ export const theme360 = extendTheme({
         },
       },
     },
+    // custom: {
+    //   // Palette for custom theme mode
+    //   palette: {
+    //     // Variables to set various MUI components, helpful for future customizeability
+    //     AppBar: {
+    //       darkBg: NightMarsh,
+    //     },
+    //     background: {
+    //       paper: DarkGray, // Card Colors
+    //     },
+    //     text: {
+    //       primary: White, // Various MUI components and text
+    //     },
+    //     action: {
+    //       active: White, // Various icons, especially in PersonalInfo on the profile
+    //     },
+    //     // May be used later, gives us the flexibility to change switch colors when switched off
+    //     // if needed for dark mode.
+    //     // Switch: {
+    //     //   defaultColor: Placeholder, // switch ball off color
+    //     // },
+    //     // common: {
+    //     //   onBackground: Placeholder, // switch track off color
+    //     // },
+    //     // May be used later, gives us the flexibility to change tooltip colors if needed for dark
+    //     // mode.
+    //     // Tooltip: {
+
+    //     //   bg: Placeholder, // Tooltip background color
+    //     // },
+    //     primary: {
+    //       main: NightMarsh,
+    //       dark: NightMarsh_opacity50,
+    //       contrastText: White,
+    //       50: NightMarsh_opacity50, //should be half opacity of main
+    //     },
+    //     secondary: {
+    //       main: GordonBlue,
+    //       contrastText: White,
+    //       50: GordonBlue_opacity50,
+    //       100: '#BBDDF0',
+    //       200: '#92C8E6',
+    //       300: '#6BB2DC',
+    //       400: '#4EA2D7',
+    //       500: '#3394D1',
+    //       600: '#2886C5',
+    //       700: '#1C75B3',
+    //       800: '#1365A2',
+    //       900: '#014883',
+    //     },
+    //     error: {
+    //       main: NauticalRed,
+    //       light: ChristmasRed,
+    //       contrastText: White,
+    //     },
+    //     success: {
+    //       dark: LaVidaGreen,
+    //       main: OldSchemeGreen,
+    //       light: SeaSpray,
+    //     },
+    //     warning: { main: BarringtonGold, dark: ChristmasRed },
+    //     info: { main: NightMarsh, light: SnowDay, dark: Athletics, contrastText: White },
+    //     neutral: {
+    //       main: DarkGray,
+    //       dark: Athletics,
+    //       light: Gray,
+    //       contrastText: White,
+    //       50: '#1D1C1C',
+    //       100: '#353535',
+    //       200: '#5C5B5B',
+    //       300: '#706F6F',
+    //       400: '#989797',
+    //       500: '#B8B7B7',
+    //       600: '#DCDBDB',
+    //       700: '#EBEAEA',
+    //       800: '#F4F3F3',
+    //       900: '#FAF9F9',
+    //       A100: White,
+    //     },
+    //     link: {
+    //       main: LinkBlue,
+    //       light: ScottieCyan,
+    //       dark: Placeholder,
+    //       contrastText: ScottieCyan,
+    //     },
+    //     Alert: {
+    //       errorColor: NauticalRed,
+    //       errorIconColor: NauticalRed,
+    //       errorStandardBg: DarkRed,
+    //     },
+    //   },
+    // },
+    // This is for custom mode
   },
   components: {
     MuiButton: {
@@ -278,6 +376,7 @@ export enum ColorSetting {
   System = 'system',
   Dark = 'dark',
   Light = 'light',
+  //  Custom = 'custom',
 }
 
 /**
@@ -286,4 +385,5 @@ export enum ColorSetting {
 export enum ColorMode {
   Dark = 'dark',
   Light = 'light',
+  //  Custom = 'custom',
 }

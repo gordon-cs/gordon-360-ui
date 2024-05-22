@@ -92,6 +92,11 @@ const PaletteSwitcherDialog = ({ dialogOpen, handleClose }: Props) => {
             control={<Radio color="secondary" />}
             label="Dark Mode"
           />
+          {/* <FormControlLabel
+            value={ColorSetting.Custom}
+            control={<Radio color="primary" />}
+            label="Custom Mode"
+          /> */}
         </RadioGroup>
       </FormControl>
       <Divider />
