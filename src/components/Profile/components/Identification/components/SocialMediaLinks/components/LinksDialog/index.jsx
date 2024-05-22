@@ -9,13 +9,17 @@ import {
 import { useState } from 'react';
 import { platforms, socialMediaInfo } from 'services/socialMedia';
 import user from 'services/user';
+import { useUserActions } from 'hooks';
 import styles from './LinksDialog.module.css';
 
 const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
   const [formErrors, setFormErrors] = useState([]);
   const [updatedLinks, setUpdatedLinks] = useState(links);
   const [failedUpdates, setFailedUpdates] = useState([]);
+  //const [isSubmitted, setIsSubmitted] = useState(false);
   const hasUpdatedLink = platforms.some((platform) => updatedLinks[platform] !== links[platform]);
+
+  const { updateProfile } = useUserActions();
 
   const handleLinkUpdated = (platform, value) => {
     setUpdatedLinks((prev) => ({ ...prev, [platform]: value }));
@@ -61,8 +65,10 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
       createSnackbar('Failed Updating Link(s)', 'error');
     } else {
       createSnackbar('Social Media Links Updated', 'success');
-      window.location.reload();
+      updateProfile();
+      //  setIsSubmitted(true);
     }
+    onClose();
   };
 
   return (
