@@ -23,12 +23,15 @@ type Props = {
   myProf: boolean;
 };
 
+const scheduleOpenKey = 'profile.schedule.isOpen';
 const GordonSchedulePanel = ({ profile, myProf }: Props) => {
   const [loading, setLoading] = useState(true);
   const [allSchedules, setAllSchedules] = useState<Schedule[]>([]);
   const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<CourseEvent | null>(null);
-  const [accordionState, setAccordionState] = useState<boolean>(true);
+  const [isScheduleOpen, setIsScheduleOpen] = useState<boolean>(
+    localStorage.getItem('isScheduleOpen') === 'true' ?? true,
+  );
 
   useEffect(() => {
     setLoading(true);
@@ -46,19 +49,19 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
       setSelectedSchedule(defaultSchedule);
 
       setLoading(false);
+
+      const getIsScheduleOpen = localStorage.getItem('isScheduleOpen');
+      if (getIsScheduleOpen !== null) {
+        setIsScheduleOpen(getIsScheduleOpen === 'true');
+      }
     });
   }, [profile.AD_Username]);
 
-  useEffect(() => {
-    const getAccordionState = localStorage.getItem('accordionState');
-    if (getAccordionState !== null) {
-      setAccordionState(getAccordionState === 'true');
-    }
-  }, []);
-
-  const toggleAccordionState = () => {
-    setAccordionState((a) => !a);
-    localStorage.setItem('accordionState', String(!accordionState));
+  const toggleIsScheduleOpen = () => {
+    setIsScheduleOpen((wasOpen) => {
+      localStorage.setItem('isScheduleOpen', String(!isScheduleOpen));
+      return !wasOpen;
+    });
   };
 
   return loading ? (
@@ -66,8 +69,8 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
   ) : (
     <>
       <Accordion
-        expanded={accordionState}
-        onChange={toggleAccordionState}
+        expanded={isScheduleOpen}
+        onChange={toggleIsScheduleOpen}
         TransitionProps={{ unmountOnExit: true }}
       >
         <AccordionSummary
