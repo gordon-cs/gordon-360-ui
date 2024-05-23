@@ -30,6 +30,17 @@ type DbSchedule = {
   AllCourses: DbCourse[];
 };
 
+function detectMobile() {
+  return window.innerWidth <= 800 && window.innerHeight <= 600;
+}
+
+function mobileFormat() {
+  if (detectMobile() == false) {
+    return ' | ';
+  } else {
+    return ' ';
+  }
+}
 export const scheduleCalendarResources = [
   { id: 'MO', title: 'Monday' },
   { id: 'TU', title: 'Tuesday' },
@@ -87,7 +98,7 @@ function formatCoursesFromDb(courses: DbCourse[]): CourseEvent[] {
   return courses.map((course) => {
     const sharedDetails = {
       name: course.CRS_TITLE.trim(),
-      title: course.CRS_CDE.trim(),
+      title: course.CRS_CDE + mobileFormat() + course.BLDG_CDE + '\u00A0' + course.ROOM_CDE,
       location: course.BLDG_CDE + ' ' + course.ROOM_CDE,
     };
 
