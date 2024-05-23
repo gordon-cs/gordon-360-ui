@@ -149,8 +149,6 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const [halls, setHalls] = useState<string[]>([]);
   const currentYear = new Date().getFullYear();
   const [graduationYearRange, setGraduationYearRange] = useState<number[]>([1889, currentYear]);
-  const [gradYearBegin, setGradYearBegin] = useState<number[]>([1889]);
-  const [gradYearEnd, setGradYearEnd] = useState<number[]>([currentYear]);
   // 1889 is the establish date of Gordon
   const [switchYearRange, setSwitchYearRange] = useState(true);
   const [involvements, setInvolvements] = useState<string[]>([]);
@@ -327,8 +325,8 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const handleSwitchChange = () => {
     setSearchParams((sp) => ({
       ...sp,
-      initial_year: '',
-      final_year: '',
+      initial_year: '1889',
+      final_year: String(currentYear),
       graduation_year: '',
     }));
     setSwitchYearRange((prev) => !prev);
@@ -525,82 +523,60 @@ const SearchFieldList = ({ onSearch }: Props) => {
                       select
                     />
                   ) : (
-                    // <Autocomplete
-                    //   name="graduation_year"
-                    //   onClose={handleUpdate}
-                    //   options={Array.from({ length: currentYear - 1889 + 1 }, (_, i) => ({
-                    //     value: (currentYear - i).toString(),
-                    //     label: (currentYear - i).toString(),
-                    //   }))}
-                    //   Icon={FaCalendarTimes}
-                    //   disabled={!searchParams.includeAlumni}
-                    //   renderInput={(params) => <TextField {...params} label="Graduation Year" />}
-                    // />
-                    // <Grid item width={225}>
-                    //   <Slider
-                    //     getAriaLabel={() => 'graduationYearRange'}
-                    //     value={graduationYearRange}
-                    //     onChange={handleSliderChange}
-                    //     valueLabelDisplay="auto"
-                    //     getAriaValueText={toString}
-                    //     min={1889}
-                    //     max={currentYear}
-                    //     disabled={!searchParams.includeAlumni}
-                    //     color="secondary"
-                    //   />
-                    //   <Typography fontSize={15} align="center">
-                    //     {graduationYearRange[0]}-{graduationYearRange[1]}
-                    //   </Typography>
-                    // </Grid>
-                    <>
-                      <SearchField
-                        name="initial_year"
-                        //name="Initial Graduation Year"
-                        value={searchParams.initial_year}
-                        updateValue={handleUpdate}
-                        options={Array.from(
-                          {
-                            length:
-                              Number(searchParams.final_year) > 0
-                                ? Number(searchParams.final_year) - 1889 + 1
-                                : currentYear - 1889 + 1,
-                          },
-                          (_, i) => ({
-                            value:
-                              Number(searchParams.final_year) > 0
-                                ? (Number(searchParams.final_year) - i).toString()
-                                : (currentYear - i).toString(),
-                            label:
-                              Number(searchParams.final_year) > 0
-                                ? (Number(searchParams.final_year) - i).toString()
-                                : (currentYear - i).toString(),
-                          }),
-                        ).reverse()}
-                        Icon={FaCalendarTimes}
-                        disabled={!searchParams.includeAlumni}
-                        select
-                      />
-                      <SearchField
-                        name="final_year"
-                        value={searchParams.final_year}
-                        updateValue={handleUpdate}
-                        options={Array.from(
-                          {
-                            length:
-                              Number(searchParams.initial_year) > 0
-                                ? currentYear - Number(searchParams.initial_year) + 1
-                                : currentYear - 1889 + 1,
-                          },
-                          (_, i) => ({
-                            value: (currentYear - i).toString(),
-                            label: (currentYear - i).toString(),
-                          }),
-                        ).reverse()}
-                        Icon={FaCalendarTimes}
-                        disabled={!searchParams.includeAlumni}
-                        select
-                      />
-                    </>
+                    <Grid item container spacing={1}>
+                      <Grid item xs={6} md={6.5}>
+                        <SearchField
+                          name="initial_year"
+                          //value={String(1889)}
+                          value={searchParams.initial_year}
+                          updateValue={handleUpdate}
+                          options={Array.from(
+                            {
+                              length:
+                                Number(searchParams.final_year) > 0
+                                  ? Number(searchParams.final_year) - 1889 + 1
+                                  : currentYear - 1889 + 1,
+                            },
+                            (_, i) => ({
+                              value:
+                                Number(searchParams.final_year) > 0
+                                  ? (Number(searchParams.final_year) - i).toString()
+                                  : (currentYear - i).toString(),
+                              label:
+                                Number(searchParams.final_year) > 0
+                                  ? (Number(searchParams.final_year) - i).toString()
+                                  : (currentYear - i).toString(),
+                            }),
+                          ).reverse()}
+                          Icon={FaCalendarTimes}
+                          disabled={!searchParams.includeAlumni}
+                          defaultDisabled
+                          select
+                        />
+                      </Grid>
+                      <Grid item xs={6} md={5.5}>
+                        <SearchField
+                          name="final_year"
+                          value={searchParams.final_year}
+                          updateValue={handleUpdate}
+                          options={Array.from(
+                            {
+                              length:
+                                Number(searchParams.initial_year) > 0
+                                  ? currentYear - Number(searchParams.initial_year) + 1
+                                  : currentYear - 1889 + 1,
+                            },
+                            (_, i) => ({
+                              value: (currentYear - i).toString(),
+                              label: (currentYear - i).toString(),
+                            }),
+                          ).reverse()}
+                          disabled={!searchParams.includeAlumni}
+                          defaultDisabled
+                          select
+                        />
+                      </Grid>
+                    </Grid>
                   )}
                   {(isAlumni || isFacStaff) && (
                     <FormControlLabel
