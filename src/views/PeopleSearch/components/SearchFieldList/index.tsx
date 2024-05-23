@@ -2,7 +2,6 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Autocomplete,
   Button,
   Card,
   CardActions,
@@ -297,6 +296,8 @@ const SearchFieldList = ({ onSearch }: Props) => {
     } else if (event.target.name === 'includeAlumni' && !event.target.checked) {
       setSearchParams((sp) => ({
         ...sp,
+        initial_year: '',
+        final_year: '',
         graduation_year: '',
       }));
     }
@@ -524,10 +525,9 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     />
                   ) : (
                     <Grid item container spacing={1}>
-                      <Grid item xs={6} md={6.5}>
+                      <Grid item xs={6} md={6.75}>
                         <SearchField
                           name="initial_year"
-                          //value={String(1889)}
                           value={searchParams.initial_year}
                           updateValue={handleUpdate}
                           options={Array.from(
@@ -554,7 +554,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                           select
                         />
                       </Grid>
-                      <Grid item xs={6} md={5.5}>
+                      <Grid item xs={6} md={5.25}>
                         <SearchField
                           name="final_year"
                           value={searchParams.final_year}
@@ -583,6 +583,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                       control={<Switch onChange={handleSwitchChange} color="secondary" />}
                       label={switchYearRange ? 'Search by Year Range' : 'Search by Graduation Year'}
                       labelPlacement="end"
+                      disabled={!searchParams.includeAlumni}
                     />
                   )}
                 </AdvancedOptionsColumn>
