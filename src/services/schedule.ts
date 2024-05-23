@@ -31,7 +31,9 @@ type DbSchedule = {
 };
 
 function detectMobile() {
-  return window.innerWidth <= 800 && window.innerHeight <= 600;
+  if (window.innerWidth >= 1514) {
+    return false;
+  }
 }
 
 function mobileFormat() {
