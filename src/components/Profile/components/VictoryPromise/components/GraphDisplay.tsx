@@ -21,7 +21,7 @@ const GraphDisplay = ({ scores }: Props) => {
   Object.entries(scores).forEach((score) => {
     const [key, value] = score as [VictoryPromiseCategory, number];
     const index = GraphOrder[key];
-    const colorHex = (Colors[key].match(/#[A-Fa-f0-9]{6}/) || '')[0];
+    const colorHex = (Colors[key].match(/#[A-Fa-f0-9]{6}/) || [''])[0];
     labels[index] = toTitleCase(key, '_');
     if (value > 0) {
       colorHex == '' ? (colors[index] = '#000000') : (colors[index] = colorHex);
