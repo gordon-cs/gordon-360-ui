@@ -12,6 +12,7 @@ import CanvasIcon from './images/Canvas.ico';
 import GordonIcon from './images/favicon.ico';
 import GOIcon from './images/GoGordonFavicon.ico';
 import MyGordonIcon from './images/MyGordonFavicon.ico';
+import HandShakeIcon from './images/HandShakeIcon.png';
 import { PropsWithChildren } from 'react';
 import styles from './QuickLinksDialog.module.css';
 
@@ -44,6 +45,11 @@ const academicLinks: ListItemProps[] = [
     href: 'https://canvas.gordon.edu',
     name: 'Canvas',
     icon: { src: CanvasIcon, alt: 'Canvas Logo' },
+  },
+  {
+    href: 'https://joinhandshake.com/',
+    name: 'HandShake',
+    icon: { src: HandShakeIcon, alt: 'HandShake Logo' },
   },
 ];
 

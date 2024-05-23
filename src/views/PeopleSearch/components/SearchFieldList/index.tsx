@@ -43,7 +43,12 @@ import {
 import { useNavigate } from 'react-router-dom';
 import addressService from 'services/address';
 import { AuthGroup } from 'services/auth';
-import peopleSearchService, { Class, PeopleSearchQuery, SearchResult } from 'services/peopleSearch';
+import peopleSearchService, {
+  Class,
+  Faculty,
+  PeopleSearchQuery,
+  SearchResult,
+} from 'services/peopleSearch';
 import { compareByProperty, searchParamSerializerFactory } from 'services/utils';
 import styles from './SearchFieldList.module.css';
 import SearchField, { SelectOption } from './components/SearchField';
@@ -69,6 +74,7 @@ const relationship_statuses = [
   'Waiting For Her Boaz',
   'Waiting For His Proverbs 31 Woman',
   "It's Complicated",
+  'Waiting for that Ice Spice',
 ];
 
 const searchPageTitle = (
@@ -493,9 +499,9 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     options={
                       Object.values(Class).filter((value) => typeof value !== 'number') as string[]
                     }
-                    Icon={FaSchool}
+                    Icon={FaBuilding}
                     select
-                    disabled={!searchParams.includeStudent}
+                    disabled={!searchParams.includeFacStaff}
                   />
                   <SearchField
                     name="involvement"

@@ -61,6 +61,7 @@ export type PeopleSearchQuery = {
   includeStudent: boolean;
   includeFacStaff: boolean;
   includeAlumni: boolean;
+  search: string;
   first_name: string;
   last_name: string;
   major: string;
