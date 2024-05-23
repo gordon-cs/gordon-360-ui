@@ -172,9 +172,9 @@ const CLWCreditsDaysLeft = () => {
                 variant="contained"
                 color="secondary"
                 component={Link}
-                to="https://www.iattendedapp.com/"
+                to="/events?CLW%20Credits"
               >
-                Chapel Status
+                MORE CREDITS
               </Button>
             </Grid>
           </Grid>
