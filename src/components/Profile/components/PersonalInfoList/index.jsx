@@ -44,7 +44,7 @@ const formatPhone = (phone) => {
 
 const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
   const [isMobilePhonePrivate, setIsMobilePhonePrivate] = useState(
-    Boolean(profile.IsMobilePhonePrivate && profile.MobilePhone !== PRIVATE_INFO),
+    Boolean(profile.IsMobilePhonePrivate || profile.MobilePhone === PRIVATE_INFO),
   );
   const [isCliftonStrengthsPrivate, setIsCliftonStrengthsPrivate] = useState(
     profile.CliftonStrengths?.Private,
@@ -110,42 +110,6 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     loadPersonalInfo();
   }, [myProf, profile.Mail_Location, isStudent]);
 
-  const handleChangeMobilePhonePrivacy = async () => {
-    try {
-      await userService.setMobilePhonePrivacy(!isMobilePhonePrivate);
-      setIsMobilePhonePrivate(!isMobilePhonePrivate);
-
-      setSnackbar({
-        message: 'Your privacy setting will update within a couple hours.',
-        severity: 'success',
-        open: true,
-      });
-    } catch {
-      setSnackbar({
-        message: 'Your privacy setting failed to update. Please contact CTS.',
-        severity: 'error',
-        open: true,
-      });
-    }
-  };
-
-  const handleChangeHomePhonePrivacy = async () => {
-    try {
-      // this user service currently sets mobile_privacy to true or false - same as setMobilePhonePrivacy, which is NOT optimal or sensical. See user.ts
-      await userService.setHomePhonePrivacy(!isHomePhonePrivate);
-      setIsHomePhonePrivate(!isHomePhonePrivate);
-
-      createSnackbar(
-        isHomePhonePrivate
-          ? 'Personal Info Visible (This change may take several minutes)'
-          : 'Personal Info Hidden (This change may take several minutes)',
-        'success',
-      );
-    } catch {
-      createSnackbar('Privacy Change Failed', 'error');
-    }
-  };
-
   const handleChangeCliftonStrengthsPrivacy = async () => {
     try {
       const newPrivacy = await CliftonStrengthsService.togglePrivacy();
@@ -174,7 +138,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </a>
         )
       }
-      ContentIcon={myProf && UpdateUserPrivacy(profile.AD_Username, ['HomePhone'])}
+      ContentIcon={myProf && !isStudent && UpdateUserPrivacy(profile.AD_Username, ['HomePhone'])}
       privateInfo={isHomePhonePrivate}
       myProf={myProf}
     />
@@ -220,8 +184,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
             {profile.HomeCity === PRIVATE_INFO || profile.Country === PRIVATE_INFO
               ? PRIVATE_INFO
               : profile.Country === 'United States of America' || !profile.Country
-              ? `${profile.HomeCity}, ${profile.HomeState}`
-              : profile.Country}
+                ? `${profile.HomeCity}, ${profile.HomeState}`
+                : profile.Country}
           </span>
         </>
       }
@@ -273,7 +237,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     ) : null;
 
   const updateAlumniInfoButton =
-    profile.PersonType === 'alu' && isOnline && myProf ? (
+    isAlumni && isOnline && myProf ? (
       <Grid container justifyContent="center">
         <Button
           variant="contained"
@@ -433,7 +397,9 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                 <GordonDialogBox
                   open={isJoinDialogOpen}
                   title={`Mailbox Instructions`}
-                  closeButtonClicked={() => setIsJoinDialogOpen(false)}
+                  onClose={() => setIsJoinDialogOpen(false)}
+                  cancelButtonClicked={() => setIsJoinDialogOpen(false)}
+                  cancelButtonName="Close"
                   maxWidth="md"
                 >
                   <Grid container>

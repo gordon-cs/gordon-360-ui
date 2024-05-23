@@ -1,0 +1,17 @@
+@import '../../../../../../../vars';
+.select_text {
+  text-transform: capitalize;
+}
+
+.field {
+  width: 100%;
+}
+
+.multiselectText {
+  margin-top: 0.5em;
+  color: var(--mui-palette-neutral-500);
+}
+
+.multiselectItemText {
+  color: var(--mui-palette-neutral-500);
+}

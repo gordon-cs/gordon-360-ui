@@ -1,7 +1,8 @@
-import moment from 'moment';
 import http from './http';
+import { parse } from 'date-fns';
+import { Session } from './session';
 
-type CourseSchedule = {
+type DbCourse = {
   Username: string;
   SessionCode: string;
   CRS_CDE: string;
@@ -15,45 +16,106 @@ type CourseSchedule = {
   FRIDAY_CDE: string;
   SATURDAY_CDE: string;
   /** A timespan of the format HH:mm:ss, stringified */
-  BEGIN_TIME: string;
+  BEGIN_TIME?: string;
   /** A timespan of the format HH:mm:ss, stringified */
-  END_TIME: string;
+  END_TIME?: string;
   Role: string;
 };
 
-type SessionCourses = {
+type DbSchedule = {
   SessionBeginDate: string;
   SessionCode: string;
   SessionDescription: string;
   SessionEndDate: string;
-  AllCourses: CourseSchedule;
+  AllCourses: DbCourse[];
 };
 
-type ScheduleEvent = {
-  id: number;
+export const scheduleCalendarResources = [
+  { id: 'MO', title: 'Monday' },
+  { id: 'TU', title: 'Tuesday' },
+  { id: 'WE', title: 'Wednesday' },
+  { id: 'TH', title: 'Thursday' },
+  { id: 'FR', title: 'Friday' },
+  { id: 'SA', title: 'Saturday' },
+] as const;
+
+type CourseDayID = (typeof scheduleCalendarResources)[number]['id'];
+export const courseDayIds = [
+  'MO',
+  'TU',
+  'WE',
+  'TH',
+  'FR',
+  'SA',
+] as const satisfies readonly CourseDayID[];
+
+export type Schedule = {
+  session: Session;
+  courses: CourseEvent[];
+};
+
+export type CourseEvent = {
+  /**
+   * used by `react-big-calendar` to determine which resource (e.g. `Monday`) this event should display for
+   */
+  resourceId: CourseDayID[];
   name: string;
   title: string;
   location: string;
   start: Date;
   end: Date;
-  resourceId: string;
-  meetingDays: string[];
+  allDay?: boolean;
 };
 
 const getCanReadStudentSchedules = (): Promise<boolean> => http.get(`schedule/canreadstudent/`);
 
-const getSchedule = (username: string = '', sessionID: string = ''): Promise<CourseSchedule[]> => {
-  if (sessionID === '') {
-    return http.get(`schedule/${username}`);
-  }
-  return http.get(`schedule/${username}?sessionID=${sessionID}`);
+const getAllSessionSchedules = async (username: string): Promise<Schedule[]> => {
+  const dbSchedules = await http.get<DbSchedule[]>(`schedule/${username}/allcourses`);
+
+  return dbSchedules.map(({ AllCourses, ...session }) => ({
+    session,
+    courses: formatCoursesFromDb(AllCourses),
+  }));
 };
 
-const getAllCourses = (username: string): Promise<SessionCourses> =>
-  http.get(`schedule/${username}/allcourses`);
+function formatCoursesFromDb(courses: DbCourse[]): CourseEvent[] {
+  const today = new Date();
+  // Don't show async courses as meeting on saturday
+  // Because saturday is only included in the schedule if a non-async course meetst that day
+  const asyncMeetingDays = courseDayIds.slice(0, -1);
 
-function getMeetingDays(course: CourseSchedule): string[] {
-  let dayArray = [];
+  return courses.map((course) => {
+    const sharedDetails = {
+      name: course.CRS_TITLE.trim(),
+      title: course.CRS_CDE.trim(),
+      location: course.BLDG_CDE + ' ' + course.ROOM_CDE,
+    };
+
+    if (course.ROOM_CDE === 'ASY') {
+      return {
+        ...sharedDetails,
+        resourceId: asyncMeetingDays,
+        start: today,
+        end: today,
+        allDay: true,
+      };
+    } else {
+      const meetingDays = getMeetingDays(course);
+      const beginning = parse(course.BEGIN_TIME ?? '', 'HH:mm:ss', today);
+      const end = parse(course.END_TIME ?? '', 'HH:mm:ss', today);
+
+      return {
+        ...sharedDetails,
+        resourceId: meetingDays,
+        start: beginning,
+        end: end,
+      };
+    }
+  });
+}
+
+function getMeetingDays(course: DbCourse): CourseDayID[] {
+  let dayArray: CourseDayID[] = [];
 
   if (course.MONDAY_CDE === 'M') {
     dayArray.push('MO');
@@ -77,61 +139,9 @@ function getMeetingDays(course: CourseSchedule): string[] {
   return dayArray;
 }
 
-function makeScheduleCourses(schedule: CourseSchedule[]): ScheduleEvent[] {
-  const today = moment();
-  let eventId = 0;
-  let asyncMeetingDays = ['MO', 'TU', 'WE', 'TH', 'FR'];
-
-  const eventArray = schedule.flatMap((course) => {
-    course.CRS_CDE = course.CRS_CDE.trim();
-    course.CRS_TITLE = course.CRS_TITLE.trim();
-
-    const beginTime = moment(course.BEGIN_TIME, 'HH:mm:ss')
-      .set('y', today.year())
-      .set('M', today.month())
-      .set('d', today.day());
-    const endTime = moment(course.END_TIME, 'HH:mm:ss')
-      .set('y', today.year())
-      .set('M', today.month())
-      .set('d', today.day());
-
-    const meetingDays = getMeetingDays(course);
-
-    if (course.ROOM_CDE === 'ASY') {
-      return asyncMeetingDays.map((day) => ({
-        id: eventId++,
-        name: course.CRS_TITLE,
-        title: course.CRS_CDE,
-        // you might confused about name and title reference, but it is for displaying course code in the panel and course name in the dialog
-        location: course.BLDG_CDE + ' ' + course.ROOM_CDE,
-        start: today.toDate(),
-        end: today.toDate(),
-        resourceId: day,
-        allDay: true,
-        meetingDays: ['MO', 'TU', 'WE', 'TH', 'FR'],
-      }));
-    } else {
-      return meetingDays.map((day) => ({
-        id: eventId++,
-        name: course.CRS_TITLE,
-        title: course.CRS_CDE,
-        location: course.BLDG_CDE + ' ' + course.ROOM_CDE,
-        start: beginTime.toDate(),
-        end: endTime.toDate(),
-        resourceId: day,
-        meetingDays: meetingDays,
-      }));
-    }
-  });
-
-  return eventArray;
-}
-
 const scheduleService = {
-  getSchedule,
-  makeScheduleCourses,
   getCanReadStudentSchedules,
-  getAllCourses,
+  getAllSessionSchedules,
 };
 
 export default scheduleService;

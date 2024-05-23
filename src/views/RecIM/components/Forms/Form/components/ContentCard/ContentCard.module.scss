@@ -1,0 +1,14 @@
+@import '../../../../../../../vars';
+
+.update {
+  margin-top: 1em;
+
+  & :global(.MuiCard-root) {
+    margin-bottom: 1em;
+  }
+
+  &_header {
+    background-color: var(--mui-palette-primary-main);
+    color: var(--mui-palette-primary-contrastText);
+  }
+}

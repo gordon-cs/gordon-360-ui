@@ -1,0 +1,16 @@
+@import '../../../../vars';
+
+.selectedSurfaces {
+  color: var(--mui-palette-neutral-500);
+  text-align: left;
+}
+
+.surfacesContainer {
+  margin-top: 2em;
+}
+
+.scrollableCenteredTabs {
+  display: flex;
+  justify-content: center;
+  max-width: 65vw;
+}

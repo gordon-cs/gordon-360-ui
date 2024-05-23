@@ -1,36 +1,10 @@
-@import './vars';
-
-.app_wrapper {
-  display: flex;
-  position: relative;
-  width: 100%;
-}
-
 .app_main {
-  height: calc(100vh - #{$header-height-xs});
-  margin-top: $header-height-xs;
+  height: calc(100vh - var(--header-height));
   overflow-y: auto; // change this to scroll for ios to make the scroll smoothly
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   padding: 1rem 0.5rem;
   width: 100%;
-  background-color: var(--mui-palette-neutral-main);
-  &_container {
-    height: 100%;
-  }
-}
 
-@media (min-width: $break-sm) {
-  .app_main {
-    height: calc(100vh - #{$header-height-sm});
-    margin-top: $header-height-sm;
-    margin-left: 0;
-  }
-}
-@media (min-width: $break-md) {
-  .app_main {
-    height: calc(100vh - #{$header-height-md});
-    margin-top: $header-height-md;
-    padding: 1rem;
-  }
+  background-color: var(--mui-palette-neutral-main);
 }
