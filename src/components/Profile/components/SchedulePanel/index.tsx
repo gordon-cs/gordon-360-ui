@@ -57,7 +57,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
   }, []);
 
   const toggleAccordionState = () => {
-    setAccordionState(!accordionState);
+    setAccordionState((a) => !a);
     localStorage.setItem('accordionState', String(!accordionState));
   };
 
