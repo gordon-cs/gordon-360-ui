@@ -16,7 +16,6 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
   const [formErrors, setFormErrors] = useState([]);
   const [updatedLinks, setUpdatedLinks] = useState(links);
   const [failedUpdates, setFailedUpdates] = useState([]);
-  //const [isSubmitted, setIsSubmitted] = useState(false);
   const hasUpdatedLink = platforms.some((platform) => updatedLinks[platform] !== links[platform]);
 
   const { updateProfile } = useUserActions();
@@ -66,7 +65,6 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
     } else {
       createSnackbar('Social Media Links Updated', 'success');
       updateProfile();
-      //  setIsSubmitted(true);
     }
     onClose();
   };
