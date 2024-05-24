@@ -57,9 +57,16 @@ const UpdatePlannedGraduationYear = (props) => {
           />
         </FormControl>
         <p className={styles.note}>
-          NOTE: <br /> This does not set your official graduation <br />
-          year. To make an official change, please <br /> contact{' '}
-          <a href="mailto:registrar@gordon.edu">the Registrar's Office</a>.
+          NOTE: <br /> This does not replace the Application to
+          <br />
+          Graduate.
+          <br />
+          Please fill that out 8-12 months before
+          <br />
+          you plan to graduate. The application <br />
+          can be found in
+          <a href="https://my.gordon.edu"> my.gordon.edu</a>, in the
+          <br /> Academics tab, on the left.
         </p>
       </GordonDialogBox>
       <GordonSnackbar
