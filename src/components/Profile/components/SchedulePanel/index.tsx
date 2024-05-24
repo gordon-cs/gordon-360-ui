@@ -30,7 +30,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
   const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<CourseEvent | null>(null);
   const [isScheduleOpen, setIsScheduleOpen] = useState<boolean>(
-    localStorage.getItem(scheduleOpenKey) !== 'true',
+    localStorage.getItem(scheduleOpenKey) !== 'false',
   );
 
   useEffect(() => {
