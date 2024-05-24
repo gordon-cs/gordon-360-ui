@@ -101,7 +101,7 @@ const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
     major: searchFields.major,
     minor: searchFields.minor,
     hall: searchFields.residence_hall,
-    classType: searchFields.class_standing === '' ? '' : Class[searchFields.class_standing],
+    classType: searchFields.class_standing === '' ? '' : String(Class[searchFields.class_standing]),
     preferredClassYear: searchFields.graduation_year,
     initialYear: searchFields.initial_year,
     finalYear: searchFields.final_year,
