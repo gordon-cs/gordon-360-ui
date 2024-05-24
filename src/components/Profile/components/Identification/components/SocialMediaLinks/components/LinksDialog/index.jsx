@@ -9,6 +9,7 @@ import {
 import { useState } from 'react';
 import { platforms, socialMediaInfo } from 'services/socialMedia';
 import user from 'services/user';
+import { useUserActions } from 'hooks';
 import styles from './LinksDialog.module.css';
 
 const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
@@ -16,6 +17,8 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
   const [updatedLinks, setUpdatedLinks] = useState(links);
   const [failedUpdates, setFailedUpdates] = useState([]);
   const hasUpdatedLink = platforms.some((platform) => updatedLinks[platform] !== links[platform]);
+
+  const { updateProfile } = useUserActions();
 
   const handleLinkUpdated = (platform, value) => {
     setUpdatedLinks((prev) => ({ ...prev, [platform]: value }));
@@ -60,9 +63,10 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
       console.log('Failed Updates: ', failedUpdates);
       createSnackbar('Failed Updating Link(s)', 'error');
     } else {
-      onClose();
       createSnackbar('Social Media Links Updated', 'success');
+      updateProfile();
     }
+    onClose();
   };
 
   return (
@@ -86,8 +90,8 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
                 failedUpdates.includes(platform)
                   ? '(failed)'
                   : updatedLinks[platform] !== links[platform]
-                  ? '(updated)'
-                  : 'link'
+                    ? '(updated)'
+                    : 'link'
               }`}
               value={updatedLinks[platform]}
               onChange={(event) => handleLinkUpdated(platform, event.target.value)}
