@@ -23,7 +23,7 @@ type Props = {
   myProf: boolean;
 };
 
-const scheduleOpenKey = 'profile.schedule.isOpenOrNot';
+const scheduleOpenKey = 'profile.schedule.isOpen';
 const GordonSchedulePanel = ({ profile, myProf }: Props) => {
   const [loading, setLoading] = useState(true);
   const [allSchedules, setAllSchedules] = useState<Schedule[]>([]);
@@ -54,7 +54,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
 
   const toggleIsScheduleOpen = () => {
     setIsScheduleOpen((wasOpen) => {
-      localStorage.setItem(scheduleOpenKey, String(isScheduleOpen));
+      localStorage.setItem(scheduleOpenKey, String(!wasOpen));
       return !wasOpen;
     });
   };
