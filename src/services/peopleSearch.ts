@@ -101,7 +101,7 @@ const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
     major: searchFields.major,
     minor: searchFields.minor,
     hall: searchFields.residence_hall,
-    classType: searchFields.class_standing === '' ? '' : String(Class[searchFields.class_standing]),
+    classType: searchFields.class_standing === '' ? '' : Class[searchFields.class_standing],
     preferredClassYear: searchFields.graduation_year,
     initialYear: searchFields.initial_year,
     finalYear: searchFields.final_year,
@@ -112,7 +112,7 @@ const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
     building: searchFields.building,
     involvement: searchFields.involvement,
   })
-    .filter(([_key, value]) => Boolean(value))
+    .filter(([_key, value]) => value !== '')
     .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
     .join('&');
 
