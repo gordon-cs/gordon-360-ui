@@ -69,7 +69,8 @@ const PaletteSwitcherDialog = ({ dialogOpen, handleClose }: Props) => {
       buttonName="Close"
     >
       <FormControl>
-        {/* The line below could be useful in the future if more color modes are introduced */}
+        {/* Color Mode */}
+        {/* The line below could be useful in the future if more appearance settings are introduced*/}
         {/* <FormLabel id="palette-mode-group-label">Color Mode</FormLabel> */}
         <RadioGroup
           row
