@@ -42,7 +42,7 @@ export const GordonNavAvatarRightCorner = ({ onClick }) => {
       <Tooltip className={styles.tooltip} id="tooltip_avatar" title={name ?? 'Nav Avatar'}>
         <IconButton
           className={styles.root}
-          aria-label="More"
+          aria-label="My Profile"
           aria-owns={'global-menu'}
           aria-haspopup="true"
           onClick={onClick}
