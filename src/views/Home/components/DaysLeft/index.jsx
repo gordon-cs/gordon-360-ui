@@ -76,7 +76,7 @@ const DaysLeft = () => {
               </Typography>
               <Typography className={styles.label}>Days Finished</Typography>
               <Typography variant="body2" className={styles.label2}>
-                {`Current Term: ${first} - ${last}`}
+                `Current Term: {first} - {last}`
               </Typography>
             </Grid>
           </Grid>
