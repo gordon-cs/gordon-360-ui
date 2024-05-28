@@ -274,6 +274,31 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       />
     ) : null;
 
+  const matriculationYear =
+    myProf && isStudent ? (
+      <ProfileInfoListItem
+        title={'Matriculation Date:'}
+        contentText={
+          <Grid container spacing={0} alignItems="center">
+            <Grid item>
+              {!profPlannedGradYear
+                ? 'Fill in with your planned graduation year'
+                : profPlannedGradYear}
+            </Grid>
+            <Grid item>
+              <UpdatePlannedGraduationYear change={setProfPlannedGradYear} />
+            </Grid>
+          </Grid>
+        }
+      />
+    ) : profPlannedGradYear ? (
+      <ProfileInfoListItem
+        title={'Planned Graduation Year:'}
+        contentText={profile.PlannedGradYear}
+        myProf={myProf}
+      />
+    ) : null;
+
   const updateAlumniInfoButton =
     isAlumni && isOnline && myProf ? (
       <Grid container justifyContent="center">
@@ -710,6 +735,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
             {majors}
             {minors}
             {plannedGraduationYear}
+            {matriculationYear}
             {graduationYear}
             {cliftonStrengths}
             {advisors}
