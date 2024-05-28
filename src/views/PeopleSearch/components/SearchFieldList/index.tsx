@@ -326,7 +326,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const handleSwitchChange = () => {
     setSearchParams((sp) => ({
       ...sp,
-      initial_year: '1889',
+      initial_year: '1889', //gordon est
       final_year: String(currentYear),
       graduation_year: '',
     }));
