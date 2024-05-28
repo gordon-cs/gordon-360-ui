@@ -23,10 +23,6 @@ type Props = {
   myProf: boolean;
 };
 
-export function mobileFormat() {
-  return window.innerWidth >= 1514 ? ' | ' : ' ';
-}
-
 const scheduleOpenKey = 'profile.schedule.isOpen';
 const GordonSchedulePanel = ({ profile, myProf }: Props) => {
   const [loading, setLoading] = useState(true);
