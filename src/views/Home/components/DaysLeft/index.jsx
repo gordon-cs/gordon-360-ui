@@ -12,15 +12,15 @@ const DaysLeft = () => {
   const [daysFinished, setDaysFinished] = useState();
   const [currentSessionDescription, setCurrentSessionDescription] = useState();
   const [loading, setLoading] = useState(true);
-  const [firstDay, setFirstDay] = useState('');
-  const [lastDay, setLastDay] = useState('');
+  const [first, setFirstDay] = useState('');
+  const [last, setLastDay] = useState('');
 
   useEffect(() => {
     const load = async () => {
       setLoading(true);
       const currSession = await session.getCurrent();
-      const firstDay = format(parseISO(currSession.SessionBeginDate), 'MM/dd/yyyy');
-      const lastDay = format(parseISO(currSession.SessionEndDate), 'MM/dd/yyyy');
+      const first = format(parseISO(currSession.SessionBeginDate), 'MM/dd/yyyy');
+      const last = format(parseISO(currSession.SessionEndDate), 'MM/dd/yyyy');
       const [[daysRemaining, daysInSemester], currentSession] = await Promise.all([
         session.getDaysLeft(),
         session.getCurrent(),
@@ -31,8 +31,8 @@ const DaysLeft = () => {
         '',
       );
 
-      setFirstDay(firstDay);
-      setLastDay(lastDay);
+      setFirstDay(first);
+      setLastDay(last);
       setCurrentSessionDescription(currentSessionDescription);
       setDaysRemaining(daysRemaining);
       setDaysFinished(daysInSemester - daysRemaining || 0);
@@ -78,7 +78,7 @@ const DaysLeft = () => {
               </Typography>
               <Typography className={styles.label}>Days Finished</Typography>
               <Typography variant="body2" className={styles.label2}>
-                {`Current Term: ${firstDay} - ${lastDay}`}
+                {`Current Term: ${first} - ${last}`}
               </Typography>
             </Grid>
           </Grid>
