@@ -91,9 +91,7 @@ function formatCoursesFromDb(courses: DbCourse[]): CourseEvent[] {
       location: course.BLDG_CDE + ' ' + course.ROOM_CDE,
     };
     function deviceFormat() {
-      return window.innerWidth >= 1514
-        ? ' | ' + course.BLDG_CDE + '\u00A0' + course.ROOM_CDE
-        : ' ' + course.BLDG_CDE + '\u00A0' + course.ROOM_CDE;
+      return `${window.innerWidth >= 1514 ? ' | ' : ' '} ${course.BLDG_CDE}\u00A0${course.ROOM_CDE}`;
     }
     if (course.ROOM_CDE === 'ASY') {
       return {
