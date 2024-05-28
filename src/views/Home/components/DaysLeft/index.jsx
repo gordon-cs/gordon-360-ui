@@ -18,14 +18,12 @@ const DaysLeft = () => {
   useEffect(() => {
     const load = async () => {
       setLoading(true);
-      const currSession = await session.getCurrent();
-      const first = format(parseISO(currSession.SessionBeginDate), 'MM/dd/yyyy');
-      const last = format(parseISO(currSession.SessionEndDate), 'MM/dd/yyyy');
       const [[daysRemaining, daysInSemester], currentSession] = await Promise.all([
         session.getDaysLeft(),
         session.getCurrent(),
       ]);
-
+      const first = format(parseISO(currentSession.SessionBeginDate), 'MM/dd/yyyy');
+      const last = format(parseISO(currentSession.SessionEndDate), 'MM/dd/yyyy');
       const currentSessionDescription = currentSession.SessionDescription.replace(
         /(Academic Year)|(Grad)/gm,
         '',
