@@ -9,7 +9,19 @@ type Props = {
   schedule: Schedule;
   onSelectEvent: (event: CourseEvent) => void;
 };
+function detectMobile() {
+  if (window.innerWidth >= 1514) {
+    return false;
+  }
+}
 
+export function mobileFormat() {
+  if (detectMobile() == false) {
+    return ' | ';
+  } else {
+    return ' ';
+  }
+}
 const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
   const dayStart = new Date();
   dayStart.setHours(8, 0, 0, 0);
