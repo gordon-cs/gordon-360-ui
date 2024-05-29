@@ -57,16 +57,9 @@ const UpdatePlannedGraduationYear = (props) => {
           />
         </FormControl>
         <p className={styles.note}>
-          NOTE: <br /> This does not replace the Application to
-          <br />
-          Graduate.
-          <br />
-          Please fill that out 8-12 months before
-          <br />
-          you plan to graduate. The application <br />
-          can be found in
-          <a href="https://my.gordon.edu"> my.gordon.edu</a>, in the
-          <br /> Academics tab, on the left.
+          NOTE: <br /> This does not replace the Application to Graduate, which must be filled out
+          8-12 months before you plan to graduate. The application can be found in{' '}
+          <a href="https://my.gordon.edu"> my.gordon.edu</a>, in the Academics tab, on the left.
         </p>
       </GordonDialogBox>
       <GordonSnackbar

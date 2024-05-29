@@ -657,8 +657,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           <li>
             <Typography>
               Setting your planned graduation date above does not replace the Application to
-              Graduate. Please fill out that application 8-12 months before you plan to graduate.
-              The application can be found in{' '}
+              Graduate, which must be filled out 8-12 months before you plan to graduate. The
+              application can be found in{' '}
               <a href="https://my.gordon.edu" className={`gc360_text_link ${styles.note_link}`}>
                 my.gordon.edu
               </a>
