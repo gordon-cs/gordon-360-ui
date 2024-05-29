@@ -326,7 +326,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const handleSwitchChange = () => {
     setSearchParams((sp) => ({
       ...sp,
-      initial_year: '1889',
+      initial_year: '1889', //gordon est
       final_year: String(currentYear),
       graduation_year: '',
     }));
@@ -532,20 +532,17 @@ const SearchFieldList = ({ onSearch }: Props) => {
                           updateValue={handleUpdate}
                           options={Array.from(
                             {
-                              length:
-                                Number(searchParams.final_year) > 0
-                                  ? Number(searchParams.final_year) - 1889 + 1
-                                  : currentYear - 1889 + 1,
+                              length: searchParams.final_year
+                                ? Number(searchParams.final_year) - 1889 + 1
+                                : currentYear - 1889 + 1,
                             },
                             (_, i) => ({
-                              value:
-                                Number(searchParams.final_year) > 0
-                                  ? (Number(searchParams.final_year) - i).toString()
-                                  : (currentYear - i).toString(),
-                              label:
-                                Number(searchParams.final_year) > 0
-                                  ? (Number(searchParams.final_year) - i).toString()
-                                  : (currentYear - i).toString(),
+                              value: searchParams.final_year
+                                ? (Number(searchParams.final_year) - i).toString()
+                                : (currentYear - i).toString(),
+                              label: searchParams.final_year
+                                ? (Number(searchParams.final_year) - i).toString()
+                                : (currentYear - i).toString(),
                             }),
                           ).reverse()}
                           Icon={FaCalendarTimes}
@@ -561,10 +558,9 @@ const SearchFieldList = ({ onSearch }: Props) => {
                           updateValue={handleUpdate}
                           options={Array.from(
                             {
-                              length:
-                                Number(searchParams.initial_year) > 0
-                                  ? currentYear - Number(searchParams.initial_year) + 1
-                                  : currentYear - 1889 + 1,
+                              length: searchParams.initial_year
+                                ? currentYear - Number(searchParams.initial_year) + 1
+                                : currentYear - 1889 + 1,
                             },
                             (_, i) => ({
                               value: (currentYear - i).toString(),
