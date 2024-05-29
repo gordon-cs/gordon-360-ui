@@ -5,12 +5,15 @@ import session from 'services/session';
 import styles from '../Doughnut.module.css';
 import { Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
 import { theme360 } from 'theme';
+import { format, parseISO } from 'date-fns';
 
 const DaysLeft = () => {
   const [daysRemaining, setDaysRemaining] = useState();
   const [daysFinished, setDaysFinished] = useState();
   const [currentSessionDescription, setCurrentSessionDescription] = useState();
   const [loading, setLoading] = useState(true);
+  const [first, setFirstDay] = useState('');
+  const [last, setLastDay] = useState('');
 
   useEffect(() => {
     const load = async () => {
@@ -19,12 +22,15 @@ const DaysLeft = () => {
         session.getDaysLeft(),
         session.getCurrent(),
       ]);
-
+      const first = format(parseISO(currentSession.SessionBeginDate), 'MM/dd/yyyy');
+      const last = format(parseISO(currentSession.SessionEndDate), 'MM/dd/yyyy');
       const currentSessionDescription = currentSession.SessionDescription.replace(
         /(Academic Year)|(Grad)/gm,
         '',
       );
 
+      setFirstDay(first);
+      setLastDay(last);
       setCurrentSessionDescription(currentSessionDescription);
       setDaysRemaining(daysRemaining);
       setDaysFinished(daysInSemester - daysRemaining || 0);
@@ -69,6 +75,9 @@ const DaysLeft = () => {
                 {daysFinished}
               </Typography>
               <Typography className={styles.label}>Days Finished</Typography>
+              <Typography variant="body2" className={styles.label2}>
+                Current Term: {first} - {last}
+              </Typography>
             </Grid>
           </Grid>
         )}

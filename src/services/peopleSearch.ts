@@ -112,7 +112,7 @@ const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
     building: searchFields.building,
     involvement: searchFields.involvement,
   })
-    .filter(([_key, value]) => Boolean(value))
+    .filter(([_key, value]) => value !== '')
     .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
     .join('&');
 
