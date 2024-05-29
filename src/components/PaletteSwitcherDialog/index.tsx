@@ -73,7 +73,6 @@ const PaletteSwitcherDialog = ({ dialogOpen, handleClose }: Props) => {
         {/* The line below could be useful in the future if more appearance settings are introduced*/}
         {/* <FormLabel id="palette-mode-group-label">Color Mode</FormLabel> */}
         <RadioGroup
-          row
           name="palette-mode-group"
           aria-labelledby="palette-mode-group-label"
           value={localScheme}
