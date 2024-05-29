@@ -3,7 +3,7 @@ import LinkIcon from '@mui/icons-material/InsertLink';
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
-import { ListItemIcon, ListItemText, ListSubheader, List, ListItem } from '@mui/material';
+import { ListItemIcon, ListItemText, ListSubheader, List, ListItem, Link } from '@mui/material';
 import CanvasIcon from '/src/components/QuickLinksDialog/images/Canvas.ico';
 import GordonIcon from '/src/components/QuickLinksDialog/images/favicon.ico';
 import GOIcon from '/src/components/QuickLinksDialog/images/GoGordonFavicon.ico';
@@ -11,7 +11,9 @@ import MyGordonIcon from '/src/components/QuickLinksDialog/images/MyGordonFavico
 import CriterionIcon from '/src/components/QuickLinksDialog/images/criterion.png';
 import HandshakeIcon from '/src/components/QuickLinksDialog/images/handshake.png';
 import FightingScotsIcon from '/src/components/QuickLinksDialog/images/fightingscots.svg';
-import { PropsWithChildren } from 'react';
+import styles from './Links.module.scss';
+
+const iconStyle = { width: '1.5rem' };
 
 const Links = () => (
   <Grid container>
@@ -23,35 +25,51 @@ const Links = () => (
             <List>
               <ListItem>
                 <ListItemIcon>
-                  <img src={GordonIcon} alt={'Gordon College'} />
+                  <img src={GordonIcon} alt={'Gordon College'} style={iconStyle} />
                 </ListItemIcon>
-                <a href="https://www.gordon.edu">
+                <Link
+                  href="https://www.gordon.edu"
+                  underline="hover"
+                  className={`gc360_text_link ${styles.dp_link}`}
+                >
                   <ListItemText primary="Gordon College"></ListItemText>
-                </a>
+                </Link>
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <img src={MyGordonIcon} alt={'My Gordon Logo'} />
+                  <img src={MyGordonIcon} alt={'My Gordon Logo'} style={iconStyle} />
                 </ListItemIcon>
-                <a href="https://my.gordon.edu">
+                <Link
+                  href="https://my.gordon.edu"
+                  underline="hover"
+                  className={`gc360_text_link ${styles.dp_link}`}
+                >
                   <ListItemText primary="My Gordon"></ListItemText>
-                </a>
+                </Link>
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <img src={GOIcon} alt={'Go Gordon Logo'} />
+                  <img src={GOIcon} alt={'Go Gordon Logo'} style={iconStyle} />
                 </ListItemIcon>
-                <a href="https://go.gordon.edu">
+                <Link
+                  href="https://go.gordon.edu"
+                  underline="hover"
+                  className={`gc360_text_link ${styles.dp_link}`}
+                >
                   <ListItemText primary="Go Gordon"></ListItemText>
-                </a>
+                </Link>
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <img src={CanvasIcon} alt={'Canvas Logo'} />
+                  <img src={CanvasIcon} alt={'Canvas Logo'} style={iconStyle} />
                 </ListItemIcon>
-                <a href="https://canvas.gordon.edu">
+                <Link
+                  href="https://canvas.gordon.edu"
+                  underline="hover"
+                  className={`gc360_text_link ${styles.dp_link}`}
+                >
                   <ListItemText primary="Canvas"></ListItemText>
-                </a>
+                </Link>
               </ListItem>
             </List>
           </Typography>
@@ -60,25 +78,45 @@ const Links = () => (
     </Grid>
     <Grid item xs={12} md={4} padding={1}>
       <Card>
-        <CardHeader title={`Employment`} className="gc360_header" />
+        <CardHeader title={`Services`} className="gc360_header" />
         <CardContent>
           <Typography>
             <List>
               <ListItem>
                 <ListItemIcon>
-                  <img src={CriterionIcon} alt={'Criterion Logo'} />
+                  <img src={CriterionIcon} alt={'Criterion Logo'} style={iconStyle} />
                 </ListItemIcon>
-                <a href="https://gordon.criterionhcm.com/">
+                <Link
+                  href="https://gordon.criterionhcm.com/"
+                  underline="hover"
+                  className={`gc360_text_link ${styles.dp_link}`}
+                >
                   <ListItemText primary="Criterion"></ListItemText>
-                </a>
+                </Link>
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <img src={HandshakeIcon} alt={'Handshake Logo'} />
+                  <LinkIcon style={iconStyle} />
                 </ListItemIcon>
-                <a href="https://gordon.joinhandshake.com/">
+                <Link
+                  href="https://25live.collegenet.com/pro/gordon"
+                  underline="hover"
+                  className={`gc360_text_link ${styles.dp_link}`}
+                >
+                  <ListItemText primary="25Live"></ListItemText>
+                </Link>
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <img src={HandshakeIcon} alt={'Handshake Logo'} style={iconStyle} />
+                </ListItemIcon>
+                <Link
+                  href="https://gordon.joinhandshake.com/"
+                  underline="hover"
+                  className={`gc360_text_link ${styles.dp_link}`}
+                >
                   <ListItemText primary="Handshake"></ListItemText>
-                </a>
+                </Link>
               </ListItem>
             </List>
           </Typography>
@@ -93,43 +131,63 @@ const Links = () => (
             <List>
               <ListItem>
                 <ListItemIcon>
-                  <img src={FightingScotsIcon} alt={'Fighting Scots Logo'} />
+                  <img src={FightingScotsIcon} alt={'Fighting Scots Logo'} style={iconStyle} />
                 </ListItemIcon>
-                <a href="https://athletics.gordon.edu/">
+                <Link
+                  href="https://athletics.gordon.edu/"
+                  underline="hover"
+                  className={`gc360_text_link ${styles.dp_link}`}
+                >
                   <ListItemText primary="Fighting Scots"></ListItemText>
-                </a>
+                </Link>
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <NotificationsNoneOutlinedIcon />
+                  <NotificationsNoneOutlinedIcon style={iconStyle} />
                 </ListItemIcon>
-                <a href="https://stories.gordon.edu/">
+                <Link
+                  href="https://stories.gordon.edu/"
+                  underline="hover"
+                  className={`gc360_text_link ${styles.dp_link}`}
+                >
                   <ListItemText primary="The Bell"></ListItemText>
-                </a>
+                </Link>
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <LinkIcon />
+                  <LinkIcon style={iconStyle} />
                 </ListItemIcon>
-                <a href="https://www.gordon.edu/titleix">
+                <Link
+                  href="https://www.gordon.edu/titleix"
+                  underline="hover"
+                  className={`gc360_text_link ${styles.dp_link}`}
+                >
                   <ListItemText primary="Sexual Discrimination and Harassment"></ListItemText>
-                </a>
+                </Link>
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <MapOutlinedIcon />
+                  <MapOutlinedIcon style={iconStyle} />
                 </ListItemIcon>
-                <a href="https://www.gordon.edu/map">
+                <Link
+                  href="https://www.gordon.edu/map"
+                  underline="hover"
+                  className={`gc360_text_link ${styles.dp_link}`}
+                >
                   <ListItemText primary="Gordon College Maps"></ListItemText>
-                </a>
+                </Link>
               </ListItem>
               <ListItem>
                 <ListItemIcon>
-                  <EmailOutlinedIcon />
+                  <EmailOutlinedIcon style={iconStyle} />
                 </ListItemIcon>
-                <a href="https://outlook.office.com/mail/">
+                <Link
+                  href="https://outlook.office.com/mail/"
+                  underline="hover"
+                  className={`gc360_text_link ${styles.dp_link}`}
+                >
                   <ListItemText primary="Gordon Email"></ListItemText>
-                </a>
+                </Link>
               </ListItem>
             </List>
           </Typography>
