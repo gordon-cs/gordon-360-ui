@@ -32,8 +32,7 @@ const About = () => {
                 <Typography variant="body1">
                   Gordon 360 was created by students in the 2016 Summer Practicum in Computer
                   Science. It started with two main goals: capture co-curricular involvements for an
-                  experience transcript, and make basic info like meal credits and chapel attendance
-                  easily available.
+                  experience transcript, and make basic info like meal credits easily available.
                 </Typography>
                 <br />
                 <Typography variant="body1">
@@ -48,9 +47,7 @@ const About = () => {
                     </li>
                     <li>Timesheets for student jobs on campus,</li>
                     <li>dark mode,</li>
-                    <li>
-                      (coming soon) RecIM to manage fun and competitive recreational activities,
-                    </li>
+                    <li>RecIM to manage fun and competitive recreational activities,</li>
                     <li>and more.</li>
                   </ul>
                   They also maintained the code, revising and sometimes rewriting it to use new
@@ -118,6 +115,7 @@ const About = () => {
             </Card>
           </CardContent>
         </Card>
+
         <Typography variant="subtitle1" className={styles.about_text}>
           Found a bug?
           <a href="mailto:cts@gordon.edu?Subject=Gordon 360 Bug">

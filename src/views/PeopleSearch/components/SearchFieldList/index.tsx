@@ -11,6 +11,7 @@ import {
   FormControlLabel,
   FormLabel,
   Grid,
+  TextField,
   Typography,
 } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
@@ -295,6 +296,8 @@ const SearchFieldList = ({ onSearch }: Props) => {
     } else if (event.target.name === 'includeAlumni' && !event.target.checked) {
       setSearchParams((sp) => ({
         ...sp,
+        initial_year: '',
+        final_year: '',
         graduation_year: '',
       }));
     }
@@ -323,8 +326,8 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const handleSwitchChange = () => {
     setSearchParams((sp) => ({
       ...sp,
-      initial_year: '',
-      final_year: '',
+      initial_year: '1889', //gordon est
+      final_year: String(currentYear),
       graduation_year: '',
     }));
     setSwitchYearRange((prev) => !prev);
@@ -521,21 +524,54 @@ const SearchFieldList = ({ onSearch }: Props) => {
                       select
                     />
                   ) : (
-                    <Grid item width={225}>
-                      <Slider
-                        getAriaLabel={() => 'graduationYearRange'}
-                        value={graduationYearRange}
-                        onChange={handleSliderChange}
-                        valueLabelDisplay="auto"
-                        getAriaValueText={toString}
-                        min={1889}
-                        max={currentYear}
-                        disabled={!searchParams.includeAlumni}
-                        color="secondary"
-                      />
-                      <Typography fontSize={15} align="center">
-                        {graduationYearRange[0]}-{graduationYearRange[1]}
-                      </Typography>
+                    <Grid item container spacing={1}>
+                      <Grid item xs={6} md={6.75}>
+                        <SearchField
+                          name="initial_year"
+                          value={searchParams.initial_year}
+                          updateValue={handleUpdate}
+                          options={Array.from(
+                            {
+                              length: searchParams.final_year
+                                ? Number(searchParams.final_year) - 1889 + 1
+                                : currentYear - 1889 + 1,
+                            },
+                            (_, i) => ({
+                              value: searchParams.final_year
+                                ? (Number(searchParams.final_year) - i).toString()
+                                : (currentYear - i).toString(),
+                              label: searchParams.final_year
+                                ? (Number(searchParams.final_year) - i).toString()
+                                : (currentYear - i).toString(),
+                            }),
+                          ).reverse()}
+                          Icon={FaCalendarTimes}
+                          disabled={!searchParams.includeAlumni}
+                          defaultDisabled
+                          select
+                        />
+                      </Grid>
+                      <Grid item xs={6} md={5.25}>
+                        <SearchField
+                          name="final_year"
+                          value={searchParams.final_year}
+                          updateValue={handleUpdate}
+                          options={Array.from(
+                            {
+                              length: searchParams.initial_year
+                                ? currentYear - Number(searchParams.initial_year) + 1
+                                : currentYear - 1889 + 1,
+                            },
+                            (_, i) => ({
+                              value: (currentYear - i).toString(),
+                              label: (currentYear - i).toString(),
+                            }),
+                          ).reverse()}
+                          disabled={!searchParams.includeAlumni}
+                          defaultDisabled
+                          select
+                        />
+                      </Grid>
                     </Grid>
                   )}
                   {(isAlumni || isFacStaff) && (
@@ -543,6 +579,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                       control={<Switch onChange={handleSwitchChange} color="secondary" />}
                       label={switchYearRange ? 'Search by Year Range' : 'Search by Graduation Year'}
                       labelPlacement="end"
+                      disabled={!searchParams.includeAlumni}
                     />
                   )}
                 </AdvancedOptionsColumn>
