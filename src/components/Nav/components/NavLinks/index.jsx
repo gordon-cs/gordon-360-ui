@@ -104,8 +104,8 @@ const GordonNavLinks = ({ onLinkClick }) => {
   const LinksButton = (
     <GordonNavButton
       onLinkClick={onLinkClick}
-      linkName={'Links'}
-      linkPath={'/links'}
+      linkName="Links"
+      linkPath="/links"
       LinkIcon={LinkIcon}
       divider={false}
     />
