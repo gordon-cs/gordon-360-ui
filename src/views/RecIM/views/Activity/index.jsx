@@ -116,12 +116,7 @@ const Activity = () => {
   useEffect(() => {
     if (activity) {
       if (user) {
-        let participating = false;
-        if (userTeams) {
-          userTeams.forEach((team) => {
-            if (team.Activity.ID === activity.ID) participating = true;
-          });
-        }
+        const participating = userTeams?.some((team) => team.Activity.ID === activity.ID);
         setCanCreateTeam((!participating && activity.RegistrationOpen) || user.IsAdmin);
       } else {
         // edgecase non-participant wants to create a team
