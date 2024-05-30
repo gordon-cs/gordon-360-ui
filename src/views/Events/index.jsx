@@ -147,8 +147,6 @@ const Events = () => {
     </div>
   );
 
-  const eventsNotLoading = {};
-
   if (width >= 920) {
     return (
       <Grid container justifyContent="center" spacing={6}>
