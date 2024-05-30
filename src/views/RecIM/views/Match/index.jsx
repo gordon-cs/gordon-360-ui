@@ -147,6 +147,17 @@ const Match = () => {
     }
   };
 
+  const getWinLoss = (teamID) => {
+    if (match) {
+      let record = match.Series.TeamStanding.find((ts) => ts.TeamID === teamID);
+      return {
+        WinCount: record?.WinCount ?? 0,
+        LossCount: record?.LossCount ?? 0,
+      };
+    }
+  };
+
+  console.log(match);
   if (loading && !profile) {
     return <GordonLoader />;
   } else if (!profile) {
