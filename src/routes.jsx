@@ -12,6 +12,7 @@ import Home from './views/Home';
 import IDUploader from './views/IDUploader';
 import InvolvementProfile from './views/InvolvementProfile';
 import InvolvementsAll from './views/InvolvementsAll';
+import Links from './views/Links';
 import MyProfile from './views/MyProfile';
 import News from './views/News';
 import Page404 from './views/Page404';
@@ -122,6 +123,11 @@ const routes = [
     name: 'News',
     path: '/news',
     element: <News />,
+  },
+  {
+    name: 'Links',
+    path: '/links',
+    element: <Links />,
   },
   {
     name: 'Rec-IM',

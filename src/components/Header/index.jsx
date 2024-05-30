@@ -5,6 +5,7 @@ import {
   Menu as MenuIcon,
   People as PeopleIcon,
   Work as WorkIcon,
+  Link as LinkIcon,
 } from '@mui/icons-material';
 import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Link } from '@mui/material';
 import RecIMIcon from '@mui/icons-material/SportsFootball';
@@ -34,7 +35,7 @@ const TabUrlPatterns = [
   /^\/involvements\/?$|^\/activity/,
   /^\/events\/?$/,
   /^\/people$|^\/myprofile|^\/profile/,
-  /^\/timesheets$/,
+  /^\/links$/,
   /^\/recim$/,
 ];
 
@@ -173,7 +174,13 @@ const GordonHeader = ({ onDrawerToggle }) => {
             to="/events"
           />
           {requiresAuthTab('People', <PeopleIcon />)}
-          {requiresAuthTab('Timesheets', <WorkIcon />)}
+          <Tab
+            className={styles.tab}
+            icon={<LinkIcon />}
+            label="Links"
+            component={ForwardNavLink}
+            to="/links"
+          />
           {requiresAuthTab('Rec-IM', <RecIMIcon />)}
         </Tabs>
         <div className={styles.side_container}>

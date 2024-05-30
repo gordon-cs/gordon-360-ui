@@ -15,6 +15,7 @@ interface CommonProps {
   updateValue: (event: ChangeEvent<HTMLInputElement>) => void;
   Icon?: IconType;
   disabled?: boolean;
+  defaultDisabled?: boolean;
   select?: boolean;
   options?: string[] | SelectOption[];
 }
@@ -56,6 +57,7 @@ const SearchField = ({
   updateValue,
   Icon,
   disabled = false,
+  defaultDisabled = false,
   select = false,
   options = undefined,
 }: SearchFieldProps) => {
@@ -81,7 +83,11 @@ const SearchField = ({
           select={select}
           disabled={disabled}
         >
-          {select && options && [defaultMenuItem, mapOptionsToMenuItems(options)]}
+          {select && options
+            ? defaultDisabled
+              ? [mapOptionsToMenuItems(options)]
+              : [defaultMenuItem, mapOptionsToMenuItems(options)]
+            : null}
         </TextField>
       </Grid>
     </Grid>

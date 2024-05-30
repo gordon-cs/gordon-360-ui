@@ -221,18 +221,6 @@ const postIDImage = (imageDataURI: string): Promise<void> =>
 const postImage = (imageDataURI: string): Promise<void> =>
   http.postImage('profiles/image', imageDataURI);
 
-// TODO: get chapel credits from useUser, making this obsolete.
-const getChapelCredits = async (): Promise<CLWCredits | null> => {
-  const profile = await getProfile();
-
-  return isStudent(profile)
-    ? {
-        current: profile.ChapelAttended || 0,
-        required: profile.ChapelRequired,
-      }
-    : null;
-};
-
 const getDiningInfo = (): Promise<DiningInfo | string> => http.get('dining');
 
 const getProfile = (username: string = ''): Promise<UnformattedProfileInfo> =>
@@ -366,7 +354,6 @@ const userService = {
   updateOfficeHours,
   setImagePrivacy,
   getMailStops,
-  getChapelCredits,
   getImage,
   getDiningInfo,
   getProfileInfo,
