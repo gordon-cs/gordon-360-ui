@@ -87,10 +87,12 @@ function formatCoursesFromDb(courses: DbCourse[]): CourseEvent[] {
   return courses.map((course) => {
     const sharedDetails = {
       name: course.CRS_TITLE.trim(),
-      title: course.CRS_CDE.trim(),
+      title: course.CRS_CDE.trim() + deviceFormat(),
       location: course.BLDG_CDE + ' ' + course.ROOM_CDE,
     };
-
+    function deviceFormat() {
+      return `${window.innerWidth >= 1514 ? ' | ' : ' '} ${course.BLDG_CDE}\u00A0${course.ROOM_CDE}`;
+    }
     if (course.ROOM_CDE === 'ASY') {
       return {
         ...sharedDetails,
