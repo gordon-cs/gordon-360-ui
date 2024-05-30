@@ -76,7 +76,7 @@ const Activity = () => {
   const [openAddSoloTeam, setOpenAddSoloTeam] = useState(false);
   const [user, setUser] = useState();
   const [userTeams, setUserTeams] = useState();
-  const [canCreateTeam, setCanCreateTeam] = useState(true);
+  const [canCreateTeam, setCanCreateTeam] = useState(false);
   const [openConfirmDelete, setOpenConfirmDelete] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminAnchorEl, setAdminAnchorEl] = useState();
@@ -114,12 +114,14 @@ const Activity = () => {
   // disable create team if participant already is participating in this activity,
   // unless they're an admin
   useEffect(() => {
-    if (activity && userTeams && user) {
-      let participating = false;
-      userTeams.forEach((team) => {
-        if (team.Activity.ID === activity.ID) participating = true;
-      });
-      setCanCreateTeam((!participating && activity.RegistrationOpen) || user.IsAdmin);
+    if (activity) {
+      if (user) {
+        const participating = userTeams?.some((team) => team.Activity.ID === activity.ID);
+        setCanCreateTeam((!participating && activity.RegistrationOpen) || user.IsAdmin);
+      } else {
+        // edgecase non-participant wants to create a team
+        setCanCreateTeam(activity.RegistrationOpen);
+      }
     }
   }, [activity, user, userTeams]);
 

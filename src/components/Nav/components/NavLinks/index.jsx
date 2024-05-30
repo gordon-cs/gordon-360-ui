@@ -2,13 +2,13 @@ import { useIsAuthenticated } from '@azure/msal-react';
 import EventIcon from '@mui/icons-material/Event';
 import HomeIcon from '@mui/icons-material/Home';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
+import LinkIcon from '@mui/icons-material/InsertLink';
 import PeopleIcon from '@mui/icons-material/People';
 import WorkIcon from '@mui/icons-material/Work';
 import { Divider, List } from '@mui/material';
 import RecIMIcon from '@mui/icons-material/SportsFootball';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonNavButton from 'components/NavButton';
-import GordonQuickLinksDialog from 'components/QuickLinksDialog';
 import PaletteSwitcherDialog from 'components/PaletteSwitcherDialog';
 import { useAuthGroups, useNetworkStatus } from 'hooks';
 import { useState } from 'react';
@@ -16,7 +16,6 @@ import { AuthGroup, signOut } from 'services/auth';
 import styles from './NavLinks.module.css';
 
 const GordonNavLinks = ({ onLinkClick }) => {
-  const [areLinksOpen, setAreLinksOpen] = useState(false);
   const [paletteOptionsOpen, setPaletteOptionsOpen] = useState(false);
   const [dialog, setDialog] = useState(null);
   const isOnline = useNetworkStatus();
@@ -100,6 +99,16 @@ const GordonNavLinks = ({ onLinkClick }) => {
     />
   );
 
+  const LinksButton = (
+    <GordonNavButton
+      onLinkClick={onLinkClick}
+      linkName="Links"
+      linkPath="/links"
+      LinkIcon={LinkIcon}
+      divider={false}
+    />
+  );
+
   const timesheetsButton = (
     <GordonNavButton
       unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
@@ -121,19 +130,6 @@ const GordonNavLinks = ({ onLinkClick }) => {
       linkPath={'/recim'}
       LinkIcon={RecIMIcon}
       divider={false}
-    />
-  );
-
-  const linksButton = (
-    <GordonNavButton
-      unavailable={isOnline ? null : 'offline'}
-      openUnavailableDialog={setDialog}
-      divider={false}
-      onLinkClick={() => {
-        onLinkClick();
-        setAreLinksOpen(true);
-      }}
-      linkName={'Links'}
     />
   );
 
@@ -200,14 +196,13 @@ const GordonNavLinks = ({ onLinkClick }) => {
         {involvementsButton}
         {eventsButton}
         {peopleButton}
-        {timesheetsButton}
+        {LinksButton}
         {recimButton}
       </List>
 
       <Divider />
 
       <List className={styles.gordon_nav_links_bottom}>
-        {linksButton}
         {helpButton}
         {aboutButton}
         {paletteOptionsButton}
@@ -216,11 +211,6 @@ const GordonNavLinks = ({ onLinkClick }) => {
         {signOutButton}
       </List>
 
-      <GordonQuickLinksDialog
-        handleLinkClickOpen={() => setAreLinksOpen(true)}
-        handleLinkClose={() => setAreLinksOpen(false)}
-        linkopen={areLinksOpen}
-      />
       <PaletteSwitcherDialog
         handleClose={() => setPaletteOptionsOpen(false)}
         dialogOpen={paletteOptionsOpen}

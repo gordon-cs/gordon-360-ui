@@ -32,7 +32,14 @@ const OfficeInfoList = ({
   }
 
   // Only display if there is some info to show
-  if (!myProf && !BuildingDescription && !OnCampusRoom && !OnCampusPhone && !office_hours && !Mail_Location) {
+  if (
+    !myProf &&
+    !BuildingDescription &&
+    !OnCampusRoom &&
+    !OnCampusPhone &&
+    !office_hours &&
+    !Mail_Location
+  ) {
     return null;
   }
 
@@ -77,7 +84,7 @@ const OfficeInfoList = ({
         <Grid container spacing={0} alignItems="center">
           <Grid item>
             {BuildingDescription || OnCampusRoom
-              ? (BuildingDescription, OnCampusRoom)
+              ? `${BuildingDescription}, ${OnCampusRoom}`
               : 'Add your office location here'}
           </Grid>
           <Grid item>

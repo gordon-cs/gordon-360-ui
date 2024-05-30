@@ -21,7 +21,7 @@ This guide walks you through the basics of developing the Gordon 360 frontend, a
 
 Here are the steps to setup the frontend for development:
 
-1. Clone this repository to the machine that you will develop on.  This can be done via HTTPS or SSH.  Summer Practicum developers typically use the SSH method; use these instructions to [create a SSH public-private keypair](https://git-scm.com/book/en/v2/Git-on-the-Server-Generating-Your-SSH-Public-Key) and [add the public key to your GitHub account](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/).  (For more info, check out https://help.github.com/articles/connecting-to-github-with-ssh/)
+1. Clone this repository to the machine that you will develop on. This can be done via HTTPS or SSH. Summer Practicum developers typically use the SSH method; use these instructions to [create a SSH public-private keypair](https://git-scm.com/book/en/v2/Git-on-the-Server-Generating-Your-SSH-Public-Key) and [add the public key to your GitHub account](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/). (For more info, check out https://help.github.com/articles/connecting-to-github-with-ssh/)
 
 1. Ensure that [NodeJS](https://nodejs.org/en/) is installed on that machine.
 
@@ -35,15 +35,15 @@ Here are the steps to setup the frontend for development:
 
    If it doesn't return a number, you will need to install NodeJS. There are two ways to do this:
 
-   1. Download and run the installer from [the NodeJS Website](https://nodejs.org/en/download/).  This requires admin (aka "root" or "sudoer") privileges, so if you are on a shared Linux workstation, use one of the options below.
+   1. Download and run the installer from [the NodeJS Website](https://nodejs.org/en/download/). This requires admin (aka "root" or "sudoer") privileges, so if you are on a shared Linux workstation, use one of the options below.
    1. Use a tool that manages Node installations, and use the "lts" version
       (which means "long term support"). Options include:
       - [Node Version Manager (NVM)](https://github.com/nvm-sh/nvm),
-        for Linux and MacOS.  After following the
+        for Linux and MacOS. After following the
         [installation instructions](https://github.com/nvm-sh/nvm#installing-and-updating),
         run these commands:
-         - `nvm install --lts`
-         - `nvm use --lts`
+        - `nvm install --lts`
+        - `nvm use --lts`
       - [NVM for Windows](https://github.com/coreybutler/nvm-windows#overview).
         (This is a completely separate project from the Linux/MacOS NVM.)
       - [Fast Node Manager](https://github.com/Schniz/fnm) for all 3 platforms.
@@ -76,11 +76,11 @@ After following [the instructions to start the backend](https://github.com/gordo
 
 1. Open `.env.development`. You will see three sets of environment variables, marked `@PROD`, `@TRAIN`, and `@LOCALHOST`.
 1. Ensure that the `@PROD` and `@TRAIN` variables are commented out, and that `@LOCALHOST` is not commented out.
-1. Set `VITE_APP_API_URL` equal to `http://localhost:NNNNN/`, where `NNNNN` is the port your backend is listening on (e.g. `51626`).
+1. Set `VITE_API_URL` equal to `http://localhost:NNNNN/`, where `NNNNN` is the port your backend is listening on (e.g. `51626`).
 
 You do **not** need to change `.env.production`.
 
-Make sure to stop and restart the project with ```npm run start``` any time you change the API URL.
+Make sure to stop and restart the project with `npm run start` any time you change the API URL.
 
 Sometimes, you would like to connect the frontend on your local computer to the backend on a remote server. For example, if you are running the backend on a CPS Server virtual machine but you want to run the frontend from your own machine. There are two ways to do this: via HTTP/s or via SSH
 
@@ -109,18 +109,19 @@ Sometimes, you would like to connect the frontend on your local computer to the 
 
 1. Your local machine must be configured as an SSH host.
 
-  - Windows [Instructions](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=gui).
+- Windows [Instructions](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_install_firstuse?tabs=gui).
 
-    - If you are on Windows 11+, you may need to update the firewall to allow inbound connections on a public network.
-      - Search for `Check Firewall Status` in the start menu
-      - Click `Turn Windows Defender Firewall on or off`
-      - Uncheck `Block all incoming connections, including...` under the `Public network settings` header
-      - Click Ok
-    - Also on Windows, if you are a local administrator, you will not be able to use SSH key authentication unless you add the public SSH key to `C:\Program Data\ssh\administrators_authorized_keys` rather than to `C:\Users\[your username]\.ssh\authorized_keys`. Create the file if it does not exist.
+  - If you are on Windows 11+, you may need to update the firewall to allow inbound connections on a public network.
+    - Search for `Check Firewall Status` in the start menu
+    - Click `Turn Windows Defender Firewall on or off`
+    - Uncheck `Block all incoming connections, including...` under the `Public network settings` header
+    - Click Ok
+  - Also on Windows, if you are a local administrator, you will not be able to use SSH key authentication unless you add the public SSH key to `C:\Program Data\ssh\administrators_authorized_keys` rather than to `C:\Users\[your username]\.ssh\authorized_keys`. Create the file if it does not exist.
 
-   - Ubuntu [Instructions](https://ubuntu.com/server/docs/service-openssh).  Red Hat and other Linux distributions should already have an SSH server installed.
+- Ubuntu [Instructions](https://ubuntu.com/server/docs/service-openssh). Red Hat and other Linux distributions should already have an SSH server installed.
 
-   - MacOS: The SSH server should already be installed but you may have to enable the SSH server in System Preferences. Follow [these instructions](https://support.apple.com/guide/mac-help/allow-a-remote-computer-to-access-your-mac-mchlp1066/mac) to do so.
+- MacOS: The SSH server should already be installed but you may have to enable the SSH server in System Preferences. Follow [these instructions](https://support.apple.com/guide/mac-help/allow-a-remote-computer-to-access-your-mac-mchlp1066/mac) to do so.
+
 
 2. Create the SSH tunnel
 
@@ -138,12 +139,12 @@ Sometimes, you would like to connect the frontend on your local computer to the 
 
    where:
 
-   - `API_VM_PORT_NUMBER` is the port that you selected for the API on the virtual machine, i.e., `http://localhost:[API_VM_PORT_NUMBER]`. *Please make sure to use the non-HTTPS version as HTTPS does not work over the SSH tunnel.*
+   - `API_VM_PORT_NUMBER` is the port that you selected for the API on the virtual machine, i.e., `http://localhost:[API_VM_PORT_NUMBER]`. _Please make sure to use the non-HTTPS version as HTTPS does not work over the SSH tunnel._
    - `API_PC_PORT_NUMBER` is the port on your local machine that you want forwarded to the API. Feel free to use the same port as above for this one.
    - `USERNAME` is your account on the local machine.
    - `IP or HOSTNAME` is the IP or HOSTNAME of your local machine that you found above.
 
-You are now able to point your local frontend to the remote backend by setting `VITE_APP_API_URL` to `http://localhost:[API_PC_PORT_NUMBER]` in the `.env.development` file.
+You are now able to point your local frontend to the remote backend by setting `VITE_API_URL` to `http://localhost:[API_PC_PORT_NUMBER]` in the `.env.development` file.
 
 # Code Style
 
