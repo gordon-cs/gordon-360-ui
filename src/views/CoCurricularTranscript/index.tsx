@@ -24,6 +24,8 @@ const CoCurricularTranscript = () => {
   const isAuthenticated = useIsAuthenticated();
   const { profile: userProfile, loading: loadingProfile } = useUser();
   const profile = isAuthenticated ? userProfile : exampleStudentProfile;
+  console.log('transcript');
+  console.log(transcriptItems);
 
   useEffect(() => {
     const loadTranscript = async () => {

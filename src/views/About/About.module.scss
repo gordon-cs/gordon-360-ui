@@ -27,7 +27,7 @@
   }
 
   &_header {
-    background-color: purple;
+    background-color: var(--mui-palette-primary-main);
     color: var(--mui-palette-primary-contrastText);
   }
 
@@ -37,10 +37,6 @@
     padding-bottom: 0.5rem;
   }
   &_text {
-    color: var(--mui-palette-neutral-contrastText);
-  }
-  &_test {
-    background-color: violet;
     color: var(--mui-palette-neutral-contrastText);
   }
 }
