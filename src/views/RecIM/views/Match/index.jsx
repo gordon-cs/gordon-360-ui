@@ -157,8 +157,6 @@ const Match = () => {
     }
     return;
   };
-
-  console.log(match);
   if (loading && !profile) {
     return <GordonLoader />;
   } else if (!profile) {
