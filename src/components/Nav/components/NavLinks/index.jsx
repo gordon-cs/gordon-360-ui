@@ -9,7 +9,6 @@ import { Divider, List } from '@mui/material';
 import RecIMIcon from '@mui/icons-material/SportsFootball';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonNavButton from 'components/NavButton';
-import GordonQuickLinksDialog from 'components/QuickLinksDialog';
 import PaletteSwitcherDialog from 'components/PaletteSwitcherDialog';
 import { useAuthGroups, useNetworkStatus } from 'hooks';
 import { useState } from 'react';
@@ -17,7 +16,6 @@ import { AuthGroup, signOut } from 'services/auth';
 import styles from './NavLinks.module.css';
 
 const GordonNavLinks = ({ onLinkClick }) => {
-  const [areLinksOpen, setAreLinksOpen] = useState(false);
   const [paletteOptionsOpen, setPaletteOptionsOpen] = useState(false);
   const [dialog, setDialog] = useState(null);
   const isOnline = useNetworkStatus();
@@ -104,8 +102,8 @@ const GordonNavLinks = ({ onLinkClick }) => {
   const LinksButton = (
     <GordonNavButton
       onLinkClick={onLinkClick}
-      linkName={'Links'}
-      linkPath={'/links'}
+      linkName="Links"
+      linkPath="/links"
       LinkIcon={LinkIcon}
       divider={false}
     />
@@ -134,19 +132,6 @@ const GordonNavLinks = ({ onLinkClick }) => {
       divider={false}
     />
   );
-
-  // const linksButton = (
-  //   <GordonNavButton
-  //     unavailable={isOnline ? null : 'offline'}
-  //     openUnavailableDialog={setDialog}
-  //     divider={false}
-  //     onLinkClick={() => {
-  //       onLinkClick();
-  //       setAreLinksOpen(true);
-  //     }}
-  //     linkName={'Links'}
-  //   />
-  // );
 
   const paletteOptionsButton = (
     <GordonNavButton
@@ -226,11 +211,6 @@ const GordonNavLinks = ({ onLinkClick }) => {
         {signOutButton}
       </List>
 
-      <GordonQuickLinksDialog
-        handleLinkClickOpen={() => setAreLinksOpen(true)}
-        handleLinkClose={() => setAreLinksOpen(false)}
-        linkopen={areLinksOpen}
-      />
       <PaletteSwitcherDialog
         handleClose={() => setPaletteOptionsOpen(false)}
         dialogOpen={paletteOptionsOpen}

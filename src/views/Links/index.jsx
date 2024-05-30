@@ -4,15 +4,15 @@ import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import { ListItemIcon, ListItemText, ListSubheader, List, ListItem, Link } from '@mui/material';
-import CanvasIcon from '/src/components/QuickLinksDialog/images/Canvas.ico';
-import GordonIcon from '/src/components/QuickLinksDialog/images/favicon.ico';
-import GOIcon from '/src/components/QuickLinksDialog/images/GoGordonFavicon.ico';
-import MyGordonIcon from '/src/components/QuickLinksDialog/images/MyGordonFavicon.ico';
-import CriterionIcon from '/src/components/QuickLinksDialog/images/criterion.png';
-import HandshakeIcon from '/src/components/QuickLinksDialog/images/handshake.png';
-import FightingScotsIcon from '/src/components/QuickLinksDialog/images/fightingscots.svg';
-import OutlookIcon from '/src/components/QuickLinksDialog/images/outlook-icon1.png';
-import SchedulerIcon from '/src/components/QuickLinksDialog/images/25-live-logo.jpg';
+import CanvasIcon from '/src/views/Links/images/Canvas.ico';
+import GordonIcon from '/src/views/Links/images/favicon.ico';
+import GOIcon from '/src/views/Links/images/GoGordonFavicon.ico';
+import MyGordonIcon from '/src/views/Links/images/MyGordonFavicon.ico';
+import CriterionIcon from '/src/views/Links/images/criterion.png';
+import HandshakeIcon from '/src/views/Links/images/handshake.png';
+import FightingScotsIcon from '/src/views/Links/images/fightingscots.svg';
+import OutlookIcon from '/src/views/Links/images/outlook-icon1.png';
+import SchedulerIcon from '/src/views/Links/images/25-live-logo.jpg';
 
 const iconStyle = { width: '1.5rem' };
 
