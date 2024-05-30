@@ -47,9 +47,7 @@ const About = () => {
                     </li>
                     <li>Timesheets for student jobs on campus,</li>
                     <li>dark mode,</li>
-                    <li>
-                      (coming soon) RecIM to manage fun and competitive recreational activities,
-                    </li>
+                    <li>RecIM to manage fun and competitive recreational activities,</li>
                     <li>and more.</li>
                   </ul>
                   They also maintained the code, revising and sometimes rewriting it to use new
