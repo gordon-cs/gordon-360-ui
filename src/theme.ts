@@ -278,7 +278,6 @@ export enum ColorSetting {
   System = 'system',
   Dark = 'dark',
   Light = 'light',
-  Custom = 'custom',
 }
 
 /**
@@ -287,5 +286,4 @@ export enum ColorSetting {
 export enum ColorMode {
   Dark = 'dark',
   Light = 'light',
-  Custom = 'custom',
 }
