@@ -32,8 +32,7 @@ const About = () => {
                 <Typography variant="body1">
                   Gordon 360 was created by students in the 2016 Summer Practicum in Computer
                   Science. It started with two main goals: capture co-curricular involvements for an
-                  experience transcript, and make basic info like meal credits and chapel attendance
-                  easily available.
+                  experience transcript, and make basic info like meal credits easily available.
                 </Typography>
                 <br />
                 <Typography variant="body1">
@@ -114,13 +113,6 @@ const About = () => {
                     </Fragment>
                   );
                 })}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className={styles.about_test} title="Tests"></CardHeader>
-              <CardContent>
-                <Typography variant="body1"></Typography>
               </CardContent>
             </Card>
           </CardContent>
