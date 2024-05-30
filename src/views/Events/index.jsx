@@ -16,6 +16,7 @@ import EventIcon from '@mui/icons-material/Event';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import Autocomplete from '@mui/material/Autocomplete';
 import EventList from 'components/EventList';
+import GordonError from 'components/Error';
 import GordonLoader from 'components/Loader';
 import { useWindowSize } from 'hooks';
 import { useEffect, useMemo, useState } from 'react';
@@ -32,6 +33,8 @@ const Events = () => {
   const [includePast, setIncludePast] = useState(false);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState([]);
+  const [noEventsLoaded, setNoEventsLoaded] = useState(false);
+  const [loadError, setLoadError] = useState([]);
   const [hasInitializedEvents, setHasInitializedEvents] = useState(false);
   const futureEvents = useMemo(() => gordonEvent.getFutureEvents(allEvents), [allEvents]);
   const [width] = useWindowSize();
@@ -48,6 +51,7 @@ const Events = () => {
       } else {
         allEvents = await gordonEvent.getAllGuestEvents();
       }
+
       setAllEvents(allEvents);
       setHasInitializedEvents(true);
 
@@ -73,7 +77,12 @@ const Events = () => {
       setLoading(false);
     };
 
-    loadEvents();
+    try {
+      loadEvents();
+    } catch (error) {
+      setNoEventsLoaded(true);
+      setLoadError(error);
+    }
   }, [isAuthenticated, location.search]);
 
   useEffect(() => {
@@ -122,7 +131,9 @@ const Events = () => {
 
   let content;
 
-  if (loading || !hasInitializedEvents) {
+  if (noEventsLoaded) {
+    content = <GordonError error={loadError} />;
+  } else if (!noEventsLoaded && (loading || !hasInitializedEvents)) {
     content = <GordonLoader />;
   } else {
     content = <EventList events={filteredEvents} loading={loading} />;
@@ -135,6 +146,8 @@ const Events = () => {
       Events
     </div>
   );
+
+  const eventsNotLoading = {};
 
   if (width >= 920) {
     return (
