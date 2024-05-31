@@ -110,6 +110,7 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
             <Card className={styles.result} elevation={0}>
               {avatar && (
                 <CardMedia
+                  loading="lazy"
                   src={avatar}
                   title={fullName}
                   component="img"
