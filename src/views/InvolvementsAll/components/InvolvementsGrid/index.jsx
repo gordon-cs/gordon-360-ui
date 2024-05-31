@@ -21,6 +21,7 @@ const InvolvementsGrid = ({ involvements, sessionCode, noInvolvementsText }) => 
                 }}
               >
                 <CardMedia
+                  loading="lazy"
                   component="img"
                   alt={activity.ActivityDescription}
                   src={activity.ActivityImagePath}

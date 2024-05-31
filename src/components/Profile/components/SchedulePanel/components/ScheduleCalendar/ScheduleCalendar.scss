@@ -72,7 +72,7 @@ button.rbc-input::-moz-focus-inner {
   background-color: var(--mui-palette-primary-main);
   color: var(--mui-palette-primary-contrastText);
   font-size: 90%;
-  width: 100%;
+  width: 60%;
   flex: 1 1 0;
   word-wrap: break-word;
   line-height: 1;
@@ -245,7 +245,7 @@ button.rbc-input::-moz-focus-inner {
 
 .rbc-timeslot-group {
   border-bottom: 1px solid var(--mui-palette-neutral-dark);
-  min-height: 40px;
+  min-height: 50px;
   display: flex;
   flex-flow: column nowrap;
 }

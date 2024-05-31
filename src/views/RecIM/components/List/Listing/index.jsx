@@ -455,6 +455,7 @@ const ParticipantListing = ({
       <>
         <ListItemAvatar>
           <Avatar
+            slotProps={{ img: { loading: 'lazy' } }}
             src={`data:image/jpg;base64,${avatar}`}
             className={minimal || isMobile ? styles.avatarSmall : styles.avatar}
             variant="rounded"
@@ -682,8 +683,8 @@ const MatchHistoryListing = ({ match, activityID }) => {
           ownScore > oppScore
             ? styles.matchHistoryListing_winner
             : ownScore < oppScore
-            ? styles.matchHistoryListing_loser
-            : styles.matchHistoryListing
+              ? styles.matchHistoryListing_loser
+              : styles.matchHistoryListing
         }
       >
         <Grid container alignItems="center">
@@ -697,6 +698,7 @@ const MatchHistoryListing = ({ match, activityID }) => {
           </Grid>
           <Grid item xs={2.8}>
             <img
+              loading="lazy"
               src={match.Opponent?.Logo ?? defaultLogo}
               alt="Team Icon"
               className={styles.teamHistoryLogo}

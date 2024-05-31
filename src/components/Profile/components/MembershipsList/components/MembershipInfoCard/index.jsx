@@ -136,6 +136,7 @@ const MembershipInfoCard = ({ myProf, membershipHistory, createSnackbar }) => {
         >
           <OnlineOnlyLink element={membershipHistory.Memberships[0]}>
             <img
+              loading="lazy"
               src={membershipHistory.ActivityImagePath}
               alt=""
               className={isOnline ? 'active' : ''}
