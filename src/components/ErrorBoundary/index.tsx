@@ -2,6 +2,10 @@ import GordonError from 'components/Error';
 import { Component } from 'react';
 import analytics from 'services/analytics';
 
+// const ErrorBoundary = () {
+
+// }
+
 export default class ErrorBoundary extends Component {
   constructor(props) {
     super(props);

@@ -5,7 +5,25 @@ import GordonLoader from 'components/Loader';
 
 const LOADER_SIZE = 20;
 
-const DynamicButton = ({ buttonText, className, color, disabled, startIcon, status, onClick }) => {
+type Props = {
+  buttonText: string;
+  className: string;
+  color: 'success' | 'error' | 'primary' | 'inherit' | 'secondary' | 'info' | 'warning' | undefined;
+  disabled: boolean;
+  startIcon: JSX.Element;
+  status: string;
+  onClick: (event: {}) => void;
+};
+
+const DynamicButton = ({
+  buttonText,
+  className,
+  color,
+  disabled,
+  startIcon,
+  status,
+  onClick,
+}: Props) => {
   let dynamicIcon = startIcon;
   if (startIcon) {
     if (status) {
