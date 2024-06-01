@@ -1,7 +1,7 @@
 /*
   Logic for saving and updating the site color scheme.
   Contains:
-  useWatchUsersColorScheme - method for setting up event listeners to detect changes to user color 
+  useWatchUsersColorScheme - method for setting up event listeners to detect changes to user color
   preferences
   PaletteSwitcherDialog - component with a dialog box to allow users to choose their color
   preferences in the site, and save their preference in localStorage
@@ -9,14 +9,7 @@
 
 import GordonDialogBox from 'components/GordonDialogBox';
 import React, { useEffect, useState } from 'react';
-import {
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  RadioGroup,
-  Radio,
-  Divider,
-} from '@mui/material';
+import { FormControl, FormControlLabel, RadioGroup, Radio, Divider } from '@mui/material';
 import { ColorMode, ColorSetting, STORAGE_COLOR_PREFERENCE_KEY } from 'theme';
 import { useColorScheme } from '@mui/material/styles';
 
@@ -46,7 +39,7 @@ const PaletteSwitcherDialog = ({ dialogOpen, handleClose }: Props) => {
   useEffect(() => {
     setMode(getModeFromSetting(localScheme));
     /* ensures the color scheme is correct when the component first mounts.
-    without this when the system setting was changed while the page was closed, the page would 
+    without this when the system setting was changed while the page was closed, the page would
     render still on the old scheme */
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setMode]);

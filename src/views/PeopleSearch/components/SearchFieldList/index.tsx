@@ -11,7 +11,6 @@ import {
   FormControlLabel,
   FormLabel,
   Grid,
-  TextField,
   Typography,
 } from '@mui/material';
 import { ExpandMore } from '@mui/icons-material';
@@ -48,7 +47,6 @@ import peopleSearchService, { Class, PeopleSearchQuery, SearchResult } from 'ser
 import { compareByProperty, searchParamSerializerFactory } from 'services/utils';
 import styles from './SearchFieldList.module.css';
 import SearchField, { SelectOption } from './components/SearchField';
-import Slider from '@mui/material/Slider';
 import Switch from '@mui/material/Switch';
 
 /**
@@ -147,8 +145,6 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const [buildings, setBuildings] = useState<string[]>([]);
   const [halls, setHalls] = useState<string[]>([]);
   const currentYear = new Date().getFullYear();
-  const [graduationYearRange, setGraduationYearRange] = useState<number[]>([1889, currentYear]);
-  // 1889 is the establish date of Gordon
   const [switchYearRange, setSwitchYearRange] = useState(true);
   const [involvements, setInvolvements] = useState<string[]>([]);
 
@@ -173,8 +169,10 @@ const SearchFieldList = ({ onSearch }: Props) => {
   /**
    * Whether the user can search for the current params.
    * This prevents a search with empty params, which freezes the client by trying to render thousands of results
+   * @param params the people search parameters
+   * @returns true if searching is allowed for the given params
    */
-  const canSearch = (params: PeopleSearchQuery) => {
+  const canSearch = useCallback((params: PeopleSearchQuery): boolean => {
     const { includeStudent, includeFacStaff, includeAlumni, ...criteria } = params;
 
     // Must search some cohort of people
@@ -184,7 +182,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
     const anySearchCriteria = Object.values(criteria).some((c) => containsLetterRegExp.test(c));
 
     return includesSomeone && anySearchCriteria;
-  };
+  }, []);
 
   const search = useCallback(
     async (params: PeopleSearchQuery) => {
@@ -202,7 +200,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
         setLoadingSearch(false);
       }
     },
-    [canSearch, searchParams, onSearch, navigate],
+    [canSearch, onSearch, navigate],
   );
 
   useEffect(() => {
@@ -231,6 +229,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
 
     loadPage();
   }, []);
+
   useEffect(() => {
     const readSearchParamsFromURL = () => {
       const newSearchParams = deserializeSearchParams(new URLSearchParams(window.location.search));
@@ -257,7 +256,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
     // Read search params from URL on 'popstate' (back/forward navigation) events
     window.addEventListener('popstate', readSearchParamsFromURL);
     return () => window.removeEventListener('popstate', readSearchParamsFromURL);
-  }, []);
+  }, [initialSearchParams, search]);
 
   const handleUpdate = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.name === 'graduation_year') {
@@ -307,20 +306,6 @@ const SearchFieldList = ({ onSearch }: Props) => {
     if (event.key === 'Enter') {
       search(searchParams);
     }
-  };
-
-  const handleSliderChange = (event: Event, newValue: number | number[]) => {
-    setGraduationYearRange(newValue as number[]);
-    let values = newValue.toString().split(',');
-    setSearchParams((sp) => ({
-      ...sp,
-      initial_year: values[0],
-      final_year: values[1],
-    }));
-    setSearchParams((sp) => ({
-      ...sp,
-      class_standing: '',
-    }));
   };
 
   const handleSwitchChange = () => {

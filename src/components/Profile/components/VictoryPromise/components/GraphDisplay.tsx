@@ -24,7 +24,7 @@ const GraphDisplay = ({ scores }: Props) => {
     const colorHex = (Colors[key].match(/#[A-Fa-f0-9]{6,8}/) || [''])[0];
     labels[index] = toTitleCase(key, '_');
     if (value > 0) {
-      colorHex == '' ? (colors[index] = '#000000') : (colors[index] = colorHex);
+      colorHex === '' ? (colors[index] = '#000000') : (colors[index] = colorHex);
       data[index] = value;
     } else {
       colors[index] = light_gray;

@@ -6,11 +6,6 @@ import { Participation } from './membership';
 import { Class } from './peopleSearch';
 import { Override } from './utils';
 
-type CLWCredits = {
-  current: number;
-  required: number;
-};
-
 enum OnOffCampusStatus {
   'Off Campus' = 'O',
   Away = 'A',

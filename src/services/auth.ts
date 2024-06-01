@@ -36,7 +36,6 @@ const acquireAccessToken = async () => {
 
 /**
  * Check if current session is authenticated
- *
  * @description This is a naive check. The session is considered authenticated if
  * @returns Whether session is authenticated or not
  */
@@ -48,7 +47,6 @@ const isAuthenticated = () => {
 
 /**
  * Sign a user out
- *
  * @description Removes all data from storage and cache
  */
 const signOut = async () => {

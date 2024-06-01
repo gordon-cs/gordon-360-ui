@@ -27,7 +27,6 @@ const terms = {
 /**
  * Convert a session code to a readable session
  * e.g. '202109' -> '2021fall'
- *
  * @param sessionCode the session code
  * @returns List of sessions
  */
@@ -50,7 +49,6 @@ const decodeSessionCode = (sessionCode: string): string => {
 /**
  * Convert a readable session code to a session code
  * e.g. '2021fall' -> '202109'
- *
  * @param readableSessionCode the readable session code
  * @returns List of sessions
  */

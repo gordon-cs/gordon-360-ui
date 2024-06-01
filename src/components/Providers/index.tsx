@@ -1,4 +1,4 @@
-import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
+import { StyledEngineProvider } from '@mui/material/styles';
 import UserContextProvider from 'contexts/UserContext';
 import 'app.global.css';
 import NetworkContextProvider from 'contexts/NetworkContext';

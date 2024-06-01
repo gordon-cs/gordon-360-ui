@@ -110,7 +110,6 @@ const getFilteredEvents = (events: Event[], filters: string[], search: string): 
  * Make a closure over a search string.
  *
  * The returned closure determines whether a given `event` matches the`search` string
- *
  * @param search The string to search for
  * @returns A function that matches a given event against `search`
  */
@@ -130,7 +129,6 @@ const makeMatchesSearch = (search: string) => {
  * Make a closure over a list of filters.
  *
  * The returned closure determines whether a given `event` matches any filter in `filters`
- *
  * @param filters The list of filters to match an event against
  * @returns A function that matches a given event against `filters`
  */

@@ -1,7 +1,7 @@
 import { Card, CardActionArea, CardContent, CardMedia, Divider, Typography } from '@mui/material';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import { ReactNode, useCallback, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import VisibilitySensor from 'react-visibility-sensor';
 import { Class, SearchResult } from 'services/peopleSearch';
 import { useWindowSize } from 'hooks';
@@ -40,7 +40,6 @@ const PeopleSearchResult = ({ person, lazyLoadAvatar }: Props) => {
   );
   const [hasBeenRun, setHasBeenRun] = useState(false);
   const [width] = useWindowSize();
-  const navigate = useNavigate();
   const isMobileView = width < breakpointWidth;
 
   const loadAvatar = useCallback(async () => {
