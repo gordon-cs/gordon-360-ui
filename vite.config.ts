@@ -1,6 +1,7 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig, loadEnv, splitVendorChunkPlugin } from 'vite';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
+import eslint from 'vite-plugin-eslint';
 
 // https://vitejs.dev/config/
 const config = ({ mode }) => {
@@ -10,7 +11,7 @@ const config = ({ mode }) => {
     build: {
       target: 'es2022',
     },
-    plugins: [react(), viteTsconfigPaths(), splitVendorChunkPlugin()],
+    plugins: [eslint(), react(), viteTsconfigPaths(), splitVendorChunkPlugin()],
     server: {
       port: parseInt(process.env.VITE_PORT ?? '5173'),
       host: process.env.VITE_HOST ?? 'localhost',
