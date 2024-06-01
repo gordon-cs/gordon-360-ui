@@ -38,7 +38,7 @@
     "react-router-dom": "^6.22.1",
     "react-to-print": "^2.15.1",
     "react-visibility-sensor": "^5.1.1",
-    "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.3/xlsx-0.19.3.tgz"
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.2/xlsx-0.20.2.tgz"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.202",
