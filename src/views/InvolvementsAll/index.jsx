@@ -2,6 +2,7 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Divider,
   FormControl,
   Grid,
   InputLabel,
@@ -12,13 +13,12 @@ import {
 import GordonLoader from 'components/Loader';
 import { useNetworkStatus, useUser } from 'hooks';
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import involvementService from 'services/activity';
 import membershipService, { NonGuestParticipations } from 'services/membership';
 import sessionService from 'services/session';
 import InvolvementsGrid from './components/InvolvementsGrid';
 import Requests from './components/Requests';
-import styles from './Involvements.module.css';
 
 const InvolvementsAll = () => {
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
@@ -33,51 +33,47 @@ const InvolvementsAll = () => {
   const [types, setTypes] = useState([]);
   const { profile, loading: loadingProfile } = useUser();
   const isOnline = useNetworkStatus();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const sessionFromURL = new URLSearchParams(location.search).get('session');
+  useEffect(() => {
+    sessionService.getAll().then(setSessions);
+  }, []);
 
   useEffect(() => {
     const loadPage = async () => {
-      setSessions(await sessionService.getAll());
-
+      const sessionFromURL = searchParams.get('session');
       if (sessionFromURL) {
-        setSelectedSession(sessionService.encodeSessionCode(sessionFromURL));
+        setSelectedSession(sessionFromURL);
       } else {
         const { SessionCode: currentSessionCode } = await sessionService.getCurrent();
         setCurrentAcademicSession(currentSessionCode);
 
-        const [involvements, sessions] = await Promise.all([
-          involvementService.getAll(currentSessionCode),
-          sessionService.getAll(),
-        ]);
-
-        if (involvements.length === 0) {
-          let IndexOfCurrentSession = sessions.findIndex(
+        const involvements = await involvementService.getAll(currentSessionCode);
+        if (involvements.length > 0) {
+          setSelectedSession(currentSessionCode);
+        } else if (sessions) {
+          let indexOfCurrentSession = sessions.findIndex(
             (session) => session.SessionCode === currentSessionCode,
           );
 
-          for (let k = IndexOfCurrentSession + 1; k < sessions.length; k++) {
-            const newInvolvements = await involvementService.getAll(sessions[k].SessionCode);
+          for (const session of sessions.slice(indexOfCurrentSession)) {
+            const newInvolvements = await involvementService.getAll(session.SessionCode);
             if (newInvolvements.length !== 0) {
-              setSelectedSession(sessions[k].SessionCode);
-
+              setSelectedSession(session.SessionCode);
               break;
             }
           }
-        } else {
-          setSelectedSession(currentSessionCode);
         }
       }
     };
     loadPage();
-  }, [sessionFromURL]);
+  }, [searchParams, sessions]);
 
   const handleSelectSession = async (value) => {
     setSelectedSession(value);
-    value = sessionService.decodeSessionCode(value);
-    navigate(`?session=${value}`);
+    setSearchParams((urlSearchParams) => urlSearchParams.set('session', value), {
+      replace: searchParams.get('session'),
+    });
   };
 
   useEffect(() => {
@@ -106,7 +102,6 @@ const InvolvementsAll = () => {
     setInvolvements(involvementService.filter(allInvolvements, type, search));
   }, [allInvolvements, type, search]);
 
-  let myInvolvementsHeadingText;
   let myInvolvementsNoneText;
   let involvementSessionText =
     sessions.find((s) => s.SessionCode === selectedSession)?.SessionDescription ?? '';
@@ -117,57 +112,24 @@ const InvolvementsAll = () => {
     );
   }
   if (selectedSession === currentAcademicSession && selectedSession !== '') {
-    myInvolvementsHeadingText = 'Current';
     myInvolvementsNoneText =
       "It looks like you're not currently a member of any involvements. Get connected below!";
   } else {
-    myInvolvementsHeadingText = involvementSessionText;
     myInvolvementsNoneText = 'No personal involvements found for this term';
   }
 
-  const searchPageTitle = (
-    <div align="left">
-      Search
-      <b className={styles.involvements_gordon_text}> Gordon </b>
-      Involvements
-    </div>
-  );
-
   return (
     <Grid container justifyContent="center" spacing={4}>
-      {loadingProfile ? (
-        <GordonLoader />
-      ) : (
-        profile && (
-          <Grid item xs={12} lg={8}>
-            <Card>
-              <CardHeader
-                title={`My ${myInvolvementsHeadingText} Involvements`}
-                className="gc360_header"
-              />
-              <CardContent>
-                {loading ? (
-                  <GordonLoader />
-                ) : (
-                  <InvolvementsGrid
-                    involvements={myInvolvements}
-                    sessionCode={selectedSession}
-                    noInvolvementsText={myInvolvementsNoneText}
-                  />
-                )}
-              </CardContent>
-            </Card>
-          </Grid>
-        )
-      )}
       {!isOnline ? null : loadingProfile ? (
         <GordonLoader />
       ) : (
         profile && <Requests profile={profile} session={selectedSession} />
       )}
+
+      {/* All Involvements (public) */}
       <Grid item xs={12} lg={8}>
         <Card>
-          <CardHeader title={searchPageTitle} className="gc360_header" />
+          <CardHeader title={`${involvementSessionText} Involvements`} className="gc360_header" />
           <CardContent>
             <Grid container spacing={2}>
               <Grid item xs={12} lg={6}>
@@ -222,23 +184,35 @@ const InvolvementsAll = () => {
                 </FormControl>
               </Grid>
             </Grid>
-          </CardContent>
-        </Card>
-      </Grid>
-
-      {/* All Involvements (public) */}
-      <Grid item xs={12} lg={8}>
-        <Card>
-          <CardHeader title={`${involvementSessionText} Involvements`} className="gc360_header" />
-          <CardContent>
+            <br />
             {loading ? (
               <GordonLoader />
             ) : (
-              <InvolvementsGrid
-                involvements={involvements}
-                sessionCode={selectedSession}
-                noInvolvementsText="There aren't any involvements for the selected session and type"
-              />
+              <>
+                {myInvolvements && (
+                  <>
+                    <InvolvementsGrid
+                      involvements={myInvolvements}
+                      sessionCode={selectedSession}
+                      noInvolvementsText={myInvolvementsNoneText}
+                    />
+                    <br />
+                    <Divider />
+                    <br />
+                  </>
+                )}
+                <InvolvementsGrid
+                  involvements={
+                    myInvolvements.length > 0
+                      ? involvements.filter(
+                          (i) => !myInvolvements.some((m) => m.ActivityCode === i.ActivityCode),
+                        )
+                      : involvements
+                  }
+                  sessionCode={selectedSession}
+                  noInvolvementsText="There aren't any involvements for the selected session and type"
+                />
+              </>
             )}
           </CardContent>
         </Card>
