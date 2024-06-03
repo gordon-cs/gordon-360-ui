@@ -5,7 +5,19 @@ import 'add-to-calendar-button';
 import { format } from 'date-fns';
 import { STORAGE_COLOR_PREFERENCE_KEY } from 'theme';
 
-const EventItem = ({ event }) => {
+type Event = {
+  event: {
+    title: string;
+    Description: string;
+    location: string;
+    date: JSX.Element | string;
+    StartDate: Date | string;
+    EndDate: Date | string;
+    timeRange: string;
+  };
+};
+
+const EventItem = ({ event }: Event) => {
   const [expanded, setExpanded] = useState(false);
 
   return (
