@@ -37,7 +37,7 @@ const EventItem = ({ event }) => {
       <Grid item xs={12} sm={4}>
         <Typography className={styles.event_column}>{event.location}</Typography>
       </Grid>
-      <Collapse in={expanded} timeout="auto" unmountOnExit tabIndex={0}>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography type="caption" className={styles.descriptionText} tabIndex={0}>
             {event.Description || 'No description available'}
