@@ -15,6 +15,7 @@ const EventItem = ({ event }) => {
       direction="row"
       onClick={() => setExpanded((e) => !e)}
       className={styles.event_item}
+      tabIndex={0}
     >
       <Grid item xs={12} sm={4}>
         <Typography variant="h6" className={styles.event_column}>
@@ -38,7 +39,7 @@ const EventItem = ({ event }) => {
       </Grid>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography type="caption" className={styles.descriptionText}>
+          <Typography type="caption" className={styles.descriptionText} tabIndex={0}>
             {event.Description || 'No description available'}
           </Typography>
           {event.StartDate !== '' && event.EndDate !== '' && (
