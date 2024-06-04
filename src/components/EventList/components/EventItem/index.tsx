@@ -1,4 +1,4 @@
-import { CardContent, Collapse, Grid, Typography } from '@mui/material';
+import { Button, CardContent, Collapse, Grid, Typography } from '@mui/material';
 import { useState } from 'react';
 import styles from './EventItem.module.css';
 import 'add-to-calendar-button';
@@ -15,6 +15,20 @@ export interface GordonEvent {
   timeRange?: string;
   Event_ID?: string;
 }
+
+const checkLightMode = (mode: string | null) => {
+  if (mode === 'system') {
+    return 'system';
+  } else if (mode === 'dark') {
+    return 'dark';
+  } else if (mode === 'light') {
+    return 'light';
+  } else if (mode === 'bodyScheme') {
+    return 'bodyScheme';
+  } else {
+    return 'system';
+  }
+};
 
 const EventItem = (event: GordonEvent) => {
   const [expanded, setExpanded] = useState(false);
@@ -53,22 +67,25 @@ const EventItem = (event: GordonEvent) => {
             {event.Description || 'No description available'}
           </Typography>
           {event.StartDate !== '' && event.EndDate !== '' && (
-            <add-to-calendar-button
-              name={event.title}
-              options="'Google','Microsoft365|Gordon Outlook','Apple','Outlook.com|Outlook','MicrosoftTeams'"
-              location={event.location}
-              startDate={format(new Date(event.StartDate), 'yyyy-MM-dd')}
-              endDate={format(new Date(event.EndDate), 'yyyy-MM-dd')}
-              startTime={format(new Date(event.StartDate), 'HH:mm')}
-              endTime={format(new Date(event.EndDate), 'HH:mm')}
-              //default timeZone setting is "currentBrowser", and saved setting "America/New_York" if needed in case
-              timeZone="currentBrowser"
-              label="Add to Calendar"
-              description={event.Description}
-              onClick={() => setExpanded((e) => !e)}
-              lightMode={localStorage.getItem(STORAGE_COLOR_PREFERENCE_KEY) ?? 'system'}
-              //Get user theme mode preference
-            ></add-to-calendar-button>
+            <Button onClick={() => setExpanded((e) => !e)}>
+              <add-to-calendar-button
+                name={event.title}
+                options="'Google','Microsoft365|Gordon Outlook','Apple','Outlook.com|Outlook','MicrosoftTeams'"
+                location={event.location}
+                startDate={format(new Date(event.StartDate), 'yyyy-MM-dd')}
+                endDate={format(new Date(event.EndDate), 'yyyy-MM-dd')}
+                startTime={format(new Date(event.StartDate), 'HH:mm')}
+                endTime={format(new Date(event.EndDate), 'HH:mm')}
+                //default timeZone setting is "currentBrowser", and saved setting "America/New_York" if needed in case
+                timeZone="currentBrowser"
+                label="Add to Calendar"
+                description={event.Description}
+                lightMode={
+                  checkLightMode(localStorage.getItem(STORAGE_COLOR_PREFERENCE_KEY)) ?? 'system'
+                }
+                //Get user theme mode preference
+              ></add-to-calendar-button>
+            </Button>
           )}
         </CardContent>
       </Collapse>
