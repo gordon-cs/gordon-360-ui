@@ -18,7 +18,7 @@ interface CommonProps {
   defaultDisabled?: boolean;
   select?: boolean;
   options?: string[] | SelectOption[];
-  defaultLabel: string;
+  defaultLabel?: string;
 }
 
 interface SelectProps extends CommonProps {
