@@ -35,6 +35,7 @@ import {
   getParticipantTeams,
   getParticipantMatches,
 } from 'services/recim/participant';
+import { MatchList } from './../../components/List';
 import { getTeamInvites } from 'services/recim/team';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import WaiverForm from 'views/RecIM/components/Forms/WaiverForm';
@@ -270,6 +271,22 @@ const Home = () => {
     </Card>
   );
 
+  let myMatches = (
+    <Card>
+      <Accordion>
+        <AccordionSummary
+          className={`${styles.cardHeader} ${styles.center}`}
+          expandIcon={<ExpandMoreIcon className={styles.expandMoreIcon} />}
+        >
+          <Typography>My Matches</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <MatchList matches={participantMatches} />
+        </AccordionDetails>
+      </Accordion>
+    </Card>
+  );
+
   let myTeams = (
     <CardContent>
       {participantTeams.length > 0 ? (
@@ -372,7 +389,10 @@ const Home = () => {
         <>
           {headerAlert}
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid item xs={12} md={6.5}>
+              {myMatches}
+            </Grid>
+            <Grid item xs={12} md={5.5}>
               {affiliationsCard}
             </Grid>
             <Grid item xs={12} md={6.5}>
