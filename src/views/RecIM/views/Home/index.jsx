@@ -33,7 +33,9 @@ import {
   editParticipantAllowEmails,
   getParticipantByUsername,
   getParticipantTeams,
+  getParticipantMatches,
 } from 'services/recim/participant';
+import { MatchList } from './../../components/List';
 import { getTeamInvites } from 'services/recim/team';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
 import WaiverForm from 'views/RecIM/components/Forms/WaiverForm';
@@ -58,6 +60,7 @@ const Home = () => {
   const [registrableActivities, setRegistrableActivities] = useState([]);
   const [completedActivities, setCompletedActivities] = useState([]);
   const [participantTeams, setParticipantTeams] = useState([]);
+  const [participantMatches, setParticipantMatches] = useState([]);
   const [invites, setInvites] = useState([]);
   const [homeMenuAnchorEl, setHomeMenuAnchorEl] = useState();
   const openHomeSettings = Boolean(homeMenuAnchorEl);
@@ -95,6 +98,7 @@ const Home = () => {
       setLoading(true);
       setInvites(await getTeamInvites());
       setParticipantTeams(await getParticipantTeams(participant.Username));
+      setParticipantMatches(await getParticipantMatches(participant.Username));
       setAllowEmails(participant.AllowEmails);
       setLoading(false);
     };
@@ -265,6 +269,22 @@ const Home = () => {
     </Card>
   );
 
+  let myMatches = (
+    <Card>
+      <Accordion>
+        <AccordionSummary
+          className={`${styles.cardHeader} ${styles.center}`}
+          expandIcon={<ExpandMoreIcon className={styles.expandMoreIcon} />}
+        >
+          <Typography>My Matches</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <MatchList matches={participantMatches} />
+        </AccordionDetails>
+      </Accordion>
+    </Card>
+  );
+
   let myTeams = (
     <CardContent>
       {participantTeams.length > 0 ? (
@@ -367,14 +387,21 @@ const Home = () => {
         <>
           {headerAlert}
           <Grid container spacing={2}>
-            <Grid item xs={12}>
+            <Grid item xs={12} md={12}></Grid>
+            {/* Temporarily Removing hall rankings while they are broken */}
+            {/* <Grid item xs={12} md={12}>
               {affiliationsCard}
-            </Grid>
+            </Grid> */}
             <Grid item xs={12} md={6.5}>
               {activitiesCard}
             </Grid>
-            <Grid item xs={12} md={5.5}>
-              {myTeamsCard}
+            <Grid item container spacing={2} xs={12} md={5.5}>
+              <Grid item xs={12}>
+                {myMatches}
+              </Grid>
+              <Grid item xs={12}>
+                {myTeamsCard}
+              </Grid>
             </Grid>
             <ActivityForm
               onClose={() => {

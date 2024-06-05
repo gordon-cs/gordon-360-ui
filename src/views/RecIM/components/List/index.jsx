@@ -301,7 +301,11 @@ const MatchList = ({ matches = [], activityID }) => {
           <TabPanel value={selectedDay} index={index}>
             <List dense>
               {day.Matches.map((match) => (
-                <MatchListing key={match?.ID} match={match} activityID={activityID} />
+                <MatchListing
+                  key={match?.ID}
+                  match={match}
+                  activityID={activityID ?? match.Activity.ID}
+                />
               ))}
             </List>
           </TabPanel>
@@ -313,7 +317,7 @@ const MatchList = ({ matches = [], activityID }) => {
   return organizedMatches.length === 1 ? (
     <List dense>
       {organizedMatches[0].Matches.map((match) => (
-        <MatchListing key={match?.ID} match={match} activityID={activityID} />
+        <MatchListing key={match?.ID} match={match} activityID={activityID ?? match.Activity.ID} />
       ))}
     </List>
   ) : (

@@ -18,6 +18,7 @@ interface CommonProps {
   defaultDisabled?: boolean;
   select?: boolean;
   options?: string[] | SelectOption[];
+  defaultLabel?: string;
 }
 
 interface SelectProps extends CommonProps {
@@ -32,9 +33,9 @@ interface TextProps extends CommonProps {
 
 type SearchFieldProps = SelectProps | TextProps;
 
-const defaultMenuItem = (
+const defaultMenuItem = (defaultValue: string) => (
   <MenuItem value="" key="default">
-    <em>All</em>
+    <em>{defaultValue}</em>
   </MenuItem>
 );
 
@@ -60,6 +61,7 @@ const SearchField = ({
   defaultDisabled = false,
   select = false,
   options = undefined,
+  defaultLabel = 'All',
 }: SearchFieldProps) => {
   const isLargeScreen = useMediaQuery('(min-width: 600px)');
 
@@ -86,7 +88,7 @@ const SearchField = ({
           {select && options
             ? defaultDisabled
               ? [mapOptionsToMenuItems(options)]
-              : [defaultMenuItem, mapOptionsToMenuItems(options)]
+              : [defaultMenuItem(defaultLabel), mapOptionsToMenuItems(options)]
             : null}
         </TextField>
       </Grid>
