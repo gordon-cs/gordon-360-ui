@@ -46,7 +46,7 @@ const UpdatePlannedGraduationYear = (props) => {
           <SearchField
             name="Planned Graduation Year"
             value={plannedGraduationYear}
-            allIndicator={false}
+            defaultLabel="None"
             updateValue={(event) => setPlannedGraduationYear(event.target.value)}
             options={Array.from({ length: 6 }, (_, i) => ({
               value: (currentYear + i).toString(),
