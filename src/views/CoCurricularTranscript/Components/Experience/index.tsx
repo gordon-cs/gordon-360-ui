@@ -8,9 +8,7 @@ type Props = {
 
 const Experience = ({ Experience }: Props) => (
   <div className={styles.experience_transcript_activities}>
-    <div className={styles.organization_role}>
-      {Experience.Job_Department_Name}, {Experience.Job_Title}
-    </div>
+    <div className={styles.organization_role}>{newJobTitle(Experience)}</div>
     <div className={styles.date}> {formatDuration(Experience)} </div>
   </div>
 );
@@ -32,6 +30,21 @@ const formatDuration = ({ Job_Start_Date, Job_End_Date }: StudentEmployment) => 
     return `${format(startDate, 'MMM')} - ${format(endDate, 'MMM yyyy')}`;
   } else {
     return `${format(startDate, 'MMM yyyy')} - ${format(endDate, 'MMM yyyy')}`;
+  }
+};
+
+let prev_job_title = '';
+
+const newJobTitle = ({ Job_Department_Name, Job_Title }: StudentEmployment) => {
+  if (Job_Title != prev_job_title) {
+    prev_job_title = Job_Title;
+    if (Job_Department_Name == Job_Title.split(':')[0]) {
+      return Job_Title;
+    } else {
+      return Job_Department_Name + ', ' + Job_Title;
+    }
+  } else {
+    return '';
   }
 };
 
