@@ -16,6 +16,7 @@ const EventItem = ({ event }) => {
       onClick={() => setExpanded((e) => !e)}
       className={styles.event_item}
       tabIndex={0}
+      onKeyDown={(e) => (e.key === 'Enter' ? setExpanded((e) => !e) : {})}
     >
       <Grid item xs={12} sm={4}>
         <Typography variant="h6" className={styles.event_column}>
