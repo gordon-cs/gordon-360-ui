@@ -80,15 +80,15 @@ const performSearch = debounce(
 
 type Props =
   | {
-      disableLink: true;
-      customPlaceholderText: string;
-      onSearchSubmit: (person: SearchResult) => void;
+      disableLink?: true;
+      customPlaceholderText?: string;
+      onSearchSubmit?: (person: SearchResult) => void;
       searchFunction?: SearchFunction;
     }
   | {
-      disableLink: false;
-      customPlaceholderText: undefined;
-      onSearchSubmit: undefined;
+      disableLink?: false;
+      customPlaceholderText?: undefined;
+      onSearchSubmit?: undefined;
       searchFunction?: SearchFunction;
     };
 

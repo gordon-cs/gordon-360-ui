@@ -14,13 +14,24 @@ import { NavLink } from 'react-router-dom';
  * @param {JSX.Element} props.LinkIcon An optional icon to include in the link
  * @returns {JSX.ELement} A NavButton with the specified content and behavior
  */
+
+interface GordonNavButton {
+  unavailable?: string | null;
+  onLinkClick?: () => void;
+  openUnavailableDialog?: () => void;
+  divider?: boolean;
+  linkName?: string;
+  linkPath?: string;
+  LinkIcon?: JSX.Element | null;
+}
+
 const GordonNavButton = ({
   unavailable = null,
   onLinkClick = () => {},
   openUnavailableDialog = () => {},
   divider = true,
-  linkName,
-  linkPath = null,
+  linkName = '',
+  linkPath = '',
   LinkIcon = null,
 }) => {
   const link =

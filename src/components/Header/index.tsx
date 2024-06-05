@@ -12,7 +12,13 @@ import RecIMIcon from '@mui/icons-material/SportsFootball';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { useNetworkStatus } from 'hooks';
 import { forwardRef, useEffect, useState } from 'react';
-import { useNavigate, NavLink, useLocation } from 'react-router-dom';
+import {
+  useNavigate,
+  NavLink,
+  useLocation,
+  Link as RouterLink,
+  LinkProps as RouterLinkProps,
+} from 'react-router-dom';
 import { authenticate } from 'services/auth';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
 import GordonQuickSearch from './components/QuickSearch';
@@ -27,7 +33,10 @@ const headerLogo64dpi = 'images/gc_' + angleMode + '_yellow_logo_64.png';
 const headerLogo56dpi = 'images/gc_' + angleMode + '_yellow_logo_56.png';
 const headerLogo56dpiNoText = 'images/gc_' + angleMode + '_yellow_logo_56_vert.png';
 
-const ForwardNavLink = forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
+//const ForwardNavLink = forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
+const ForwardNavLink = forwardRef<any, Omit<RouterLinkProps, string>>((props, ref) => (
+  <NavLink ref={ref} to="/" {...props} role={undefined} />
+));
 
 // Tab url regular expressions must be listed in the same order as the tabs, since the
 // indices of the elements in the array on the next line are mapped to the indices of the tabs
@@ -57,7 +66,11 @@ const useTabHighlight = () => {
   return tabIndex;
 };
 
-const GordonHeader = ({ onDrawerToggle }) => {
+type Props = {
+  onDrawerToggle: (event: {}) => void;
+};
+
+const GordonHeader = ({ onDrawerToggle }: Props) => {
   const navigate = useNavigate();
   const [dialog, setDialog] = useState('');
   const isOnline = useNetworkStatus();
@@ -72,10 +85,10 @@ const GordonHeader = ({ onDrawerToggle }) => {
     const isOffline = dialog === 'offline';
     return (
       <GordonDialogBox
-        open={dialog}
-        onClose={() => setDialog(null)}
+        open={dialog ? true : false}
+        onClose={() => setDialog('')}
         title={isOffline ? 'Unavailabile Offline' : 'Login Required'}
-        buttonClicked={() => setDialog(null)}
+        buttonClicked={() => setDialog('')}
         buttonName={'Okay'}
       >
         {isOffline
@@ -85,7 +98,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
     );
   };
 
-  const requiresAuthTab = (name, icon) => {
+  const requiresAuthTab = (name: string, icon: JSX.Element) => {
     if (!isOnline) {
       return (
         <Tab
@@ -142,11 +155,11 @@ const GordonHeader = ({ onDrawerToggle }) => {
           >
             <MenuIcon className={styles.hamburger_menu_button_icon} />
           </IconButton>
-          <Link to="/" component={ForwardNavLink} value={tabIndex}>
+          <Link to={'/'} component={ForwardNavLink} value={tabIndex}>
             <picture>
               {/* pick a different image as the screen gets smaller.*/}
-              <source srcset={headerLogo72dpi} media="(min-width: 900px)" />
-              <source srcset={headerLogo64dpi} media="(min-width: 600px)" />
+              <source srcSet={headerLogo72dpi} media="(min-width: 900px)" />
+              <source srcSet={headerLogo64dpi} media="(min-width: 600px)" />
               <source srcSet={headerLogo56dpiNoText} media="(max-width: 375px)" />
               <img src={headerLogo56dpi} alt="Gordon 360 Logo"></img>
             </picture>
