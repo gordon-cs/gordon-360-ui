@@ -140,8 +140,6 @@ const Home = () => {
     await editParticipantAllowEmails(participant.Username, value);
   };
 
-  console.log(participantMatches);
-
   let headerContents = (
     <Grid container alignItems="center" columnSpacing={4} className={styles.header}>
       <Grid item container xs={9} alignItems="center" columnSpacing={2}>
