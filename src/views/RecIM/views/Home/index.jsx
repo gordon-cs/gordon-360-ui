@@ -389,17 +389,21 @@ const Home = () => {
         <>
           {headerAlert}
           <Grid container spacing={2}>
-            <Grid item xs={12} md={6.5}>
-              {myMatches}
-            </Grid>
-            <Grid item xs={12} md={5.5}>
+            <Grid item xs={12} md={12}></Grid>
+            {/* Temporarily Removing hall rankings while they are broken */}
+            {/* <Grid item xs={12} md={12}>
               {affiliationsCard}
-            </Grid>
+            </Grid> */}
             <Grid item xs={12} md={6.5}>
               {activitiesCard}
             </Grid>
-            <Grid item xs={12} md={5.5}>
-              {myTeamsCard}
+            <Grid item container spacing={2} xs={12} md={5.5}>
+              <Grid item xs={12}>
+                {myMatches}
+              </Grid>
+              <Grid item xs={12}>
+                {myTeamsCard}
+              </Grid>
             </Grid>
             <ActivityForm
               onClose={() => {
