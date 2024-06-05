@@ -343,13 +343,15 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           <Typography>
             {' '}
             No strengths to show.{' '}
-            <a
+            <Link
               href="https://gordon.gallup.com/signin/default.aspx"
+              underline="hover"
               target="_blank"
+              className={'gc360_text_link'}
               rel="noopener noreferrer"
             >
               Take the test
-            </a>{' '}
+            </Link>{' '}
           </Typography>
         )
       }

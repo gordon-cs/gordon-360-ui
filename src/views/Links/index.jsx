@@ -13,6 +13,7 @@ import HandshakeIcon from '/src/views/Links/images/handshake.png';
 import FightingScotsIcon from '/src/views/Links/images/fightingscots.svg';
 import OutlookIcon from '/src/views/Links/images/outlook-icon1.png';
 import SchedulerIcon from '/src/views/Links/images/25-live-logo.jpg';
+import ChapelIcon from '/src/views/Links/images/iAttended.png';
 
 const iconStyle = { width: '1.5rem' };
 
@@ -137,6 +138,19 @@ const Links = () => (
                   target="_blank"
                 >
                   <ListItemText primary="25Live"></ListItemText>
+                </Link>
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <img src={ChapelIcon} alt={'iAttended Logo'} style={iconStyle} />
+                </ListItemIcon>
+                <Link
+                  href="https://iattendedapp.com/"
+                  underline="hover"
+                  className={`gc360_text_link`}
+                  target="_blank"
+                >
+                  <ListItemText primary="iAttended"></ListItemText>
                 </Link>
               </ListItem>
             </List>
