@@ -1,10 +1,76 @@
 import styles from './Help.module.css';
-
+import { HashLink as Link } from 'react-router-hash-link';
 import { Typography, Grid, Button, Card, CardHeader, CardContent } from '@mui/material';
 
 const Help = () => {
   return (
     <Grid container justifyContent="center">
+      <Grid item xs={12} md={2}>
+        <Card className={styles.help}>
+          <CardHeader
+            className={styles.help_title}
+            title="Jump To:"
+            titleTypographyProps={{ variant: 'h5' }}
+          />
+          <CardContent container="row">
+            <li>
+              <Link
+                className={`gc360_text_link`}
+                style={{ padding: '0 1vw' }}
+                to="#site-navigation"
+                smooth
+              >
+                Site Navigation
+              </Link>
+            </li>
+            <li>
+              <Link
+                className={`gc360_text_link`}
+                style={{ padding: '0 0.5vw' }}
+                to="#involvement-user-levels"
+                smooth
+              >
+                Involvement User Levels
+              </Link>
+            </li>
+            <li>
+              <Link
+                className={`gc360_text_link`}
+                style={{ padding: '0 0.5vw' }}
+                to="#management-&-editing-involvements"
+                smooth
+              >
+                Management & Editing Involvements
+              </Link>
+            </li>
+            <li>
+              <Link
+                className={`gc360_text_link`}
+                style={{ padding: '0.5vw' }}
+                to="#issues-&-troubleshooting"
+                smooth
+              >
+                Issues & Troubleshooting
+              </Link>
+            </li>
+            <li>
+              <Link
+                className={`gc360_text_link`}
+                style={{ padding: '0.5vw' }}
+                to="#supported-platforms"
+                smooth
+              >
+                Supported Platforms
+              </Link>
+            </li>
+            <li>
+              <Link className={`gc360_text_link`} style={{ padding: '0.5vw' }} to="#faq" smooth>
+                FAQ
+              </Link>
+            </li>
+          </CardContent>
+        </Card>
+      </Grid>
       <Grid item xs={12} lg={8}>
         <Card className={styles.help}>
           <CardHeader
@@ -12,9 +78,20 @@ const Help = () => {
             title="Gordon 360 Help"
             titleTypographyProps={{ variant: 'h4' }}
           />
+          <Typography variant="body"></Typography>
+
+          {/* <CardContent>
+            Jump To:
+          </CardContent>
+          <Link className={`gc360_text_link`} style={{ padding: '0 1vw'}}  to="#site-navigation" smooth>Site Navigation</Link>
+          <Link className={`gc360_text_link`} style={{ padding: '0 0.5vw'}} to="#involvement-user-levels" smooth>Involvement User Levels</Link>
+          <Link className={`gc360_text_link`} style={{ padding: '0 0.5vw'}} to="#management-&-editing-involvements" smooth>Management & Editing Involvements</Link>
+          <Link className={`gc360_text_link`} style={{ padding: '0.5vw'}} to ="#issues-&-troubleshooting" smooth>Issues & Troubleshooting</Link>
+          <Link className={`gc360_text_link`} style={{ padding: '0.5vw'}} to="#supported-platforms" smooth>Supported Platforms</Link>
+          <Link className={`gc360_text_link`} style={{ padding: '0.5vw'}} to="#faq" smooth>FAQ</Link> */}
           <br />
           <CardContent>
-            <Card className={styles.help_section}>
+            <Card className={styles.help_section} id="login-instructions">
               <CardHeader className="gc360_header" title="Login Instructions" />
               <CardContent>
                 <Typography variant="body1" component="ul">
@@ -23,8 +100,7 @@ const Help = () => {
                 </Typography>
               </CardContent>
             </Card>
-
-            <Card className={styles.help_section}>
+            <Card className={styles.help_section} id="site-navigation">
               <CardHeader className="gc360_header" title="Site Navigation" />
 
               <CardContent>
@@ -32,16 +108,14 @@ const Help = () => {
                   <li>
                     <strong>Home</strong> &ndash; Contains various tiles with charts or information.
                     <Typography variant="body1" component="ul">
-                      <li>
+                      <div>
                         <strong>Student:</strong> Includes your Dining “Meal Wheel’ tracker synced
-                        to days remaining in the semester and your Christian Life & Worship (CL&W)
-                        credits. You can click on the CL&W tracker to see which events are recorded
-                        for you.
-                      </li>
-                      <li>
+                        to days remaining in the semester.
+                      </div>
+                      <div>
                         <strong>Faculty/Staff:</strong> Includes days remaining wheel and a separate
                         Dining Dollars tracker.
-                      </li>
+                      </div>
                     </Typography>
                   </li>
                   <li>
@@ -61,6 +135,18 @@ const Help = () => {
                     <strong>People</strong> &ndash; Allows searching the campus community with more
                     in-depth filters than the normal search bar. You can filter students, staff, and
                     faculty by name or hall and by academic, home, and office info.
+                  </li>
+                  <li>
+                    <strong>Links</strong> &ndash; Provides quick links to important services such
+                    as academics,financial/career and more general information.
+                  </li>
+                  <li>
+                    <strong>Rec-IM</strong> &ndash; Recreational-Intramural(Rec-IM) offers services
+                    to manage fun and competitive recreational activities tailored for Gordon's
+                    campus. RecIM ensures a vibrant and engaging campus life for students. With a
+                    focus on fostering teamwork, wellness, and community spirit. RecIM provides a
+                    platform for students to enjoy a wide range of recreational pursuits while
+                    enhancing their college experience.
                   </li>
                   <li>
                     <strong>Quick Search</strong> &ndash; Quick searches by name of Gordon students,
@@ -91,7 +177,7 @@ const Help = () => {
               </CardContent>
             </Card>
 
-            <Card className={styles.help_section}>
+            <Card className={styles.help_section} id="involvement-user-levels">
               <CardHeader className="gc360_header" title="Involvement User Levels" />
 
               <CardContent>
@@ -132,7 +218,7 @@ const Help = () => {
               </CardContent>
             </Card>
 
-            <Card className={styles.help_section}>
+            <Card className={styles.help_section} id="management-&-editing-involvements">
               <CardHeader className="gc360_header" title="Management & Editing Involvements" />
               <CardContent>
                 <Typography variant="body1" component="ul">
@@ -178,7 +264,7 @@ const Help = () => {
               </CardContent>
             </Card>
 
-            <Card className={styles.help_section}>
+            <Card className={styles.help_section} id="issues-&-troubleshooting">
               <CardHeader className="gc360_header" title="Issues & Troubleshooting" />
 
               <CardContent>
@@ -197,7 +283,7 @@ const Help = () => {
               </CardContent>
             </Card>
 
-            <Card className={styles.help_section}>
+            <Card className={styles.help_section} id="supported-platforms">
               <CardHeader className="gc360_header" title="Supported Platforms" />
 
               <CardContent>
@@ -211,7 +297,7 @@ const Help = () => {
               </CardContent>
             </Card>
 
-            <Card className={styles.help_section}>
+            <Card className={styles.help_section} id="faq">
               <CardHeader className="gc360_header" title="FAQ" />
 
               <CardContent>
