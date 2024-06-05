@@ -44,7 +44,11 @@ const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
         dayHeaderFormat: () => schedule.session.SessionDescription,
       }}
       onSelectEvent={onSelectEvent}
-      onKeyPressEvent={onSelectEvent}
+      onKeyPressEvent={(selectedEvent, keyPressEvent) => {
+        if (keyPressEvent.key === 'Enter') {
+          onSelectEvent(selectedEvent);
+        }
+      }}
     />
   );
 };
