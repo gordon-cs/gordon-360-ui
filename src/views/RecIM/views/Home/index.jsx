@@ -33,6 +33,7 @@ import {
   editParticipantAllowEmails,
   getParticipantByUsername,
   getParticipantTeams,
+  getParticipantMatches,
 } from 'services/recim/participant';
 import { getTeamInvites } from 'services/recim/team';
 import SeriesForm from 'views/RecIM/components/Forms/SeriesForm';
@@ -58,6 +59,7 @@ const Home = () => {
   const [registrableActivities, setRegistrableActivities] = useState([]);
   const [completedActivities, setCompletedActivities] = useState([]);
   const [participantTeams, setParticipantTeams] = useState([]);
+  const [participantMatches, setParticipantMatches] = useState([]);
   const [invites, setInvites] = useState([]);
   const [homeMenuAnchorEl, setHomeMenuAnchorEl] = useState();
   const openHomeSettings = Boolean(homeMenuAnchorEl);
@@ -95,6 +97,7 @@ const Home = () => {
       setLoading(true);
       setInvites(await getTeamInvites());
       setParticipantTeams(await getParticipantTeams(participant.Username));
+      setParticipantMatches(await getParticipantMatches(participant.Username));
       setAllowEmails(participant.AllowEmails);
       setLoading(false);
     };
@@ -135,6 +138,8 @@ const Home = () => {
     setAllowEmails(value);
     await editParticipantAllowEmails(participant.Username, value);
   };
+
+  console.log(participantMatches);
 
   let headerContents = (
     <Grid container alignItems="center" columnSpacing={4} className={styles.header}>
