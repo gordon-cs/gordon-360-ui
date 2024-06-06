@@ -45,7 +45,11 @@ const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
       }}
       onSelectEvent={onSelectEvent}
       onKeyPressEvent={(selectedEvent, keyPressEvent) => {
-        if (keyPressEvent.key === 'Enter') {
+        if (
+          'key' in keyPressEvent &&
+          typeof keyPressEvent.key === 'string' &&
+          keyPressEvent.key === 'Enter'
+        ) {
           onSelectEvent(selectedEvent);
         }
       }}
