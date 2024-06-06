@@ -129,12 +129,12 @@ const InviteParticipantForm = ({
         cancelButtonName="cancel"
         PaperProps={{ className: styles.dialogPaper }} // allow people search overflow
       >
-        <Grid container alignItems="center" direction="column" spacing={2} p={2}>
-          <Grid item sx={{ width: '100%' }}>
+        <Grid container alignContent="center" direction="column" spacing={2} p={2}>
+          <Grid item xs={12}>
             <ParticipantList minimal participants={inviteList} callbackFunction={removeInvite} />
           </Grid>
           {!saving && (
-            <Grid item>
+            <Grid item xs={12}>
               <GordonQuickSearch
                 customPlaceholderText="Search for people"
                 disableLink
