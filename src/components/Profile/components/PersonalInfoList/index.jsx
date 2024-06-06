@@ -110,6 +110,20 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     loadPersonalInfo();
   }, [myProf, profile.Mail_Location, isStudent]);
 
+  const handleChangeMobilePhonePrivacy = async () => {
+    try {
+      await userService.setMobilePhonePrivacy(!isMobilePhonePrivate);
+      setIsMobilePhonePrivate(!isMobilePhonePrivate);
+
+      createSnackbar(
+        isMobilePhonePrivate ? 'Mobile Phone Visible' : 'Mobile Phone Hidden',
+        'success',
+      );
+    } catch {
+      createSnackbar('Privacy Change Failed', 'error'); //it looks like it around here where the bug s located
+    }
+  };
+
   const handleChangeCliftonStrengthsPrivacy = async () => {
     try {
       const newPrivacy = await CliftonStrengthsService.togglePrivacy();
@@ -151,7 +165,9 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
         myProf ? (
           <Grid container spacing={0} alignItems="center" className={styles.not_private}>
             <Grid item>{formatPhone(profile.MobilePhone)}</Grid>
-            <Grid item>{isStudent ? <UpdatePhone /> : null}</Grid>
+            <Grid item>
+              <UpdatePhone />
+            </Grid>
           </Grid>
         ) : profile.MobilePhone === PRIVATE_INFO ? (
           PRIVATE_INFO
@@ -161,7 +177,22 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </a>
         )
       }
-      ContentIcon={myProf && UpdateUserPrivacy(profile.AD_Username, ['MobilePhone'])}
+      ContentIcon={
+        myProf && (
+          <FormControlLabel
+            control={
+              <Switch
+                onChange={handleChangeMobilePhonePrivacy}
+                color="secondary"
+                checked={!isMobilePhonePrivate}
+              />
+            }
+            label={isMobilePhonePrivate ? 'Private' : 'Public'}
+            labelPlacement="bottom"
+            disabled={!isOnline}
+          />
+        )
+      }
       privateInfo={isMobilePhonePrivate}
       myProf={myProf}
     />
@@ -189,7 +220,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </span>
         </>
       }
-      ContentIcon={myProf && UpdateUserPrivacy(profile.AD_Username, combineHomeLocation)}
+      ContentIcon={myProf && UpdateUserPrivacy(profile.AD_Username, combineHomeLocation)} // here it needs to be just for fac/stuff only
       privateInfo={isAddressPrivate}
       myProf={myProf}
     />
