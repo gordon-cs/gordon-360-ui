@@ -1,6 +1,11 @@
 import styles from './Help.module.css';
 import { HashLink as Link } from 'react-router-hash-link';
 import { Typography, Grid, Button, Card, CardHeader, CardContent } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+
+const FloatingHashlink = () => {
+  const [floating, setFloating] = useState(false);
+};
 
 const Help = () => {
   return (
@@ -27,20 +32,20 @@ const Help = () => {
               <Link
                 className={`gc360_text_link`}
                 style={{ padding: '0 0.5vw' }}
-                to="#involvement-user-levels"
+                to="#involvement-user-types"
                 smooth
               >
-                Involvement User Levels
+                Involvement User Types
               </Link>
             </li>
             <li>
               <Link
                 className={`gc360_text_link`}
                 style={{ padding: '0 0.5vw' }}
-                to="#managing-&-editing-involvements"
+                to="#managing-involvements"
                 smooth
               >
-                Managing & Editing Involvements
+                Managing Involvements
               </Link>
             </li>
             <li>
@@ -79,16 +84,6 @@ const Help = () => {
             titleTypographyProps={{ variant: 'h4' }}
           />
           <Typography variant="body"></Typography>
-
-          {/* <CardContent>
-            Jump To:
-          </CardContent>
-          <Link className={`gc360_text_link`} style={{ padding: '0 1vw'}}  to="#site-navigation" smooth>Site Navigation</Link>
-          <Link className={`gc360_text_link`} style={{ padding: '0 0.5vw'}} to="#involvement-user-levels" smooth>Involvement User Levels</Link>
-          <Link className={`gc360_text_link`} style={{ padding: '0 0.5vw'}} to="#management-&-editing-involvements" smooth>Management & Editing Involvements</Link>
-          <Link className={`gc360_text_link`} style={{ padding: '0.5vw'}} to ="#issues-&-troubleshooting" smooth>Issues & Troubleshooting</Link>
-          <Link className={`gc360_text_link`} style={{ padding: '0.5vw'}} to="#supported-platforms" smooth>Supported Platforms</Link>
-          <Link className={`gc360_text_link`} style={{ padding: '0.5vw'}} to="#faq" smooth>FAQ</Link> */}
           <br />
           <CardContent>
             <Card className={styles.help_section} id="login-instructions">
@@ -177,8 +172,8 @@ const Help = () => {
               </CardContent>
             </Card>
 
-            <Card className={styles.help_section} id="involvement-user-levels">
-              <CardHeader className="gc360_header" title="Involvement User Levels" />
+            <Card className={styles.help_section} id="involvement-user-types">
+              <CardHeader className="gc360_header" title="Involvement User Types" />
 
               <CardContent>
                 <Typography variant="body1" component="ul">
@@ -218,8 +213,8 @@ const Help = () => {
               </CardContent>
             </Card>
 
-            <Card className={styles.help_section} id="managing-&-editing-involvements">
-              <CardHeader className="gc360_header" title="Managing & Editing Involvements" />
+            <Card className={styles.help_section} id="managing-involvements">
+              <CardHeader className="gc360_header" title="Managing Involvements" />
               <CardContent>
                 <Typography variant="body1" component="ul">
                   <li>
