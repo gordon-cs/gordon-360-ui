@@ -5,18 +5,18 @@ import { Typography, Grid, Button, Card, CardHeader, CardContent } from '@mui/ma
 const Help = () => {
   return (
     <Grid container justifyContent="center">
-      <Grid item xs={12} md={2}>
+      <Grid item xs={12} lg={3} md={12}>
         <Card className={styles.help}>
           <CardHeader
             className={styles.help_title}
             title="Jump To:"
-            titleTypographyProps={{ variant: 'h5' }}
+            titleTypographyProps={{ variant: 'h4' }}
           />
           <CardContent container="row">
             <li>
               <Link
                 className={`gc360_text_link`}
-                style={{ padding: '0 1vw' }}
+                style={{ padding: '0 0.5vw' }}
                 to="#site-navigation"
                 smooth
               >
@@ -37,10 +37,10 @@ const Help = () => {
               <Link
                 className={`gc360_text_link`}
                 style={{ padding: '0 0.5vw' }}
-                to="#management-&-editing-involvements"
+                to="#managing-&-editing-involvements"
                 smooth
               >
-                Management & Editing Involvements
+                Managing & Editing Involvements
               </Link>
             </li>
             <li>
@@ -218,8 +218,8 @@ const Help = () => {
               </CardContent>
             </Card>
 
-            <Card className={styles.help_section} id="management-&-editing-involvements">
-              <CardHeader className="gc360_header" title="Management & Editing Involvements" />
+            <Card className={styles.help_section} id="managing-&-editing-involvements">
+              <CardHeader className="gc360_header" title="Managing & Editing Involvements" />
               <CardContent>
                 <Typography variant="body1" component="ul">
                   <li>
