@@ -34,18 +34,13 @@ const formatDuration = ({ Job_Start_Date, Job_End_Date }: StudentEmployment) => 
 };
 
 let prev_job_title = '';
-
 const newJobTitle = ({ Job_Department_Name, Job_Title }: StudentEmployment) => {
   if (Job_Title != prev_job_title) {
     prev_job_title = Job_Title;
-    if (Job_Department_Name == Job_Title.split(':')[0]) {
-      return Job_Title;
-    } else {
-      return Job_Department_Name + ', ' + Job_Title;
-    }
-  } else {
-    return '';
+    return Job_Department_Name === Job_Title.split(':')[0]
+      ? Job_Title
+      : `${Job_Department_Name}, ${Job_Title}`;
   }
+  return '';
 };
-
 export default Experience;
