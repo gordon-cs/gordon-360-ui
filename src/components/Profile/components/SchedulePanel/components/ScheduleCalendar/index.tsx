@@ -21,11 +21,13 @@ const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
 
   const courseFormat = schedule.courses.map((course) => {
     let title;
-    if (course.location.includes('ASY')) {
-      title = `${course.title}${width >= 1500 ? ' | ' : ' '} ${course.location}`;
-    } else {
+    if (course.location.includes('ASY') || course.location.includes('null')) {
+      title = `${course.title}`;
+    } 
+    else {
       title = `${course.title}${width >= 2212 ? ' | ' : ' '} ${course.location}`;
     }
+
 
     return { ...course, title };
   });
