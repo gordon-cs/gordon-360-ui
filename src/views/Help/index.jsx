@@ -1,11 +1,6 @@
 import styles from './Help.module.css';
 import { HashLink as Link } from 'react-router-hash-link';
 import { Typography, Grid, Button, Card, CardHeader, CardContent } from '@mui/material';
-import React, { useState, useEffect } from 'react';
-
-const FloatingHashlink = () => {
-  const [floating, setFloating] = useState(false);
-};
 
 const Help = () => {
   return (
