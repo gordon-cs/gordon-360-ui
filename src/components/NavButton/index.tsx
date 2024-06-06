@@ -1,6 +1,16 @@
 import { ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 
+type GordonNavButtonProps = {
+  unavailable?: string | null;
+  onLinkClick?: () => void;
+  openUnavailableDialog?: any | (() => void);
+  divider?: boolean;
+  linkName?: string;
+  linkPath?: string;
+  LinkIcon?: any | JSX.Element | null;
+};
+
 /**
  * A Navigation Button for the Right Corner Menu
  *
@@ -15,16 +25,6 @@ import { NavLink } from 'react-router-dom';
  * @returns {JSX.ELement} A NavButton with the specified content and behavior
  */
 
-interface GordonNavButton {
-  unavailable?: string | null;
-  onLinkClick?: () => void;
-  openUnavailableDialog?: () => void;
-  divider?: boolean;
-  linkName?: string;
-  linkPath?: string;
-  LinkIcon?: JSX.Element | null;
-}
-
 const GordonNavButton = ({
   unavailable = null,
   onLinkClick = () => {},
@@ -33,7 +33,7 @@ const GordonNavButton = ({
   linkName = '',
   linkPath = '',
   LinkIcon = null,
-}) => {
+}: GordonNavButtonProps) => {
   const link =
     unavailable !== null || linkPath === null ? (
       <ListItem
