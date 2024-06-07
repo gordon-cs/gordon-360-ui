@@ -5,7 +5,7 @@ import { Typography, Grid, Button, Card, CardHeader, CardContent } from '@mui/ma
 const Help = () => {
   return (
     <Grid container justifyContent="center">
-      <Grid item xs={12} lg={3} md={12}>
+      <Grid item xs={12} lg={3}>
         <Card className={styles.help}>
           <CardHeader
             className={styles.help_title}
