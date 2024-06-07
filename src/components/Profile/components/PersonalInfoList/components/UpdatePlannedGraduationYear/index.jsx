@@ -1,4 +1,4 @@
-import { FormControl, IconButton } from '@mui/material';
+import { FormControl, IconButton, Link } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonSnackbar from 'components/Snackbar';
@@ -46,6 +46,7 @@ const UpdatePlannedGraduationYear = (props) => {
           <SearchField
             name="Planned Graduation Year"
             value={plannedGraduationYear}
+            defaultLabel="None"
             updateValue={(event) => setPlannedGraduationYear(event.target.value)}
             options={Array.from({ length: 6 }, (_, i) => ({
               value: (currentYear + i).toString(),
@@ -57,9 +58,12 @@ const UpdatePlannedGraduationYear = (props) => {
           />
         </FormControl>
         <p className={styles.note}>
-          NOTE: <br /> This does not set your official graduation <br />
-          year. To make an official change, please <br /> contact{' '}
-          <a href="mailto:registrar@gordon.edu">the Registrar's Office</a>.
+          NOTE: <br /> This does not replace the Application to Graduate, which must be filled out
+          8-12 months before you plan to graduate. The application can be found in{' '}
+          <Link href="https://my.gordon.edu" underline="hover" className={'gc360_text_link'}>
+            my.gordon.edu
+          </Link>
+          , in the Academics tab, on the left.
         </p>
       </GordonDialogBox>
       <GordonSnackbar

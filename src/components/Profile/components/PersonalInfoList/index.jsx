@@ -305,13 +305,15 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           <Typography>
             {' '}
             No strengths to show.{' '}
-            <a
+            <Link
               href="https://gordon.gallup.com/signin/default.aspx"
+              underline="hover"
               target="_blank"
+              className={'gc360_text_link'}
               rel="noopener noreferrer"
             >
               Take the test
-            </a>{' '}
+            </Link>{' '}
           </Typography>
         )
       }
@@ -572,6 +574,17 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                 Housing
               </a>{' '}
               (x4263).
+            </Typography>
+          </li>
+          <li>
+            <Typography>
+              Setting your planned graduation date above does not replace the Application to
+              Graduate, which must be filled out 8-12 months before you plan to graduate. The
+              application can be found in{' '}
+              <a href="https://my.gordon.edu" className={`gc360_text_link ${styles.note_link}`}>
+                my.gordon.edu
+              </a>
+              , in the Academics tab, on the left.
             </Typography>
           </li>
           <li>

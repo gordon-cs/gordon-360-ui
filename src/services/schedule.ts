@@ -88,7 +88,7 @@ function formatCoursesFromDb(courses: DbCourse[]): CourseEvent[] {
     const sharedDetails = {
       name: course.CRS_TITLE.trim(),
       title: course.CRS_CDE.trim(),
-      location: course.BLDG_CDE + ' ' + course.ROOM_CDE,
+      location: course.BLDG_CDE + '\u00A0' + course.ROOM_CDE,
     };
 
     if (course.ROOM_CDE === 'ASY') {
