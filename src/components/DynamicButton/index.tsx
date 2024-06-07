@@ -1,4 +1,4 @@
-import { Button } from '@mui/material/';
+import { Button, ButtonProps } from '@mui/material/';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import GordonLoader from 'components/Loader';
@@ -6,50 +6,28 @@ import GordonLoader from 'components/Loader';
 const LOADER_SIZE = 20;
 
 type Props = {
-  buttonText: string;
-  className: string;
-  color: 'success' | 'error' | 'primary' | 'inherit' | 'secondary' | 'info' | 'warning' | undefined;
-  disabled: boolean;
-  startIcon: JSX.Element;
-  status: string;
-  onClick: (event: {}) => void;
-};
+  status: 'success' | 'error' | boolean;
+} & ButtonProps;
 
-const DynamicButton = ({
-  buttonText,
-  className,
-  color,
-  disabled,
-  startIcon,
-  status,
-  onClick,
-}: Props) => {
-  let dynamicIcon = startIcon;
-  if (startIcon) {
-    if (status) {
-      if (status === 'success') {
-        dynamicIcon = <CheckCircleIcon />;
-      } else if (status === 'error') {
-        dynamicIcon = <ErrorIcon />;
-      } else {
-        dynamicIcon = <GordonLoader size={LOADER_SIZE} />;
-      }
-    } else {
-      dynamicIcon = startIcon;
-    }
-  }
+const DynamicButton = ({ status, ...otherProps }: Props) => {
+  const dynamicIcon =
+    status === 'success' ? (
+      <CheckCircleIcon />
+    ) : status === 'error' ? (
+      <ErrorIcon />
+    ) : Boolean(status) === true ? (
+      <GordonLoader size={LOADER_SIZE} />
+    ) : (
+      otherProps.startIcon
+    );
 
   return (
     <Button
-      className={className}
-      disabled={disabled || Boolean(status)}
-      variant="contained"
-      color={color ?? 'primary'}
+      {...otherProps}
+      disabled={otherProps.disabled || Boolean(status)}
       startIcon={dynamicIcon}
-      fullWidth
-      onClick={onClick}
     >
-      {buttonText}
+      {otherProps.children}
     </Button>
   );
 };
