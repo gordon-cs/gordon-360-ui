@@ -1,4 +1,5 @@
-import { Polar } from 'react-chartjs-2';
+import { PolarArea } from 'react-chartjs-2';
+import { Chart, RadialLinearScale, ArcElement, Tooltip, Legend } from 'chart.js';
 import { toTitleCase } from 'services/utils';
 import { Colors, VictoryPromiseCategory, VictoryPromiseColor } from 'services/victoryPromise';
 
@@ -11,67 +12,95 @@ const labels = new Array<string>(4);
 type Props = { scores: Record<VictoryPromiseCategory, number> };
 
 const GraphDisplay = ({ scores }: Props) => {
-  const minimumScore = Math.min(...Object.values(scores).filter((v) => v > 0), 1);
-  /**
-   * A 0 value won't display on the graph, so we use `emptySliceValue` to represent empty values,
-   * which is 2/3 of the minimum non-zero score
-   */
-  const emptySliceValue = minimumScore * 0.6;
+  console.log(scores);
+  Chart.register(RadialLinearScale, ArcElement, Tooltip, Legend);
+  const data = {
+    labels: [
+      'intellectual_maturity',
+      'leadership_worldwide',
+      'lives_of_service',
+      'christian_character',
+    ],
+    datasets: [
+      {
+        label: '# of Votes',
+        data: [0, 0, 5, 5],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.5)',
+          'rgba(54, 162, 235, 0.5)',
+          'rgba(255, 206, 86, 0.5)',
+          'rgba(75, 192, 192, 0.5)',
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
 
-  Object.entries(scores).forEach((score) => {
-    const [key, value] = score as [VictoryPromiseCategory, number];
-    const index = GraphOrder[key];
-    const colorHex = (Colors[key].match(/#[A-Fa-f0-9]{6,8}/) || [''])[0];
-    labels[index] = toTitleCase(key, '_');
-    if (value > 0) {
-      colorHex == '' ? (colors[index] = '#000000') : (colors[index] = colorHex);
-      data[index] = value;
-    } else {
-      colors[index] = light_gray;
-      data[index] = emptySliceValue;
-    }
-  });
+  const options = {};
 
-  const datasets = [
-    {
-      data,
-      backgroundColor: colors,
-      borderWidth: 3,
-    },
-  ];
+  return <PolarArea data={data} options={options} />;
+  return null;
+  // const minimumScore = Math.min(...Object.values(scores).filter((v) => v > 0), 1);
+  // /**
+  //  * A 0 value won't display on the graph, so we use `emptySliceValue` to represent empty values,
+  //  * which is 2/3 of the minimum non-zero score
+  //  */
+  // const emptySliceValue = minimumScore * 0.6;
 
-  return (
-    <Polar
-      data={{ labels, datasets }}
-      options={{
-        legend: {
-          display: false,
-        },
-        scale: {
-          display: false,
-          ticks: {
-            display: false,
-            max: (Math.max(...data) ?? 0.8) + 0.2,
-            min: 0,
-            maxTicksLimit: 1,
-          },
-        },
-        tooltips: {
-          callbacks: {
-            label: (
-              tooltipItem: { yLabel: number; index: number },
-              data: { labels: typeof labels; datasets: typeof datasets },
-            ) => {
-              const score = tooltipItem.yLabel;
-              const value = score === emptySliceValue ? 0 : score;
-              var label = data.labels[tooltipItem.index];
-              return `${label}: ${value}`;
-            },
-          },
-        },
-      }}
-    />
-  );
+  // Object.entries(scores).forEach((score) => {
+  //   const [key, value] = score as [VictoryPromiseCategory, number];
+  //   const index = GraphOrder[key];
+  //   const colorHex = (Colors[key].match(/#[A-Fa-f0-9]{6,8}/) || [''])[0];
+  //   labels[index] = toTitleCase(key, '_');
+  //   if (value > 0) {
+  //     colorHex == '' ? (colors[index] = '#000000') : (colors[index] = colorHex);
+  //     data[index] = value;
+  //   } else {
+  //     colors[index] = light_gray;
+  //     data[index] = emptySliceValue;
+  //   }
+  // });
+
+  // const datasets = [
+  //   {
+  //     data,
+  //     backgroundColor: colors,
+  //     borderWidth: 3,
+  //   },
+  // ];
+
+  // return (
+  //   <PolarArea
+  //     data={{ labels, datasets }}
+  //     options={{
+  //       legend: {
+  //         display: false,
+  //       },
+  //       scale: {
+  //         display: false,
+  //         ticks: {
+  //           display: false,
+  //           max: (Math.max(...data) ?? 0.8) + 0.2,
+  //           min: 0,
+  //           maxTicksLimit: 1,
+  //         },
+  //       },
+  //       tooltips: {
+  //         callbacks: {
+  //           label: (
+  //             tooltipItem: { yLabel: number; index: number },
+  //             data: { labels: typeof labels; datasets: typeof datasets },
+  //           ) => {
+  //             const score = tooltipItem.yLabel;
+  //             const value = score === emptySliceValue ? 0 : score;
+  //             var label = data.labels[tooltipItem.index];
+  //             return `${label}: ${value}`;
+  //           },
+  //         },
+  //       },
+  //     }}
+  //   />
+  // );
 };
 
 /**
