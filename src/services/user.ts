@@ -261,12 +261,7 @@ const getBirthdate = async (): Promise<DateTime> =>
 
 const isBirthdayToday = async () => {
   const birthday = await getBirthdate();
-  if (birthday?.year != 1800) {
-    // Birthday in year 1800 means no birthday data
-    return birthday?.month === DateTime.now().month && birthday?.day === DateTime.now().day;
-  } else {
-    return false;
-  }
+  return birthday?.month === DateTime.now().month && birthday?.day === DateTime.now().day;
 };
 
 const getProfileInfo = async (username: string = ''): Promise<Profile | undefined> => {
