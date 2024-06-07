@@ -2,9 +2,14 @@ import { Typography, Grid } from '@mui/material/';
 import styles from './ConfirmationRow.module.css';
 import { Check, Remove } from '@mui/icons-material';
 
-const ConfirmationRow = ({ field, prevValue }) => {
+type Props = {
+  field: any;
+  prevValue: string;
+};
+
+const ConfirmationRow = ({ field, prevValue }: Props) => {
   const isCheckbox = typeof prevValue === 'boolean';
-  const truthIcon = (value) => {
+  const truthIcon = (value: boolean) => {
     return value ? (
       <Check className={styles.icon_current} />
     ) : (

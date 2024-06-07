@@ -233,9 +233,10 @@ const getMailboxCombination = () => http.get('profiles/mailbox-combination/');
 
 const getMailStops = (): Promise<string[]> => http.get(`profiles/mailstops`);
 
-const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_number/${value}/`);
+const setMobilePhoneNumber = (value: number | string) =>
+  http.put(`profiles/mobile_phone_number/${value}/`);
 
-const setPlannedGraduationYear = (value: number) => {
+const setPlannedGraduationYear = (value: number | string) => {
   const body = { plannedGradYear: value };
   http.put(`profiles/plannedGradYear`, body);
 };
@@ -298,7 +299,16 @@ const getProfileInfo = async (username: string = ''): Promise<Profile | undefine
   }
 };
 
-const getEmergencyInfo = async (username: string) => {
+type Contact = {
+  FirstName?: string;
+  LastName?: string;
+  Relationship?: string;
+  MobilePhone: string;
+  HomePhone: string;
+  WorkPhone: string;
+};
+
+const getEmergencyInfo = async (username: string): Promise<Contact[]> => {
   return await http.get(`profiles/emergency-contact/${username}/`);
 };
 

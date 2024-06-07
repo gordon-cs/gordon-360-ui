@@ -19,6 +19,13 @@ const shouldContactFields = [
 const UPDATE_STEP = 'update';
 const CONFIRM_STEP = 'confirm';
 
+type Props = {
+  profile: any;
+  closeWithSnackbar: ({}) => void;
+  openAlumniUpdateForm: boolean;
+  setOpenAlumniUpdateForm: ({}) => void;
+};
+
 /**
  * A form for alumni to request an update to their profile information.
  */
@@ -28,7 +35,7 @@ const AlumniUpdateForm = ({
   closeWithSnackbar,
   openAlumniUpdateForm,
   setOpenAlumniUpdateForm,
-}) => {
+}: Props) => {
   const [statesAndProv, setStatesAndProv] = useState(['Not Applicable']);
   const [countries, setCountries] = useState(['Prefer Not to Say']);
   const [errorStatus, setErrorStatus] = useState({
@@ -157,7 +164,33 @@ const AlumniUpdateForm = ({
       .then(setCountries);
   }, []);
 
-  const currentInfo = useMemo(() => {
+  type Info = {
+    salutation?: string;
+    firstName?: string;
+    lastName?: string;
+    middleName?: string;
+    nickName?: string;
+    suffix?: string;
+    personalEmail?: string;
+    workEmail?: string;
+    aEmail?: string;
+    preferredEmail?: string;
+    doNotContact?: boolean;
+    doNotMail?: boolean;
+    homePhone?: string;
+    workPhone?: string;
+    mobilePhone?: string;
+    preferredPhone?: string;
+    address1?: string;
+    address2?: string;
+    city?: string;
+    state?: string;
+    zip?: string;
+    country?: string;
+    married?: boolean;
+  };
+
+  const currentInfo = useMemo<Info>(() => {
     return {
       salutation: profile.Title
         ? profile.Title.charAt(0).toUpperCase() + profile.Title.slice(1).toLowerCase()
@@ -193,8 +226,8 @@ const AlumniUpdateForm = ({
   const [changeReason, setChangeReason] = useState('');
   const [disableUpdateButton, setDisableUpdateButton] = useState(true);
 
-  const handleSetError = (field, condition) => {
-    const getCurrentErrorStatus = (currentValue) => {
+  const handleSetError = (field: string, condition: boolean) => {
+    const getCurrentErrorStatus = (currentValue: any) => {
       return {
         ...currentValue,
         [field]: condition,
@@ -203,20 +236,20 @@ const AlumniUpdateForm = ({
     setErrorStatus(getCurrentErrorStatus);
   };
 
-  const isEmailValid = (email) => {
+  const isEmailValid = (email?: string) => {
     //email regex from: https://stackoverflow.com/a/72476905
     const regex = /[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,8}(.[a-z{2,8}])?/g;
     return !email || email === '' || regex.test(email);
   };
 
-  const isPhoneValid = (phoneNum) => {
+  const isPhoneValid = (phoneNum?: string) => {
     /**
      * 2 Regex's used here:
      * /[-()\s]/g => /g is a global search for all characters in the array symbols -,(,),(space)
      * /^[+]?\d{7,15}+$/ => regex match value of (begin char)(0 or 1 instance of '+')(7-15 digits)(end char)
      */
-    let value = phoneNum.replace(/[-()\s]/g, '');
-    return /^[+]?\d{7,15}$/.test(value) || phoneNum.length === 0;
+    let value = phoneNum!.replace(/[-()\s]/g, '');
+    return /^[+]?\d{7,15}$/.test(value) || phoneNum!.length === 0;
   };
 
   // Field Validation
@@ -224,7 +257,7 @@ const AlumniUpdateForm = ({
     let hasError = false;
     let hasChanges = false;
     for (const field in currentInfo) {
-      if (currentInfo[field] !== updatedInfo[field]) {
+      if ((field as keyof typeof currentInfo) !== (field as keyof typeof updatedInfo)) {
         hasChanges = true;
       }
       switch (field) {
@@ -252,8 +285,8 @@ const AlumniUpdateForm = ({
     setDisableUpdateButton(hasError || !hasChanges);
   }, [updatedInfo, currentInfo]);
 
-  const handleChange = (event) => {
-    const getNewInfo = (currentValue) => {
+  const handleChange = (event: any) => {
+    const getNewInfo = (currentValue: Info) => {
       return {
         ...currentValue,
         [event.target.name]:
@@ -263,19 +296,21 @@ const AlumniUpdateForm = ({
     setUpdatedInfo(getNewInfo);
   };
 
-  const getFieldLabel = (fieldName) => {
+  const getFieldLabel = (fieldName: string) => {
     const matchingField = allFields.find((field) => field.name === fieldName);
-    return matchingField.label;
+    return matchingField!.label;
   };
 
-  function getUpdatedFields(updatedInfo, currentInfo) {
-    const updatedFields = [];
+  function getUpdatedFields(updatedInfo: Info, currentInfo: Info) {
+    const updatedFields: any[] = [];
     Object.entries(currentInfo).forEach(([field, value]) => {
       let updatedValue = value;
       if (field === 'homePhone' || field === 'workPhone' || field === 'mobilePhone') {
-        updatedValue = value.replace(/[-()\s]/g, '');
+        if (typeof value === 'string') {
+          updatedValue = value.replace(/[-()\s]/g, '');
+        }
       }
-      if (updatedInfo[field] !== value)
+      if ((field as keyof typeof updatedInfo) !== value)
         updatedFields.push({
           Field: field,
           Value: updatedValue,
@@ -312,14 +347,14 @@ const AlumniUpdateForm = ({
    * @param {Array<{name: string, label: string, type: string, menuItems: string[]}>} fields array of objects defining the properties of the input field
    * @returns JSX correct input for each field based on type
    */
-  const mapFieldsToInputs = (fields) => {
+  const mapFieldsToInputs = (fields: any[]) => {
     return fields.map((field) => (
       <ProfileUpdateField
         error={field.error}
         label={field.label}
         name={field.name}
         helperText={field.helperText}
-        value={updatedInfo[field.name]}
+        value={field.name as keyof typeof updatedInfo}
         type={field.type}
         menuItems={field.menuItems}
         onChange={handleChange}
@@ -349,13 +384,12 @@ const AlumniUpdateForm = ({
 
   return (
     <GordonDialogBox
+      {...dialogProps}
       open={openAlumniUpdateForm}
       fullWidth
       maxWidth="lg"
       isButtonDisabled={disableUpdateButton}
       cancelButtonName="Cancel"
-      titleClass={styles.alumni_update_form_title}
-      {...dialogProps}
     >
       {step === UPDATE_STEP && (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
@@ -381,7 +415,7 @@ const AlumniUpdateForm = ({
           <ConfirmationWindowHeader />
           <Grid container>
             {getUpdatedFields(currentInfo, updatedInfo).map((field) => (
-              <ConfirmationRow field={field} prevValue={currentInfo[field.Field]} />
+              <ConfirmationRow field={field} prevValue={field.Field as keyof typeof currentInfo} />
             ))}
           </Grid>
           <TextField

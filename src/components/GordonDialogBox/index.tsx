@@ -12,10 +12,10 @@ import { KeyboardEvent, PropsWithChildren } from 'react';
 type Props = {
   open: boolean;
   title: string;
-  buttonClicked: (event: {}) => void;
+  buttonClicked: (({}) => void) | null;
   buttonName?: string;
   isButtonDisabled?: boolean;
-  cancelButtonClicked?: (event: {}) => void;
+  cancelButtonClicked?: ((event: {}) => void) | null;
   cancelButtonName?: string;
   severity?: AlertColor;
 } & Partial<DialogProps>;

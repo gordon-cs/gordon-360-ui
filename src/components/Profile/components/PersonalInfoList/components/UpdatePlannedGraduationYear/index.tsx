@@ -10,7 +10,7 @@ import styles from './UpdatePlannedGradYear.module.css';
 const UpdatePlannedGraduationYear = (props) => {
   const [open, setOpen] = useState(false);
   const [plannedGraduationYear, setPlannedGraduationYear] = useState('');
-  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
+  const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
   const currentYear = new Date().getFullYear();
 
   const handleSubmit = async () => {
@@ -23,7 +23,7 @@ const UpdatePlannedGraduationYear = (props) => {
     setOpen(false);
   };
 
-  const createSnackbar = (message, severity) => {
+  const createSnackbar = (message: string, severity: string) => {
     setSnackbar({ message, severity, open: true });
   };
 

@@ -10,7 +10,7 @@ import styles from './UpdatePhone.module.css';
 const UpdatePhone = () => {
   const [open, setOpen] = useState(false);
   const [mobilePhoneNumber, setMobilePhoneNumber] = useState('');
-  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
+  const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
 
   const handleSubmit = async () => {
     try {
@@ -22,7 +22,7 @@ const UpdatePhone = () => {
     setOpen(false);
   };
 
-  const createSnackbar = (message, severity) => {
+  const createSnackbar = (message: string, severity: string) => {
     setSnackbar({ message, severity, open: true });
   };
 

@@ -7,25 +7,32 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
-import { platforms, socialMediaInfo } from 'services/socialMedia';
+import { platforms, Platform, socialMediaInfo } from 'services/socialMedia';
 import user from 'services/user';
 import { useUserActions } from 'hooks';
 import styles from './LinksDialog.module.css';
 
-const LinksDialog = ({ links, createSnackbar, onClose, setLinks }) => {
-  const [formErrors, setFormErrors] = useState([]);
+type Props = {
+  links: string[];
+  createSnackbar: ({}, {}) => void;
+  onClose: () => void;
+  setLinks: ({}) => void;
+};
+
+const LinksDialog = ({ links, createSnackbar, onClose, setLinks }: Props) => {
+  const [formErrors, setFormErrors] = useState<Platform[]>([]);
   const [updatedLinks, setUpdatedLinks] = useState(links);
-  const [failedUpdates, setFailedUpdates] = useState([]);
+  const [failedUpdates, setFailedUpdates] = useState<Platform[]>([]);
   const hasUpdatedLink = platforms.some((platform) => updatedLinks[platform] !== links[platform]);
 
   const { updateProfile } = useUserActions();
 
-  const handleLinkUpdated = (platform, value) => {
+  const handleLinkUpdated = (platform: keyof typeof socialMediaInfo, value: string) => {
     setUpdatedLinks((prev) => ({ ...prev, [platform]: value }));
     validateField(platform, value);
   };
 
-  const validateField = (platform, value) => {
+  const validateField = (platform: keyof typeof socialMediaInfo, value: string) => {
     const { prefix, prefix2 } = socialMediaInfo[platform];
     const isValid =
       value === '' || value.indexOf(prefix) === 0 || (prefix2 && value.indexOf(prefix2) === 0);
