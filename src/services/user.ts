@@ -248,10 +248,10 @@ const getAdvisors = (username: string): Promise<StudentAdvisorInfo[]> =>
 
 const getMailboxCombination = () => http.get('profiles/mailbox-combination/');
 
-const getVisibilityGroups = (): Promise<string[]> => http.get(`profiles/visibility_group`);
+const getVisibilityGroups = (): Promise<string[]> => http.get(`profiles/visibility_groups`);
 
 const getPrivacySetting = (username: string): Promise<string> =>
-  http.get(`profiles/privacy_setting/${username}/`);
+  http.get(`profiles/${username}/privacy_setting/`);
 
 const getMailStops = (): Promise<string[]> => http.get(`profiles/mailstops`);
 
