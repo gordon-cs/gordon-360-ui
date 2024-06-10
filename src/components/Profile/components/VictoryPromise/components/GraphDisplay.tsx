@@ -21,6 +21,7 @@ const GraphDisplay = ({ scores }: Props) => {
 
   Chart.register(RadialLinearScale, ArcElement, Tooltip, Legend);
   Chart.defaults.plugins.tooltip.callbacks.label = () => '';
+  Chart.defaults.plugins.tooltip.titleMarginBottom = 0;
 
   Object.entries(scores).forEach((score) => {
     const [key, value] = score as [VictoryPromiseCategory, number];
