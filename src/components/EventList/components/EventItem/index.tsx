@@ -30,7 +30,11 @@ const checkLightMode = (mode: string | null) => {
   }
 };
 
-const EventItem = (event: GordonEvent) => {
+type Props = {
+    event: GordonEvent;
+}
+
+const EventItem = ({event}: Props) => {
   const [expanded, setExpanded] = useState(false);
 
   return (
