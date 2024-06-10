@@ -1,6 +1,6 @@
 import { InteractionRequiredAuthError, SilentRequest } from '@azure/msal-browser';
-import { msalInstance } from 'components/Providers/components/AuthProvider';
 import storage from './storage';
+import { msalInstance } from 'index';
 
 const apiRequest = {
   scopes: ['api://b19c300a-00dc-4adc-bcd1-b678b25d7ad1/access_as_user'],
