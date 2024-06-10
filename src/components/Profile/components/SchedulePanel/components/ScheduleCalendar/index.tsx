@@ -3,6 +3,7 @@ import { CourseEvent, Schedule, scheduleCalendarResources } from 'services/sched
 import './ScheduleCalendar.css';
 import { DateTime } from 'luxon';
 import { useWindowSize } from 'hooks';
+import { isNull } from 'lodash';
 
 const localizer = luxonLocalizer(DateTime, { firstDayOfWeek: 1 });
 
@@ -24,6 +25,8 @@ const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
 
     if (course.location.includes('ASY')) {
       title = `${course.title.replaceAll(' ', '')} | ASYNC`;
+    } else if (course.location.includes('null')) {
+      title = `${course.title.replaceAll(' ', '')}`;
     } else {
       title = `${course.title.replaceAll(' ', '')} \n${course.location}`;
     }
