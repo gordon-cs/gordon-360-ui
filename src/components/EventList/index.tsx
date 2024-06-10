@@ -71,7 +71,7 @@ const EventList = ({ events }: Props) => {
         <List className="gc360_event_list" disablePadding>
           {events?.length < 1
             ? noEvents
-            : events.map((event) => <EventItem {...event} key={event.Event_ID} />)}
+            : events.map((event) => <EventItem event={event} key={event.Event_ID} />)}
         </List>
       </Grid>
     </Card>
