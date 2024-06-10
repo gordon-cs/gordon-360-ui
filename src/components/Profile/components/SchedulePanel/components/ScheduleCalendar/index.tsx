@@ -23,7 +23,7 @@ const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
     let title;
 
     if (course.location.includes('ASY')) {
-      title = `${course.title} | ASYNC`;
+      title = `${course.title.replaceAll(' ', '')} | ASYNC`;
     } else {
       title = `${course.title.replaceAll(' ', '')} \n${course.location}`;
     }
