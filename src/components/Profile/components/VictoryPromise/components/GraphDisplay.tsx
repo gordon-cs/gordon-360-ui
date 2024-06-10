@@ -24,19 +24,35 @@ const GraphDisplay = ({ scores }: Props) => {
     datasets: [
       {
         label: '# of Votes',
-        data: [0, 0, 5, 5],
+        data: [0, 5, 5, 0],
         backgroundColor: [
-          'rgba(255, 99, 132, 0.5)',
-          'rgba(54, 162, 235, 0.5)',
-          'rgba(255, 206, 86, 0.5)',
-          'rgba(75, 192, 192, 0.5)',
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
         ],
-        borderWidth: 1,
+        borderWidth: 5,
+        borderColor: '#fff',
       },
     ],
   };
 
-  const options = {};
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+    scales: {
+      r: {
+        display: false,
+      },
+    },
+    layout: {
+      padding: 30,
+    },
+  };
 
   return <PolarArea data={data} options={options} />;
   return null;
