@@ -21,10 +21,11 @@ const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
 
   const courseFormat = schedule.courses.map((course) => {
     let title;
+
     if (course.location.includes('ASY')) {
-      title = `${course.title}${width >= 1500 ? ' | ' : ' '} ${course.location}`;
+      title = `${course.title} | ASYNC`;
     } else {
-      title = `${course.title}${width >= 2212 ? ' | ' : ' '} ${course.location}`;
+      title = `${course.title.replaceAll(' ', '')} \n${course.location}`;
     }
 
     return { ...course, title };
@@ -32,6 +33,7 @@ const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
 
   return (
     <Calendar
+      style={{ whiteSpace: 'pre-wrap' }}
       events={courseFormat}
       localizer={localizer}
       min={dayStart}
