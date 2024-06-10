@@ -33,9 +33,11 @@ const headerLogo64dpi = 'images/gc_' + angleMode + '_yellow_logo_64.png';
 const headerLogo56dpi = 'images/gc_' + angleMode + '_yellow_logo_56.png';
 const headerLogo56dpiNoText = 'images/gc_' + angleMode + '_yellow_logo_56_vert.png';
 
-// currently can't figure out how to make `to` take a variable... copy/pasting component for now
-const ForwardNavLink = forwardRef<any, Omit<RouterLinkProps, string>>((props, ref) => (
-  <NavLink ref={ref} to="/" {...props} />
+const ForwardNavLink = forwardRef<
+    any, 
+    Omit<RouterLinkProps, 'to'> & { href: RouterLinkProps['to'] }
+>(({href, ...props), ref) => (
+  <NavLink ref={ref} to={href} {...props} />
 ));
 
 // Tab url regular expressions must be listed in the same order as the tabs, since the
