@@ -85,7 +85,7 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
     const isOffline = dialog === 'offline';
     return (
       <GordonDialogBox
-        open={dialog ? true : false}
+        open={Boolean(dialog)}
         onClose={() => setDialog('')}
         title={isOffline ? 'Unavailabile Offline' : 'Login Required'}
         buttonClicked={() => setDialog('')}
