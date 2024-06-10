@@ -50,7 +50,7 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
     }
     return (
       <GordonDialogBox
-        open={dialog ? true : false}
+        open={Boolean(dialog)}
         onClose={() => setDialog('')}
         title={title}
         buttonClicked={() => setDialog('')}
