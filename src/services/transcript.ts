@@ -1,7 +1,6 @@
 import { differenceInCalendarMonths, format, parse } from 'date-fns';
 import http from './http';
 import userService, { MembershipHistory } from './user';
-import Experience from 'views/CoCurricularTranscript/Components/Experience';
 
 export type StudentEmployment = {
   Job_Title: string;
@@ -73,18 +72,15 @@ const categorizeItems = async (memberships: MembershipHistory[], jobs: StudentEm
 
   groupedMembershipHistory.activities = memberships;
 
-  groupedMembershipHistory.experiences.sort(
-    (a, b) => getExperienceEndDate(b) - getExperienceEndDate(a),
-  );
+  // sorting job title by alphabetical order
+  groupedMembershipHistory.experiences.sort((a, b) => getJobTitle(a).localeCompare(getJobTitle(b)));
 
-  //test
-  // groupedMembershipHistory.experiences.sort(
-  //   (a, b) => getJobTitle(a).localeCompare(getJobTitle(b)),
-  // );
-  // groupedMembershipHistory.experiences.sort(
-  //   (a, b) => getJobTitle(a).localeCompare(getJobTitle(b)) != 0
-  //   ? 0 : getExperienceEndDate(b) - getExperienceEndDate(a),
-  // );
+  // sorting the same job title by end date
+  groupedMembershipHistory.experiences.sort((a, b) =>
+    getJobTitle(a).localeCompare(getJobTitle(b)) != 0
+      ? 0
+      : getExperienceEndDate(b) - getExperienceEndDate(a),
+  );
 
   return groupedMembershipHistory;
 };
@@ -154,7 +150,6 @@ const transcriptService = {
 
 export default transcriptService;
 
-//test
 const getJobTitle = (experience: MembershipHistory | StudentEmployment) => {
   const title = 'Sessions' in experience ? experience.ActivityCode : experience.Job_Title;
 
