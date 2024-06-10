@@ -12,26 +12,40 @@ const labels = new Array<string>(4);
 type Props = { scores: Record<VictoryPromiseCategory, number> };
 
 const GraphDisplay = ({ scores }: Props) => {
-  console.log(scores);
+  const minimumScore = Math.min(...Object.values(scores).filter((v) => v > 0), 1);
+  /**
+   * A 0 value won't display on the graph, so we use `emptySliceValue` to represent empty values,
+   * which is 2/3 of the minimum non-zero score
+   */
+  const emptySliceValue = minimumScore * 0.6;
+
   Chart.register(RadialLinearScale, ArcElement, Tooltip, Legend);
-  const data = {
-    labels: [
-      'intellectual_maturity',
-      'leadership_worldwide',
-      'lives_of_service',
-      'christian_character',
-    ],
+  Chart.defaults.plugins.tooltip.callbacks.label = () => '';
+
+  Object.entries(scores).forEach((score) => {
+    const [key, value] = score as [VictoryPromiseCategory, number];
+    const index = GraphOrder[key];
+    const colorHex = (Colors[key].match(/#[A-Fa-f0-9]{6,8}/) || [''])[0];
+    labels[index] = toTitleCase(key, '_');
+
+    if (value > 0) {
+      colorHex == '' ? (colors[index] = '#000000') : (colors[index] = colorHex);
+      data[index] = value;
+      labels[index] += ` : ${value}`;
+    } else {
+      colors[index] = light_gray;
+      data[index] = emptySliceValue;
+      labels[index] += ` : 0`;
+    }
+  });
+
+  const dataOBJ = {
+    labels: labels,
     datasets: [
       {
-        label: '# of Votes',
-        data: [0, 5, 5, 0],
-        backgroundColor: [
-          'rgba(255, 99, 132, 1)',
-          'rgba(54, 162, 235, 1)',
-          'rgba(255, 206, 86, 1)',
-          'rgba(75, 192, 192, 1)',
-        ],
-        borderWidth: 5,
+        data: data,
+        backgroundColor: colors,
+        borderWidth: 3,
         borderColor: '#fff',
       },
     ],
@@ -54,69 +68,7 @@ const GraphDisplay = ({ scores }: Props) => {
     },
   };
 
-  return <PolarArea data={data} options={options} />;
-  return null;
-  // const minimumScore = Math.min(...Object.values(scores).filter((v) => v > 0), 1);
-  // /**
-  //  * A 0 value won't display on the graph, so we use `emptySliceValue` to represent empty values,
-  //  * which is 2/3 of the minimum non-zero score
-  //  */
-  // const emptySliceValue = minimumScore * 0.6;
-
-  // Object.entries(scores).forEach((score) => {
-  //   const [key, value] = score as [VictoryPromiseCategory, number];
-  //   const index = GraphOrder[key];
-  //   const colorHex = (Colors[key].match(/#[A-Fa-f0-9]{6,8}/) || [''])[0];
-  //   labels[index] = toTitleCase(key, '_');
-  //   if (value > 0) {
-  //     colorHex == '' ? (colors[index] = '#000000') : (colors[index] = colorHex);
-  //     data[index] = value;
-  //   } else {
-  //     colors[index] = light_gray;
-  //     data[index] = emptySliceValue;
-  //   }
-  // });
-
-  // const datasets = [
-  //   {
-  //     data,
-  //     backgroundColor: colors,
-  //     borderWidth: 3,
-  //   },
-  // ];
-
-  // return (
-  //   <PolarArea
-  //     data={{ labels, datasets }}
-  //     options={{
-  //       legend: {
-  //         display: false,
-  //       },
-  //       scale: {
-  //         display: false,
-  //         ticks: {
-  //           display: false,
-  //           max: (Math.max(...data) ?? 0.8) + 0.2,
-  //           min: 0,
-  //           maxTicksLimit: 1,
-  //         },
-  //       },
-  //       tooltips: {
-  //         callbacks: {
-  //           label: (
-  //             tooltipItem: { yLabel: number; index: number },
-  //             data: { labels: typeof labels; datasets: typeof datasets },
-  //           ) => {
-  //             const score = tooltipItem.yLabel;
-  //             const value = score === emptySliceValue ? 0 : score;
-  //             var label = data.labels[tooltipItem.index];
-  //             return `${label}: ${value}`;
-  //           },
-  //         },
-  //       },
-  //     }}
-  //   />
-  // );
+  return <PolarArea data={dataOBJ} options={options} />;
 };
 
 /**
