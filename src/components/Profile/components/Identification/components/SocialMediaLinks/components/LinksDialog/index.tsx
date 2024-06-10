@@ -13,7 +13,7 @@ import { useUserActions } from 'hooks';
 import styles from './LinksDialog.module.css';
 
 type Props = {
-  links: string[];
+  links: {};
   createSnackbar: ({}, {}) => void;
   onClose: () => void;
   setLinks: ({}) => void;
@@ -23,7 +23,10 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }: Props) => {
   const [formErrors, setFormErrors] = useState<Platform[]>([]);
   const [updatedLinks, setUpdatedLinks] = useState(links);
   const [failedUpdates, setFailedUpdates] = useState<Platform[]>([]);
-  const hasUpdatedLink = platforms.some((platform) => updatedLinks[platform] !== links[platform]);
+  const hasUpdatedLink = platforms.some(
+    (platform) =>
+      updatedLinks[platform as keyof typeof updatedLinks] !== links[platform as keyof typeof links],
+  );
 
   const { updateProfile } = useUserActions();
 
@@ -47,10 +50,17 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }: Props) => {
   const handleSubmit = async () => {
     const responses = await Promise.all(
       platforms
-        .filter((platform) => updatedLinks[platform] !== links[platform]) // Remove unchanged links
+        .filter(
+          (platform) =>
+            updatedLinks[platform as keyof typeof updatedLinks] !==
+            links[platform as keyof typeof links],
+        ) // Remove unchanged links
         .map(async (platform) => ({
           platform: platform,
-          value: await user.updateSocialLink(platform, updatedLinks[platform]),
+          value: await user.updateSocialLink(
+            platform,
+            updatedLinks[platform as keyof typeof updatedLinks],
+          ),
         })),
     );
 
@@ -58,9 +68,9 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }: Props) => {
       if (response.value === undefined) {
         setFailedUpdates((prevState) => [...prevState, [response.platform]]);
       } else {
-        setLinks((prevLinks) => ({
+        setLinks((prevLinks: {}) => ({
           ...prevLinks,
-          [response.platform]: updatedLinks[response.platform],
+          [response.platform]: updatedLinks[response.platform as keyof typeof updatedLinks],
         }));
         setFailedUpdates((prevState) => prevState.filter((link) => link !== response.platform));
       }
@@ -96,11 +106,12 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }: Props) => {
               label={`${platform} ${
                 failedUpdates.includes(platform)
                   ? '(failed)'
-                  : updatedLinks[platform] !== links[platform]
+                  : updatedLinks[platform as keyof typeof updatedLinks] !==
+                      links[platform as keyof typeof links]
                     ? '(updated)'
                     : 'link'
               }`}
-              value={updatedLinks[platform]}
+              value={updatedLinks[platform as keyof typeof updatedLinks]}
               onChange={(event) => handleLinkUpdated(platform, event.target.value)}
               error={formErrors.includes(platform)}
               helperText={formErrors.includes(platform) ? `Invalid ${platform} link` : null}
@@ -109,7 +120,6 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }: Props) => {
               multiline
               className={styles.gc360_links_dialog_content_field}
               variant="outlined"
-              color="link"
             />
           </div>
         ))}

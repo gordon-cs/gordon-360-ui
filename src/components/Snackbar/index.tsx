@@ -10,7 +10,7 @@ type Props = {
   open: boolean;
   text: string;
   severity: 'error' | 'info' | 'success' | 'warning';
-  duration: number;
+  duration?: number;
   onClose: () => void;
 };
 

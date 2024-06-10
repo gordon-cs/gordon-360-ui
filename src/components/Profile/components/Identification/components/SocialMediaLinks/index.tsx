@@ -7,17 +7,26 @@ import { platforms, socialMediaInfo } from 'services/socialMedia';
 import styles from '../../Identification.module.css';
 import LinksDialog from './components/LinksDialog/index';
 
-const SocialMediaLinks = ({ profile, createSnackbar, myProf }) => {
+type Props = {
+  profile: typeof socialMediaInfo;
+  createSnackbar: ({}) => void;
+  myProf: typeof socialMediaInfo;
+};
+
+const SocialMediaLinks = ({ profile, createSnackbar, myProf }: Props) => {
   const [socialLinksOpen, setSocialLinksOpen] = useState(false);
   const [links, setLinks] = useState(
     platforms.reduce((links, platform) => ({ ...links, [platform]: profile[platform] || '' }), {}),
   );
   const isOnline = useNetworkStatus();
-  const numberOfLinks = platforms.reduce((num, platform) => (links[platform] ? num + 1 : num), 0);
+  const numberOfLinks = platforms.reduce(
+    (num, platform) => (links[platform as keyof typeof links] ? num + 1 : num),
+    0,
+  );
 
   return (
     <>
-      {(myProf || platforms.some((platform) => links[platform])) && (
+      {(myProf || platforms.some((platform) => links[platform as keyof typeof links])) && (
         <Grid item className={styles.identification_card_content_card_container_info_social_media}>
           <Grid
             container
@@ -25,11 +34,11 @@ const SocialMediaLinks = ({ profile, createSnackbar, myProf }) => {
             alignItems="center"
           >
             {platforms.map((platform) => {
-              if (links[platform]) {
+              if (links[platform as keyof typeof links]) {
                 return (
                   <Grid item key={platform}>
                     <a
-                      href={links[platform]}
+                      href={links[platform as keyof typeof links]}
                       className={`gc360_text_link ${styles.gc360_my_profile_icon}`}
                       target="_blank"
                       rel="noopener noreferrer"

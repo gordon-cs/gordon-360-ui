@@ -93,7 +93,7 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
 
   const peopleButton = (
     <GordonNavButton
-      unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : ''}
+      unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
       onLinkClick={onLinkClick}
       openUnavailableDialog={setDialog}
       divider={false}
@@ -115,7 +115,7 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
 
   const timesheetsButton = (
     <GordonNavButton
-      unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : ''}
+      unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
       openUnavailableDialog={setDialog}
       onLinkClick={onLinkClick}
       linkName={'Timesheets'}
@@ -127,7 +127,7 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
 
   const recimButton = (
     <GordonNavButton
-      unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : ''}
+      unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
       openUnavailableDialog={setDialog}
       onLinkClick={onLinkClick}
       linkName={'Rec-IM'}

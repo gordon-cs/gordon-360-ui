@@ -15,8 +15,10 @@ import {
   VictoryPromise,
 } from './components';
 
+type severityType = 'error' | 'info' | 'success' | 'warning';
+
 const Profile = ({ profile, myProf }) => {
-  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
+  const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
   const isOnline = useNetworkStatus();
   const viewerIsPolice = useAuthGroups(AuthGroup.Police);
   const [canReadStudentSchedules, setCanReadStudentSchedules] = useState();
@@ -90,7 +92,7 @@ const Profile = ({ profile, myProf }) => {
       <GordonSnackbar
         open={snackbar.open}
         text={snackbar.message}
-        severity={snackbar.severity}
+        severity={snackbar.severity as severityType}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
       />
     </Grid>

@@ -7,6 +7,8 @@ import { IMaskInput } from 'react-imask';
 import userService from 'services/user';
 import styles from './UpdatePhone.module.css';
 
+type severityType = 'error' | 'info' | 'success' | 'warning';
+
 const UpdatePhone = () => {
   const [open, setOpen] = useState(false);
   const [mobilePhoneNumber, setMobilePhoneNumber] = useState('');
@@ -50,14 +52,14 @@ const UpdatePhone = () => {
             value={mobilePhoneNumber}
             onChange={(event) => setMobilePhoneNumber(event.target.value)}
             inputComponent={phoneMaskUS}
-            required="required"
+            required
             autoFocus
           />
         </FormControl>
       </GordonDialogBox>
       <GordonSnackbar
         open={snackbar.open}
-        severity={snackbar.severity}
+        severity={snackbar.severity as severityType}
         text={snackbar.message}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
       />
