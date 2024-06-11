@@ -1,75 +1,75 @@
 import { PolarArea } from 'react-chartjs-2';
-import { Chart, RadialLinearScale, ArcElement, Tooltip, Legend } from 'chart.js';
+import { Chart, RadialLinearScale, ArcElement, Tooltip } from 'chart.js';
 import { toTitleCase } from 'services/utils';
 import { Colors, VictoryPromiseCategory, VictoryPromiseColor } from 'services/victoryPromise';
 
 const light_gray = '#EBEAEA';
 
+Chart.register(RadialLinearScale, ArcElement, Tooltip);
+
 const colors = new Array<VictoryPromiseColor | typeof light_gray>(4);
 const data = new Array<number>(4);
-const labels = new Array<string>(4);
 
 type Props = { scores: Record<VictoryPromiseCategory, number> };
 
 const GraphDisplay = ({ scores }: Props) => {
-  const minimumScore = Math.min(...Object.values(scores).filter((v) => v > 0), 1);
+  const minimumScore = Math.min(...Object.values(scores).filter((v) => v > 0)) || 1;
   /**
    * A 0 value won't display on the graph, so we use `emptySliceValue` to represent empty values,
    * which is 2/3 of the minimum non-zero score
    */
   const emptySliceValue = minimumScore * 0.6;
 
-  Chart.register(RadialLinearScale, ArcElement, Tooltip, Legend);
-  Chart.defaults.plugins.tooltip.callbacks.label = () => '';
-  Chart.defaults.plugins.tooltip.titleMarginBottom = 0;
-
   Object.entries(scores).forEach((score) => {
     const [key, value] = score as [VictoryPromiseCategory, number];
     const index = GraphOrder[key];
-    const colorHex = (Colors[key].match(/#[A-Fa-f0-9]{6,8}/) || [''])[0];
-    labels[index] = toTitleCase(key, '_');
+    const colorHex = Colors[key].match(/#[A-Fa-f0-9]{6,8}/)?.[0] ?? '#000000';
 
     if (value > 0) {
-      colorHex == '' ? (colors[index] = '#000000') : (colors[index] = colorHex);
+      colors[index] = colorHex;
       data[index] = value;
-      labels[index] += ` : ${value}`;
     } else {
       colors[index] = light_gray;
       data[index] = emptySliceValue;
-      labels[index] += ` : 0`;
     }
   });
 
-  const dataOBJ = {
-    labels: labels,
-    datasets: [
-      {
-        data: data,
-        backgroundColor: colors,
-        borderWidth: 3,
-        borderColor: '#fff',
-      },
-    ],
-  };
-
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        display: false,
-      },
-    },
-    scales: {
-      r: {
-        display: false,
-      },
-    },
-    layout: {
-      padding: 30,
-    },
-  };
-
-  return <PolarArea data={dataOBJ} options={options} />;
+  return (
+    <PolarArea
+      data={{
+        datasets: [
+          {
+            data,
+            backgroundColor: colors,
+            borderWidth: 3,
+          },
+        ],
+      }}
+      options={{
+        responsive: true,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: (tooltipItem) => {
+                const categoryKey =
+                  Object.entries(GraphOrder).find(([, i]) => i === tooltipItem.dataIndex)?.[0] ??
+                  'Unknown';
+                return ` ${toTitleCase(categoryKey, '_')}: ${tooltipItem.raw === emptySliceValue ? 0 : tooltipItem.raw}`;
+              },
+            },
+          },
+        },
+        scales: {
+          r: {
+            display: false,
+          },
+        },
+        layout: {
+          padding: 10,
+        },
+      }}
+    />
+  );
 };
 
 /**
