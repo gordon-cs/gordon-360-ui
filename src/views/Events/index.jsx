@@ -179,18 +179,6 @@ const Events = () => {
                         Filters
                       </Button>
                     </Grid>
-
-                    <Grid item>
-                      {isAuthenticated && (
-                        <Button
-                          color="secondary"
-                          variant="contained"
-                          onClick={() => navigate('/attended')}
-                        >
-                          ATTENDED CL&amp;W
-                        </Button>
-                      )}
-                    </Grid>
                   </Grid>
                 </Grid>
 
