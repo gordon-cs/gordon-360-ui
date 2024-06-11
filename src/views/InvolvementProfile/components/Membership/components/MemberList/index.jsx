@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, Grid } from '@mui/material';
 import { useWindowSize } from 'hooks';
 import MemberListItem from './components/MemberListItem';
-import styles from './MemberList.module.css';
 
 const breakpointWidth = 810;
 
