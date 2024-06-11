@@ -46,7 +46,6 @@ const newJobTitle = (
   setPreviousTitles: Dispatch<SetStateAction<string[]>>,
 ) => {
   if (!previousTitles.includes(Job_Title)) {
-    console.log(previousTitles);
     previousTitles.push(Job_Title);
     setPreviousTitles(previousTitles);
     return Job_Department_Name === Job_Title.split(':')[0]
