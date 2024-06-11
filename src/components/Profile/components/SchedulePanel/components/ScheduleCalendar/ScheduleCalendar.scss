@@ -68,12 +68,6 @@ button.rbc-input::-moz-focus-inner {
   max-width: 100%;
 }
 
-@media (max-width: 1152px) {
-  .rbc-row-segment .rbc-event-content {
-    font-size: 70%;
-  }
-}
-
 .rbc-day-slot .rbc-event-content {
   background-color: var(--mui-palette-primary-main);
   color: var(--mui-palette-primary-contrastText);
@@ -86,6 +80,7 @@ button.rbc-input::-moz-focus-inner {
   min-height: 1em;
 }
 @media (max-width: 1152px) {
+  .rbc-row-segment .rbc-event-content,
   .rbc-day-slot .rbc-event-content {
     font-size: 70%;
   }
