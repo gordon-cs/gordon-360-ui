@@ -23,6 +23,7 @@ const DaysLeft = () => {
   const [fallBegin, setFallBegin] = useState('');
   const [springEnd, setSpringEnd] = useState('');
   const [nextFallBegin, setNextFallBegin] = useState('');
+  const [termDates, setTermDates] = useState('');
 
   useEffect(() => {
     const load = async () => {
@@ -54,10 +55,39 @@ const DaysLeft = () => {
       setSpringEnd(springEnd);
       setFallBegin(fallBegin);
       setNextFallBegin(nextFallBegin);
+      setTermDates(termDates);
     };
 
     load();
   }, []);
+  async function getTermDates() {
+    const currentYear = new Date().getFullYear();
+
+    const termDates = {
+      fall: {
+        start: new Date((await session.get(`${currentYear - 1}09`)).SessionBeginDate),
+        end: new Date((await session.get(`${currentYear - 1}09`)).SessionEndDate),
+      },
+      spring: {
+        start: new Date((await session.get(`${currentYear}01`)).SessionBeginDate),
+        end: new Date((await session.get(`${currentYear}01`)).SessionEndDate),
+      },
+      summer: {
+        start: new Date((await session.get(`${currentYear}05`)).SessionBeginDate),
+        end: new Date((await session.get(`${currentYear}05`)).SessionEndDate),
+      },
+      nextFall: {
+        start: new Date((await session.get(`${currentYear}09`)).SessionBeginDate),
+      },
+    };
+
+    return termDates;
+  }
+  (async function () {
+    // const termDates = useMemo (() => getTermDates());
+
+    console.log(termDates.fall);
+  })();
 
   const academicTerms = ['Fall', 'Spring', 'Summer'];
 
