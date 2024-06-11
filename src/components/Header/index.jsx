@@ -145,8 +145,8 @@ const GordonHeader = ({ onDrawerToggle }) => {
           <Link to="/" component={ForwardNavLink} value={tabIndex}>
             <picture>
               {/* pick a different image as the screen gets smaller.*/}
-              <source srcset={headerLogo72dpi} media="(min-width: 900px)" />
-              <source srcset={headerLogo64dpi} media="(min-width: 600px)" />
+              <source srcSet={headerLogo72dpi} media="(min-width: 900px)" />
+              <source srcSet={headerLogo64dpi} media="(min-width: 600px)" />
               <source srcSet={headerLogo56dpiNoText} media="(max-width: 375px)" />
               <img src={headerLogo56dpi} alt="Gordon 360 Logo"></img>
             </picture>
