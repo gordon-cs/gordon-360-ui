@@ -86,7 +86,7 @@ const MemberList = ({
           </Grid>
         </Grid>
       }
-      className={styles.headerStyle}
+      className="gc360_header"
     />
   );
   return (
