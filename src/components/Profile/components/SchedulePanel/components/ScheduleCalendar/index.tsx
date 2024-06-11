@@ -18,13 +18,13 @@ const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
   dayEnd.setHours(22, 0, 0, 0);
 
   const courseFormat = schedule.courses.map((course) => {
-    // let title = `${course.title.replaceAll(' ', '')}`;
+    let tempTitle = `${course.title.replaceAll(' ', '')}`;
     let title;
     course.location.includes('ASY')
-      ? (title = ' | ASYNC')
+      ? (title = tempTitle + ' | ASYNC')
       : course.location.includes('null')
-        ? (title = 'hello')
-        : (title = `\n${course.location}`);
+        ? (title = tempTitle)
+        : (title = tempTitle + `\n${course.location}`);
     return { ...course, title };
   });
 
