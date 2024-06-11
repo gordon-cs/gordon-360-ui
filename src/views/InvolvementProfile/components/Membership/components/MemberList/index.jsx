@@ -52,7 +52,7 @@ const MemberList = ({
   };
 
   const header = isMobileView ? (
-    <CardHeader title="Members" className={styles.headerStyle} />
+    <CardHeader title="Members" className="gc360_header" />
   ) : isAdmin || isSiteAdmin ? (
     <CardHeader
       title={
@@ -71,7 +71,7 @@ const MemberList = ({
         </Grid>
       }
       titleTypographyProps={{ variant: 'h6' }}
-      className={styles.headerStyle}
+      className="gc360_header"
     />
   ) : (
     <CardHeader
