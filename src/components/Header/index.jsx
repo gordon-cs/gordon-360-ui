@@ -165,6 +165,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
             label="Involvements"
             component={ForwardNavLink}
             to="/involvements"
+            tabIndex={0}
           />
           <Tab
             className={styles.tab}
