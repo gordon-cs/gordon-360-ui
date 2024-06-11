@@ -19,6 +19,7 @@ const SectionTitle: { [Key in keyof TranscriptItems]: string } = {
 };
 
 const CoCurricularTranscript = () => {
+  const [previousTitles, setPreviousTitles] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [transcriptItems, setTranscriptItems] = useState<TranscriptItems | undefined>();
   const isAuthenticated = useIsAuthenticated();
@@ -32,6 +33,7 @@ const CoCurricularTranscript = () => {
           return;
         }
         setLoading(true);
+        setPreviousTitles([]);
         const transcriptItems = await transcriptService.getItems(profile.AD_Username);
         setTranscriptItems(transcriptItems);
       } else {
@@ -78,6 +80,8 @@ const CoCurricularTranscript = () => {
                         ) : (
                           <Experience
                             Experience={activity}
+                            previousTitles={previousTitles}
+                            setPreviousTitles={setPreviousTitles}
                             key={activity.Job_Title + activity.Job_Start_Date}
                           />
                         ),
