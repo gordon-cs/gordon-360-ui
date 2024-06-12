@@ -33,6 +33,10 @@ const CoCurricularTranscript = () => {
           return;
         }
         setLoading(true);
+        /**
+         * When you return the transcript from other page, the job titles will be lost
+         * Fixing bug by setting PreviousTitles to empty array when the transcript is loaded
+         */
         setPreviousTitles([]);
         const transcriptItems = await transcriptService.getItems(profile.AD_Username);
         setTranscriptItems(transcriptItems);

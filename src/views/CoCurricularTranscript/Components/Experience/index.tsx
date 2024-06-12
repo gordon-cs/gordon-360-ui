@@ -10,11 +10,14 @@ type Props = {
 };
 
 const Experience = ({ Experience, previousTitles, setPreviousTitles }: Props) => {
+  const jobTitles = newJobTitle(Experience, previousTitles, setPreviousTitles);
+  const experienceTranscript =
+    jobTitles === ''
+      ? styles.experience_transcript_activities_empty_titles
+      : styles.experience_transcript_activities;
   return (
-    <div className={styles.experience_transcript_activities}>
-      <div className={styles.organization_role}>
-        {newJobTitle(Experience, previousTitles, setPreviousTitles)}
-      </div>
+    <div className={experienceTranscript}>
+      <div className={styles.organization_role}>{jobTitles}</div>
       <div className={styles.date}> {formatDuration(Experience)} </div>
     </div>
   );

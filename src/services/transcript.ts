@@ -22,8 +22,7 @@ const getItems = (username: string) =>
   Promise.all([
     userService.getMembershipHistory(username),
     http.get<StudentEmployment[]>('studentemployment/'),
-  ])
-    .then(([memberships, jobs]) => categorizeItems(memberships, jobs))
+  ]).then(([memberships, jobs]) => categorizeItems(memberships, jobs));
 
 // const MembershipTypeMap = {
 //   LEA: 'honors',
@@ -71,12 +70,13 @@ const categorizeItems = async (memberships: MembershipHistory[], jobs: StudentEm
 
   groupedMembershipHistory.activities = memberships;
 
-  // sorting job title by alphabetical order
-
-  // sorting the same job title by end date
+  /**
+   * Sorting job titles by alphabetical order.
+   * Sorting job titles by end date if there are the same job titles.
+   */
   groupedMembershipHistory.experiences.sort((a, b) =>
-    getJobTitle(a).localeCompare(getJobTitle(b)) != 0
-      ? 0
+    getJobTitle(a).localeCompare(getJobTitle(b)) !== 0
+      ? getJobTitle(a).localeCompare(getJobTitle(b))
       : getExperienceEndDate(b) - getExperienceEndDate(a),
   );
 
@@ -148,5 +148,5 @@ const transcriptService = {
 
 export default transcriptService;
 
-const getJobTitle = (experience: MembershipHistory | StudentEmployment) => 
-   'Sessions' in experience ? experience.ActivityCode : experience.Job_Title;
+const getJobTitle = (experience: MembershipHistory | StudentEmployment) =>
+  'Sessions' in experience ? experience.ActivityCode : experience.Job_Title;
