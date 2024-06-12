@@ -63,7 +63,7 @@ const useAltText = () => {
 
   useEffect(() => {
     if (location.pathname === '/') {
-      setAltText('Gordon 360 Logo - You are on the home page');
+      setAltText('Gordon 360 Logo - Home page');
     } else {
       setAltText('Gordon 360 Logo - Go to home');
     }
