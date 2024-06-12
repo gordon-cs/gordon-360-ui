@@ -24,7 +24,6 @@ const getItems = (username: string) =>
     http.get<StudentEmployment[]>('studentemployment/'),
   ])
     .then(([memberships, jobs]) => categorizeItems(memberships, jobs))
-    .then();
 
 // const MembershipTypeMap = {
 //   LEA: 'honors',
@@ -73,7 +72,6 @@ const categorizeItems = async (memberships: MembershipHistory[], jobs: StudentEm
   groupedMembershipHistory.activities = memberships;
 
   // sorting job title by alphabetical order
-  groupedMembershipHistory.experiences.sort((a, b) => getJobTitle(a).localeCompare(getJobTitle(b)));
 
   // sorting the same job title by end date
   groupedMembershipHistory.experiences.sort((a, b) =>
@@ -150,8 +148,5 @@ const transcriptService = {
 
 export default transcriptService;
 
-const getJobTitle = (experience: MembershipHistory | StudentEmployment) => {
-  const title = 'Sessions' in experience ? experience.ActivityCode : experience.Job_Title;
-
-  return title;
-};
+const getJobTitle = (experience: MembershipHistory | StudentEmployment) => 
+   'Sessions' in experience ? experience.ActivityCode : experience.Job_Title;
