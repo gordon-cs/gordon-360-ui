@@ -10,6 +10,20 @@ import user from 'services/user';
 import EditIcon from '@mui/icons-material/Edit';
 import { SignalWifiStatusbarConnectedNoInternet4TwoTone } from '@mui/icons-material';
 
+type Props = {
+  myProf: any;
+  profile: {
+    BuildingDescription: string;
+    OnCampusDepartment: string;
+    OnCampusRoom: string;
+    OnCampusPhone: string;
+    PersonType: string;
+    office_hours: string;
+    Mail_Location: string;
+    Mail_Description: string;
+  };
+};
+
 const OfficeInfoList = ({
   myProf,
   profile: {
@@ -22,7 +36,7 @@ const OfficeInfoList = ({
     Mail_Location,
     Mail_Description,
   },
-}) => {
+}: Props) => {
   const [profOfficeHours, setProfOfficeHours] = useState(office_hours);
   const [profMailLocation, setProfMailLocation] = useState(Mail_Location);
 

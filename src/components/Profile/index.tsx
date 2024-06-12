@@ -17,14 +17,14 @@ import {
 
 type severityType = 'error' | 'info' | 'success' | 'warning';
 
-const Profile = ({ profile, myProf }) => {
+const Profile = ({ profile, myProf }: any) => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
   const isOnline = useNetworkStatus();
   const viewerIsPolice = useAuthGroups(AuthGroup.Police);
   const [canReadStudentSchedules, setCanReadStudentSchedules] = useState();
   const profileIsStudent = profile.PersonType?.includes('stu');
 
-  const createSnackbar = useCallback((message, severity) => {
+  const createSnackbar = useCallback((message: string, severity: severityType) => {
     setSnackbar({ message, severity, open: true });
   }, []);
 

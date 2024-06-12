@@ -6,12 +6,19 @@ import { useState, useEffect } from 'react';
 import userService from 'services/user';
 import peopleSearchService from 'services/peopleSearch';
 
+type severityType = 'error' | 'info' | 'success' | 'warning';
+
+type Building = {
+  Code: string;
+  Description: string;
+};
+
 const UpdateOffice = () => {
   const [open, setOpen] = useState(false);
   const [room, setRoom] = useState('');
-  const [building, setBuilding] = useState();
-  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
-  const [buildings, setBuildings] = useState([]);
+  const [building, setBuilding] = useState('');
+  const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
+  const [buildings, setBuildings] = useState<Building[]>([]);
 
   useEffect(() => {
     peopleSearchService.getBuildings().then(setBuildings);
@@ -48,7 +55,6 @@ const UpdateOffice = () => {
         buttonClicked={handleSubmit}
         cancelButtonName="CANCEL"
         cancelButtonClicked={() => setOpen(false)}
-        handleSubmit
       >
         <Box
           sx={{ gap: '1rem', marginBlockStart: '1rem', display: 'flex', flexDirection: 'column' }}
@@ -57,8 +63,7 @@ const UpdateOffice = () => {
             options={buildings}
             renderInput={(params) => <TextField {...params} label="Building" />}
             getOptionLabel={(option) => option.Description}
-            onChange={(_event, value) => setBuilding(value.Code)}
-            required
+            onChange={(_event, value) => setBuilding(value!.Code)}
           />
           <TextField
             label="Room"
@@ -70,7 +75,7 @@ const UpdateOffice = () => {
       </GordonDialogBox>
       <GordonSnackbar
         open={snackbar.open}
-        severity={snackbar.severity}
+        severity={snackbar.severity as severityType}
         text={snackbar.message}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
       />

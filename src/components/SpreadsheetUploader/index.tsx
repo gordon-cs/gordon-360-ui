@@ -13,12 +13,24 @@ const acceptedTypes = [
   'text/csv',
 ];
 
-const displayCell = (cellData) => {
+const displayCell = (cellData: any) => {
   if (cellData instanceof Date) {
     return cellData.toLocaleString();
   } else {
     return cellData;
   }
+};
+
+type Props = {
+  open: boolean;
+  setOpen: () => void;
+  onSubmitData: () => void;
+  title: string;
+  maxColumns: number;
+  requiredColumns: string[];
+  otherColumns: string[];
+  buttonName: string;
+  template: string;
 };
 
 const SpreadsheetUploader = ({
@@ -31,11 +43,11 @@ const SpreadsheetUploader = ({
   otherColumns = [],
   buttonName,
   template,
-}) => {
+}: Props) => {
   const [data, setData] = useState();
   const [error, setError] = useState();
 
-  const handleFileUpload = async ([file]) => {
+  const handleFileUpload = async ([file]: any) => {
     try {
       if (!acceptedTypes.includes(file.type)) {
         throw new Error('The file is not one of the supported file types.');

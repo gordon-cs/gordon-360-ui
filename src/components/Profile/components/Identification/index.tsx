@@ -63,18 +63,18 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                */
               await user.getImage(profile.AD_Username)
             : // Checks to see if the current page is the My Profile page
-            myProf
-            ? /**
-               * This case will occur only if the currently signed-in user is Non-Faculty and are
-               * on the My Profile page
-               */
-              await user.getImage()
-            : /**
-               * The requested user's image is Non-Faculty
-               * If currently signed-in user is Faculty : Will receive default and preferred image
-               * If currently signed-in user is Non-Faculty : Will receive either default or preferred image
-               */
-              await user.getImage(profile.AD_Username);
+              myProf
+              ? /**
+                 * This case will occur only if the currently signed-in user is Non-Faculty and are
+                 * on the My Profile page
+                 */
+                await user.getImage()
+              : /**
+                 * The requested user's image is Non-Faculty
+                 * If currently signed-in user is Faculty : Will receive default and preferred image
+                 * If currently signed-in user is Non-Faculty : Will receive either default or preferred image
+                 */
+                await user.getImage(profile.AD_Username);
 
         // Sets the given user's preferred image. If a default image is given but the preferred is undefined,
         // then this could mean that the currently signed-in user is not allowed to see the preferred image or
@@ -539,8 +539,8 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                 isAprilFools
                   ? profileTitleAprilFools
                   : userProfile.NickName
-                  ? userProfile.NickName
-                  : userProfile.FirstName
+                    ? userProfile.NickName
+                    : userProfile.FirstName
               }'s Profile`}
             />
           ) : (
@@ -601,10 +601,10 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                           ? // Main Photo: Default
                             defaultUserImage
                           : // Main Photo: Preferred
-                          // If the given user doesn't have a preferred photo, then their default photo is shown
-                          hasPreferredImage
-                          ? preferredUserImage
-                          : defaultUserImage
+                            // If the given user doesn't have a preferred photo, then their default photo is shown
+                            hasPreferredImage
+                            ? preferredUserImage
+                            : defaultUserImage
                       }`}
                       alt="Profile"
                     />
