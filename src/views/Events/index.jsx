@@ -10,6 +10,7 @@ import {
   FormControlLabel,
   Grid,
   TextField,
+  Link,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EventIcon from '@mui/icons-material/Event';
@@ -185,7 +186,10 @@ const Events = () => {
                         <Button
                           color="secondary"
                           variant="contained"
-                          onClick={() => navigate('/attended')}
+                          component={Link}
+                          href="https://iattendedapp.com/"
+                          target="_blank"
+                          rel="noopener noreferrer"
                         >
                           ATTENDED CL&amp;W
                         </Button>
