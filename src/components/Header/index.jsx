@@ -57,12 +57,28 @@ const useTabHighlight = () => {
   return tabIndex;
 };
 
+const useAltText = () => {
+  const location = useLocation();
+  const [altText, setAltText] = useState('');
+
+  useEffect(() => {
+    if (location.pathname === '/') {
+      setAltText('Gordon 360 Logo - Home page');
+    } else {
+      setAltText('Gordon 360 Logo - Go to home');
+    }
+  }, [location]);
+
+  return altText;
+};
+
 const GordonHeader = ({ onDrawerToggle }) => {
   const navigate = useNavigate();
   const [dialog, setDialog] = useState('');
   const isOnline = useNetworkStatus();
   const isAuthenticated = useIsAuthenticated();
   const tabIndex = useTabHighlight();
+  const altText = useAltText();
 
   const handleOpenProfile = () => {
     navigate('/myprofile');
@@ -148,7 +164,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
               <source srcSet={headerLogo72dpi} media="(min-width: 900px)" />
               <source srcSet={headerLogo64dpi} media="(min-width: 600px)" />
               <source srcSet={headerLogo56dpiNoText} media="(max-width: 375px)" />
-              <img src={headerLogo56dpi} alt="Gordon 360 Logo"></img>
+              <img src={headerLogo56dpi} alt={altText}></img>
             </picture>
           </Link>
         </div>
