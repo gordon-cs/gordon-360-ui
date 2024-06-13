@@ -247,7 +247,7 @@ const MemberListItem = ({
                 {member.FirstName} {member.LastName}
               </Typography>
             ) : (
-              <Link href={`/profile/${member.Username}`} underline="hover">
+              <Link href={`/profile/${member.Username}`} className={`gc360_text_link`}>
                 <Typography>
                   {member.FirstName} {member.LastName}
                 </Typography>
@@ -307,7 +307,7 @@ const MemberListItem = ({
                         {member.FirstName} {member.LastName}
                       </Typography>
                     ) : (
-                      <Link href={`/profile/${member.Username}`} underline="hover">
+                      <Link href={`/profile/${member.Username}`} className={`gc360_text_link`}>
                         <Typography>
                           {member.FirstName} {member.LastName}
                         </Typography>
@@ -359,7 +359,7 @@ const MemberListItem = ({
                 {member.FirstName} {member.LastName}
               </Typography>
             ) : (
-              <Link href={`/profile/${member.Username}`} underline="hover">
+              <Link href={`/profile/${member.Username}`} className={`gc360_text_link`}>
                 <Typography>
                   {member.FirstName} {member.LastName}
                 </Typography>

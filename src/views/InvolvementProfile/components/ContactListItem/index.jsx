@@ -42,15 +42,15 @@ const ContactListItem = ({ contact }) => {
           {!avatar && <PlaceHolderAvatar />}
         </Avatar>
       </ListItemAvatar>
-      <Link href={`/profile/${contact.Email.split('@')[0]}`} underline="hover">
+      <Link href={`/profile/${contact.Email.split('@')[0]}`} className={`gc360_text_link`}>
         <ListItemText
           primary={`${contact.FirstName} ${contact.LastName}`}
           secondary={contact?.Description}
         />
       </Link>
       <ListItemSecondaryAction>
-        <IconButton color="primary" href={`mailto:${contact.Email}`} size="large">
-          <Email color="primary" />
+        <IconButton href={`mailto:${contact.Email}`} size="large">
+          <Email className={`gc360_text_link`} />
         </IconButton>
       </ListItemSecondaryAction>
     </ListItem>
