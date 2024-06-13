@@ -1,6 +1,7 @@
 import { Typography, Grid, Button, TextField, Box } from '@mui/material/';
 import { useState, useMemo, useEffect } from 'react';
 import styles from './AlumniUpdateForm.module.css';
+import { Profile as profileType } from 'services/user';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { ConfirmationRow } from './components/ConfirmationRow';
@@ -20,7 +21,7 @@ const UPDATE_STEP = 'update';
 const CONFIRM_STEP = 'confirm';
 
 type Props = {
-  profile: any;
+  profile: profileType;
   closeWithSnackbar: ({}) => void;
   openAlumniUpdateForm: boolean;
   setOpenAlumniUpdateForm: ({}) => void;

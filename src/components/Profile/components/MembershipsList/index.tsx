@@ -2,9 +2,17 @@ import { Button, Card, CardContent, CardHeader, Grid, List, Typography } from '@
 import GordonLoader from 'components/Loader';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import membershipService from 'services/membership';
+import membershipService, { MembershipHistory } from 'services/membership';
 import MembershipInfoCard from './components/MembershipInfoCard';
 import styles from './MembershipsList.module.css';
+
+type severityType = 'error' | 'info' | 'success' | 'warning';
+
+type Props = {
+  username: string;
+  myProf: boolean;
+  createSnackbar: (message: string, severity: severityType) => void;
+};
 
 /**
  * A List of memberships for display on the Profile and MyProfile views.
@@ -15,9 +23,9 @@ import styles from './MembershipsList.module.css';
  * @param {Function} props.createSnackbar function to create a snackbar of whether an operation succeeded
  * @returns {JSX} A list of the user's memberships
  */
-const MembershipsList = ({ username, myProf, createSnackbar }) => {
+const MembershipsList = ({ username, myProf, createSnackbar }: Props) => {
   const [loading, setLoading] = useState(true);
-  const [membershipHistories, setMembershipHistories] = useState([]);
+  const [membershipHistories, setMembershipHistories] = useState<MembershipHistory[]>([]);
 
   useEffect(() => {
     async function loadMemberships() {
@@ -69,7 +77,7 @@ const MembershipsList = ({ username, myProf, createSnackbar }) => {
     </Grid>
   );
   const noteInfo = myProf && (
-    <div align="left" className={styles.memberships_card_note}>
+    <div className={styles.memberships_card_note}>
       <Typography>
         NOTE: Shaded areas are visible only to you and other members of the same club session.
       </Typography>

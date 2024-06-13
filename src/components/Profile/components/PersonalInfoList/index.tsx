@@ -22,6 +22,7 @@ import { useEffect, useState } from 'react';
 import { AuthGroup } from 'services/auth';
 import userService from 'services/user';
 import ProfileInfoListItem from '../ProfileInfoListItem';
+import { Profile as profileType } from 'services/user';
 import UpdatePhone from './components/UpdatePhoneDialog';
 import UpdatePlannedGraduationYear from './components/UpdatePlannedGraduationYear';
 import styles from './PersonalInfoList.module.css';
@@ -33,7 +34,7 @@ import DDLock from './DandD.png';
 
 const PRIVATE_INFO = 'Private as requested.';
 
-const formatPhone = (phone) => {
+const formatPhone = (phone: string) => {
   if (phone?.length === 10) {
     return `(${phone?.slice(0, 3)}) ${phone?.slice(3, 6)}-${phone?.slice(6)}`;
   } else {
@@ -41,7 +42,16 @@ const formatPhone = (phone) => {
   }
 };
 
-const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
+type severityType = 'error' | 'info' | 'success' | 'warning';
+
+type Props = {
+  myProf: boolean;
+  profile: profileType;
+  isOnline: boolean;
+  createSnackbar: (message: string, severity: severityType) => void;
+};
+
+const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) => {
   const [isMobilePhonePrivate, setIsMobilePhonePrivate] = useState(
     Boolean(profile.IsMobilePhonePrivate && profile.MobilePhone !== PRIVATE_INFO),
   );
@@ -325,8 +335,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                 <b style={{ color: strength.color }}>{strength.name}</b>
               </a>
             )).reduce((prev, curr) => [prev, ', ', curr])}
-            <GordonTooltip
-              title={
+            <GordonTooltip title={''} enterTouchDelay={50} leaveTouchDelay={5000}>
+              {
                 <span style={{ fontSize: '0.8rem' }}>
                   Categories:&nbsp;
                   <span style={{ color: '#60409f' }}>Executing</span>,{' '}
@@ -335,9 +345,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                   <span style={{ color: '#2c8b0f' }}>Thinking</span>
                 </span>
               }
-              enterTouchDelay={50}
-              leaveTouchDelay={5000}
-            />
+            </GordonTooltip>
           </Typography>
         ) : (
           <Typography>
@@ -600,7 +608,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
         <a href="https://gordon.criterionhcm.com/">Criterion</a> and look under "Personal Info" tab.
       </Typography>
     ) : isStudent ? (
-      <div align="left" className={styles.note}>
+      <div className={styles.note}>
         <Typography>NOTE:</Typography>
         <ul>
           <li>

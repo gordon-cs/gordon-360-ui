@@ -1,4 +1,4 @@
-import { Snackbar, Alert } from '@mui/material/';
+import { Snackbar, SnackbarProps, Alert, AlertProps } from '@mui/material/';
 import {
   CheckCircleOutlineOutlined,
   ErrorOutline,
@@ -6,15 +6,17 @@ import {
   ReportProblemOutlined,
 } from '@mui/icons-material/';
 
-type Props = {
-  open: boolean;
-  text: string;
-  severity: 'error' | 'info' | 'success' | 'warning';
-  duration?: number;
-  onClose: () => void;
-};
+type Props = SnackbarProps &
+  AlertProps & {
+    open: boolean;
+    text?: string | null;
+    severity: 'error' | 'info' | 'success' | 'warning';
+    duration?: number;
+    onClose: () => void;
+  };
 
 const SimpleSnackbar = ({
+  children,
   open,
   text,
   severity,

@@ -1,5 +1,6 @@
 import { Grid } from '@mui/material';
 import GordonSnackbar from 'components/Snackbar';
+import { Profile as profileType } from 'services/user';
 import { useAuthGroups } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useCallback, useEffect, useState } from 'react';
@@ -17,11 +18,16 @@ import {
 
 type severityType = 'error' | 'info' | 'success' | 'warning';
 
-const Profile = ({ profile, myProf }: any) => {
+type Props = {
+  profile: profileType;
+  myProf: boolean;
+};
+
+const Profile = ({ profile, myProf }: Props) => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
   const isOnline = useNetworkStatus();
   const viewerIsPolice = useAuthGroups(AuthGroup.Police);
-  const [canReadStudentSchedules, setCanReadStudentSchedules] = useState();
+  const [canReadStudentSchedules, setCanReadStudentSchedules] = useState<boolean>();
   const profileIsStudent = profile.PersonType?.includes('stu');
 
   const createSnackbar = useCallback((message: string, severity: severityType) => {

@@ -66,7 +66,7 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }: Props) => {
 
     responses.forEach((response) => {
       if (response.value === undefined) {
-        setFailedUpdates((prevState) => [...prevState, [response.platform]]);
+        setFailedUpdates((prevState) => [...prevState, response.platform]);
       } else {
         setLinks((prevLinks: {}) => ({
           ...prevLinks,

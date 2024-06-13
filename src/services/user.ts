@@ -43,6 +43,16 @@ type BaseProfileInfo = {
   OnCampusPhone: string;
   OnCampusPrivatePhone: string;
   OnCampusFax: string;
+  PersonalEmail?: string;
+  WorkEmail?: string;
+  aEmail?: string;
+  PreferredEmail?: string;
+  doNotContact?: boolean;
+  doNotMail?: boolean;
+  WorkPhone?: string;
+  MobilePhone?: string;
+  IsMobilePhonePrivate: number;
+  PreferredPhone?: string;
   Mail_Location: string;
   HomeStreet1: string;
   HomeStreet2: string;
@@ -70,6 +80,7 @@ type BaseProfileInfo = {
   PersonType: string;
   fullName?: string;
   CliftonStrengths?: CliftonStrengths | null;
+  Married?: string;
 };
 
 export type UnformattedFacStaffProfileInfo = BaseProfileInfo & {

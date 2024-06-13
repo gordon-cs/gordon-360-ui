@@ -23,7 +23,7 @@ const displayCell = (cellData: any) => {
 
 type Props = {
   open: boolean;
-  setOpen: () => void;
+  setOpen: ({}) => void;
   onSubmitData: () => void;
   title: string;
   maxColumns: number;
@@ -45,7 +45,7 @@ const SpreadsheetUploader = ({
   template,
 }: Props) => {
   const [data, setData] = useState();
-  const [error, setError] = useState();
+  const [error, setError] = useState<string | null>();
 
   const handleFileUpload = async ([file]: any) => {
     try {
@@ -155,7 +155,7 @@ const SpreadsheetUploader = ({
         dropZone
       )}
       <GordonSnackbar
-        open={error}
+        open={error ? true : false}
         text={error}
         severity={'error'}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}

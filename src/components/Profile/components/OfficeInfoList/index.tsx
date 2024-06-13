@@ -1,4 +1,4 @@
-import { useState, Fragment, useEffect } from 'react';
+import { useState, Fragment, useEffect, Children } from 'react';
 import { Card, CardContent, CardHeader, Grid, List, Typography, IconButton } from '@mui/material';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import styles from './OfficeInfoList.module.css';
@@ -20,7 +20,7 @@ type Props = {
     PersonType: string;
     office_hours: string;
     Mail_Location: string;
-    Mail_Description: string;
+    Mail_Description: string | ReactElement;
   };
 };
 
@@ -120,11 +120,9 @@ const OfficeInfoList = ({
             <Typography>
               {profMailLocation ? profMailLocation : 'Add your mail location here'}
               {Mail_Description && (
-                <GordonTooltip
-                  content={Mail_Description}
-                  enterTouchDelay={50}
-                  leaveTouchDelay={2000}
-                />
+                <GordonTooltip title={''} enterTouchDelay={50} leaveTouchDelay={2000}>
+                  {Mail_Description}
+                </GordonTooltip>
               )}
             </Typography>
           </Grid>
