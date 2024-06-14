@@ -11,6 +11,7 @@ type severityType = 'error' | 'info' | 'success' | 'warning';
 type Props = {
   username: string;
   myProf: boolean;
+  PersonType?: string;
   createSnackbar: (message: string, severity: severityType) => void;
 };
 
@@ -23,7 +24,7 @@ type Props = {
  * @param {Function} props.createSnackbar function to create a snackbar of whether an operation succeeded
  * @returns {JSX} A list of the user's memberships
  */
-const MembershipsList = ({ username, myProf, createSnackbar }: Props) => {
+const MembershipsList = ({ username, myProf, PersonType, createSnackbar }: Props) => {
   const [loading, setLoading] = useState(true);
   const [membershipHistories, setMembershipHistories] = useState<MembershipHistory[]>([]);
 

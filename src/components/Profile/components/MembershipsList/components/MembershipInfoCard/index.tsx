@@ -9,6 +9,7 @@ import {
   AccordionSummary,
   AccordionDetails,
 } from '@mui/material/';
+import { ReactNode } from 'react';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { Link } from 'react-router-dom';
 import styles from './MembershipInfoCard.module.css';
@@ -17,15 +18,23 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 type severityType = 'error' | 'info' | 'success' | 'warning';
 
-type Props = {
+type PrivacyProps = {
+  createSnackbar: (message: string, severity: severityType) => void;
+  element: MembershipView;
+};
+
+type OnlineProps = {
+  element: MembershipView;
+  children: JSX.Element | JSX.Element[];
+};
+
+type MembershipProps = {
   myProf: boolean;
   membershipHistory: MembershipHistory;
   createSnackbar: (message: string, severity: severityType) => void;
-  element: MembershipView;
-  children: JSX.Element;
 };
 
-const PrivacyToggle = ({ element, createSnackbar }: Props) => {
+const PrivacyToggle = ({ element, createSnackbar }: PrivacyProps) => {
   const toggleMembershipPrivacy = async (element: MembershipView) => {
     try {
       const update = await membershipService.setMembershipPrivacy(
@@ -64,9 +73,9 @@ const PrivacyToggle = ({ element, createSnackbar }: Props) => {
   );
 };
 
-const OnlineOnlyLink = ({ element, children }: Props) => {
+const OnlineOnlyLink = ({ element, children }: OnlineProps) => {
   const isOnline = useNetworkStatus();
-  const showPrivate = element.IsInvolvementPrivate || element.Privacy;
+  const showPrivate = element.Privacy;
   if (isOnline) {
     return (
       <Link
@@ -87,7 +96,7 @@ const OnlineOnlyLink = ({ element, children }: Props) => {
   }
 };
 
-const MembershipInfoCard = ({ myProf, membershipHistory, createSnackbar }: Props) => {
+const MembershipInfoCard = ({ myProf, membershipHistory, createSnackbar }: MembershipProps) => {
   const isOnline = useNetworkStatus();
   return (
     <>

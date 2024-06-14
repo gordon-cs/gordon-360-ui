@@ -103,6 +103,7 @@ export type UnformattedStudentProfileInfo = BaseProfileInfo & {
   OffCampusCountry: string;
   OffCampusPhone: string;
   OffCampusFax: string;
+  Hall?: string;
   Cohort: string;
   Class: Class;
   Major: string;
@@ -141,6 +142,7 @@ type UnformattedAlumniProfileInfo = BaseProfileInfo & {
   PreferredClassYear?: string;
   ShareName: string;
   ShareAddress?: string;
+  Majors: string[];
 };
 
 export type UnformattedProfileInfo =
@@ -165,7 +167,7 @@ export type StudentProfileInfo = {
 
 export type Profile = FacStaffProfileInfo | StudentProfileInfo | AlumniProfileInfo;
 
-type StudentAdvisorInfo = {
+export type StudentAdvisorInfo = {
   Firstname: string;
   Lastname: string;
   AD_Username: string;
@@ -192,12 +194,32 @@ export type OfficeLocationQuery = {
   RoomNumber: string;
 };
 
-function isStudent(profile: Profile): profile is StudentProfileInfo;
-function isStudent(profile: UnformattedProfileInfo): profile is UnformattedStudentProfileInfo;
-function isStudent(
+export function isStudent(profile: Profile): profile is StudentProfileInfo;
+export function isStudent(
+  profile: UnformattedProfileInfo,
+): profile is UnformattedStudentProfileInfo;
+export function isStudent(
   profile: UnformattedProfileInfo | Profile,
 ): profile is UnformattedStudentProfileInfo | StudentProfileInfo {
   return profile?.PersonType.includes('stu') || false;
+}
+
+export function isFacStaff(profile: Profile): profile is FacStaffProfileInfo;
+export function isFacStaff(
+  profile: UnformattedProfileInfo,
+): profile is UnformattedFacStaffProfileInfo;
+export function isFacStaff(
+  profile: UnformattedProfileInfo | Profile,
+): profile is UnformattedStudentProfileInfo | StudentProfileInfo {
+  return profile?.PersonType.includes('fac') || false;
+}
+
+export function isAlumni(profile: Profile): profile is AlumniProfileInfo;
+export function isAlumni(profile: UnformattedProfileInfo): profile is UnformattedAlumniProfileInfo;
+export function isAlumni(
+  profile: UnformattedProfileInfo | Profile,
+): profile is UnformattedAlumniProfileInfo | AlumniProfileInfo {
+  return profile?.PersonType.includes('alu') || false;
 }
 
 function formatCountry(profile: UnformattedProfileInfo) {

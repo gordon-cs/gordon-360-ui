@@ -12,7 +12,7 @@ import { KeyboardEvent, PropsWithChildren } from 'react';
 type Props = {
   open: boolean;
   title: string;
-  buttonClicked: (({}) => void) | null;
+  buttonClicked?: (({}) => void) | null;
   buttonName?: string;
   isButtonDisabled?: boolean;
   cancelButtonClicked?: ((event: {}) => void) | null;

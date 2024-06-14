@@ -24,7 +24,7 @@ type Props = {
   profile: profileType;
   closeWithSnackbar: ({}) => void;
   openAlumniUpdateForm: boolean;
-  setOpenAlumniUpdateForm: ({}) => void;
+  setOpenAlumniUpdateForm: (bool: boolean) => void;
 };
 
 /**

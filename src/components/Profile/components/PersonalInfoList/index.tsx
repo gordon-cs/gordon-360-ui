@@ -22,7 +22,13 @@ import { useEffect, useState } from 'react';
 import { AuthGroup } from 'services/auth';
 import userService from 'services/user';
 import ProfileInfoListItem from '../ProfileInfoListItem';
-import { Profile as profileType } from 'services/user';
+import {
+  Profile as profileType,
+  StudentAdvisorInfo as AdvisorType,
+  isStudent as checkIsStudent,
+  isFacStaff as checkIsFacStaff,
+  isAlumni as checkIsAlumni,
+} from 'services/user';
 import UpdatePhone from './components/UpdatePhoneDialog';
 import UpdatePlannedGraduationYear from './components/UpdatePlannedGraduationYear';
 import styles from './PersonalInfoList.module.css';
@@ -60,7 +66,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
   );
   const [openAlumniUpdateForm, setOpenAlumniUpdateForm] = useState(false);
   const [mailCombo, setMailCombo] = useState();
-  const [advisorsList, setAdvisorsList] = useState([]);
+  const [advisorsList, setAdvisorsList] = useState<AdvisorType[]>([]);
   const [showMailCombo, setShowMailCombo] = useState(false);
   const isStudent = profile.PersonType?.includes('stu');
   const isFacStaff = profile.PersonType?.includes('fac');
@@ -103,7 +109,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     (keepPrivate && profile.HomeCity !== PRIVATE_INFO) || profile.HomeStreet2;
 
   // FacStaff spouses are private for private users
-  const isSpousePrivate = isFacStaff && keepPrivate && profile.SpouseName !== PRIVATE_INFO;
+  const isSpousePrivate =
+    checkIsFacStaff(profile) && keepPrivate && profile.SpouseName !== PRIVATE_INFO;
   useEffect(() => {
     async function loadPersonalInfo() {
       if (isStudent) {
@@ -244,7 +251,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
   );
 
   const minors =
-    profile.Minors?.length > 0 && !isFacStaff ? (
+    checkIsStudent(profile) && profile.Minors?.length > 0 ? (
       <ProfileInfoListItem
         title={profile.Minors?.length > 1 ? 'Minors:' : 'Minor:'}
         contentText={profile.Minors?.join(', ')}
@@ -252,7 +259,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     ) : null;
 
   const majors =
-    isFacStaff || (isAlumni && !profile.Majors?.length) ? null : (
+    checkIsFacStaff(profile) || (checkIsAlumni(profile) && !profile.Majors?.length) ? null : (
       <ProfileInfoListItem
         title={profile.Majors?.length > 1 ? 'Majors:' : 'Major:'}
         contentText={!profile.Majors?.length ? 'Deciding' : profile.Majors?.join(', ')}
@@ -260,7 +267,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     );
 
   const plannedGraduationYear =
-    myProf && isStudent ? (
+    myProf && checkIsStudent(profile) ? (
       <ProfileInfoListItem
         title={'Planned Graduation Year:'}
         contentText={
@@ -276,10 +283,10 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
           </Grid>
         }
       />
-    ) : profPlannedGradYear ? (
+    ) : profPlannedGradYear && checkIsStudent(profile) ? (
       <ProfileInfoListItem
         title={'Planned Graduation Year:'}
-        contentText={profile.PlannedGradYear}
+        contentText={profile.plannedGradYear}
         myProf={myProf}
       />
     ) : null;
@@ -306,17 +313,19 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
   };
 
   const gradYearAndMajor = () => {
-    var text = profile.PreferredClassYear;
-    if (profile.Major1Description !== '') {
-      text += ' | ' + profile.Major1Description;
+    if (checkIsAlumni(profile)) {
+      let text = profile.PreferredClassYear;
+      if (profile.Major1Description !== '') {
+        text += ' | ' + profile.Major1Description;
+      }
+      if (profile.Major2Description !== '') {
+        text += ' & ' + profile.Major2Description;
+      }
+      return text;
     }
-    if (profile.Major2Description !== '') {
-      text += ' & ' + profile.Major2Description;
-    }
-    return text;
   };
 
-  const graduationYear = isAlumni && (
+  const graduationYear = checkIsAlumni(profile) && (
     <ProfileInfoListItem title={profile.College + ' Alum:'} contentText={gradYearAndMajor()} />
   );
 
@@ -547,19 +556,21 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     ) : null;
 
   const campusDormInfo =
-    isStudent && profile.OnOffCampus && !(profile.BuildingDescription || profile.Hall) ? (
+    checkIsStudent(profile) &&
+    profile.OnOffCampus &&
+    !(profile.BuildingDescription || profile.Hall) ? (
       <ProfileInfoListItem
         title="Dormitory:"
         contentText={profile.OnOffCampus}
-        private={isCampusLocationPrivate}
+        privateInfo={isCampusLocationPrivate}
         myProf={myProf}
       />
-    ) : isStudent ? (
+    ) : checkIsStudent(profile) ? (
       <ProfileInfoListItem
         title="Dormitory:"
         contentText={
           <>
-            <span className={keepPrivate ? null : styles.not_private}>
+            <span className={keepPrivate ? undefined : styles.not_private}>
               {profile.BuildingDescription ?? profile.Hall}
             </span>
 
@@ -592,7 +603,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     ) : null;
 
   const spouse =
-    isFacStaff && profile.SpouseName ? (
+    checkIsFacStaff(profile) && profile.SpouseName ? (
       <ProfileInfoListItem
         title="Spouse:"
         contentText={profile.SpouseName}
@@ -693,7 +704,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
           <Grid item xs={8}>
             <CardHeader title="Personal Information" />
           </Grid>
-          <Grid item xs={4} align="right">
+          <Grid item xs={4}>
             {/* visible only for fac/staff on their profile */}
             {/* isHomePhonePrivate is a misleading name for determining if personal information should be shown */}
             {isFacStaff && myProf ? (
@@ -706,7 +717,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
                   />
                 }
                 label={isHomePhonePrivate ? 'Private' : 'Public'}
-                labelPlacement="right"
+                labelPlacement="end"
                 disabled={!isOnline}
               />
             ) : null}
@@ -737,7 +748,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
         profile={profile}
         closeWithSnackbar={handleAlumniUpdateForm}
         openAlumniUpdateForm={openAlumniUpdateForm}
-        setOpenAlumniUpdateForm={(bool) => setOpenAlumniUpdateForm(bool)}
+        setOpenAlumniUpdateForm={(bool: boolean) => setOpenAlumniUpdateForm(bool)}
       />
     </Grid>
   );

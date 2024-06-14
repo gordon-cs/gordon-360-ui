@@ -24,7 +24,7 @@ const displayCell = (cellData: any) => {
 type Props = {
   open: boolean;
   setOpen: ({}) => void;
-  onSubmitData: () => void;
+  onSubmitData: ({}) => void;
   title: string;
   maxColumns: number;
   requiredColumns: string[];
@@ -47,7 +47,7 @@ const SpreadsheetUploader = ({
   const [data, setData] = useState();
   const [error, setError] = useState<string | null>();
 
-  const handleFileUpload = async ([file]: any) => {
+  const handleFileUpload = async ([file]: [File]) => {
     try {
       if (!acceptedTypes.includes(file.type)) {
         throw new Error('The file is not one of the supported file types.');
