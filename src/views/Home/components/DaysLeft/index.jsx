@@ -1,204 +1,189 @@
 import { useEffect, useState } from 'react';
 import session from 'services/session';
-import styles from '../Doughnut.module.css';
-import { Card, CardContent, CardHeader, Grid, Typography, checkboxClasses } from '@mui/material';
-import { theme360 } from 'theme';
+import styles from './ProgressBar.module.css';
+import { Grid } from '@mui/material';
 import { format, parseISO } from 'date-fns';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import { withStyles } from '@material-ui/core/styles';
 
 const DaysLeft = () => {
   const [daysRemaining, setDaysRemaining] = useState();
   const [daysFinished, setDaysFinished] = useState();
-  const [currentSessionDescription, setCurrentSessionDescription] = useState();
   const [loading, setLoading] = useState(true);
   const [first, setFirstDay] = useState('');
   const [last, setLastDay] = useState('');
+  const [termDates, setTermDates] = useState({});
+  const [termFinder, setTermFinder] = useState('Fall');
+  const [termDialogue, setTermDialogue] = useState('');
+  const [termProgress, setTermProgress] = useState(0);
   const currentYear = new Date().getFullYear();
   const today = new Date();
-  const [fallEnd, setFallEnd] = useState('');
-  const [springBegin, setSpringBegin] = useState('');
-  const [summerEnd, setSummerEnd] = useState('');
-  const [summerBegin, setSummerBegin] = useState('');
-  const [fallBegin, setFallBegin] = useState('');
-  const [springEnd, setSpringEnd] = useState('');
-  const [nextFallBegin, setNextFallBegin] = useState('');
-  const [termDates, setTermDates] = useState('');
 
-  useEffect(() => {
-    const load = async () => {
-      setLoading(true);
-      const [[daysRemaining, daysInSemester], currentSession] = await Promise.all([
-        session.getDaysLeft(),
-        session.getCurrent(),
-      ]);
-      const first = format(parseISO(currentSession.SessionBeginDate), 'MM/dd/yyyy');
-      const last = format(parseISO(currentSession.SessionEndDate), 'MM/dd/yyyy');
-      const fallBegin = new Date((await session.get(`${currentYear - 1}09`)).SessionBeginDate);
-      const fallEnd = new Date((await session.get(`${currentYear - 1}09`)).SessionEndDate);
-      const springBegin = new Date((await session.get(`${currentYear}01`)).SessionBeginDate);
-      const springEnd = new Date((await session.get(`${currentYear}01`)).SessionEndDate);
-      const summerBegin = new Date((await session.get(`${currentYear}05`)).SessionBeginDate);
-      const summerEnd = new Date((await session.get(`${currentYear}05`)).SessionEndDate);
-      const nextFallBegin = new Date((await session.get(`${currentYear}09`)).SessionBeginDate);
-
-      setFirstDay(first);
-      setLastDay(last);
-      setCurrentSessionDescription(currentSessionDescription);
-      setDaysRemaining(daysRemaining);
-      setDaysFinished(daysInSemester - daysRemaining || 0);
-      setLoading(false);
-      setFallEnd(fallEnd);
-      setSpringBegin(springBegin);
-      setSummerBegin(summerBegin);
-      setSummerEnd(summerEnd);
-      setSpringEnd(springEnd);
-      setFallBegin(fallBegin);
-      setNextFallBegin(nextFallBegin);
-      setTermDates(termDates);
-    };
-
-    load();
-  }, []);
-  async function getTermDates() {
-    const currentYear = new Date().getFullYear();
-
+  const fetchTermDates = async () => {
     const termDates = {
       fall: {
+        name: 'Fall',
         start: new Date((await session.get(`${currentYear - 1}09`)).SessionBeginDate),
         end: new Date((await session.get(`${currentYear - 1}09`)).SessionEndDate),
       },
       spring: {
+        name: 'Spring',
         start: new Date((await session.get(`${currentYear}01`)).SessionBeginDate),
         end: new Date((await session.get(`${currentYear}01`)).SessionEndDate),
       },
       summer: {
+        name: 'Summer',
         start: new Date((await session.get(`${currentYear}05`)).SessionBeginDate),
         end: new Date((await session.get(`${currentYear}05`)).SessionEndDate),
       },
       nextFall: {
+        name: 'Next Fall',
         start: new Date((await session.get(`${currentYear}09`)).SessionBeginDate),
       },
     };
-
     return termDates;
-  }
-  (async function () {
-    // const termDates = useMemo (() => getTermDates());
+  };
 
-    console.log(termDates.fall);
-  })();
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true);
 
-  const academicTerms = ['Fall', 'Spring', 'Summer'];
+      const [[daysRemaining, daysInSemester], currentSession, termDates] = await Promise.all([
+        session.getDaysLeft(),
+        session.getCurrent(),
+        fetchTermDates(),
+      ]);
 
-  const termBreaks = ['Winter', 'PreSummer', 'PostSummer'];
+      const first = format(parseISO(currentSession.SessionBeginDate), 'MM/dd/yyyy');
+      const last = format(parseISO(currentSession.SessionEndDate), 'MM/dd/yyyy');
+
+      setFirstDay(first);
+      setLastDay(last);
+      setDaysRemaining(daysRemaining);
+      setDaysFinished(daysInSemester - daysRemaining || 0);
+      setLoading(false);
+      setTermDates(termDates);
+    };
+
+    load();
+  }, [currentYear]);
 
   const msToDays = 1.15741e-8;
-  const winterBreak = Math.round((springBegin - fallEnd) * msToDays);
-  const daysRemainingWinter = Math.round((springBegin - today) * msToDays);
-  const winterProgress = (Math.round((today - fallEnd) * msToDays) / winterBreak) * 100;
-  const preSummer = Math.round((summerBegin - springEnd) * msToDays);
-  const preSummerProgress = (Math.round((today - springEnd) * msToDays) / preSummer) * 100;
-  const daysRemainingPreSummer = Math.round((summerBegin - today) * msToDays);
-  const postSummer = Math.round((nextFallBegin - summerEnd) * msToDays);
-  const daysRemainingPostSummer = Math.round((nextFallBegin - today) * msToDays);
-  const postSummerProgress = (Math.round((today - summerEnd) * msToDays) / postSummer) * 100;
 
-  const termLoop = [
-    { start: fallBegin, end: fallEnd, type: academicTerms[0] },
-    { start: fallEnd, end: springBegin, type: termBreaks[0] },
-    { start: springBegin, end: springEnd, type: academicTerms[1] },
-    { start: springEnd, end: summerBegin, type: termBreaks[1] },
-    { start: summerBegin, end: summerEnd, type: academicTerms[2] },
-    { start: summerEnd, end: nextFallBegin, type: termBreaks[2], condition: postSummer > 1 },
-  ];
+  useEffect(() => {
+    if (!loading) {
+      const termBreaks = {
+        winter: {
+          name: 'Winter',
+          label: 'Spring',
+          length: Math.round((termDates.spring?.start - termDates.fall?.end) * msToDays),
+          daysLeft: Math.round((termDates.spring?.start - today) * msToDays),
+        },
+        preSummer: {
+          name: 'Pre-Summer',
+          label: 'Summer',
+          length: Math.round((termDates.summer?.start - termDates.spring?.end) * msToDays),
+          daysLeft: Math.round((termDates.summer?.start - today) * msToDays),
+        },
+        postSummer: {
+          name: 'Post-Summer',
+          label: 'Fall',
+          length: Math.round((termDates.nextFall?.start - termDates.summer?.end) * msToDays),
+          daysLeft: Math.round((termDates.nextFall?.start - today) * msToDays),
+        },
+      };
 
-  let termFinder = academicTerms[0];
+      const winterProgress =
+        (Math.round((today - termDates.fall?.end) * msToDays) / termBreaks.winter?.length) * 100;
+      const preSummerProgress =
+        (Math.round((today - termDates.spring?.end) * msToDays) / termBreaks.preSummer.length) *
+        100;
+      const postSummerProgress =
+        (Math.round((today - termDates.summer?.end) * msToDays) / termBreaks.postSummer.length) *
+        100;
 
-  for (let term of termLoop) {
-    if (
-      today >= term.start &&
-      today <= term.end &&
-      (term.condition === undefined || term.condition)
-    ) {
-      termFinder = term.type;
-      break;
+      const termLoop = [
+        { ...termDates.fall, type: 'Academic' },
+        {
+          start: termDates.fall?.end,
+          end: termDates.spring?.start,
+          name: termBreaks.winter?.name,
+          type: 'Break',
+        },
+        { ...termDates.spring, type: 'Academic' },
+        {
+          start: termDates.spring?.end,
+          end: termDates.summer?.start,
+          name: termBreaks.preSummer?.name,
+          type: 'Break',
+        },
+        { ...termDates.summer, type: 'Academic' },
+        {
+          start: termDates.summer?.end,
+          end: termDates.nextFall?.start,
+          name: termBreaks.postSummer?.name,
+          type: 'Break',
+          condition: termBreaks.postSummer?.length > 1,
+        },
+      ];
+
+      let foundTerm = 'Fall';
+
+      for (let term of termLoop) {
+        if (
+          today >= term.start &&
+          today <= term.end &&
+          (term.condition === undefined || term.condition)
+        ) {
+          foundTerm = term.name;
+          break;
+        }
+      }
+
+      const daysRemainingTermBreaks =
+        foundTerm === termBreaks.winter?.name
+          ? termBreaks.winter?.daysLeft
+          : foundTerm === termBreaks.preSummer?.name
+            ? termBreaks.preSummer?.daysLeft
+            : foundTerm === termBreaks.postSummer?.name
+              ? termBreaks.postSummer?.daysLeft
+              : '';
+
+      const termLabel =
+        foundTerm === termBreaks.winter?.name
+          ? termBreaks.winter?.label
+          : foundTerm === termBreaks.preSummer?.name
+            ? termBreaks.preSummer?.label
+            : foundTerm === termBreaks.postSummer?.name
+              ? termBreaks.postSummer?.label
+              : '';
+
+      const dialogue = termLoop.find((term) => term.name === foundTerm && term.type === 'Academic')
+        ? `${daysRemaining} Days Remaining in ${foundTerm} Term`
+        : `${daysRemainingTermBreaks} Days Until ${termLabel} Term`;
+
+      const progress = termLoop.find((term) => term.name === foundTerm && term.type === 'Academic')
+        ? daysFinished
+        : foundTerm === termBreaks.winter?.name
+          ? winterProgress
+          : foundTerm === termBreaks.preSummer?.name
+            ? preSummerProgress
+            : foundTerm === termBreaks.postSummer?.name
+              ? postSummerProgress
+              : '';
+
+      setTermFinder(foundTerm);
+      setTermDialogue(dialogue);
+      setTermProgress(progress);
     }
-  }
-
-  const daysRemainingTermBreaks =
-    termFinder === termBreaks[0]
-      ? daysRemainingWinter
-      : termFinder === termBreaks[1]
-        ? daysRemainingPreSummer
-        : termFinder === termBreaks[2]
-          ? daysRemainingPostSummer
-          : '';
-
-  const termLabelLoop = [
-    { term: academicTerms[0], label: academicTerms[0] },
-    { term: academicTerms[1], label: academicTerms[1] },
-    { term: academicTerms[2], label: academicTerms[2] },
-    { term: termBreaks[0], label: academicTerms[1] },
-    { term: termBreaks[1], label: academicTerms[2] },
-    { term: termBreaks[2], label: academicTerms[0] },
-  ];
-
-  let termLabel = academicTerms[0];
-
-  for (let currentLabel of termLabelLoop) {
-    if (termFinder === currentLabel.term) {
-      termLabel = currentLabel.label;
-    }
-  }
-
-  const termDialogue = academicTerms.includes(termFinder)
-    ? daysRemaining + ' Days\u00A0Remaining\u00A0in\u00A0' + termLabel + '\u00A0Term'
-    : termBreaks.includes(termFinder)
-      ? daysRemainingTermBreaks + ' Days\u00A0Until\u00A0' + termLabel + '\u00A0Term'
-      : '';
-
-  const termProgress = academicTerms.includes(termFinder)
-    ? daysFinished
-    : termFinder === termBreaks[0]
-      ? winterProgress
-      : termFinder === termBreaks[1]
-        ? preSummerProgress
-        : termFinder === termBreaks[2]
-          ? postSummerProgress
-          : '';
-
-  const BorderLinearProgress = withStyles((theme) => ({
-    root: {
-      height: 50,
-      borderRadius: 5,
-      position: 'relative',
-    },
-    colorPrimary: {
-      backgroundColor: '#00aeef',
-    },
-    bar: {
-      borderRadius: 5,
-      backgroundColor: '#014983',
-    },
-  }))(LinearProgress);
+  }, [loading, termDates, daysRemaining, daysFinished]);
 
   return (
     <Grid align="center">
-      <div style={{ position: 'relative', width: '100%' }}>
-        <BorderLinearProgress variant="determinate" value={termProgress} />
-        <div
-          className={styles.value}
-          style={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            color: 'white',
-            fontSize: '1rem',
-          }}
-        >
-          {`${termDialogue}`}
+      <div className={styles.backContainer}>
+        {termDialogue}
+        <div className={styles.boundBox} style={{ width: termProgress + '%' }}>
+          <div className={styles.frontContainer} style={{ width: 10000 / termProgress + '%' }}>
+            {termDialogue}
+          </div>
         </div>
       </div>
     </Grid>

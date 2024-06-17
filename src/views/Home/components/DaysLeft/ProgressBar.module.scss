@@ -1,0 +1,37 @@
+// @import '../../../../vars';
+
+.backContainer {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background-color: white;
+  border-radius: 5px;
+  color: #014983;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.frontContainer {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #014983;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.boundBox {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+}
