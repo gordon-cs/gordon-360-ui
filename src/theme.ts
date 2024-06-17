@@ -188,8 +188,8 @@ export const theme360 = extendTheme({
           50: NightMarsh_opacity50, //should be half opacity of main
         },
         secondary: {
-          main: GordonBlue,
-          contrastText: White,
+          main: ScottieCyan,
+          contrastText: Black,
           50: GordonBlue_opacity50,
           100: '#BBDDF0',
           200: '#92C8E6',
