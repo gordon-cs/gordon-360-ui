@@ -42,7 +42,6 @@ const GordonNavAvatar = ({ onLinkClick }) => {
   const buttonLink = forwardRef((props, ref) => (
     <Link
       {...props}
-      innerRef={ref}
       to={profile ? `/myprofile` : '/'}
       onClick={onLinkClick}
       className="gc360_link"

@@ -27,7 +27,7 @@ const headerLogo64dpi = 'images/gc_' + angleMode + '_yellow_logo_64.png';
 const headerLogo56dpi = 'images/gc_' + angleMode + '_yellow_logo_56.png';
 const headerLogo56dpiNoText = 'images/gc_' + angleMode + '_yellow_logo_56_vert.png';
 
-const ForwardNavLink = forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
+const ForwardNavLink = forwardRef((props, ref) => <NavLink {...props} />);
 
 // Tab url regular expressions must be listed in the same order as the tabs, since the
 // indices of the elements in the array on the next line are mapped to the indices of the tabs
