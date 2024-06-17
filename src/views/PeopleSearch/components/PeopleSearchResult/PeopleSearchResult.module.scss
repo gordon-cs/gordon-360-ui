@@ -54,11 +54,11 @@
   border-radius: 6px;
   padding: 0 0.2rem;
   color: var(--mui-palette-neutral-main);
-  background-color: var(--mui-palette-primary-main);
+  background-color: var(--mui-palette-secondary-main);
 }
 
 .mail_outline {
-  color: var(--mui-palette-primary-contrastText);
+  color: var(--mui-palette-secondary-contrastText);
   height: 100%;
   width: clamp(2.5rem, 2vw, 4rem);
 }
