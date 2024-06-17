@@ -7,6 +7,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import WorkIcon from '@mui/icons-material/Work';
 import { Divider, List } from '@mui/material';
 import RecIMIcon from '@mui/icons-material/SportsFootball';
+import TranscriptIcon from '@mui/icons-material/Receipt';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonNavButton from 'components/NavButton';
 import PaletteSwitcherDialog from 'components/PaletteSwitcherDialog';
@@ -36,7 +37,7 @@ const GordonNavLinks = ({ onLinkClick }) => {
         break;
       case 'unauthorized':
         message = 'That page is only available to authenticated users. Please log in to access it.';
-        title = 'Unavailable Offline';
+        title = 'Login Required';
         break;
       default:
         message =
@@ -52,6 +53,7 @@ const GordonNavLinks = ({ onLinkClick }) => {
         buttonClicked={() => setDialog(null)}
         buttonName={'Okay'}
       >
+        <br />
         {message}
       </GordonDialogBox>
     );
@@ -63,6 +65,16 @@ const GordonNavLinks = ({ onLinkClick }) => {
       linkName={'Home'}
       linkPath={'/'}
       LinkIcon={HomeIcon}
+      divider={false}
+    />
+  );
+
+  const guestTranscriptButton = (
+    <GordonNavButton
+      onLinkClick={onLinkClick}
+      linkName={'Guest Transcript'}
+      linkPath={'Transcript'}
+      LinkIcon={TranscriptIcon}
       divider={false}
     />
   );
@@ -193,6 +205,7 @@ const GordonNavLinks = ({ onLinkClick }) => {
     <>
       <List className={styles.gordon_nav_links}>
         {homeButton}
+        {isAuthenticated ? '' : guestTranscriptButton}
         {involvementsButton}
         {eventsButton}
         {peopleButton}
