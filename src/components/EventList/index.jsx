@@ -15,19 +15,19 @@ const smallHeader = (
 const headings = [
   {
     name: 'Event',
-    size: '4',
+    size: 4,
   },
   {
     name: 'Date',
-    size: '2',
+    size: 2,
   },
   {
     name: 'Time',
-    size: '2',
+    size: 2,
   },
   {
     name: 'Location',
-    size: '4',
+    size: 4,
   },
 ];
 

@@ -181,13 +181,10 @@
   margin: 1em;
   color: var(--mui-palette-neutral-500);
   text-align: center;
-
+  text-decoration-line: line-through;
   &_available {
-    text-decoration-line: overline;
-    text-decoration-style: solid;
-    text-decoration-color: var(--mui-palette-secondary-main);
     text-decoration-thickness: 3px;
-    color: var(--mui-palette-neutral-800);
+    color: var(--mui-palette-secondary-main);
     font-weight: bold;
     margin: 1em;
     text-align: center;

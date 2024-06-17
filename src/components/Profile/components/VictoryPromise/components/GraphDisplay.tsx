@@ -1,17 +1,19 @@
-import { Polar } from 'react-chartjs-2';
+import { PolarArea } from 'react-chartjs-2';
+import { Chart, RadialLinearScale, ArcElement, Tooltip } from 'chart.js';
 import { toTitleCase } from 'services/utils';
 import { Colors, VictoryPromiseCategory, VictoryPromiseColor } from 'services/victoryPromise';
 
 const light_gray = '#EBEAEA';
 
+Chart.register(RadialLinearScale, ArcElement, Tooltip);
+
 const colors = new Array<VictoryPromiseColor | typeof light_gray>(4);
 const data = new Array<number>(4);
-const labels = new Array<string>(4);
 
 type Props = { scores: Record<VictoryPromiseCategory, number> };
 
 const GraphDisplay = ({ scores }: Props) => {
-  const minimumScore = Math.min(...Object.values(scores).filter((v) => v > 0), 1);
+  const minimumScore = Math.min(...Object.values(scores).filter((v) => v > 0)) || 1;
   /**
    * A 0 value won't display on the graph, so we use `emptySliceValue` to represent empty values,
    * which is 2/3 of the minimum non-zero score
@@ -21,10 +23,10 @@ const GraphDisplay = ({ scores }: Props) => {
   Object.entries(scores).forEach((score) => {
     const [key, value] = score as [VictoryPromiseCategory, number];
     const index = GraphOrder[key];
-    const colorHex = (Colors[key].match(/#[A-Fa-f0-9]{6,8}/) || [''])[0];
-    labels[index] = toTitleCase(key, '_');
+    const colorHex = Colors[key].match(/#[A-Fa-f0-9]{6,8}/)?.[0] ?? '#000000';
+
     if (value > 0) {
-      colorHex == '' ? (colors[index] = '#000000') : (colors[index] = colorHex);
+      colors[index] = colorHex;
       data[index] = value;
     } else {
       colors[index] = light_gray;
@@ -32,42 +34,38 @@ const GraphDisplay = ({ scores }: Props) => {
     }
   });
 
-  const datasets = [
-    {
-      data,
-      backgroundColor: colors,
-      borderWidth: 3,
-    },
-  ];
-
   return (
-    <Polar
-      data={{ labels, datasets }}
-      options={{
-        legend: {
-          display: false,
-        },
-        scale: {
-          display: false,
-          ticks: {
-            display: false,
-            max: (Math.max(...data) ?? 0.8) + 0.2,
-            min: 0,
-            maxTicksLimit: 1,
+    <PolarArea
+      data={{
+        datasets: [
+          {
+            data,
+            backgroundColor: colors,
+            borderWidth: 3,
           },
-        },
-        tooltips: {
-          callbacks: {
-            label: (
-              tooltipItem: { yLabel: number; index: number },
-              data: { labels: typeof labels; datasets: typeof datasets },
-            ) => {
-              const score = tooltipItem.yLabel;
-              const value = score === emptySliceValue ? 0 : score;
-              var label = data.labels[tooltipItem.index];
-              return `${label}: ${value}`;
+        ],
+      }}
+      options={{
+        responsive: true,
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: (tooltipItem) => {
+                const categoryKey =
+                  Object.entries(GraphOrder).find(([, i]) => i === tooltipItem.dataIndex)?.[0] ??
+                  'Unknown';
+                return ` ${toTitleCase(categoryKey, '_')}: ${tooltipItem.raw === emptySliceValue ? 0 : tooltipItem.raw}`;
+              },
             },
           },
+        },
+        scales: {
+          r: {
+            display: false,
+          },
+        },
+        layout: {
+          padding: 10,
         },
       }}
     />
