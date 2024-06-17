@@ -7,6 +7,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useState } from 'react';
+import { severityType } from 'components/Snackbar';
 import { platforms, Platform, socialMediaInfo } from 'services/socialMedia';
 import user from 'services/user';
 import { useUserActions } from 'hooks';
@@ -14,7 +15,7 @@ import styles from './LinksDialog.module.css';
 
 type Props = {
   links: {};
-  createSnackbar: ({}, {}) => void;
+  createSnackbar: (message: string, severity: severityType) => void;
   onClose: () => void;
   setLinks: ({}) => void;
 };

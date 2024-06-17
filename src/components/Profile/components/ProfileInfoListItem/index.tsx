@@ -4,8 +4,8 @@ import styles from './ProfileInfoListItem.module.css';
 type ProfileInfo = {
   title?: string;
   contentText?: JSX.Element | string;
-  ContentIcon?: JSX.Element | null;
-  privateInfo?: boolean;
+  ContentIcon?: JSX.Element | null | boolean;
+  privateInfo?: boolean | string;
   myProf?: boolean;
   contentClass?: string;
 };

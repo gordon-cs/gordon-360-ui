@@ -2,11 +2,10 @@ import { Button, Card, CardContent, CardHeader, Grid, List, Typography } from '@
 import GordonLoader from 'components/Loader';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { severityType } from 'components/Snackbar';
 import membershipService, { MembershipHistory } from 'services/membership';
 import MembershipInfoCard from './components/MembershipInfoCard';
 import styles from './MembershipsList.module.css';
-
-type severityType = 'error' | 'info' | 'success' | 'warning';
 
 type Props = {
   username: string;

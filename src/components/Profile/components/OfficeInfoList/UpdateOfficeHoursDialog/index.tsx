@@ -1,13 +1,14 @@
 import { FormControl, IconButton, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import GordonDialogBox from 'components/GordonDialogBox';
-import GordonSnackbar from 'components/Snackbar';
+import GordonSnackbar, { severityType } from 'components/Snackbar';
 import { useState } from 'react';
 import userService from 'services/user';
 
-type severityType = 'error' | 'info' | 'success' | 'warning';
-
-const UpdateOfficeHours = (props: any) => {
+const UpdateOfficeHours = (props: {
+  officeHours: string;
+  changeOfficeHours: (hours: string) => void;
+}) => {
   const [open, setOpen] = useState(false);
   const [hours, setHours] = useState(props.officeHours);
   const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });

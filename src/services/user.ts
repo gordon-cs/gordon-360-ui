@@ -130,7 +130,7 @@ export type UnformattedStudentProfileInfo = BaseProfileInfo & {
   Minor3Description: string;
   ChapelRequired: number;
   ChapelAttended: number;
-  plannedGradYear: string;
+  PlannedGradYear: string;
 };
 
 type UnformattedAlumniProfileInfo = BaseProfileInfo & {
@@ -143,6 +143,8 @@ type UnformattedAlumniProfileInfo = BaseProfileInfo & {
   ShareName: string;
   ShareAddress?: string;
   Majors: string[];
+  Major1Description: string;
+  Major2Description: string;
 };
 
 export type UnformattedProfileInfo =
@@ -262,7 +264,8 @@ const getProfile = (username: string = ''): Promise<UnformattedProfileInfo> =>
 const getAdvisors = (username: string): Promise<StudentAdvisorInfo[]> =>
   http.get(`profiles/Advisors/${username}/`);
 
-const getMailboxCombination = () => http.get('profiles/mailbox-combination/');
+const getMailboxCombination = (): Promise<{ Combination: string }> =>
+  http.get('profiles/mailbox-combination/');
 
 const getMailStops = (): Promise<string[]> => http.get(`profiles/mailstops`);
 

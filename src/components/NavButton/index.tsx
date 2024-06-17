@@ -1,14 +1,15 @@
 import { ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import { NavLink } from 'react-router-dom';
+import { ReactNode, ReactElement, ReactPortal, JSXElementConstructor } from 'react';
 
 type GordonNavButtonProps = {
   unavailable?: string | null;
   onLinkClick?: () => void;
-  openUnavailableDialog?: any | (() => void);
+  openUnavailableDialog?: ({}) => void;
   divider?: boolean;
   linkName?: string;
   linkPath?: string;
-  LinkIcon?: any | JSX.Element | null;
+  LinkIcon?: any;
 };
 
 /**

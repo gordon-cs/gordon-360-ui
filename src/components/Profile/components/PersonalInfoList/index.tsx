@@ -32,6 +32,7 @@ import {
 import UpdatePhone from './components/UpdatePhoneDialog';
 import UpdatePlannedGraduationYear from './components/UpdatePlannedGraduationYear';
 import styles from './PersonalInfoList.module.css';
+import { severityType } from 'components/Snackbar';
 import AlumniUpdateForm from './components/AlumniUpdateForm';
 import CliftonStrengthsService from 'services/cliftonStrengths';
 import SLock from './Salsbury.png';
@@ -48,8 +49,6 @@ const formatPhone = (phone: string) => {
   }
 };
 
-type severityType = 'error' | 'info' | 'success' | 'warning';
-
 type Props = {
   myProf: boolean;
   profile: profileType;
@@ -65,7 +64,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     profile.CliftonStrengths?.Private,
   );
   const [openAlumniUpdateForm, setOpenAlumniUpdateForm] = useState(false);
-  const [mailCombo, setMailCombo] = useState();
+  const [mailCombo, setMailCombo] = useState<string>();
   const [advisorsList, setAdvisorsList] = useState<AdvisorType[]>([]);
   const [showMailCombo, setShowMailCombo] = useState(false);
   const isStudent = profile.PersonType?.includes('stu');
@@ -77,7 +76,9 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     AuthGroup.AcademicInfoView,
   );
   const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false);
-  const [profPlannedGradYear, setProfPlannedGradYear] = useState(profile.PlannedGradYear);
+  const [profPlannedGradYear, setProfPlannedGradYear] = useState(
+    checkIsStudent(profile) ? profile.PlannedGradYear : null,
+  );
 
   // KeepPrivate has different values for Students and FacStaff.
   // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
@@ -99,7 +100,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
    */
 
   // Students' on-campus location is public unless the student is marked as private
-  const isCampusLocationPrivate = isStudent && keepPrivate && profile.OnOffCampus !== PRIVATE_INFO;
+  const isCampusLocationPrivate =
+    checkIsStudent(profile) && keepPrivate && profile.OnOffCampus !== PRIVATE_INFO;
 
   // Students' home phone is always private. FacStaffs' home phone is private for private users
   const [isHomePhonePrivate, setIsHomePhonePrivate] = useState(isStudent || keepPrivate);
@@ -236,7 +238,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
       contentText={
         <>
           {streetAddr}
-          <span className={keepPrivate ? null : styles.not_private}>
+          <span className={keepPrivate ? undefined : styles.not_private}>
             {profile.HomeCity === PRIVATE_INFO
               ? PRIVATE_INFO
               : profile.Country === 'United States of America' || !profile.Country
@@ -286,7 +288,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     ) : profPlannedGradYear && checkIsStudent(profile) ? (
       <ProfileInfoListItem
         title={'Planned Graduation Year:'}
-        contentText={profile.plannedGradYear}
+        contentText={profile.PlannedGradYear}
         myProf={myProf}
       />
     ) : null;
@@ -307,7 +309,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
       </Grid>
     ) : null;
 
-  const handleAlumniUpdateForm = (status) => {
+  const handleAlumniUpdateForm = (status: { type: severityType; message: string }) => {
     setOpenAlumniUpdateForm(false);
     createSnackbar(status.message, status.type);
   };
@@ -343,7 +345,11 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
               <a href={strength.link} target="_blank" rel="noopener noreferrer" key={strength.name}>
                 <b style={{ color: strength.color }}>{strength.name}</b>
               </a>
-            )).reduce((prev, curr) => [prev, ', ', curr])}
+            )).reduce((prev, curr) => (
+              <>
+                {prev}, {curr}
+              </>
+            ))}
             <GordonTooltip title={''} enterTouchDelay={50} leaveTouchDelay={5000}>
               {
                 <span style={{ fontSize: '0.8rem' }}>

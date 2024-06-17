@@ -1,15 +1,15 @@
 import { FormControl, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import GordonDialogBox from 'components/GordonDialogBox';
-import GordonSnackbar from 'components/Snackbar';
+import GordonSnackbar, { severityType } from 'components/Snackbar';
 import { useState } from 'react';
 import userService from 'services/user';
 import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
 import styles from './UpdatePlannedGradYear.module.css';
 
-type severityType = 'error' | 'info' | 'success' | 'warning';
-
-const UpdatePlannedGraduationYear = (props: any) => {
+const UpdatePlannedGraduationYear = (props: {
+  change: (plannedGraduationYear: string) => void;
+}) => {
   const [open, setOpen] = useState(false);
   const [plannedGraduationYear, setPlannedGraduationYear] = useState('');
   const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });

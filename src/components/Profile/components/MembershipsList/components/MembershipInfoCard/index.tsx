@@ -9,14 +9,12 @@ import {
   AccordionSummary,
   AccordionDetails,
 } from '@mui/material/';
-import { ReactNode } from 'react';
+import { severityType } from 'components/Snackbar';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { Link } from 'react-router-dom';
 import styles from './MembershipInfoCard.module.css';
 import membershipService, { MembershipHistory, MembershipView } from 'services/membership';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-
-type severityType = 'error' | 'info' | 'success' | 'warning';
 
 type PrivacyProps = {
   createSnackbar: (message: string, severity: severityType) => void;

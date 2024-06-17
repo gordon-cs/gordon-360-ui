@@ -3,7 +3,7 @@ import styles from './ConfirmationRow.module.css';
 import { Check, Remove } from '@mui/icons-material';
 
 type Props = {
-  field: any;
+  field: { Value: boolean; Label: string };
   prevValue: string;
 };
 

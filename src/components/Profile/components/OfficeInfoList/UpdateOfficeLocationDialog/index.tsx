@@ -1,12 +1,10 @@
 import { Autocomplete, Box, IconButton, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import GordonDialogBox from 'components/GordonDialogBox';
-import GordonSnackbar from 'components/Snackbar';
+import GordonSnackbar, { severityType } from 'components/Snackbar';
 import { useState, useEffect } from 'react';
 import userService from 'services/user';
 import peopleSearchService from 'services/peopleSearch';
-
-type severityType = 'error' | 'info' | 'success' | 'warning';
 
 type Building = {
   Code: string;

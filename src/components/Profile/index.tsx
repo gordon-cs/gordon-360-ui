@@ -1,6 +1,6 @@
 import { Grid } from '@mui/material';
-import GordonSnackbar from 'components/Snackbar';
-import { Profile as profileType } from 'services/user';
+import GordonSnackbar, { severityType } from 'components/Snackbar';
+import { Profile as profileType, isFacStaff as checkIsFacStaff } from 'services/user';
 import { useAuthGroups } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useCallback, useEffect, useState } from 'react';
@@ -15,8 +15,6 @@ import {
   SchedulePanel,
   VictoryPromise,
 } from './components';
-
-type severityType = 'error' | 'info' | 'success' | 'warning';
 
 type Props = {
   profile: profileType;
@@ -60,17 +58,19 @@ const Profile = ({ profile, myProf }: Props) => {
         </Grid>
       )}
 
-      <Grid item xs={12} lg={10}>
-        <Grid container spacing={2}>
-          <OfficeInfoList profile={profile} myProf={myProf} />
+      {checkIsFacStaff(profile) && (
+        <Grid item xs={12} lg={10}>
+          <Grid container spacing={2}>
+            <OfficeInfoList profile={profile} myProf={myProf} />
 
-          {viewerIsPolice ? <EmergencyInfoList username={profile.AD_Username} /> : null}
+            {viewerIsPolice ? <EmergencyInfoList username={profile.AD_Username} /> : null}
+          </Grid>
         </Grid>
-      </Grid>
+      )}
 
       {(myProf || !profileIsStudent || canReadStudentSchedules) && (
         <Grid item xs={12} lg={10}>
-          <SchedulePanel profile={profile} myProf={myProf} isOnline={isOnline} />
+          <SchedulePanel profile={profile} myProf={myProf} />
         </Grid>
       )}
 

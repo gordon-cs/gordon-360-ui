@@ -1,13 +1,18 @@
-import { FormControl, IconButton, Input, InputLabel } from '@mui/material';
+import {
+  FormControl,
+  IconButton,
+  Input,
+  InputLabel,
+  InputBaseComponentProps,
+  InputProps,
+} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import GordonDialogBox from 'components/GordonDialogBox';
-import GordonSnackbar from 'components/Snackbar';
-import { forwardRef, useState } from 'react';
+import GordonSnackbar, { severityType } from 'components/Snackbar';
+import { forwardRef, useState, FormEvent } from 'react';
 import { IMaskInput } from 'react-imask';
 import userService from 'services/user';
 import styles from './UpdatePhone.module.css';
-
-type severityType = 'error' | 'info' | 'success' | 'warning';
 
 const UpdatePhone = () => {
   const [open, setOpen] = useState(false);
@@ -24,7 +29,7 @@ const UpdatePhone = () => {
     setOpen(false);
   };
 
-  const createSnackbar = (message: string, severity: string) => {
+  const createSnackbar = (message: string, severity: severityType) => {
     setSnackbar({ message, severity, open: true });
   };
 
@@ -69,20 +74,22 @@ const UpdatePhone = () => {
 
 // From material ui website
 // https://material-ui.com/components/text-fields/#integration-with-3rd-party-input-libraries
-const phoneMaskUS = forwardRef((props, ref) => {
-  const { onChange, ...other } = props;
+const phoneMaskUS = forwardRef(
+  (props: { onChange: ({}) => void; name?: string } & InputBaseComponentProps, ref) => {
+    const { onChange, ...other } = props;
 
-  return (
-    <IMaskInput
-      {...other}
-      ref={ref}
-      mask="(000) 000-0000"
-      placeholderChar={'\u2000'}
-      unmask={true}
-      onAccept={(value) => onChange({ target: { name: props.name, value } })}
-      overwrite
-    />
-  );
-});
+    return (
+      <IMaskInput
+        {...other}
+        ref={ref}
+        mask="(000) 000-0000"
+        placeholderChar={'\u2000'}
+        unmask={true}
+        onAccept={(value) => onChange({ target: { name: props.name, value } })}
+        overwrite
+      />
+    );
+  },
+);
 
 export default UpdatePhone;

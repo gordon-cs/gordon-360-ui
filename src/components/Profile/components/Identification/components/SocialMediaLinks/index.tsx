@@ -3,14 +3,15 @@ import EditIcon from '@mui/icons-material/Edit';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useState } from 'react';
 import { platforms, socialMediaInfo } from 'services/socialMedia';
+import { severityType } from 'components/Snackbar';
 // @TODO CSSMODULES - outside directory
 import styles from '../../Identification.module.css';
 import LinksDialog from './components/LinksDialog/index';
 
 type Props = {
   profile: typeof socialMediaInfo;
-  createSnackbar: ({}) => void;
-  myProf: typeof socialMediaInfo;
+  createSnackbar: (message: string, severity: severityType) => void;
+  myProf: boolean;
 };
 
 const SocialMediaLinks = ({ profile, createSnackbar, myProf }: Props) => {

@@ -1,4 +1,4 @@
-import { useState, Fragment, useEffect, Children } from 'react';
+import { useState, Fragment, useEffect, Children, ReactElement } from 'react';
 import { Card, CardContent, CardHeader, Grid, List, Typography, IconButton } from '@mui/material';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import styles from './OfficeInfoList.module.css';
@@ -11,7 +11,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { SignalWifiStatusbarConnectedNoInternet4TwoTone } from '@mui/icons-material';
 
 type Props = {
-  myProf: any;
+  myProf: boolean;
   profile: {
     BuildingDescription: string;
     OnCampusDepartment: string;
@@ -20,7 +20,7 @@ type Props = {
     PersonType: string;
     office_hours: string;
     Mail_Location: string;
-    Mail_Description: string | ReactElement;
+    Mail_Description: ReactElement;
   };
 };
 

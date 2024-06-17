@@ -1,9 +1,10 @@
 import { Typography, Grid, Button, TextField, Box } from '@mui/material/';
-import { useState, useMemo, useEffect } from 'react';
+import React, { ChangeEvent, useState, useMemo, useEffect } from 'react';
 import styles from './AlumniUpdateForm.module.css';
 import { Profile as profileType } from 'services/user';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
+import { severityType } from 'components/Snackbar';
 import { ConfirmationRow } from './components/ConfirmationRow';
 import { ConfirmationWindowHeader } from './components/ConfirmationHeader';
 import { ContentCard } from './components/ContentCard';
@@ -22,7 +23,7 @@ const CONFIRM_STEP = 'confirm';
 
 type Props = {
   profile: profileType;
-  closeWithSnackbar: ({}) => void;
+  closeWithSnackbar: (status: { type: severityType; message: string }) => void;
   openAlumniUpdateForm: boolean;
   setOpenAlumniUpdateForm: (bool: boolean) => void;
 };
@@ -286,7 +287,7 @@ const AlumniUpdateForm = ({
     setDisableUpdateButton(hasError || !hasChanges);
   }, [updatedInfo, currentInfo]);
 
-  const handleChange = (event: any) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const getNewInfo = (currentValue: Info) => {
       return {
         ...currentValue,
@@ -348,7 +349,16 @@ const AlumniUpdateForm = ({
    * @param {Array<{name: string, label: string, type: string, menuItems: string[]}>} fields array of objects defining the properties of the input field
    * @returns JSX correct input for each field based on type
    */
-  const mapFieldsToInputs = (fields: any[]) => {
+  const mapFieldsToInputs = (
+    fields: Array<{
+      name: string;
+      label: string;
+      type: string;
+      menuItems: string[];
+      error: boolean;
+      helperText: React.ReactNode;
+    }>,
+  ) => {
     return fields.map((field) => (
       <ProfileUpdateField
         error={field.error}

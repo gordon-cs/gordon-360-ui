@@ -22,7 +22,11 @@ type Contact = {
   WorkPhone: string;
 };
 
-const EmergencyInfoList = (username: string) => {
+type Props = {
+  username: string;
+};
+
+const EmergencyInfoList = ({ username }: Props) => {
   const [emergencyContacts, setEmergencyContacts] = useState<Contact[]>([]);
 
   useEffect(() => {

@@ -8,7 +8,7 @@ import {
   Select,
   TextField,
 } from '@mui/material/';
-import { ReactNode } from 'react';
+import { ChangeEvent, ReactNode } from 'react';
 import styles from './ProfileUpdateField.module.css';
 
 type Props = {
@@ -16,10 +16,10 @@ type Props = {
   name: string;
   type: string;
   value: any;
-  onChange: ({}) => void;
+  onChange: (event: ChangeEvent) => void;
   error: boolean;
   helperText: ReactNode;
-  menuItems: any;
+  menuItems: string[];
 };
 
 const ProfileUpdateField = ({

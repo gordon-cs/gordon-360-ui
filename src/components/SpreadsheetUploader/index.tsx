@@ -24,7 +24,7 @@ const displayCell = (cellData: any) => {
 type Props = {
   open: boolean;
   setOpen: ({}) => void;
-  onSubmitData: ({}) => void;
+  onSubmitData: (data: object[] | null) => void;
   title: string;
   maxColumns: number;
   requiredColumns: string[];
@@ -44,7 +44,7 @@ const SpreadsheetUploader = ({
   buttonName,
   template,
 }: Props) => {
-  const [data, setData] = useState();
+  const [data, setData] = useState<object[] | null>();
   const [error, setError] = useState<string | null>();
 
   const handleFileUpload = async ([file]: [File]) => {
@@ -58,7 +58,7 @@ const SpreadsheetUploader = ({
       const workbook = read(data, { cellDates: true });
       const sheet = workbook.Sheets[workbook.SheetNames[0]];
 
-      const uploadedData = utils.sheet_to_json(sheet);
+      const uploadedData = utils.sheet_to_json<object>(sheet);
 
       uploadedData.forEach((row) => {
         let columnNames = Object.keys(row);
@@ -81,8 +81,8 @@ const SpreadsheetUploader = ({
       });
 
       setData(uploadedData);
-    } catch (e) {
-      setError(e.message);
+    } catch (e: unknown) {
+      if (e instanceof Error) setError(e.message);
     }
   };
 
