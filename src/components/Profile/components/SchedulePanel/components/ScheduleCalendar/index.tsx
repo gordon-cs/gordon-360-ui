@@ -2,7 +2,6 @@ import { Calendar, luxonLocalizer } from 'react-big-calendar';
 import { CourseEvent, Schedule, scheduleCalendarResources } from 'services/schedule';
 import './ScheduleCalendar.css';
 import { DateTime } from 'luxon';
-import { useWindowSize } from 'hooks';
 
 const localizer = luxonLocalizer(DateTime, { firstDayOfWeek: 1 });
 
@@ -12,7 +11,6 @@ type Props = {
 };
 
 const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
-  const [width] = useWindowSize();
   const dayStart = new Date();
   dayStart.setHours(8, 0, 0, 0);
 
@@ -20,18 +18,19 @@ const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
   dayEnd.setHours(22, 0, 0, 0);
 
   const courseFormat = schedule.courses.map((course) => {
+    let tempTitle = `${course.title.replaceAll(' ', '')}`;
     let title;
-    if (course.location.includes('ASY')) {
-      title = `${course.title}${width >= 1500 ? ' | ' : ' '} ${course.location}`;
-    } else {
-      title = `${course.title}${width >= 2212 ? ' | ' : ' '} ${course.location}`;
-    }
-
+    course.location.includes('ASY')
+      ? (title = tempTitle + ' | ASYNC')
+      : course.location.includes('null')
+        ? (title = tempTitle)
+        : (title = tempTitle + `\n${course.location}`);
     return { ...course, title };
   });
 
   return (
     <Calendar
+      style={{ whiteSpace: 'pre-wrap' }}
       events={courseFormat}
       localizer={localizer}
       min={dayStart}

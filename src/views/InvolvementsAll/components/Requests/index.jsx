@@ -98,7 +98,7 @@ const Requests = ({ profile, session }) => {
   } else {
     content = (
       <>
-        <Accordion defaultExpanded>
+        <Accordion defaultExpanded={requestsSent?.length > 0}>
           <AccordionSummary
             aria-controls="received-requests-content"
             expandIcon={<ExpandMore className={styles.requests_expand_icon} />}
