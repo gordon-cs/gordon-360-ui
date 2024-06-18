@@ -1,4 +1,3 @@
-import { DateTime } from 'luxon';
 import { Platform, platforms, socialMediaInfo } from 'services/socialMedia';
 import CliftonStrengthsService, { CliftonStrengths } from './cliftonStrengths';
 import http from './http';
@@ -256,12 +255,14 @@ const setHomePhonePrivacy = (makePrivate: boolean) =>
 const setImagePrivacy = (makePrivate: boolean) =>
   http.put('profiles/image_privacy/' + (makePrivate ? 'N' : 'Y')); // 'Y' = show image, 'N' = don't show image
 
-const getBirthdate = async (): Promise<DateTime> =>
-  DateTime.fromISO(await http.get('profiles/birthdate'));
+const getBirthdate = async (): Promise<Date> => await http.get('profiles/birthdate');
 
 const isBirthdayToday = async () => {
-  const birthday = await getBirthdate();
-  return birthday?.month === DateTime.now().month && birthday?.day === DateTime.now().day;
+  const birthdate = await getBirthdate();
+  const birthday = new Date(birthdate);
+  return (
+    birthday.getMonth() === new Date().getMonth() && birthday.getDate() === new Date().getDate()
+  );
 };
 
 const getProfileInfo = async (username: string = ''): Promise<Profile | undefined> => {
