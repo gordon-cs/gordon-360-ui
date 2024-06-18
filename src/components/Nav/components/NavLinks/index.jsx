@@ -69,7 +69,7 @@ const GordonNavLinks = ({ onLinkClick }) => {
     />
   );
 
-  const guestTranscriptButton = isAuthenticated ? (
+  const guestTranscriptButton = !isAuthenticated ? (
     <GordonNavButton
       onLinkClick={onLinkClick}
       linkName="Guest Transcript"
