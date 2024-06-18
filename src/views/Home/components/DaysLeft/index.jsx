@@ -2,63 +2,53 @@ import { useEffect, useState } from 'react';
 import session from 'services/session';
 import styles from './ProgressBar.module.css';
 import { Grid } from '@mui/material';
-import { format, parseISO } from 'date-fns';
+
+/* DaysLeft calculates the start and end date of each term and the breaks in between. 
+It uses the difference between term start and end dates to find the length of each term break. 
+The loop iterates over each start and end date to find which term the current date is in between.
+Once the current term is found the values that each term holds in termValues are used to set the 
+value of the progress bar and the text that is displayed. 
+TESTING: If it is currently in the fall semester add 1 to the current year of the spring and 
+summer start and end dates. If it is currently beyond the new year then subtract 1 from the 
+year for the start and end of the fall. You can then change the current date in the today const
+to test. e.g. '2023-12-05'*/
 
 const DaysLeft = () => {
-  const [daysRemaining, setDaysRemaining] = useState();
-  const [daysFinished, setDaysFinished] = useState();
   const [loading, setLoading] = useState(true);
-  const [first, setFirstDay] = useState('');
-  const [last, setLastDay] = useState('');
   const [termDates, setTermDates] = useState({});
-  const [termFinder, setTermFinder] = useState('Fall');
   const [termDialogue, setTermDialogue] = useState('');
   const [termProgress, setTermProgress] = useState(0);
   const currentYear = new Date().getFullYear();
   const today = new Date();
 
+  // Gathers all the academic term start and end dates that are used to find the term breaks values.
   const fetchTermDates = async () => {
     const termDates = {
       fall: {
-        name: 'Fall',
-        start: new Date((await session.get(`${currentYear - 1}09`)).SessionBeginDate),
-        end: new Date((await session.get(`${currentYear - 1}09`)).SessionEndDate),
+        start: new Date((await session.get(`${currentYear}09`)).SessionBeginDate),
+        end: new Date((await session.get(`${currentYear}09`)).SessionEndDate),
       },
       spring: {
-        name: 'Spring',
         start: new Date((await session.get(`${currentYear}01`)).SessionBeginDate),
         end: new Date((await session.get(`${currentYear}01`)).SessionEndDate),
       },
       summer: {
-        name: 'Summer',
         start: new Date((await session.get(`${currentYear}05`)).SessionBeginDate),
         end: new Date((await session.get(`${currentYear}05`)).SessionEndDate),
-      },
-      nextFall: {
-        name: 'Next Fall',
-        start: new Date((await session.get(`${currentYear}09`)).SessionBeginDate),
       },
     };
     return termDates;
   };
-
   useEffect(() => {
     const load = async () => {
       setLoading(true);
 
-      const [[daysRemaining, daysInSemester], currentSession, termDates] = await Promise.all([
+      const [[daysInSemester], currentSession, termDates] = await Promise.all([
         session.getDaysLeft(),
         session.getCurrent(),
         fetchTermDates(),
       ]);
 
-      const first = format(parseISO(currentSession.SessionBeginDate), 'MM/dd/yyyy');
-      const last = format(parseISO(currentSession.SessionEndDate), 'MM/dd/yyyy');
-
-      setFirstDay(first);
-      setLastDay(last);
-      setDaysRemaining(daysRemaining);
-      setDaysFinished(daysInSemester - daysRemaining || 0);
       setLoading(false);
       setTermDates(termDates);
     };
@@ -66,116 +56,143 @@ const DaysLeft = () => {
     load();
   }, [currentYear]);
 
+  // When performing math on dates multiply the answer by this to convert from ms to days
   const msToDays = 1.15741e-8;
 
+  // Stores the needed values to compute and display the progress bar properly
   useEffect(() => {
     if (!loading) {
-      const termBreaks = {
+      const termValues = {
+        fall: {
+          name: 'Fall',
+          label: 'Fall',
+          type: 'Academic',
+          start: termDates.fall?.start,
+          end: termDates.fall?.end,
+          daysLeft: Math.round((termDates.fall?.end - today) * msToDays),
+          progress: Math.round(
+            (((today - termDates.fall?.start) * msToDays) /
+              Math.round((termDates.fall?.end - termDates.fall?.start) * msToDays)) *
+              100,
+          ),
+        },
+        spring: {
+          name: 'Spring',
+          label: 'Spring',
+          type: 'Academic',
+          start: termDates.spring?.start,
+          end: termDates.spring?.end,
+          daysLeft: Math.round((termDates.spring?.end - today) * msToDays),
+          progress: Math.round(
+            (((today - termDates.spring?.start) * msToDays) /
+              Math.round((termDates.spring?.end - termDates.spring?.start) * msToDays)) *
+              100,
+          ),
+        },
+        summer: {
+          name: 'Summer',
+          label: 'Summer',
+          type: 'Academic',
+          start: termDates.summer?.start,
+          end: termDates.summer?.end,
+          daysLeft: Math.round((termDates.summer?.end - today) * msToDays),
+          progress: Math.round(
+            (((today - termDates.summer?.start) * msToDays) /
+              Math.round((termDates.summer?.end - termDates.summer?.start) * msToDays)) *
+              100,
+          ),
+        },
         winter: {
           name: 'Winter',
           label: 'Spring',
-          length: Math.round((termDates.spring?.start - termDates.fall?.end) * msToDays),
+          type: 'Break',
+          start: termDates.fall?.end,
+          end: termDates.spring?.start,
           daysLeft: Math.round((termDates.spring?.start - today) * msToDays),
+          progress: Math.round(
+            (((today - termDates.fall?.end) * msToDays) /
+              Math.round((termDates.spring?.start - termDates.fall?.end) * msToDays)) *
+              100,
+          ),
         },
         preSummer: {
           name: 'Pre-Summer',
           label: 'Summer',
-          length: Math.round((termDates.summer?.start - termDates.spring?.end) * msToDays),
+          type: 'Break',
+          start: termDates.spring?.end,
+          end: termDates.summer?.start,
           daysLeft: Math.round((termDates.summer?.start - today) * msToDays),
+          progress: Math.round(
+            (((today - termDates.spring?.end) * msToDays) /
+              Math.round((termDates.summer?.start - termDates.spring?.end) * msToDays)) *
+              100,
+          ),
         },
         postSummer: {
           name: 'Post-Summer',
           label: 'Fall',
-          length: Math.round((termDates.nextFall?.start - termDates.summer?.end) * msToDays),
-          daysLeft: Math.round((termDates.nextFall?.start - today) * msToDays),
+          type: 'Break',
+          start: termDates.summer?.end,
+          end: termDates.fall?.start,
+          daysLeft: Math.round((termDates.fall?.start - today) * msToDays),
+          progress: Math.round(
+            (((today - termDates.summer?.end) * msToDays) /
+              Math.round((termDates.fall?.start - termDates.summer?.end) * msToDays)) *
+              100,
+          ),
         },
       };
-
-      const winterProgress =
-        (Math.round((today - termDates.fall?.end) * msToDays) / termBreaks.winter?.length) * 100;
-      const preSummerProgress =
-        (Math.round((today - termDates.spring?.end) * msToDays) / termBreaks.preSummer.length) *
-        100;
-      const postSummerProgress =
-        (Math.round((today - termDates.summer?.end) * msToDays) / termBreaks.postSummer.length) *
-        100;
-
       const termLoop = [
-        { ...termDates.fall, type: 'Academic' },
+        { ...termValues.fall },
         {
-          start: termDates.fall?.end,
-          end: termDates.spring?.start,
-          name: termBreaks.winter?.name,
-          type: 'Break',
+          ...termValues.winter,
         },
-        { ...termDates.spring, type: 'Academic' },
+        { ...termValues.spring },
         {
-          start: termDates.spring?.end,
-          end: termDates.summer?.start,
-          name: termBreaks.preSummer?.name,
-          type: 'Break',
+          ...termValues.preSummer,
         },
-        { ...termDates.summer, type: 'Academic' },
-        {
-          start: termDates.summer?.end,
-          end: termDates.nextFall?.start,
-          name: termBreaks.postSummer?.name,
-          type: 'Break',
-          condition: termBreaks.postSummer?.length > 1,
-        },
+        { ...termValues.summer },
+        { ...termValues.postSummer },
       ];
 
-      let foundTerm = 'Fall';
+      let currentTerm = 'Fall';
+      let currentLabel = 'Fall';
+      let currentDaysLeft = '';
+      let currentProgress = '';
+      let currentType = '';
 
+      // Iterate through all term start and end dates to find what term the current date is in
       for (let term of termLoop) {
-        if (
-          today >= term.start &&
-          today <= term.end &&
-          (term.condition === undefined || term.condition)
-        ) {
-          foundTerm = term.name;
+        if (today >= term.start && today <= term.end) {
+          currentTerm = term.name;
+          currentLabel = term.label;
+          currentDaysLeft = term.daysLeft + 1;
+          currentProgress = term.progress;
+          currentType = term.type;
+
           break;
         }
       }
 
-      const daysRemainingTermBreaks =
-        foundTerm === termBreaks.winter?.name
-          ? termBreaks.winter?.daysLeft
-          : foundTerm === termBreaks.preSummer?.name
-            ? termBreaks.preSummer?.daysLeft
-            : foundTerm === termBreaks.postSummer?.name
-              ? termBreaks.postSummer?.daysLeft
-              : '';
+      /* Applys the proper dialogue based on if we are in an academic term or a term break with 
+      a condition to make days singular if there is only 1 day left*/
+      const termDialogue = termLoop.find(
+        (term) => term.name === currentTerm && term.type === 'Academic' && currentDaysLeft > 1,
+      )
+        ? `${currentDaysLeft} Days Remaining in ${currentTerm} Term`
+        : currentType === 'Academic' && currentDaysLeft === 1
+          ? `${currentDaysLeft} Day Remaining in ${currentTerm} Term`
+          : currentDaysLeft > 1
+            ? `${currentDaysLeft} Days Until ${currentLabel} Term`
+            : `${currentDaysLeft} Day Until ${currentLabel} Term`;
 
-      const termLabel =
-        foundTerm === termBreaks.winter?.name
-          ? termBreaks.winter?.label
-          : foundTerm === termBreaks.preSummer?.name
-            ? termBreaks.preSummer?.label
-            : foundTerm === termBreaks.postSummer?.name
-              ? termBreaks.postSummer?.label
-              : '';
-
-      const dialogue = termLoop.find((term) => term.name === foundTerm && term.type === 'Academic')
-        ? `${daysRemaining} Days Remaining in ${foundTerm} Term`
-        : `${daysRemainingTermBreaks} Days Until ${termLabel} Term`;
-
-      const progress = termLoop.find((term) => term.name === foundTerm && term.type === 'Academic')
-        ? daysFinished
-        : foundTerm === termBreaks.winter?.name
-          ? winterProgress
-          : foundTerm === termBreaks.preSummer?.name
-            ? preSummerProgress
-            : foundTerm === termBreaks.postSummer?.name
-              ? postSummerProgress
-              : '';
-
-      setTermFinder(foundTerm);
-      setTermDialogue(dialogue);
-      setTermProgress(progress);
+      setTermDialogue(termDialogue);
+      setTermProgress(currentProgress);
     }
-  }, [loading, termDates, daysRemaining, daysFinished]);
+  }, [loading, termDates]);
 
+  /* The width of the front container is 10,000 / termProgress to correctly overlap with the 
+  backContainer and make it seem like the color changes as the backContainer gets covered*/
   return (
     <Grid align="center">
       <div className={styles.backContainer}>
