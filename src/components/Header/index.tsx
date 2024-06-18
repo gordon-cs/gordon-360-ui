@@ -126,9 +126,8 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
           className={styles.tab}
           icon={icon}
           label={name}
-          component={forwardRef<any, Omit<RouterLinkProps, 'to'>>((props, ref) => (
-            <NavLink ref={ref} to={route} {...props} />
-          ))}
+          component={NavLink}
+          to={route}
         />
       );
     }
