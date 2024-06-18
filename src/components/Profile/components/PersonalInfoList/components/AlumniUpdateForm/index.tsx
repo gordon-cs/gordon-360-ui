@@ -1,4 +1,4 @@
-import { Typography, Grid, Button, TextField, Box } from '@mui/material/';
+import { Typography, Grid, Button, TextField, Box, SelectChangeEvent } from '@mui/material/';
 import React, { ChangeEvent, useState, useMemo, useEffect } from 'react';
 import styles from './AlumniUpdateForm.module.css';
 import { Profile as profileType } from 'services/user';
@@ -13,9 +13,11 @@ import addressService from 'services/address';
 import { map } from 'services/utils';
 import userService from 'services/user';
 
+type inputType = 'text' & 'checkbox' & 'select';
+
 const shouldContactFields = [
-  { label: 'Do Not Contact', name: 'doNotContact', type: 'checkbox' },
-  { label: 'Do Not Mail', name: 'doNotMail', type: 'checkbox' },
+  { label: 'Do Not Contact', name: 'doNotContact', type: 'checkbox' as inputType },
+  { label: 'Do Not Mail', name: 'doNotMail', type: 'checkbox' as inputType },
 ];
 
 const UPDATE_STEP = 'update';
@@ -57,54 +59,54 @@ const AlumniUpdateForm = ({
     {
       label: 'Salutation',
       name: 'salutation',
-      type: 'select',
+      type: 'select' as inputType,
       menuItems: ['Prefer Not to Answer', 'Mr.', 'Ms.', 'Mrs.', 'Miss', 'Dr.', 'Rev.'],
     },
     {
       label: 'First Name',
       name: 'firstName',
-      type: 'text',
+      type: 'text' as inputType,
       error: errorStatus.firstName,
       helperText: '*Required',
     },
     {
       label: 'Last Name',
       name: 'lastName',
-      type: 'text',
+      type: 'text' as inputType,
       error: errorStatus.lastName,
       helperText: '*Required',
     },
-    { label: 'Middle Name', name: 'middleName', type: 'text' },
-    { label: 'Preferred Name', name: 'nickName', type: 'text' },
-    { label: 'Suffix', name: 'suffix', type: 'text' },
-    { label: 'Married', name: 'married', type: 'checkbox' },
+    { label: 'Middle Name', name: 'middleName', type: 'text' as inputType },
+    { label: 'Preferred Name', name: 'nickName', type: 'text' as inputType },
+    { label: 'Suffix', name: 'suffix', type: 'text' as inputType },
+    { label: 'Married', name: 'married', type: 'checkbox' as inputType },
   ];
   const emailInfoFields = [
     {
       label: 'Personal Email',
       name: 'personalEmail',
-      type: 'text',
+      type: 'text' as inputType,
       error: errorStatus.personalEmail,
       helperText: '*Invalid Email',
     },
     {
       label: 'Work Email',
       name: 'workEmail',
-      type: 'text',
+      type: 'text' as inputType,
       error: errorStatus.workEmail,
       helperText: '*Invalid Email',
     },
     {
       label: 'Alternate Email',
       name: 'aEmail',
-      type: 'text',
+      type: 'text' as inputType,
       error: errorStatus.aEmail,
       helperText: '*Invalid Email',
     },
     {
       label: 'Preferred Email',
       name: 'preferredEmail',
-      type: 'select',
+      type: 'select' as inputType,
       menuItems: ['No Preference', 'Personal Email', 'Work Email', 'Alternate Email'],
     },
   ];
@@ -112,38 +114,38 @@ const AlumniUpdateForm = ({
     {
       label: 'Home Phone',
       name: 'homePhone',
-      type: 'text',
+      type: 'text' as inputType,
       error: errorStatus.homePhone,
       helperText: '*Invalid Number',
     },
     {
       label: 'Work Phone',
       name: 'workPhone',
-      type: 'text',
+      type: 'text' as inputType,
       error: errorStatus.workPhone,
       helperText: '*Invalid Number',
     },
     {
       label: 'Mobile Phone',
       name: 'mobilePhone',
-      type: 'text',
+      type: 'text' as inputType,
       error: errorStatus.mobilePhone,
       helperText: '*Invalid Number',
     },
     {
       label: 'Preferred Phone',
       name: 'preferredPhone',
-      type: 'select',
+      type: 'select' as inputType,
       menuItems: ['No Preference', 'Home Phone', 'Work Phone', 'Mobile Phone'],
     },
   ];
   const mailingInfoFields = [
-    { label: 'Address', name: 'address1', type: 'text' },
-    { label: 'Address Line 2 (optional)', name: 'address2', type: 'text' },
-    { label: 'City', name: 'city', type: 'text' },
-    { label: 'State', name: 'state', type: 'select', menuItems: statesAndProv },
-    { label: 'Zip Code', name: 'zip', type: 'text' },
-    { label: 'Country', name: 'country', type: 'select', menuItems: countries },
+    { label: 'Address', name: 'address1', type: 'text' as inputType },
+    { label: 'Address Line 2 (optional)', name: 'address2', type: 'text' as inputType },
+    { label: 'City', name: 'city', type: 'text' as inputType },
+    { label: 'State', name: 'state', type: 'select' as inputType, menuItems: statesAndProv },
+    { label: 'Zip Code', name: 'zip', type: 'text' as inputType },
+    { label: 'Country', name: 'country', type: 'select' as inputType, menuItems: countries },
   ];
 
   const allFields = [
@@ -287,7 +289,7 @@ const AlumniUpdateForm = ({
     setDisableUpdateButton(hasError || !hasChanges);
   }, [updatedInfo, currentInfo]);
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: SelectChangeEvent<string> & ChangeEvent<HTMLInputElement>) => {
     const getNewInfo = (currentValue: Info) => {
       return {
         ...currentValue,
@@ -353,10 +355,10 @@ const AlumniUpdateForm = ({
     fields: Array<{
       name: string;
       label: string;
-      type: string;
-      menuItems: string[];
-      error: boolean;
-      helperText: React.ReactNode;
+      type: 'select' & 'text' & 'checkbox';
+      menuItems?: string[];
+      error?: boolean;
+      helperText?: React.ReactNode;
     }>,
   ) => {
     return fields.map((field) => (

@@ -10,13 +10,19 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { Profile as profileType } from 'services/user';
+import {
+  Profile as profileType,
+  isStudent as checkIsStudent,
+  isFacStaff as checkIsFacStaff,
+  isAlumni as checkIsAlumni,
+} from 'services/user';
 import EmailIcon from '@mui/icons-material/Email';
 import GordonLoader from 'components/Loader/index';
 import 'cropperjs/dist/cropper.css';
 import { useUserActions } from 'hooks';
-import { useEffect, useRef, useState } from 'react';
-import Cropper from 'react-cropper';
+import { useEffect, useRef, useState, ReactNode } from 'react';
+import Cropper, { ReactCropperElement } from 'react-cropper';
+import ZoomEvent from 'react-cropper';
 import Dropzone from 'react-dropzone';
 import { Link } from 'react-router-dom';
 import { Class } from 'services/peopleSearch';
@@ -45,7 +51,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
   const [hasNickname, setHasNickname] = useState<boolean | string>(Boolean);
   const [hasMaidenName, setHasMaidenName] = useState<boolean | string>(Boolean);
   const [openPhotoDialog, setOpenPhotoDialog] = useState(false);
-  const [photoDialogError, setPhotoDialogError] = useState<typeof photoDialogErrorTimeout | null>();
+  const [photoDialogError, setPhotoDialogError] = useState<typeof photoDialogErrorTimeout>();
   const [cropperData, setCropperData] = useState<{
     cropBoxDim: number | undefined;
     aspectRatio: number;
@@ -54,9 +60,9 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
   const [currentWidth, setCurrentWidth] = useState<string>();
   const [cliftonColor, setCliftonColor] = useState<string>();
   const { updateImage } = useUserActions();
-  const cropperRef = useRef();
+  const cropperRef = useRef<(ReactCropperElement & HTMLImageElement) | null>(null);
   const isStudent = profile.PersonType?.includes('stu');
-  let photoDialogErrorTimeout: string | number | NodeJS.Timeout | undefined | null;
+  let photoDialogErrorTimeout: string | number | NodeJS.Timeout | undefined;
 
   /**
    * Loads the given user's profile info
@@ -97,7 +103,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
         // then this, means that the currently signed-in user is not allowed to see the default picture.
         setDefaultUserImage(defaultImage);
 
-        const colorFrequencies = profile.CliftonStrengths?.Themes.reduce(
+        const colorFrequencies = profile.CliftonStrengths!.Themes.reduce(
           (colorFrequencies, strength) => ({
             ...colorFrequencies,
             [strength.color]:
@@ -161,8 +167,9 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
       }
 
       // An event listener for when the browser size changes to get the current Material-UI breakpoint
-      window.addEventListener('resize', (event) => {
-        setCurrentWidth(getMaterialUIBreakpoint(event.target.innerWidth));
+      window.addEventListener('resize', (event: UIEvent) => {
+        const w = event.target as Window;
+        setCurrentWidth(getMaterialUIBreakpoint(w.innerWidth));
       });
       // Sets the current Material-UI Breakpoint
       setCurrentWidth(getMaterialUIBreakpoint(window.innerWidth));
@@ -183,8 +190,8 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
    */
   function handleCloseSubmit() {
     if (showCropper != null) {
-      let croppedImage = cropperRef.current.cropper
-        .getCroppedCanvas({ width: CROP_DIM })
+      let croppedImage = cropperRef
+        .current!.cropper.getCroppedCanvas({ width: CROP_DIM })
         .toDataURL();
       let newImage = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
       let response = user.postImage(croppedImage);
@@ -299,8 +306,8 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
    */
   function clearPhotoDialogErrorTimeout() {
     clearTimeout(photoDialogErrorTimeout);
-    photoDialogErrorTimeout = null;
-    setPhotoDialogError(null);
+    photoDialogErrorTimeout = undefined;
+    setPhotoDialogError(undefined);
   }
 
   /**
@@ -313,12 +320,12 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
     // If an error occured and there's no currently running timeout, the error is displayed
     // and a timeout for that error message is created
     if (photoDialogError !== null) {
-      message = <span className={styles.photoDialogError}>{photoDialogError}</span>;
+      message = <span className={styles.photoDialogError}>{photoDialogError as ReactNode}</span>;
       if (photoDialogErrorTimeout === null) {
         // Shows the error message for 6 seconds and then returns back to normal text
         photoDialogErrorTimeout = setTimeout(() => {
-          photoDialogErrorTimeout = null;
-          setPhotoDialogError(null);
+          photoDialogErrorTimeout = undefined;
+          setPhotoDialogError(undefined);
         }, 6000);
       }
     }
@@ -385,7 +392,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
           var maxWidth = maxCropPreviewWidth();
           var displayWidth = maxWidth > i.width ? i.width : maxWidth;
           var cropDim = minCropBoxDim(i.width, displayWidth);
-          setPhotoDialogError(null);
+          setPhotoDialogError(undefined);
           setCropperData({ aspectRatio: aRatio, cropBoxDim: cropDim });
           setShowCropper(dataURL);
         }
@@ -403,10 +410,10 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
     setPhotoDialogError('Sorry, invalid image file! Only PNG and JPEG images are accepted.');
   }
 
-  function onCropperZoom(event: React.SyntheticEvent) {
+  function onCropperZoom(event: Cropper.ZoomEvent<HTMLImageElement>) {
     if (event.detail.ratio > 1) {
       event.preventDefault();
-      cropperRef.current.cropper.zoomTo(1);
+      cropperRef.current!.cropper.zoomTo(1);
     }
   }
 
@@ -524,7 +531,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
                   onClick={handleCloseSubmit}
                   disabled={!showCropper}
                   color="primary"
-                  className={!showCropper ? styles.hiddenButton : null}
+                  className={!showCropper ? styles.hiddenButton : undefined}
                 >
                   Submit
                 </Button>
@@ -599,7 +606,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
                             cliftonColor +
                             ') border-box',
                         }
-                      : null
+                      : undefined
                   }
                 >
                   <div
@@ -680,7 +687,9 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
                   xs={12}
                   className={styles.identification_card_content_card_container_info_class}
                 >
-                  {userProfile.Class && <Typography>{Class[userProfile.Class]}</Typography>}
+                  {checkIsStudent(userProfile) && userProfile.Class && (
+                    <Typography>{Class[userProfile.Class]}</Typography>
+                  )}
                 </Grid>
 
                 <Grid
@@ -698,17 +707,19 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
                     }${hasMaidenName ? ` (${userProfile.MaidenName})` : ''}`}
                   </Typography>
                 </Grid>
-                {userProfile.JobTitle && userProfile.JobTitle !== '' && (
-                  <Grid
-                    item
-                    xs={12}
-                    className={styles.identification_card_content_card_container_info_job_title}
-                  >
-                    <Typography variant="h6" paragraph>
-                      {userProfile.JobTitle}
-                    </Typography>
-                  </Grid>
-                )}
+                {checkIsFacStaff(userProfile) &&
+                  userProfile.JobTitle &&
+                  userProfile.JobTitle !== '' && (
+                    <Grid
+                      item
+                      xs={12}
+                      className={styles.identification_card_content_card_container_info_job_title}
+                    >
+                      <Typography variant="h6" paragraph>
+                        {userProfile.JobTitle}
+                      </Typography>
+                    </Grid>
+                  )}
                 {userProfile.Email ? (
                   <Grid
                     item

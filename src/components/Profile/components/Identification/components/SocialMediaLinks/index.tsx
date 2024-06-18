@@ -2,6 +2,7 @@ import { Button, Dialog, Grid, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useState } from 'react';
+import { Profile as profileType } from 'services/user';
 import { platforms, socialMediaInfo } from 'services/socialMedia';
 import { severityType } from 'components/Snackbar';
 // @TODO CSSMODULES - outside directory
@@ -9,7 +10,7 @@ import styles from '../../Identification.module.css';
 import LinksDialog from './components/LinksDialog/index';
 
 type Props = {
-  profile: typeof socialMediaInfo;
+  profile: profileType;
   createSnackbar: (message: string, severity: severityType) => void;
   myProf: boolean;
 };

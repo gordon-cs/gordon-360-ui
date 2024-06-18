@@ -79,7 +79,7 @@ type BaseProfileInfo = {
   Calendar: string;
   PersonType: string;
   fullName?: string;
-  CliftonStrengths?: CliftonStrengths | null;
+  CliftonStrengths: CliftonStrengths | null;
   Married?: string;
 };
 

@@ -24,7 +24,7 @@ const displayCell = (cellData: any) => {
 type Props = {
   open: boolean;
   setOpen: ({}) => void;
-  onSubmitData: (data: object[] | null) => void;
+  onSubmitData: (data: object[] | null | undefined) => void;
   title: string;
   maxColumns: number;
   requiredColumns: string[];
@@ -47,7 +47,7 @@ const SpreadsheetUploader = ({
   const [data, setData] = useState<object[] | null>();
   const [error, setError] = useState<string | null>();
 
-  const handleFileUpload = async ([file]: [File]) => {
+  const handleFileUpload = async ([file]: File[]) => {
     try {
       if (!acceptedTypes.includes(file.type)) {
         throw new Error('The file is not one of the supported file types.');
@@ -141,9 +141,9 @@ const SpreadsheetUploader = ({
             {data.map((row, index) => (
               <Paper key={index} className={styles.dataconfirmationcard}>
                 {requiredColumns.map((columnName) =>
-                  row[columnName] ? (
+                  row[columnName as keyof typeof row] ? (
                     <Typography variant="body2">
-                      <b>{columnName}:</b> {displayCell(row[columnName])}
+                      <b>{columnName}:</b> {displayCell(row[columnName as keyof typeof row])}
                     </Typography>
                   ) : null,
                 )}
