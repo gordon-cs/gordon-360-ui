@@ -92,6 +92,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
         buttonClicked={() => setDialog(null)}
         buttonName={'Okay'}
       >
+        <br />
         {isOffline
           ? 'That page is not available offline. Please reconnect to internet to access this feature.'
           : 'That page is only available to authenticated users. Please log in to access it.'}
