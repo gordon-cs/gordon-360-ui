@@ -11,7 +11,7 @@ import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Link } from '@mui/mater
 import RecIMIcon from '@mui/icons-material/SportsFootball';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { useNetworkStatus } from 'hooks';
-import { forwardRef, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, NavLink, useLocation } from 'react-router-dom';
 import { authenticate } from 'services/auth';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
@@ -26,8 +26,6 @@ const headerLogo72dpi = 'images/gc_' + angleMode + '_yellow_logo_72.png';
 const headerLogo64dpi = 'images/gc_' + angleMode + '_yellow_logo_64.png';
 const headerLogo56dpi = 'images/gc_' + angleMode + '_yellow_logo_56.png';
 const headerLogo56dpiNoText = 'images/gc_' + angleMode + '_yellow_logo_56_vert.png';
-
-const ForwardNavLink = forwardRef((props, ref) => <NavLink innerRef={ref} {...props} />);
 
 // Tab url regular expressions must be listed in the same order as the tabs, since the
 // indices of the elements in the array on the next line are mapped to the indices of the tabs
@@ -122,15 +120,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
       );
     } else {
       const route = `/${name.toLowerCase().replace('-', '')}`;
-      return (
-        <Tab
-          className={styles.tab}
-          icon={icon}
-          label={name}
-          component={ForwardNavLink}
-          to={route}
-        />
-      );
+      return <Tab className={styles.tab} icon={icon} label={name} component={NavLink} to={route} />;
     }
   };
 
@@ -158,7 +148,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
           >
             <MenuIcon className={styles.hamburger_menu_button_icon} />
           </IconButton>
-          <Link to="/" component={ForwardNavLink} value={tabIndex}>
+          <Link to="/" component={NavLink} value={tabIndex}>
             <picture>
               {/* pick a different image as the screen gets smaller.*/}
               <source srcSet={headerLogo72dpi} media="(min-width: 900px)" />
@@ -179,7 +169,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
             className={styles.tab}
             icon={<LocalActivityIcon />}
             label="Involvements"
-            component={ForwardNavLink}
+            component={NavLink}
             to="/involvements"
             tabIndex={0}
           />
@@ -187,7 +177,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
             className={styles.tab}
             icon={<EventIcon />}
             label="Events"
-            component={ForwardNavLink}
+            component={NavLink}
             to="/events"
           />
           {requiresAuthTab('People', <PeopleIcon />)}
@@ -195,7 +185,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
             className={styles.tab}
             icon={<LinkIcon />}
             label="Links"
-            component={ForwardNavLink}
+            component={NavLink}
             to="/links"
           />
           {requiresAuthTab('Rec-IM', <RecIMIcon />)}
