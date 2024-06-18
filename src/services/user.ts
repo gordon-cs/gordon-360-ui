@@ -258,8 +258,7 @@ const setImagePrivacy = (makePrivate: boolean) =>
 const getBirthdate = async (): Promise<Date> => await http.get('profiles/birthdate');
 
 const isBirthdayToday = async () => {
-  const birthdate = await getBirthdate();
-  const birthday = new Date(birthdate);
+  const birthday = new Date(await getBirthdate());
   return (
     birthday.getMonth() === new Date().getMonth() && birthday.getDate() === new Date().getDate()
   );
