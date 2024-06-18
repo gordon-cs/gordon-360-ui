@@ -185,20 +185,16 @@ const InvolvementsAll = () => {
                 </TabList>
               </Grid>
               <TabPanel value="1">
-                {loadingProfile ? (
+                {loadingProfile || loading ? (
                   <GordonLoader />
                 ) : (
                   profile && (
                     <Grid item xs={12} lg={12}>
-                      {loading ? (
-                        <GordonLoader />
-                      ) : (
-                        <InvolvementsGrid
-                          involvements={myInvolvements}
-                          sessionCode={selectedSession}
-                          noInvolvementsText={myInvolvementsNoneText}
-                        />
-                      )}
+                      <InvolvementsGrid
+                        involvements={myInvolvements}
+                        sessionCode={selectedSession}
+                        noInvolvementsText={myInvolvementsNoneText}
+                      />
                     </Grid>
                   )
                 )}
@@ -255,15 +251,6 @@ const InvolvementsAll = () => {
                       </FormControl>
                     </Grid>
                   </Grid>
-                  {loading ? (
-                    <GordonLoader />
-                  ) : (
-                    <InvolvementsGrid
-                      involvements={involvements}
-                      sessionCode={selectedSession}
-                      noInvolvementsText="There aren't any involvements for the selected session and type"
-                    />
-                  )}
                 </Grid>
               </TabPanel>
             </TabContext>
