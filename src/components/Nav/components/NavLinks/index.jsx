@@ -69,15 +69,15 @@ const GordonNavLinks = ({ onLinkClick }) => {
     />
   );
 
-  const guestTranscriptButton = (
+  const guestTranscriptButton = isAuthenticated ? (
     <GordonNavButton
       onLinkClick={onLinkClick}
-      linkName={'Guest Transcript'}
-      linkPath={'Transcript'}
+      linkName="Guest Transcript"
+      linkPath="Transcript"
       LinkIcon={TranscriptIcon}
       divider={false}
     />
-  );
+  ) : null;
 
   const involvementsButton = (
     <GordonNavButton
@@ -205,7 +205,7 @@ const GordonNavLinks = ({ onLinkClick }) => {
     <>
       <List className={styles.gordon_nav_links}>
         {homeButton}
-        {isAuthenticated ? '' : guestTranscriptButton}
+        {guestTranscriptButton}
         {involvementsButton}
         {eventsButton}
         {peopleButton}
