@@ -1,3 +1,4 @@
+import { isToday } from 'date-fns';
 import { Platform, platforms, socialMediaInfo } from 'services/socialMedia';
 import CliftonStrengthsService, { CliftonStrengths } from './cliftonStrengths';
 import http from './http';
@@ -255,14 +256,10 @@ const setHomePhonePrivacy = (makePrivate: boolean) =>
 const setImagePrivacy = (makePrivate: boolean) =>
   http.put('profiles/image_privacy/' + (makePrivate ? 'N' : 'Y')); // 'Y' = show image, 'N' = don't show image
 
-const getBirthdate = async (): Promise<Date> => await http.get('profiles/birthdate');
+const getBirthdate = async (): Promise<Date> =>
+  http.get<string>('profiles/birthdate').then((birthdate) => new Date(birthdate));
 
-const isBirthdayToday = async () => {
-  const birthday = new Date(await getBirthdate());
-  return (
-    birthday.getMonth() === new Date().getMonth() && birthday.getDate() === new Date().getDate()
-  );
-};
+const isBirthdayToday = (): Promise<boolean> => getBirthdate().then(isToday);
 
 const getProfileInfo = async (username: string = ''): Promise<Profile | undefined> => {
   const profile = await getProfile(username).then(formatCountry).then(formatSocialMediaLinks);
