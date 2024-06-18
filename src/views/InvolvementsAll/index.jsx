@@ -251,6 +251,15 @@ const InvolvementsAll = () => {
                       </FormControl>
                     </Grid>
                   </Grid>
+                  {loading ? (
+                    <GordonLoader />
+                  ) : (
+                    <InvolvementsGrid
+                      involvements={involvements}
+                      sessionCode={selectedSession}
+                      noInvolvementsText="There aren't any involvements for the selected session and type"
+                    />
+                  )}
                 </Grid>
               </TabPanel>
             </TabContext>
