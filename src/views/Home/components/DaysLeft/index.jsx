@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import session from 'services/session';
 import styles from './ProgressBar.module.css';
 import { Grid } from '@mui/material';
+import { addDays } from 'date-fns';
 
 /* DaysLeft calculates the start and end date of each term and the breaks in between. 
 It uses the difference between term start and end dates to find the length of each term break. 
@@ -57,8 +58,7 @@ const DaysLeft = () => {
   }, [currentYear]);
 
   // When performing math on dates multiply the answer by this to convert from ms to days
-  const msToDays = 1.15741e-8;
-
+  const msToDays = 1.1574074074074e-8;
   // Stores the needed values to compute and display the progress bar properly
   useEffect(() => {
     if (!loading) {
@@ -69,12 +69,6 @@ const DaysLeft = () => {
           type: 'Academic',
           start: termDates.fall?.start,
           end: termDates.fall?.end,
-          daysLeft: Math.round((termDates.fall?.end - today) * msToDays),
-          progress: Math.round(
-            (((today - termDates.fall?.start) * msToDays) /
-              Math.round((termDates.fall?.end - termDates.fall?.start) * msToDays)) *
-              100,
-          ),
         },
         spring: {
           name: 'Spring',
@@ -82,12 +76,6 @@ const DaysLeft = () => {
           type: 'Academic',
           start: termDates.spring?.start,
           end: termDates.spring?.end,
-          daysLeft: Math.round((termDates.spring?.end - today) * msToDays),
-          progress: Math.round(
-            (((today - termDates.spring?.start) * msToDays) /
-              Math.round((termDates.spring?.end - termDates.spring?.start) * msToDays)) *
-              100,
-          ),
         },
         summer: {
           name: 'Summer',
@@ -95,64 +83,36 @@ const DaysLeft = () => {
           type: 'Academic',
           start: termDates.summer?.start,
           end: termDates.summer?.end,
-          daysLeft: Math.round((termDates.summer?.end - today) * msToDays),
-          progress: Math.round(
-            (((today - termDates.summer?.start) * msToDays) /
-              Math.round((termDates.summer?.end - termDates.summer?.start) * msToDays)) *
-              100,
-          ),
         },
         winter: {
           name: 'Winter',
           label: 'Spring',
           type: 'Break',
-          start: termDates.fall?.end,
-          end: termDates.spring?.start,
-          daysLeft: Math.round((termDates.spring?.start - today) * msToDays),
-          progress: Math.round(
-            (((today - termDates.fall?.end) * msToDays) /
-              Math.round((termDates.spring?.start - termDates.fall?.end) * msToDays)) *
-              100,
-          ),
+          start: addDays(termDates.fall?.end, 1),
+          end: addDays(termDates.spring?.start, -1),
         },
         preSummer: {
           name: 'Pre-Summer',
           label: 'Summer',
           type: 'Break',
-          start: termDates.spring?.end,
-          end: termDates.summer?.start,
-          daysLeft: Math.round((termDates.summer?.start - today) * msToDays),
-          progress: Math.round(
-            (((today - termDates.spring?.end) * msToDays) /
-              Math.round((termDates.summer?.start - termDates.spring?.end) * msToDays)) *
-              100,
-          ),
+          start: addDays(termDates.spring?.end, 1),
+          end: addDays(termDates.summer?.start, -1),
         },
         postSummer: {
           name: 'Post-Summer',
           label: 'Fall',
           type: 'Break',
-          start: termDates.summer?.end,
-          end: termDates.fall?.start,
-          daysLeft: Math.round((termDates.fall?.start - today) * msToDays),
-          progress: Math.round(
-            (((today - termDates.summer?.end) * msToDays) /
-              Math.round((termDates.fall?.start - termDates.summer?.end) * msToDays)) *
-              100,
-          ),
+          start: addDays(termDates.summer?.end, 1),
+          end: addDays(termDates.fall?.start, -1),
         },
       };
       const termLoop = [
-        { ...termValues.fall },
-        {
-          ...termValues.winter,
-        },
-        { ...termValues.spring },
-        {
-          ...termValues.preSummer,
-        },
-        { ...termValues.summer },
-        { ...termValues.postSummer },
+        termValues.fall,
+        termValues.winter,
+        termValues.spring,
+        termValues.preSummer,
+        termValues.summer,
+        termValues.postSummer,
       ];
 
       let currentTerm = 'Fall';
@@ -166,8 +126,12 @@ const DaysLeft = () => {
         if (today >= term.start && today <= term.end) {
           currentTerm = term.name;
           currentLabel = term.label;
-          currentDaysLeft = term.daysLeft + 1;
-          currentProgress = term.progress;
+          currentDaysLeft = Math.round((term.end - today) * msToDays) + 1;
+          currentProgress = Math.round(
+            (((today - term.start) * msToDays + 1) /
+              (Math.round((term.end - term.start) * msToDays) + 1)) *
+              100,
+          );
           currentType = term.type;
 
           break;
