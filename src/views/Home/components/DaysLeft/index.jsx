@@ -9,10 +9,10 @@ It uses the difference between term start and end dates to find the length of ea
 The loop iterates over each start and end date to find which term the current date is in between.
 Once the current term is found the values that each term holds in termValues are used to set the 
 value of the progress bar and the text that is displayed. 
-TESTING: If it is currently in the fall semester add 1 to the current year of the spring and 
-summer start and end dates. If it is currently beyond the new year then subtract 1 from the 
-year for the start and end of the fall. You can then change the current date in the today const
-to test. e.g. '2023-12-05'*/
+TESTING: First change localhost to PROD. If it is currently in the fall semester add 1 to the 
+current year of the spring and summer start and end dates. If it is currently beyond the new year 
+then subtract 1 from the year for the start and end of the fall. You can then change the current 
+date in the today const to test. e.g. '2023-12-05'*/
 
 const DaysLeft = () => {
   const [loading, setLoading] = useState(true);

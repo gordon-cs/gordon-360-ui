@@ -1,4 +1,4 @@
-// @import '../../../../vars';
+@import '../../../../vars';
 
 .backContainer {
   position: relative;
@@ -8,9 +8,9 @@
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  background-color: white;
+  background-color: var(--mui-palette-neutral-light);
   border-radius: 5px;
-  color: #014983;
+  color: var(--mui-palette-link-main);
   font-weight: bold;
   font-size: 1rem;
 }
@@ -22,7 +22,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #014983;
+  background-color: var(--mui-palette-primary-main);
   border-radius: 5px;
   color: white;
   font-weight: bold;
