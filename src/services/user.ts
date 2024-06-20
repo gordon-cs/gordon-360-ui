@@ -256,7 +256,7 @@ const setHomePhonePrivacy = (makePrivate: boolean) =>
 const setImagePrivacy = (makePrivate: boolean) =>
   http.put('profiles/image_privacy/' + (makePrivate ? 'N' : 'Y')); // 'Y' = show image, 'N' = don't show image
 
-const getBirthdate = async (): Promise<Date> =>
+const getBirthdate = (): Promise<Date> =>
   http.get<string>('profiles/birthdate').then((birthdate) => new Date(birthdate));
 
 const isBirthdayToday = (): Promise<boolean> => getBirthdate().then(isToday);
