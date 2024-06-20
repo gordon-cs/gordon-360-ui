@@ -16,7 +16,7 @@ import {
   useNavigate,
   NavLink,
   useLocation,
-  Link as RouterLink,
+  // Link as RouterLink,
   LinkProps as RouterLinkProps,
 } from 'react-router-dom';
 import { authenticate } from 'services/auth';
@@ -34,11 +34,9 @@ const headerLogo56dpi = 'images/gc_' + angleMode + '_yellow_logo_56.png';
 const headerLogo56dpiNoText = 'images/gc_' + angleMode + '_yellow_logo_56_vert.png';
 
 const ForwardNavLink = forwardRef<
-    any, 
-    Omit<RouterLinkProps, 'to'> & { href: RouterLinkProps['to'] }
->(({href, ...props), ref) => (
-  <NavLink ref={ref} to={href} {...props} />
-));
+  any,
+  Omit<RouterLinkProps, 'to'> & { href: RouterLinkProps['to'] }
+>(({ href, ...props }, ref) => <NavLink ref={ref} to={href} {...props} />);
 
 // Tab url regular expressions must be listed in the same order as the tabs, since the
 // indices of the elements in the array on the next line are mapped to the indices of the tabs
@@ -121,16 +119,7 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
       );
     } else {
       const route = `/${name.toLowerCase().replace('-', '')}`;
-      return (
-        <Tab
-          className={styles.tab}
-          icon={icon}
-          label={name}
-          component={forwardRef<any, Omit<RouterLinkProps, 'to'>>((props, ref) => (
-            <NavLink ref={ref} to={route} {...props} />
-          ))}
-        />
-      );
+      return <Tab className={styles.tab} icon={icon} label={name} component={NavLink} to={route} />;
     }
   };
 
@@ -158,7 +147,7 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
           >
             <MenuIcon className={styles.hamburger_menu_button_icon} />
           </IconButton>
-          <Link ref={ForwardNavLink} component={ForwardNavLink}>
+          <Link to="/" component={NavLink}>
             <picture>
               {/* pick a different image as the screen gets smaller.*/}
               <source srcSet={headerLogo72dpi} media="(min-width: 900px)" />
@@ -179,26 +168,23 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
             className={styles.tab}
             icon={<LocalActivityIcon />}
             label="Involvements"
-            component={forwardRef<any, Omit<RouterLinkProps, 'to'>>((props, ref) => (
-              <NavLink ref={ref} to="/involvements" {...props} />
-            ))}
+            component={NavLink}
+            to="/involvements"
           />
           <Tab
             className={styles.tab}
             icon={<EventIcon />}
             label="Events"
-            component={forwardRef<any, Omit<RouterLinkProps, 'to'>>((props, ref) => (
-              <NavLink ref={ref} to="/events" {...props} />
-            ))}
+            component={NavLink}
+            to="/events"
           />
           {requiresAuthTab('People', <PeopleIcon />)}
           <Tab
             className={styles.tab}
             icon={<LinkIcon />}
             label="Links"
-            component={forwardRef<any, Omit<RouterLinkProps, 'to'>>((props, ref) => (
-              <NavLink ref={ref} to="/links" {...props} />
-            ))}
+            component={NavLink}
+            to="/links"
           />
           {requiresAuthTab('Rec-IM', <RecIMIcon />)}
         </Tabs>
