@@ -179,9 +179,9 @@ const InvolvementsAll = () => {
                   centered
                   indicatorColor="secondary"
                 >
-                  <Tab label="Personal" className={styles.tab} value="1" />
-                  <Tab label="Requests" className={styles.tab} value="2" />
-                  <Tab label="All" className={styles.tab} value="3" />
+                  <Tab label="Personal" className="gc360_header" value="1" />
+                  <Tab label="Requests" className="gc360_header" value="2" />
+                  <Tab label="All" className="gc360_header" value="3" />
                 </TabList>
               </Grid>
               <TabPanel value="1">
