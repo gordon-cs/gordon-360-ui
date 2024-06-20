@@ -93,7 +93,7 @@ const DiningBalance = () => {
     const daysFinished = daysInSession - daysLeftRounded;
 
     const options = {
-      cutoutPercentage: 0,
+      cutout: 0,
       tooltips: {
         // Allow different tooltips for different datasets within the same pie;
         callbacks: {
@@ -165,7 +165,7 @@ const DiningBalance = () => {
             </Typography>
           </Grid>
         </Grid>
-        <Doughnut data={data} height={175} options={options} />
+        <Doughnut data={data} options={options} />
         <div
           style={{
             marginTop: '1rem',
