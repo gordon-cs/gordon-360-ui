@@ -38,7 +38,7 @@ const headings = [
 const fullHeader = (
   <Grid container direction="row">
     {headings.map(({ name, size }) => (
-      <Grid item xs={size}>
+      <Grid item xs={size} key={name}>
         <Typography variant="h5" className={styles.header_text}>
           {name}
         </Typography>

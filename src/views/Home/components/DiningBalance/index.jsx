@@ -148,7 +148,7 @@ const DiningBalance = () => {
           spacing={0}
           style={{ paddingTop: 5, paddingBottom: 10 }}
         >
-          <Grid item sx={10}>
+          <Grid item>
             <Typography variant="body2" className={styles.label2}>
               {diningInfo.ChoiceDescription}
               <IconButton

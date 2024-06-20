@@ -339,13 +339,15 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           <Typography>
             {' '}
             No strengths to show.{' '}
-            <a
+            <Link
               href="https://gordon.gallup.com/signin/default.aspx"
+              underline="hover"
               target="_blank"
+              className={'gc360_text_link'}
               rel="noopener noreferrer"
             >
               Take the test
-            </a>{' '}
+            </Link>{' '}
           </Typography>
         )
       }
@@ -593,7 +595,10 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     (isFacStaff ? (
       <Typography align="left" className={styles.note}>
         NOTE: To update your personal info, please go to{' '}
-        <a href="https://gordon.criterionhcm.com/">Criterion</a> and look under "Personal Info" tab.
+        <a href="https://gordon.criterionhcm.com/" className={`gc360_text_link`}>
+          Criterion
+        </a>{' '}
+        and look under "Personal Info" tab.
       </Typography>
     ) : isStudent ? (
       <div align="left" className={styles.note}>
