@@ -46,56 +46,59 @@ const Requests = ({ profile, session }) => {
   } else if (involvementsLeading?.length > 0) {
     content = (
       <>
-        <Accordion>
-          <AccordionSummary
-            aria-controls="received-requests-content"
-            expandIcon={<ExpandMore style={{ color: 'white' }} />}
-            className={styles.requests_header}
-          >
-            <Typography variant="h6">Requests Received</Typography>
-          </AccordionSummary>
-          <AccordionDetails style={{ flexDirection: 'column' }}>
-            {involvementsLeading.map((involvement) => (
-              <RequestReceived
-                key={involvement.ActivityCode + involvement.SessioinCode}
-                involvement={involvement}
-              />
-            ))}
-          </AccordionDetails>
-        </Accordion>
+        <CardHeader title="Membership Requests" className={styles.requests_header} />
+        <CardContent>
+          <Accordion>
+            <AccordionSummary
+              aria-controls="received-requests-content"
+              expandIcon={<ExpandMore style={{ color: 'white' }} />}
+              className={styles.requests_header}
+            >
+              <Typography variant="h6">Requests Received</Typography>
+            </AccordionSummary>
+            <AccordionDetails style={{ flexDirection: 'column' }}>
+              {involvementsLeading.map((involvement) => (
+                <RequestReceived
+                  key={involvement.ActivityCode + involvement.SessioinCode}
+                  involvement={involvement}
+                />
+              ))}
+            </AccordionDetails>
+          </Accordion>
 
-        <Accordion>
-          <AccordionSummary
-            aria-controls="sent-requests-content"
-            expandIcon={<ExpandMore style={{ color: 'white' }} />}
-            className={styles.requests_header}
-          >
-            <Typography variant="h6">Requests Sent</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Grid container align="right" direction="row">
-              {requestsSent?.length > 0 ? (
-                requestsSent
-                  .sort((a, b) => parseISO(b.DateSent) - parseISO(a.DateSent))
-                  .map((request) => (
-                    <RequestSent
-                      member={request}
-                      key={request.RequestID}
-                      onCancel={handleCancelRequest}
-                    />
-                  ))
-              ) : (
-                <Typography variant="h6">You haven't sent any requests</Typography>
-              )}
-            </Grid>
-          </AccordionDetails>
-        </Accordion>
-      </>
-    );
+          <Accordion>
+            <AccordionSummary
+              aria-controls="sent-requests-content"
+              expandIcon={<ExpandMore style={{ color: 'white' }} />}
+              className={styles.requests_header}
+            >
+              <Typography variant="h6">Requests Sent</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Grid container align="right" direction="row">
+                {requestsSent?.length > 0 ? (
+                  requestsSent
+                    .sort((a, b) => parseISO(b.DateSent) - parseISO(a.DateSent))
+                    .map((request) => (
+                      <RequestSent
+                        member={request}
+                        key={request.RequestID}
+                        onCancel={handleCancelRequest}
+                      />
+                    ))
+                ) : (
+                  <Typography variant="h6">You haven't sent any requests</Typography>
+                )}
+              </Grid>
+            </AccordionDetails>
+          </Accordion>
+          </CardContent>
+        </>
+      );
   } else {
     content = (
       <>
-        <Accordion defaultExpanded>
+        <Accordion defaultExpanded={requestsSent?.length > 0}>
           <AccordionSummary
             aria-controls="received-requests-content"
             expandIcon={<ExpandMore style={{ color: 'white' }} />}
