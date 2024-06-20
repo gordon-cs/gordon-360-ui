@@ -12,7 +12,7 @@ import RecIMIcon from '@mui/icons-material/SportsFootball';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { useNetworkStatus } from 'hooks';
 import { useEffect, useState } from 'react';
-import { useNavigate, NavLink, useLocation } from 'react-router-dom';
+import { useNavigate, NavLink, useLocation, LinkProps as RouterLinkProps } from 'react-router-dom';
 import { authenticate } from 'services/auth';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
 import GordonQuickSearch from './components/QuickSearch';
@@ -70,7 +70,11 @@ const useAltText = () => {
   return altText;
 };
 
-const GordonHeader = ({ onDrawerToggle }) => {
+type Props = {
+  onDrawerToggle: (event: {}) => void;
+};
+
+const GordonHeader = ({ onDrawerToggle }: Props) => {
   const navigate = useNavigate();
   const [dialog, setDialog] = useState('');
   const isOnline = useNetworkStatus();
@@ -86,10 +90,10 @@ const GordonHeader = ({ onDrawerToggle }) => {
     const isOffline = dialog === 'offline';
     return (
       <GordonDialogBox
-        open={dialog}
-        onClose={() => setDialog(null)}
+        open={Boolean(dialog)}
+        onClose={() => setDialog('')}
         title={isOffline ? 'Unavailabile Offline' : 'Login Required'}
-        buttonClicked={() => setDialog(null)}
+        buttonClicked={() => setDialog('')}
         buttonName={'Okay'}
       >
         <br />
@@ -100,7 +104,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
     );
   };
 
-  const requiresAuthTab = (name, icon) => {
+  const requiresAuthTab = (name: string, icon: JSX.Element) => {
     if (!isOnline) {
       return (
         <Tab
@@ -149,7 +153,7 @@ const GordonHeader = ({ onDrawerToggle }) => {
           >
             <MenuIcon className={styles.hamburger_menu_button_icon} />
           </IconButton>
-          <Link to="/" component={NavLink} value={tabIndex}>
+          <Link to="/" component={NavLink}>
             <picture>
               {/* pick a different image as the screen gets smaller.*/}
               <source srcSet={headerLogo72dpi} media="(min-width: 900px)" />
