@@ -11,3 +11,9 @@
   color: $neutral-white;
   background-color: $primary-blue;
 }
+
+.involvements {
+  &_gordon_text {
+    color: var(--mui-palette-link-light);
+  }
+}

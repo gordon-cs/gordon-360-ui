@@ -21,7 +21,7 @@ import { gordonColors } from 'theme';
 import InvolvementsGrid from './components/InvolvementsGrid';
 import Requests from './components/Requests';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import styles from './InvolvementsAll.module.css';
+import styles from './Involvements.module.css';
 
 const InvolvementsAll = () => {
   const [currentAcademicSession, setCurrentAcademicSession] = useState('');
@@ -135,7 +135,7 @@ const InvolvementsAll = () => {
 
   const searchPageTitle = (
     <div align="center">
-      <b style={{ color: gordonColors.primary.cyan }}> Gordon </b>
+      <b className={styles.involvements_gordon_text}> Gordon </b>
       Involvements
     </div>
   );
