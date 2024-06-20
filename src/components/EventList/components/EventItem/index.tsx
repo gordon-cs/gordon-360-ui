@@ -73,7 +73,7 @@ const EventItem = ({ event }: Props) => {
       </Grid>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography type="caption" className={styles.descriptionText} tabIndex={0}>
+          <Typography sx={{ type: 'caption', className: styles.descriptionText, tabIndex: 0 }}>
             {event.Description || 'No description available'}
           </Typography>
           {event.StartDate !== '' && event.EndDate !== '' && (
