@@ -140,33 +140,33 @@ const DaysLeft = () => {
 
       /* Applys the proper dialogue based on if we are in an academic term or a term break with 
       a condition to make days singular if there is only 1 day left*/
-      const termDialogue = termLoop.find(
-        (term) => term.name === currentTerm && term.type === 'Academic' && currentDaysLeft > 1,
-      )
-        ? `${currentDaysLeft} Days Remaining in ${currentTerm} Term`
-        : currentType === 'Academic' && currentDaysLeft === 1
-          ? `${currentDaysLeft} Day Remaining in ${currentTerm} Term`
-          : currentDaysLeft > 1
-            ? `${currentDaysLeft} Days Until ${currentLabel} Term`
-            : `${currentDaysLeft} Day Until ${currentLabel} Term`;
-
+      const termDialogue =
+        currentType === 'Academic'
+          ? `${currentDaysLeft} Day${currentDaysLeft > 1 ? 's' : ''} Remaining in ${currentTerm} Term`
+          : `${currentDaysLeft} Day${currentDaysLeft > 1 ? 's' : ''} Until ${currentLabel} Term`;
       setTermDialogue(termDialogue);
       setTermProgress(currentProgress);
     }
   }, [loading, termDates]);
 
-  /* The width of the front container is 10,000 / termProgress to correctly overlap with the 
-  backContainer and make it seem like the color changes as the backContainer gets covered*/
+  /* This won't display if termDialogue is empty, specifically when on train because it doesn't 
+  access the correct dates.The width of the front container is 10,000 / termProgress to correctly 
+  overlap with the  backContainer and make it seem like the color changes as the backContainer
+  gets covered*/
   return (
     <Grid align="center">
-      <div className={styles.backContainer}>
-        {termDialogue}
-        <div className={styles.boundBox} style={{ width: termProgress + '%' }}>
-          <div className={styles.frontContainer} style={{ width: 10000 / termProgress + '%' }}>
-            {termDialogue}
+      {termDialogue !== '' ? (
+        <div className={styles.backContainer}>
+          {termDialogue}
+          <div className={styles.boundBox} style={{ width: termProgress + '%' }}>
+            <div className={styles.frontContainer} style={{ width: 10000 / termProgress + '%' }}>
+              {termDialogue}
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        ''
+      )}
     </Grid>
   );
 };
