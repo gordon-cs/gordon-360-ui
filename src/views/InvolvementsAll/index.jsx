@@ -8,6 +8,7 @@ import {
   MenuItem,
   Select,
   TextField,
+  Tab,
 } from '@mui/material';
 import GordonLoader from 'components/Loader';
 import { useNetworkStatus, useUser } from 'hooks';
@@ -18,6 +19,7 @@ import membershipService, { NonGuestParticipations } from 'services/membership';
 import sessionService from 'services/session';
 import InvolvementsGrid from './components/InvolvementsGrid';
 import Requests from './components/Requests';
+import { TabContext, TabList, TabPanel } from '@mui/lab';
 import styles from './Involvements.module.css';
 
 const InvolvementsAll = () => {
@@ -35,6 +37,7 @@ const InvolvementsAll = () => {
   const isOnline = useNetworkStatus();
   const navigate = useNavigate();
   const location = useLocation();
+  const [tabIndex, setTabIndex] = useState('1');
 
   const sessionFromURL = new URLSearchParams(location.search).get('session');
 
@@ -78,6 +81,10 @@ const InvolvementsAll = () => {
     setSelectedSession(value);
     value = sessionService.decodeSessionCode(value);
     navigate(`?session=${value}`);
+  };
+
+  const handleChangeTab = (event, newValue) => {
+    setTabIndex(newValue);
   };
 
   useEffect(() => {
@@ -127,7 +134,6 @@ const InvolvementsAll = () => {
 
   const searchPageTitle = (
     <div align="left">
-      Search
       <b className={styles.involvements_gordon_text}> Gordon </b>
       Involvements
     </div>
@@ -135,53 +141,14 @@ const InvolvementsAll = () => {
 
   return (
     <Grid container justifyContent="center" spacing={4}>
-      {loadingProfile ? (
-        <GordonLoader />
-      ) : (
-        profile && (
-          <Grid item xs={12} lg={8}>
-            <Card>
-              <CardHeader
-                title={`My ${myInvolvementsHeadingText} Involvements`}
-                className="gc360_header"
-              />
-              <CardContent>
-                {loading ? (
-                  <GordonLoader />
-                ) : (
-                  <InvolvementsGrid
-                    involvements={myInvolvements}
-                    sessionCode={selectedSession}
-                    noInvolvementsText={myInvolvementsNoneText}
-                  />
-                )}
-              </CardContent>
-            </Card>
-          </Grid>
-        )
-      )}
-      {!isOnline ? null : loadingProfile ? (
-        <GordonLoader />
-      ) : (
-        profile && <Requests profile={profile} session={selectedSession} />
-      )}
       <Grid item xs={12} lg={8}>
         <Card>
-          <CardHeader title={searchPageTitle} className="gc360_header" />
           <CardContent>
             <Grid container spacing={2}>
-              <Grid item xs={12} lg={6}>
-                <TextField
-                  id="search"
-                  variant="filled"
-                  label="Search"
-                  type="search"
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                  fullWidth
-                />
+              <Grid item xs={12} lg={8} marginTop={1}>
+                <CardHeader title={searchPageTitle} />
               </Grid>
-              <Grid item xs={12} md={6} lg={3}>
+              <Grid item xs={12} md={6} lg={4} marginTop={2}>
                 <FormControl variant="filled" fullWidth>
                   <InputLabel id="activity-session">Term</InputLabel>
                   <Select
@@ -201,45 +168,100 @@ const InvolvementsAll = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} md={6} lg={3}>
-                <FormControl fullWidth variant="filled">
-                  <InputLabel id="activity-type">Type</InputLabel>
-                  <Select
-                    labelId="activity-type"
-                    id="activity-type"
-                    value={type}
-                    onChange={(event) => setType(event.target.value)}
-                  >
-                    <MenuItem label="All" value="">
-                      <em>All</em>
-                    </MenuItem>
-                    {types.map((type) => (
-                      <MenuItem value={type} key={type}>
-                        {type}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
             </Grid>
-          </CardContent>
-        </Card>
-      </Grid>
-
-      {/* All Involvements (public) */}
-      <Grid item xs={12} lg={8}>
-        <Card>
-          <CardHeader title={`${involvementSessionText} Involvements`} className="gc360_header" />
-          <CardContent>
-            {loading ? (
-              <GordonLoader />
-            ) : (
-              <InvolvementsGrid
-                involvements={involvements}
-                sessionCode={selectedSession}
-                noInvolvementsText="There aren't any involvements for the selected session and type"
-              />
-            )}
+            <TabContext value={tabIndex}>
+              <Grid item xs={16} marginTop={2}>
+                <TabList
+                  onChange={handleChangeTab}
+                  aria-label="involvements tabs"
+                  variant="fullWidth"
+                  centered
+                  indicatorColor="secondary"
+                >
+                  <Tab label="Personal" className="gc360_header" value="1" />
+                  <Tab label="Requests" className="gc360_header" value="2" />
+                  <Tab label="All" className="gc360_header" value="3" />
+                </TabList>
+              </Grid>
+              <TabPanel value="1">
+                {loadingProfile || loading ? (
+                  <GordonLoader />
+                ) : (
+                  profile && (
+                    <Grid item xs={12} lg={12}>
+                      <InvolvementsGrid
+                        involvements={myInvolvements}
+                        sessionCode={selectedSession}
+                        noInvolvementsText={myInvolvementsNoneText}
+                      />
+                    </Grid>
+                  )
+                )}
+              </TabPanel>
+              <TabPanel value="2">
+                <Grid
+                  item
+                  xs={12}
+                  lg={12}
+                  xl={12}
+                  container
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  {!isOnline ? null : loadingProfile ? (
+                    <GordonLoader />
+                  ) : (
+                    profile && <Requests profile={profile} session={selectedSession} />
+                  )}
+                </Grid>
+              </TabPanel>
+              <TabPanel value="3">
+                <Grid item xs={12} lg={12}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} lg={6} marginBottom={4}>
+                      <TextField
+                        id="search"
+                        variant="filled"
+                        label="Search"
+                        type="search"
+                        value={search}
+                        onChange={(event) => setSearch(event.target.value)}
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item xs={12} md={6} lg={6} marginBottom={4}>
+                      <FormControl fullWidth variant="filled">
+                        <InputLabel id="activity-type">Type</InputLabel>
+                        <Select
+                          labelId="activity-type"
+                          id="activity-type"
+                          value={type}
+                          onChange={(event) => setType(event.target.value)}
+                        >
+                          <MenuItem label="All" value="">
+                            <em>All</em>
+                          </MenuItem>
+                          {types.map((type) => (
+                            <MenuItem value={type} key={type}>
+                              {type}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                  </Grid>
+                  {loading ? (
+                    <GordonLoader />
+                  ) : (
+                    <InvolvementsGrid
+                      involvements={involvements}
+                      sessionCode={selectedSession}
+                      noInvolvementsText="There aren't any involvements for the selected session and type"
+                    />
+                  )}
+                </Grid>
+              </TabPanel>
+            </TabContext>
           </CardContent>
         </Card>
       </Grid>
