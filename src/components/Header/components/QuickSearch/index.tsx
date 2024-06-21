@@ -86,9 +86,9 @@ type Props =
       searchFunction?: SearchFunction;
     }
   | {
-      disableLink: false;
-      customPlaceholderText: undefined;
-      onSearchSubmit: undefined;
+      disableLink?: false;
+      customPlaceholderText?: undefined;
+      onSearchSubmit?: undefined;
       searchFunction?: SearchFunction;
     };
 

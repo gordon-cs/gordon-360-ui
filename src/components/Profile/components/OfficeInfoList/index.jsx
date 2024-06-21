@@ -1,14 +1,11 @@
-import { useState, Fragment, useEffect } from 'react';
-import { Card, CardContent, CardHeader, Grid, List, Typography, IconButton } from '@mui/material';
+import { useState } from 'react';
+import { Card, CardContent, CardHeader, Grid, List, Typography } from '@mui/material';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import styles from './OfficeInfoList.module.css';
 import UpdateOffice from './UpdateOfficeLocationDialog';
 import UpdateOfficeHours from './UpdateOfficeHoursDialog';
 import UpdateMail from './UpdateMailDestinationDialog';
 import GordonTooltip from 'components/GordonTooltip';
-import user from 'services/user';
-import EditIcon from '@mui/icons-material/Edit';
-import { SignalWifiStatusbarConnectedNoInternet4TwoTone } from '@mui/icons-material';
 
 const OfficeInfoList = ({
   myProf,
@@ -106,11 +103,9 @@ const OfficeInfoList = ({
             <Typography>
               {profMailLocation ? profMailLocation : 'Add your mail location here'}
               {Mail_Description && (
-                <GordonTooltip
-                  content={Mail_Description}
-                  enterTouchDelay={50}
-                  leaveTouchDelay={2000}
-                />
+                <GordonTooltip enterTouchDelay={50} leaveTouchDelay={2000}>
+                  {Mail_Description}
+                </GordonTooltip>
               )}
             </Typography>
           </Grid>
