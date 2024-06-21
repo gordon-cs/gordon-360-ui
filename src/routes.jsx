@@ -21,6 +21,7 @@ import ProfileNotFound from './views/ProfileNotFound';
 import PublicProfile from './views/PublicProfile';
 import Timesheets from './views/Timesheets';
 import RecIM from './views/RecIM';
+import Posters from './views/Posters';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
 const routes = [
@@ -133,6 +134,11 @@ const routes = [
     name: 'Rec-IM',
     path: '/recim/*',
     element: <RecIM />,
+  },
+  {
+    name: 'Posters',
+    path: '/posters',
+    element: <Posters />,
   },
   {
     name: 'Page Not Found',

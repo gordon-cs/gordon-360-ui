@@ -7,6 +7,7 @@ import Carousel from './components/Carousel';
 import DiningBalance from './components/DiningBalance';
 import GuestWelcome from './components/GuestWelcome';
 import NewsCard from './components/NewsCard';
+import PosterSwiper from './components/PosterSwiper';
 
 const Home = () => {
   const { profile, loading } = useUser();
@@ -19,7 +20,7 @@ const Home = () => {
     return (
       <Grid container justifyContent="center" spacing={2}>
         <Grid item xs={12} md={10}>
-          <Carousel />
+          <PosterSwiper />
         </Grid>
         <Grid item xs={12} md={5}>
           <DiningBalance />

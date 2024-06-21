@@ -26,6 +26,9 @@ import sessionService from 'services/session';
 import ContactListItem from './components/ContactListItem';
 import Membership from './components/Membership';
 import styles from './InvolvementProfile.module.css';
+import ClubPosters from './components/ClubPosters';
+import UploadPosterForm from 'views/Posters/components/UploadPosterForm';
+//import posterService from 'services/poster';
 
 const CROP_DIM = 320; // pixels
 
@@ -44,6 +47,7 @@ const InvolvementProfile = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const isSiteAdmin = useAuthGroups(AuthGroup.SiteAdmin);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isPosterDialogOpen, setIsPosterDialogOpen] = useState(false);
   const [isRemoveImageDialogOpen, setIsRemoveImageDialogOpen] = useState(false);
   const [emailList, setEmailList] = useState([]);
   const [cropperData, setCropperData] = useState({});
@@ -150,6 +154,17 @@ const InvolvementProfile = () => {
     alert('Sorry, invalid image file! Only PNG and JPEG images are accepted.');
   };
 
+  //added by CollyWills for Poster
+  const onUploadPoster = async () => {
+    console.log('Test');
+    const data = {
+      //image
+    };
+    //await posterServce
+  };
+
+  //end of poster functions
+
   const onEditInvolvement = async () => {
     const data = {
       Description: tempBlurb,
@@ -220,8 +235,8 @@ const InvolvementProfile = () => {
       <Grid item>
         <Grid container spacing={2} justifyContent="center">
           <Grid item>
-            <Button variant="contained" color="primary" onClick={() => setIsEditDialogOpen(true)}>
-              Edit Involvement
+            <Button variant="contained" color="primary" onClick={() => setIsPosterDialogOpen(true)}>
+              <b>*NEW*</b>Upload Poster
             </Button>
           </Grid>
           <Grid item>
@@ -234,7 +249,40 @@ const InvolvementProfile = () => {
               Email Members/Subscribers
             </Button>
           </Grid>
+          <Grid item>
+            <Button variant="contained" color="primary" onClick={() => setIsEditDialogOpen(true)}>
+              Edit Involvement
+            </Button>
+          </Grid>
         </Grid>
+
+        <GordonDialogBox
+          open={isPosterDialogOpen}
+          title={`Upload Poster for ${ActivityDescription}`}
+          buttonName="Submit"
+          buttonClicked={onUploadPoster}
+          cancelButtonClicked={() => setIsPosterDialogOpen(false)}
+        >
+          <UploadPosterForm
+          // onClose,
+          // createSnackbar,
+          // openPosterForm,
+          // setOpenPosterForm,
+
+          // setCreatedInstance,
+          />
+          {/* <Form
+              formTitles={{ name: 'Upload Poster', formType: activity ? 'Edit' : 'Create' }}
+              fields={[activityFields]}
+              currentInfo={currentInfo}
+              loading={loading}
+              isSaving={isSaving}
+              setOpenForm={setOpenActivityForm}
+              openForm={openActivityForm}
+              handleConfirm={handleConfirm}
+          />
+        */}
+        </GordonDialogBox>
 
         <GordonDialogBox
           open={isEditDialogOpen}
@@ -412,6 +460,14 @@ const InvolvementProfile = () => {
               <GordonLoader />
             ) : profile ? (
               <>
+                <hr width="101.5%"></hr>
+                <Grid item>
+                  <ClubPosters clubName={ActivityDescription} clubCode={involvementCode} />
+                </Grid>
+                {/*Not an ideal way to format the page me thinks*/}
+                <br />
+                <br />
+                <br />
                 <hr width="101.5%"></hr>
 
                 <Grid item>
