@@ -7,7 +7,7 @@ import Carousel from './components/Carousel';
 import DiningBalance from './components/DiningBalance';
 import GuestWelcome from './components/GuestWelcome';
 import NewsCard from './components/NewsCard';
-
+import DaysLeft from './components/DaysLeft';
 const Home = () => {
   const { profile, loading } = useUser();
 
@@ -20,6 +20,9 @@ const Home = () => {
       <Grid container justifyContent="center" spacing={2}>
         <Grid item xs={12} md={10}>
           <Carousel />
+        </Grid>
+        <Grid item xs={12} md={10}>
+          <DaysLeft />
         </Grid>
         <Grid item xs={12} md={5}>
           <DiningBalance />

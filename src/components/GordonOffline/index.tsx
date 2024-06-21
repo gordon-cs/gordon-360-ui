@@ -2,12 +2,11 @@ import { Button, Card, CardContent, Grid } from '@mui/material/';
 import { Link } from 'react-router-dom';
 import styles from './GordonOffline.module.css';
 
-/**
- * @param {Object} props props
- * @param {string} props.feature - Text representing the content the user tried to access
- * @returns {JSX.Element} A card with a message that the user must connect to view content
- */
-const GordonOffline = ({ feature }) => {
+type Props = {
+  feature: string;
+};
+
+const GordonOffline = ({ feature }: Props) => {
   return (
     <Grid container justifyContent="center" spacing="16">
       <Grid item xs={12} md={8}>
