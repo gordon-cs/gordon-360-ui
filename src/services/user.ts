@@ -181,6 +181,11 @@ export type OfficeLocationQuery = {
   RoomNumber: string;
 };
 
+export type UserPrivacyQuery = {
+  Field: string[];
+  VisibilityGroup: string;
+};
+
 function isStudent(profile: Profile): profile is StudentProfileInfo;
 function isStudent(profile: UnformattedProfileInfo): profile is UnformattedStudentProfileInfo;
 function isStudent(
@@ -231,6 +236,11 @@ const getAdvisors = (username: string): Promise<StudentAdvisorInfo[]> =>
 
 const getMailboxCombination = () => http.get('profiles/mailbox-combination/');
 
+const getVisibilityGroups = (): Promise<string[]> => http.get(`profiles/visibility_groups`);
+
+const getPrivacySetting = (username: string): Promise<string> =>
+  http.get(`profiles/${username}/privacy_setting/`);
+
 const getMailStops = (): Promise<string[]> => http.get(`profiles/mailstops`);
 
 const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_number/${value}/`);
@@ -250,8 +260,8 @@ const updateOfficeHours = (value: string) => http.put(`profiles/office_hours`, v
 const setMobilePhonePrivacy = (makePrivate: boolean) =>
   http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N')); // 'Y' = private, 'N' = public
 
-const setHomePhonePrivacy = (makePrivate: boolean) =>
-  http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N')); // 'Y' = private, 'N' = public
+const setUserPrivacy = (userPrivacy: UserPrivacyQuery) =>
+  http.put(`profiles/user_privacy`, userPrivacy);
 
 const setImagePrivacy = (makePrivate: boolean) =>
   http.put('profiles/image_privacy/' + (makePrivate ? 'N' : 'Y')); // 'Y' = show image, 'N' = don't show image
@@ -343,8 +353,8 @@ const getMembershipHistory = (username: string): Promise<MembershipHistory[]> =>
 
 const userService = {
   setMobilePhonePrivacy,
+  setUserPrivacy,
   setPlannedGraduationYear,
-  setHomePhonePrivacy,
   setMobilePhoneNumber,
   updateMailStop,
   updateOfficeLocation,
@@ -357,6 +367,8 @@ const userService = {
   getAdvisors,
   getMailboxCombination,
   getMembershipHistory,
+  getVisibilityGroups,
+  getPrivacySetting,
   resetImage,
   postImage,
   postIDImage,

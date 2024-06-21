@@ -2,6 +2,7 @@
 @import '../../../../vars';
 
 .root {
+  color: var(--mui-palette-primary-contrastText);
   transition:
     box-shadow 0.3s,
     width 0.3s;
