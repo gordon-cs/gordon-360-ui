@@ -11,7 +11,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import GordonLoader from 'components/Loader';
 import { useEffect, useState } from 'react';
-import { Doughnut } from 'react-chartjs-2';
+import { Doughnut, Pie } from 'react-chartjs-2';
 import session from 'services/session';
 import user from 'services/user';
 import styles from '../Doughnut.module.css';
@@ -93,7 +93,6 @@ const DiningBalance = () => {
     const daysFinished = daysInSession - daysLeftRounded;
 
     const options = {
-      cutout: 0,
       tooltips: {
         // Allow different tooltips for different datasets within the same pie;
         callbacks: {
@@ -165,7 +164,7 @@ const DiningBalance = () => {
             </Typography>
           </Grid>
         </Grid>
-        <Doughnut data={data} options={options} />
+        <Pie data={data} options={options} />
         <div
           style={{
             marginTop: '1rem',
