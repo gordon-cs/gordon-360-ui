@@ -85,3 +85,19 @@
   font-size: 0.9rem;
   font-weight: bold;
 }
+.header {
+  padding-left: 0rem;
+  justify-content: left;
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+@media (max-width: $break-sm) {
+  .header {
+    padding-left: 0rem;
+    justify-content: center;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+  }
+}
