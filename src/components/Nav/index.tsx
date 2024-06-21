@@ -3,7 +3,12 @@ import GordonNavAvatar from './components/NavAvatar';
 import GordonNavLinks from './components/NavLinks';
 import styles from './Nav.module.css';
 
-const GordonNav = ({ onDrawerToggle, drawerOpen }) => (
+type Props = {
+  onDrawerToggle: () => void;
+  drawerOpen: boolean;
+};
+
+const GordonNav = ({ onDrawerToggle, drawerOpen }: Props) => (
   <section className={styles.gordon_nav}>
     <Drawer
       variant="temporary"

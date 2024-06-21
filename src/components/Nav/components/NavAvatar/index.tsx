@@ -5,10 +5,14 @@ import { forwardRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './NavAvatar.module.css';
 
-const GordonNavAvatar = ({ onLinkClick }) => {
-  const [email, setEmail] = useState();
-  const [image, setImage] = useState();
-  const [name, setName] = useState();
+type Props = {
+  onLinkClick: () => void;
+};
+
+const GordonNavAvatar = ({ onLinkClick }: Props) => {
+  const [email, setEmail] = useState('');
+  const [image, setImage] = useState('');
+  const [name, setName] = useState('');
   const { profile, images, loading } = useUser();
 
   useEffect(() => {

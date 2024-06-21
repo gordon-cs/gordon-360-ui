@@ -16,9 +16,13 @@ import { useState } from 'react';
 import { AuthGroup, signOut } from 'services/auth';
 import styles from './NavLinks.module.css';
 
-const GordonNavLinks = ({ onLinkClick }) => {
+type Props = {
+  onLinkClick: () => void;
+};
+
+const GordonNavLinks = ({ onLinkClick }: Props) => {
   const [paletteOptionsOpen, setPaletteOptionsOpen] = useState(false);
-  const [dialog, setDialog] = useState(null);
+  const [dialog, setDialog] = useState('');
   const isOnline = useNetworkStatus();
   const isAuthenticated = useIsAuthenticated();
   const isSiteAdmin = useAuthGroups(AuthGroup.SiteAdmin);
@@ -47,10 +51,10 @@ const GordonNavLinks = ({ onLinkClick }) => {
     }
     return (
       <GordonDialogBox
-        open={dialog}
-        onClose={() => setDialog(null)}
+        open={Boolean(dialog)}
+        onClose={() => setDialog('')}
         title={title}
-        buttonClicked={() => setDialog(null)}
+        buttonClicked={() => setDialog('')}
         buttonName={'Okay'}
       >
         <br />
@@ -101,7 +105,7 @@ const GordonNavLinks = ({ onLinkClick }) => {
 
   const peopleButton = (
     <GordonNavButton
-      unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
+      unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : ''}
       onLinkClick={onLinkClick}
       openUnavailableDialog={setDialog}
       divider={false}
@@ -123,7 +127,7 @@ const GordonNavLinks = ({ onLinkClick }) => {
 
   const timesheetsButton = (
     <GordonNavButton
-      unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
+      unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : ''}
       openUnavailableDialog={setDialog}
       onLinkClick={onLinkClick}
       linkName={'Timesheets'}
@@ -135,7 +139,7 @@ const GordonNavLinks = ({ onLinkClick }) => {
 
   const recimButton = (
     <GordonNavButton
-      unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
+      unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : ''}
       openUnavailableDialog={setDialog}
       onLinkClick={onLinkClick}
       linkName={'Rec-IM'}
