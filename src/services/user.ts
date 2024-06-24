@@ -268,8 +268,6 @@ const isBirthdayToday = (): Promise<boolean> => {
   );
 };
 
-//birthday?.month === DateTime.now().month && birthday?.day === DateTime.now().day
-
 const getProfileInfo = async (username: string = ''): Promise<Profile | undefined> => {
   const profile = await getProfile(username).then(formatCountry).then(formatSocialMediaLinks);
 
