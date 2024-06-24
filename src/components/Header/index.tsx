@@ -132,7 +132,7 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
           label={name}
           component={NavLink}
           to={route}
-          tabIndex={name == 'People' ? 5 : 7}
+          tabIndex={0}
         />
       );
     }
@@ -159,11 +159,10 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
             aria-label="open drawer"
             onClick={onDrawerToggle}
             size="large"
-            tabIndex={1}
           >
             <MenuIcon className={styles.hamburger_menu_button_icon} />
           </IconButton>
-          <Link to="/" component={NavLink} tabIndex={2}>
+          <Link to="/" component={NavLink}>
             <picture>
               {/* pick a different image as the screen gets smaller.*/}
               <source srcSet={headerLogo72dpi} media="(min-width: 900px)" />
@@ -186,7 +185,7 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
             label="Involvements"
             component={NavLink}
             to="/involvements"
-            tabIndex={3}
+            tabIndex={0}
           />
           <Tab
             className={styles.tab}
@@ -194,7 +193,7 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
             label="Events"
             component={NavLink}
             to="/events"
-            tabIndex={4}
+            tabIndex={0}
           />
           {requiresAuthTab('People', <PeopleIcon />)}
           <Tab
@@ -203,7 +202,7 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
             label="Links"
             component={NavLink}
             to="/links"
-            tabIndex={6}
+            tabIndex={0}
           />
           {requiresAuthTab('Rec-IM', <RecIMIcon />)}
         </Tabs>
