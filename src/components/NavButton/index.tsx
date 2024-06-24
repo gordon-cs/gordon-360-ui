@@ -51,16 +51,21 @@ const GordonNavButton = ({
         <ListItemText primary={linkName} />
       </ListItem>
     ) : (
-      <NavLink end to={linkPath} onClick={onLinkClick}>
-        <ListItem divider={divider} button className="gc360_link">
-          {LinkIcon && (
-            <ListItemIcon>
-              <LinkIcon />
-            </ListItemIcon>
-          )}
-          <ListItemText primary={linkName} />
-        </ListItem>
-      </NavLink>
+      <ListItem
+        divider={divider}
+        button
+        className="gc360_link"
+        component={NavLink}
+        to={linkPath}
+        onClick={onLinkClick}
+      >
+        {LinkIcon && (
+          <ListItemIcon>
+            <LinkIcon />
+          </ListItemIcon>
+        )}
+        <ListItemText primary={linkName} />
+      </ListItem>
     );
 
   if (unavailable) {
