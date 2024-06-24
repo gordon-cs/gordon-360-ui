@@ -683,7 +683,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           alignItems="center"
           className={styles.personal_info_list_header}
         >
-          <Grid item xs={8}>
+          <Grid container className={styles.header}>
             <CardHeader title="Personal Information" />
           </Grid>
           <Grid item xs={4} align="right">
