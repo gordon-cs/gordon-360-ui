@@ -5,12 +5,11 @@
   }
 
   & .weak {
-    color: var(--mui-palette-primary-50);
-    font-size: 85%;
+    color: var(--mui-palette-link-main);
+    font-size: 95%;
   }
 
   &_expand_icon {
     color: var(--mui-palette-primary-contrastText);
   }
 }
-
