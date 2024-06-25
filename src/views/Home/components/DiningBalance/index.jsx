@@ -99,6 +99,7 @@ const DiningBalance = () => {
         tooltip: {
           // Allow different tooltips for different datasets within the same pie;
           callbacks: {
+            // Code taken from https://github.com/chartjs/Chart.js/issues/1417
             label: function (data) {
               return swipeInit === 0 &&
                 data.dataset.labels.includes('Swipes Used' || 'Swipes Remaining')
