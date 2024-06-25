@@ -1,5 +1,5 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import 'swiper/css';
 import DummyData from '/src/views/Posters/dummy-posters/dummyposters.jsx';
 import 'swiper/css';
@@ -32,6 +32,7 @@ import {
 } from '@mui/material';
 
 const PosterSwiper = () => {
+  const size = useWindowSize();
   return (
     <Grid>
       <Card>
@@ -62,7 +63,7 @@ const PosterSwiper = () => {
               clickable: true,
             }}
             loop={true}
-            navigation={true}
+            navigation={window.innerWidth >= 600 ? true : false}
             grabCursor={true}
             centeredSlides={true}
             keyboard={true}

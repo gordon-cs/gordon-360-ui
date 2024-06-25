@@ -2,7 +2,7 @@
 //som sort of css problem
 .swiper {
   width: 100%;
-  padding-top: 50px;
+  padding-top: 20px;
   padding-bottom: 50px;
 }
 
@@ -10,7 +10,7 @@
   background-position: center;
   background-size: cover;
   width: 500px;
-  height: 700px;
+  height: 600px;
 }
 
 .swiper-slide img {
@@ -19,12 +19,18 @@
   height: 100%;
 }
 
-@media (min-width: $break-sm) {
+@media (max-width: $break-sm) {
   .header {
     font-size: 1rem;
   }
 
   .headerImg {
     width: 5em;
+  }
+  .swiper-slide {
+    background-position: center;
+    background-size: cover;
+    width: 350px;
+    height: 450px;
   }
 }

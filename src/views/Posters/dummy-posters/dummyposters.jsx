@@ -28,6 +28,7 @@ export const DATA = [
     uploader: 'collin.williams',
     status: 'strike',
   },
+
   {
     key: '2',
     title: 'Event 3',
@@ -54,14 +55,14 @@ export const DATA = [
     desc: 'this is a short descirption',
     org: null,
   },
-  {
-    key: '5',
-    title: 'Movie Night',
-    image: MoviePoster,
-    alt: 'alt text for poster hunter1',
-    desc: 'this is a short descirption',
-    org: 'I-95 Rocks',
-  },
+  // {
+  //   key: '5',
+  //   title: 'Movie Night',
+  //   image: MoviePoster,
+  //   alt: 'alt text for poster hunter1',
+  //   desc: 'this is a short descirption',
+  //   org: 'I-95 Rocks',
+  // },
   {
     key: '6',
     title: 'Poster 6 Title',
