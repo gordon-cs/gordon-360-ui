@@ -231,8 +231,8 @@ export const theme360 = extendTheme({
           A100: White,
         },
         link: {
-          main: LinkBlue,
-          light: ScottieCyan,
+          main: ScottieCyan,
+          light: BarringtonGold,
           dark: Placeholder,
           contrastText: ScottieCyan,
         },

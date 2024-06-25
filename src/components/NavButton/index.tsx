@@ -12,6 +12,16 @@ type GordonNavButtonProps = {
   LinkIcon?: any;
 };
 
+type GordonNavButtonProps = {
+  unavailable?: string | null;
+  onLinkClick?: () => void;
+  openUnavailableDialog?: any | (() => void);
+  divider?: boolean;
+  linkName?: string;
+  linkPath?: string;
+  LinkIcon?: any | JSX.Element | null;
+};
+
 /**
  * A Navigation Button for the Right Corner Menu
  *
@@ -52,16 +62,21 @@ const GordonNavButton = ({
         <ListItemText primary={linkName} />
       </ListItem>
     ) : (
-      <NavLink end to={linkPath} onClick={onLinkClick}>
-        <ListItem divider={divider} button className="gc360_link">
-          {LinkIcon && (
-            <ListItemIcon>
-              <LinkIcon />
-            </ListItemIcon>
-          )}
-          <ListItemText primary={linkName} />
-        </ListItem>
-      </NavLink>
+      <ListItem
+        divider={divider}
+        button
+        className="gc360_link"
+        component={NavLink}
+        to={linkPath}
+        onClick={onLinkClick}
+      >
+        {LinkIcon && (
+          <ListItemIcon>
+            <LinkIcon />
+          </ListItemIcon>
+        )}
+        <ListItemText primary={linkName} />
+      </ListItem>
     );
 
   if (unavailable) {

@@ -30,7 +30,11 @@ const checkLightMode = (mode: string | null) => {
   }
 };
 
-const EventItem = (event: GordonEvent) => {
+type Props = {
+  event: GordonEvent;
+};
+
+const EventItem = ({ event }: Props) => {
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -40,6 +44,12 @@ const EventItem = (event: GordonEvent) => {
       direction="row"
       onClick={() => setExpanded((e) => !e)}
       className={styles.event_item}
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' && e.currentTarget === e.target) {
+          setExpanded((e) => !e);
+        }
+      }}
     >
       <Grid item xs={12} sm={4}>
         <Typography variant="h6" className={styles.event_column}>
@@ -63,7 +73,7 @@ const EventItem = (event: GordonEvent) => {
       </Grid>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography sx={{ type: 'caption', className: styles.descriptionText }}>
+          <Typography sx={{ type: 'caption', className: styles.descriptionText, tabIndex: 0 }}>
             {event.Description || 'No description available'}
           </Typography>
           {event.StartDate !== '' && event.EndDate !== '' && (
