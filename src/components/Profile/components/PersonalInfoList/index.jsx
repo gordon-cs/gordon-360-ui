@@ -325,19 +325,15 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                 <b style={{ color: strength.color }}>{strength.name}</b>
               </a>
             )).reduce((prev, curr) => [prev, ', ', curr])}
-            <GordonTooltip
-              title={
-                <span style={{ fontSize: '0.8rem' }}>
-                  Categories:&nbsp;
-                  <span style={{ color: '#60409f' }}>Executing</span>,{' '}
-                  <span style={{ color: '#c88a2e' }}>Influencing</span>,{' '}
-                  <span style={{ color: '#04668f' }}>Relationship</span>,{' '}
-                  <span style={{ color: '#2c8b0f' }}>Thinking</span>
-                </span>
-              }
-              enterTouchDelay={50}
-              leaveTouchDelay={5000}
-            />
+            <GordonTooltip enterTouchDelay={50} leaveTouchDelay={5000}>
+              <span style={{ fontSize: '0.8rem' }}>
+                Categories:&nbsp;
+                <span style={{ color: '#60409f' }}>Executing</span>,{' '}
+                <span style={{ color: '#c88a2e' }}>Influencing</span>,{' '}
+                <span style={{ color: '#04668f' }}>Relationship</span>,{' '}
+                <span style={{ color: '#2c8b0f' }}>Thinking</span>
+              </span>
+            </GordonTooltip>
           </Typography>
         ) : (
           <Typography>

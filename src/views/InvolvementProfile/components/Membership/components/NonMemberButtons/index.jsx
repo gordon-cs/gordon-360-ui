@@ -13,7 +13,7 @@ import GordonDialogBox from 'components/GordonDialogBox';
 import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import involvementService from 'services/activity';
+import involvementService from 'services/involvements';
 import requestService, { RequestStatus } from 'services/request';
 import GordonConfetti from 'components/GordonConfetti';
 
