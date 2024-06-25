@@ -130,7 +130,7 @@ const InvolvementsAll = () => {
   }
 
   const searchPageTitle = (
-    <div align="left">
+    <div align="center">
       <b className={styles.involvements_gordon_text}> Gordon </b>
       Involvements
     </div>
@@ -172,7 +172,8 @@ const InvolvementsAll = () => {
                 onChange={(event, newTab) => setInvolvementsTab(newTab)}
                 aria-label="involvements tabs"
                 centered
-                className={styles.tab}
+                variant="fullWidth"
+                className="gc360_header"
                 textColor="inherit"
                 indicatorColor="secondary"
               >
