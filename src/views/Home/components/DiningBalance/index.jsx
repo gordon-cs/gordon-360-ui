@@ -11,7 +11,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import GordonLoader from 'components/Loader';
 import { useEffect, useState } from 'react';
-import { Doughnut, Pie } from 'react-chartjs-2';
+import { Pie } from 'react-chartjs-2';
 import session from 'services/session';
 import user from 'services/user';
 import styles from '../Doughnut.module.css';
@@ -93,46 +93,43 @@ const DiningBalance = () => {
     const daysFinished = daysInSession - daysLeftRounded;
 
     const options = {
-      tooltips: {
-        // Allow different tooltips for different datasets within the same pie;
-        callbacks: {
-          // Code taken from https://github.com/chartjs/Chart.js/issues/1417
-          label: function (item, data) {
-            return (
-              data.datasets[item.datasetIndex].label[item.index] +
-              ': ' +
-              (swipeInit === 0 &&
-              data.datasets[item.datasetIndex].label[item.index].includes('Swipes') &&
-              !data.datasets[item.datasetIndex].label[item.index].includes('Guest')
-                ? '\u221E'
-                : data.datasets[item.datasetIndex].data[item.index])
-            );
+      responsive: true,
+      legend: { display: false },
+      plugins: {
+        tooltip: {
+          // Allow different tooltips for different datasets within the same pie;
+          callbacks: {
+            label: function (data) {
+              return swipeInit === 0 &&
+                data.dataset.labels.includes('Swipes Used' || 'Swipes Remaining')
+                ? data.dataset.labels[data.dataIndex] + ': ' + '\u221E'
+                : data.dataset.labels[data.dataIndex] + ': ' + data.dataset.data[data.dataIndex];
+            },
           },
         },
       },
-      legend: false,
     };
 
     const data = {
       legendEntries: ['A', 'B', 'C', 'D'], // Just used as key
       datasets: [
         {
-          label: ['Days Finished', 'Days Remaining'],
+          labels: ['Days Finished', 'Days Remaining'],
           data: [daysFinished, daysLeftRounded],
           backgroundColor: [daysColor, emptyColor],
         },
         {
-          label: ['Swipes Used', 'Swipes Remaining'],
+          labels: ['Swipes Used', 'Swipes Remaining'],
           data: [swipeUsed, swipeCurr],
           backgroundColor: [emptyColor, swipesColor],
         },
         {
-          label: ['Dining Dollars Used', 'Dining Dollars Remaining'],
+          labels: ['Dining Dollars Used', 'Dining Dollars Remaining'],
           data: [dollarUsed, dollarCurr],
           backgroundColor: [emptyColor, dollarsColor],
         },
         {
-          label: ['Guest Swipes Used', 'Guest Swipes Remaining'],
+          labels: ['Guest Swipes Used', 'Guest Swipes Remaining'],
           data: [guestUsed, guestCurr],
           backgroundColor: [emptyColor, guestColor],
         },
