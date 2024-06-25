@@ -262,27 +262,7 @@ const InvolvementProfile = () => {
           buttonName="Submit"
           buttonClicked={onUploadPoster}
           cancelButtonClicked={() => setIsPosterDialogOpen(false)}
-        >
-          <UploadPosterForm
-          // onClose,
-          // createSnackbar,
-          // openPosterForm,
-          // setOpenPosterForm,
-
-          // setCreatedInstance,
-          />
-          {/* <Form
-              formTitles={{ name: 'Upload Poster', formType: activity ? 'Edit' : 'Create' }}
-              fields={[activityFields]}
-              currentInfo={currentInfo}
-              loading={loading}
-              isSaving={isSaving}
-              setOpenForm={setOpenActivityForm}
-              openForm={openActivityForm}
-              handleConfirm={handleConfirm}
-          />
-        */}
-        </GordonDialogBox>
+        ></GordonDialogBox>
 
         <GordonDialogBox
           open={isEditDialogOpen}
