@@ -1,6 +1,6 @@
 import Providers from 'components/Providers';
 import { register } from 'pwa';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import App from './app';
 import './app.global.css';
 import { AuthenticationResult, EventType, PublicClientApplication } from '@azure/msal-browser';
@@ -29,11 +29,12 @@ msalInstance.initialize().then(() => {
     }
   });
 
-  ReactDOM.render(
+  const container = document.getElementById('root');
+  const root = createRoot(container!);
+  root.render(
     <Providers msalInstance={msalInstance}>
       <App />
     </Providers>,
-    document.getElementById('root'),
   );
 
   register();
