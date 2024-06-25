@@ -1,7 +1,13 @@
 import Confetti from 'react-dom-confetti';
 import { theme360 } from 'theme';
 
-const GordonConfetti = ({ active, colorOption, colors }) => {
+type Props = {
+  active: boolean;
+  colorOption: string;
+  colors?: string[];
+};
+
+const GordonConfetti = ({ active, colorOption, colors }: Props) => {
   let config = {
     angle: 90,
     spread: 360,
@@ -13,6 +19,7 @@ const GordonConfetti = ({ active, colorOption, colors }) => {
     width: '10px',
     height: '10px',
     perspective: '500px',
+    colors: ['#00000'],
   };
 
   const themeColors = theme360.colorSchemes.light.palette;

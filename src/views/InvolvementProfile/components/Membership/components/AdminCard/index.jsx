@@ -16,7 +16,7 @@ import {
 
 import GordonDialogBox from 'components/GordonDialogBox';
 import { useParams } from 'react-router';
-import involvementService from 'services/activity';
+import involvementService from 'services/involvements';
 import membershipService from 'services/membership';
 import { stripDomain } from 'services/utils';
 import RequestsReceived from './components/RequestsReceived';

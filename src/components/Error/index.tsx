@@ -1,7 +1,11 @@
 import { Grid, Typography } from '@mui/material';
 import styles from './Error.module.css';
 
-const GordonError = ({ error }) => {
+type Props = {
+  error?: Error;
+};
+
+const GordonError = ({ error }: Props) => {
   return (
     <Grid className={styles.gordon_error} container justifyContent="center" alignItems="center">
       <Grid item xs={11} md={7} lg={5}>
@@ -18,7 +22,7 @@ const GordonError = ({ error }) => {
         </Typography>
         <br />
         <Typography color="error" variant="h6" className={styles.errMessage}>
-          {error.toString()}
+          {error?.toString()}
         </Typography>
       </Grid>
     </Grid>
