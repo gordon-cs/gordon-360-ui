@@ -98,7 +98,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     async function loadPersonalInfo() {
       if (isStudent) {
         if (myProf) {
-          const info = await userService.getMailboxCombination();
+          const info = await userService.getMailboxInformation();
           setMailCombo(info.Combination);
         }
         if (canViewAcademicInfo || myProf) {
