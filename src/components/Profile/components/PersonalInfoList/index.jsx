@@ -94,6 +94,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
 
   // FacStaff spouses are private for private users
   const isSpousePrivate = isFacStaff && keepPrivate && profile.SpouseName !== PRIVATE_INFO;
+
+  // Get a student's mailbox combination and advisor using information in their profile
   useEffect(() => {
     async function loadPersonalInfo() {
       if (isStudent) {
