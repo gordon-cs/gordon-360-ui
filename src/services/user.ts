@@ -259,7 +259,14 @@ const setImagePrivacy = (makePrivate: boolean) =>
 const getBirthdate = (): Promise<Date> =>
   http.get<string>('profiles/birthdate').then((birthdate) => new Date(birthdate));
 
-const isBirthdayToday = (): Promise<boolean> => getBirthdate().then(isToday);
+const isBirthdayToday = (): Promise<boolean> => {
+  return getBirthdate().then(
+    (birthdate) =>
+      birthdate.getMonth() == new Date().getMonth() &&
+      birthdate.getDate() == new Date().getDate() &&
+      birthdate.getFullYear() > 1800, // Birth in 1800 means no birthday in database
+  );
+};
 
 const getProfileInfo = async (username: string = ''): Promise<Profile | undefined> => {
   const profile = await getProfile(username).then(formatCountry).then(formatSocialMediaLinks);
