@@ -390,7 +390,12 @@ const InvolvementProfile = () => {
 
     content = (
       <Card>
-        <CardHeader align="center" title={ActivityDescription} subheader={SessionDescription} />
+        <CardHeader
+          align="center"
+          title={ActivityDescription}
+          subheader={<Typography> {SessionDescription} </Typography>}
+          className="gc360_header"
+        />
         <CardContent>
           <Grid container direction="column" spacing={2}>
             <Grid align="center" item>
