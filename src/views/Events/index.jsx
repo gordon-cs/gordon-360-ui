@@ -7,10 +7,14 @@ import {
   Checkbox,
   Chip,
   Collapse,
+  FormControl,
   FormControlLabel,
   Grid,
-  TextField,
+  InputLabel,
   Link,
+  MenuItem,
+  Select,
+  TextField,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EventIcon from '@mui/icons-material/Event';
@@ -33,6 +37,7 @@ const Events = () => {
   const [includePast, setIncludePast] = useState(false);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState([]);
+  const [timeFilter, setTimeFilter] = useState('');
   const [hasInitializedEvents, setHasInitializedEvents] = useState(false);
   const futureEvents = useMemo(() => gordonEvent.getFutureEvents(allEvents), [allEvents]);
   const [width] = useWindowSize();
@@ -84,7 +89,7 @@ const Events = () => {
   }, [includePast, allEvents, futureEvents]);
 
   useEffect(() => {
-    setFilteredEvents(gordonEvent.getFilteredEvents(events, filters, search));
+    setFilteredEvents(gordonEvent.getFilteredEvents(events, filters, search, timeFilter));
   }, [events, filters, search]);
 
   const handleChangeFilters = async (value) => {
@@ -235,6 +240,40 @@ const Events = () => {
                         />
                       </Grid>
                     </Grid>
+                    <Grid container spacing={2} alignItems="center">
+                      <Grid item>
+                        <FilterListIcon className={styles.events_icon} />
+                      </Grid>
+
+                      <Grid item xs={8}>
+                        <FormControl fullWidth variant="filled">
+                          <InputLabel id="event-time">Time Filters</InputLabel>
+                          <Select
+                            labelId="event-time"
+                            id="even-time"
+                            value={timeFilter}
+                            onChange={(event) => setTimeFilter(event.target.value)}
+                          >
+                            <MenuItem label="All" value="">
+                              <em>All</em>
+                            </MenuItem>
+                            {[
+                              'This Week',
+                              '2 Weeks',
+                              '3 Weeks',
+                              'This Month',
+                              '2 Months',
+                              '4 Months',
+                              'This Year',
+                            ].map((timeFilter) => (
+                              <MenuItem value={timeFilter} key={timeFilter}>
+                                {timeFilter}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                    </Grid>
                   </Collapse>
                 </Grid>
               </Grid>
@@ -351,6 +390,41 @@ const Events = () => {
                           <TextField {...param} variant="filled" label="Filters" />
                         )}
                       />
+                    </Grid>
+                  </Grid>
+                  <Grid container spacing={2} alignItems="center">
+                    {width > 600 && (
+                      <Grid item>
+                        <FilterListIcon className={styles.events_icon} />
+                      </Grid>
+                    )}
+                    <Grid item xs={11}>
+                      <FormControl fullWidth variant="filled">
+                        <InputLabel id="event-time">Time Filters</InputLabel>
+                        <Select
+                          labelId="event-time"
+                          id="even-time"
+                          value={timeFilter}
+                          onChange={(event) => setTimeFilter(event.target.value)}
+                        >
+                          <MenuItem label="All" value="">
+                            <em>All</em>
+                          </MenuItem>
+                          {[
+                            'This Week',
+                            '2 Weeks',
+                            '3 Weeks',
+                            'This Month',
+                            '2 Months',
+                            '4 Months',
+                            'This Year',
+                          ].map((timeFilter) => (
+                            <MenuItem value={timeFilter} key={timeFilter}>
+                              {timeFilter}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
                     </Grid>
                   </Grid>
                 </Collapse>

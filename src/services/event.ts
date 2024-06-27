@@ -92,7 +92,12 @@ export const EVENT_FILTERS = Object.freeze([
   'Student Life',
 ]);
 
-const getFilteredEvents = (events: Event[], filters: string[], search: string): Event[] => {
+const getFilteredEvents = (
+  events: Event[],
+  filters: string[],
+  search: string,
+  timeFilter: string,
+): Event[] => {
   const matchesSearch = makeMatchesSearch(search);
   const matchesFilters = makeMatchesFilters(filters);
   if (search && filters.length) {
@@ -179,6 +184,20 @@ const makeMatchesFilters =
           break;
         case 'CLW Credits':
           if (event.HasCLAWCredit) {
+            return true;
+          }
+          break;
+        case 'This Week':
+          //console.log(new Date((new Date()).setDate(new Date().getDate() + 8)));
+          if (new Date(event.StartDate) <= new Date(new Date().setDate(new Date().getDate() + 7))) {
+            return true;
+          }
+          break;
+        case '2 Weeks':
+          //console.log(new Date((new Date()).setDate(new Date().getDate() + 8)));
+          if (
+            new Date(event.StartDate) <= new Date(new Date().setDate(new Date().getDate() + 14))
+          ) {
             return true;
           }
           break;
