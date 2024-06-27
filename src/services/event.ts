@@ -100,16 +100,45 @@ const getFilteredEvents = (
 ): Event[] => {
   const matchesSearch = makeMatchesSearch(search);
   const matchesFilters = makeMatchesFilters(filters);
-  if (search && filters.length) {
-    return events.filter((event) => matchesSearch(event) && matchesFilters(event));
+  const matchesTimeFilter = makeMatchesTimeFilter(timeFilter);
+  if (search && filters.length && timeFilter) {
+    return events.filter(
+      (event) => matchesSearch(event) && matchesFilters(event) && matchesTimeFilter(event),
+    );
+  } else if (filters.length && timeFilter) {
+    return events.filter((event) => matchesFilters(event) && matchesTimeFilter(event));
+  } else if (search && timeFilter) {
+    return events.filter((event) => matchesSearch(event) && matchesTimeFilter(event));
   } else if (search) {
     return events.filter(matchesSearch);
   } else if (filters.length) {
     return events.filter(matchesFilters);
+  } else if (timeFilter) {
+    return events.filter(matchesTimeFilter);
   } else {
     return events;
   }
 };
+
+/**
+ * Make a closure over a time filter.
+ *
+ * The returned closure determines whether a given `event` falls before the time range
+ *
+ * @param timeFilter The time filter to use
+ * @returns A function that matches a given event against `timeFilter`
+ */
+const makeMatchesTimeFilter =
+  (timeFilter: string) =>
+  (event: Event): boolean => {
+    if (timeFilter == 'This Week') {
+      return new Date(event.StartDate) <= new Date(new Date().setDate(new Date().getDate() + 7));
+    } else if (timeFilter == '2 Weeks') {
+      return new Date(event.StartDate) <= new Date(new Date().setDate(new Date().getDate() + 14));
+    } else {
+      return false;
+    }
+  };
 
 /**
  * Make a closure over a search string.

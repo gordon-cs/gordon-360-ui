@@ -107,6 +107,7 @@ const Events = () => {
     setURLParams(false, []);
     setSearch('');
     setOpen(false);
+    setTimeFilter('');
   };
 
   const handleChangeIncludePast = () => {
@@ -261,10 +262,10 @@ const Events = () => {
                               'This Week',
                               '2 Weeks',
                               '3 Weeks',
-                              'This Month',
+                              'One Month',
                               '2 Months',
                               '4 Months',
-                              'This Year',
+                              'One Year',
                             ].map((timeFilter) => (
                               <MenuItem value={timeFilter} key={timeFilter}>
                                 {timeFilter}
@@ -414,10 +415,10 @@ const Events = () => {
                             'This Week',
                             '2 Weeks',
                             '3 Weeks',
-                            'This Month',
+                            'One Month',
                             '2 Months',
                             '4 Months',
-                            'This Year',
+                            'One Year',
                           ].map((timeFilter) => (
                             <MenuItem value={timeFilter} key={timeFilter}>
                               {timeFilter}
