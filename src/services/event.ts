@@ -187,20 +187,6 @@ const makeMatchesFilters =
             return true;
           }
           break;
-        case 'This Week':
-          //console.log(new Date((new Date()).setDate(new Date().getDate() + 8)));
-          if (new Date(event.StartDate) <= new Date(new Date().setDate(new Date().getDate() + 7))) {
-            return true;
-          }
-          break;
-        case '2 Weeks':
-          //console.log(new Date((new Date()).setDate(new Date().getDate() + 8)));
-          if (
-            new Date(event.StartDate) <= new Date(new Date().setDate(new Date().getDate() + 14))
-          ) {
-            return true;
-          }
-          break;
         default:
           break;
       }
