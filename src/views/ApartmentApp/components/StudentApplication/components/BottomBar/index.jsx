@@ -1,4 +1,4 @@
-import { Card, CardContent, Grid, Typography } from '@mui/material/';
+import { Button, Card, CardContent, Grid, Typography } from '@mui/material/';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PublishIcon from '@mui/icons-material/Publish';
 import SaveIcon from '@mui/icons-material/Save';
@@ -8,13 +8,12 @@ import styles from '../../../../ApartmentApp.module.css';
 
 /**
  * Renders the bottom bar for the apartment application page
- *
- * @param {Object} props The React component props
+ * @param {object} props The React component props
  * @param {boolean} props.applicationCardsOpen Indicates whether the application cards are open and visible
  * @param {number} props.applicationID Application ID number of this application
  * @param {boolean} props.canEditApplication Indicates whether the current using is authorized to edit the application
  * @param {boolean | string} props.deleting Status of delete operation
- * @param {Object} props.disableSubmit boolean to disable the submit button
+ * @param {object} props.disableSubmit boolean to disable the submit button
  * @param {boolean | string} props.saving Status of save operation
  * @param {boolean | string} props.submitStatus Status of submit operation
  * @param {boolean} props.unsavedChanges Indicates whether the page currently contains unsaved changes
@@ -115,44 +114,56 @@ const BottomBar = ({
           <Grid container item xs={12} sm={7} lg={6} spacing={2}>
             {!applicationCardsOpen && (
               <Grid item xs>
-                <DynamicButton
-                  color={'secondary'}
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="secondary"
                   disabled={applicationCardsOpen}
-                  buttonText={dynamicContent.openCardsButtonLabel}
                   onClick={onShowApplication}
-                />
+                >
+                  {dynamicContent.openCardsButtonLabel}
+                </Button>
               </Grid>
             )}
             <Grid item xs>
               <DynamicButton
+                fullWidth
+                variant="contained"
                 color="error"
-                buttonText={'Delete'}
                 startIcon={<DeleteIcon />}
                 status={deleting}
                 onClick={canEditApplication ? onDeleteButtonClick : undefined}
-              />
+              >
+                Delete
+              </DynamicButton>
             </Grid>
             {applicationCardsOpen && (
               <>
                 <Grid item xs>
                   <DynamicButton
-                    color={'secondary'}
+                    fullWidth
+                    variant="contained"
+                    color="secondary"
                     disabled={!canEditApplication || !unsavedChanges}
-                    buttonText={'Save'}
                     startIcon={<SaveIcon />}
                     status={saving}
                     onClick={canEditApplication ? onSaveButtonClick : undefined}
-                  />
+                  >
+                    Save
+                  </DynamicButton>
                 </Grid>
                 <Grid item xs>
                   <DynamicButton
-                    color={'primary'}
+                    fullWidth
+                    variant="contained"
+                    color="primary"
                     disabled={!canEditApplication || Boolean(disableSubmit)}
-                    buttonText={'Submit'}
                     startIcon={<PublishIcon />}
                     status={submitStatus}
                     onClick={canEditApplication ? onSubmitButtonClick : undefined}
-                  />
+                  >
+                    Submit
+                  </DynamicButton>
                 </Grid>
               </>
             )}

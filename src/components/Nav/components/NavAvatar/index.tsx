@@ -1,14 +1,18 @@
 import { Avatar, Button, Typography } from '@mui/material';
 import GordonLoader from 'components/Loader';
 import { useUser } from 'hooks';
-import { forwardRef, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import styles from './NavAvatar.module.css';
 
-const GordonNavAvatar = ({ onLinkClick }) => {
-  const [email, setEmail] = useState();
-  const [image, setImage] = useState();
-  const [name, setName] = useState();
+type Props = {
+  onLinkClick: () => void;
+};
+
+const GordonNavAvatar = ({ onLinkClick }: Props) => {
+  const [email, setEmail] = useState('');
+  const [image, setImage] = useState('');
+  const [name, setName] = useState('');
   const { profile, images, loading } = useUser();
 
   useEffect(() => {
@@ -39,16 +43,6 @@ const GordonNavAvatar = ({ onLinkClick }) => {
     <Avatar className={`${styles.avatar} ${styles.placeholder}`}>Guest</Avatar>
   );
 
-  const buttonLink = forwardRef((props, ref) => (
-    <Link
-      {...props}
-      innerRef={ref}
-      to={profile ? `/myprofile` : '/'}
-      onClick={onLinkClick}
-      className="gc360_link"
-    />
-  ));
-
   const label = loading ? (
     <Typography variant="body2" className={styles.avatar_text} align="left" gutterBottom>
       loading profile
@@ -69,7 +63,12 @@ const GordonNavAvatar = ({ onLinkClick }) => {
   );
 
   return (
-    <Button component={buttonLink}>
+    <Button
+      component={NavLink}
+      to={profile ? `/myprofile` : '/'}
+      onClick={onLinkClick}
+      className="gc360_link"
+    >
       <div className={styles.gordon_nav_avatar}>
         {avatar}
         {label}

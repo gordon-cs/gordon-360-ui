@@ -24,10 +24,7 @@ const ClubPosters = ({ clubName, clubCode }) => {
 
   return (
     <Card>
-      <CardHeader
-        title={`Posters from ${clubName}- code is ${clubCode}`}
-        className="gc360_header"
-      />
+      <CardHeader title={`Posters from ${clubName}`} className="gc360_header" />
       <CardContent>
         <Grid container direction="row" spacing={4} className={'test1'}>
           {pizzaSlice?.length > 0 ? (

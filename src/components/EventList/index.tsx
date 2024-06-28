@@ -1,10 +1,14 @@
-import EventItem from './components/EventItem';
+import EventItem, { GordonEvent } from './components/EventItem';
 import { windowBreakWidths } from 'theme';
 
 import useWindowSize from 'hooks/useWindowSize';
 
 import { List, Grid, Typography, Card, CardHeader } from '@mui/material';
 import styles from './EventList.module.css';
+
+type Props = {
+  events: GordonEvent[];
+};
 
 const smallHeader = (
   <Typography variant="h5" className={styles.header_text}>
@@ -34,7 +38,7 @@ const headings = [
 const fullHeader = (
   <Grid container direction="row">
     {headings.map(({ name, size }) => (
-      <Grid item xs={size}>
+      <Grid item xs={size} key={name}>
         <Typography variant="h5" className={styles.header_text}>
           {name}
         </Typography>
@@ -44,7 +48,7 @@ const fullHeader = (
 );
 
 const noEvents = (
-  <Grid item align="center">
+  <Grid item alignItems="center">
     <br />
     <Typography variant="h4" align="center">
       No Events To Show
@@ -55,7 +59,7 @@ const noEvents = (
 
 const breakpointWidth = windowBreakWidths.breakSM;
 
-const EventList = ({ events }) => {
+const EventList = ({ events }: Props) => {
   const [width] = useWindowSize();
 
   const header = width < breakpointWidth ? smallHeader : fullHeader;
