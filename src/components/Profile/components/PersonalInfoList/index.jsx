@@ -129,10 +129,10 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       title="Home Phone:"
       contentText={
         myProf ? (
-          <Grid className={styles.not_private}>{formatPhone(profile.HomePhone.data)}</Grid>
+          <Grid className={styles.not_private}>{formatPhone(profile.HomePhone.value)}</Grid>
         ) : (
-          <a href={`tel:${profile.HomePhone.data}`} className="gc360_text_link">
-            {formatPhone(profile.HomePhone.data)}
+          <a href={`tel:${profile.HomePhone.value}`} className="gc360_text_link">
+            {formatPhone(profile.HomePhone.value)}
           </a>
         )
       }
@@ -148,12 +148,12 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       contentText={
         myProf ? (
           <Grid container spacing={0} alignItems="center" className={styles.not_private}>
-            <Grid item>{formatPhone(profile.MobilePhone.data)}</Grid>
+            <Grid item>{formatPhone(profile.MobilePhone.value)}</Grid>
             <Grid item>{isStudent ? <UpdatePhone /> : null}</Grid>
           </Grid>
         ) : (
-          <a href={`tel:${profile.MobilePhone.data}`} className="gc360_text_link">
-            {formatPhone(profile.MobilePhone.data)}
+          <a href={`tel:${profile.MobilePhone.value}`} className="gc360_text_link">
+            {formatPhone(profile.MobilePhone.value)}
           </a>
         )
       }
@@ -179,8 +179,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
             {streetAddr}
             <span className={styles.not_private}>
               {profile?.Country === 'United States of America' || !profile.Country
-                ? `${profile.HomeCity?.data}, ${profile.HomeState?.data}`
-                : profile.Country?.data}
+                ? `${profile.HomeCity?.value}, ${profile.HomeState?.value}`
+                : profile.Country?.value}
             </span>
           </>
         }
@@ -539,7 +539,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     isFacStaff && profile.SpouseName ? (
       <ProfileInfoListItem
         title="Spouse:"
-        contentText={profile.SpouseName.data}
+        contentText={profile.SpouseName.value}
         ContentIcon={isFacStaff && myProf && UpdateUserPrivacy(profile.AD_Username, ['SpouseName'])}
         privateInfo={(keepPrivate && myProf) || isSpousePrivate}
       />
