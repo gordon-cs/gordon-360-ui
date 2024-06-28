@@ -13,7 +13,7 @@ import GordonLoader from 'components/Loader';
 import { useNetworkStatus, useUser } from 'hooks';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import involvementService from 'services/activity';
+import involvementService from 'services/involvements';
 import membershipService, { NonGuestParticipations } from 'services/membership';
 import sessionService from 'services/session';
 import InvolvementsGrid from './components/InvolvementsGrid';

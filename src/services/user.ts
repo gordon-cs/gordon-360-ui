@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon';
+import { isToday } from 'date-fns';
 import { Platform, platforms, socialMediaInfo } from 'services/socialMedia';
 import CliftonStrengthsService, { CliftonStrengths } from './cliftonStrengths';
 import http from './http';
@@ -266,12 +266,16 @@ const setUserPrivacy = (userPrivacy: UserPrivacyQuery) =>
 const setImagePrivacy = (makePrivate: boolean) =>
   http.put('profiles/image_privacy/' + (makePrivate ? 'N' : 'Y')); // 'Y' = show image, 'N' = don't show image
 
-const getBirthdate = async (): Promise<DateTime> =>
-  DateTime.fromISO(await http.get('profiles/birthdate'));
+const getBirthdate = (): Promise<Date> =>
+  http.get<string>('profiles/birthdate').then((birthdate) => new Date(birthdate));
 
-const isBirthdayToday = async () => {
-  const birthday = await getBirthdate();
-  return birthday?.month === DateTime.now().month && birthday?.day === DateTime.now().day;
+const isBirthdayToday = (): Promise<boolean> => {
+  return getBirthdate().then(
+    (birthdate) =>
+      birthdate.getMonth() == new Date().getMonth() &&
+      birthdate.getDate() == new Date().getDate() &&
+      birthdate.getFullYear() > 1800, // Birth in 1800 means no birthday in database
+  );
 };
 
 const getProfileInfo = async (username: string = ''): Promise<Profile | undefined> => {

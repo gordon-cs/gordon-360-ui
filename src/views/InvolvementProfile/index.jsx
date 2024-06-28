@@ -18,7 +18,7 @@ import { useEffect, useRef, useState } from 'react';
 import Cropper from 'react-cropper';
 import Dropzone from 'react-dropzone';
 import { useParams } from 'react-router';
-import involvementService from 'services/activity';
+import involvementService from 'services/involvements';
 import { AuthGroup } from 'services/auth';
 import emailsService from 'services/emails';
 import membershipService from 'services/membership';
@@ -390,7 +390,12 @@ const InvolvementProfile = () => {
 
     content = (
       <Card>
-        <CardHeader align="center" title={ActivityDescription} subheader={SessionDescription} />
+        <CardHeader
+          align="center"
+          title={ActivityDescription}
+          subheader={<Typography> {SessionDescription} </Typography>}
+          className="gc360_header"
+        />
         <CardContent>
           <Grid container direction="column" spacing={2}>
             <Grid align="center" item>

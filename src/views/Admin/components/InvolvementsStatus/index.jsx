@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import GordonLoader from 'components/Loader';
-import activity from 'services/activity';
+import activity from 'services/involvements';
 import session from 'services/session';
 import InvolvementStatusListItem from './components/InvolvementStatusList/index';
 import { Typography, Card, CardHeader } from '@mui/material';

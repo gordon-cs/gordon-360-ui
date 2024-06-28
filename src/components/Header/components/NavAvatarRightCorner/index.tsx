@@ -4,9 +4,14 @@ import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
 import styles from './NavAvatarRightCorner.module.css';
 
-export const GordonNavAvatarRightCorner = ({ onClick }) => {
-  const [name, setName] = useState(null);
-  const [image, setImage] = useState(null);
+type Props = {
+  onClick: () => void;
+};
+
+export const GordonNavAvatarRightCorner = ({ onClick }: Props) => {
+  const [name, setName] = useState('');
+  const [image, setImage] = useState('');
+
   const user = useUser();
 
   useEffect(() => {
