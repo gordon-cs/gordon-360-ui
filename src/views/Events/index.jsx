@@ -19,6 +19,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EventIcon from '@mui/icons-material/Event';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import ClockIcon from '@mui/icons-material/AccessTime';
 import Autocomplete from '@mui/material/Autocomplete';
 import EventList from 'components/EventList';
 import GordonLoader from 'components/Loader';
@@ -206,7 +207,7 @@ const Events = () => {
 
                 <Grid item xs={12}>
                   <Collapse in={open} timeout="auto" unmountOnExit>
-                    <Grid container spacing={2} alignItems="center">
+                    <Grid container spacing={2} direction="row" alignItems="center">
                       <Grid item>
                         <FilterListIcon className={styles.events_icon} />
                       </Grid>
@@ -232,7 +233,7 @@ const Events = () => {
                           )}
                         />
                       </Grid>
-                      <Grid container item xs={3}>
+                      <Grid container item xs={3.25}>
                         <FormControlLabel
                           control={
                             <Checkbox checked={includePast} onChange={handleChangeIncludePast} />
@@ -240,10 +241,9 @@ const Events = () => {
                           label="Include Past"
                         />
                       </Grid>
-                    </Grid>
-                    <Grid container spacing={2} alignItems="center">
+
                       <Grid item>
-                        <FilterListIcon className={styles.events_icon} />
+                        <ClockIcon className={styles.events_icon} />
                       </Grid>
 
                       <Grid item xs={8}>
@@ -392,11 +392,9 @@ const Events = () => {
                         )}
                       />
                     </Grid>
-                  </Grid>
-                  <Grid container spacing={2} alignItems="center">
                     {width > 600 && (
                       <Grid item>
-                        <FilterListIcon className={styles.events_icon} />
+                        <ClockIcon className={styles.events_icon} />
                       </Grid>
                     )}
                     <Grid item xs={11}>
