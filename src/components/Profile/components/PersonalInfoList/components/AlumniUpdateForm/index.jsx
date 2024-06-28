@@ -173,17 +173,17 @@ const AlumniUpdateForm = ({
       preferredEmail: profile.PreferredEmail ?? '',
       doNotContact: profile.doNotContact ?? false,
       doNotMail: profile.doNotMail ?? false,
-      homePhone: profile.HomePhone ?? '',
+      homePhone: profile.HomePhone?.value ?? '',
       workPhone: profile.WorkPhone ?? '',
-      mobilePhone: profile.MobilePhone ?? '',
+      mobilePhone: profile.MobilePhone?.value ?? '',
       preferredPhone: profile.PreferredPhone ?? '',
       //Homestreet lines are inverted in alumni SQL
       address1: profile.HomeStreet2 ?? profile.HomeStreet1 ?? '',
       address2: profile.HomeStreet2 && profile.HomeStreet1 ? profile.HomeStreet2 : '',
-      city: profile.HomeCity ?? '',
-      state: profile.HomeState ?? '',
+      city: profile.HomeCity?.value ?? '',
+      state: profile.HomeState?.value ?? '',
       zip: profile.HomePostalCode ?? '',
-      country: profile.HomeCountry ?? '',
+      country: profile.HomeCountry?.value ?? '',
       married: profile.Married === 'Y' ? true : false,
     };
   }, [profile]);

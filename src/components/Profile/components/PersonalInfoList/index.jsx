@@ -90,8 +90,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
   const [isHomePhonePrivate, setIsHomePhonePrivate] = useState(isStudent || keepPrivate);
 
   // Street address info is always private, and City/State/Country info is private for private users
-  const isAddressPrivate =
-    (keepPrivate && profile.HomeCity !== PRIVATE_INFO) || profile.HomeStreet2;
+  const isAddressPrivate = (keepPrivate && profile.HomeCity?.isPrivate) || profile.HomeStreet2;
 
   // FacStaff spouses are private for private users
   const isSpousePrivate = isFacStaff && keepPrivate && profile.SpouseName !== PRIVATE_INFO;
@@ -171,14 +170,14 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       : ['Country', 'HomeCountry'];
 
   const home =
-    profile.HomeCity || profile.Country ? (
+    (profile.HomeCity && profile.HomeState) || profile.Country ? (
       <ProfileInfoListItem
         title="Home:"
         contentText={
           <>
             {streetAddr}
             <span className={styles.not_private}>
-              {profile?.Country === 'United States of America' || !profile.Country
+              {profile.Country === 'United States of America' || !profile.Country
                 ? `${profile.HomeCity?.value}, ${profile.HomeState?.value}`
                 : profile.Country?.value}
             </span>
