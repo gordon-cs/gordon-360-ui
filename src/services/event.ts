@@ -109,6 +109,8 @@ const getFilteredEvents = (
     return events.filter((event) => matchesFilters(event) && matchesTimeFilter(event));
   } else if (search && timeFilter) {
     return events.filter((event) => matchesSearch(event) && matchesTimeFilter(event));
+  } else if (search && filters.length) {
+    return events.filter((event) => matchesSearch(event) && matchesFilters(event));
   } else if (search) {
     return events.filter(matchesSearch);
   } else if (filters.length) {
