@@ -9,6 +9,8 @@ import {
   List,
   TextField,
   Typography,
+  DialogContent,
+  Dialog,
 } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonOffline from 'components/GordonOffline';
@@ -27,8 +29,7 @@ import ContactListItem from './components/ContactListItem';
 import Membership from './components/Membership';
 import styles from './InvolvementProfile.module.css';
 import ClubPosters from './components/ClubPosters';
-import UploadPosterForm from 'views/Posters/components/UploadPosterForm';
-//import posterService from 'services/poster';
+import UploadForm from 'views/Posters/Forms/Forms/UploadForm';
 
 const CROP_DIM = 320; // pixels
 
@@ -55,6 +56,7 @@ const InvolvementProfile = () => {
   const cropperRef = useRef();
   const { sessionCode, involvementCode } = useParams();
   const { profile, loading: loadingProfile } = useUser();
+  const [openUploadForm, setOpenUploadForm] = useState(false);
 
   useEffect(() => {
     const loadPage = async () => {
@@ -91,7 +93,6 @@ const InvolvementProfile = () => {
     };
     loadPage();
   }, [involvementCode, isSiteAdmin, sessionCode, profile]);
-
   const onDropAccepted = (fileList) => {
     var previewImageFile = fileList[0];
     var reader = new FileReader();
@@ -153,17 +154,6 @@ const InvolvementProfile = () => {
   const onDropRejected = () => {
     alert('Sorry, invalid image file! Only PNG and JPEG images are accepted.');
   };
-
-  //added by CollyWills for Poster
-  const onUploadPoster = async () => {
-    console.log('Test');
-    const data = {
-      //image
-    };
-    //await posterServce
-  };
-
-  //end of poster functions
 
   const onEditInvolvement = async () => {
     const data = {
@@ -233,10 +223,25 @@ const InvolvementProfile = () => {
       <GordonLoader />
     ) : isAdmin || isSiteAdmin ? (
       <Grid item>
+        <Dialog open={openUploadForm} onClose={() => setOpenUploadForm(false)}>
+          <CardHeader
+            title={
+              <Grid container direction="row" alignItems="center">
+                <Grid item xs={7} align="left">
+                  Upload Poster
+                </Grid>
+              </Grid>
+            }
+            className="gc360_header"
+          />
+          <DialogContent>
+            <UploadForm onClose={() => setOpenUploadForm(false)} />
+          </DialogContent>
+        </Dialog>
         <Grid container spacing={2} justifyContent="center">
           <Grid item>
-            <Button variant="contained" color="primary" onClick={() => setIsPosterDialogOpen(true)}>
-              <b>*NEW*</b>Upload Poster
+            <Button variant="contained" color="primary" onClick={() => setOpenUploadForm(true)}>
+              Upload Poster
             </Button>
           </Grid>
           <Grid item>
@@ -260,30 +265,7 @@ const InvolvementProfile = () => {
           open={isPosterDialogOpen}
           title={`Upload Poster for ${ActivityDescription}`}
           buttonName="Submit"
-          buttonClicked={onUploadPoster}
-          cancelButtonClicked={() => setIsPosterDialogOpen(false)}
-        >
-          <UploadPosterForm
-          // onClose,
-          // createSnackbar,
-          // openPosterForm,
-          // setOpenPosterForm,
-
-          // setCreatedInstance,
-          />
-          {/* <Form
-              formTitles={{ name: 'Upload Poster', formType: activity ? 'Edit' : 'Create' }}
-              fields={[activityFields]}
-              currentInfo={currentInfo}
-              loading={loading}
-              isSaving={isSaving}
-              setOpenForm={setOpenActivityForm}
-              openForm={openActivityForm}
-              handleConfirm={handleConfirm}
-          />
-        */}
-        </GordonDialogBox>
-
+        ></GordonDialogBox>
         <GordonDialogBox
           open={isEditDialogOpen}
           title={`Edit ${ActivityDescription}`}
