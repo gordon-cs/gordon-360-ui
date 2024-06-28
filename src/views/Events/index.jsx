@@ -265,7 +265,7 @@ const Events = () => {
                               'One Month',
                               '2 Months',
                               '4 Months',
-                              'One Year',
+                              '6 Months',
                             ].map((timeFilter) => (
                               <MenuItem value={timeFilter} key={timeFilter}>
                                 {timeFilter}
@@ -418,7 +418,7 @@ const Events = () => {
                             'One Month',
                             '2 Months',
                             '4 Months',
-                            'One Year',
+                            '6 Months',
                           ].map((timeFilter) => (
                             <MenuItem value={timeFilter} key={timeFilter}>
                               {timeFilter}

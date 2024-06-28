@@ -135,6 +135,16 @@ const makeMatchesTimeFilter =
       return new Date(event.StartDate) <= new Date(new Date().setDate(new Date().getDate() + 7));
     } else if (timeFilter == '2 Weeks') {
       return new Date(event.StartDate) <= new Date(new Date().setDate(new Date().getDate() + 14));
+    } else if (timeFilter == '3 Weeks') {
+      return new Date(event.StartDate) <= new Date(new Date().setDate(new Date().getDate() + 21));
+    } else if (timeFilter == 'One Month') {
+      return new Date(event.StartDate) <= new Date(new Date().setMonth(new Date().getMonth() + 1));
+    } else if (timeFilter == '2 Months') {
+      return new Date(event.StartDate) <= new Date(new Date().setMonth(new Date().getMonth() + 2));
+    } else if (timeFilter == '4 Months') {
+      return new Date(event.StartDate) <= new Date(new Date().setMonth(new Date().getMonth() + 4));
+    } else if (timeFilter == '6 Months') {
+      return new Date(event.StartDate) <= new Date(new Date().setMonth(new Date().getMonth() + 6));
     } else {
       return false;
     }
