@@ -90,7 +90,7 @@ const Events = () => {
 
   useEffect(() => {
     setFilteredEvents(gordonEvent.getFilteredEvents(events, filters, search, timeFilter));
-  }, [events, filters, search]);
+  }, [events, filters, search, timeFilter]);
 
   const handleChangeFilters = async (value) => {
     setFilters(value);
