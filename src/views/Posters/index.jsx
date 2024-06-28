@@ -15,7 +15,7 @@ import UploadForm from './Forms/Forms/UploadForm';
 import { Participation } from 'services/membership';
 import membershipService from 'services/membership';
 import { useUser } from 'hooks';
-import involvementService from 'services/activity';
+import involvementService from 'services/involvements';
 import sessionService from 'services/session';
 import DATA from './dummy-posters/dummyposters';
 import { useLocation } from 'react-router-dom';

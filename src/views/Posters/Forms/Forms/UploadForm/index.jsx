@@ -13,7 +13,7 @@ import CropPoster from '../CropPoster';
 import PosterCheck from '../ApprovedDialogue';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useUser } from 'hooks';
-import involvementService from 'services/activity';
+import involvementService from 'services/involvements';
 import sessionService from 'services/session';
 import { useLocation } from 'react-router-dom';
 
