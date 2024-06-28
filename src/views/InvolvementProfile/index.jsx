@@ -3,6 +3,7 @@ import {
   Card,
   CardContent,
   CardHeader,
+  CardMedia,
   DialogContentText,
   Grid,
   Link,
@@ -57,6 +58,7 @@ const InvolvementProfile = () => {
   const { sessionCode, involvementCode } = useParams();
   const { profile, loading: loadingProfile } = useUser();
   const [openUploadForm, setOpenUploadForm] = useState(false);
+  const [croppedImage, setCroppedImage] = useState(null);
 
   useEffect(() => {
     const loadPage = async () => {
@@ -202,7 +204,9 @@ const InvolvementProfile = () => {
       setPreview(null);
     }
   };
-
+  const handleCropSubmit = (imageData) => {
+    setCroppedImage(imageData);
+  };
   const parseEmailsFromList = (list) => {
     return list.map((e) => e.Email).join(',');
   };
@@ -223,19 +227,41 @@ const InvolvementProfile = () => {
       <GordonLoader />
     ) : isAdmin || isSiteAdmin ? (
       <Grid item>
-        <Dialog open={openUploadForm} onClose={() => setOpenUploadForm(false)}>
-          <CardHeader
-            title={
-              <Grid container direction="row" alignItems="center">
-                <Grid item xs={7} align="left">
-                  Upload Poster
-                </Grid>
-              </Grid>
-            }
-            className="gc360_header"
-          />
+        <Dialog
+          maxWidth="md"
+          fullWidth
+          open={openUploadForm}
+          onClose={() => setOpenUploadForm(false)}
+        >
           <DialogContent>
-            <UploadForm onClose={() => setOpenUploadForm(false)} />
+            <Grid container spacing={4}>
+              <Grid item xs={12} md={croppedImage ? 6 : 12}>
+                <Card variant="outlined">
+                  <CardHeader title="Upload Poster" className="gc360_header" />
+                  <CardContent>
+                    <UploadForm
+                      onClose={() => setOpenUploadForm(false)}
+                      onCropSubmit={handleCropSubmit}
+                    />
+                  </CardContent>
+                </Card>
+              </Grid>
+
+              {croppedImage && (
+                <Grid item xs={12} md={6}>
+                  <Card variant="outlined">
+                    <CardHeader title="Preview" className="gc360_header" />
+                    <CardMedia
+                      loading="lazy"
+                      component="img"
+                      alt="Cropped Image"
+                      src={croppedImage}
+                      title="Cropped Image"
+                    />
+                  </Card>
+                </Grid>
+              )}
+            </Grid>
           </DialogContent>
         </Dialog>
         <Grid container spacing={2} justifyContent="center">
