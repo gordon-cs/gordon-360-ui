@@ -18,6 +18,7 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EventIcon from '@mui/icons-material/Event';
+import ClockIcon from '@mui/icons-material/AccessTime';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import Autocomplete from '@mui/material/Autocomplete';
 import EventList from 'components/EventList';
@@ -243,7 +244,7 @@ const Events = () => {
                     </Grid>
                     <Grid container spacing={2} alignItems="center">
                       <Grid item>
-                        <FilterListIcon className={styles.events_icon} />
+                        <ClockIcon className={styles.events_icon} />
                       </Grid>
 
                       <Grid item xs={8}>
