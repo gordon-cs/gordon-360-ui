@@ -44,7 +44,7 @@ const formatPhone = (phone) => {
 
 const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
   const [isMobilePhonePrivate, setIsMobilePhonePrivate] = useState(
-    Boolean(profile.IsMobilePhonePrivate || profile.MobilePhone === PRIVATE_INFO),
+    Boolean(profile.MobilePhone?.isPrivate || profile.MobilePhone === PRIVATE_INFO),
   );
   const [isCliftonStrengthsPrivate, setIsCliftonStrengthsPrivate] = useState(
     profile.CliftonStrengths?.Private,
@@ -129,12 +129,10 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       title="Home Phone:"
       contentText={
         myProf ? (
-          <Grid className={styles.not_private}>{formatPhone(profile.HomePhone)}</Grid>
-        ) : profile.HomePhone === PRIVATE_INFO ? (
-          PRIVATE_INFO
+          <Grid className={styles.not_private}>{formatPhone(profile.HomePhone.data)}</Grid>
         ) : (
-          <a href={`tel:${profile.HomePhone}`} className="gc360_text_link">
-            {formatPhone(profile.HomePhone)}
+          <a href={`tel:${profile.HomePhone.data}`} className="gc360_text_link">
+            {formatPhone(profile.HomePhone.data)}
           </a>
         )
       }
@@ -150,14 +148,12 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       contentText={
         myProf ? (
           <Grid container spacing={0} alignItems="center" className={styles.not_private}>
-            <Grid item>{formatPhone(profile.MobilePhone)}</Grid>
+            <Grid item>{formatPhone(profile.MobilePhone.data)}</Grid>
             <Grid item>{isStudent ? <UpdatePhone /> : null}</Grid>
           </Grid>
-        ) : profile.MobilePhone === PRIVATE_INFO ? (
-          PRIVATE_INFO
         ) : (
-          <a href={`tel:${profile.MobilePhone}`} className="gc360_text_link">
-            {formatPhone(profile.MobilePhone)}
+          <a href={`tel:${profile.MobilePhone.data}`} className="gc360_text_link">
+            {formatPhone(profile.MobilePhone.data)}
           </a>
         )
       }
@@ -174,26 +170,25 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       ? ['HomeCity', 'HomeState']
       : ['Country', 'HomeCountry'];
 
-  const home = (
-    <ProfileInfoListItem
-      title="Home:"
-      contentText={
-        <>
-          {streetAddr}
-          <span className={styles.not_private}>
-            {profile.HomeCity === PRIVATE_INFO || profile.Country === PRIVATE_INFO
-              ? PRIVATE_INFO
-              : profile.Country === 'United States of America' || !profile.Country
-                ? `${profile.HomeCity}, ${profile.HomeState}`
-                : profile.Country}
-          </span>
-        </>
-      }
-      ContentIcon={myProf && UpdateUserPrivacy(profile.AD_Username, combineHomeLocation)}
-      privateInfo={isAddressPrivate}
-      myProf={myProf}
-    />
-  );
+  const home =
+    profile.HomeCity || profile.Country ? (
+      <ProfileInfoListItem
+        title="Home:"
+        contentText={
+          <>
+            {streetAddr}
+            <span className={styles.not_private}>
+              {profile?.Country === 'United States of America' || !profile.Country
+                ? `${profile.HomeCity?.data}, ${profile.HomeState?.data}`
+                : profile.Country?.data}
+            </span>
+          </>
+        }
+        ContentIcon={myProf && UpdateUserPrivacy(profile.AD_Username, combineHomeLocation)}
+        privateInfo={isAddressPrivate}
+        myProf={myProf}
+      />
+    ) : null;
 
   const minors =
     profile.Minors?.length > 0 && !isFacStaff ? (
@@ -544,7 +539,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     isFacStaff && profile.SpouseName ? (
       <ProfileInfoListItem
         title="Spouse:"
-        contentText={profile.SpouseName}
+        contentText={profile.SpouseName.data}
         ContentIcon={isFacStaff && myProf && UpdateUserPrivacy(profile.AD_Username, ['SpouseName'])}
         privateInfo={(keepPrivate && myProf) || isSpousePrivate}
       />

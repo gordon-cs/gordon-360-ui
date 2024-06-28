@@ -275,7 +275,8 @@ const isBirthdayToday = async () => {
 };
 
 const getProfileInfo = async (username: string = ''): Promise<Profile | undefined> => {
-  const profile = await getProfile(username).then(formatCountry).then(formatSocialMediaLinks);
+  const profile = await getProfile(username).then(formatSocialMediaLinks);
+  // const profile = await getProfile(username).then(formatCountry).then(formatSocialMediaLinks);
 
   if (!profile) return undefined;
 
