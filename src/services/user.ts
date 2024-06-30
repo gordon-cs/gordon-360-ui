@@ -11,6 +11,11 @@ type CLWCredits = {
   required: number;
 };
 
+type ProfileItem = {
+  value: object;
+  isPrivate: boolean;
+};
+
 enum OnOffCampusStatus {
   'Off Campus' = 'O',
   Away = 'A',
@@ -32,12 +37,12 @@ const onOffCampusDescriptions = {
 type BaseProfileInfo = {
   ID: string;
   Title: string;
-  FirstName: string;
-  MiddleName: string;
-  LastName: string;
-  Suffix: string;
-  MaidenName: string;
-  NickName: string;
+  FirstName: ProfileItem;
+  MiddleName: ProfileItem;
+  LastName: ProfileItem;
+  Suffix: ProfileItem;
+  MaidenName: ProfileItem;
+  NickName: ProfileItem;
   OnCampusBuilding: string;
   OnCampusRoom: string;
   OnCampusPhone: string;
@@ -46,11 +51,11 @@ type BaseProfileInfo = {
   Mail_Location: string;
   HomeStreet1: string;
   HomeStreet2: string;
-  HomeCity: string;
-  HomeState: string;
+  HomeCity: ProfileItem;
+  HomeState: ProfileItem;
   HomePostalCode: string;
-  HomeCountry: string;
-  HomePhone: string;
+  HomeCountry: ProfileItem;
+  HomePhone: ProfileItem;
   HomeFax: string;
   KeepPrivate: string;
   Barcode: string;
@@ -59,7 +64,7 @@ type BaseProfileInfo = {
   AD_Username: string;
   show_pic: number;
   preferred_photo: number;
-  Country: string;
+  Country: ProfileItem;
   BuildingDescription: string;
   Facebook: string;
   Twitter: string;
@@ -76,7 +81,7 @@ export type UnformattedFacStaffProfileInfo = BaseProfileInfo & {
   Dept: string;
   JobTitle: string;
   OnCampusDepartment: string;
-  SpouseName: string;
+  SpouseName: ProfileItem;
   Type: string;
   office_hours: string;
   Mail_Description: string;
@@ -108,7 +113,7 @@ export type UnformattedStudentProfileInfo = BaseProfileInfo & {
   Minor1: string;
   Minor2: string;
   Minor3: string;
-  MobilePhone: string;
+  MobilePhone: ProfileItem;
   IsMobilePhonePrivate: number;
   Major1Description: string;
   Major2Description: string;
@@ -284,7 +289,7 @@ const getProfileInfo = async (username: string = ''): Promise<Profile | undefine
 
   if (!profile) return undefined;
 
-  const fullName = `${profile?.FirstName} ${profile?.LastName}`;
+  const fullName = `${profile?.FirstName.value} ${profile?.LastName.value}`;
   const cliftonStrengths = await CliftonStrengthsService.getCliftonStrengths(profile.AD_Username);
 
   if (isStudent(profile)) {

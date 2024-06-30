@@ -63,18 +63,18 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                */
               await user.getImage(profile.AD_Username)
             : // Checks to see if the current page is the My Profile page
-            myProf
-            ? /**
-               * This case will occur only if the currently signed-in user is Non-Faculty and are
-               * on the My Profile page
-               */
-              await user.getImage()
-            : /**
-               * The requested user's image is Non-Faculty
-               * If currently signed-in user is Faculty : Will receive default and preferred image
-               * If currently signed-in user is Non-Faculty : Will receive either default or preferred image
-               */
-              await user.getImage(profile.AD_Username);
+              myProf
+              ? /**
+                 * This case will occur only if the currently signed-in user is Non-Faculty and are
+                 * on the My Profile page
+                 */
+                await user.getImage()
+              : /**
+                 * The requested user's image is Non-Faculty
+                 * If currently signed-in user is Faculty : Will receive default and preferred image
+                 * If currently signed-in user is Non-Faculty : Will receive either default or preferred image
+                 */
+                await user.getImage(profile.AD_Username);
 
         // Sets the given user's preferred image. If a default image is given but the preferred is undefined,
         // then this could mean that the currently signed-in user is not allowed to see the preferred image or
@@ -106,8 +106,10 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
 
       setIsImagePublic(profile.show_pic);
 
-      setHasNickname(profile?.NickName && profile.NickName !== profile.FirstName);
-      setHasMaidenName(profile?.MaidenName && profile?.LastName !== profile.MaidenName);
+      setHasNickname(profile?.NickName.value && profile.NickName.value !== profile.FirstName.value);
+      setHasMaidenName(
+        profile?.MaidenName.value && profile?.LastName.value !== profile.MaidenName.value,
+      );
     }
 
     loadUserProfile();
@@ -521,6 +523,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
   }
 
   const todaysDate = new Date();
+  // Jan=0, Feb=1, Mar=2, Apr=3, etc.
   const isAprilFools = todaysDate.getMonth() === 3 && todaysDate.getDate() === 1;
   const profileTitleAprilFools = userProfile?.Title
     ? userProfile.Title.charAt(0).toUpperCase() +
@@ -538,15 +541,15 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
               title={`${
                 isAprilFools
                   ? profileTitleAprilFools
-                  : userProfile.NickName
-                  ? userProfile.NickName
-                  : userProfile.FirstName
+                  : userProfile.NickName.value
+                    ? userProfile.NickName.value
+                    : userProfile.FirstName.value
               }'s Profile`}
             />
           ) : (
             <CardHeader
-              title={`${userProfile.NickName ? userProfile.NickName : userProfile.FirstName} ${
-                userProfile.LastName
+              title={`${userProfile.NickName.value ? userProfile.NickName.value : userProfile.FirstName.value} ${
+                userProfile.LastName.value
               }'s Profile`}
             />
           ))}
@@ -601,10 +604,10 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                           ? // Main Photo: Default
                             defaultUserImage
                           : // Main Photo: Preferred
-                          // If the given user doesn't have a preferred photo, then their default photo is shown
-                          hasPreferredImage
-                          ? preferredUserImage
-                          : defaultUserImage
+                            // If the given user doesn't have a preferred photo, then their default photo is shown
+                            hasPreferredImage
+                            ? preferredUserImage
+                            : defaultUserImage
                       }`}
                       alt="Profile"
                     />
@@ -677,9 +680,9 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                       userProfile.Title && userProfile.PersonType === 'fac'
                         ? `${userProfile.Title} `
                         : ''
-                    }${userProfile.FirstName}${hasNickname ? ` (${userProfile.NickName})` : ''} ${
-                      userProfile.LastName
-                    }${hasMaidenName ? ` (${userProfile.MaidenName})` : ''}`}
+                    }${userProfile.FirstName.value}${hasNickname ? ` (${userProfile.NickName.value})` : ''} ${
+                      userProfile.LastName.value
+                    }${hasMaidenName ? ` (${userProfile.MaidenName.value})` : ''}`}
                   </Typography>
                 </Grid>
                 {userProfile.JobTitle && userProfile.JobTitle !== '' && (
