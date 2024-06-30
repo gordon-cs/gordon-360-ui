@@ -11,8 +11,13 @@ type CLWCredits = {
   required: number;
 };
 
-type ProfileItem = {
-  value: object;
+type ProfileStringItem = {
+  value: string;
+  isPrivate: boolean;
+};
+
+type ProfileNumberItem = {
+  value: number;
   isPrivate: boolean;
 };
 
@@ -37,12 +42,12 @@ const onOffCampusDescriptions = {
 type BaseProfileInfo = {
   ID: string;
   Title: string;
-  FirstName: ProfileItem;
-  MiddleName: ProfileItem;
-  LastName: ProfileItem;
-  Suffix: ProfileItem;
-  MaidenName: ProfileItem;
-  NickName: ProfileItem;
+  FirstName: ProfileStringItem;
+  MiddleName: ProfileStringItem;
+  LastName: ProfileStringItem;
+  Suffix: ProfileStringItem;
+  MaidenName: ProfileStringItem;
+  NickName: ProfileStringItem;
   OnCampusBuilding: string;
   OnCampusRoom: string;
   OnCampusPhone: string;
@@ -51,11 +56,11 @@ type BaseProfileInfo = {
   Mail_Location: string;
   HomeStreet1: string;
   HomeStreet2: string;
-  HomeCity: ProfileItem;
-  HomeState: ProfileItem;
+  HomeCity: ProfileStringItem;
+  HomeState: ProfileStringItem;
   HomePostalCode: string;
-  HomeCountry: ProfileItem;
-  HomePhone: ProfileItem;
+  HomeCountry: ProfileStringItem;
+  HomePhone: ProfileStringItem;
   HomeFax: string;
   KeepPrivate: string;
   Barcode: string;
@@ -64,7 +69,7 @@ type BaseProfileInfo = {
   AD_Username: string;
   show_pic: number;
   preferred_photo: number;
-  Country: ProfileItem;
+  Country: ProfileStringItem;
   BuildingDescription: string;
   Facebook: string;
   Twitter: string;
@@ -81,7 +86,7 @@ export type UnformattedFacStaffProfileInfo = BaseProfileInfo & {
   Dept: string;
   JobTitle: string;
   OnCampusDepartment: string;
-  SpouseName: ProfileItem;
+  SpouseName: ProfileStringItem;
   Type: string;
   office_hours: string;
   Mail_Description: string;
@@ -113,7 +118,7 @@ export type UnformattedStudentProfileInfo = BaseProfileInfo & {
   Minor1: string;
   Minor2: string;
   Minor3: string;
-  MobilePhone: ProfileItem;
+  MobilePhone: ProfileStringItem;
   IsMobilePhonePrivate: number;
   Major1Description: string;
   Major2Description: string;
@@ -200,10 +205,10 @@ function isStudent(
 }
 
 function formatCountry(profile: UnformattedProfileInfo) {
-  if (profile?.Country?.includes(',')) {
-    const country = profile.Country;
+  if (profile?.Country?.value.includes(',')) {
+    const country = profile.Country.value;
     const commaIndex = country.indexOf(',');
-    profile.Country = `${country.slice(commaIndex + 2)} ${country.slice(0, commaIndex)}`;
+    profile.Country.value = `${country.slice(commaIndex + 2)} ${country.slice(0, commaIndex)}`;
   }
   return profile;
 }
@@ -284,8 +289,7 @@ const isBirthdayToday = (): Promise<boolean> => {
 };
 
 const getProfileInfo = async (username: string = ''): Promise<Profile | undefined> => {
-  const profile = await getProfile(username).then(formatSocialMediaLinks);
-  // const profile = await getProfile(username).then(formatCountry).then(formatSocialMediaLinks);
+  const profile = await getProfile(username).then(formatCountry).then(formatSocialMediaLinks);
 
   if (!profile) return undefined;
 
