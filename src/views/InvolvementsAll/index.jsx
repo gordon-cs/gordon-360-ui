@@ -218,7 +218,7 @@ const InvolvementsAll = () => {
               <TabPanel value={involvementsTab} index={2}>
                 <Grid item xs={12} lg={12}>
                   <Grid container spacing={2}>
-                    <Grid item xs={12} lg={6} marginBottom={4}>
+                    <Grid item xs={12} lg={6} marginBottom={2}>
                       <TextField
                         id="search"
                         variant="filled"
