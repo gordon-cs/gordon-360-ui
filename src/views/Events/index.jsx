@@ -45,6 +45,15 @@ const Events = () => {
   const isAuthenticated = useIsAuthenticated();
   const navigate = useNavigate();
   const location = useLocation();
+  const timeFilters = [
+    'This Week',
+    '2 Weeks',
+    '3 Weeks',
+    'One Month',
+    '2 Months',
+    '4 Months',
+    '6 Months',
+  ];
 
   useEffect(() => {
     const loadEvents = async () => {
@@ -258,15 +267,7 @@ const Events = () => {
                             <MenuItem label="All" value="">
                               <em>All</em>
                             </MenuItem>
-                            {[
-                              'This Week',
-                              '2 Weeks',
-                              '3 Weeks',
-                              'One Month',
-                              '2 Months',
-                              '4 Months',
-                              '6 Months',
-                            ].map((timeFilter) => (
+                            {timeFilters.map((timeFilter) => (
                               <MenuItem value={timeFilter} key={timeFilter}>
                                 {timeFilter}
                               </MenuItem>
@@ -409,15 +410,7 @@ const Events = () => {
                           <MenuItem label="All" value="">
                             <em>All</em>
                           </MenuItem>
-                          {[
-                            'This Week',
-                            '2 Weeks',
-                            '3 Weeks',
-                            'One Month',
-                            '2 Months',
-                            '4 Months',
-                            '6 Months',
-                          ].map((timeFilter) => (
+                          {timeFilters.map((timeFilter) => (
                             <MenuItem value={timeFilter} key={timeFilter}>
                               {timeFilter}
                             </MenuItem>
