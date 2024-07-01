@@ -143,6 +143,7 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
         onLinkClick();
         setPaletteOptionsOpen(true);
       }}
+      openUnavailableDialog={setDialog}
       linkName={'Appearance'}
       linkPath={window.location.pathname}
     />
