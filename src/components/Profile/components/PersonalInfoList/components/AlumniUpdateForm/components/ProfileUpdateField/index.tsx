@@ -6,9 +6,35 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  SelectChangeEvent,
   TextField,
 } from '@mui/material/';
+import { ChangeEvent, ReactNode } from 'react';
 import styles from './ProfileUpdateField.module.css';
+
+type defaultProps = {
+  label: ReactNode;
+  name: string;
+  value: any;
+  helperText?: ReactNode;
+  menuItems?: string[];
+  error?: boolean;
+};
+
+type Props = defaultProps &
+  (
+    | {
+        type: 'text' | 'checkbox';
+        onChange: (
+          event: SelectChangeEvent<string> & ChangeEvent<HTMLInputElement>,
+          child?: ReactNode,
+        ) => void;
+      }
+    | {
+        type: 'select';
+        onChange: (event: SelectChangeEvent<string>, child?: ReactNode) => void;
+      }
+  );
 
 const ProfileUpdateField = ({
   label,
@@ -19,7 +45,7 @@ const ProfileUpdateField = ({
   error,
   helperText,
   menuItems,
-}) => {
+}: Props) => {
   let field;
   // eslint-disable-next-line default-case
   switch (type) {
@@ -52,7 +78,7 @@ const ProfileUpdateField = ({
         <FormControl variant="filled" className={`${styles.select_text} ${styles.field}`}>
           <InputLabel>{label}</InputLabel>
           <Select label={label} name={name} value={value} onChange={onChange}>
-            {menuItems.map((item) => (
+            {menuItems!.map((item: string) => (
               <MenuItem className={styles.select_text} value={item}>
                 {item}
               </MenuItem>

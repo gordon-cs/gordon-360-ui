@@ -118,12 +118,15 @@ const devices = {
   },
 };
 
-const PWAInstructions = (props) => {
-  const [device, setDevice] = useState(null);
-  const [platform, setPlatform] = useState(null);
+const PWAInstructions = (props: any) => {
+  const [device, setDevice] = useState<string | null>(null);
+  const [platform, setPlatform] = useState<string | null>(null);
 
   // Handles which device is selected
-  const handleDeviceChange = (event, selectedDevice) => {
+  const handleDeviceChange = (
+    event: React.MouseEvent<HTMLElement>,
+    selectedDevice: string | null,
+  ) => {
     // Checks the selected device to prevent the user from deselecting a selected toggle
     if (selectedDevice === 'Desktop') {
       setDevice(selectedDevice);
@@ -136,7 +139,10 @@ const PWAInstructions = (props) => {
   };
 
   // Handles which platform is selected
-  const handlePlatformChange = (event, selectedPlatform) => {
+  const handlePlatformChange = (
+    event: React.MouseEvent<HTMLElement>,
+    selectedPlatform: string | null,
+  ) => {
     // Checks the selected platform to prevent the user from deselecting a selected toggle
     if (selectedPlatform !== null) setPlatform(selectedPlatform);
   };
@@ -178,7 +184,7 @@ const PWAInstructions = (props) => {
           >
             <Typography variant="h5">Instructions for {preText}</Typography>
           </Grid>
-          {devices[device][platform].map((step, index) => {
+          {devices[device][platform].map((step: any[], index: number) => {
             /**
              * The first step is processed differently from the rest in order to show a link to
              * download Google Chrome. This is for all platforms except "Apple" since the PWA can
