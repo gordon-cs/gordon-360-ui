@@ -244,7 +244,7 @@ const getProfile = (username: string = ''): Promise<UnformattedProfileInfo> =>
 const getAdvisors = (username: string): Promise<StudentAdvisorInfo[]> =>
   http.get(`profiles/Advisors/${username}/`);
 
-const getMailboxCombination = () => http.get('profiles/mailbox-combination/');
+const getMailboxInformation = () => http.get('profiles/mailbox-information/');
 
 const getVisibilityGroups = (): Promise<string[]> => http.get(`profiles/visibility_groups`);
 
@@ -382,7 +382,7 @@ const userService = {
   getDiningInfo,
   getProfileInfo,
   getAdvisors,
-  getMailboxCombination,
+  getMailboxInformation,
   getMembershipHistory,
   getVisibilityGroups,
   getPrivacySetting,
