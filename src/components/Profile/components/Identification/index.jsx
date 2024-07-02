@@ -543,14 +543,14 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
               title={`${
                 isAprilFools
                   ? profileTitleAprilFools
-                  : userProfile.NickName.value
-                    ? userProfile.NickName.value
+                  : userProfile.NickName?.value
+                    ? userProfile.NickName?.value
                     : userProfile.FirstName.value
               }'s Profile`}
             />
           ) : (
             <CardHeader
-              title={`${userProfile.NickName.value ? userProfile.NickName.value : userProfile.FirstName.value} ${
+              title={`${userProfile.NickName?.value ? userProfile.NickName.value : userProfile.FirstName.value} ${
                 userProfile.LastName.value
               }'s Profile`}
             />

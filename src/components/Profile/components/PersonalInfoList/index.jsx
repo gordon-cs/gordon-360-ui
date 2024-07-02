@@ -202,7 +202,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
         title="Home:"
         contentText={
           <>
-            {streetAddr}
+            <span className={styles.private}>{streetAddr}</span>
             {profile.Country === 'United States of America' || !profile.Country
               ? `${profile.HomeCity?.value}, ${profile.HomeState?.value}`
               : profile.Country?.value}

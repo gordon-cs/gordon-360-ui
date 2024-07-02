@@ -162,10 +162,10 @@ const AlumniUpdateForm = ({
       salutation: profile.Title
         ? profile.Title.charAt(0).toUpperCase() + profile.Title.slice(1).toLowerCase()
         : '',
-      firstName: profile.FirstName.value ?? '',
-      lastName: profile.LastName.value ?? '',
-      middleName: profile.MiddleName.value ?? '',
-      nickName: profile.NickName.value ?? '',
+      firstName: profile.FirstName?.value ?? '',
+      lastName: profile.LastName?.value ?? '',
+      middleName: profile.MiddleName?.value ?? '',
+      nickName: profile.NickName?.value ?? '',
       suffix: profile.Suffix?.value ?? '',
       personalEmail: profile.PersonalEmail ?? '',
       workEmail: profile.WorkEmail ?? '',
@@ -178,11 +178,12 @@ const AlumniUpdateForm = ({
       mobilePhone: profile.MobilePhone?.value ?? '',
       preferredPhone: profile.PreferredPhone ?? '',
       //Homestreet lines are inverted in alumni SQL
-      address1: profile.HomeStreet2 ?? profile.HomeStreet1 ?? '',
-      address2: profile.HomeStreet2 && profile.HomeStreet1 ? profile.HomeStreet2 : '',
+      address1: profile.HomeStreet2?.value ?? profile.HomeStreet1?.value ?? '',
+      address2:
+        profile.HomeStreet2?.value && profile.HomeStreet1?.value ? profile.HomeStreet2.value : '',
       city: profile.HomeCity?.value ?? '',
       state: profile.HomeState?.value ?? '',
-      zip: profile.HomePostalCode ?? '',
+      zip: profile.HomePostalCode?.value ?? '',
       country: profile.HomeCountry?.value ?? '',
       married: profile.Married === 'Y' ? true : false,
     };
