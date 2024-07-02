@@ -46,7 +46,7 @@ const GraphDisplay = ({ scores }: Props) => {
         ],
       }}
       options={{
-        responsive: true,
+        responsive: false,
         plugins: {
           tooltip: {
             callbacks: {
