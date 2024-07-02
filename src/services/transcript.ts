@@ -70,9 +70,13 @@ const categorizeItems = async (memberships: MembershipHistory[], jobs: StudentEm
 
   groupedMembershipHistory.activities = memberships;
 
-  groupedMembershipHistory.experiences.sort(
-    (a, b) => getExperienceEndDate(b) - getExperienceEndDate(a),
-  );
+   // Sort experiences by experience name then by end date
+  groupedMembershipHistory.experiences.sort((a, b) => {
+     const nameComparison = getName(a).localeCompare(getName(b));
+     return nameComparison !== 0 
+        ? nameComparison
+        : getExperienceEndDate(b) - getExperienceEndDate(a);
+  });
 
   return groupedMembershipHistory;
 };
@@ -141,3 +145,6 @@ const transcriptService = {
 };
 
 export default transcriptService;
+
+const getName = (experience: MembershipHistory | StudentEmployment) =>
+  'Sessions' in experience ? experience.ActivityCode : experience.Job_Title;

@@ -31,8 +31,13 @@
   }
 }
 
+.empty_title {
+  position: relative;
+  top: -20px;
+}
+
 @media print {
   .experience_transcript_activities {
-    grid-row-gap: 0px;
+    grid-row-gap: 20px;
   }
 }
