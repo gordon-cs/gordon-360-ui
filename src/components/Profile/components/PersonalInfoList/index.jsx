@@ -44,7 +44,7 @@ const formatPhone = (phone) => {
 
 const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
   const [isMobilePhonePrivate, setIsMobilePhonePrivate] = useState(
-    Boolean(profile.MobilePhone?.isPrivate || profile.MobilePhone === PRIVATE_INFO),
+    Boolean(profile.MobilePhone?.isPrivate),
   );
   const [isCliftonStrengthsPrivate, setIsCliftonStrengthsPrivate] = useState(
     profile.CliftonStrengths?.Private,
@@ -68,9 +68,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
   // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
   //    or 'P' for Private (not visible to other students)
   // FacStaff: '0' for public, '1' for private.
-  const keepPrivate = Boolean(
-    profile.KeepPrivate === '1' || profile.KeepPrivate === 'S' || profile.KeepPrivate === 'P',
-  );
+  const keepPrivate = Boolean(profile.KeepPrivate === 'Y' || profile.KeepPrivate === 'P');
 
   /**
    * The following 'is[info]Private' variables represent whether info shown to the user is private
@@ -84,16 +82,17 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
    */
 
   // Students' on-campus location is public unless the student is marked as private
-  const isCampusLocationPrivate = isStudent && keepPrivate && profile.OnOffCampus !== PRIVATE_INFO;
+  const isCampusLocationPrivate = isStudent && profile.OnOffCampus?.isPrivate;
 
   // Students' home phone is always private. FacStaffs' home phone is private for private users
-  const [isHomePhonePrivate, setIsHomePhonePrivate] = useState(isStudent || keepPrivate);
+  const [isHomePhonePrivate, setIsHomePhonePrivate] = useState(isStudent);
 
   // Street address info is always private, and City/State/Country info is private for private users
-  const isAddressPrivate = (keepPrivate && profile.HomeCity?.isPrivate) || profile.HomeStreet2;
+  const isAddressPrivate =
+    profile.HomeCity?.isPrivate || profile.HomeCountry?.isPrivate || profile.HomeState?.isPrivate;
 
   // FacStaff spouses are private for private users
-  const isSpousePrivate = isFacStaff && keepPrivate && profile.SpouseName !== PRIVATE_INFO;
+  const isSpousePrivate = isFacStaff && profile.SpouseName?.isPrivate;
   useEffect(() => {
     async function loadPersonalInfo() {
       if (isStudent) {
@@ -176,11 +175,9 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
         contentText={
           <>
             {streetAddr}
-            <span className={styles.not_private}>
-              {profile.Country === 'United States of America' || !profile.Country
-                ? `${profile.HomeCity?.value}, ${profile.HomeState?.value}`
-                : profile.Country?.value}
-            </span>
+            {profile.Country === 'United States of America' || !profile.Country
+              ? `${profile.HomeCity?.value}, ${profile.HomeState?.value}`
+              : profile.Country?.value}
           </>
         }
         ContentIcon={myProf && UpdateUserPrivacy(profile.AD_Username, combineHomeLocation)}
@@ -498,8 +495,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
         title="Dormitory:"
         contentText={
           <>
-            <span className={keepPrivate ? null : styles.not_private}>
-              {profile.BuildingDescription ?? profile.Hall}
+            <span className={styles.not_private}>
+              {profile.BuildingDescription ?? profile.Hall.value}
             </span>
 
             {(myProf || isViewerPolice || canViewSensitiveInfo) &&
@@ -536,7 +533,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
         title="Spouse:"
         contentText={profile.SpouseName.value}
         ContentIcon={isFacStaff && myProf && UpdateUserPrivacy(profile.AD_Username, ['SpouseName'])}
-        privateInfo={(keepPrivate && myProf) || isSpousePrivate}
+        privateInfo={isSpousePrivate}
       />
     ) : null;
 
@@ -597,17 +594,21 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       </div>
     ) : null);
 
-  const disclaimer =
-    !myProf &&
-    (isHomePhonePrivate ||
-      isAddressPrivate ||
-      isMobilePhonePrivate ||
-      isCampusLocationPrivate ||
-      isSpousePrivate) ? (
+  const disclaimer = !myProf ? (
+    mobilePhoneListItem ||
+    homePhoneListItem ||
+    home ||
+    spouse ||
+    cliftonStrengths ||
+    majors ||
+    graduationYear ? (
       <Typography align="left" className={styles.disclaimer}>
-        Private by request, visible only to faculty and staff
+        Visible only to authorized personnel
       </Typography>
-    ) : null;
+    ) : (
+      <Typography align="center">No Personal information to display.</Typography>
+    )
+  ) : null;
 
   return (
     <Grid item xs={12}>

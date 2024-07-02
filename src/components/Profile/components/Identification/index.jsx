@@ -106,9 +106,11 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
 
       setIsImagePublic(profile.show_pic);
 
-      setHasNickname(profile?.NickName.value && profile.NickName.value !== profile.FirstName.value);
+      setHasNickname(
+        profile?.NickName?.value && profile.NickName?.value !== profile.FirstName.value,
+      );
       setHasMaidenName(
-        profile?.MaidenName.value && profile?.LastName.value !== profile.MaidenName.value,
+        profile?.MaidenName?.value && profile?.LastName.value !== profile.MaidenName.value,
       );
     }
 
