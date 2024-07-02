@@ -125,7 +125,16 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
       );
     } else {
       const route = `/${name.toLowerCase().replace('-', '')}`;
-      return <Tab className={styles.tab} icon={icon} label={name} component={NavLink} to={route} />;
+      return (
+        <Tab
+          className={styles.tab}
+          icon={icon}
+          label={name}
+          component={NavLink}
+          to={route}
+          tabIndex={0}
+        />
+      );
     }
   };
 
@@ -184,6 +193,7 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
             label="Events"
             component={NavLink}
             to="/events"
+            tabIndex={0}
           />
           {requiresAuthTab('People', <PeopleIcon />)}
           <Tab
@@ -192,6 +202,7 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
             label="Links"
             component={NavLink}
             to="/links"
+            tabIndex={0}
           />
           {requiresAuthTab('Rec-IM', <RecIMIcon />)}
         </Tabs>

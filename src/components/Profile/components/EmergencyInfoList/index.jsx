@@ -4,6 +4,7 @@ import ProfileInfoListItem from '../ProfileInfoListItem';
 import user from 'services/user';
 
 import { Typography, Grid, Card, CardHeader, CardContent, List } from '@mui/material';
+import { values } from 'lodash';
 
 const formatPhone = (phone) => {
   if (phone?.length === 10) {
@@ -35,7 +36,7 @@ const EmergencyInfoList = ({ username }) => {
               <>
                 <ProfileInfoListItem
                   title="Emergency Contact:"
-                  contentText={`${emrgContact.FirstName} ${emrgContact.LastName} ${
+                  contentText={`${emrgContact.FirstName?.value} ${emrgContact.LastName?.value} ${
                     emrgContact.Relationship ? ` (${emrgContact.Relationship})` : ''
                   }`}
                   contentClass={'private'}
@@ -45,8 +46,11 @@ const EmergencyInfoList = ({ username }) => {
                     <ProfileInfoListItem
                       title="Mobile Phone:"
                       contentText={
-                        <a href={`tel:${emrgContact.MobilePhone}`} className="gc360_text_link">
-                          {formatPhone(emrgContact.MobilePhone)}
+                        <a
+                          href={`tel:${emrgContact.MobilePhone?.value}`}
+                          className="gc360_text_link"
+                        >
+                          {formatPhone(emrgContact.MobilePhone?.value)}
                         </a>
                       }
                       contentClass={'private'}
@@ -56,8 +60,8 @@ const EmergencyInfoList = ({ username }) => {
                     <ProfileInfoListItem
                       title="Home Phone:"
                       contentText={
-                        <a href={`tel:${emrgContact.HomePhone}`} className="gc360_text_link">
-                          {formatPhone(emrgContact.HomePhone)}
+                        <a href={`tel:${emrgContact.HomePhone?.value}`} className="gc360_text_link">
+                          {formatPhone(emrgContact.HomePhone?.value)}
                         </a>
                       }
                       contentClass={'private'}

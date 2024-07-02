@@ -145,6 +145,7 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
       }}
       openUnavailableDialog={setDialog}
       linkName={'Appearance'}
+      linkPath={window.location.pathname}
     />
   );
 
