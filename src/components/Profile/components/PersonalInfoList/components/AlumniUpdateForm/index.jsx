@@ -41,7 +41,7 @@ const AlumniUpdateForm = ({
 
     personalEmail: false,
     workEmail: false,
-    aEmail: false,
+    altEmail: false,
   });
 
   const personalInfoFields = [
@@ -87,9 +87,9 @@ const AlumniUpdateForm = ({
     },
     {
       label: 'Alternate Email',
-      name: 'aEmail',
+      name: 'altEmail',
       type: 'text',
-      error: errorStatus.aEmail,
+      error: errorStatus.altEmail,
       helperText: '*Invalid Email',
     },
     {
@@ -162,19 +162,19 @@ const AlumniUpdateForm = ({
       salutation: profile.Title
         ? profile.Title.charAt(0).toUpperCase() + profile.Title.slice(1).toLowerCase()
         : '',
-      firstName: profile.FirstName ?? '',
-      lastName: profile.LastName ?? '',
-      middleName: profile.MiddleName ?? '',
-      nickName: profile.NickName ?? '',
-      suffix: profile.Suffix ?? '',
+      firstName: profile.FirstName.value ?? '',
+      lastName: profile.LastName.value ?? '',
+      middleName: profile.MiddleName.value ?? '',
+      nickName: profile.NickName.value ?? '',
+      suffix: profile.Suffix?.value ?? '',
       personalEmail: profile.PersonalEmail ?? '',
       workEmail: profile.WorkEmail ?? '',
-      aEmail: profile.aEmail ?? '',
+      altEmail: profile.altEmail ?? '',
       preferredEmail: profile.PreferredEmail ?? '',
       doNotContact: profile.doNotContact ?? false,
       doNotMail: profile.doNotMail ?? false,
       homePhone: profile.HomePhone?.value ?? '',
-      workPhone: profile.WorkPhone ?? '',
+      workPhone: profile.WorkPhone?.value ?? '',
       mobilePhone: profile.MobilePhone?.value ?? '',
       preferredPhone: profile.PreferredPhone ?? '',
       //Homestreet lines are inverted in alumni SQL
@@ -241,7 +241,7 @@ const AlumniUpdateForm = ({
           break;
         case 'personalEmail':
         case 'workEmail':
-        case 'aEmail':
+        case 'altEmail':
           handleSetError(field, !isEmailValid(updatedInfo[field]));
           hasError = !isEmailValid(updatedInfo[field]) || hasError;
           break;
