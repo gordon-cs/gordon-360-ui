@@ -13,7 +13,7 @@ const data = new Array<number>(4);
 type Props = { scores: Record<VictoryPromiseCategory, number> };
 
 const GraphDisplay = ({ scores }: Props) => {
-  const minimumScore = Math.min(...Object.values(scores).filter((v) => v > 0)) || 1;
+  const minimumScore = Math.min(...Object.values(scores).filter((v) => v === 0)) || 1;
   /**
    * A 0 value won't display on the graph, so we use `emptySliceValue` to represent empty values,
    * which is 2/3 of the minimum non-zero score
