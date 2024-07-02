@@ -18,6 +18,12 @@ export type TranscriptItems = {
   activities: MembershipHistory[];
 };
 
+export type Groupexperience = {
+  Job_Title: string;
+  job: StudentEmployment[] | undefined;
+  latestDate?: string;
+};
+
 const getItems = (username: string) =>
   Promise.all([
     userService.getMembershipHistory(username),
@@ -70,12 +76,43 @@ const categorizeItems = async (memberships: MembershipHistory[], jobs: StudentEm
 
   groupedMembershipHistory.activities = memberships;
 
-   // Sort experiences by experience name then by end date
+  // Sort experiences by experience name then by end date
   groupedMembershipHistory.experiences.sort((a, b) => {
-     const nameComparison = getName(a).localeCompare(getName(b));
-     return nameComparison !== 0 
-        ? nameComparison
-        : getExperienceEndDate(b) - getExperienceEndDate(a);
+    const nameComparison = getName(a).localeCompare(getName(b));
+    return nameComparison !== 0
+      ? nameComparison
+      : getExperienceEndDate(b) - getExperienceEndDate(a);
+  });
+
+  groupedMembershipHistory.experiences = jobs;
+
+  let GroupByTitle = Object.entries(Object.groupBy(jobs, (job) => job.Job_Title)).map(
+    ([title, job]) => ({
+      Job_Title: title,
+      job,
+      latestDate: '',
+    }),
+  );
+
+  // This code is has a lot of ? and ! opeators because typescript can't analyze the
+  // loop to recognize that the array indexing is safe.
+  for (let i = 0; i < GroupByTitle.length; i++) {
+    let maxDate: string = '';
+    let tempJob = GroupByTitle?.[i].job;
+    let numJobs = tempJob!.length;
+    for (let j = 0; j < numJobs; j++) {
+      let tempVal = GroupByTitle[i];
+      let value = tempVal!.job?.[j].Job_End_Date;
+      if (maxDate! < value!) {
+        maxDate = value!;
+      }
+    }
+    GroupByTitle[i].latestDate = maxDate;
+  }
+
+  // Sorting the grouped job by the latest end date
+  GroupByTitle.sort((a, b) => {
+    return getLatestEndDate(b)! - getLatestEndDate(a)!;
   });
 
   return groupedMembershipHistory;
@@ -148,3 +185,11 @@ export default transcriptService;
 
 const getName = (experience: MembershipHistory | StudentEmployment) =>
   'Sessions' in experience ? experience.ActivityCode : experience.Job_Title;
+
+const getLatestEndDate = (GroupByTitle: Groupexperience) => {
+  const date = GroupByTitle.latestDate;
+
+  if (date) {
+    return Date.parse(date);
+  }
+};
