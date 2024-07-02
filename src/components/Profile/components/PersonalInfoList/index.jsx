@@ -89,7 +89,10 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
 
   // Street address info is always private, and City/State/Country info is private for private users
   const isAddressPrivate =
-    profile.HomeCity?.isPrivate || profile.HomeCountry?.isPrivate || profile.HomeState?.isPrivate;
+    profile.HomeCity?.isPrivate ||
+    profile.HomeCountry?.isPrivate ||
+    profile.Country?.isPrivate ||
+    profile.HomeState?.isPrivate;
 
   // FacStaff spouses are private for private users
   const isSpousePrivate = isFacStaff && profile.SpouseName?.isPrivate;
@@ -163,12 +166,35 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     />
   ) : null;
 
-  let streetAddr = profile.HomeStreet2 ? <span>{profile.HomeStreet2},&nbsp;</span> : null;
+  let streetAddr = profile.HomeStreet2?.value ? (
+    <span>{profile.HomeStreet2.value},&nbsp;</span>
+  ) : null;
+  //let streetAddr = profile.HomeStreet1?.value ? <span>{profile.HomeStreet1.value},&nbsp;</span> : null;
 
   let combineHomeLocation =
     profile.Country === 'United States of America' || !profile.Country
       ? ['HomeCity', 'HomeState']
       : ['Country', 'HomeCountry'];
+
+  // const home =
+  //   (profile.HomeCity && profile.HomeState) || profile.Country ? (
+  //     <ProfileInfoListItem
+  //       title="Home:"
+  //       contentText={
+  //         <>
+  //           {streetAddr}
+  //           <span className={styles.not_private}>
+  //             {profile.Country === 'United States of America' || !profile.Country
+  //               ? `${profile.HomeCity?.value}, ${profile.HomeState?.value}`
+  //               : profile.Country?.value}
+  //           </span>
+  //         </>
+  //       }
+  //       ContentIcon={myProf && UpdateUserPrivacy(profile.AD_Username, combineHomeLocation)}
+  //       privateInfo={true||isAddressPrivate}
+  //       myProf={myProf}
+  //     />
+  //   ) : null;
 
   const home =
     (profile.HomeCity && profile.HomeState) || profile.Country ? (
