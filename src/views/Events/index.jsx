@@ -229,7 +229,11 @@ const Events = () => {
                       <Grid container item xs={3}>
                         <FormControlLabel
                           control={
-                            <Checkbox checked={includePast} onChange={handleChangeIncludePast} />
+                            <Checkbox
+                              checked={includePast}
+                              onChange={handleChangeIncludePast}
+                              color="secondary"
+                            />
                           }
                           label="Include Past"
                         />
@@ -321,7 +325,11 @@ const Events = () => {
                   <Grid container item justifyContent="center">
                     <FormControlLabel
                       control={
-                        <Checkbox checked={includePast} onChange={handleChangeIncludePast} />
+                        <Checkbox
+                          checked={includePast}
+                          onChange={handleChangeIncludePast}
+                          color="secondary"
+                        />
                       }
                       label="Include Past"
                     />
