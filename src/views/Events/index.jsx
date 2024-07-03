@@ -38,22 +38,14 @@ const Events = () => {
   const [includePast, setIncludePast] = useState(false);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState([]);
-  const [timeFilter, setTimeFilter] = useState('');
+  const [timeFilter, setTimeFilter] = useState('2 Weeks');
   const [hasInitializedEvents, setHasInitializedEvents] = useState(false);
   const futureEvents = useMemo(() => gordonEvent.getFutureEvents(allEvents), [allEvents]);
   const [width] = useWindowSize();
   const isAuthenticated = useIsAuthenticated();
   const navigate = useNavigate();
   const location = useLocation();
-  const timeFilters = [
-    'This Week',
-    '2 Weeks',
-    '3 Weeks',
-    'One Month',
-    '2 Months',
-    '4 Months',
-    '6 Months',
-  ];
+  const timeFilters = ['1 Week', '2 Weeks', '1 Month', '4 Months'];
 
   useEffect(() => {
     const loadEvents = async () => {
