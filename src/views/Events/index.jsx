@@ -38,7 +38,7 @@ const Events = () => {
   const [includePast, setIncludePast] = useState(false);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState([]);
-  const [timeFilter, setTimeFilter] = useState('2 Weeks');
+  const [timeFilter, setTimeFilter] = useState('');
   const [hasInitializedEvents, setHasInitializedEvents] = useState(false);
   const futureEvents = useMemo(() => gordonEvent.getFutureEvents(allEvents), [allEvents]);
   const [width] = useWindowSize();
