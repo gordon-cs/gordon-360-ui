@@ -229,7 +229,7 @@ const getProfile = (username: string = ''): Promise<UnformattedProfileInfo> =>
 const getAdvisors = (username: string): Promise<StudentAdvisorInfo[]> =>
   http.get(`profiles/Advisors/${username}/`);
 
-const getMailboxCombination = () => http.get('profiles/mailbox-combination/');
+const getMailboxInformation = () => http.get('profiles/mailbox-information/');
 
 const getMailStops = (): Promise<string[]> => http.get(`profiles/mailstops`);
 
@@ -362,7 +362,7 @@ const userService = {
   getDiningInfo,
   getProfileInfo,
   getAdvisors,
-  getMailboxCombination,
+  getMailboxInformation,
   getMembershipHistory,
   resetImage,
   postImage,
