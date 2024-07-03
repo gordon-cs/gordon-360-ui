@@ -141,8 +141,6 @@ const makeMatchesTimeFilter =
       return new Date(event.StartDate) <= new Date(new Date().setMonth(new Date().getMonth() + 1));
     } else if (timeFilter == '4 Months') {
       return new Date(event.StartDate) <= new Date(new Date().setMonth(new Date().getMonth() + 4));
-    } else if (timeFilter == '6 Months') {
-      return new Date(event.StartDate) <= new Date(new Date().setMonth(new Date().getMonth() + 6));
     } else {
       return false;
     }
