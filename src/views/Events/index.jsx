@@ -7,14 +7,19 @@ import {
   Checkbox,
   Chip,
   Collapse,
+  FormControl,
   FormControlLabel,
   Grid,
-  TextField,
+  InputLabel,
   Link,
+  MenuItem,
+  Select,
+  TextField,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EventIcon from '@mui/icons-material/Event';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import ClockIcon from '@mui/icons-material/AccessTime';
 import Autocomplete from '@mui/material/Autocomplete';
 import EventList from 'components/EventList';
 import GordonLoader from 'components/Loader';
@@ -33,12 +38,14 @@ const Events = () => {
   const [includePast, setIncludePast] = useState(false);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState([]);
+  const [timeFilter, setTimeFilter] = useState('');
   const [hasInitializedEvents, setHasInitializedEvents] = useState(false);
   const futureEvents = useMemo(() => gordonEvent.getFutureEvents(allEvents), [allEvents]);
   const [width] = useWindowSize();
   const isAuthenticated = useIsAuthenticated();
   const navigate = useNavigate();
   const location = useLocation();
+  const timeFilters = ['1 Week', '2 Weeks', '1 Month', '4 Months'];
 
   useEffect(() => {
     const loadEvents = async () => {
@@ -84,8 +91,8 @@ const Events = () => {
   }, [includePast, allEvents, futureEvents]);
 
   useEffect(() => {
-    setFilteredEvents(gordonEvent.getFilteredEvents(events, filters, search));
-  }, [events, filters, search]);
+    setFilteredEvents(gordonEvent.getFilteredEvents(events, filters, search, timeFilter));
+  }, [events, filters, search, timeFilter]);
 
   const handleChangeFilters = async (value) => {
     setFilters(value);
@@ -102,6 +109,7 @@ const Events = () => {
     setURLParams(false, []);
     setSearch('');
     setOpen(false);
+    setTimeFilter('');
   };
 
   const handleChangeIncludePast = () => {
@@ -200,7 +208,7 @@ const Events = () => {
 
                 <Grid item xs={12}>
                   <Collapse in={open} timeout="auto" unmountOnExit>
-                    <Grid container spacing={2} alignItems="center">
+                    <Grid container spacing={2} direction="row" alignItems="center">
                       <Grid item>
                         <FilterListIcon className={styles.events_icon} />
                       </Grid>
@@ -226,13 +234,38 @@ const Events = () => {
                           )}
                         />
                       </Grid>
-                      <Grid container item xs={3}>
+                      <Grid container item xs={3.25}>
                         <FormControlLabel
                           control={
                             <Checkbox checked={includePast} onChange={handleChangeIncludePast} />
                           }
                           label="Include Past"
                         />
+                      </Grid>
+
+                      <Grid item>
+                        <ClockIcon className={styles.events_icon} />
+                      </Grid>
+
+                      <Grid item xs={8}>
+                        <FormControl fullWidth variant="filled">
+                          <InputLabel id="event-time">Time Filters</InputLabel>
+                          <Select
+                            labelId="event-time"
+                            id="even-time"
+                            value={timeFilter}
+                            onChange={(event) => setTimeFilter(event.target.value)}
+                          >
+                            <MenuItem label="All" value="">
+                              <em>All</em>
+                            </MenuItem>
+                            {timeFilters.map((timeFilter) => (
+                              <MenuItem value={timeFilter} key={timeFilter}>
+                                {timeFilter}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
                       </Grid>
                     </Grid>
                   </Collapse>
@@ -351,6 +384,31 @@ const Events = () => {
                           <TextField {...param} variant="filled" label="Filters" />
                         )}
                       />
+                    </Grid>
+                    {width > 600 && (
+                      <Grid item>
+                        <ClockIcon className={styles.events_icon} />
+                      </Grid>
+                    )}
+                    <Grid item xs={11}>
+                      <FormControl fullWidth variant="filled">
+                        <InputLabel id="event-time">Time Filters</InputLabel>
+                        <Select
+                          labelId="event-time"
+                          id="even-time"
+                          value={timeFilter}
+                          onChange={(event) => setTimeFilter(event.target.value)}
+                        >
+                          <MenuItem label="All" value="">
+                            <em>All</em>
+                          </MenuItem>
+                          {timeFilters.map((timeFilter) => (
+                            <MenuItem value={timeFilter} key={timeFilter}>
+                              {timeFilter}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
                     </Grid>
                   </Grid>
                 </Collapse>
