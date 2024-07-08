@@ -1,0 +1,42 @@
+@import '../../../../../vars';
+
+.gc360_header {
+  background-color: var(--mui-palette-primary-main);
+  padding: 15px 20px;
+  color: var(--mui-palette-primary-contrastText);
+}
+
+.dialogContent {
+  text-align: center;
+}
+
+.dropzoneContainer {
+  padding: 20px;
+  text-align: center;
+}
+
+.dropzoneImage {
+  width: 100%;
+  height: auto;
+}
+
+.cropperContainer {
+  height: 80%;
+  width: 80%;
+}
+
+.dialogActions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.dialogButton {
+  background-color: var(--mui-palette-primary-main);
+  width: 100%;
+}
+.cancelButton {
+  width: 100%;
+}
+.photoDialogError {
+  color: red;
+}

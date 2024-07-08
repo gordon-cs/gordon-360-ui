@@ -11,7 +11,8 @@ import { useState, useRef } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import Cropper from 'react-cropper';
-import defaultLogo from '../../../images/DiscoPoster.jpg';
+import defaultLogo from '../../../images/DefaultPoster.png';
+import styles from './CropPoster.module.scss';
 
 const CROPPER_WIDTH = 1056;
 const CROPPER_HEIGHT = 1632;
@@ -82,7 +83,7 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
 
   const createPhotoDialogBoxMessage = () => {
     if (photoDialogError != null) {
-      return <span style={{ color: '#B63228' }}>{photoDialogError}</span>;
+      return <span className={styles.photoDialogError}>{photoDialogError}</span>;
     } else if (cropperImageData) {
       return 'Select an image then crop to desired dimensions';
     } else {
@@ -102,9 +103,9 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
             </Grid>
           </Grid>
         }
-        className="gc360_header"
+        className={styles.gc360_header}
       />
-      <DialogContent>
+      <DialogContent className={styles.dialogContent}>
         <DialogContentText>{createPhotoDialogBoxMessage()}</DialogContentText>
         {!showCropper && (
           <Dropzone
@@ -113,12 +114,9 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
             onDropRejected={onDropRejected}
           >
             {({ getRootProps, getInputProps }) => (
-              <div
-                {...getRootProps()}
-                style={{ border: '2px dashed #ddd', padding: '20px', textAlign: 'center' }}
-              >
+              <div {...getRootProps()} className={styles.dropzoneContainer}>
                 <input {...getInputProps()} />
-                <img src={defaultLogo} alt="Poster" style={{ width: '100%', height: 'auto' }} />
+                <img src={defaultLogo} alt="Poster" className={styles.dropzoneImage} />
               </div>
             )}
           </Dropzone>
@@ -127,7 +125,7 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
           <Cropper
             ref={cropperRef}
             src={cropperImageData}
-            style={{ height: '80%', width: '80%' }}
+            className={styles.cropperContainer}
             autoCropArea={0.8}
             aspectRatio={ASPECT_RATIO}
             guides={true}
@@ -142,14 +140,13 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
           />
         )}
       </DialogContent>
-      <DialogActions>
+      <DialogActions className={styles.dialogActions}>
         {showCropper && (
           <Button
             onClick={handleCloseSubmit}
-            fullWidth
-            type="submit"
             variant="contained"
             color="primary"
+            className={styles.dialogButton}
           >
             Submit
           </Button>
@@ -157,15 +154,19 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
         {showCropper && (
           <Button
             onClick={() => setShowCropper(false)}
-            type="submit"
             variant="contained"
-            fullWidth
             color="primary"
+            className={styles.dialogButton}
           >
             Go Back
           </Button>
         )}
-        <Button onClick={onClose} fullWidth type="submit" variant="contained" color="primary">
+        <Button
+          onClick={onClose}
+          variant="outlined"
+          color="primary"
+          className={styles.cancelButton}
+        >
           Cancel
         </Button>
       </DialogActions>

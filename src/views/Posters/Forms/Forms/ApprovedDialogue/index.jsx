@@ -17,7 +17,7 @@ const PosterCheck = ({ open, onClose }) => {
       <DialogContentText fontWeight={'bold'} color={'primary'} paddingTop={2} align="center">
         {'Has your poster been approved?'}
       </DialogContentText>
-      <DialogContentText color={'primary'} padding={(5, 5)} align="left">
+      <DialogContentText color={'secondary'} padding={(5, 5)} align="left">
         {'For more information on advertising click here: '}
         <Link color={'primary'} to="https://www.gordon.edu/studenthandbook/collegeevents">
           Advertising Guidlines
@@ -28,7 +28,7 @@ const PosterCheck = ({ open, onClose }) => {
           No
         </Button>
         <Button type="submit" variant="contained" color="primary">
-          Yes
+          Submit
         </Button>
       </DialogActions>
     </Dialog>

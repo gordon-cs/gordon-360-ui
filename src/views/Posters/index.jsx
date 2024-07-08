@@ -19,6 +19,7 @@ import involvementService from 'services/involvements';
 import sessionService from 'services/session';
 import DATA from './dummy-posters/dummyposters';
 import { useLocation } from 'react-router-dom';
+import CropPoster from './Forms/Forms/CropPoster';
 
 const Posters = () => {
   const [openUploadForm, setOpenUploadForm] = useState(false);
@@ -28,6 +29,7 @@ const Posters = () => {
   const [selectedSession, setSelectedSession] = useState('');
   const [croppedImage, setCroppedImage] = useState(null);
   const location = useLocation();
+  const [openCropPoster, setOpenCropPoster] = useState(false);
 
   const pizzaSlice = DATA.slice(0, 2);
   const sessionFromURL = new URLSearchParams(location.search).get('session');
@@ -88,7 +90,10 @@ const Posters = () => {
   const handleCropSubmit = (imageData) => {
     setCroppedImage(imageData);
   };
-
+  const clearOnClose = (e) => {
+    setOpenUploadForm(false);
+    setCroppedImage(null);
+  };
   return (
     <Grid container justifyContent="center" spacing={4}>
       <Dialog
@@ -97,36 +102,50 @@ const Posters = () => {
         open={openUploadForm}
         onClose={() => setOpenUploadForm(false)}
       >
-        <DialogContent>
-          <Grid container spacing={4}>
-            <Grid item xs={12} md={croppedImage ? 6 : 12}>
+        <Grid bgcolor={'var(--mui-palette-neutral-light)'} container spacing={4}>
+          <Grid item xs={12} md={croppedImage ? 6 : 12}>
+            <Card variant="outlined">
+              <CardHeader title="Upload Poster" className="gc360_header" />
+              <UploadForm onClose={clearOnClose} onCropSubmit={handleCropSubmit} />
+            </Card>
+          </Grid>
+          <Dialog open={openCropPoster} onClose={() => setOpenCropPoster(false)}>
+            <CardHeader
+              title={
+                <Grid container direction="row" alignItems="center">
+                  <Grid item xs={7} align="left">
+                    Upload Poster
+                  </Grid>
+                </Grid>
+              }
+              className="gc360_header"
+            />
+            <DialogContent>
+              <CropPoster
+                open={openCropPoster}
+                onClose={() => setOpenCropPoster(false)}
+                onSubmit={handleCropSubmit}
+              />
+            </DialogContent>
+          </Dialog>
+          {croppedImage && (
+            <Grid item xs={0} md={6}>
               <Card variant="outlined">
-                <CardHeader title="Upload Poster" className="gc360_header" />
-                <CardContent>
-                  <UploadForm
-                    onClose={() => setOpenUploadForm(false)}
-                    onCropSubmit={handleCropSubmit}
-                  />
-                </CardContent>
-              </Card>
-            </Grid>
-
-            {croppedImage && (
-              <Grid item xs={12} md={6}>
-                <Card variant="outlined">
-                  <CardHeader title="Preview" className="gc360_header" />
+                <CardHeader title="Preview" className="gc360_header" />
+                <CardActionArea>
                   <CardMedia
+                    onClick={() => setOpenCropPoster(true)}
                     loading="lazy"
                     component="img"
                     alt="Cropped Image"
                     src={croppedImage}
                     title="Cropped Image"
                   />
-                </Card>
-              </Grid>
-            )}
-          </Grid>
-        </DialogContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+          )}
+        </Grid>
       </Dialog>
 
       <Grid item xs={12} lg={8}>

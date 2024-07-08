@@ -16,6 +16,7 @@ import { useUser } from 'hooks';
 import involvementService from 'services/involvements';
 import sessionService from 'services/session';
 import { useLocation } from 'react-router-dom';
+import styles from './UploadForm.module.scss';
 
 const UploadForm = ({ onClose, onCropSubmit }) => {
   const [selectedClub, setSelectedClub] = useState('');
@@ -31,6 +32,7 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
   const [selectedSession, setSelectedSession] = useState('');
   const location = useLocation();
   const sessionFromURL = new URLSearchParams(location.search).get('session');
+  const [croppedImage, setCroppedImage] = useState(null);
 
   useEffect(() => {
     const loadButton = async () => {
@@ -65,6 +67,12 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
     loadButton();
   }, [sessionFromURL]);
 
+  const handleCropSubmit = (imageData) => {
+    setCroppedImage(imageData);
+    setOpenCropPoster(false);
+    onCropSubmit(imageData);
+  };
+
   useEffect(() => {
     const updateInvolvements = async () => {
       if (profile) {
@@ -85,7 +93,7 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
 
   useEffect(() => {
     const checkIfFormIsValid = () => {
-      if (startTime && endTime && title && description && selectedClub) {
+      if (startTime && endTime && title && description && selectedClub && croppedImage) {
         setIsSubmitDisabled(false);
       } else {
         setIsSubmitDisabled(true);
@@ -93,7 +101,7 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
     };
 
     checkIfFormIsValid();
-  }, [startTime, endTime, title, description, selectedClub]);
+  }, [startTime, endTime, title, description, selectedClub, croppedImage]);
 
   const handleClubChange = (event) => {
     setSelectedClub(event.target.value);
@@ -104,40 +112,41 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
     // Handle form submission logic here
   };
 
-  const handleCropSubmit = (imageData) => {
-    setOpenCropPoster(false);
-    onCropSubmit(imageData);
-  };
+  const getTextFieldSX = (color) => ({
+    '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
+      borderColor: 'var(--mui-palette-link-main)',
+    },
+  });
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className={styles.uploadFormContainer}>
       <Dialog open={openPosterCheck} onClose={() => setOpenPosterCheck(false)}>
         <CardHeader
           title={
-            <Grid container direction="row" alignItems="center">
+            <Grid container direction="row" alignItems="center" className={styles.gridItemHeader}>
               <Grid item xs={7} align="left">
                 Upload Poster
               </Grid>
             </Grid>
           }
-          className="gc360_header"
+          className={styles.gc360_header}
         />
-        <DialogContent>
+        <DialogContent className={styles.dialogContent}>
           <PosterCheck open={openPosterCheck} onClose={() => setOpenPosterCheck(false)} />
         </DialogContent>
       </Dialog>
       <Dialog open={openCropPoster} onClose={() => setOpenCropPoster(false)}>
         <CardHeader
           title={
-            <Grid container direction="row" alignItems="center">
+            <Grid container direction="row" alignItems="center" className={styles.gridItemHeader}>
               <Grid item xs={7} align="left">
                 Upload Poster
               </Grid>
             </Grid>
           }
-          className="gc360_header"
+          className={styles.gc360_header}
         />
-        <DialogContent>
+        <DialogContent className={styles.dialogContent}>
           <CropPoster
             open={openCropPoster}
             onClose={() => setOpenCropPoster(false)}
@@ -145,8 +154,8 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
           />
         </DialogContent>
       </Dialog>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
+      <Grid container spacing={1}>
+        <Grid item xs={12} className={styles.gridItem}>
           Start Time
           <TextField
             type="date"
@@ -155,9 +164,20 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
             required
             value={startTime}
             onChange={(e) => setStartTime(e.target.value)}
+            InputLabelProps={{
+              classes: {
+                focused: styles.textFieldLabelFocused,
+              },
+            }}
+            InputProps={{
+              classes: {
+                root: styles.textFieldRootFocused,
+              },
+            }}
+            sx={getTextFieldSX('var(--mui-palette-secondary-main)')}
           />
         </Grid>
-        <Grid item xs={12} color={'GordonBlue'}>
+        <Grid item xs={12} className={styles.gridItem}>
           End Time
           <TextField
             type="date"
@@ -166,9 +186,20 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
             required
             value={endTime}
             onChange={(e) => setEndTime(e.target.value)}
+            InputLabelProps={{
+              classes: {
+                focused: styles.textFieldLabelFocused,
+              },
+            }}
+            InputProps={{
+              classes: {
+                root: styles.textFieldRootFocused,
+              },
+            }}
+            sx={getTextFieldSX('var(--mui-palette-secondary-main)')}
           />
         </Grid>
-        <Grid item xs={12} paddingTop={20}>
+        <Grid item xs={12} className={`${styles.gridItem} ${styles.formField}`}>
           <TextField
             label="Title"
             variant="outlined"
@@ -176,11 +207,23 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
             required
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+            InputLabelProps={{
+              classes: {
+                focused: styles.textFieldLabelFocused,
+              },
+            }}
+            InputProps={{
+              classes: {
+                root: styles.textFieldRootFocused,
+              },
+            }}
+            sx={getTextFieldSX('var(--mui-palette-secondary-main)')}
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} className={styles.gridItem}>
           <TextField
             multiline
+            minRows={5}
             maxRows={5}
             label="Description"
             variant="outlined"
@@ -188,9 +231,20 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
             required
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            InputLabelProps={{
+              classes: {
+                focused: styles.textFieldLabelFocused,
+              },
+            }}
+            InputProps={{
+              classes: {
+                root: styles.textFieldRootFocused,
+              },
+            }}
+            sx={getTextFieldSX('var(--mui-palette-secondary-main)')}
           />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} className={styles.gridItem}>
           <TextField
             select
             label="Select Club"
@@ -199,6 +253,17 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
             variant="outlined"
             fullWidth
             required
+            InputLabelProps={{
+              classes: {
+                focused: styles.textFieldLabelFocused,
+              },
+            }}
+            InputProps={{
+              classes: {
+                root: styles.textFieldRootFocused,
+              },
+            }}
+            sx={getTextFieldSX('var(--mui-palette-secondary-main)')}
           >
             {myInvolvements.map((myInvolvements) => (
               <MenuItem key={myInvolvements.ActivityCode} value={myInvolvements.ActivityCode}>
@@ -207,31 +272,34 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
             ))}
           </TextField>
         </Grid>
-        <Grid item xs={12}>
-          <Button variant="contained" fullWidth onClick={() => setOpenCropPoster(true)}>
+        <Grid item xs={12} className={styles.gridItem}>
+          <Button
+            variant="contained"
+            className={styles.uploadPosterButton}
+            onClick={() => setOpenCropPoster(true)}
+          >
             <AddCircleRoundedIcon />
             Upload Poster
           </Button>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={6} className={styles.gridItem}>
           <Button
             onClick={() => setOpenPosterCheck(true)}
             type="submit"
             variant="contained"
             color="primary"
-            fullWidth
+            className={styles.submitButton}
             disabled={isSubmitDisabled}
           >
             Submit
           </Button>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={6} className={styles.gridItem}>
           <Button
             variant="outlined"
             color="primary"
-            fullWidth
+            className={styles.cancelButton}
             onClick={onClose}
-            style={{ backgroundColor: 'transparent' }}
           >
             Cancel
           </Button>

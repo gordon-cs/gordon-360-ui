@@ -1,0 +1,51 @@
+@import '../../../../../vars';
+
+.dialogContent {
+  text-align: center;
+}
+
+.uploadFormContainer {
+  width: 100%;
+  padding: 20px;
+  background-color: var(--mui-palette-neutral-light);
+}
+
+.formField {
+  padding-top: 20px;
+}
+
+.submitButton {
+  background-color: var(--mui-palette-primary-main);
+  width: 100%;
+}
+
+.cancelButton {
+  background-color: transparent;
+  width: 100%;
+}
+
+.uploadPosterButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.gridItem {
+  background-color: var(--mui-palette-neutral-light);
+  padding: 16px;
+}
+
+.gridItemHeader {
+  background-color: var(--mui-palette-primary-light);
+  padding: 16px;
+  color: var(--mui-palette-primary-contrastText);
+}
+
+.gridItemBody {
+  background-color: var(--mui-palette-background-default);
+  padding: 16px;
+}
+.textFieldLabelFocused {
+  color: var(--mui-palette-link-main) !important;
+}
