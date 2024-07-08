@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getBracketInfo } from 'services/recim/series';
 import { useWindowSize } from 'hooks';
 import { standardDate } from '../Helpers';
 import { useNavigate } from 'react-router-dom';
 import styles from './RecIMBracket.module.css';
+import { windowBreakWidths } from 'theme';
 // import GordonLoader from 'components/Loader';
 
 import {
@@ -16,11 +17,7 @@ import {
 import GordonLoader from 'components/Loader';
 //import './styles.css';
 
-export const SingleElimination = ({ data, navigate }) => {
-  const [width, height] = useWindowSize();
-  const finalWidth = Math.max(width - 50, 500);
-  const finalHeight = Math.max(height - 100, 500);
-
+export const SingleElimination = ({ data, navigate, width }) => {
   if (data.length === 0) return null;
   return (
     <SingleEliminationBracket
@@ -29,8 +26,8 @@ export const SingleElimination = ({ data, navigate }) => {
       matchComponent={Match}
       svgWrapper={({ children, ...props }) => (
         <SVGViewer
-          width={finalWidth}
-          height={finalHeight}
+          width={width}
+          // height={finalHeight}
           background="rgb(11, 13, 19)"
           SVGBackground="rgb(11, 13, 19)"
           {...props}
@@ -73,8 +70,11 @@ const Theme = createTheme({
 
 const RecIMBracket = ({ series }) => {
   const navigate = useNavigate();
+  const [width] = useWindowSize();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [componentWidth, setComponentWidth] = useState(0);
+
   useEffect(() => {
     const load = async () => {
       setLoading(true);
@@ -87,10 +87,20 @@ const RecIMBracket = ({ series }) => {
     };
     load();
   }, []);
-  console.log(data);
+
+  useEffect(() => {
+    /**
+     * 48 is the constant of both sides of padding on the component
+     * 6.5/12 is the grid ratio of the parent component
+     */
+    if (width < windowBreakWidths.breakSM) setComponentWidth(width - 48);
+    else setComponentWidth(Math.floor((width * 6.5) / 12) - 48);
+  }, [width]);
+
+  console.log(componentWidth);
 
   if (loading) return <GordonLoader />;
 
-  return <SingleElimination data={data} navigate={navigate} />;
+  return <SingleElimination data={data} navigate={navigate} width={componentWidth} />;
 };
 export default RecIMBracket;
