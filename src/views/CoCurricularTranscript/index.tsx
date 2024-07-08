@@ -19,7 +19,6 @@ const SectionTitle: { [Key in keyof TranscriptItems]: string } = {
 };
 
 const CoCurricularTranscript = () => {
-  const [previousTitles, setPreviousTitles] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [transcriptItems, setTranscriptItems] = useState<TranscriptItems | undefined>();
   const isAuthenticated = useIsAuthenticated();
@@ -33,11 +32,6 @@ const CoCurricularTranscript = () => {
           return;
         }
         setLoading(true);
-        /**
-         * When you return the transcript from other page, the job titles will be lost
-         * Fixing bug by setting PreviousTitles to empty array when the transcript is loaded
-         */
-        setPreviousTitles([]);
         const transcriptItems = await transcriptService.getItems(profile.AD_Username);
         setTranscriptItems(transcriptItems);
       } else {
@@ -84,8 +78,6 @@ const CoCurricularTranscript = () => {
                         ) : (
                           <Experience
                             Experience={activity}
-                            previousTitles={previousTitles}
-                            setPreviousTitles={setPreviousTitles}
                             key={activity.Job_Title + activity.Job_Start_Date}
                           />
                         ),

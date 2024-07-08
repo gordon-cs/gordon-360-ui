@@ -1,6 +1,8 @@
 import { differenceInCalendarMonths, format, parse } from 'date-fns';
 import http from './http';
 import userService, { MembershipHistory } from './user';
+import { keys } from 'lodash';
+import { LabelTwoTone } from '@mui/icons-material';
 
 export type StudentEmployment = {
   Job_Title: string;
@@ -22,6 +24,20 @@ export type Groupexperience = {
   Job_Title: string;
   job: StudentEmployment[] | undefined;
   latestDate?: string;
+};
+
+export type NewStudentEmployment = {
+  Job_Title: string;
+  Job_Department: string;
+  Job_Department_Name: string;
+  Job_Date: session[];
+  Job_Latest_Date: string;
+};
+
+export type session = {
+  Job_Start_Date?: string;
+  Job_End_Date?: string;
+  Job_Expected_Date?: string;
 };
 
 const getItems = (username: string) =>
@@ -56,7 +72,7 @@ const getItems = (username: string) =>
 const categorizeItems = async (memberships: MembershipHistory[], jobs: StudentEmployment[]) => {
   const groupedMembershipHistory: TranscriptItems = {
     honors: [] as MembershipHistory[],
-    experiences: jobs as (MembershipHistory | StudentEmployment)[],
+    experiences: jobs as StudentEmployment[],
     service: [] as MembershipHistory[],
     activities: [] as MembershipHistory[],
   };
@@ -84,7 +100,7 @@ const categorizeItems = async (memberships: MembershipHistory[], jobs: StudentEm
       : getExperienceEndDate(b) - getExperienceEndDate(a);
   });
 
-  groupedMembershipHistory.experiences = jobs;
+  //groupedMembershipHistory.experiences = jobs;
 
   let GroupByTitle = Object.entries(Object.groupBy(jobs, (job) => job.Job_Title)).map(
     ([title, job]) => ({
@@ -115,6 +131,34 @@ const categorizeItems = async (memberships: MembershipHistory[], jobs: StudentEm
     return getLatestEndDate(b)! - getLatestEndDate(a)!;
   });
 
+  console.log(GroupByTitle);
+
+  /* Delete
+  let test = [];
+  for (let i = 0; i < GroupByTitle.length; i++) {
+    let tempJob = GroupByTitle?.[i].job;
+    let numJobs = tempJob!.length;
+    for (let j = 0; j < numJobs; j++) {
+      let tempVal = GroupByTitle[i];
+      let value = tempVal!.job?.[j];
+      if (j > 0) {
+        value!.Job_Title = '';
+      }
+      if (value) {
+        test.push(value);
+      }
+    }
+  }
+
+  for (let i = 0; i < test.length; i++) {
+    jobs[i] = test[i];
+  }
+    */
+
+  //console.log('jobs');
+  //console.log(jobs);
+  //console.log('groupedMembershipHistory');
+  //console.log(groupedMembershipHistory);
   return groupedMembershipHistory;
 };
 

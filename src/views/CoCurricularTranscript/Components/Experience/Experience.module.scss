@@ -29,15 +29,16 @@
     grid-row: 1;
     text-align: left;
   }
+
+  @media print {
+    .experience_transcript_activities {
+      grid-row-gap: 20px;
+    }
+  }
 }
 
 .empty_title {
   position: relative;
-  top: -20px;
-}
-
-@media print {
-  .experience_transcript_activities {
-    grid-row-gap: 20px;
-  }
+  grid-row-gap: 5px;
+  top: -15px;
 }

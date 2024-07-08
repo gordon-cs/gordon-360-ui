@@ -1,16 +1,13 @@
 import { format } from 'date-fns';
 import { StudentEmployment } from 'services/transcript';
 import styles from './Experience.module.css';
-import { Dispatch, SetStateAction } from 'react';
 
 type Props = {
   Experience: StudentEmployment;
-  previousTitles: string[];
-  setPreviousTitles: Dispatch<SetStateAction<string[]>>;
 };
 
-const Experience = ({ Experience, previousTitles, setPreviousTitles }: Props) => {
-  const jobTitles = newJobTitle(Experience, previousTitles, setPreviousTitles);
+const Experience = ({ Experience }: Props) => {
+  const jobTitles = newJobTitle(Experience);
   return (
     <div
       className={
@@ -45,19 +42,11 @@ const formatDuration = ({ Job_Start_Date, Job_End_Date }: StudentEmployment) => 
   }
 };
 
-const newJobTitle = (
-  { Job_Department_Name, Job_Title }: StudentEmployment,
-  previousTitles: string[],
-  setPreviousTitles: Dispatch<SetStateAction<string[]>>,
-) => {
-  if (!previousTitles.includes(Job_Title)) {
-    previousTitles.push(Job_Title);
-    setPreviousTitles(previousTitles);
-    return Job_Department_Name === Job_Title.split(':')[0]
-      ? Job_Title
-      : `${Job_Department_Name}, ${Job_Title}`;
+const newJobTitle = ({ Job_Department_Name, Job_Title }: StudentEmployment) => {
+  if (Job_Title === '') {
+    return '';
   }
-  return '';
+  return Job_Title === '' ? Job_Title : `${Job_Department_Name}, ${Job_Title}`;
 };
 
 export default Experience;
