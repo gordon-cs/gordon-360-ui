@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
 import { getBracketInfo } from 'services/recim/series';
 import { useWindowSize } from 'hooks';
-
-// import { standardDate } from '../Helpers';
-// import { IRenderSeedProps } from 'react-brackets';
-// import { Link } from 'react-router-dom';
+import { standardDate } from '../Helpers';
+import { useNavigate } from 'react-router-dom';
 import styles from './RecIMBracket.module.css';
 // import GordonLoader from 'components/Loader';
 
@@ -18,7 +16,7 @@ import {
 import GordonLoader from 'components/Loader';
 //import './styles.css';
 
-export const SingleElimination = ({ data }) => {
+export const SingleElimination = ({ data, navigate }) => {
   const [width, height] = useWindowSize();
   const finalWidth = Math.max(width - 50, 500);
   const finalHeight = Math.max(height - 100, 500);
@@ -40,8 +38,14 @@ export const SingleElimination = ({ data }) => {
           {children}
         </SVGViewer>
       )}
-      onMatchClick={(match) => console.log(match)}
-      onPartyClick={(match) => console.log(match)}
+      onMatchClick={(match) => {
+        console.log(match);
+        if (match.match.id > 0) navigate(`match/${match.match.id}`);
+      }}
+      onPartyClick={(team) => {
+        console.log(team);
+        navigate(`team/${team.id}`);
+      }}
     />
   );
 };
@@ -68,12 +72,17 @@ const Theme = createTheme({
 });
 
 const RecIMBracket = ({ series }) => {
+  const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     const load = async () => {
       setLoading(true);
-      setData(await getBracketInfo(series.ID));
+      let bracket = await getBracketInfo(series.ID);
+      bracket.forEach((b) => {
+        b.startTime = b.id > 0 ? standardDate(b.startTime, true, true) : '';
+      });
+      setData(bracket);
       setLoading(false);
     };
     load();
@@ -82,11 +91,6 @@ const RecIMBracket = ({ series }) => {
 
   if (loading) return <GordonLoader />;
 
-  return (
-    <>
-      {/* <SingleElimination data={simpleSmallBracket} /> */}
-      <SingleElimination data={data} />
-    </>
-  );
+  return <SingleElimination data={data} navigate={navigate} />;
 };
 export default RecIMBracket;
