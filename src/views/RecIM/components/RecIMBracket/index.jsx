@@ -27,7 +27,6 @@ export const SingleElimination = ({ data, navigate, width }) => {
       svgWrapper={({ children, ...props }) => (
         <SVGViewer
           width={width}
-          // height={finalHeight}
           background="rgb(11, 13, 19)"
           SVGBackground="rgb(11, 13, 19)"
           {...props}
@@ -36,11 +35,9 @@ export const SingleElimination = ({ data, navigate, width }) => {
         </SVGViewer>
       )}
       onMatchClick={(match) => {
-        console.log(match);
         if (match.match.id > 0) navigate(`match/${match.match.id}`);
       }}
       onPartyClick={(team) => {
-        console.log(team);
         navigate(`team/${team.id}`);
       }}
     />
@@ -96,8 +93,6 @@ const RecIMBracket = ({ series }) => {
     if (width < windowBreakWidths.breakSM) setComponentWidth(width - 48);
     else setComponentWidth(Math.floor((width * 6.5) / 12) - 48);
   }, [width]);
-
-  console.log(componentWidth);
 
   if (loading) return <GordonLoader />;
 
