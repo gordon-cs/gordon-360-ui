@@ -124,9 +124,9 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
           className={styles.tab}
           icon={icon}
           label={name}
-          component={forwardRef<any, Omit<RouterLinkProps, 'to'>>((props, ref) => (
-            <NavLink ref={ref} to={route} {...props} />
-          ))}
+          component={NavLink}
+          to={route}
+          tabIndex={0}
         />
       );
     }
@@ -185,18 +185,18 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
             className={styles.tab}
             icon={<EventIcon />}
             label="Events"
-            component={forwardRef<any, Omit<RouterLinkProps, 'to'>>((props, ref) => (
-              <NavLink ref={ref} to="/events" {...props} />
-            ))}
+            component={NavLink}
+            to="/events"
+            tabIndex={0}
           />
           {requiresAuthTab('People', <PeopleIcon />)}
           <Tab
             className={styles.tab}
             icon={<LinkIcon />}
             label="Links"
-            component={forwardRef<any, Omit<RouterLinkProps, 'to'>>((props, ref) => (
-              <NavLink ref={ref} to="/links" {...props} />
-            ))}
+            component={NavLink}
+            to="/links"
+            tabIndex={0}
           />
           {requiresAuthTab('Rec-IM', <RecIMIcon />)}
         </Tabs>
