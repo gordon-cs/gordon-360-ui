@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Button,
   TextField,
@@ -9,6 +9,7 @@ import {
   CardHeader,
 } from '@mui/material';
 import membershipService, { Participation } from 'services/membership';
+import { createPoster } from 'services/poster';
 import CropPoster from '../CropPoster';
 import PosterCheck from '../ApprovedDialogue';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
@@ -17,6 +18,7 @@ import involvementService from 'services/involvements';
 import sessionService from 'services/session';
 import { useLocation } from 'react-router-dom';
 import styles from './UploadForm.module.scss';
+import { create } from 'lodash';
 
 const UploadForm = ({ onClose, onCropSubmit }) => {
   const [selectedClub, setSelectedClub] = useState('');
@@ -107,9 +109,25 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
     setSelectedClub(event.target.value);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Handle form submission logic here
+  const posterInfo = useMemo(() => {
+    return {
+      ACT_CDE: selectedClub,
+      Title: title,
+      Description: description,
+      ImagePath: croppedImage,
+      VisibleDate: startTime,
+      ExpirationDate: endTime,
+      UploaderADUSername: profile.AD_Username,
+      Status: 1,
+    };
+  });
+
+  const handleSubmit = async () => {
+    console.log(posterInfo);
+    //event.preventDefault();
+    const createdPoster = await createPoster(posterInfo);
+    console.log('Poster created');
+    //onClose();
   };
 
   const getTextFieldSX = (color) => ({
@@ -158,7 +176,7 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
         <Grid item xs={12} className={styles.gridItem}>
           Start Time
           <TextField
-            type="date"
+            type="datetime-local"
             variant="outlined"
             fullWidth
             required
@@ -180,7 +198,7 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
         <Grid item xs={12} className={styles.gridItem}>
           End Time
           <TextField
-            type="date"
+            type="datetime-local"
             variant="outlined"
             fullWidth
             required
