@@ -133,7 +133,6 @@ const categorizeItems = async (memberships: MembershipHistory[], jobs: StudentEm
 
   console.log(GroupByTitle);
 
-  /* Delete
   let test = [];
   for (let i = 0; i < GroupByTitle.length; i++) {
     let tempJob = GroupByTitle?.[i].job;
@@ -153,7 +152,6 @@ const categorizeItems = async (memberships: MembershipHistory[], jobs: StudentEm
   for (let i = 0; i < test.length; i++) {
     jobs[i] = test[i];
   }
-    */
 
   //console.log('jobs');
   //console.log(jobs);
