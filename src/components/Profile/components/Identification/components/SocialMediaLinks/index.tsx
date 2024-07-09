@@ -2,33 +2,33 @@ import { Button, Dialog, Grid, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useState } from 'react';
-import { Profile as profileType } from 'services/user';
-import { platforms, socialMediaInfo } from 'services/socialMedia';
+import { Profile } from 'services/user';
+import { Platform, platforms, socialMediaInfo } from 'services/socialMedia';
 import { severityType } from 'components/Snackbar';
 // @TODO CSSMODULES - outside directory
 import styles from '../../Identification.module.css';
 import LinksDialog from './components/LinksDialog/index';
 
 type Props = {
-  profile: profileType;
+  profile: Profile;
   createSnackbar: (message: string, severity: severityType) => void;
   myProf: boolean;
 };
 
 const SocialMediaLinks = ({ profile, createSnackbar, myProf }: Props) => {
   const [socialLinksOpen, setSocialLinksOpen] = useState(false);
-  const [links, setLinks] = useState(
-    platforms.reduce((links, platform) => ({ ...links, [platform]: profile[platform] || '' }), {}),
+  const [links, setLinks] = useState<Record<Platform, string>>(
+    platforms.reduce(
+      (links, platform) => ({ ...links, [platform]: profile[platform] || '' }),
+      {} as Record<Platform, string>,
+    ),
   );
   const isOnline = useNetworkStatus();
-  const numberOfLinks = platforms.reduce(
-    (num, platform) => (links[platform as keyof typeof links] ? num + 1 : num),
-    0,
-  );
+  const numberOfLinks = platforms.reduce((num, platform) => (links[platform] ? num + 1 : num), 0);
 
   return (
     <>
-      {(myProf || platforms.some((platform) => links[platform as keyof typeof links])) && (
+      {(myProf || platforms.some((platform) => links[platform])) && (
         <Grid item className={styles.identification_card_content_card_container_info_social_media}>
           <Grid
             container
@@ -36,11 +36,11 @@ const SocialMediaLinks = ({ profile, createSnackbar, myProf }: Props) => {
             alignItems="center"
           >
             {platforms.map((platform) => {
-              if (links[platform as keyof typeof links]) {
+              if (links[platform]) {
                 return (
                   <Grid item key={platform}>
                     <a
-                      href={links[platform as keyof typeof links]}
+                      href={links[platform]}
                       className={`gc360_text_link ${styles.gc360_my_profile_icon}`}
                       target="_blank"
                       rel="noopener noreferrer"

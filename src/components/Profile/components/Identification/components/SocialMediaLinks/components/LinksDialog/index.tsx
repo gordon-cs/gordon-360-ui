@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { severityType } from 'components/Snackbar';
 import { platforms, Platform, socialMediaInfo } from 'services/socialMedia';
 import user from 'services/user';
@@ -14,29 +14,26 @@ import { useUserActions } from 'hooks';
 import styles from './LinksDialog.module.css';
 
 type Props = {
-  links: {};
+  links: Record<Platform, string>;
   createSnackbar: (message: string, severity: severityType) => void;
   onClose: () => void;
-  setLinks: ({}) => void;
+  setLinks: Dispatch<SetStateAction<Record<Platform, string>>>;
 };
 
 const LinksDialog = ({ links, createSnackbar, onClose, setLinks }: Props) => {
   const [formErrors, setFormErrors] = useState<Platform[]>([]);
   const [updatedLinks, setUpdatedLinks] = useState(links);
   const [failedUpdates, setFailedUpdates] = useState<Platform[]>([]);
-  const hasUpdatedLink = platforms.some(
-    (platform) =>
-      updatedLinks[platform as keyof typeof updatedLinks] !== links[platform as keyof typeof links],
-  );
+  const hasUpdatedLink = platforms.some((platform) => updatedLinks[platform] !== links[platform]);
 
   const { updateProfile } = useUserActions();
 
-  const handleLinkUpdated = (platform: keyof typeof socialMediaInfo, value: string) => {
+  const handleLinkUpdated = (platform: Platform, value: string) => {
     setUpdatedLinks((prev) => ({ ...prev, [platform]: value }));
     validateField(platform, value);
   };
 
-  const validateField = (platform: keyof typeof socialMediaInfo, value: string) => {
+  const validateField = (platform: Platform, value: string) => {
     const { prefix, prefix2 } = socialMediaInfo[platform];
     const isValid =
       value === '' || value.indexOf(prefix) === 0 || (prefix2 && value.indexOf(prefix2) === 0);
@@ -51,17 +48,10 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }: Props) => {
   const handleSubmit = async () => {
     const responses = await Promise.all(
       platforms
-        .filter(
-          (platform) =>
-            updatedLinks[platform as keyof typeof updatedLinks] !==
-            links[platform as keyof typeof links],
-        ) // Remove unchanged links
+        .filter((platform) => updatedLinks[platform] !== links[platform]) // Remove unchanged links
         .map(async (platform) => ({
           platform: platform,
-          value: await user.updateSocialLink(
-            platform,
-            updatedLinks[platform as keyof typeof updatedLinks],
-          ),
+          value: await user.updateSocialLink(platform, updatedLinks[platform]),
         })),
     );
 
@@ -69,9 +59,9 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }: Props) => {
       if (response.value === undefined) {
         setFailedUpdates((prevState) => [...prevState, response.platform]);
       } else {
-        setLinks((prevLinks: {}) => ({
+        setLinks((prevLinks: Record<Platform, string>) => ({
           ...prevLinks,
-          [response.platform]: updatedLinks[response.platform as keyof typeof updatedLinks],
+          [response.platform]: updatedLinks[response.platform],
         }));
         setFailedUpdates((prevState) => prevState.filter((link) => link !== response.platform));
       }
@@ -107,12 +97,11 @@ const LinksDialog = ({ links, createSnackbar, onClose, setLinks }: Props) => {
               label={`${platform} ${
                 failedUpdates.includes(platform)
                   ? '(failed)'
-                  : updatedLinks[platform as keyof typeof updatedLinks] !==
-                      links[platform as keyof typeof links]
+                  : updatedLinks[platform] !== links[platform]
                     ? '(updated)'
                     : 'link'
               }`}
-              value={updatedLinks[platform as keyof typeof updatedLinks]}
+              value={updatedLinks[platform]}
               onChange={(event) => handleLinkUpdated(platform, event.target.value)}
               error={formErrors.includes(platform)}
               helperText={formErrors.includes(platform) ? `Invalid ${platform} link` : null}
