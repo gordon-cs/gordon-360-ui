@@ -205,7 +205,7 @@ const getHighlightedDetails = (person: SearchResult, inputPartsRegex: RegExp) =>
     // If having nickname that is unique, display that nickname
     (person.NickName && person.NickName !== person.FirstName && person.NickName !== usernameParts[0]
       ? ` (${person.NickName})`
-      : 'Private as requested') +
+      : '') +
     ' ' +
     person.LastName +
     // If having maiden name that is unique, display that maiden name
