@@ -155,7 +155,7 @@ const SpreadsheetUploader = ({
         dropZone
       )}
       <GordonSnackbar
-        open={error ? true : false}
+        open={Boolean(error)}
         text={error}
         severity={'error'}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
