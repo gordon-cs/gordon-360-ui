@@ -153,7 +153,7 @@ const AlumniUpdateForm = ({
       .then(setStatesAndProv);
     addressService
       .getCountries()
-      .then(map((country) => country.Name?.isprivate))
+      .then(map((country) => country.Name))
       .then(setCountries);
   }, []);
 

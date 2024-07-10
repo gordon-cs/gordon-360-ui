@@ -6,26 +6,22 @@ import { Participation } from './membership';
 import { Class } from './peopleSearch';
 import { Override } from './utils';
 
-type CLWCredits = {
-  current: number;
-  required: number;
-};
-
 type ProfileStringItem = {
   value: string;
   isPrivate: boolean;
 };
 
-type ProfileNumberItem = {
-  value: number;
-  isPrivate: boolean;
-};
+// **** Reserved for future use ****
+// type ProfileNumberItem = {
+//   value: number;
+//   isPrivate: boolean;
+// };
 
 enum OnOffCampusStatus {
   'Off Campus' = 'O',
   Away = 'A',
   Remote = 'D',
-  'Private as requested.' = 'P',
+  'Private' = 'P',
   'On Campus' = '',
 }
 
@@ -35,7 +31,7 @@ const onOffCampusDescriptions = {
   O: 'Off Campus' as OnOffCampusDescription,
   A: 'Away' as OnOffCampusDescription,
   D: 'Remote' as OnOffCampusDescription,
-  P: 'Private as requested.' as OnOffCampusDescription,
+  P: 'Private' as OnOffCampusDescription,
   '': 'On Campus' as OnOffCampusDescription,
 };
 
