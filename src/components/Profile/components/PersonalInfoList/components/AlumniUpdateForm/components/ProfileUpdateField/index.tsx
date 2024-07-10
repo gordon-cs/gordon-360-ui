@@ -13,7 +13,7 @@ import { ChangeEvent, ReactNode } from 'react';
 import styles from './ProfileUpdateField.module.css';
 
 type defaultProps = {
-  label: ReactNode;
+  label: string;
   name: string;
   value: any;
   helperText?: ReactNode;
@@ -21,17 +21,16 @@ type defaultProps = {
   error?: boolean;
 };
 
-type Props = defaultProps &
+export type ProfileUpdateFieldProps = defaultProps &
   (
     | {
         type: 'text' | 'checkbox';
-        onChange: (
-          event: SelectChangeEvent<string> & ChangeEvent<HTMLInputElement>,
-          child?: ReactNode,
-        ) => void;
+        menuItems?: undefined;
+        onChange: (event: ChangeEvent<HTMLInputElement>, child?: ReactNode) => void;
       }
     | {
         type: 'select';
+        menuItems: string[];
         onChange: (event: SelectChangeEvent<string>, child?: ReactNode) => void;
       }
   );
@@ -45,7 +44,7 @@ const ProfileUpdateField = ({
   error,
   helperText,
   menuItems,
-}: Props) => {
+}: ProfileUpdateFieldProps) => {
   let field;
   // eslint-disable-next-line default-case
   switch (type) {

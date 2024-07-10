@@ -368,7 +368,7 @@ function updateSocialLink(platform: Platform, link: string) {
 
 type ProfileFieldUpdate = {
   Field: string;
-  Value: string;
+  Value: string | boolean;
   Label: string;
 };
 
