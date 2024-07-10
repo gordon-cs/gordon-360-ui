@@ -19,7 +19,7 @@ const GordonNavAvatar = ({ onLinkClick }: Props) => {
     async function loadAvatar() {
       if (profile) {
         setName(profile.fullName);
-        setEmail(profile.Email);
+        setEmail(profile.Email?.value);
         setImage(images.pref || images.def);
       } else {
         setName('Guest');
