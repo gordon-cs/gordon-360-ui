@@ -16,6 +16,7 @@ import {
   Select,
   TextField,
 } from '@mui/material';
+import { HashLink } from 'react-router-hash-link';
 import AddIcon from '@mui/icons-material/Add';
 import EventIcon from '@mui/icons-material/Event';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -149,17 +150,45 @@ const Events = () => {
 
   if (timeFilter != '') {
     filterReminder = (
-      <div align="center">
-        Your search is limited to {timeFilter}. Check out the top of the page if you want to change
-        your filters.
-      </div>
+      <>
+        <div align="center">
+          Your search is limited to {timeFilter}. Check out the top of the page if you want to
+          change your filters.
+        </div>
+        <div align="center">
+          <Button
+            variant="contained"
+            color="secondary"
+            component={HashLink}
+            to="#top"
+            smooth
+            id="bottom"
+          >
+            Jump to Top
+          </Button>
+        </div>
+      </>
     );
   } else {
     filterReminder = (
-      <div align="center">
-        You have reached the end of Gordon's events. Check out the top of the page if you want to
-        add filters.
-      </div>
+      <>
+        <div align="center">
+          You have reached the end of Gordon's events. Check out the top of the page if you want to
+          add filters.
+        </div>
+        <div align="center">
+          <Button
+            variant="contained"
+            color="secondary"
+            component={HashLink}
+            to="#top"
+            smooth
+            id="bottom"
+          >
+            Jump to Top
+          </Button>
+        </div>
+      </>
     );
   }
 
@@ -167,7 +196,7 @@ const Events = () => {
     return (
       <Grid container justifyContent="center" spacing={6}>
         <Grid item xs={12} lg={10} xl={8}>
-          <CardHeader title={searchPageTitle} className="gc360_header" />
+          <CardHeader title={searchPageTitle} className="gc360_header" id="top" />
           <Card style={{ padding: '0 3vw' }}>
             <CardContent>
               {/* Search Bar and Filters */}
@@ -248,7 +277,7 @@ const Events = () => {
                           }
                           value={filters}
                           renderInput={(param) => (
-                            <TextField {...param} variant="filled" label="Filters" />
+                            <TextField {...param} variant="filled" label="Event Type" />
                           )}
                         />
                       </Grid>
@@ -291,6 +320,18 @@ const Events = () => {
                       </Grid>
                     </Grid>
                   </Collapse>
+                  <Grid item container marginTop={2} justifyContent="center" alignItems="center">
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      component={HashLink}
+                      to="#bottom"
+                      smooth
+                      id="top"
+                    >
+                      Jump to Bottom
+                    </Button>
+                  </Grid>
                 </Grid>
               </Grid>
             </CardContent>
@@ -302,7 +343,7 @@ const Events = () => {
           <Grid item xs={12}>
             {content}
           </Grid>
-          <CardHeader item xs={12} className="gc360_header" title={filterReminder} />
+          <CardHeader item xs={12} className="gc360_header" title={filterReminder} id="bottom" />
         </Grid>
       </Grid>
     );
@@ -310,7 +351,7 @@ const Events = () => {
     return (
       <Grid container justifyContent="center" spacing={6}>
         <Grid item xs={12} lg={10} xl={8}>
-          <CardHeader title={searchPageTitle} className="gc360_header" />
+          <CardHeader title={searchPageTitle} className="gc360_header" id="top" />
           <Card style={{ padding: '0 3vw' }}>
             <CardContent>
               {/* Search Bar and Filters */}
@@ -408,7 +449,7 @@ const Events = () => {
                           ))
                         }
                         renderInput={(param) => (
-                          <TextField {...param} variant="filled" label="Filters" />
+                          <TextField {...param} variant="filled" label="Event Type" />
                         )}
                       />
                     </Grid>
@@ -439,6 +480,18 @@ const Events = () => {
                     </Grid>
                   </Grid>
                 </Collapse>
+                <Grid item container marginTop={2} justifyContent="center" alignItems="center">
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    component={HashLink}
+                    to="#bottom"
+                    smooth
+                    id="top"
+                  >
+                    Jump to Bottom
+                  </Button>
+                </Grid>
               </Grid>
             </CardContent>
           </Card>
