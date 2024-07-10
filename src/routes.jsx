@@ -12,6 +12,7 @@ import Home from './views/Home';
 import IDUploader from './views/IDUploader';
 import InvolvementProfile from './views/InvolvementProfile';
 import InvolvementsAll from './views/InvolvementsAll';
+import Links from './views/Links';
 import MyProfile from './views/MyProfile';
 import News from './views/News';
 import Page404 from './views/Page404';
@@ -19,7 +20,6 @@ import PeopleSearch from './views/PeopleSearch';
 import ProfileNotFound from './views/ProfileNotFound';
 import PublicProfile from './views/PublicProfile';
 import Timesheets from './views/Timesheets';
-import WellnessCheck from './views/WellnessCheck';
 import RecIM from './views/RecIM';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
@@ -33,11 +33,6 @@ const routes = [
     name: 'About',
     path: '/about',
     element: <About />,
-  },
-  {
-    name: 'Wellness',
-    path: '/wellness',
-    element: <WellnessCheck />,
   },
   {
     name: 'Apartment Application',
@@ -128,6 +123,11 @@ const routes = [
     name: 'News',
     path: '/news',
     element: <News />,
+  },
+  {
+    name: 'Links',
+    path: '/links',
+    element: <Links />,
   },
   {
     name: 'Rec-IM',

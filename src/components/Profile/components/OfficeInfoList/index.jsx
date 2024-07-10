@@ -1,14 +1,11 @@
-import { useState, Fragment, useEffect } from 'react';
-import { Card, CardContent, CardHeader, Grid, List, Typography, IconButton } from '@mui/material';
+import { useState } from 'react';
+import { Card, CardContent, CardHeader, Grid, List, Typography } from '@mui/material';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import styles from './OfficeInfoList.module.css';
 import UpdateOffice from './UpdateOfficeLocationDialog';
 import UpdateOfficeHours from './UpdateOfficeHoursDialog';
 import UpdateMail from './UpdateMailDestinationDialog';
 import GordonTooltip from 'components/GordonTooltip';
-import user from 'services/user';
-import EditIcon from '@mui/icons-material/Edit';
-import { SignalWifiStatusbarConnectedNoInternet4TwoTone } from '@mui/icons-material';
 
 const OfficeInfoList = ({
   myProf,
@@ -32,7 +29,14 @@ const OfficeInfoList = ({
   }
 
   // Only display if there is some info to show
-  if (!myProf && !BuildingDescription && !OnCampusRoom && !OnCampusPhone && !office_hours) {
+  if (
+    !myProf &&
+    !BuildingDescription &&
+    !OnCampusRoom &&
+    !OnCampusPhone &&
+    !office_hours &&
+    !Mail_Location
+  ) {
     return null;
   }
 
@@ -77,7 +81,7 @@ const OfficeInfoList = ({
         <Grid container spacing={0} alignItems="center">
           <Grid item>
             {BuildingDescription || OnCampusRoom
-              ? (BuildingDescription, OnCampusRoom)
+              ? `${BuildingDescription}, ${OnCampusRoom}`
               : 'Add your office location here'}
           </Grid>
           <Grid item>
@@ -99,11 +103,9 @@ const OfficeInfoList = ({
             <Typography>
               {profMailLocation ? profMailLocation : 'Add your mail location here'}
               {Mail_Description && (
-                <GordonTooltip
-                  content={Mail_Description}
-                  enterTouchDelay={50}
-                  leaveTouchDelay={2000}
-                />
+                <GordonTooltip enterTouchDelay={50} leaveTouchDelay={2000}>
+                  {Mail_Description}
+                </GordonTooltip>
               )}
             </Typography>
           </Grid>

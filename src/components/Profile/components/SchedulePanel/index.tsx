@@ -23,12 +23,15 @@ type Props = {
   myProf: boolean;
 };
 
+const scheduleOpenKey = 'profile.schedule.isOpen';
 const GordonSchedulePanel = ({ profile, myProf }: Props) => {
   const [loading, setLoading] = useState(true);
   const [allSchedules, setAllSchedules] = useState<Schedule[]>([]);
   const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<CourseEvent | null>(null);
-
+  const [isScheduleOpen, setIsScheduleOpen] = useState<boolean>(
+    localStorage.getItem(scheduleOpenKey) !== 'false',
+  );
   useEffect(() => {
     setLoading(true);
 
@@ -43,67 +46,86 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
         // Otherwise, use the most recent session
         allSessionSchedules[0];
       setSelectedSchedule(defaultSchedule);
-
       setLoading(false);
     });
   }, [profile.AD_Username]);
+  const toggleIsScheduleOpen = () => {
+    setIsScheduleOpen((wasOpen) => {
+      localStorage.setItem(scheduleOpenKey, String(!wasOpen));
+      return !wasOpen;
+    });
+  };
 
   return loading ? (
     <GordonLoader />
   ) : (
     <>
-      <Accordion TransitionProps={{ unmountOnExit: true }}>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon className={styles.expandIcon} />}
-          aria-controls="schedule"
-          id="schedule-header"
-          className={`gc360_header ${styles.accordionHeader}`}
-        >
-          <CardHeader title={'Schedule'} />
-        </AccordionSummary>
-        <AccordionDetails>
-          <Grid container justifyContent="center" spacing={4}>
-            <Grid item xs={12} lg={3}>
-              <TextField
-                label="Term"
-                id="schedule-session"
-                value={selectedSchedule?.session.SessionCode ?? ''}
-                onChange={(e) =>
-                  setSelectedSchedule(
-                    allSchedules.find((s) => s.session.SessionCode === e.target.value) ?? null,
-                  )
-                }
-                select
-              >
-                {allSchedules.map(
-                  ({ session: { SessionDescription: description, SessionCode: code } }) => (
-                    <MenuItem value={code} key={code}>
-                      {description}
-                    </MenuItem>
-                  ),
-                )}
-              </TextField>
-            </Grid>
-            <Grid lg={7}></Grid>
-            {selectedSchedule && (
-              <>
-                <Grid item className={styles.addCalendarInfoText}>
-                  {myProf && (
-                    <Typography className={styles.addCalendarInfoText}>
-                      Click on Course to add Schedule to Personal Calendar
-                    </Typography>
-                  )}
-                </Grid>
-                <Grid item xs={12} lg={10}>
-                  <GordonScheduleCalendar
-                    schedule={selectedSchedule}
-                    onSelectEvent={setSelectedCourse}
-                  />
-                </Grid>
-              </>
-            )}
+      <Accordion
+        expanded={isScheduleOpen}
+        onChange={toggleIsScheduleOpen}
+        TransitionProps={{ unmountOnExit: true }}
+      >
+        {allSchedules.length > 0 ? (
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon className={styles.expandIcon} />}
+            aria-controls="schedule"
+            id="schedule-header"
+            className={`gc360_header ${styles.accordionHeader}`}
+          >
+          <Grid container className={styles.header}>
+            <CardHeader title={'Course Schedule'} />
           </Grid>
-        </AccordionDetails>
+          </AccordionSummary>
+        ) : (
+          <div></div>
+        )}
+        {allSchedules.length > 0 ? (
+          <AccordionDetails>
+            <Grid container justifyContent="center" spacing={4}>
+              <Grid item xs={12} lg={3}>
+                <TextField
+                  label="Term"
+                  id="schedule-session"
+                  value={selectedSchedule?.session.SessionCode ?? ''}
+                  onChange={(e) =>
+                    setSelectedSchedule(
+                      allSchedules.find((s) => s.session.SessionCode === e.target.value) ?? null,
+                    )
+                  }
+                  select
+                >
+                  {allSchedules.map(
+                    ({ session: { SessionDescription: description, SessionCode: code } }) => (
+                      <MenuItem value={code} key={code}>
+                        {description}
+                      </MenuItem>
+                    ),
+                  )}
+                </TextField>
+              </Grid>
+              <Grid lg={7}></Grid>
+              {selectedSchedule && (
+                <>
+                  <Grid item className={styles.addCalendarInfoText}>
+                    {myProf && (
+                      <Typography className={styles.addCalendarInfoText}>
+                        Click on Course to add Schedule to Personal Calendar
+                      </Typography>
+                    )}
+                  </Grid>
+                  <Grid item xs={12} lg={10}>
+                    <GordonScheduleCalendar
+                      schedule={selectedSchedule}
+                      onSelectEvent={setSelectedCourse}
+                    />
+                  </Grid>
+                </>
+              )}
+            </Grid>
+          </AccordionDetails>
+        ) : (
+          <div></div>
+        )}
       </Accordion>
       {myProf && selectedCourse && selectedSchedule && (
         <ScheduleDialog

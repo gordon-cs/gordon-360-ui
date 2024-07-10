@@ -1,4 +1,4 @@
-import { differenceInCalendarMonths, format, parse, setMonth } from 'date-fns';
+import { differenceInCalendarMonths, format, parse } from 'date-fns';
 import http from './http';
 import userService, { MembershipHistory } from './user';
 

@@ -17,9 +17,21 @@ const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
   const dayEnd = new Date();
   dayEnd.setHours(22, 0, 0, 0);
 
+  const courseFormat = schedule.courses.map((course) => {
+    let tempTitle = `${course.title.replaceAll(' ', '')}`;
+    let title;
+    course.location.includes('ASY')
+      ? (title = tempTitle + ' | ASYNC')
+      : course.location.includes('null')
+        ? (title = tempTitle)
+        : (title = tempTitle + `\n${course.location}`);
+    return { ...course, title };
+  });
+
   return (
     <Calendar
-      events={schedule.courses}
+      style={{ whiteSpace: 'pre-wrap' }}
+      events={courseFormat}
       localizer={localizer}
       min={dayStart}
       max={dayEnd}
@@ -31,6 +43,15 @@ const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
         dayHeaderFormat: () => schedule.session.SessionDescription,
       }}
       onSelectEvent={onSelectEvent}
+      onKeyPressEvent={(selectedEvent, keyPressEvent) => {
+        if (
+          'key' in keyPressEvent &&
+          typeof keyPressEvent.key === 'string' &&
+          keyPressEvent.key === 'Enter'
+        ) {
+          onSelectEvent(selectedEvent);
+        }
+      }}
     />
   );
 };

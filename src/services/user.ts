@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon';
+import { isToday } from 'date-fns';
 import { Platform, platforms, socialMediaInfo } from 'services/socialMedia';
 import CliftonStrengthsService, { CliftonStrengths } from './cliftonStrengths';
 import http from './http';
@@ -177,7 +177,7 @@ type MealPlanComponent = {
 export type ProfileImages = { def: string; pref?: string };
 
 export type OfficeLocationQuery = {
-  BuildingDescription: string;
+  BuildingCode: string;
   RoomNumber: string;
 };
 
@@ -221,18 +221,6 @@ const postIDImage = (imageDataURI: string): Promise<void> =>
 const postImage = (imageDataURI: string): Promise<void> =>
   http.postImage('profiles/image', imageDataURI);
 
-// TODO: get chapel credits from useUser, making this obsolete.
-const getChapelCredits = async (): Promise<CLWCredits | null> => {
-  const profile = await getProfile();
-
-  return isStudent(profile)
-    ? {
-        current: profile.ChapelAttended || 0,
-        required: profile.ChapelRequired,
-      }
-    : null;
-};
-
 const getDiningInfo = (): Promise<DiningInfo | string> => http.get('dining');
 
 const getProfile = (username: string = ''): Promise<UnformattedProfileInfo> =>
@@ -241,16 +229,14 @@ const getProfile = (username: string = ''): Promise<UnformattedProfileInfo> =>
 const getAdvisors = (username: string): Promise<StudentAdvisorInfo[]> =>
   http.get(`profiles/Advisors/${username}/`);
 
-const getMailboxCombination = () => http.get('profiles/mailbox-combination/');
-
-const getBuildings = (): Promise<string[]> => http.get(`advancedsearch/buildings`);
+const getMailboxInformation = () => http.get('profiles/mailbox-information/');
 
 const getMailStops = (): Promise<string[]> => http.get(`profiles/mailstops`);
 
 const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_number/${value}/`);
 
 const setPlannedGraduationYear = (value: number) => {
-  const body = { ['plannedGradYear']: value };
+  const body = { plannedGradYear: value };
   http.put(`profiles/plannedGradYear`, body);
 };
 
@@ -270,12 +256,16 @@ const setHomePhonePrivacy = (makePrivate: boolean) =>
 const setImagePrivacy = (makePrivate: boolean) =>
   http.put('profiles/image_privacy/' + (makePrivate ? 'N' : 'Y')); // 'Y' = show image, 'N' = don't show image
 
-const getBirthdate = async (): Promise<DateTime> =>
-  DateTime.fromISO(await http.get('profiles/birthdate'));
+const getBirthdate = (): Promise<Date> =>
+  http.get<string>('profiles/birthdate').then((birthdate) => new Date(birthdate));
 
-const isBirthdayToday = async () => {
-  const birthday = await getBirthdate();
-  return birthday?.month === DateTime.now().month && birthday?.day === DateTime.now().day;
+const isBirthdayToday = (): Promise<boolean> => {
+  return getBirthdate().then(
+    (birthdate) =>
+      birthdate.getMonth() == new Date().getMonth() &&
+      birthdate.getDate() == new Date().getDate() &&
+      birthdate.getFullYear() > 1800, // Birth in 1800 means no birthday in database
+  );
 };
 
 const getProfileInfo = async (username: string = ''): Promise<Profile | undefined> => {
@@ -368,14 +358,12 @@ const userService = {
   updateOfficeHours,
   setImagePrivacy,
   getMailStops,
-  getChapelCredits,
   getImage,
   getDiningInfo,
   getProfileInfo,
   getAdvisors,
-  getMailboxCombination,
+  getMailboxInformation,
   getMembershipHistory,
-  getBuildings,
   resetImage,
   postImage,
   postIDImage,

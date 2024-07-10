@@ -147,6 +147,16 @@ const Match = () => {
     }
   };
 
+  const getWinLoss = (teamID) => {
+    if (match && teamID) {
+      let record = match.Series.TeamStanding.find((ts) => ts.TeamID === teamID);
+      return {
+        WinCount: record?.WinCount ?? 0,
+        LossCount: record?.LossCount ?? 0,
+      };
+    }
+    return;
+  };
   if (loading && !profile) {
     return <GordonLoader />;
   } else if (!profile) {
@@ -203,8 +213,8 @@ const Match = () => {
                   </Typography>
                 </LinkRouter>
                 <Typography className={styles.subtitle}>
-                  {match?.Team[0]?.TeamRecord.WinCount ?? 0}W :{' '}
-                  {match?.Team[0]?.TeamRecord.LossCount ?? 0}L
+                  {getWinLoss(match?.Team[0]?.ID)?.WinCount}W :{' '}
+                  {getWinLoss(match?.Team[0]?.ID)?.LossCount}L
                 </Typography>
                 {user?.IsAdmin && (
                   <i className={styles.subtitle}>
@@ -271,8 +281,8 @@ const Match = () => {
                   </Typography>
                 </LinkRouter>
                 <Typography className={styles.subtitle}>
-                  {match?.Team[1]?.TeamRecord.WinCount ?? 0}W :{' '}
-                  {match?.Team[1]?.TeamRecord.LossCount ?? 0}L
+                  {getWinLoss(match?.Team[1]?.ID)?.WinCount}W :{' '}
+                  {getWinLoss(match?.Team[1]?.ID)?.LossCount}L
                 </Typography>
                 {user?.IsAdmin && (
                   <i className={styles.subtitle}>

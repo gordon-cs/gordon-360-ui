@@ -93,7 +93,7 @@ const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsIte
           <CardContent>
             <Typography className={styles.news_content}>"{posting.categoryName}"</Typography>
             <Typography className={styles.news_content}>{posting.Body}</Typography>
-            {posting.Image !== null && <img src={`${posting.Image}`} alt=" " />}
+            {posting.Image !== null && <img loading="lazy" src={`${posting.Image}`} alt=" " />}
           </CardContent>
           <Grid container justifyContent="space-evenly">
             {editButton}
@@ -136,7 +136,7 @@ const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsIte
                 <Typography type="caption" className={styles.descriptionText}>
                   {posting.Body}
                 </Typography>
-                {posting.Image !== null && <img src={`${posting.Image}`} alt=" " />}
+                {posting.Image !== null && <img loading="lazy" src={`${posting.Image}`} alt=" " />}
               </Grid>
               {/* Possible action buttons */}
               <Grid item xs={4}>

@@ -94,11 +94,13 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
 
   // FacStaff spouses are private for private users
   const isSpousePrivate = isFacStaff && keepPrivate && profile.SpouseName !== PRIVATE_INFO;
+
+  // Get a student's mailbox combination and advisor using information in their profile
   useEffect(() => {
     async function loadPersonalInfo() {
       if (isStudent) {
         if (myProf) {
-          const info = await userService.getMailboxCombination();
+          const info = await userService.getMailboxInformation();
           setMailCombo(info.Combination);
         }
         if (canViewAcademicInfo || myProf) {
@@ -223,8 +225,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
             {profile.HomeCity === PRIVATE_INFO
               ? PRIVATE_INFO
               : profile.Country === 'United States of America' || !profile.Country
-              ? `${profile.HomeCity}, ${profile.HomeState}`
-              : profile.Country}
+                ? `${profile.HomeCity}, ${profile.HomeState}`
+                : profile.Country}
           </span>
         </>
       }
@@ -325,31 +327,29 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                 <b style={{ color: strength.color }}>{strength.name}</b>
               </a>
             )).reduce((prev, curr) => [prev, ', ', curr])}
-            <GordonTooltip
-              title={
-                <span style={{ fontSize: '0.8rem' }}>
-                  Categories:&nbsp;
-                  <span style={{ color: '#60409f' }}>Executing</span>,{' '}
-                  <span style={{ color: '#c88a2e' }}>Influencing</span>,{' '}
-                  <span style={{ color: '#04668f' }}>Relationship</span>,{' '}
-                  <span style={{ color: '#2c8b0f' }}>Thinking</span>
-                </span>
-              }
-              enterTouchDelay={50}
-              leaveTouchDelay={5000}
-            />
+            <GordonTooltip enterTouchDelay={50} leaveTouchDelay={5000}>
+              <span style={{ fontSize: '0.8rem' }}>
+                Categories:&nbsp;
+                <span style={{ color: '#60409f' }}>Executing</span>,{' '}
+                <span style={{ color: '#c88a2e' }}>Influencing</span>,{' '}
+                <span style={{ color: '#04668f' }}>Relationship</span>,{' '}
+                <span style={{ color: '#2c8b0f' }}>Thinking</span>
+              </span>
+            </GordonTooltip>
           </Typography>
         ) : (
           <Typography>
             {' '}
             No strengths to show.{' '}
-            <a
+            <Link
               href="https://gordon.gallup.com/signin/default.aspx"
+              underline="hover"
               target="_blank"
+              className={'gc360_text_link'}
               rel="noopener noreferrer"
             >
               Take the test
-            </a>{' '}
+            </Link>{' '}
           </Typography>
         )
       }
@@ -442,7 +442,9 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                 <GordonDialogBox
                   open={isJoinDialogOpen}
                   title={`Mailbox Instructions`}
-                  closeButtonClicked={() => setIsJoinDialogOpen(false)}
+                  onClose={() => setIsJoinDialogOpen(false)}
+                  cancelButtonClicked={() => setIsJoinDialogOpen(false)}
+                  cancelButtonName="Close"
                   maxWidth="md"
                 >
                   <Grid container>
@@ -595,7 +597,10 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     (isFacStaff ? (
       <Typography align="left" className={styles.note}>
         NOTE: To update your personal info, please go to{' '}
-        <a href="https://gordon.criterionhcm.com/">Criterion</a> and look under "Personal Info" tab.
+        <a href="https://gordon.criterionhcm.com/" className={`gc360_text_link`}>
+          Criterion
+        </a>{' '}
+        and look under "Personal Info" tab.
       </Typography>
     ) : isStudent ? (
       <div align="left" className={styles.note}>
@@ -625,6 +630,17 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                 Housing
               </a>{' '}
               (x4263).
+            </Typography>
+          </li>
+          <li>
+            <Typography>
+              Setting your planned graduation date above does not replace the Application to
+              Graduate, which must be filled out 8-12 months before you plan to graduate. The
+              application can be found in{' '}
+              <a href="https://my.gordon.edu" className={`gc360_text_link ${styles.note_link}`}>
+                my.gordon.edu
+              </a>
+              , in the Academics tab, on the left.
             </Typography>
           </li>
           <li>
@@ -669,7 +685,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           alignItems="center"
           className={styles.personal_info_list_header}
         >
-          <Grid item xs={8}>
+          <Grid container className={styles.header}>
             <CardHeader title="Personal Information" />
           </Grid>
           <Grid item xs={4} align="right">

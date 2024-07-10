@@ -159,7 +159,7 @@ const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
         <DialogContent className={styles.dialog_content}>
           <DialogContentText>
             {step === UploadStep.Upload ? (
-              'Drag & Drop a picutre, or Click to Browse Files'
+              'Drag & Drop a picture, or Click to Browse Files'
             ) : (
               <>
                 Use the arrow keys to move the crop box.
