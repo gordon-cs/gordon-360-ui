@@ -1,4 +1,5 @@
 import {
+  AlertColor,
   Button,
   CardHeader,
   Dialog,
@@ -27,7 +28,6 @@ import Dropzone from 'react-dropzone';
 import { Link } from 'react-router-dom';
 import { Class } from 'services/peopleSearch';
 import user from 'services/user';
-import { severityType } from 'components/Snackbar';
 import { windowBreakWidths } from 'theme';
 import SocialMediaLinks from './components/SocialMediaLinks';
 import defaultGordonImage from './defaultGordonImage';
@@ -37,7 +37,7 @@ type Props = {
   profile: profileType;
   myProf: boolean;
   isOnline: boolean;
-  createSnackbar: (message: string, severity: severityType) => void;
+  createSnackbar: (message: string, severity: AlertColor) => void;
 };
 
 const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) => {

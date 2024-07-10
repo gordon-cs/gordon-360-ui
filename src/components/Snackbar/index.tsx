@@ -1,4 +1,4 @@
-import { Snackbar, SnackbarProps, Alert, AlertProps } from '@mui/material/';
+import { Snackbar, SnackbarProps, Alert, AlertColor, AlertProps } from '@mui/material/';
 import {
   CheckCircleOutlineOutlined,
   ErrorOutline,
@@ -6,13 +6,11 @@ import {
   ReportProblemOutlined,
 } from '@mui/icons-material/';
 
-export type severityType = 'error' | 'info' | 'success' | 'warning';
-
 type Props = SnackbarProps &
   AlertProps & {
     open: boolean;
     text?: string | null;
-    severity: severityType;
+    severity: AlertColor;
     duration?: number;
     onClose: () => void;
   };

@@ -1,4 +1,5 @@
 import {
+  AlertColor,
   Button,
   DialogActions,
   DialogContent,
@@ -7,7 +8,6 @@ import {
   Typography,
 } from '@mui/material';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { severityType } from 'components/Snackbar';
 import { platforms, Platform, socialMediaInfo } from 'services/socialMedia';
 import user from 'services/user';
 import { useUserActions } from 'hooks';
@@ -15,7 +15,7 @@ import styles from './LinksDialog.module.css';
 
 type Props = {
   links: Record<Platform, string>;
-  createSnackbar: (message: string, severity: severityType) => void;
+  createSnackbar: (message: string, severity: AlertColor) => void;
   onClose: () => void;
   setLinks: Dispatch<SetStateAction<Record<Platform, string>>>;
 };

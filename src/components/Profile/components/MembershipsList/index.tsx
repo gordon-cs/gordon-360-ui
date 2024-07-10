@@ -1,8 +1,16 @@
-import { Button, Card, CardContent, CardHeader, Grid, List, Typography } from '@mui/material';
+import {
+  AlertColor,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  List,
+  Typography,
+} from '@mui/material';
 import GordonLoader from 'components/Loader';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { severityType } from 'components/Snackbar';
 import membershipService, { MembershipHistory } from 'services/membership';
 import MembershipInfoCard from './components/MembershipInfoCard';
 import styles from './MembershipsList.module.css';
@@ -11,7 +19,7 @@ type Props = {
   username: string;
   myProf: boolean;
   PersonType?: string;
-  createSnackbar: (message: string, severity: severityType) => void;
+  createSnackbar: (message: string, severity: AlertColor) => void;
 };
 
 /**
@@ -23,7 +31,7 @@ type Props = {
  * @param {Function} props.createSnackbar function to create a snackbar of whether an operation succeeded
  * @returns {JSX} A list of the user's memberships
  */
-const MembershipsList = ({ username, myProf, PersonType, createSnackbar }: Props) => {
+const MembershipsList = ({ username, myProf, createSnackbar }: Props) => {
   const [loading, setLoading] = useState(true);
   const [membershipHistories, setMembershipHistories] = useState<MembershipHistory[]>([]);
 

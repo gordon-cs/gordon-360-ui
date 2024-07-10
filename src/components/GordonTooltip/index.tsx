@@ -1,5 +1,4 @@
 import { Tooltip, TooltipProps } from '@mui/material';
-import { ReactNode } from 'react';
 import HelpIcon from '@mui/icons-material/Help';
 import styles from './GordonTooltip.module.css';
 

@@ -1,7 +1,7 @@
-import { Autocomplete, Box, IconButton, TextField } from '@mui/material';
+import { AlertColor, Autocomplete, Box, IconButton, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import GordonDialogBox from 'components/GordonDialogBox';
-import GordonSnackbar, { severityType } from 'components/Snackbar';
+import GordonSnackbar from 'components/Snackbar';
 import { useState, useEffect } from 'react';
 import userService from 'services/user';
 import peopleSearchService from 'services/peopleSearch';
@@ -73,7 +73,7 @@ const UpdateOffice = () => {
       </GordonDialogBox>
       <GordonSnackbar
         open={snackbar.open}
-        severity={snackbar.severity as severityType}
+        severity={snackbar.severity as AlertColor}
         text={snackbar.message}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
       />

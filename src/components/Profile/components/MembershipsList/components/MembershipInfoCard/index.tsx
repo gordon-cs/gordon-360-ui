@@ -8,8 +8,8 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  AlertColor,
 } from '@mui/material/';
-import { severityType } from 'components/Snackbar';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { Link } from 'react-router-dom';
 import styles from './MembershipInfoCard.module.css';
@@ -17,7 +17,7 @@ import membershipService, { MembershipHistory, MembershipView } from 'services/m
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 type PrivacyProps = {
-  createSnackbar: (message: string, severity: severityType) => void;
+  createSnackbar: (message: string, severity: AlertColor) => void;
   element: MembershipView;
 };
 
@@ -29,7 +29,7 @@ type OnlineProps = {
 type MembershipProps = {
   myProf: boolean;
   membershipHistory: MembershipHistory;
-  createSnackbar: (message: string, severity: severityType) => void;
+  createSnackbar: (message: string, severity: AlertColor) => void;
 };
 
 const PrivacyToggle = ({ element, createSnackbar }: PrivacyProps) => {

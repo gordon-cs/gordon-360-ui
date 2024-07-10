@@ -1,9 +1,16 @@
-import { Typography, Grid, Button, TextField, Box, SelectChangeEvent } from '@mui/material/';
+import {
+  Typography,
+  Grid,
+  Button,
+  TextField,
+  Box,
+  SelectChangeEvent,
+  AlertColor,
+} from '@mui/material/';
 import React, { useState, useMemo, useEffect } from 'react';
 import { Profile as profileType } from 'services/user';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
-import { severityType } from 'components/Snackbar';
 import { ConfirmationRow } from './components/ConfirmationRow';
 import { ConfirmationWindowHeader } from './components/ConfirmationHeader';
 import { ContentCard } from './components/ContentCard';
@@ -30,7 +37,7 @@ const CONFIRM_STEP = 'confirm';
 
 type Props = {
   profile: profileType;
-  closeWithSnackbar: (status: { type: severityType; message: string }) => void;
+  closeWithSnackbar: (status: { type: AlertColor; message: string }) => void;
   openAlumniUpdateForm: boolean;
   setOpenAlumniUpdateForm: (bool: boolean) => void;
 };

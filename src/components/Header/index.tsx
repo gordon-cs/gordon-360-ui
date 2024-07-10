@@ -11,14 +11,8 @@ import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Link } from '@mui/mater
 import RecIMIcon from '@mui/icons-material/SportsFootball';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { useNetworkStatus } from 'hooks';
-import { forwardRef, useEffect, useState } from 'react';
-import {
-  useNavigate,
-  NavLink,
-  useLocation,
-  Link as RouterLink,
-  LinkProps as RouterLinkProps,
-} from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, NavLink, useLocation, LinkProps as RouterLinkProps } from 'react-router-dom';
 import { authenticate } from 'services/auth';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
 import GordonQuickSearch from './components/QuickSearch';
@@ -32,11 +26,6 @@ const headerLogo72dpi = 'images/gc_' + angleMode + '_yellow_logo_72.png';
 const headerLogo64dpi = 'images/gc_' + angleMode + '_yellow_logo_64.png';
 const headerLogo56dpi = 'images/gc_' + angleMode + '_yellow_logo_56.png';
 const headerLogo56dpiNoText = 'images/gc_' + angleMode + '_yellow_logo_56_vert.png';
-
-// currently can't figure out how to make `to` take a variable... copy/pasting component for now
-const ForwardNavLink = forwardRef<any, Omit<RouterLinkProps, string>>((props, ref) => (
-  <NavLink ref={ref} to="/" {...props} />
-));
 
 // Tab url regular expressions must be listed in the same order as the tabs, since the
 // indices of the elements in the array on the next line are mapped to the indices of the tabs
@@ -66,6 +55,21 @@ const useTabHighlight = () => {
   return tabIndex;
 };
 
+const useAltText = () => {
+  const location = useLocation();
+  const [altText, setAltText] = useState('');
+
+  useEffect(() => {
+    if (location.pathname === '/') {
+      setAltText('Gordon 360 Logo - Home page');
+    } else {
+      setAltText('Gordon 360 Logo - Go to home');
+    }
+  }, [location]);
+
+  return altText;
+};
+
 type Props = {
   onDrawerToggle: (event: {}) => void;
 };
@@ -76,6 +80,7 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
   const isOnline = useNetworkStatus();
   const isAuthenticated = useIsAuthenticated();
   const tabIndex = useTabHighlight();
+  const altText = useAltText();
 
   const handleOpenProfile = () => {
     navigate('/myprofile');
@@ -85,12 +90,13 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
     const isOffline = dialog === 'offline';
     return (
       <GordonDialogBox
-        open={dialog ? true : false}
+        open={Boolean(dialog)}
         onClose={() => setDialog('')}
         title={isOffline ? 'Unavailabile Offline' : 'Login Required'}
         buttonClicked={() => setDialog('')}
         buttonName={'Okay'}
       >
+        <br />
         {isOffline
           ? 'That page is not available offline. Please reconnect to internet to access this feature.'
           : 'That page is only available to authenticated users. Please log in to access it.'}
@@ -156,13 +162,13 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
           >
             <MenuIcon className={styles.hamburger_menu_button_icon} />
           </IconButton>
-          <Link ref={ForwardNavLink} component={ForwardNavLink}>
+          <Link to="/" component={NavLink}>
             <picture>
               {/* pick a different image as the screen gets smaller.*/}
               <source srcSet={headerLogo72dpi} media="(min-width: 900px)" />
               <source srcSet={headerLogo64dpi} media="(min-width: 600px)" />
               <source srcSet={headerLogo56dpiNoText} media="(max-width: 375px)" />
-              <img src={headerLogo56dpi} alt="Gordon 360 Logo"></img>
+              <img src={headerLogo56dpi} alt={altText}></img>
             </picture>
           </Link>
         </div>
@@ -177,9 +183,9 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
             className={styles.tab}
             icon={<LocalActivityIcon />}
             label="Involvements"
-            component={forwardRef<any, Omit<RouterLinkProps, 'to'>>((props, ref) => (
-              <NavLink ref={ref} to="/involvements" {...props} />
-            ))}
+            component={NavLink}
+            to="/involvements"
+            tabIndex={0}
           />
           <Tab
             className={styles.tab}

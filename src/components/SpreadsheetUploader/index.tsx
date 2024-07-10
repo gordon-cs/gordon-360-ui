@@ -6,6 +6,7 @@ import { useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { read, utils } from 'xlsx';
 import styles from './SpreadsheetUploader.module.css';
+import errorLogService from 'services/logging';
 
 const acceptedTypes = [
   'application/vnd.ms-excel',
@@ -13,7 +14,7 @@ const acceptedTypes = [
   'text/csv',
 ];
 
-const displayCell = (cellData: any) => {
+const displayCell = (cellData: unknown) => {
   if (cellData instanceof Date) {
     return cellData.toLocaleString();
   } else {
@@ -23,7 +24,7 @@ const displayCell = (cellData: any) => {
 
 type Props = {
   open: boolean;
-  setOpen: ({}) => void;
+  setOpen: (arg0: boolean) => void;
   onSubmitData: (data: object[] | null | undefined) => void;
   title: string;
   maxColumns: number;
@@ -155,7 +156,7 @@ const SpreadsheetUploader = ({
         dropZone
       )}
       <GordonSnackbar
-        open={error ? true : false}
+        open={Boolean(error)}
         text={error}
         severity={'error'}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}

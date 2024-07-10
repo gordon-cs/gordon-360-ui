@@ -1,5 +1,5 @@
-import { Grid } from '@mui/material';
-import GordonSnackbar, { severityType } from 'components/Snackbar';
+import { Grid, AlertColor } from '@mui/material';
+import GordonSnackbar from 'components/Snackbar';
 import { Profile as profileType, isFacStaff as checkIsFacStaff } from 'services/user';
 import { useAuthGroups } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
@@ -28,7 +28,7 @@ const Profile = ({ profile, myProf }: Props) => {
   const [canReadStudentSchedules, setCanReadStudentSchedules] = useState<boolean>();
   const profileIsStudent = profile.PersonType?.includes('stu');
 
-  const createSnackbar = useCallback((message: string, severity: severityType) => {
+  const createSnackbar = useCallback((message: string, severity: AlertColor) => {
     setSnackbar({ message, severity, open: true });
   }, []);
 
@@ -98,7 +98,7 @@ const Profile = ({ profile, myProf }: Props) => {
       <GordonSnackbar
         open={snackbar.open}
         text={snackbar.message}
-        severity={snackbar.severity as severityType}
+        severity={snackbar.severity as AlertColor}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
       />
     </Grid>

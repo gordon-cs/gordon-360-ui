@@ -1,4 +1,5 @@
 import {
+  AlertColor,
   Card,
   CardContent,
   CardHeader,
@@ -32,7 +33,6 @@ import {
 import UpdatePhone from './components/UpdatePhoneDialog';
 import UpdatePlannedGraduationYear from './components/UpdatePlannedGraduationYear';
 import styles from './PersonalInfoList.module.css';
-import { severityType } from 'components/Snackbar';
 import AlumniUpdateForm from './components/AlumniUpdateForm';
 import CliftonStrengthsService from 'services/cliftonStrengths';
 import SLock from './Salsbury.png';
@@ -53,7 +53,7 @@ type Props = {
   myProf: boolean;
   profile: profileType;
   isOnline: boolean;
-  createSnackbar: (message: string, severity: severityType) => void;
+  createSnackbar: (message: string, severity: AlertColor) => void;
 };
 
 const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) => {
@@ -311,7 +311,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
       </Grid>
     ) : null;
 
-  const handleAlumniUpdateForm = (status: { type: severityType; message: string }) => {
+  const handleAlumniUpdateForm = (status: { type: AlertColor; message: string }) => {
     setOpenAlumniUpdateForm(false);
     createSnackbar(status.message, status.type);
   };

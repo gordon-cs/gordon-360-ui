@@ -1,17 +1,16 @@
-import { Button, Dialog, Grid, IconButton } from '@mui/material';
+import { AlertColor, Button, Dialog, Grid, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useState } from 'react';
 import { Profile } from 'services/user';
 import { Platform, platforms, socialMediaInfo } from 'services/socialMedia';
-import { severityType } from 'components/Snackbar';
 // @TODO CSSMODULES - outside directory
 import styles from '../../Identification.module.css';
 import LinksDialog from './components/LinksDialog/index';
 
 type Props = {
   profile: Profile;
-  createSnackbar: (message: string, severity: severityType) => void;
+  createSnackbar: (message: string, severity: AlertColor) => void;
   myProf: boolean;
 };
 

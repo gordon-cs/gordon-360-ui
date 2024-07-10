@@ -8,13 +8,7 @@ import BannerSmall from './HBDBanner.png';
 import BannerLarge from './HBDBannerLarge.png';
 import styles from './BirthdayMessage.module.css';
 
-type Props = {
-  open: boolean;
-  setOpen: (event: {}) => void;
-  name: string;
-};
-
-const BirthdayMessage = ({ open, setOpen, name }: Props) => {
+const BirthdayMessage = () => {
   const [confetti, setConfetti] = useState(false);
   const [width] = useWindowSize();
   const isAuthenticated = useIsAuthenticated();

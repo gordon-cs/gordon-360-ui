@@ -1,14 +1,14 @@
 import {
+  AlertColor,
   FormControl,
   IconButton,
   Input,
   InputLabel,
   InputBaseComponentProps,
-  InputProps,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import GordonDialogBox from 'components/GordonDialogBox';
-import GordonSnackbar, { severityType } from 'components/Snackbar';
+import GordonSnackbar from 'components/Snackbar';
 import { forwardRef, useState, FormEvent } from 'react';
 import { IMaskInput } from 'react-imask';
 import userService from 'services/user';
@@ -29,7 +29,7 @@ const UpdatePhone = () => {
     setOpen(false);
   };
 
-  const createSnackbar = (message: string, severity: severityType) => {
+  const createSnackbar = (message: string, severity: AlertColor) => {
     setSnackbar({ message, severity, open: true });
   };
 
@@ -64,7 +64,7 @@ const UpdatePhone = () => {
       </GordonDialogBox>
       <GordonSnackbar
         open={snackbar.open}
-        severity={snackbar.severity as severityType}
+        severity={snackbar.severity as AlertColor}
         text={snackbar.message}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
       />
@@ -75,7 +75,13 @@ const UpdatePhone = () => {
 // From material ui website
 // https://material-ui.com/components/text-fields/#integration-with-3rd-party-input-libraries
 const phoneMaskUS = forwardRef(
-  (props: { onChange: ({}) => void; name?: string } & InputBaseComponentProps, ref) => {
+  (
+    props: {
+      onChange: FormEvent<HTMLInputElement | HTMLTextAreaElement>;
+      name?: string;
+    } & InputBaseComponentProps,
+    ref,
+  ) => {
     const { onChange, ...other } = props;
 
     return (

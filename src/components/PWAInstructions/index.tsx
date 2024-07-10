@@ -2,6 +2,7 @@ import { useState } from 'react';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import BeforeInstallPromptEvent from '@mui/material';
 import styles from './PWAInstructions.module.css';
 
 import DesktopChromeInstall from './images/Desktop/Desktop-Chrome-Install-360.png';
@@ -118,7 +119,13 @@ const devices = {
   },
 };
 
-const PWAInstructions = (props: any) => {
+type props = {
+  open: boolean;
+  handleDisplay: () => void;
+  deferredPWAPrompt: typeof BeforeInstallPromptEvent;
+};
+
+const PWAInstructions = ({ open, handleDisplay, deferredPWAPrompt }: props) => {
   const [device, setDevice] = useState<string | null>(null);
   const [platform, setPlatform] = useState<string | null>(null);
 
@@ -188,84 +195,93 @@ const PWAInstructions = (props: any) => {
             //@ts-ignore TypeScript cannot encode the fact that platform may have a different value depending on the value of device
             devices[device][platform] //
               .map((step: string[], index: number) => {
-            /**
-             * The first step is processed differently from the rest in order to show a link to
-             * download Google Chrome. This is for all platforms except "Apple" since the PWA can
-             * only be installed through Safari with Apple
-             */
-            if (index === 0 && platform !== 'Apple') {
-              return (
-                <Grid container xs={12}>
-                  <Grid
-                    container
-                    xs={12}
-                    alignItems="center"
-                    className={styles.pwa_instructions_content_container_toggles_instructions_text}
-                  >
-                    <Typography
-                      variant="h6"
+                /**
+                 * The first step is processed differently from the rest in order to show a link to
+                 * download Google Chrome. This is for all platforms except "Apple" since the PWA can
+                 * only be installed through Safari with Apple
+                 */
+                if (index === 0 && platform !== 'Apple') {
+                  return (
+                    <Grid container xs={12}>
+                      <Grid
+                        container
+                        xs={12}
+                        alignItems="center"
+                        className={
+                          styles.pwa_instructions_content_container_toggles_instructions_text
+                        }
+                      >
+                        <Typography
+                          variant="h6"
+                          className={
+                            styles.pwa_instructions_content_container_toggles_instructions_text_step
+                          }
+                        >
+                          Step {index + 1}:&nbsp;
+                        </Typography>
+                        <Typography
+                          variant="subtitle1"
+                          className={
+                            styles.pwa_instructions_content_container_toggles_instructions_text_instruction
+                          }
+                        >
+                          {step[0]}&nbsp;
+                          <a href={step[1]}>click here</a>.
+                        </Typography>
+                      </Grid>
+                      <Grid
+                        container
+                        xs={12}
+                        className={
+                          styles.pwa_instructions_content_container_toggles_instructions_image
+                        }
+                      >
+                        <img src={step[2]} alt={step[3]} />
+                      </Grid>
+                    </Grid>
+                  );
+                }
+                // Creates the JSX of the current step containing the instruction and its corresponding image
+                return (
+                  <Grid container xs={12}>
+                    <Grid
+                      container
+                      xs={12}
+                      alignItems="center"
                       className={
-                        styles.pwa_instructions_content_container_toggles_instructions_text_step
+                        styles.pwa_instructions_content_container_toggles_instructions_text
                       }
                     >
-                      Step {index + 1}:&nbsp;
-                    </Typography>
-                    <Typography
-                      variant="subtitle1"
+                      <Typography
+                        variant="h6"
+                        className={
+                          styles.pwa_instructions_content_container_toggles_instructions_text_step
+                        }
+                      >
+                        Step {index + 1}:&nbsp;
+                      </Typography>
+                      <Typography
+                        variant="subtitle1"
+                        className={
+                          styles.pwa_instructions_content_container_toggles_instructions_text_instruction
+                        }
+                      >
+                        {step[0]}
+                      </Typography>
+                    </Grid>
+                    <Grid
+                      container
+                      xs={12}
                       className={
-                        styles.pwa_instructions_content_container_toggles_instructions_text_instruction
+                        styles.pwa_instructions_content_container_toggles_instructions_image
                       }
                     >
-                      {step[0]}&nbsp;
-                      <a href={step[1]}>click here</a>.
-                    </Typography>
+                      <img src={step[1]} alt={step[2]} />
+                    </Grid>
                   </Grid>
-                  <Grid
-                    container
-                    xs={12}
-                    className={styles.pwa_instructions_content_container_toggles_instructions_image}
-                  >
-                    <img src={step[2]} alt={step[3]} />
-                  </Grid>
-                </Grid>
-              );
-            }
-            // Creates the JSX of the current step containing the instruction and its corresponding image
-            return (
-              <Grid container xs={12}>
-                <Grid
-                  container
-                  xs={12}
-                  alignItems="center"
-                  className={styles.pwa_instructions_content_container_toggles_instructions_text}
-                >
-                  <Typography
-                    variant="h6"
-                    className={
-                      styles.pwa_instructions_content_container_toggles_instructions_text_step
-                    }
-                  >
-                    Step {index + 1}:&nbsp;
-                  </Typography>
-                  <Typography
-                    variant="subtitle1"
-                    className={
-                      styles.pwa_instructions_content_container_toggles_instructions_text_instruction
-                    }
-                  >
-                    {step[0]}
-                  </Typography>
-                </Grid>
-                <Grid
-                  container
-                  xs={12}
-                  className={styles.pwa_instructions_content_container_toggles_instructions_image}
-                >
-                  <img src={step[1]} alt={step[2]} />
-                </Grid>
-              </Grid>
-            );
-          })}
+                );
+              })
+          }
         </Grid>
       );
     }
