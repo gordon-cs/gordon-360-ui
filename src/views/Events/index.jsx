@@ -300,7 +300,7 @@ const Events = () => {
 
                       <Grid item xs={8}>
                         <FormControl fullWidth variant="filled">
-                          <InputLabel id="event-time">Time Filters</InputLabel>
+                          <InputLabel id="event-time">Time Window</InputLabel>
                           <Select
                             labelId="event-time"
                             id="even-time"
@@ -460,7 +460,7 @@ const Events = () => {
                     )}
                     <Grid item xs={11}>
                       <FormControl fullWidth variant="filled">
-                        <InputLabel id="event-time">Time Filters</InputLabel>
+                        <InputLabel id="event-time">Time Window</InputLabel>
                         <Select
                           labelId="event-time"
                           id="even-time"
