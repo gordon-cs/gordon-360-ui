@@ -184,7 +184,10 @@ const PWAInstructions = (props: any) => {
           >
             <Typography variant="h5">Instructions for {preText}</Typography>
           </Grid>
-          {devices[device][platform].map((step: any[], index: number) => {
+          {
+            //@ts-ignore TypeScript cannot encode the fact that platform may have a different value depending on the value of device
+            devices[device][platform] //
+              .map((step: string[], index: number) => {
             /**
              * The first step is processed differently from the rest in order to show a link to
              * download Google Chrome. This is for all platforms except "Apple" since the PWA can
