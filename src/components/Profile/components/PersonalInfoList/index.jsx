@@ -70,7 +70,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
 
   // Students' home phone is always private. FacStaff can choose to restrict their home phone
   const isHomePhonePrivate =
-    keepPrivate || isStudent || (isFacStaff && profile.HomePhone?.isPrivate);
+    keepPrivate || isStudent || (isStudent && profile.HomePhone?.isPrivate);
 
   // Student and FacStaff can restrict access to mobile phone
   const isMobilePhonePrivate = keepPrivate || profile.MobilePhone?.isPrivate;
@@ -85,6 +85,9 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
 
   // Users may restrict name of spouse
   const isSpousePrivate = keepPrivate || profile.SpouseName?.isPrivate;
+
+  // Students should not have the 'FacStaff' visibility option in privacy settings
+  const excludedVisibilityList = isStudent ? ['FacStaff'] : [];
 
   // Get a student's mailbox combination and advisor using information in their profile
   useEffect(() => {
@@ -128,7 +131,11 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </a>
         )
       }
-      ContentIcon={myProf && !isStudent && UpdateUserPrivacy(profile.AD_Username, ['HomePhone'])}
+      ContentIcon={
+        myProf &&
+        !isStudent &&
+        UpdateUserPrivacy(profile.AD_Username, ['HomePhone'], excludedVisibilityList)
+      }
       privateInfo={isHomePhonePrivate}
       myProf={myProf}
     />
@@ -149,7 +156,9 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </a>
         )
       }
-      ContentIcon={myProf && UpdateUserPrivacy(profile.AD_Username, ['MobilePhone'])}
+      ContentIcon={
+        myProf && UpdateUserPrivacy(profile.AD_Username, ['MobilePhone'], excludedVisibilityList)
+      }
       privateInfo={isMobilePhonePrivate}
       myProf={myProf}
     />
@@ -181,7 +190,10 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
               : profile.Country?.value}
           </>
         }
-        ContentIcon={myProf && UpdateUserPrivacy(profile.AD_Username, homePrivacyFields)}
+        ContentIcon={
+          myProf &&
+          UpdateUserPrivacy(profile.AD_Username, homePrivacyFields, excludedVisibilityList)
+        }
         privateInfo={isAddressPrivate}
         myProf={myProf}
       />
@@ -533,7 +545,11 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       <ProfileInfoListItem
         title="Spouse:"
         contentText={profile.SpouseName.value}
-        ContentIcon={isFacStaff && myProf && UpdateUserPrivacy(profile.AD_Username, ['SpouseName'])}
+        ContentIcon={
+          isFacStaff &&
+          myProf &&
+          UpdateUserPrivacy(profile.AD_Username, ['SpouseName'], excludedVisibilityList)
+        }
         privateInfo={isSpousePrivate}
         myProf={myProf}
       />
