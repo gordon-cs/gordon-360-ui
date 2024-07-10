@@ -8,6 +8,7 @@
 
 .dialogContent {
   text-align: center;
+  overflow: hidden;
 }
 
 .dropzoneContainer {
@@ -16,6 +17,8 @@
 }
 
 .dropzoneImage {
+  max-width: 90%;
+  max-height: 100%;
   width: 100%;
   height: auto;
 }

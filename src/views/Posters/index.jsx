@@ -129,7 +129,7 @@ const Posters = () => {
             </DialogContent>
           </Dialog>
           {croppedImage && (
-            <Grid item xs={0} md={6}>
+            <Grid item xs={12} md={6}>
               <Card variant="outlined">
                 <CardHeader title="Preview" className="gc360_header" />
                 <CardActionArea>
@@ -152,7 +152,7 @@ const Posters = () => {
         <Card>
           <CardHeader
             title={
-              <Grid container direction="row" alignItems="center">
+              <Grid container direction="row" alignItems="center" paddingRight={'5px'}>
                 <Grid item xs={7} align="left">
                   My Upcoming Club Events
                 </Grid>
@@ -163,7 +163,7 @@ const Posters = () => {
                       color="secondary"
                       onClick={() => setOpenUploadForm(true)}
                     >
-                      Upload Poster
+                      Upload{'\u00A0'}Poster
                     </Button>
                   </Grid>
                 )}

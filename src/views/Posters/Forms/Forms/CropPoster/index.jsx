@@ -158,7 +158,7 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
             color="primary"
             className={styles.dialogButton}
           >
-            Go Back
+            Go{'\u00A0'}Back
           </Button>
         )}
         <Button
