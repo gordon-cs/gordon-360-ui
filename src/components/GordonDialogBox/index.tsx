@@ -15,7 +15,7 @@ type Props = {
   buttonClicked?: (({}) => void) | null;
   buttonName?: string;
   isButtonDisabled?: boolean;
-  cancelButtonClicked?: ((event: {}) => void) | null;
+  cancelButtonClicked?: MouseEventHandler<HTMLButtonElement>;
   cancelButtonName?: string;
   severity?: AlertColor;
 } & Partial<DialogProps>;
