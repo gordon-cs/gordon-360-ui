@@ -196,7 +196,7 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
           />
         </Grid>
         <Grid item xs={12} className={styles.gridItem}>
-          Stop Displaying After
+          Display Until
           <TextField
             type="datetime-local"
             variant="outlined"
