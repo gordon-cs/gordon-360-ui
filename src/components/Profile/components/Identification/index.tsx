@@ -42,7 +42,7 @@ type Props = {
 
 const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) => {
   const CROP_DIM = 200; // pixels
-  const [isImagePublic, setIsImagePublic] = useState<boolean | number>();
+  const [isImagePublic, setIsImagePublic] = useState<boolean>(false);
   const [defaultUserImage, setDefaultUserImage] = useState<string | null>();
   const [preferredUserImage, setPreferredUserImage] = useState<string | null>();
   const [hasPreferredImage, setHasPreferredImage] = useState(false);
@@ -126,7 +126,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
       }
       setUserProfile(profile);
 
-      setIsImagePublic(profile.show_pic);
+      setIsImagePublic(profile.show_pic === 1);
 
       setHasNickname(profile?.NickName && profile.NickName !== profile.FirstName);
       setHasMaidenName(profile?.MaidenName && profile?.LastName !== profile.MaidenName);
@@ -272,15 +272,16 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
    * Handles when the user chooses to hide or show their public profile picture
    */
   async function toggleImagePrivacy() {
+    const willBePublic = !isImagePublic;
     // Attempts to change the user's privacy
     let changedPrivacy = await user
-      .setImagePrivacy(isImagePublic == 0 ? false : true)
+      .setImagePrivacy(willBePublic)
       .then(async () => {
         // Closes out of Photo Updater and removes any error messages
         clearPhotoDialogErrorTimeout();
         setOpenPhotoDialog(false);
         setShowCropper(null);
-        setIsImagePublic(((isImagePublic as number) + 1) % 2 == 0 ? false : true);
+        setIsImagePublic(willBePublic);
         return true;
       })
       .catch(() => {
