@@ -1,8 +1,6 @@
 import { differenceInCalendarMonths, format, parse } from 'date-fns';
 import http from './http';
 import userService, { MembershipHistory } from './user';
-import { keys } from 'lodash';
-import { LabelTwoTone } from '@mui/icons-material';
 
 export type StudentEmployment = {
   Job_Title: string;
@@ -24,20 +22,6 @@ export type Groupexperience = {
   Job_Title: string;
   job: StudentEmployment[] | undefined;
   latestDate?: string;
-};
-
-export type NewStudentEmployment = {
-  Job_Title: string;
-  Job_Department: string;
-  Job_Department_Name: string;
-  Job_Date: session[];
-  Job_Latest_Date: string;
-};
-
-export type session = {
-  Job_Start_Date?: string;
-  Job_End_Date?: string;
-  Job_Expected_Date?: string;
 };
 
 const getItems = (username: string) =>
