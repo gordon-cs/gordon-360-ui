@@ -119,7 +119,7 @@ const devices = {
   },
 };
 
-type props = {
+type Props = {
   open: boolean;
   handleDisplay: () => void;
   deferredPWAPrompt: typeof BeforeInstallPromptEvent;
