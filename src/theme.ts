@@ -79,6 +79,7 @@ export const theme360 = extendTheme({
       palette: {
         primary: {
           main: GordonBlue,
+          dark: GordonBlue_opacity50,
           contrastText: White,
           50: GordonBlue_opacity50,
           100: '#BBDDF0',
@@ -189,6 +190,7 @@ export const theme360 = extendTheme({
         },
         secondary: {
           main: ScottieCyan,
+          dark: ScottieCyan_opacity75,
           contrastText: Black,
           50: GordonBlue_opacity50,
           100: '#BBDDF0',
