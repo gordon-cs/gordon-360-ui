@@ -1,11 +1,28 @@
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, Grid, List, Typography } from '@mui/material';
+import { useState, Fragment, useEffect, Children, ReactElement } from 'react';
+import { Card, CardContent, CardHeader, Grid, List, Typography, IconButton } from '@mui/material';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import styles from './OfficeInfoList.module.css';
 import UpdateOffice from './UpdateOfficeLocationDialog';
 import UpdateOfficeHours from './UpdateOfficeHoursDialog';
 import UpdateMail from './UpdateMailDestinationDialog';
 import GordonTooltip from 'components/GordonTooltip';
+import user from 'services/user';
+import EditIcon from '@mui/icons-material/Edit';
+import { SignalWifiStatusbarConnectedNoInternet4TwoTone } from '@mui/icons-material';
+
+type Props = {
+  myProf: boolean;
+  profile: {
+    BuildingDescription: string;
+    OnCampusDepartment: string;
+    OnCampusRoom: string;
+    OnCampusPhone: string;
+    PersonType: string;
+    office_hours: string;
+    Mail_Location: string;
+    Mail_Description: string;
+  };
+};
 
 const OfficeInfoList = ({
   myProf,
@@ -19,7 +36,7 @@ const OfficeInfoList = ({
     Mail_Location,
     Mail_Description,
   },
-}) => {
+}: Props) => {
   const [profOfficeHours, setProfOfficeHours] = useState(office_hours);
   const [profMailLocation, setProfMailLocation] = useState(Mail_Location);
 
@@ -103,8 +120,8 @@ const OfficeInfoList = ({
             <Typography>
               {profMailLocation ? profMailLocation : 'Add your mail location here'}
               {Mail_Description && (
-                <GordonTooltip enterTouchDelay={50} leaveTouchDelay={2000}>
-                  {Mail_Description}
+                <GordonTooltip title={''} enterTouchDelay={50} leaveTouchDelay={2000}>
+                  <>{Mail_Description}</>
                 </GordonTooltip>
               )}
             </Typography>

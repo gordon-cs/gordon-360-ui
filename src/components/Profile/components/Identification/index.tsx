@@ -1,4 +1,5 @@
 import {
+  AlertColor,
   Button,
   CardHeader,
   Dialog,
@@ -10,12 +11,19 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
+import {
+  Profile as profileType,
+  isStudent as checkIsStudent,
+  isFacStaff as checkIsFacStaff,
+  isAlumni as checkIsAlumni,
+} from 'services/user';
 import EmailIcon from '@mui/icons-material/Email';
 import GordonLoader from 'components/Loader/index';
 import 'cropperjs/dist/cropper.css';
 import { useUserActions } from 'hooks';
-import { useEffect, useRef, useState } from 'react';
-import Cropper from 'react-cropper';
+import { useEffect, useRef, useState, ReactNode } from 'react';
+import Cropper, { ReactCropperElement } from 'react-cropper';
+import ZoomEvent from 'react-cropper';
 import Dropzone from 'react-dropzone';
 import { Link } from 'react-router-dom';
 import { Class } from 'services/peopleSearch';
@@ -25,26 +33,36 @@ import SocialMediaLinks from './components/SocialMediaLinks';
 import defaultGordonImage from './defaultGordonImage';
 import styles from './Identification.module.css';
 
-const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
+type Props = {
+  profile: profileType;
+  myProf: boolean;
+  isOnline: boolean;
+  createSnackbar: (message: string, severity: AlertColor) => void;
+};
+
+const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) => {
   const CROP_DIM = 200; // pixels
-  const [isImagePublic, setIsImagePublic] = useState();
-  const [defaultUserImage, setDefaultUserImage] = useState();
-  const [preferredUserImage, setPreferredUserImage] = useState();
+  const [isImagePublic, setIsImagePublic] = useState<boolean>(false);
+  const [defaultUserImage, setDefaultUserImage] = useState<string | null>();
+  const [preferredUserImage, setPreferredUserImage] = useState<string | null>();
   const [hasPreferredImage, setHasPreferredImage] = useState(false);
   const [isPhotosSwitched, setisPhotosSwitched] = useState(false);
-  const [showCropper, setShowCropper] = useState();
-  const [hasNickname, setHasNickname] = useState(Boolean);
-  const [hasMaidenName, setHasMaidenName] = useState(Boolean);
+  const [showCropper, setShowCropper] = useState<string | null>();
+  const [hasNickname, setHasNickname] = useState<boolean | string>(Boolean);
+  const [hasMaidenName, setHasMaidenName] = useState<boolean | string>(Boolean);
   const [openPhotoDialog, setOpenPhotoDialog] = useState(false);
-  const [photoDialogError, setPhotoDialogError] = useState();
-  const [cropperData, setCropperData] = useState({ cropBoxDim: null, aspectRatio: null });
-  const [userProfile, setUserProfile] = useState();
-  const [currentWidth, setCurrentWidth] = useState();
-  const [cliftonColor, setCliftonColor] = useState();
+  const [photoDialogError, setPhotoDialogError] = useState<typeof photoDialogErrorTimeout>();
+  const [cropperData, setCropperData] = useState<{
+    cropBoxDim: number | undefined;
+    aspectRatio: number;
+  }>({ cropBoxDim: undefined, aspectRatio: 1 });
+  const [userProfile, setUserProfile] = useState<profileType>();
+  const [currentWidth, setCurrentWidth] = useState<string>();
+  const [cliftonColor, setCliftonColor] = useState<string>();
   const { updateImage } = useUserActions();
-  const cropperRef = useRef();
+  const cropperRef = useRef<(ReactCropperElement & HTMLImageElement) | null>(null);
   const isStudent = profile.PersonType?.includes('stu');
-  let photoDialogErrorTimeout;
+  let photoDialogErrorTimeout: string | number | NodeJS.Timeout | undefined;
 
   /**
    * Loads the given user's profile info
@@ -63,18 +81,18 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                */
               await user.getImage(profile.AD_Username)
             : // Checks to see if the current page is the My Profile page
-            myProf
-            ? /**
-               * This case will occur only if the currently signed-in user is Non-Faculty and are
-               * on the My Profile page
-               */
-              await user.getImage()
-            : /**
-               * The requested user's image is Non-Faculty
-               * If currently signed-in user is Faculty : Will receive default and preferred image
-               * If currently signed-in user is Non-Faculty : Will receive either default or preferred image
-               */
-              await user.getImage(profile.AD_Username);
+              myProf
+              ? /**
+                 * This case will occur only if the currently signed-in user is Non-Faculty and are
+                 * on the My Profile page
+                 */
+                await user.getImage()
+              : /**
+                 * The requested user's image is Non-Faculty
+                 * If currently signed-in user is Faculty : Will receive default and preferred image
+                 * If currently signed-in user is Non-Faculty : Will receive either default or preferred image
+                 */
+                await user.getImage(profile.AD_Username);
 
         // Sets the given user's preferred image. If a default image is given but the preferred is undefined,
         // then this could mean that the currently signed-in user is not allowed to see the preferred image or
@@ -85,17 +103,21 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
         // then this, means that the currently signed-in user is not allowed to see the default picture.
         setDefaultUserImage(defaultImage);
 
-        const colorFrequencies = profile.CliftonStrengths?.Themes.reduce(
+        const colorFrequencies = profile.CliftonStrengths!.Themes.reduce(
           (colorFrequencies, strength) => ({
             ...colorFrequencies,
-            [strength.color]: (colorFrequencies[strength.color] || 0) + 1,
+            [strength.color]:
+              (colorFrequencies[strength.color as keyof typeof colorFrequencies] || 0) + 1,
           }),
           {},
         );
 
         // find max frequency by always recursively keeping a from every (a,b) where a >= b
         const cliftonColor = Object.keys(colorFrequencies).reduce((a, b) =>
-          colorFrequencies[a] >= colorFrequencies[b] ? a : b,
+          colorFrequencies[a as keyof typeof colorFrequencies] >=
+          colorFrequencies[b as keyof typeof colorFrequencies]
+            ? a
+            : b,
         );
 
         setCliftonColor(cliftonColor);
@@ -104,7 +126,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
       }
       setUserProfile(profile);
 
-      setIsImagePublic(profile.show_pic);
+      setIsImagePublic(profile.show_pic === 1);
 
       setHasNickname(profile?.NickName && profile.NickName !== profile.FirstName);
       setHasMaidenName(profile?.MaidenName && profile?.LastName !== profile.MaidenName);
@@ -119,7 +141,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
   useEffect(() => {
     if (myProf) {
       // Gets the current Material-UI Breakpoint
-      function getMaterialUIBreakpoint(width) {
+      function getMaterialUIBreakpoint(width: number) {
         let currentWidth = '';
         // If current width is in Material-UI breakpoint XS
         if (width >= windowBreakWidths.breakXS && width < windowBreakWidths.breakSM) {
@@ -145,8 +167,9 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
       }
 
       // An event listener for when the browser size changes to get the current Material-UI breakpoint
-      window.addEventListener('resize', (event) => {
-        setCurrentWidth(getMaterialUIBreakpoint(event.target.innerWidth));
+      window.addEventListener('resize', (event: UIEvent) => {
+        const w = event.target as Window;
+        setCurrentWidth(getMaterialUIBreakpoint(w.innerWidth));
       });
       // Sets the current Material-UI Breakpoint
       setCurrentWidth(getMaterialUIBreakpoint(window.innerWidth));
@@ -167,8 +190,8 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
    */
   function handleCloseSubmit() {
     if (showCropper != null) {
-      let croppedImage = cropperRef.current.cropper
-        .getCroppedCanvas({ width: CROP_DIM })
+      let croppedImage = cropperRef
+        .current!.cropper.getCroppedCanvas({ width: CROP_DIM })
         .toDataURL();
       let newImage = croppedImage.replace(/data:image\/[A-Za-z]{3,4};base64,/, '');
       let response = user.postImage(croppedImage);
@@ -222,7 +245,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
       .then(async () => {
         // Attempts to get the user's image since it has been reset
         try {
-          const { def: defaultImage } = await user.getImage(userProfile.AD_Username);
+          const { def: defaultImage } = await user.getImage(userProfile!.AD_Username);
           setDefaultUserImage(defaultImage);
           // Displays to the user that their photo has been restored
           createSnackbar('Original Photo Restored', 'success');
@@ -249,15 +272,16 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
    * Handles when the user chooses to hide or show their public profile picture
    */
   async function toggleImagePrivacy() {
+    const willBePublic = !isImagePublic;
     // Attempts to change the user's privacy
     let changedPrivacy = await user
-      .setImagePrivacy(isImagePublic)
+      .setImagePrivacy(willBePublic)
       .then(async () => {
         // Closes out of Photo Updater and removes any error messages
         clearPhotoDialogErrorTimeout();
         setOpenPhotoDialog(false);
         setShowCropper(null);
-        setIsImagePublic((isImagePublic + 1) % 2);
+        setIsImagePublic(willBePublic);
         return true;
       })
       .catch(() => {
@@ -283,8 +307,8 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
    */
   function clearPhotoDialogErrorTimeout() {
     clearTimeout(photoDialogErrorTimeout);
-    photoDialogErrorTimeout = null;
-    setPhotoDialogError(null);
+    photoDialogErrorTimeout = undefined;
+    setPhotoDialogError(undefined);
   }
 
   /**
@@ -293,16 +317,16 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
    * @returns {string} The message of the Photo Dialog
    */
   function createPhotoDialogBoxMessage() {
-    let message = '';
+    let message: string | JSX.Element = '';
     // If an error occured and there's no currently running timeout, the error is displayed
     // and a timeout for that error message is created
     if (photoDialogError !== null) {
-      message = <span className={styles.photoDialogError}>{photoDialogError}</span>;
+      message = <span className={styles.photoDialogError}>{photoDialogError as ReactNode}</span>;
       if (photoDialogErrorTimeout === null) {
         // Shows the error message for 6 seconds and then returns back to normal text
         photoDialogErrorTimeout = setTimeout(() => {
-          photoDialogErrorTimeout = null;
-          setPhotoDialogError(null);
+          photoDialogErrorTimeout = undefined;
+          setPhotoDialogError(undefined);
         }, 6000);
       }
     }
@@ -342,7 +366,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
     }
   }
 
-  function minCropBoxDim(imgWidth, dispWidth) {
+  function minCropBoxDim(imgWidth: number, dispWidth: number) {
     return (CROP_DIM * dispWidth) / imgWidth;
   }
 
@@ -351,11 +375,11 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
    *
    * @param {*} fileList The image dropped in the Dropzone of the Photo Updater
    */
-  function onDropAccepted(fileList) {
+  function onDropAccepted(fileList: any) {
     var previewImageFile = fileList[0];
     var reader = new FileReader();
     reader.onload = function () {
-      var dataURL = reader.result.toString();
+      var dataURL = reader.result!.toString();
       var i = new Image();
       i.onload = async () => {
         if (i.width < CROP_DIM || i.height < CROP_DIM) {
@@ -365,11 +389,11 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
           );
         } else {
           var aRatio = i.width / i.height;
-          setCropperData({ aspectRatio: aRatio });
+          //setCropperData({ aspectRatio: aRatio });
           var maxWidth = maxCropPreviewWidth();
           var displayWidth = maxWidth > i.width ? i.width : maxWidth;
           var cropDim = minCropBoxDim(i.width, displayWidth);
-          setPhotoDialogError(null);
+          setPhotoDialogError(undefined);
           setCropperData({ aspectRatio: aRatio, cropBoxDim: cropDim });
           setShowCropper(dataURL);
         }
@@ -387,10 +411,10 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
     setPhotoDialogError('Sorry, invalid image file! Only PNG and JPEG images are accepted.');
   }
 
-  function onCropperZoom(event) {
+  function onCropperZoom(event: Cropper.ZoomEvent<HTMLImageElement>) {
     if (event.detail.ratio > 1) {
       event.preventDefault();
-      cropperRef.current.cropper.zoomTo(1);
+      cropperRef.current!.cropper.zoomTo(1);
     }
   }
 
@@ -508,7 +532,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                   onClick={handleCloseSubmit}
                   disabled={!showCropper}
                   color="primary"
-                  className={!showCropper ? styles.hiddenButton : null}
+                  className={!showCropper ? styles.hiddenButton : undefined}
                 >
                   Submit
                 </Button>
@@ -539,8 +563,8 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                 isAprilFools
                   ? profileTitleAprilFools
                   : userProfile.NickName
-                  ? userProfile.NickName
-                  : userProfile.FirstName
+                    ? userProfile.NickName
+                    : userProfile.FirstName
               }'s Profile`}
             />
           ) : (
@@ -583,7 +607,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                             cliftonColor +
                             ') border-box',
                         }
-                      : null
+                      : undefined
                   }
                 >
                   <div
@@ -601,10 +625,10 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                           ? // Main Photo: Default
                             defaultUserImage
                           : // Main Photo: Preferred
-                          // If the given user doesn't have a preferred photo, then their default photo is shown
-                          hasPreferredImage
-                          ? preferredUserImage
-                          : defaultUserImage
+                            // If the given user doesn't have a preferred photo, then their default photo is shown
+                            hasPreferredImage
+                            ? preferredUserImage
+                            : defaultUserImage
                       }`}
                       alt="Profile"
                     />
@@ -664,7 +688,9 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                   xs={12}
                   className={styles.identification_card_content_card_container_info_class}
                 >
-                  {userProfile.Class && <Typography>{Class[userProfile.Class]}</Typography>}
+                  {checkIsStudent(userProfile) && userProfile.Class && (
+                    <Typography>{Class[userProfile.Class]}</Typography>
+                  )}
                 </Grid>
 
                 <Grid
@@ -682,17 +708,19 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }) => {
                     }${hasMaidenName ? ` (${userProfile.MaidenName})` : ''}`}
                   </Typography>
                 </Grid>
-                {userProfile.JobTitle && userProfile.JobTitle !== '' && (
-                  <Grid
-                    item
-                    xs={12}
-                    className={styles.identification_card_content_card_container_info_job_title}
-                  >
-                    <Typography variant="h6" paragraph>
-                      {userProfile.JobTitle}
-                    </Typography>
-                  </Grid>
-                )}
+                {checkIsFacStaff(userProfile) &&
+                  userProfile.JobTitle &&
+                  userProfile.JobTitle !== '' && (
+                    <Grid
+                      item
+                      xs={12}
+                      className={styles.identification_card_content_card_container_info_job_title}
+                    >
+                      <Typography variant="h6" paragraph>
+                        {userProfile.JobTitle}
+                      </Typography>
+                    </Grid>
+                  )}
                 {userProfile.Email ? (
                   <Grid
                     item
