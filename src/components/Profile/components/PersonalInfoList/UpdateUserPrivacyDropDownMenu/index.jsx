@@ -47,6 +47,7 @@ const UpdateUserPrivacy = (username, field, excludedVisibilityList = []) => {
             handlePrivacy(e);
           }}
           options={groupList}
+          defaultDisabled={true}
           select
           size={120}
         />
