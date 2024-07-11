@@ -38,7 +38,7 @@ const Events = () => {
   const [includePast, setIncludePast] = useState(false);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState([]);
-  const [timeFilter, setTimeFilter] = useState('');
+  const [timeFilter, setTimeFilter] = useState('2 Weeks');
   const [hasInitializedEvents, setHasInitializedEvents] = useState(false);
   const futureEvents = useMemo(() => gordonEvent.getFutureEvents(allEvents), [allEvents]);
   const [width] = useWindowSize();
@@ -145,6 +145,24 @@ const Events = () => {
     </div>
   );
 
+  let filterReminder;
+
+  if (timeFilter != '') {
+    filterReminder = (
+      <div align="center">
+        Your search is limited to {timeFilter}. Check out the top of the page if you want to change
+        your filters.
+      </div>
+    );
+  } else {
+    filterReminder = (
+      <div align="center">
+        You have reached the end of Gordon's events. Check out the top of the page if you want to
+        add filters.
+      </div>
+    );
+  }
+
   if (width >= 920) {
     return (
       <Grid container justifyContent="center" spacing={6}>
@@ -237,7 +255,11 @@ const Events = () => {
                       <Grid container item xs={3.25}>
                         <FormControlLabel
                           control={
-                            <Checkbox checked={includePast} onChange={handleChangeIncludePast} />
+                            <Checkbox
+                              checked={includePast}
+                              onChange={handleChangeIncludePast}
+                              color="secondary"
+                            />
                           }
                           label="Include Past"
                         />
@@ -280,6 +302,7 @@ const Events = () => {
           <Grid item xs={12}>
             {content}
           </Grid>
+          <CardHeader item xs={12} className="gc360_header" title={filterReminder} />
         </Grid>
       </Grid>
     );
@@ -354,7 +377,11 @@ const Events = () => {
                   <Grid container item justifyContent="center">
                     <FormControlLabel
                       control={
-                        <Checkbox checked={includePast} onChange={handleChangeIncludePast} />
+                        <Checkbox
+                          checked={includePast}
+                          onChange={handleChangeIncludePast}
+                          color="secondary"
+                        />
                       }
                       label="Include Past"
                     />
@@ -420,6 +447,7 @@ const Events = () => {
           <Grid item xs={12}>
             {content}
           </Grid>
+          <CardHeader item xs={12} className="gc360_header" title={filterReminder} />
         </Grid>
       </Grid>
     );
