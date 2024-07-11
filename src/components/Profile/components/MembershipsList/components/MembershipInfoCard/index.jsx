@@ -8,32 +8,15 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  AlertColor,
 } from '@mui/material/';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { Link } from 'react-router-dom';
 import styles from './MembershipInfoCard.module.css';
-import membershipService, { MembershipHistory, MembershipView } from 'services/membership';
+import membershipService from 'services/membership';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
-type PrivacyProps = {
-  createSnackbar: (message: string, severity: AlertColor) => void;
-  element: MembershipView;
-};
-
-type OnlineProps = {
-  element: MembershipView;
-  children: JSX.Element | JSX.Element[];
-};
-
-type MembershipProps = {
-  myProf: boolean;
-  membershipHistory: MembershipHistory;
-  createSnackbar: (message: string, severity: AlertColor) => void;
-};
-
-const PrivacyToggle = ({ element, createSnackbar }: PrivacyProps) => {
-  const toggleMembershipPrivacy = async (element: MembershipView) => {
+const PrivacyToggle = ({ element, createSnackbar }) => {
+  const toggleMembershipPrivacy = async (element) => {
     try {
       const update = await membershipService.setMembershipPrivacy(
         element.MembershipID,
@@ -56,7 +39,7 @@ const PrivacyToggle = ({ element, createSnackbar }: PrivacyProps) => {
 
   return (
     <Grid container item xs={4} alignItems="center">
-      <Grid item xs={12}>
+      <Grid item xs={12} align="center">
         <Switch
           onChange={() => toggleMembershipPrivacy(element)}
           checked={!element.Privacy}
@@ -64,16 +47,16 @@ const PrivacyToggle = ({ element, createSnackbar }: PrivacyProps) => {
           color="secondary"
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={12} align="center">
         <Typography>{element.Privacy ? 'Private' : 'Public'}</Typography>
       </Grid>
     </Grid>
   );
 };
 
-const OnlineOnlyLink = ({ element, children }: OnlineProps) => {
+const OnlineOnlyLink = ({ element, children }) => {
   const isOnline = useNetworkStatus();
-  const showPrivate = element.Privacy;
+  const showPrivate = element.IsInvolvementPrivate || element.Privacy;
   if (isOnline) {
     return (
       <Link
@@ -94,7 +77,7 @@ const OnlineOnlyLink = ({ element, children }: OnlineProps) => {
   }
 };
 
-const MembershipInfoCard = ({ myProf, membershipHistory, createSnackbar }: MembershipProps) => {
+const MembershipInfoCard = ({ myProf, membershipHistory, createSnackbar }) => {
   const isOnline = useNetworkStatus();
   return (
     <>

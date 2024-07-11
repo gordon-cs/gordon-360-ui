@@ -2,36 +2,30 @@ import { Typography, Grid } from '@mui/material/';
 import styles from './ConfirmationRow.module.css';
 import { Check, Remove } from '@mui/icons-material';
 
-type Props = {
-  field: { Value: string | boolean; Label: string };
-  prevValue: string | boolean;
-};
-
-const ConfirmationRow = ({ field, prevValue }: Props) => {
-  const truthIcon = (value: boolean) => {
+const ConfirmationRow = ({ field, prevValue }) => {
+  const isCheckbox = typeof prevValue === 'boolean';
+  const truthIcon = (value) => {
     return value ? (
       <Check className={styles.icon_current} />
     ) : (
       <Remove className={styles.icon_previous} />
     );
   };
-  const currentValue =
-    typeof field.Value === 'boolean' ? (
-      truthIcon(field.Value)
-    ) : (
-      <Typography variant="subtitle2" className={styles.text_current}>
-        {field.Value}
-      </Typography>
-    );
+  const currentValue = isCheckbox ? (
+    truthIcon(field.Value)
+  ) : (
+    <Typography variant="subtitle2" className={styles.text_current}>
+      {`${field.Value}`}
+    </Typography>
+  );
 
-  const previousValue =
-    typeof prevValue === 'boolean' ? (
-      truthIcon(prevValue)
-    ) : (
-      <Typography variant="caption" className={styles.text_previous}>
-        {prevValue === '' || false ? 'No previous value' : prevValue}
-      </Typography>
-    );
+  const previousValue = isCheckbox ? (
+    truthIcon(prevValue)
+  ) : (
+    <Typography variant="caption" className={styles.text_previous}>
+      {prevValue === '' || false ? 'No previous value' : `${prevValue}`}
+    </Typography>
+  );
 
   return (
     <Grid

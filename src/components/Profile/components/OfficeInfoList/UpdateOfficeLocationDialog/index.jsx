@@ -1,4 +1,4 @@
-import { AlertColor, Autocomplete, Box, IconButton, TextField } from '@mui/material';
+import { Autocomplete, Box, IconButton, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonSnackbar from 'components/Snackbar';
@@ -6,17 +6,12 @@ import { useState, useEffect } from 'react';
 import userService from 'services/user';
 import peopleSearchService from 'services/peopleSearch';
 
-type Building = {
-  Code: string;
-  Description: string;
-};
-
 const UpdateOffice = () => {
   const [open, setOpen] = useState(false);
   const [room, setRoom] = useState('');
-  const [building, setBuilding] = useState('');
-  const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
-  const [buildings, setBuildings] = useState<Building[]>([]);
+  const [building, setBuilding] = useState();
+  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
+  const [buildings, setBuildings] = useState([]);
 
   useEffect(() => {
     peopleSearchService.getBuildings().then(setBuildings);
@@ -53,6 +48,7 @@ const UpdateOffice = () => {
         buttonClicked={handleSubmit}
         cancelButtonName="CANCEL"
         cancelButtonClicked={() => setOpen(false)}
+        handleSubmit
       >
         <Box
           sx={{ gap: '1rem', marginBlockStart: '1rem', display: 'flex', flexDirection: 'column' }}
@@ -61,7 +57,8 @@ const UpdateOffice = () => {
             options={buildings}
             renderInput={(params) => <TextField {...params} label="Building" />}
             getOptionLabel={(option) => option.Description}
-            onChange={(_event, value) => setBuilding(value!.Code)}
+            onChange={(_event, value) => setBuilding(value.Code)}
+            required
           />
           <TextField
             label="Room"
@@ -73,7 +70,7 @@ const UpdateOffice = () => {
       </GordonDialogBox>
       <GordonSnackbar
         open={snackbar.open}
-        severity={snackbar.severity as AlertColor}
+        severity={snackbar.severity}
         text={snackbar.message}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
       />

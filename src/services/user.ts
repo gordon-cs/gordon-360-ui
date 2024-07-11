@@ -43,16 +43,6 @@ type BaseProfileInfo = {
   OnCampusPhone: string;
   OnCampusPrivatePhone: string;
   OnCampusFax: string;
-  PersonalEmail?: string;
-  WorkEmail?: string;
-  aEmail?: string;
-  PreferredEmail?: string;
-  doNotContact?: boolean;
-  doNotMail?: boolean;
-  WorkPhone?: string;
-  MobilePhone?: string;
-  IsMobilePhonePrivate: number;
-  PreferredPhone?: string;
   Mail_Location: string;
   HomeStreet1: string;
   HomeStreet2: string;
@@ -79,8 +69,7 @@ type BaseProfileInfo = {
   Calendar: string;
   PersonType: string;
   fullName?: string;
-  CliftonStrengths: CliftonStrengths | null;
-  Married?: string;
+  CliftonStrengths?: CliftonStrengths | null;
 };
 
 export type UnformattedFacStaffProfileInfo = BaseProfileInfo & {
@@ -103,7 +92,6 @@ export type UnformattedStudentProfileInfo = BaseProfileInfo & {
   OffCampusCountry: string;
   OffCampusPhone: string;
   OffCampusFax: string;
-  Hall?: string;
   Cohort: string;
   Class: Class;
   Major: string;
@@ -130,7 +118,7 @@ export type UnformattedStudentProfileInfo = BaseProfileInfo & {
   Minor3Description: string;
   ChapelRequired: number;
   ChapelAttended: number;
-  PlannedGradYear: string;
+  plannedGradYear: string;
 };
 
 type UnformattedAlumniProfileInfo = BaseProfileInfo & {
@@ -142,9 +130,6 @@ type UnformattedAlumniProfileInfo = BaseProfileInfo & {
   PreferredClassYear?: string;
   ShareName: string;
   ShareAddress?: string;
-  Majors: string[];
-  Major1Description: string;
-  Major2Description: string;
 };
 
 export type UnformattedProfileInfo =
@@ -169,7 +154,7 @@ export type StudentProfileInfo = {
 
 export type Profile = FacStaffProfileInfo | StudentProfileInfo | AlumniProfileInfo;
 
-export type StudentAdvisorInfo = {
+type StudentAdvisorInfo = {
   Firstname: string;
   Lastname: string;
   AD_Username: string;
@@ -196,32 +181,12 @@ export type OfficeLocationQuery = {
   RoomNumber: string;
 };
 
-export function isStudent(profile: Profile): profile is StudentProfileInfo;
-export function isStudent(
-  profile: UnformattedProfileInfo,
-): profile is UnformattedStudentProfileInfo;
-export function isStudent(
+function isStudent(profile: Profile): profile is StudentProfileInfo;
+function isStudent(profile: UnformattedProfileInfo): profile is UnformattedStudentProfileInfo;
+function isStudent(
   profile: UnformattedProfileInfo | Profile,
 ): profile is UnformattedStudentProfileInfo | StudentProfileInfo {
   return profile?.PersonType.includes('stu') || false;
-}
-
-export function isFacStaff(profile: Profile): profile is FacStaffProfileInfo;
-export function isFacStaff(
-  profile: UnformattedProfileInfo,
-): profile is UnformattedFacStaffProfileInfo;
-export function isFacStaff(
-  profile: UnformattedProfileInfo | Profile,
-): profile is UnformattedStudentProfileInfo | StudentProfileInfo {
-  return profile?.PersonType.includes('fac') || false;
-}
-
-export function isAlumni(profile: Profile): profile is AlumniProfileInfo;
-export function isAlumni(profile: UnformattedProfileInfo): profile is UnformattedAlumniProfileInfo;
-export function isAlumni(
-  profile: UnformattedProfileInfo | Profile,
-): profile is UnformattedAlumniProfileInfo | AlumniProfileInfo {
-  return profile?.PersonType.includes('alu') || false;
 }
 
 function formatCountry(profile: UnformattedProfileInfo) {
@@ -264,15 +229,13 @@ const getProfile = (username: string = ''): Promise<UnformattedProfileInfo> =>
 const getAdvisors = (username: string): Promise<StudentAdvisorInfo[]> =>
   http.get(`profiles/Advisors/${username}/`);
 
-const getMailboxInformation = (): Promise<{ Combination: string }> =>
-  http.get('profiles/mailbox-information/');
+const getMailboxInformation = () => http.get('profiles/mailbox-information/');
 
 const getMailStops = (): Promise<string[]> => http.get(`profiles/mailstops`);
 
-const setMobilePhoneNumber = (value: number | string) =>
-  http.put(`profiles/mobile_phone_number/${value}/`);
+const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_number/${value}/`);
 
-const setPlannedGraduationYear = (value: number | string) => {
+const setPlannedGraduationYear = (value: number) => {
   const body = { plannedGradYear: value };
   http.put(`profiles/plannedGradYear`, body);
 };
@@ -339,16 +302,7 @@ const getProfileInfo = async (username: string = ''): Promise<Profile | undefine
   }
 };
 
-type Contact = {
-  FirstName?: string;
-  LastName?: string;
-  Relationship?: string;
-  MobilePhone: string;
-  HomePhone: string;
-  WorkPhone: string;
-};
-
-const getEmergencyInfo = async (username: string): Promise<Contact[]> => {
+const getEmergencyInfo = async (username: string) => {
   return await http.get(`profiles/emergency-contact/${username}/`);
 };
 
@@ -368,7 +322,7 @@ function updateSocialLink(platform: Platform, link: string) {
 
 type ProfileFieldUpdate = {
   Field: string;
-  Value: string | boolean;
+  Value: string;
   Label: string;
 };
 

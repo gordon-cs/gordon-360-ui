@@ -1,4 +1,4 @@
-import { AlertColor, FormControl, IconButton, Link } from '@mui/material';
+import { FormControl, IconButton, Link } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonSnackbar from 'components/Snackbar';
@@ -7,12 +7,10 @@ import userService from 'services/user';
 import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
 import styles from './UpdatePlannedGradYear.module.css';
 
-const UpdatePlannedGraduationYear = (props: {
-  change: (plannedGraduationYear: string) => void;
-}) => {
+const UpdatePlannedGraduationYear = (props) => {
   const [open, setOpen] = useState(false);
   const [plannedGraduationYear, setPlannedGraduationYear] = useState('');
-  const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
+  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const currentYear = new Date().getFullYear();
 
   const handleSubmit = async () => {
@@ -25,7 +23,7 @@ const UpdatePlannedGraduationYear = (props: {
     setOpen(false);
   };
 
-  const createSnackbar = (message: string, severity: string) => {
+  const createSnackbar = (message, severity) => {
     setSnackbar({ message, severity, open: true });
   };
 
@@ -47,7 +45,7 @@ const UpdatePlannedGraduationYear = (props: {
         buttonClicked={handleSubmit}
         cancelButtonName="CANCEL"
         cancelButtonClicked={() => setOpen(false)}
-        sx={{ fontsize: 12 }}
+        sx={12}
       >
         <FormControl sx={{ m: 1, minWidth: 300 }}>
           <SearchField
@@ -60,6 +58,8 @@ const UpdatePlannedGraduationYear = (props: {
               label: (currentYear + i).toString(),
             }))}
             select
+            required="required"
+            autoFocus
           />
         </FormControl>
         <p className={styles.note}>
@@ -73,7 +73,7 @@ const UpdatePlannedGraduationYear = (props: {
       </GordonDialogBox>
       <GordonSnackbar
         open={snackbar.open}
-        severity={snackbar.severity as AlertColor}
+        severity={snackbar.severity}
         text={snackbar.message}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
       />

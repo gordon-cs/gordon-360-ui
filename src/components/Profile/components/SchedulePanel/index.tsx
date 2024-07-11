@@ -72,9 +72,9 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
             id="schedule-header"
             className={`gc360_header ${styles.accordionHeader}`}
           >
-            <Grid container className={styles.header}>
-              <CardHeader title={'Course Schedule'} />
-            </Grid>
+          <Grid container className={styles.header}>
+            <CardHeader title={'Course Schedule'} />
+          </Grid>
           </AccordionSummary>
         ) : (
           <div></div>

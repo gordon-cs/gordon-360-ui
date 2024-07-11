@@ -3,9 +3,9 @@ import styles from './EmergencyInfoList.module.css';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import user from 'services/user';
 
-import { Typography, Grid, Card, CardHeader, CardContent, List, ListItem } from '@mui/material';
+import { Typography, Grid, Card, CardHeader, CardContent, List } from '@mui/material';
 
-const formatPhone = (phone: string) => {
+const formatPhone = (phone) => {
   if (phone?.length === 10) {
     return `(${phone?.slice(0, 3)}) ${phone?.slice(3, 6)}-${phone?.slice(6)}`;
   } else {
@@ -13,21 +13,8 @@ const formatPhone = (phone: string) => {
   }
 };
 
-type Contact = {
-  FirstName?: string;
-  LastName?: string;
-  Relationship?: string;
-  MobilePhone: string;
-  HomePhone: string;
-  WorkPhone: string;
-};
-
-type Props = {
-  username: string;
-};
-
-const EmergencyInfoList = ({ username }: Props) => {
-  const [emergencyContacts, setEmergencyContacts] = useState<Contact[]>([]);
+const EmergencyInfoList = ({ username }) => {
+  const [emergencyContacts, setEmergencyContacts] = useState([]);
 
   useEffect(() => {
     const loadEmrg = async () => {
@@ -53,8 +40,8 @@ const EmergencyInfoList = ({ username }: Props) => {
                   }`}
                   contentClass={'private'}
                 />
-                <List style={{ listStyleType: 'disc' }}>
-                  <ListItem>
+                <ul type="disc">
+                  <li>
                     <ProfileInfoListItem
                       title="Mobile Phone:"
                       contentText={
@@ -64,8 +51,8 @@ const EmergencyInfoList = ({ username }: Props) => {
                       }
                       contentClass={'private'}
                     />
-                  </ListItem>
-                  <ListItem>
+                  </li>
+                  <li>
                     <ProfileInfoListItem
                       title="Home Phone:"
                       contentText={
@@ -75,8 +62,8 @@ const EmergencyInfoList = ({ username }: Props) => {
                       }
                       contentClass={'private'}
                     />
-                  </ListItem>
-                  <ListItem>
+                  </li>
+                  <li>
                     <ProfileInfoListItem
                       title="Work Phone:"
                       contentText={
@@ -86,8 +73,8 @@ const EmergencyInfoList = ({ username }: Props) => {
                       }
                       contentClass={'private'}
                     />
-                  </ListItem>
-                </List>
+                  </li>
+                </ul>
               </>
             ))}
             <Typography align="left" className={styles.disclaimer}>

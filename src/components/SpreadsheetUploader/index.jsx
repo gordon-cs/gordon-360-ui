@@ -6,7 +6,6 @@ import { useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { read, utils } from 'xlsx';
 import styles from './SpreadsheetUploader.module.css';
-import errorLogService from 'services/logging';
 
 const acceptedTypes = [
   'application/vnd.ms-excel',
@@ -14,24 +13,12 @@ const acceptedTypes = [
   'text/csv',
 ];
 
-const displayCell = (cellData: unknown) => {
+const displayCell = (cellData) => {
   if (cellData instanceof Date) {
     return cellData.toLocaleString();
   } else {
     return cellData;
   }
-};
-
-type Props = {
-  open: boolean;
-  setOpen: (arg0: boolean) => void;
-  onSubmitData: (data: object[] | null | undefined) => void;
-  title: string;
-  maxColumns: number;
-  requiredColumns: string[];
-  otherColumns: string[];
-  buttonName: string;
-  template: string;
 };
 
 const SpreadsheetUploader = ({
@@ -44,11 +31,11 @@ const SpreadsheetUploader = ({
   otherColumns = [],
   buttonName,
   template,
-}: Props) => {
-  const [data, setData] = useState<object[] | null>();
-  const [error, setError] = useState<string | null>();
+}) => {
+  const [data, setData] = useState();
+  const [error, setError] = useState();
 
-  const handleFileUpload = async ([file]: File[]) => {
+  const handleFileUpload = async ([file]) => {
     try {
       if (!acceptedTypes.includes(file.type)) {
         throw new Error('The file is not one of the supported file types.');
@@ -59,7 +46,7 @@ const SpreadsheetUploader = ({
       const workbook = read(data, { cellDates: true });
       const sheet = workbook.Sheets[workbook.SheetNames[0]];
 
-      const uploadedData = utils.sheet_to_json<object>(sheet);
+      const uploadedData = utils.sheet_to_json(sheet);
 
       uploadedData.forEach((row) => {
         let columnNames = Object.keys(row);
@@ -82,8 +69,8 @@ const SpreadsheetUploader = ({
       });
 
       setData(uploadedData);
-    } catch (e: unknown) {
-      if (e instanceof Error) setError(e.message);
+    } catch (e) {
+      setError(e.message);
     }
   };
 
@@ -142,9 +129,9 @@ const SpreadsheetUploader = ({
             {data.map((row, index) => (
               <Paper key={index} className={styles.dataconfirmationcard}>
                 {requiredColumns.map((columnName) =>
-                  row[columnName as keyof typeof row] ? (
+                  row[columnName] ? (
                     <Typography variant="body2">
-                      <b>{columnName}:</b> {displayCell(row[columnName as keyof typeof row])}
+                      <b>{columnName}:</b> {displayCell(row[columnName])}
                     </Typography>
                   ) : null,
                 )}
@@ -156,7 +143,7 @@ const SpreadsheetUploader = ({
         dropZone
       )}
       <GordonSnackbar
-        open={Boolean(error)}
+        open={error}
         text={error}
         severity={'error'}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
