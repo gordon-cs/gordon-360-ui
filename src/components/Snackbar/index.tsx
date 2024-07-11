@@ -10,7 +10,7 @@ type Props = SnackbarProps &
   AlertProps & {
     open: boolean;
     text?: string | null;
-    severity: AlertColor;
+    severity?: AlertColor;
     duration?: number;
     onClose: () => void;
   };

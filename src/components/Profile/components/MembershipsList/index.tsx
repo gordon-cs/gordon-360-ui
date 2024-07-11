@@ -60,14 +60,18 @@ const MembershipsList = ({ username, myProf, createSnackbar }: Props) => {
         </Link>
       );
     } else {
-      return membershipHistories.map((membership) => (
-        <MembershipInfoCard
-          myProf={myProf}
-          membershipHistory={membership}
-          key={membership.ActivityCode}
-          createSnackbar={createSnackbar}
-        />
-      ));
+      return (
+        <>
+          {membershipHistories.map((membership) => (
+            <MembershipInfoCard
+              myProf={myProf}
+              membershipHistory={membership}
+              key={membership.ActivityCode}
+              createSnackbar={createSnackbar}
+            />
+          ))}
+        </>
+      );
     }
   };
 

@@ -9,7 +9,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonSnackbar from 'components/Snackbar';
-import { forwardRef, useState, FormEvent } from 'react';
+import { forwardRef, useState } from 'react';
 import { IMaskInput } from 'react-imask';
 import userService from 'services/user';
 import styles from './UpdatePhone.module.css';
@@ -77,7 +77,7 @@ const UpdatePhone = () => {
 const phoneMaskUS = forwardRef(
   (
     props: {
-      onChange: FormEvent<HTMLInputElement | HTMLTextAreaElement>;
+      onChange: (name: string | undefined, value: string) => void;
       name?: string;
     } & InputBaseComponentProps,
     ref,
@@ -91,7 +91,7 @@ const phoneMaskUS = forwardRef(
         mask="(000) 000-0000"
         placeholderChar={'\u2000'}
         unmask={true}
-        onAccept={(value) => onChange({ target: { name: props.name, value } })}
+        onAccept={(value) => onChange(props.name, value)}
         overwrite
       />
     );

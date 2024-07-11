@@ -20,7 +20,7 @@ type Props = {
     PersonType: string;
     office_hours: string;
     Mail_Location: string;
-    Mail_Description: ReactElement;
+    Mail_Description: string;
   };
 };
 
@@ -121,7 +121,7 @@ const OfficeInfoList = ({
               {profMailLocation ? profMailLocation : 'Add your mail location here'}
               {Mail_Description && (
                 <GordonTooltip title={''} enterTouchDelay={50} leaveTouchDelay={2000}>
-                  {Mail_Description}
+                  <>{Mail_Description}</>
                 </GordonTooltip>
               )}
             </Typography>
