@@ -1,4 +1,5 @@
 import {
+  AlertColor,
   Card,
   CardContent,
   CardHeader,
@@ -22,6 +23,13 @@ import { useEffect, useState } from 'react';
 import { AuthGroup } from 'services/auth';
 import userService from 'services/user';
 import ProfileInfoListItem from '../ProfileInfoListItem';
+import {
+  Profile as profileType,
+  StudentAdvisorInfo as AdvisorType,
+  isStudent as checkIsStudent,
+  isFacStaff as checkIsFacStaff,
+  isAlumni as checkIsAlumni,
+} from 'services/user';
 import UpdatePhone from './components/UpdatePhoneDialog';
 import UpdatePlannedGraduationYear from './components/UpdatePlannedGraduationYear';
 import styles from './PersonalInfoList.module.css';
@@ -33,7 +41,7 @@ import DDLock from './DandD.png';
 
 const PRIVATE_INFO = 'Private as requested.';
 
-const formatPhone = (phone) => {
+const formatPhone = (phone: string) => {
   if (phone?.length === 10) {
     return `(${phone?.slice(0, 3)}) ${phone?.slice(3, 6)}-${phone?.slice(6)}`;
   } else {
@@ -41,7 +49,14 @@ const formatPhone = (phone) => {
   }
 };
 
-const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
+type Props = {
+  myProf: boolean;
+  profile: profileType;
+  isOnline: boolean;
+  createSnackbar: (message: string, severity: AlertColor) => void;
+};
+
+const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) => {
   const [isMobilePhonePrivate, setIsMobilePhonePrivate] = useState(
     Boolean(profile.IsMobilePhonePrivate && profile.MobilePhone !== PRIVATE_INFO),
   );
@@ -49,8 +64,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     profile.CliftonStrengths?.Private,
   );
   const [openAlumniUpdateForm, setOpenAlumniUpdateForm] = useState(false);
-  const [mailCombo, setMailCombo] = useState();
-  const [advisorsList, setAdvisorsList] = useState([]);
+  const [mailCombo, setMailCombo] = useState<string>();
+  const [advisorsList, setAdvisorsList] = useState<AdvisorType[]>([]);
   const [showMailCombo, setShowMailCombo] = useState(false);
   const isStudent = profile.PersonType?.includes('stu');
   const isFacStaff = profile.PersonType?.includes('fac');
@@ -61,7 +76,9 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     AuthGroup.AcademicInfoView,
   );
   const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false);
-  const [profPlannedGradYear, setProfPlannedGradYear] = useState(profile.PlannedGradYear);
+  const [profPlannedGradYear, setProfPlannedGradYear] = useState(
+    checkIsStudent(profile) ? profile.PlannedGradYear : null,
+  );
 
   // KeepPrivate has different values for Students and FacStaff.
   // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
@@ -83,7 +100,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
    */
 
   // Students' on-campus location is public unless the student is marked as private
-  const isCampusLocationPrivate = isStudent && keepPrivate && profile.OnOffCampus !== PRIVATE_INFO;
+  const isCampusLocationPrivate =
+    checkIsStudent(profile) && keepPrivate && profile.OnOffCampus !== PRIVATE_INFO;
 
   // Students' home phone is always private. FacStaffs' home phone is private for private users
   const [isHomePhonePrivate, setIsHomePhonePrivate] = useState(isStudent || keepPrivate);
@@ -93,7 +111,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     (keepPrivate && profile.HomeCity !== PRIVATE_INFO) || profile.HomeStreet2;
 
   // FacStaff spouses are private for private users
-  const isSpousePrivate = isFacStaff && keepPrivate && profile.SpouseName !== PRIVATE_INFO;
+  const isSpousePrivate =
+    checkIsFacStaff(profile) && keepPrivate && profile.SpouseName !== PRIVATE_INFO;
 
   // Get a student's mailbox combination and advisor using information in their profile
   useEffect(() => {
@@ -221,7 +240,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       contentText={
         <>
           {streetAddr}
-          <span className={keepPrivate ? null : styles.not_private}>
+          <span className={keepPrivate ? undefined : styles.not_private}>
             {profile.HomeCity === PRIVATE_INFO
               ? PRIVATE_INFO
               : profile.Country === 'United States of America' || !profile.Country
@@ -236,7 +255,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
   );
 
   const minors =
-    profile.Minors?.length > 0 && !isFacStaff ? (
+    checkIsStudent(profile) && profile.Minors?.length > 0 ? (
       <ProfileInfoListItem
         title={profile.Minors?.length > 1 ? 'Minors:' : 'Minor:'}
         contentText={profile.Minors?.join(', ')}
@@ -244,7 +263,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     ) : null;
 
   const majors =
-    isFacStaff || (isAlumni && !profile.Majors?.length) ? null : (
+    checkIsFacStaff(profile) || (checkIsAlumni(profile) && !profile.Majors?.length) ? null : (
       <ProfileInfoListItem
         title={profile.Majors?.length > 1 ? 'Majors:' : 'Major:'}
         contentText={!profile.Majors?.length ? 'Deciding' : profile.Majors?.join(', ')}
@@ -252,7 +271,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     );
 
   const plannedGraduationYear =
-    myProf && isStudent ? (
+    myProf && checkIsStudent(profile) ? (
       <ProfileInfoListItem
         title={'Planned Graduation Year:'}
         contentText={
@@ -268,7 +287,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           </Grid>
         }
       />
-    ) : profPlannedGradYear ? (
+    ) : profPlannedGradYear && checkIsStudent(profile) ? (
       <ProfileInfoListItem
         title={'Planned Graduation Year:'}
         contentText={profile.PlannedGradYear}
@@ -292,23 +311,25 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
       </Grid>
     ) : null;
 
-  const handleAlumniUpdateForm = (status) => {
+  const handleAlumniUpdateForm = (status: { type: AlertColor; message: string }) => {
     setOpenAlumniUpdateForm(false);
     createSnackbar(status.message, status.type);
   };
 
   const gradYearAndMajor = () => {
-    var text = profile.PreferredClassYear;
-    if (profile.Major1Description !== '') {
-      text += ' | ' + profile.Major1Description;
+    if (checkIsAlumni(profile)) {
+      let text = profile.PreferredClassYear;
+      if (profile.Major1Description !== '') {
+        text += ' | ' + profile.Major1Description;
+      }
+      if (profile.Major2Description !== '') {
+        text += ' & ' + profile.Major2Description;
+      }
+      return text;
     }
-    if (profile.Major2Description !== '') {
-      text += ' & ' + profile.Major2Description;
-    }
-    return text;
   };
 
-  const graduationYear = isAlumni && (
+  const graduationYear = checkIsAlumni(profile) && (
     <ProfileInfoListItem title={profile.College + ' Alum:'} contentText={gradYearAndMajor()} />
   );
 
@@ -326,15 +347,21 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
               <a href={strength.link} target="_blank" rel="noopener noreferrer" key={strength.name}>
                 <b style={{ color: strength.color }}>{strength.name}</b>
               </a>
-            )).reduce((prev, curr) => [prev, ', ', curr])}
-            <GordonTooltip enterTouchDelay={50} leaveTouchDelay={5000}>
-              <span style={{ fontSize: '0.8rem' }}>
-                Categories:&nbsp;
-                <span style={{ color: '#60409f' }}>Executing</span>,{' '}
-                <span style={{ color: '#c88a2e' }}>Influencing</span>,{' '}
-                <span style={{ color: '#04668f' }}>Relationship</span>,{' '}
-                <span style={{ color: '#2c8b0f' }}>Thinking</span>
-              </span>
+            )).reduce((prev, curr) => (
+              <>
+                {prev}, {curr}
+              </>
+            ))}
+            <GordonTooltip title={''} enterTouchDelay={50} leaveTouchDelay={5000}>
+              {
+                <span style={{ fontSize: '0.8rem' }}>
+                  Categories:&nbsp;
+                  <span style={{ color: '#60409f' }}>Executing</span>,{' '}
+                  <span style={{ color: '#c88a2e' }}>Influencing</span>,{' '}
+                  <span style={{ color: '#04668f' }}>Relationship</span>,{' '}
+                  <span style={{ color: '#2c8b0f' }}>Thinking</span>
+                </span>
+              }
             </GordonTooltip>
           </Typography>
         ) : (
@@ -539,19 +566,21 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     ) : null;
 
   const campusDormInfo =
-    isStudent && profile.OnOffCampus && !(profile.BuildingDescription || profile.Hall) ? (
+    checkIsStudent(profile) &&
+    profile.OnOffCampus &&
+    !(profile.BuildingDescription || profile.Hall) ? (
       <ProfileInfoListItem
         title="Dormitory:"
         contentText={profile.OnOffCampus}
-        private={isCampusLocationPrivate}
+        privateInfo={isCampusLocationPrivate}
         myProf={myProf}
       />
-    ) : isStudent ? (
+    ) : checkIsStudent(profile) ? (
       <ProfileInfoListItem
         title="Dormitory:"
         contentText={
           <>
-            <span className={keepPrivate ? null : styles.not_private}>
+            <span className={keepPrivate ? undefined : styles.not_private}>
               {profile.BuildingDescription ?? profile.Hall}
             </span>
 
@@ -584,7 +613,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
     ) : null;
 
   const spouse =
-    isFacStaff && profile.SpouseName ? (
+    checkIsFacStaff(profile) && profile.SpouseName ? (
       <ProfileInfoListItem
         title="Spouse:"
         contentText={profile.SpouseName}
@@ -603,7 +632,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
         and look under "Personal Info" tab.
       </Typography>
     ) : isStudent ? (
-      <div align="left" className={styles.note}>
+      <div className={styles.note}>
         <Typography>NOTE:</Typography>
         <ul>
           <li>
@@ -688,7 +717,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
           <Grid container className={styles.header}>
             <CardHeader title="Personal Information" />
           </Grid>
-          <Grid item xs={4} align="right">
+          <Grid item xs={4}>
             {/* visible only for fac/staff on their profile */}
             {/* isHomePhonePrivate is a misleading name for determining if personal information should be shown */}
             {isFacStaff && myProf ? (
@@ -701,7 +730,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
                   />
                 }
                 label={isHomePhonePrivate ? 'Private' : 'Public'}
-                labelPlacement="right"
+                labelPlacement="end"
                 disabled={!isOnline}
               />
             ) : null}
@@ -732,7 +761,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
         profile={profile}
         closeWithSnackbar={handleAlumniUpdateForm}
         openAlumniUpdateForm={openAlumniUpdateForm}
-        setOpenAlumniUpdateForm={(bool) => setOpenAlumniUpdateForm(bool)}
+        setOpenAlumniUpdateForm={(bool: boolean) => setOpenAlumniUpdateForm(bool)}
       />
     </Grid>
   );

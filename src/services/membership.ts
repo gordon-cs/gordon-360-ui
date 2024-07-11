@@ -121,7 +121,7 @@ const getFollowersNum = (involvementCode: string, sessionCode: string): Promise<
 const getPublicMemberships = (username: string): Promise<MembershipHistory[]> =>
   groupByActivityCode(username).then(sort(compareByProperty('ActivityDescription')));
 
-interface MembershipHistory {
+export interface MembershipHistory {
   ActivityCode: string;
   ActivityDescription: string;
   ActivityImagePath: string;
