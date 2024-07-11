@@ -117,7 +117,7 @@ const DiningBalance = () => {
         {
           labels: ['Days Finished', 'Days Remaining'],
           data: [daysFinished, daysLeftRounded],
-          backgroundColor: [daysColor, emptyColor],
+          backgroundColor: [emptyColor, daysColor],
         },
         {
           labels: ['Swipes Used', 'Swipes Remaining'],
@@ -228,7 +228,7 @@ const DiningBalance = () => {
                 variant="contained"
                 color="secondary"
                 component={Link}
-                href="https://gordon.cafebonappetit.com/"
+                href="https://www.gordonmetz.com/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
