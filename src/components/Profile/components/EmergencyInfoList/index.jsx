@@ -9,6 +9,8 @@ import { values } from 'lodash';
 const formatPhone = (phone) => {
   if (phone?.length === 10) {
     return `(${phone?.slice(0, 3)}) ${phone?.slice(3, 6)}-${phone?.slice(6)}`;
+  } else if (phone?.length === 11 && phone[0] === '1') {
+    return `(${phone?.slice(1, 4)}) ${phone?.slice(4, 7)}-${phone?.slice(7)}`;
   } else {
     return phone;
   }
