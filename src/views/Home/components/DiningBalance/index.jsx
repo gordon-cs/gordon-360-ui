@@ -228,7 +228,7 @@ const DiningBalance = () => {
                 variant="contained"
                 color="secondary"
                 component={Link}
-                href="https://gordon.cafebonappetit.com/"
+                href="https://www.gordonmetz.com/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
