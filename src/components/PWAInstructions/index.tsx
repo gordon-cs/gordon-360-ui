@@ -119,13 +119,22 @@ const devices = {
   },
 };
 
-type props = {
+interface BeforeInstallPromptEvent extends Event {
+  readonly platforms: string[];
+  readonly userChoice: Promise<{
+    outcome: 'accepted' | 'dismissed';
+    platform: string;
+  }>;
+  prompt(): Promise<void>;
+}
+
+type Props = {
   open: boolean;
   handleDisplay: () => void;
-  deferredPWAPrompt: typeof BeforeInstallPromptEvent;
+  deferredPWAPrompt: BeforeInstallPromptEvent;
 };
 
-const PWAInstructions = ({ open, handleDisplay, deferredPWAPrompt }: props) => {
+const PWAInstructions = ({ open, handleDisplay, deferredPWAPrompt }: Props) => {
   const [device, setDevice] = useState<string | null>(null);
   const [platform, setPlatform] = useState<string | null>(null);
 
@@ -289,7 +298,7 @@ const PWAInstructions = ({ open, handleDisplay, deferredPWAPrompt }: props) => {
 
   function createContent() {
     // If the browser has quick PWA installation capability
-    if (props.deferredPWAPrompt) {
+    if (deferredPWAPrompt) {
       return (
         <Grid
           container
@@ -311,7 +320,7 @@ const PWAInstructions = ({ open, handleDisplay, deferredPWAPrompt }: props) => {
             <Button
               onClick={() => {
                 // Exits out the dialog box
-                props.handleDisplay();
+                handleDisplay();
               }}
               className={styles.button_cancel}
             >
@@ -320,7 +329,7 @@ const PWAInstructions = ({ open, handleDisplay, deferredPWAPrompt }: props) => {
             <Button
               onClick={() => {
                 // Calls the browser's default prompt to do a quick installation of the PWA
-                props.deferredPWAPrompt.prompt();
+                deferredPWAPrompt.prompt();
               }}
               className={styles.button_install}
             >
@@ -448,7 +457,7 @@ const PWAInstructions = ({ open, handleDisplay, deferredPWAPrompt }: props) => {
             <Button
               onClick={() => {
                 // Exits out the dialog box
-                props.handleDisplay();
+                handleDisplay();
               }}
               className={styles.button_cancel}
             >
@@ -462,7 +471,7 @@ const PWAInstructions = ({ open, handleDisplay, deferredPWAPrompt }: props) => {
 
   return (
     <Dialog
-      open={props.open}
+      open={open}
       fullWidth
       maxWidth="sm"
       aria-labelledby="alert-dialog-slide-title"
@@ -471,9 +480,7 @@ const PWAInstructions = ({ open, handleDisplay, deferredPWAPrompt }: props) => {
       <Grid container className={styles.pwa_instructions}>
         <Grid container xs={12} justifyContent="center" className={styles.pwa_instructions_title}>
           <Typography variant="h5">
-            {props.deferredPWAPrompt
-              ? 'Install Gordon 360'
-              : ' Instructions to install Gordon 360 '}
+            {deferredPWAPrompt ? 'Install Gordon 360' : ' Instructions to install Gordon 360 '}
           </Typography>
         </Grid>
         <DialogContent className={styles.pwa_instructions_content}>{createContent()}</DialogContent>

@@ -33,11 +33,11 @@ const GordonDialogBox = ({
 }: PropsWithChildren<Props>) => {
   const handleKeyPress = (event: KeyboardEvent<HTMLDivElement>) => {
     if (
-      !isButtonDisabled &&
+      buttonClicked &&
       event.key === 'Enter' &&
       event.currentTarget.classList.contains('MuiDialog-root')
     ) {
-      buttonClicked!(event);
+      buttonClicked(event);
     }
   };
 
