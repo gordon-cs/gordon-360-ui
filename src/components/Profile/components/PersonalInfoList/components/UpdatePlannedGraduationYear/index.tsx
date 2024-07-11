@@ -31,7 +31,12 @@ const UpdatePlannedGraduationYear = (props: {
 
   return (
     <div>
-      <IconButton style={{ marginBottom: '0.5rem' }} onClick={() => setOpen(true)} size="large">
+      <IconButton
+        style={{ marginBottom: '0.5rem' }}
+        onClick={() => setOpen(true)}
+        size="large"
+        aria-label="Update planned graduation year"
+      >
         <EditIcon style={{ fontSize: 20 }} />
       </IconButton>
       <GordonDialogBox

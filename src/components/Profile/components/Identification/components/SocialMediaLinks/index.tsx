@@ -60,6 +60,7 @@ const SocialMediaLinks = ({ profile, createSnackbar, myProf }: Props) => {
                     className={styles.gc360_my_profile_edit_icon}
                     onClick={() => setSocialLinksOpen(true)}
                     size="large"
+                    aria-label="Update social media links"
                   >
                     <EditIcon />
                   </IconButton>

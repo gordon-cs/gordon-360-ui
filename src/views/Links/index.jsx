@@ -111,7 +111,7 @@ const Links = () => (
                   className={`gc360_text_link`}
                   target="_blank"
                 >
-                  <ListItemText primary="Criterion"></ListItemText>
+                  <ListItemText primary="Criterion (Timesheets)"></ListItemText>
                 </Link>
               </ListItem>
               <ListItem>
@@ -137,7 +137,7 @@ const Links = () => (
                   className={`gc360_text_link`}
                   target="_blank"
                 >
-                  <ListItemText primary="25Live"></ListItemText>
+                  <ListItemText primary="25Live (Scheduling)"></ListItemText>
                 </Link>
               </ListItem>
               <ListItem>
