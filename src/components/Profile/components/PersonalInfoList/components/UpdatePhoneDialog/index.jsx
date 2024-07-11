@@ -28,7 +28,12 @@ const UpdatePhone = () => {
 
   return (
     <div>
-      <IconButton className={styles.edit_button} onClick={() => setOpen(true)} size="large">
+      <IconButton
+        className={styles.edit_button}
+        onClick={() => setOpen(true)}
+        size="large"
+        aria-label="Update mobile phone number"
+      >
         <EditIcon fontSize="small" />
       </IconButton>
       <GordonDialogBox
