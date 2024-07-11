@@ -72,7 +72,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }) => {
 
   // Students' home phone is always private. FacStaff can choose to restrict their home phone
   const isHomePhonePrivate =
-    keepPrivate || isStudent || (isStudent && profile.HomePhone?.isPrivate);
+    keepPrivate || isStudent || (isFacStaff && profile.HomePhone?.isPrivate);
 
   // Student and FacStaff can restrict access to mobile phone
   const isMobilePhonePrivate = keepPrivate || profile.MobilePhone?.isPrivate;
