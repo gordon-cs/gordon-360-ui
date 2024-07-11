@@ -1,26 +1,10 @@
-import {
-  AlertColor,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Grid,
-  List,
-  Typography,
-} from '@mui/material';
+import { Button, Card, CardContent, CardHeader, Grid, List, Typography } from '@mui/material';
 import GordonLoader from 'components/Loader';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import membershipService, { MembershipHistory } from 'services/membership';
+import membershipService from 'services/membership';
 import MembershipInfoCard from './components/MembershipInfoCard';
 import styles from './MembershipsList.module.css';
-
-type Props = {
-  username: string;
-  myProf: boolean;
-  PersonType?: string;
-  createSnackbar: (message: string, severity: AlertColor) => void;
-};
 
 /**
  * A List of memberships for display on the Profile and MyProfile views.
@@ -31,9 +15,9 @@ type Props = {
  * @param {Function} props.createSnackbar function to create a snackbar of whether an operation succeeded
  * @returns {JSX} A list of the user's memberships
  */
-const MembershipsList = ({ username, myProf, createSnackbar }: Props) => {
+const MembershipsList = ({ username, myProf, createSnackbar }) => {
   const [loading, setLoading] = useState(true);
-  const [membershipHistories, setMembershipHistories] = useState<MembershipHistory[]>([]);
+  const [membershipHistories, setMembershipHistories] = useState([]);
 
   useEffect(() => {
     async function loadMemberships() {
@@ -60,18 +44,14 @@ const MembershipsList = ({ username, myProf, createSnackbar }: Props) => {
         </Link>
       );
     } else {
-      return (
-        <>
-          {membershipHistories.map((membership) => (
-            <MembershipInfoCard
-              myProf={myProf}
-              membershipHistory={membership}
-              key={membership.ActivityCode}
-              createSnackbar={createSnackbar}
-            />
-          ))}
-        </>
-      );
+      return membershipHistories.map((membership) => (
+        <MembershipInfoCard
+          myProf={myProf}
+          membershipHistory={membership}
+          key={membership.ActivityCode}
+          createSnackbar={createSnackbar}
+        />
+      ));
     }
   };
 
@@ -89,7 +69,7 @@ const MembershipsList = ({ username, myProf, createSnackbar }: Props) => {
     </Grid>
   );
   const noteInfo = myProf && (
-    <div className={styles.memberships_card_note}>
+    <div align="left" className={styles.memberships_card_note}>
       <Typography>
         NOTE: Shaded areas are visible only to you and other members of the same club session.
       </Typography>

@@ -1,22 +1,13 @@
 import { Divider, ListItem, Grid, Typography } from '@mui/material';
 import styles from './ProfileInfoListItem.module.css';
 
-type ProfileInfo = {
-  title?: string;
-  contentText?: JSX.Element | string;
-  ContentIcon?: JSX.Element | null | boolean;
-  privateInfo?: boolean | string;
-  myProf?: boolean;
-  contentClass?: string;
-};
-
 const ProfileInfoListItem = ({
   title,
   contentText,
   ContentIcon = null,
   privateInfo = false,
   myProf = false,
-}: ProfileInfo) => {
+}) => {
   const gridSizeProps = ContentIcon ? { xs: 4, md: 3, lg: 4 } : { xs: 7 };
 
   return (
@@ -31,7 +22,7 @@ const ProfileInfoListItem = ({
             item
             {...gridSizeProps}
             alignItems="center"
-            className={privateInfo ? (myProf ? styles.private : styles.privateNotMine) : undefined}
+            className={privateInfo ? (myProf ? styles.private : styles.privateNotMine) : null}
           >
             {contentText}
           </Grid>

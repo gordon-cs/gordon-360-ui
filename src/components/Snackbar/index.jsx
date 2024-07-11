@@ -1,4 +1,4 @@
-import { Snackbar, SnackbarProps, Alert, AlertColor, AlertProps } from '@mui/material/';
+import { Snackbar, Alert } from '@mui/material/';
 import {
   CheckCircleOutlineOutlined,
   ErrorOutline,
@@ -6,24 +6,7 @@ import {
   ReportProblemOutlined,
 } from '@mui/icons-material/';
 
-type Props = SnackbarProps &
-  AlertProps & {
-    open: boolean;
-    text?: string | null;
-    severity?: AlertColor;
-    duration?: number;
-    onClose: () => void;
-  };
-
-const SimpleSnackbar = ({
-  children,
-  open,
-  text,
-  severity,
-  duration = 10000,
-  onClose,
-  ...otherProps
-}: Props) => {
+const SimpleSnackbar = ({ open, text, severity, duration = 10000, onClose, ...otherProps }) => {
   return (
     <Snackbar open={open} autoHideDuration={duration} onClose={onClose} {...otherProps}>
       <Alert

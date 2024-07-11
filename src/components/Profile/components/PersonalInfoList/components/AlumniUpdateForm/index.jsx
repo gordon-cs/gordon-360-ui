@@ -1,46 +1,23 @@
-import {
-  Typography,
-  Grid,
-  Button,
-  TextField,
-  Box,
-  SelectChangeEvent,
-  AlertColor,
-} from '@mui/material/';
-import React, { useState, useMemo, useEffect } from 'react';
-import { Profile as profileType } from 'services/user';
+import { Typography, Grid, Button, TextField, Box } from '@mui/material/';
+import { useState, useMemo, useEffect } from 'react';
+import styles from './AlumniUpdateForm.module.css';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { ConfirmationRow } from './components/ConfirmationRow';
 import { ConfirmationWindowHeader } from './components/ConfirmationHeader';
 import { ContentCard } from './components/ContentCard';
-import { ProfileUpdateField, ProfileUpdateFieldProps } from './components/ProfileUpdateField';
+import { ProfileUpdateField } from './components/ProfileUpdateField';
 import addressService from 'services/address';
-import { ArrayElement, DistributiveOmit, map } from 'services/utils';
+import { map } from 'services/utils';
 import userService from 'services/user';
 
-type ProfileUpdateFieldType = DistributiveOmit<ProfileUpdateFieldProps, 'onChange' | 'value'>;
-
-const INPUT_TYPES = {
-  Text: 'text',
-  Checkbox: 'checkbox',
-  Select: 'select',
-} as const;
-
 const shouldContactFields = [
-  { label: 'Do Not Contact', name: 'doNotContact', type: INPUT_TYPES.Checkbox },
-  { label: 'Do Not Mail', name: 'doNotMail', type: INPUT_TYPES.Checkbox },
+  { label: 'Do Not Contact', name: 'doNotContact', type: 'checkbox' },
+  { label: 'Do Not Mail', name: 'doNotMail', type: 'checkbox' },
 ];
 
 const UPDATE_STEP = 'update';
 const CONFIRM_STEP = 'confirm';
-
-type Props = {
-  profile: profileType;
-  closeWithSnackbar: (status: { type: AlertColor; message: string }) => void;
-  openAlumniUpdateForm: boolean;
-  setOpenAlumniUpdateForm: (bool: boolean) => void;
-};
 
 /**
  * A form for alumni to request an update to their profile information.
@@ -51,7 +28,7 @@ const AlumniUpdateForm = ({
   closeWithSnackbar,
   openAlumniUpdateForm,
   setOpenAlumniUpdateForm,
-}: Props) => {
+}) => {
   const [statesAndProv, setStatesAndProv] = useState(['Not Applicable']);
   const [countries, setCountries] = useState(['Prefer Not to Say']);
   const [errorStatus, setErrorStatus] = useState({
@@ -67,58 +44,58 @@ const AlumniUpdateForm = ({
     aEmail: false,
   });
 
-  const personalInfoFields: ProfileUpdateFieldType[] = [
+  const personalInfoFields = [
     {
       label: 'Salutation',
       name: 'salutation',
-      type: INPUT_TYPES.Select,
+      type: 'select',
       menuItems: ['Prefer Not to Answer', 'Mr.', 'Ms.', 'Mrs.', 'Miss', 'Dr.', 'Rev.'],
     },
     {
       label: 'First Name',
       name: 'firstName',
-      type: INPUT_TYPES.Text,
+      type: 'text',
       error: errorStatus.firstName,
       helperText: '*Required',
     },
     {
       label: 'Last Name',
       name: 'lastName',
-      type: INPUT_TYPES.Text,
+      type: 'text',
       error: errorStatus.lastName,
       helperText: '*Required',
     },
-    { label: 'Middle Name', name: 'middleName', type: INPUT_TYPES.Text },
-    { label: 'Preferred Name', name: 'nickName', type: INPUT_TYPES.Text },
-    { label: 'Suffix', name: 'suffix', type: INPUT_TYPES.Text },
-    { label: 'Married', name: 'married', type: INPUT_TYPES.Checkbox },
+    { label: 'Middle Name', name: 'middleName', type: 'text' },
+    { label: 'Preferred Name', name: 'nickName', type: 'text' },
+    { label: 'Suffix', name: 'suffix', type: 'text' },
+    { label: 'Married', name: 'married', type: 'checkbox' },
   ];
   const emailInfoFields = [
     {
       label: 'Personal Email',
       name: 'personalEmail',
-      type: INPUT_TYPES.Text,
+      type: 'text',
       error: errorStatus.personalEmail,
       helperText: '*Invalid Email',
     },
     {
       label: 'Work Email',
       name: 'workEmail',
-      type: INPUT_TYPES.Text,
+      type: 'text',
       error: errorStatus.workEmail,
       helperText: '*Invalid Email',
     },
     {
       label: 'Alternate Email',
       name: 'aEmail',
-      type: INPUT_TYPES.Text,
+      type: 'text',
       error: errorStatus.aEmail,
       helperText: '*Invalid Email',
     },
     {
       label: 'Preferred Email',
       name: 'preferredEmail',
-      type: INPUT_TYPES.Select,
+      type: 'select',
       menuItems: ['No Preference', 'Personal Email', 'Work Email', 'Alternate Email'],
     },
   ];
@@ -126,38 +103,38 @@ const AlumniUpdateForm = ({
     {
       label: 'Home Phone',
       name: 'homePhone',
-      type: INPUT_TYPES.Text,
+      type: 'text',
       error: errorStatus.homePhone,
       helperText: '*Invalid Number',
     },
     {
       label: 'Work Phone',
       name: 'workPhone',
-      type: INPUT_TYPES.Text,
+      type: 'text',
       error: errorStatus.workPhone,
       helperText: '*Invalid Number',
     },
     {
       label: 'Mobile Phone',
       name: 'mobilePhone',
-      type: INPUT_TYPES.Text,
+      type: 'text',
       error: errorStatus.mobilePhone,
       helperText: '*Invalid Number',
     },
     {
       label: 'Preferred Phone',
       name: 'preferredPhone',
-      type: INPUT_TYPES.Select,
+      type: 'select',
       menuItems: ['No Preference', 'Home Phone', 'Work Phone', 'Mobile Phone'],
     },
   ];
   const mailingInfoFields = [
-    { label: 'Address', name: 'address1', type: INPUT_TYPES.Text },
-    { label: 'Address Line 2 (optional)', name: 'address2', type: INPUT_TYPES.Text },
-    { label: 'City', name: 'city', type: INPUT_TYPES.Text },
-    { label: 'State', name: 'state', type: INPUT_TYPES.Select, menuItems: statesAndProv },
-    { label: 'Zip Code', name: 'zip', type: INPUT_TYPES.Text },
-    { label: 'Country', name: 'country', type: INPUT_TYPES.Select, menuItems: countries },
+    { label: 'Address', name: 'address1', type: 'text' },
+    { label: 'Address Line 2 (optional)', name: 'address2', type: 'text' },
+    { label: 'City', name: 'city', type: 'text' },
+    { label: 'State', name: 'state', type: 'select', menuItems: statesAndProv },
+    { label: 'Zip Code', name: 'zip', type: 'text' },
+    { label: 'Country', name: 'country', type: 'select', menuItems: countries },
   ];
 
   const allFields = [
@@ -180,33 +157,7 @@ const AlumniUpdateForm = ({
       .then(setCountries);
   }, []);
 
-  type Info = {
-    salutation?: string;
-    firstName?: string;
-    lastName?: string;
-    middleName?: string;
-    nickName?: string;
-    suffix?: string;
-    personalEmail?: string;
-    workEmail?: string;
-    aEmail?: string;
-    preferredEmail?: string;
-    doNotContact?: boolean;
-    doNotMail?: boolean;
-    homePhone?: string;
-    workPhone?: string;
-    mobilePhone?: string;
-    preferredPhone?: string;
-    address1?: string;
-    address2?: string;
-    city?: string;
-    state?: string;
-    zip?: string;
-    country?: string;
-    married?: boolean;
-  };
-
-  const currentInfo = useMemo<Info>(() => {
+  const currentInfo = useMemo(() => {
     return {
       salutation: profile.Title
         ? profile.Title.charAt(0).toUpperCase() + profile.Title.slice(1).toLowerCase()
@@ -242,97 +193,91 @@ const AlumniUpdateForm = ({
   const [changeReason, setChangeReason] = useState('');
   const [disableUpdateButton, setDisableUpdateButton] = useState(true);
 
-  const isEmailValid = (email?: string) => {
+  const handleSetError = (field, condition) => {
+    const getCurrentErrorStatus = (currentValue) => {
+      return {
+        ...currentValue,
+        [field]: condition,
+      };
+    };
+    setErrorStatus(getCurrentErrorStatus);
+  };
+
+  const isEmailValid = (email) => {
     //email regex from: https://stackoverflow.com/a/72476905
     const regex = /[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,8}(.[a-z{2,8}])?/g;
     return !email || email === '' || regex.test(email);
   };
 
-  const isPhoneValid = (phoneNum?: string) => {
+  const isPhoneValid = (phoneNum) => {
     /**
      * 2 Regex's used here:
      * /[-()\s]/g => /g is a global search for all characters in the array symbols -,(,),(space)
      * /^[+]?\d{7,15}+$/ => regex match value of (begin char)(0 or 1 instance of '+')(7-15 digits)(end char)
      */
-    let value = phoneNum!.replace(/[-()\s]/g, '');
-    return /^[+]?\d{7,15}$/.test(value) || phoneNum!.length === 0;
+    let value = phoneNum.replace(/[-()\s]/g, '');
+    return /^[+]?\d{7,15}$/.test(value) || phoneNum.length === 0;
   };
 
   // Field Validation
   useEffect(() => {
     let hasError = false;
     let hasChanges = false;
-    Object.keys(currentInfo).forEach((field) => {
-      if (currentInfo[field as keyof Info] !== updatedInfo[field as keyof Info]) {
+    for (const field in currentInfo) {
+      if (currentInfo[field] !== updatedInfo[field]) {
         hasChanges = true;
       }
       switch (field) {
         case 'firstName':
         case 'lastName':
-          setErrorStatus((currentValue) => ({
-            ...currentValue,
-            [field]: updatedInfo[field] === '',
-          }));
+          handleSetError(field, updatedInfo[field] === '');
           hasError = updatedInfo[field] === '' || hasError;
           break;
         case 'homePhone':
         case 'workPhone':
         case 'mobilePhone':
-          setErrorStatus((currentValue) => ({
-            ...currentValue,
-            [field]: !isPhoneValid(updatedInfo[field]),
-          }));
+          handleSetError(field, !isPhoneValid(updatedInfo[field]));
           hasError = !isPhoneValid(updatedInfo[field]) || hasError;
           break;
         case 'personalEmail':
         case 'workEmail':
         case 'aEmail':
-          setErrorStatus((currentValue) => ({
-            ...currentValue,
-            [field]: !isEmailValid(updatedInfo[field]),
-          }));
+          handleSetError(field, !isEmailValid(updatedInfo[field]));
           hasError = !isEmailValid(updatedInfo[field]) || hasError;
           break;
         default:
           break;
       }
-    });
+    }
     setDisableUpdateButton(hasError || !hasChanges);
   }, [updatedInfo, currentInfo]);
 
-  const handleChange = (event: SelectChangeEvent<string>) => {
-    const getNewInfo = (currentValue: Info) => {
-      let value: string | boolean;
-      if ('type' in event.target && event.target.type === 'checkbox') {
-        value = event.target.checked;
-      } else {
-        value = event.target.value;
-      }
+  const handleChange = (event) => {
+    const getNewInfo = (currentValue) => {
       return {
         ...currentValue,
-        [event.target.name]: value,
+        [event.target.name]:
+          event.target.type === 'checkbox' ? event.target.checked : event.target.value,
       };
     };
     setUpdatedInfo(getNewInfo);
   };
 
-  const getFieldLabel = (fieldName: string): string => {
+  const getFieldLabel = (fieldName) => {
     const matchingField = allFields.find((field) => field.name === fieldName);
-    return matchingField!.label;
+    return matchingField.label;
   };
 
-  function getUpdatedFields(updatedInfo: Info) {
-    const updatedFields: { Field: keyof Info; Value: string | boolean; Label: string }[] = [];
-    Object.entries(updatedInfo).forEach(([field, value]) => {
+  function getUpdatedFields(updatedInfo, currentInfo) {
+    const updatedFields = [];
+    Object.entries(currentInfo).forEach(([field, value]) => {
       let updatedValue = value;
       if (field === 'homePhone' || field === 'workPhone' || field === 'mobilePhone') {
-        if (typeof value === 'string') {
-          updatedValue = value.replace(/[-()\s]/g, '');
-        }
+        updatedValue = value.replace(/[-()\s]/g, '');
       }
-      if (field !== value)
+      if (updatedInfo[field] !== value)
         updatedFields.push({
-          Field: field as keyof Info,
+          Field: field,
           Value: updatedValue,
           Label: getFieldLabel(field),
         });
@@ -342,16 +287,12 @@ const AlumniUpdateForm = ({
 
   const handleConfirm = () => {
     setSaving(true);
-    const updateRequest: Array<
-      | ArrayElement<ReturnType<typeof getUpdatedFields>>
-      | { Field: 'changeReason'; Value: string; Label: string }
-    > = getUpdatedFields(updatedInfo);
+    let updateRequest = getUpdatedFields(currentInfo, updatedInfo);
     updateRequest.push({
       Field: 'changeReason',
       Value: changeReason,
       Label: 'Reason for change',
     });
-
     userService.requestInfoUpdate(updateRequest).then(() => {
       setSaving(false);
       closeWithSnackbar({
@@ -367,14 +308,33 @@ const AlumniUpdateForm = ({
     setChangeReason('');
   };
 
+  /**
+   * @param {Array<{name: string, label: string, type: string, menuItems: string[]}>} fields array of objects defining the properties of the input field
+   * @returns JSX correct input for each field based on type
+   */
+  const mapFieldsToInputs = (fields) => {
+    return fields.map((field) => (
+      <ProfileUpdateField
+        error={field.error}
+        label={field.label}
+        name={field.name}
+        helperText={field.helperText}
+        value={updatedInfo[field.name]}
+        type={field.type}
+        menuItems={field.menuItems}
+        onChange={handleChange}
+      />
+    ));
+  };
+
   const dialogProps =
     step === CONFIRM_STEP
       ? {
           title: 'Confirm Your Updates',
-          buttonClicked: !isSaving ? handleConfirm : undefined,
+          buttonClicked: !isSaving ? handleConfirm : null,
           buttonName: 'Confirm',
           isButtonDisabled: changeReason === '',
-          cancelButtonClicked: !isSaving ? handleWindowClose : undefined,
+          cancelButtonClicked: !isSaving ? handleWindowClose : null,
         }
       : {
           title: 'Update Information',
@@ -389,59 +349,24 @@ const AlumniUpdateForm = ({
 
   return (
     <GordonDialogBox
-      {...dialogProps}
       open={openAlumniUpdateForm}
       fullWidth
       maxWidth="lg"
       isButtonDisabled={disableUpdateButton}
       cancelButtonName="Cancel"
+      titleClass={styles.alumni_update_form_title}
+      {...dialogProps}
     >
       {step === UPDATE_STEP && (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
           <ContentCard title="Personal Information">
-            {personalInfoFields.map((field) => (
-              <ProfileUpdateField
-                {...field}
-                value={updatedInfo[field.name as keyof Info]}
-                onChange={handleChange}
-              />
-            ))}
+            {mapFieldsToInputs(personalInfoFields)}
           </ContentCard>
-          <ContentCard title="Email Addresses">
-            {emailInfoFields.map((field) => (
-              <ProfileUpdateField
-                {...field}
-                value={updatedInfo[field.name as keyof Info]}
-                onChange={handleChange}
-              />
-            ))}
-          </ContentCard>
-          <ContentCard title="Phone Numbers">
-            {phoneInfoFields.map((field) => (
-              <ProfileUpdateField
-                {...field}
-                value={updatedInfo[field.name as keyof Info]}
-                onChange={handleChange}
-              />
-            ))}
-          </ContentCard>
-          <ContentCard title="Mailing Address">
-            {mailingInfoFields.map((field) => (
-              <ProfileUpdateField
-                {...field}
-                value={updatedInfo[field.name as keyof Info]}
-                onChange={handleChange}
-              />
-            ))}
-          </ContentCard>
+          <ContentCard title="Email Addresses">{mapFieldsToInputs(emailInfoFields)}</ContentCard>
+          <ContentCard title="Phone Numbers">{mapFieldsToInputs(phoneInfoFields)}</ContentCard>
+          <ContentCard title="Mailing Address">{mapFieldsToInputs(mailingInfoFields)}</ContentCard>
           <ContentCard title="Contact Preferences">
-            {shouldContactFields.map((field) => (
-              <ProfileUpdateField
-                {...field}
-                value={updatedInfo[field.name as keyof Info]}
-                onChange={handleChange}
-              />
-            ))}
+            {mapFieldsToInputs(shouldContactFields)}
           </ContentCard>
           <Typography variant="subtitle1">
             Found a bug?
@@ -455,11 +380,8 @@ const AlumniUpdateForm = ({
         <>
           <ConfirmationWindowHeader />
           <Grid container>
-            {getUpdatedFields(updatedInfo).map((field) => (
-              <ConfirmationRow
-                field={field}
-                prevValue={currentInfo[field.Field] as string | boolean}
-              />
+            {getUpdatedFields(currentInfo, updatedInfo).map((field) => (
+              <ConfirmationRow field={field} prevValue={currentInfo[field.Field]} />
             ))}
           </Grid>
           <TextField

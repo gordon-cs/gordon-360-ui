@@ -1,6 +1,5 @@
-import { Grid, AlertColor } from '@mui/material';
+import { Grid } from '@mui/material';
 import GordonSnackbar from 'components/Snackbar';
-import { Profile as profileType, isFacStaff as checkIsFacStaff } from 'services/user';
 import { useAuthGroups } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useCallback, useEffect, useState } from 'react';
@@ -16,19 +15,14 @@ import {
   VictoryPromise,
 } from './components';
 
-type Props = {
-  profile: profileType;
-  myProf: boolean;
-};
-
-const Profile = ({ profile, myProf }: Props) => {
-  const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
+const Profile = ({ profile, myProf }) => {
+  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const isOnline = useNetworkStatus();
   const viewerIsPolice = useAuthGroups(AuthGroup.Police);
-  const [canReadStudentSchedules, setCanReadStudentSchedules] = useState<boolean>();
+  const [canReadStudentSchedules, setCanReadStudentSchedules] = useState();
   const profileIsStudent = profile.PersonType?.includes('stu');
 
-  const createSnackbar = useCallback((message: string, severity: AlertColor) => {
+  const createSnackbar = useCallback((message, severity) => {
     setSnackbar({ message, severity, open: true });
   }, []);
 
@@ -58,19 +52,17 @@ const Profile = ({ profile, myProf }: Props) => {
         </Grid>
       )}
 
-      {checkIsFacStaff(profile) && (
-        <Grid item xs={12} lg={10}>
-          <Grid container spacing={2}>
-            <OfficeInfoList profile={profile} myProf={myProf} />
+      <Grid item xs={12} lg={10}>
+        <Grid container spacing={2}>
+          <OfficeInfoList profile={profile} myProf={myProf} />
 
-            {viewerIsPolice ? <EmergencyInfoList username={profile.AD_Username} /> : null}
-          </Grid>
+          {viewerIsPolice ? <EmergencyInfoList username={profile.AD_Username} /> : null}
         </Grid>
-      )}
+      </Grid>
 
       {(myProf || !profileIsStudent || canReadStudentSchedules) && (
-        <Grid item xs={12} lg={10}>
-          <SchedulePanel profile={profile} myProf={myProf} />
+        <Grid item xs={12} lg={10} align="center">
+          <SchedulePanel profile={profile} myProf={myProf} isOnline={isOnline} />
         </Grid>
       )}
 
@@ -98,7 +90,7 @@ const Profile = ({ profile, myProf }: Props) => {
       <GordonSnackbar
         open={snackbar.open}
         text={snackbar.message}
-        severity={snackbar.severity as AlertColor}
+        severity={snackbar.severity}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
       />
     </Grid>

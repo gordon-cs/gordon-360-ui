@@ -7,15 +7,15 @@ import {
   DialogProps,
   DialogTitle,
 } from '@mui/material';
-import { KeyboardEvent, MouseEvent, MouseEventHandler, PropsWithChildren } from 'react';
+import { KeyboardEvent, PropsWithChildren } from 'react';
 
 type Props = {
   open: boolean;
   title: string;
-  buttonClicked?: (event: KeyboardEvent<HTMLDivElement> | MouseEvent<HTMLButtonElement>) => void;
+  buttonClicked: (event: {}) => void;
   buttonName?: string;
   isButtonDisabled?: boolean;
-  cancelButtonClicked?: MouseEventHandler<HTMLButtonElement>;
+  cancelButtonClicked?: (event: {}) => void;
   cancelButtonName?: string;
   severity?: AlertColor;
 } & Partial<DialogProps>;
@@ -33,7 +33,7 @@ const GordonDialogBox = ({
 }: PropsWithChildren<Props>) => {
   const handleKeyPress = (event: KeyboardEvent<HTMLDivElement>) => {
     if (
-      buttonClicked &&
+      !isButtonDisabled &&
       event.key === 'Enter' &&
       event.currentTarget.classList.contains('MuiDialog-root')
     ) {
