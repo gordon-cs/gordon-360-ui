@@ -117,7 +117,7 @@ const DiningBalance = () => {
         {
           labels: ['Days Finished', 'Days Remaining'],
           data: [daysFinished, daysLeftRounded],
-          backgroundColor: [daysColor, emptyColor],
+          backgroundColor: [emptyColor, daysColor],
         },
         {
           labels: ['Swipes Used', 'Swipes Remaining'],
