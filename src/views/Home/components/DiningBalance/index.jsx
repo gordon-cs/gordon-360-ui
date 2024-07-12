@@ -11,7 +11,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import GordonLoader from 'components/Loader';
 import { useEffect, useState } from 'react';
-import { Pie } from 'react-chartjs-2';
+import { Doughnut } from 'react-chartjs-2';
 import session from 'services/session';
 import user from 'services/user';
 import styles from '../Doughnut.module.css';
@@ -74,63 +74,66 @@ const DiningBalance = () => {
     );
   } else {
     const swipeInit = diningInfo.Swipes.InitialBalance;
-    const swipeCurr = 100;
+    const swipeCurr = swipeInit === 0 ? 1 : diningInfo.Swipes.CurrentBalance;
     const swipeUsed = swipeInit === 0 ? 0 : swipeInit - swipeCurr;
 
     const dollarInit = diningInfo.DiningDollars.InitialBalance;
 
     const dollarCurrNotRounded = diningInfo.DiningDollars.CurrentBalance;
-    const dollarCurr = 30;
+    const dollarCurr = Math.round(dollarCurrNotRounded * 100) / 100;
     const dollarUsedNotRounded = dollarInit - dollarCurr;
     //fixed issue of too many decimal places in meal points
     const dollarUsed = Math.round(dollarUsedNotRounded * 100) / 100;
 
     const guestInit = diningInfo.GuestSwipes.InitialBalance;
-    const guestCurr = 5;
+    const guestCurr = diningInfo.GuestSwipes.CurrentBalance;
     const guestUsed = guestInit - guestCurr;
 
     const daysLeftRounded = Math.max(daysRemaining, 0);
     const daysFinished = daysInSession - daysLeftRounded;
 
     const options = {
-      responsive: true,
-      legend: { display: false },
-      plugins: {
-        tooltip: {
-          // Allow different tooltips for different datasets within the same pie;
-          callbacks: {
-            // Code taken from https://github.com/chartjs/Chart.js/issues/1417
-            label: function (data) {
-              return swipeInit === 0 &&
-                data.dataset.labels.includes('Swipes Used' || 'Swipes Remaining')
-                ? data.dataset.labels[data.dataIndex] + ': ' + '\u221E'
-                : data.dataset.labels[data.dataIndex] + ': ' + data.dataset.data[data.dataIndex];
-            },
+      cutoutPercentage: 0,
+      tooltips: {
+        // Allow different tooltips for different datasets within the same pie;
+        callbacks: {
+          // Code taken from https://github.com/chartjs/Chart.js/issues/1417
+          label: function (item, data) {
+            return (
+              data.datasets[item.datasetIndex].label[item.index] +
+              ': ' +
+              (swipeInit === 0 &&
+              data.datasets[item.datasetIndex].label[item.index].includes('Swipes') &&
+              !data.datasets[item.datasetIndex].label[item.index].includes('Guest')
+                ? '\u221E'
+                : data.datasets[item.datasetIndex].data[item.index])
+            );
           },
         },
       },
+      legend: false,
     };
 
     const data = {
       legendEntries: ['A', 'B', 'C', 'D'], // Just used as key
       datasets: [
         {
-          labels: ['Days Finished', 'Days Remaining'],
+          label: ['Days Finished', 'Days Remaining'],
           data: [daysFinished, daysLeftRounded],
-          backgroundColor: [emptyColor, daysColor],
+          backgroundColor: [daysColor, emptyColor],
         },
         {
-          labels: ['Swipes Used', 'Swipes Remaining'],
+          label: ['Swipes Used', 'Swipes Remaining'],
           data: [swipeUsed, swipeCurr],
           backgroundColor: [emptyColor, swipesColor],
         },
         {
-          labels: ['Dining Dollars Used', 'Dining Dollars Remaining'],
+          label: ['Dining Dollars Used', 'Dining Dollars Remaining'],
           data: [dollarUsed, dollarCurr],
           backgroundColor: [emptyColor, dollarsColor],
         },
         {
-          labels: ['Guest Swipes Used', 'Guest Swipes Remaining'],
+          label: ['Guest Swipes Used', 'Guest Swipes Remaining'],
           data: [guestUsed, guestCurr],
           backgroundColor: [emptyColor, guestColor],
         },
@@ -162,7 +165,7 @@ const DiningBalance = () => {
             </Typography>
           </Grid>
         </Grid>
-        <Pie data={data} options={options} />
+        <Doughnut data={data} height={175} options={options} />
         <div
           style={{
             marginTop: '1rem',
