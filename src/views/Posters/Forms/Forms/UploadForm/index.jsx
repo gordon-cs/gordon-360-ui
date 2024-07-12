@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Button,
   TextField,
@@ -18,9 +18,9 @@ import involvementService from 'services/involvements';
 import sessionService from 'services/session';
 import { useLocation } from 'react-router-dom';
 import styles from './UploadForm.module.scss';
-import { create } from 'lodash';
 
 const UploadForm = ({ onClose, onCropSubmit }) => {
+  const [priorityStatus, setPriorityStatus] = useState('');
   const [selectedClub, setSelectedClub] = useState('');
   const [openCropPoster, setOpenCropPoster] = useState(false);
   const [openPosterCheck, setOpenPosterCheck] = useState(false);
@@ -95,7 +95,15 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
 
   useEffect(() => {
     const checkIfFormIsValid = () => {
-      if (startTime && endTime && title && description && selectedClub && croppedImage) {
+      if (
+        startTime &&
+        endTime &&
+        title &&
+        description &&
+        selectedClub &&
+        croppedImage &&
+        priorityStatus
+      ) {
         setIsSubmitDisabled(false);
       } else {
         setIsSubmitDisabled(true);
@@ -103,10 +111,13 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
     };
 
     checkIfFormIsValid();
-  }, [startTime, endTime, title, description, selectedClub, croppedImage]);
+  }, [startTime, endTime, title, description, selectedClub, croppedImage, priorityStatus]);
 
   const handleClubChange = (event) => {
     setSelectedClub(event.target.value);
+  };
+  const handlePriorityChange = (event) => {
+    setPriorityStatus(event.target.value);
   };
 
   const posterInfo = () => {
@@ -118,6 +129,7 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
       VisibleDate: startTime,
       ExpirationDate: endTime,
       UploaderADUSername: profile.AD_Username,
+      Priority: priorityStatus == 1 ? 1 : 0,
       Status: 1,
     };
   };
@@ -141,20 +153,14 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
   });
 
   return (
-    <form onSubmit={handleSubmit} className={styles.uploadFormContainer}>
+    <form className={styles.uploadFormContainer}>
       <Dialog open={openPosterCheck} onClose={() => setOpenPosterCheck(false)}>
-        <CardHeader
-          title={
-            <Grid container direction="row" alignItems="center" className={styles.gridItemHeader}>
-              <Grid item xs={7} align="left">
-                Upload Poster
-              </Grid>
-            </Grid>
-          }
-          className={styles.gc360_header}
-        />
         <DialogContent className={styles.dialogContent}>
-          <PosterCheck open={openPosterCheck} onClose={() => setOpenPosterCheck(false)} />
+          <PosterCheck
+            open={openPosterCheck}
+            onClose={() => setOpenPosterCheck(false)}
+            posterInfo={posterInfo}
+          />
         </DialogContent>
       </Dialog>
       <Dialog open={openCropPoster} onClose={() => setOpenCropPoster(false)}>
@@ -266,6 +272,7 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
             sx={getTextFieldSX('var(--mui-palette-secondary-main)')}
           />
         </Grid>
+
         <Grid item xs={12} className={styles.gridItem}>
           <TextField
             select
@@ -294,6 +301,38 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
             ))}
           </TextField>
         </Grid>
+        {/* Add a check for site admin like Chris Carlson to be have access to priority screen*/}
+        {selectedClub == 'CEC' && (
+          <Grid item xs={12} className={styles.gridItem}>
+            <TextField
+              select
+              label="Priority"
+              value={priorityStatus}
+              onChange={handlePriorityChange}
+              variant="outlined"
+              fullWidth
+              required
+              InputLabelProps={{
+                classes: {
+                  focused: styles.textFieldLabelFocused,
+                },
+              }}
+              InputProps={{
+                classes: {
+                  root: styles.textFieldRootFocused,
+                },
+              }}
+              sx={getTextFieldSX('var(--mui-palette-secondary-main)')}
+            >
+              <MenuItem key={'Yes'} value={1}>
+                Yes
+              </MenuItem>
+              <MenuItem key={'No'} value={2}>
+                No
+              </MenuItem>
+            </TextField>
+          </Grid>
+        )}
         <Grid item xs={12} className={styles.gridItem}>
           <Button
             variant="contained"
@@ -307,7 +346,7 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
         <Grid item xs={6} className={styles.gridItem}>
           <Button
             onClick={() => setOpenPosterCheck(true)}
-            type="submit"
+            type="button"
             variant="contained"
             color="primary"
             className={styles.submitButton}
