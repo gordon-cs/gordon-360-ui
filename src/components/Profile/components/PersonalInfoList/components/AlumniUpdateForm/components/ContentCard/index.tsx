@@ -1,7 +1,8 @@
 import { Grid, Card, CardContent, CardHeader } from '@mui/material/';
 import styles from './ContentCard.module.css';
+import { ReactNode } from 'react';
 
-const ContentCard = (props) => {
+const ContentCard = (props: { title?: string; children: ReactNode }) => {
   return (
     <Card>
       <CardHeader className={styles.update_header} title={props.title} />

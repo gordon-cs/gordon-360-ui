@@ -1,6 +1,17 @@
 export type Override<What, With> = Omit<What, keyof With> & With;
 
 /**
+ * Gets the type of elements in an array, given the type of the array
+ */
+export type ArrayElement<ArrayType extends readonly unknown[]> =
+  ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
+
+/**
+ * Omits the given key(s) from every case of a union, while preserving the union cases
+ */
+export type DistributiveOmit<T, K extends keyof any> = T extends any ? Omit<T, K> : never;
+
+/**
  * Create a closure to map an array on a given predicate
  *
  * @param predicate The predicate to map on
