@@ -2,6 +2,7 @@ import { useState } from 'react';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import BeforeInstallPromptEvent from '@mui/material';
 import styles from './PWAInstructions.module.css';
 
 import DesktopChromeInstall from './images/Desktop/Desktop-Chrome-Install-360.png';
@@ -118,12 +119,30 @@ const devices = {
   },
 };
 
-const PWAInstructions = (props) => {
-  const [device, setDevice] = useState(null);
-  const [platform, setPlatform] = useState(null);
+interface BeforeInstallPromptEvent extends Event {
+  readonly platforms: string[];
+  readonly userChoice: Promise<{
+    outcome: 'accepted' | 'dismissed';
+    platform: string;
+  }>;
+  prompt(): Promise<void>;
+}
+
+type Props = {
+  open: boolean;
+  handleDisplay: () => void;
+  deferredPWAPrompt: BeforeInstallPromptEvent;
+};
+
+const PWAInstructions = ({ open, handleDisplay, deferredPWAPrompt }: Props) => {
+  const [device, setDevice] = useState<string | null>(null);
+  const [platform, setPlatform] = useState<string | null>(null);
 
   // Handles which device is selected
-  const handleDeviceChange = (event, selectedDevice) => {
+  const handleDeviceChange = (
+    event: React.MouseEvent<HTMLElement>,
+    selectedDevice: string | null,
+  ) => {
     // Checks the selected device to prevent the user from deselecting a selected toggle
     if (selectedDevice === 'Desktop') {
       setDevice(selectedDevice);
@@ -136,7 +155,10 @@ const PWAInstructions = (props) => {
   };
 
   // Handles which platform is selected
-  const handlePlatformChange = (event, selectedPlatform) => {
+  const handlePlatformChange = (
+    event: React.MouseEvent<HTMLElement>,
+    selectedPlatform: string | null,
+  ) => {
     // Checks the selected platform to prevent the user from deselecting a selected toggle
     if (selectedPlatform !== null) setPlatform(selectedPlatform);
   };
@@ -178,85 +200,97 @@ const PWAInstructions = (props) => {
           >
             <Typography variant="h5">Instructions for {preText}</Typography>
           </Grid>
-          {devices[device][platform].map((step, index) => {
-            /**
-             * The first step is processed differently from the rest in order to show a link to
-             * download Google Chrome. This is for all platforms except "Apple" since the PWA can
-             * only be installed through Safari with Apple
-             */
-            if (index === 0 && platform !== 'Apple') {
-              return (
-                <Grid container xs={12}>
-                  <Grid
-                    container
-                    xs={12}
-                    alignItems="center"
-                    className={styles.pwa_instructions_content_container_toggles_instructions_text}
-                  >
-                    <Typography
-                      variant="h6"
+          {
+            //@ts-ignore TypeScript cannot encode the fact that platform may have a different value depending on the value of device
+            devices[device][platform] //
+              .map((step: string[], index: number) => {
+                /**
+                 * The first step is processed differently from the rest in order to show a link to
+                 * download Google Chrome. This is for all platforms except "Apple" since the PWA can
+                 * only be installed through Safari with Apple
+                 */
+                if (index === 0 && platform !== 'Apple') {
+                  return (
+                    <Grid container xs={12}>
+                      <Grid
+                        container
+                        xs={12}
+                        alignItems="center"
+                        className={
+                          styles.pwa_instructions_content_container_toggles_instructions_text
+                        }
+                      >
+                        <Typography
+                          variant="h6"
+                          className={
+                            styles.pwa_instructions_content_container_toggles_instructions_text_step
+                          }
+                        >
+                          Step {index + 1}:&nbsp;
+                        </Typography>
+                        <Typography
+                          variant="subtitle1"
+                          className={
+                            styles.pwa_instructions_content_container_toggles_instructions_text_instruction
+                          }
+                        >
+                          {step[0]}&nbsp;
+                          <a href={step[1]}>click here</a>.
+                        </Typography>
+                      </Grid>
+                      <Grid
+                        container
+                        xs={12}
+                        className={
+                          styles.pwa_instructions_content_container_toggles_instructions_image
+                        }
+                      >
+                        <img src={step[2]} alt={step[3]} />
+                      </Grid>
+                    </Grid>
+                  );
+                }
+                // Creates the JSX of the current step containing the instruction and its corresponding image
+                return (
+                  <Grid container xs={12}>
+                    <Grid
+                      container
+                      xs={12}
+                      alignItems="center"
                       className={
-                        styles.pwa_instructions_content_container_toggles_instructions_text_step
+                        styles.pwa_instructions_content_container_toggles_instructions_text
                       }
                     >
-                      Step {index + 1}:&nbsp;
-                    </Typography>
-                    <Typography
-                      variant="subtitle1"
+                      <Typography
+                        variant="h6"
+                        className={
+                          styles.pwa_instructions_content_container_toggles_instructions_text_step
+                        }
+                      >
+                        Step {index + 1}:&nbsp;
+                      </Typography>
+                      <Typography
+                        variant="subtitle1"
+                        className={
+                          styles.pwa_instructions_content_container_toggles_instructions_text_instruction
+                        }
+                      >
+                        {step[0]}
+                      </Typography>
+                    </Grid>
+                    <Grid
+                      container
+                      xs={12}
                       className={
-                        styles.pwa_instructions_content_container_toggles_instructions_text_instruction
+                        styles.pwa_instructions_content_container_toggles_instructions_image
                       }
                     >
-                      {step[0]}&nbsp;
-                      <a href={step[1]}>click here</a>.
-                    </Typography>
+                      <img src={step[1]} alt={step[2]} />
+                    </Grid>
                   </Grid>
-                  <Grid
-                    container
-                    xs={12}
-                    className={styles.pwa_instructions_content_container_toggles_instructions_image}
-                  >
-                    <img src={step[2]} alt={step[3]} />
-                  </Grid>
-                </Grid>
-              );
-            }
-            // Creates the JSX of the current step containing the instruction and its corresponding image
-            return (
-              <Grid container xs={12}>
-                <Grid
-                  container
-                  xs={12}
-                  alignItems="center"
-                  className={styles.pwa_instructions_content_container_toggles_instructions_text}
-                >
-                  <Typography
-                    variant="h6"
-                    className={
-                      styles.pwa_instructions_content_container_toggles_instructions_text_step
-                    }
-                  >
-                    Step {index + 1}:&nbsp;
-                  </Typography>
-                  <Typography
-                    variant="subtitle1"
-                    className={
-                      styles.pwa_instructions_content_container_toggles_instructions_text_instruction
-                    }
-                  >
-                    {step[0]}
-                  </Typography>
-                </Grid>
-                <Grid
-                  container
-                  xs={12}
-                  className={styles.pwa_instructions_content_container_toggles_instructions_image}
-                >
-                  <img src={step[1]} alt={step[2]} />
-                </Grid>
-              </Grid>
-            );
-          })}
+                );
+              })
+          }
         </Grid>
       );
     }
@@ -264,7 +298,7 @@ const PWAInstructions = (props) => {
 
   function createContent() {
     // If the browser has quick PWA installation capability
-    if (props.deferredPWAPrompt) {
+    if (deferredPWAPrompt) {
       return (
         <Grid
           container
@@ -286,7 +320,7 @@ const PWAInstructions = (props) => {
             <Button
               onClick={() => {
                 // Exits out the dialog box
-                props.handleDisplay();
+                handleDisplay();
               }}
               className={styles.button_cancel}
             >
@@ -295,7 +329,7 @@ const PWAInstructions = (props) => {
             <Button
               onClick={() => {
                 // Calls the browser's default prompt to do a quick installation of the PWA
-                props.deferredPWAPrompt.prompt();
+                deferredPWAPrompt.prompt();
               }}
               className={styles.button_install}
             >
@@ -423,7 +457,7 @@ const PWAInstructions = (props) => {
             <Button
               onClick={() => {
                 // Exits out the dialog box
-                props.handleDisplay();
+                handleDisplay();
               }}
               className={styles.button_cancel}
             >
@@ -437,7 +471,7 @@ const PWAInstructions = (props) => {
 
   return (
     <Dialog
-      open={props.open}
+      open={open}
       fullWidth
       maxWidth="sm"
       aria-labelledby="alert-dialog-slide-title"
@@ -446,9 +480,7 @@ const PWAInstructions = (props) => {
       <Grid container className={styles.pwa_instructions}>
         <Grid container xs={12} justifyContent="center" className={styles.pwa_instructions_title}>
           <Typography variant="h5">
-            {props.deferredPWAPrompt
-              ? 'Install Gordon 360'
-              : ' Instructions to install Gordon 360 '}
+            {deferredPWAPrompt ? 'Install Gordon 360' : ' Instructions to install Gordon 360 '}
           </Typography>
         </Grid>
         <DialogContent className={styles.pwa_instructions_content}>{createContent()}</DialogContent>

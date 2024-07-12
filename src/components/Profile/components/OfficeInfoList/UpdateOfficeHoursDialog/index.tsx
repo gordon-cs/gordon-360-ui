@@ -1,14 +1,17 @@
-import { FormControl, IconButton, TextField } from '@mui/material';
+import { AlertColor, FormControl, IconButton, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonSnackbar from 'components/Snackbar';
 import { useState } from 'react';
 import userService from 'services/user';
 
-const UpdateOfficeHours = (props) => {
+const UpdateOfficeHours = (props: {
+  officeHours: string;
+  changeOfficeHours: (hours: string) => void;
+}) => {
   const [open, setOpen] = useState(false);
   const [hours, setHours] = useState(props.officeHours);
-  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
+  const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
   const maxCharacter = 4000;
 
   const handleSubmit = async () => {
@@ -38,7 +41,6 @@ const UpdateOfficeHours = (props) => {
         buttonClicked={handleSubmit}
         cancelButtonName="CANCEL"
         cancelButtonClicked={() => setOpen(false)}
-        handleSubmit
       >
         <FormControl sx={{ m: 2, minWidth: 500 }}>
           <TextField
@@ -50,13 +52,13 @@ const UpdateOfficeHours = (props) => {
             value={hours}
             onChange={(event) => setHours(event.target.value)}
             inputProps={{ maxLength: maxCharacter - 1 }}
-            required="required"
+            required
           />
         </FormControl>
       </GordonDialogBox>
       <GordonSnackbar
         open={snackbar.open}
-        severity={snackbar.severity}
+        severity={snackbar.severity as AlertColor}
         text={snackbar.message}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
       />

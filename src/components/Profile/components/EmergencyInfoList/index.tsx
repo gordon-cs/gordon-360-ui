@@ -3,10 +3,9 @@ import styles from './EmergencyInfoList.module.css';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import user from 'services/user';
 
-import { Typography, Grid, Card, CardHeader, CardContent, List } from '@mui/material';
-import { values } from 'lodash';
+import { Typography, Grid, Card, CardHeader, CardContent, List, ListItem } from '@mui/material';
 
-const formatPhone = (phone) => {
+const formatPhone = (phone: string) => {
   if (phone?.length === 10) {
     return `(${phone?.slice(0, 3)}) ${phone?.slice(3, 6)}-${phone?.slice(6)}`;
   } else if (phone?.length === 11 && phone[0] === '1') {
@@ -16,8 +15,21 @@ const formatPhone = (phone) => {
   }
 };
 
-const EmergencyInfoList = ({ username }) => {
-  const [emergencyContacts, setEmergencyContacts] = useState([]);
+type Contact = {
+  FirstName?: string;
+  LastName?: string;
+  Relationship?: string;
+  MobilePhone: string;
+  HomePhone: string;
+  WorkPhone: string;
+};
+
+type Props = {
+  username: string;
+};
+
+const EmergencyInfoList = ({ username }: Props) => {
+  const [emergencyContacts, setEmergencyContacts] = useState<Contact[]>([]);
 
   useEffect(() => {
     const loadEmrg = async () => {
@@ -38,38 +50,35 @@ const EmergencyInfoList = ({ username }) => {
               <>
                 <ProfileInfoListItem
                   title="Emergency Contact:"
-                  contentText={`${emrgContact.FirstName?.value} ${emrgContact.LastName?.value} ${
+                  contentText={`${emrgContact.FirstName} ${emrgContact.LastName} ${
                     emrgContact.Relationship ? ` (${emrgContact.Relationship})` : ''
                   }`}
                   contentClass={'private'}
                 />
-                <ul type="disc">
-                  <li>
+                <List style={{ listStyleType: 'disc' }}>
+                  <ListItem>
                     <ProfileInfoListItem
                       title="Mobile Phone:"
                       contentText={
-                        <a
-                          href={`tel:${emrgContact.MobilePhone?.value}`}
-                          className="gc360_text_link"
-                        >
-                          {formatPhone(emrgContact.MobilePhone?.value)}
+                        <a href={`tel:${emrgContact.MobilePhone}`} className="gc360_text_link">
+                          {formatPhone(emrgContact.MobilePhone)}
                         </a>
                       }
                       contentClass={'private'}
                     />
-                  </li>
-                  <li>
+                  </ListItem>
+                  <ListItem>
                     <ProfileInfoListItem
                       title="Home Phone:"
                       contentText={
-                        <a href={`tel:${emrgContact.HomePhone?.value}`} className="gc360_text_link">
-                          {formatPhone(emrgContact.HomePhone?.value)}
+                        <a href={`tel:${emrgContact.HomePhone}`} className="gc360_text_link">
+                          {formatPhone(emrgContact.HomePhone)}
                         </a>
                       }
                       contentClass={'private'}
                     />
-                  </li>
-                  <li>
+                  </ListItem>
+                  <ListItem>
                     <ProfileInfoListItem
                       title="Work Phone:"
                       contentText={
@@ -79,8 +88,8 @@ const EmergencyInfoList = ({ username }) => {
                       }
                       contentClass={'private'}
                     />
-                  </li>
-                </ul>
+                  </ListItem>
+                </List>
               </>
             ))}
             <Typography align="left" className={styles.disclaimer}>
