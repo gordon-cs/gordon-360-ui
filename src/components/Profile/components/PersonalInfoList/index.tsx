@@ -595,7 +595,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
         <Typography>NOTE:</Typography>
         <ul>
           <li>
-            <Typography>Private and shaded information is visible to authprized users.</Typography>
+            <Typography>Private and shaded information is visible to authorized users.</Typography>
           </li>
           <li>
             <Typography>
@@ -643,7 +643,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     isMobilePhonePrivate ||
     isCampusLocationPrivate ||
     isSpousePrivate ||
-    cliftonStrengths ? (
+    isCliftonStrengthsPrivate ? (
       <Typography align="left" className={styles.disclaimer}>
         Visible only to authorized personnel
       </Typography>

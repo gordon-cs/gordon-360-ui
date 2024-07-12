@@ -40,13 +40,6 @@ type Props = {
   createSnackbar: (message: string, severity: AlertColor) => void;
 };
 
-// These three-character strings are valid substrings for the PersonType
-// field in the profile. These are used in the API and so cannot be changed
-// here unless the correspondin change is made in the API.
-const PERSONTYPE_FACSTAFF = 'fac';
-const PERSONTYPE_STUDENT = 'stu';
-const PERSONTYPE_ALUMNI = 'alu';
-
 const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) => {
   const CROP_DIM = 200; // pixels
   const [isImagePublic, setIsImagePublic] = useState<boolean>(false);
@@ -68,7 +61,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
   const [cliftonColor, setCliftonColor] = useState<string>();
   const { updateImage } = useUserActions();
   const cropperRef = useRef<(ReactCropperElement & HTMLImageElement) | null>(null);
-  const isStudent = profile.PersonType?.includes(PERSONTYPE_STUDENT);
+  const isStudent = profile.PersonType?.includes('stu');
   let photoDialogErrorTimeout: string | number | NodeJS.Timeout | undefined;
 
   /**
@@ -80,7 +73,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
         // Gets the requested user's image. Depending on requested user's person type and the currently
         // signed-in user's person type, different images will be shown
         const { def: defaultImage, pref: preferredImage } =
-          profile.PersonType === PERSONTYPE_FACSTAFF
+          profile.PersonType === 'fac'
             ? /**
                * The requested user's image is Faculty
                * If currently signed-in user is Faculty : Will receive default and preferred image
@@ -712,7 +705,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
                 >
                   <Typography variant="h6" paragraph>
                     {`${
-                      userProfile.Title && userProfile.PersonType === PERSONTYPE_FACSTAFF
+                      userProfile.Title && userProfile.PersonType === 'fac'
                         ? `${userProfile.Title} `
                         : ''
                     }${userProfile.FirstName.value}${hasNickname ? ` (${userProfile.NickName.value})` : ''} ${
@@ -739,7 +732,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
                     xs={12}
                     className={styles.identification_card_content_card_container_info_email}
                   >
-                    <a href={`mailto:${userProfile.Email.value}`}>
+                    <a href={`mailto:${userProfile.Email}`}>
                       <div
                         className={
                           styles.identification_card_content_card_container_info_email_container
@@ -750,7 +743,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
                             styles.identification_card_content_card_container_info_email_container_icon
                           }
                         />
-                        <Typography paragraph>{userProfile.Email.value}</Typography>
+                        <Typography paragraph>{userProfile.Email}</Typography>
                       </div>
                     </a>
                   </Grid>

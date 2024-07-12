@@ -70,7 +70,7 @@ type BaseProfileInfo = {
   HomeFax: string;
   KeepPrivate: string;
   Barcode: string;
-  Email: ProfileStringItem;
+  Email: string;
   Gender: string;
   AD_Username: string;
   show_pic: number;
@@ -141,7 +141,7 @@ export type UnformattedStudentProfileInfo = BaseProfileInfo & {
 
 type UnformattedAlumniProfileInfo = BaseProfileInfo & {
   WebUpdate?: string;
-  HomeEmail: ProfileStringItem;
+  HomeEmail: string;
   MaritalStatus: string;
   College: string;
   ClassYear: string;
