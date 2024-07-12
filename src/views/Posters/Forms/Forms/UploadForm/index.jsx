@@ -178,7 +178,7 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
       </Dialog>
       <Grid container spacing={1}>
         <Grid item xs={12} className={styles.gridItem}>
-          Start Time
+          Display After
           <TextField
             type="datetime-local"
             variant="outlined"
@@ -200,7 +200,7 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
           />
         </Grid>
         <Grid item xs={12} className={styles.gridItem}>
-          End Time
+          Display Until
           <TextField
             type="datetime-local"
             variant="outlined"
