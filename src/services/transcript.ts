@@ -24,6 +24,20 @@ export type Groupexperience = {
   latestDate?: string;
 };
 
+export type NewStudentEmployment = {
+  Job_Title: string;
+  Job_Department: string;
+  Job_Department_Name: string;
+  Job_Date: session[];
+  Job_Latest_Date: string;
+};
+
+export type session = {
+  Job_Start_Date?: string;
+  Job_End_Date?: string;
+  Job_Expected_Date?: string;
+};
+
 const getItems = (username: string) =>
   Promise.all([
     userService.getMembershipHistory(username),
@@ -84,8 +98,6 @@ const categorizeItems = async (memberships: MembershipHistory[], jobs: StudentEm
       : getExperienceEndDate(b) - getExperienceEndDate(a);
   });
 
-  //groupedMembershipHistory.experiences = jobs;
-
   let GroupByTitle = Object.entries(Object.groupBy(jobs, (job) => job.Job_Title)).map(
     ([title, job]) => ({
       Job_Title: title,
@@ -115,8 +127,6 @@ const categorizeItems = async (memberships: MembershipHistory[], jobs: StudentEm
     return getLatestEndDate(b)! - getLatestEndDate(a)!;
   });
 
-  console.log(GroupByTitle);
-
   let test = [];
   for (let i = 0; i < GroupByTitle.length; i++) {
     let tempJob = GroupByTitle?.[i].job;
@@ -137,10 +147,6 @@ const categorizeItems = async (memberships: MembershipHistory[], jobs: StudentEm
     jobs[i] = test[i];
   }
 
-  //console.log('jobs');
-  //console.log(jobs);
-  //console.log('groupedMembershipHistory');
-  //console.log(groupedMembershipHistory);
   return groupedMembershipHistory;
 };
 
