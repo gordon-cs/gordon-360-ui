@@ -7,14 +7,20 @@ import {
   Checkbox,
   Chip,
   Collapse,
+  FormControl,
   FormControlLabel,
   Grid,
-  TextField,
+  InputLabel,
   Link,
+  MenuItem,
+  Select,
+  TextField,
 } from '@mui/material';
+import { HashLink } from 'react-router-hash-link';
 import AddIcon from '@mui/icons-material/Add';
 import EventIcon from '@mui/icons-material/Event';
 import FilterListIcon from '@mui/icons-material/FilterList';
+import ClockIcon from '@mui/icons-material/AccessTime';
 import Autocomplete from '@mui/material/Autocomplete';
 import EventList from 'components/EventList';
 import GordonLoader from 'components/Loader';
@@ -33,12 +39,14 @@ const Events = () => {
   const [includePast, setIncludePast] = useState(false);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState([]);
+  const [timeFilter, setTimeFilter] = useState('2 Weeks');
   const [hasInitializedEvents, setHasInitializedEvents] = useState(false);
   const futureEvents = useMemo(() => gordonEvent.getFutureEvents(allEvents), [allEvents]);
   const [width] = useWindowSize();
   const isAuthenticated = useIsAuthenticated();
   const navigate = useNavigate();
   const location = useLocation();
+  const timeFilters = ['1 Week', '2 Weeks', '1 Month', '4 Months'];
 
   useEffect(() => {
     const loadEvents = async () => {
@@ -84,8 +92,8 @@ const Events = () => {
   }, [includePast, allEvents, futureEvents]);
 
   useEffect(() => {
-    setFilteredEvents(gordonEvent.getFilteredEvents(events, filters, search));
-  }, [events, filters, search]);
+    setFilteredEvents(gordonEvent.getFilteredEvents(events, filters, search, timeFilter));
+  }, [events, filters, search, timeFilter]);
 
   const handleChangeFilters = async (value) => {
     setFilters(value);
@@ -102,6 +110,7 @@ const Events = () => {
     setURLParams(false, []);
     setSearch('');
     setOpen(false);
+    setTimeFilter('');
   };
 
   const handleChangeIncludePast = () => {
@@ -137,11 +146,57 @@ const Events = () => {
     </div>
   );
 
+  let filterReminder;
+
+  if (timeFilter != '') {
+    filterReminder = (
+      <>
+        <div align="center">
+          Your search is limited to {timeFilter}. Check out the top of the page if you want to
+          change your filters.
+        </div>
+        <div align="center">
+          <Button
+            variant="contained"
+            color="secondary"
+            component={HashLink}
+            to="#top"
+            smooth
+            id="bottom"
+          >
+            Jump to Top
+          </Button>
+        </div>
+      </>
+    );
+  } else {
+    filterReminder = (
+      <>
+        <div align="center">
+          You have reached the end of Gordon's events. Check out the top of the page if you want to
+          add filters.
+        </div>
+        <div align="center">
+          <Button
+            variant="contained"
+            color="secondary"
+            component={HashLink}
+            to="#top"
+            smooth
+            id="bottom"
+          >
+            Jump to Top
+          </Button>
+        </div>
+      </>
+    );
+  }
+
   if (width >= 920) {
     return (
       <Grid container justifyContent="center" spacing={6}>
         <Grid item xs={12} lg={10} xl={8}>
-          <CardHeader title={searchPageTitle} className="gc360_header" />
+          <CardHeader title={searchPageTitle} className="gc360_header" id="top" />
           <Card style={{ padding: '0 3vw' }}>
             <CardContent>
               {/* Search Bar and Filters */}
@@ -200,7 +255,7 @@ const Events = () => {
 
                 <Grid item xs={12}>
                   <Collapse in={open} timeout="auto" unmountOnExit>
-                    <Grid container spacing={2} alignItems="center">
+                    <Grid container spacing={2} direction="row" alignItems="center">
                       <Grid item>
                         <FilterListIcon className={styles.events_icon} />
                       </Grid>
@@ -222,20 +277,61 @@ const Events = () => {
                           }
                           value={filters}
                           renderInput={(param) => (
-                            <TextField {...param} variant="filled" label="Filters" />
+                            <TextField {...param} variant="filled" label="Event Type" />
                           )}
                         />
                       </Grid>
-                      <Grid container item xs={3}>
+                      <Grid container item xs={3.25}>
                         <FormControlLabel
                           control={
-                            <Checkbox checked={includePast} onChange={handleChangeIncludePast} />
+                            <Checkbox
+                              checked={includePast}
+                              onChange={handleChangeIncludePast}
+                              color="secondary"
+                            />
                           }
                           label="Include Past"
                         />
                       </Grid>
+
+                      <Grid item>
+                        <ClockIcon className={styles.events_icon} />
+                      </Grid>
+
+                      <Grid item xs={8}>
+                        <FormControl fullWidth variant="filled">
+                          <InputLabel id="event-time">Time Window</InputLabel>
+                          <Select
+                            labelId="event-time"
+                            id="even-time"
+                            value={timeFilter}
+                            onChange={(event) => setTimeFilter(event.target.value)}
+                          >
+                            <MenuItem label="All" value="">
+                              <em>All</em>
+                            </MenuItem>
+                            {timeFilters.map((timeFilter) => (
+                              <MenuItem value={timeFilter} key={timeFilter}>
+                                {timeFilter}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Grid>
                     </Grid>
                   </Collapse>
+                  <Grid item container marginTop={2} justifyContent="center" alignItems="center">
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      component={HashLink}
+                      to="#bottom"
+                      smooth
+                      id="top"
+                    >
+                      Jump to Bottom
+                    </Button>
+                  </Grid>
                 </Grid>
               </Grid>
             </CardContent>
@@ -247,6 +343,7 @@ const Events = () => {
           <Grid item xs={12}>
             {content}
           </Grid>
+          <CardHeader item xs={12} className="gc360_header" title={filterReminder} id="bottom" />
         </Grid>
       </Grid>
     );
@@ -254,7 +351,7 @@ const Events = () => {
     return (
       <Grid container justifyContent="center" spacing={6}>
         <Grid item xs={12} lg={10} xl={8}>
-          <CardHeader title={searchPageTitle} className="gc360_header" />
+          <CardHeader title={searchPageTitle} className="gc360_header" id="top" />
           <Card style={{ padding: '0 3vw' }}>
             <CardContent>
               {/* Search Bar and Filters */}
@@ -321,7 +418,11 @@ const Events = () => {
                   <Grid container item justifyContent="center">
                     <FormControlLabel
                       control={
-                        <Checkbox checked={includePast} onChange={handleChangeIncludePast} />
+                        <Checkbox
+                          checked={includePast}
+                          onChange={handleChangeIncludePast}
+                          color="secondary"
+                        />
                       }
                       label="Include Past"
                     />
@@ -348,12 +449,49 @@ const Events = () => {
                           ))
                         }
                         renderInput={(param) => (
-                          <TextField {...param} variant="filled" label="Filters" />
+                          <TextField {...param} variant="filled" label="Event Type" />
                         )}
                       />
                     </Grid>
+                    {width > 600 && (
+                      <Grid item>
+                        <ClockIcon className={styles.events_icon} />
+                      </Grid>
+                    )}
+                    <Grid item xs={11}>
+                      <FormControl fullWidth variant="filled">
+                        <InputLabel id="event-time">Time Window</InputLabel>
+                        <Select
+                          labelId="event-time"
+                          id="even-time"
+                          value={timeFilter}
+                          onChange={(event) => setTimeFilter(event.target.value)}
+                        >
+                          <MenuItem label="All" value="">
+                            <em>All</em>
+                          </MenuItem>
+                          {timeFilters.map((timeFilter) => (
+                            <MenuItem value={timeFilter} key={timeFilter}>
+                              {timeFilter}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
                   </Grid>
                 </Collapse>
+                <Grid item container marginTop={2} justifyContent="center" alignItems="center">
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    component={HashLink}
+                    to="#bottom"
+                    smooth
+                    id="top"
+                  >
+                    Jump to Bottom
+                  </Button>
+                </Grid>
               </Grid>
             </CardContent>
           </Card>
@@ -362,6 +500,7 @@ const Events = () => {
           <Grid item xs={12}>
             {content}
           </Grid>
+          <CardHeader item xs={12} className="gc360_header" title={filterReminder} />
         </Grid>
       </Grid>
     );
