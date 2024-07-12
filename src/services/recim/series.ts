@@ -95,11 +95,22 @@ type AutoScheduleEstimate = {
 };
 
 export type BracketInfo = {
-  MatchID: number;
-  RoundNumber: number;
-  RoundOf: number;
-  SeedIndex: number;
-  IsLosers: boolean;
+  id: number;
+  nextMatchId: number;
+  tournamentRoundText: string;
+  state: string;
+  startTime: string;
+  participants: TeamBracketInfo[];
+  seedIndex: number;
+  isLosers: boolean;
+};
+
+type TeamBracketInfo = {
+  id: number;
+  resultText: string;
+  isWinner: boolean;
+  status: string;
+  name: string;
 };
 
 type AutoScheduleParameters = {

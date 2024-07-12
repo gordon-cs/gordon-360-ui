@@ -8,6 +8,7 @@
     "@azure/msal-react": "^2.0.12",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.10.8",
+    "@g-loot/react-tournament-brackets": "^1.0.31-rc",
     "@mui/icons-material": "^5.15.10",
     "@mui/material": "^5.15.10",
     "@mui/x-date-pickers": "^6.19.4",
