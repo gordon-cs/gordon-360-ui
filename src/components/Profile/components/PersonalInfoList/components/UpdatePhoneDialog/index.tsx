@@ -1,4 +1,11 @@
-import { FormControl, IconButton, Input, InputLabel } from '@mui/material';
+import {
+  AlertColor,
+  FormControl,
+  IconButton,
+  Input,
+  InputLabel,
+  InputBaseComponentProps,
+} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonSnackbar from 'components/Snackbar';
@@ -10,7 +17,7 @@ import styles from './UpdatePhone.module.css';
 const UpdatePhone = () => {
   const [open, setOpen] = useState(false);
   const [mobilePhoneNumber, setMobilePhoneNumber] = useState('');
-  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
+  const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
 
   const handleSubmit = async () => {
     try {
@@ -22,13 +29,18 @@ const UpdatePhone = () => {
     setOpen(false);
   };
 
-  const createSnackbar = (message, severity) => {
+  const createSnackbar = (message: string, severity: AlertColor) => {
     setSnackbar({ message, severity, open: true });
   };
 
   return (
     <div>
-      <IconButton className={styles.edit_button} onClick={() => setOpen(true)} size="large">
+      <IconButton
+        className={styles.edit_button}
+        onClick={() => setOpen(true)}
+        size="large"
+        aria-label="Update mobile phone number"
+      >
         <EditIcon fontSize="small" />
       </IconButton>
       <GordonDialogBox
@@ -50,14 +62,14 @@ const UpdatePhone = () => {
             value={mobilePhoneNumber}
             onChange={(event) => setMobilePhoneNumber(event.target.value)}
             inputComponent={phoneMaskUS}
-            required="required"
+            required
             autoFocus
           />
         </FormControl>
       </GordonDialogBox>
       <GordonSnackbar
         open={snackbar.open}
-        severity={snackbar.severity}
+        severity={snackbar.severity as AlertColor}
         text={snackbar.message}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
       />
@@ -67,20 +79,28 @@ const UpdatePhone = () => {
 
 // From material ui website
 // https://material-ui.com/components/text-fields/#integration-with-3rd-party-input-libraries
-const phoneMaskUS = forwardRef((props, ref) => {
-  const { onChange, ...other } = props;
+const phoneMaskUS = forwardRef(
+  (
+    props: {
+      onChange: (name: string | undefined, value: string) => void;
+      name?: string;
+    } & InputBaseComponentProps,
+    ref,
+  ) => {
+    const { onChange, ...other } = props;
 
-  return (
-    <IMaskInput
-      {...other}
-      ref={ref}
-      mask="(000) 000-0000"
-      placeholderChar={'\u2000'}
-      unmask={true}
-      onAccept={(value) => onChange({ target: { name: props.name, value } })}
-      overwrite
-    />
-  );
-});
+    return (
+      <IMaskInput
+        {...other}
+        ref={ref}
+        mask="(000) 000-0000"
+        placeholderChar={'\u2000'}
+        unmask={true}
+        onAccept={(value) => onChange(props.name, value)}
+        overwrite
+      />
+    );
+  },
+);
 
 export default UpdatePhone;
