@@ -595,7 +595,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
         <Typography>NOTE:</Typography>
         <ul>
           <li>
-            <Typography>Shaded areas are visible only to you.</Typography>
+            <Typography>Private and shaded information is visible to authprized users.</Typography>
           </li>
           <li>
             <Typography>
@@ -637,17 +637,20 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
       </div>
     ) : null);
 
-  const disclaimer =
-    !myProf &&
-    (isHomePhonePrivate ||
-      isAddressPrivate ||
-      isMobilePhonePrivate ||
-      isCampusLocationPrivate ||
-      isSpousePrivate) ? (
+  const disclaimer = !myProf ? (
+    isHomePhonePrivate ||
+    isAddressPrivate ||
+    isMobilePhonePrivate ||
+    isCampusLocationPrivate ||
+    isSpousePrivate ||
+    cliftonStrengths ? (
       <Typography align="left" className={styles.disclaimer}>
         Visible only to authorized personnel
       </Typography>
-    ) : null;
+    ) : (
+      <Typography align="center">No personal information to display</Typography>
+    )
+  ) : null;
 
   return (
     <Grid item xs={12}>
