@@ -98,20 +98,23 @@ const categorizeItems = async (memberships: MembershipHistory[], jobs: StudentEm
       : getExperienceEndDate(b) - getExperienceEndDate(a);
   });
 
-  let GroupByTitle = Object.entries(Object.groupBy(jobs, (job) => job.Job_Title)).map(
-    ([title, job]) => ({
-      Job_Title: title,
-      job,
-      latestDate: '',
-    }),
-  );
+  let GroupByTitle = Object.entries(
+    Object.groupBy(jobs, (job: StudentEmployment) => job.Job_Title),
+  ).map(([title, job]) => ({
+    Job_Title: title,
+    job,
+    latestDate: '',
+  }));
 
   // This code is has a lot of ? and ! opeators because typescript can't analyze the
   // loop to recognize that the array indexing is safe.
   for (let i = 0; i < GroupByTitle.length; i++) {
     let maxDate: string = '';
     let tempJob = GroupByTitle?.[i].job;
-    let numJobs = tempJob!.length;
+    let numJobs = 0;
+    if (tempJob) {
+      numJobs = tempJob!.length;
+    }
     for (let j = 0; j < numJobs; j++) {
       let tempVal = GroupByTitle[i];
       let value = tempVal!.job?.[j].Job_End_Date;
