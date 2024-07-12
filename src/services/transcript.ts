@@ -110,10 +110,10 @@ const categorizeItems = async (memberships: MembershipHistory[], jobs: StudentEm
   // loop to recognize that the array indexing is safe.
   for (let i = 0; i < GroupByTitle.length; i++) {
     let maxDate: string = '';
-    let tempJob = GroupByTitle?.[i].job;
+    let tempJob = GroupByTitle[i].job;
     let numJobs = 0;
     if (tempJob) {
-      numJobs = tempJob!.length;
+      numJobs = tempJob.length;
     }
     for (let j = 0; j < numJobs; j++) {
       let tempVal = GroupByTitle[i];
