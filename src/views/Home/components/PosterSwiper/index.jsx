@@ -8,6 +8,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/effect-coverflow';
 import { Navigate } from 'react-router-dom';
 import { useWindowSize } from 'hooks';
+import { getCurrentPosters, getPosters } from 'services/poster';
 
 //could import window
 import { Autoplay, Pagination, Navigation, Keyboard, EffectCoverflow } from 'swiper/modules';
@@ -31,8 +32,16 @@ import {
   AccordionDetails,
 } from '@mui/material';
 
-const PosterSwiper = () => {
+const PosterSwiper = (userName) => {
   const size = useWindowSize();
+  const [currentPosters, setCurrentPosters] = useState([]);
+  const [myPosters, setMyPosters] = useState([]);
+
+  useEffect(() => {
+    getCurrentPosters().then(setCurrentPosters);
+    //getPostersByUser().then(setMyPosters);
+  }, []);
+
   return (
     <Grid>
       <Card>
@@ -78,16 +87,15 @@ const PosterSwiper = () => {
             modules={[EffectCoverflow, Keyboard, Navigation, Pagination, Autoplay]}
             className="mySwiper"
           >
-            {DummyData.map((item) => (
+            {currentPosters.map((item) => (
               <SwiperSlide>
                 <Card variant="outlined">
-                  <CardActionArea component={Link} to="/posters">
+                  <CardActionArea component={Link} to={'/posters'}>
                     <CardMedia
                       loading="lazy"
                       component="img"
-                      alt={item.alt}
-                      src={item.image}
-                      title={item.title}
+                      src={item.ImagePath}
+                      title={item.Title}
                     />
                   </CardActionArea>
                 </Card>

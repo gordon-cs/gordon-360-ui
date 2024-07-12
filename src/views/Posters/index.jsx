@@ -17,6 +17,7 @@ import membershipService from 'services/membership';
 import { useUser } from 'hooks';
 import involvementService from 'services/involvements';
 import sessionService from 'services/session';
+import { getCurrentPosters } from 'services/poster';
 import DATA from './dummy-posters/dummyposters';
 import { useLocation } from 'react-router-dom';
 import CropPoster from './Forms/Forms/CropPoster';
@@ -31,6 +32,7 @@ const Posters = () => {
   const location = useLocation();
   const [openCropPoster, setOpenCropPoster] = useState(false);
 
+  const [allPosters, setAllPosters] = useState([]);
   const pizzaSlice = DATA.slice(0, 2);
   const sessionFromURL = new URLSearchParams(location.search).get('session');
 
@@ -94,6 +96,7 @@ const Posters = () => {
     setOpenUploadForm(false);
     setCroppedImage(null);
   };
+
   return (
     <Grid container justifyContent="center" spacing={4}>
       <Dialog
@@ -201,7 +204,7 @@ const Posters = () => {
           <CardHeader title="All Posters" className="gc360_header" />
           <CardContent>
             <Grid container direction="row" spacing={4}>
-              {DATA.map((item) => (
+              {allPosters.map((item) => (
                 <Grid item xs={6} sm={4} md={3} lg={2} key={item.key}>
                   <Card variant="outlined">
                     <CardActionArea component="div">

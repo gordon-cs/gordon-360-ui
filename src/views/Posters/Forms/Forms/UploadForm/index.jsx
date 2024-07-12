@@ -109,7 +109,7 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
     setSelectedClub(event.target.value);
   };
 
-  const posterInfo = useMemo(() => {
+  const posterInfo = () => {
     return {
       ACT_CDE: selectedClub,
       Title: title,
@@ -120,14 +120,18 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
       UploaderADUSername: profile.AD_Username,
       Status: 1,
     };
-  });
+  };
 
-  const handleSubmit = async () => {
-    console.log(posterInfo);
-    //event.preventDefault();
-    const createdPoster = await createPoster(posterInfo);
-    console.log('Poster created');
-    //onClose();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      console.log('Submitting poster...');
+      const createdPoster = await createPoster(posterInfo());
+      console.log('Poster created:', createdPoster);
+      onClose();
+    } catch (error) {
+      console.error('Error creating poster:', error);
+    }
   };
 
   const getTextFieldSX = (color) => ({
