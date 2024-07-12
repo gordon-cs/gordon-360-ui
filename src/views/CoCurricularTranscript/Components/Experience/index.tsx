@@ -6,14 +6,21 @@ type Props = {
   Experience: StudentEmployment;
 };
 
-const Experience = ({ Experience }: Props) => (
-  <div className={styles.experience_transcript_activities}>
-    <div className={styles.organization_role}>
-      {Experience.Job_Department_Name}, {Experience.Job_Title}
+const Experience = ({ Experience }: Props) => {
+  const jobTitles = newJobTitle(Experience);
+  return (
+    <div
+      className={
+        jobTitles === ''
+          ? `${styles.experience_transcript_activities} ${styles.empty_title}`
+          : styles.experience_transcript_activities
+      }
+    >
+      <div className={styles.organization_role}>{jobTitles}</div>
+      <div className={styles.date}> {formatDuration(Experience)} </div>
     </div>
-    <div className={styles.date}> {formatDuration(Experience)} </div>
-  </div>
-);
+  );
+};
 
 const formatDuration = ({ Job_Start_Date, Job_End_Date }: StudentEmployment) => {
   if (!Job_Start_Date) {
@@ -33,6 +40,13 @@ const formatDuration = ({ Job_Start_Date, Job_End_Date }: StudentEmployment) => 
   } else {
     return `${format(startDate, 'MMM yyyy')} - ${format(endDate, 'MMM yyyy')}`;
   }
+};
+
+const newJobTitle = ({ Job_Department_Name, Job_Title }: StudentEmployment) => {
+  if (Job_Title === '') {
+    return '';
+  }
+  return Job_Title === '' ? Job_Title : `${Job_Department_Name}, ${Job_Title}`;
 };
 
 export default Experience;

@@ -18,6 +18,26 @@ export type TranscriptItems = {
   activities: MembershipHistory[];
 };
 
+export type Groupexperience = {
+  Job_Title: string;
+  job: StudentEmployment[] | undefined;
+  latestDate?: string;
+};
+
+export type NewStudentEmployment = {
+  Job_Title: string;
+  Job_Department: string;
+  Job_Department_Name: string;
+  Job_Date: session[];
+  Job_Latest_Date: string;
+};
+
+export type session = {
+  Job_Start_Date?: string;
+  Job_End_Date?: string;
+  Job_Expected_Date?: string;
+};
+
 const getItems = (username: string) =>
   Promise.all([
     userService.getMembershipHistory(username),
@@ -50,7 +70,7 @@ const getItems = (username: string) =>
 const categorizeItems = async (memberships: MembershipHistory[], jobs: StudentEmployment[]) => {
   const groupedMembershipHistory: TranscriptItems = {
     honors: [] as MembershipHistory[],
-    experiences: jobs as (MembershipHistory | StudentEmployment)[],
+    experiences: jobs as StudentEmployment[],
     service: [] as MembershipHistory[],
     activities: [] as MembershipHistory[],
   };
@@ -70,9 +90,65 @@ const categorizeItems = async (memberships: MembershipHistory[], jobs: StudentEm
 
   groupedMembershipHistory.activities = memberships;
 
-  groupedMembershipHistory.experiences.sort(
-    (a, b) => getExperienceEndDate(b) - getExperienceEndDate(a),
-  );
+  // Sort experiences by experience name then by end date
+  groupedMembershipHistory.experiences.sort((a, b) => {
+    const nameComparison = getName(a).localeCompare(getName(b));
+    return nameComparison !== 0
+      ? nameComparison
+      : getExperienceEndDate(b) - getExperienceEndDate(a);
+  });
+
+  let GroupByTitle = Object.entries(
+    Object.groupBy(jobs, (job: StudentEmployment) => job.Job_Title),
+  ).map(([title, job]) => ({
+    Job_Title: title,
+    job,
+    latestDate: '',
+  }));
+
+  // This code is has a lot of ? and ! opeators because typescript can't analyze the
+  // loop to recognize that the array indexing is safe.
+  for (let i = 0; i < GroupByTitle.length; i++) {
+    let maxDate: string = '';
+    let tempJob = GroupByTitle[i].job;
+    let numJobs = 0;
+    if (tempJob) {
+      numJobs = tempJob.length;
+    }
+    for (let j = 0; j < numJobs; j++) {
+      let tempVal = GroupByTitle[i];
+      let value = tempVal!.job?.[j].Job_End_Date;
+      if (maxDate! < value!) {
+        maxDate = value!;
+      }
+    }
+    GroupByTitle[i].latestDate = maxDate;
+  }
+
+  // Sorting the grouped job by the latest end date
+  GroupByTitle.sort((a, b) => {
+    return getLatestEndDate(b)! - getLatestEndDate(a)!;
+  });
+
+  let test = [];
+  for (let i = 0; i < GroupByTitle.length; i++) {
+    let tempJob = GroupByTitle?.[i].job;
+    let numJobs = tempJob!.length;
+    for (let j = 0; j < numJobs; j++) {
+      let tempVal = GroupByTitle[i];
+      let value = tempVal!.job?.[j];
+      if (j > 0) {
+        value!.Job_Title = '';
+      }
+      if (value) {
+        test.push(value);
+      }
+    }
+  }
+
+  for (let i = 0; i < test.length; i++) {
+    jobs[i] = test[i];
+  }
 
   return groupedMembershipHistory;
 };
@@ -141,3 +217,14 @@ const transcriptService = {
 };
 
 export default transcriptService;
+
+const getName = (experience: MembershipHistory | StudentEmployment) =>
+  'Sessions' in experience ? experience.ActivityCode : experience.Job_Title;
+
+const getLatestEndDate = (GroupByTitle: Groupexperience) => {
+  const date = GroupByTitle.latestDate;
+
+  if (date) {
+    return Date.parse(date);
+  }
+};

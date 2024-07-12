@@ -74,19 +74,19 @@ const DiningBalance = () => {
     );
   } else {
     const swipeInit = diningInfo.Swipes.InitialBalance;
-    const swipeCurr = swipeInit === 0 ? 1 : diningInfo.Swipes.CurrentBalance;
+    const swipeCurr = 100;
     const swipeUsed = swipeInit === 0 ? 0 : swipeInit - swipeCurr;
 
     const dollarInit = diningInfo.DiningDollars.InitialBalance;
 
     const dollarCurrNotRounded = diningInfo.DiningDollars.CurrentBalance;
-    const dollarCurr = Math.round(dollarCurrNotRounded * 100) / 100;
+    const dollarCurr = 30;
     const dollarUsedNotRounded = dollarInit - dollarCurr;
     //fixed issue of too many decimal places in meal points
     const dollarUsed = Math.round(dollarUsedNotRounded * 100) / 100;
 
     const guestInit = diningInfo.GuestSwipes.InitialBalance;
-    const guestCurr = diningInfo.GuestSwipes.CurrentBalance;
+    const guestCurr = 5;
     const guestUsed = guestInit - guestCurr;
 
     const daysLeftRounded = Math.max(daysRemaining, 0);
