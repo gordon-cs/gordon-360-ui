@@ -130,7 +130,7 @@ export const exampleStudentProfile: StudentProfileInfo = {
   HomeFax: '',
   KeepPrivate: '',
   Barcode: '12312312312312',
-  Email: { value: 'example.student@gordon.edu', isPrivate: false },
+  Email: 'example.student@gordon.edu',
   Gender: 'F',
   AD_Username: 'example.student',
   show_pic: 0,
