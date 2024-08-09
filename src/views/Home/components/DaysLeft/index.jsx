@@ -102,10 +102,17 @@ const DaysLeft = () => {
           name: 'Post-Summer',
           label: 'Fall',
           type: 'Break',
-          start: addDays(termDates.fall?.start, -1),
-          end: addDays(termDates.summer?.end, 1),
+          start:
+            (termDates.fall?.start - termDates.summer?.end) * msToDays > 1
+              ? addDays(termDates.summer?.end, 1)
+              : termDates.summer?.end,
+          end:
+            (termDates.fall?.start - termDates.summer?.end) * msToDays > 1
+              ? addDays(termDates.fall?.start, -1)
+              : termDates.fall?.start,
         },
       };
+
       const termLoop = [
         termValues.fall,
         termValues.winter,
