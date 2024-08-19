@@ -1,16 +1,26 @@
-import { Button, Dialog, Grid, IconButton } from '@mui/material';
+import { AlertColor, Button, Dialog, Grid, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useState } from 'react';
-import { platforms, socialMediaInfo } from 'services/socialMedia';
+import { Profile } from 'services/user';
+import { Platform, platforms, socialMediaInfo } from 'services/socialMedia';
 // @TODO CSSMODULES - outside directory
 import styles from '../../Identification.module.css';
 import LinksDialog from './components/LinksDialog/index';
 
-const SocialMediaLinks = ({ profile, createSnackbar, myProf }) => {
+type Props = {
+  profile: Profile;
+  createSnackbar: (message: string, severity: AlertColor) => void;
+  myProf: boolean;
+};
+
+const SocialMediaLinks = ({ profile, createSnackbar, myProf }: Props) => {
   const [socialLinksOpen, setSocialLinksOpen] = useState(false);
-  const [links, setLinks] = useState(
-    platforms.reduce((links, platform) => ({ ...links, [platform]: profile[platform] || '' }), {}),
+  const [links, setLinks] = useState<Record<Platform, string>>(
+    platforms.reduce(
+      (links, platform) => ({ ...links, [platform]: profile[platform] || '' }),
+      {} as Record<Platform, string>,
+    ),
   );
   const isOnline = useNetworkStatus();
   const numberOfLinks = platforms.reduce((num, platform) => (links[platform] ? num + 1 : num), 0);

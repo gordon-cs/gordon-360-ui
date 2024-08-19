@@ -32,9 +32,9 @@ const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
   const [preview, setPreview] = useState<string | null>(null);
   const [snackbar, setSnackbar] = useState<{
     message: string;
-    severity: AlertColor | null;
+    severity?: AlertColor;
     open: boolean;
-  }>({ message: '', severity: null, open: false });
+  }>({ message: '', severity: undefined, open: false });
   const [cropperData, setCropperData] = useState<{
     cropBoxDim: number | undefined;
     aspectRatio: number;

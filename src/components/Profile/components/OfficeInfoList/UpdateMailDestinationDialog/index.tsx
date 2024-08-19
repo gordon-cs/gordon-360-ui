@@ -1,16 +1,16 @@
-import { FormControl, IconButton } from '@mui/material';
+import { AlertColor, FormControl, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonSnackbar from 'components/Snackbar';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 import userService from 'services/user';
 import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
 
-const UpdateMail = (props) => {
+const UpdateMail = (props: { changeMailLocation: (mailStop: string) => void }) => {
   const [open, setOpen] = useState(false);
   const [mailStop, setMailStop] = useState('');
-  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
-  const [mailStops, setMailStops] = useState([]);
+  const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
+  const [mailStops, setMailStops] = useState<string[]>([]);
 
   const handleSubmit = async () => {
     try {
@@ -43,7 +43,6 @@ const UpdateMail = (props) => {
         buttonClicked={handleSubmit}
         cancelButtonName="CANCEL"
         cancelButtonClicked={() => setOpen(false)}
-        handleSubmit
       >
         <FormControl sx={{ m: 1, minWidth: 200 }}>
           <SearchField
@@ -52,14 +51,12 @@ const UpdateMail = (props) => {
             updateValue={(event) => setMailStop(event.target.value)}
             options={mailStops}
             select
-            size={200}
-            required="required"
           />
         </FormControl>
       </GordonDialogBox>
       <GordonSnackbar
         open={snackbar.open}
-        severity={snackbar.severity}
+        severity={snackbar.severity as AlertColor}
         text={snackbar.message}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
       />
