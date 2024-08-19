@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardHeader, Grid } from '@mui/material';
+import { Button, Card, CardActions, CardContent, CardHeader, Grid } from '@mui/material';
 import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import GordonLoader from 'components/Loader';
 import { useUser } from 'hooks';
@@ -12,7 +12,6 @@ import CompletedCheckIn from './components/CompletedCheckIn';
 import ConfirmCheckIn from './components/ConfirmCheckIn';
 import PrivacyAgreement from './components/PrivacyAgreement';
 // import RaceEthnicity from './components/RaceEthnicity';
-import styles from './EnrollmentCheckIn.module.css';
 
 const steps = [
   'Main Form',
@@ -265,152 +264,121 @@ const EnrollmentCheckIn = (props) => {
     return <GordonUnauthenticated feature={'Enrollment Check-in'} />;
   } else {
     return (
-      <Grid container justifyContent="center" spacing={2}>
+      <Grid container justifyContent="center">
         <Grid item xs={12} md={9} lg={6}>
-          <Card className={styles.enrollmentCheckIn}>
+          <Card>
             <CardHeader
               title="Enrollment Check In"
-              className={styles.checkIn_header}
-              padding={30}
+              className="gc360_header"
+              titleTypographyProps={{ component: 'h1' }}
             />
-            <Box m={2}>
-              <Grid
-                container
-                justifyContent="center"
-                alignItems="center"
-                direction="column"
-                spacing={1}
-              >
-                <Grid item>
-                  <Grid container justifyContent="center" alignItems="center">
-                    <Grid item>
-                      {activeStep === 0 && (
-                        <EnrollmentCheckInWelcome hasMajorHold={hasMajorHold} holds={holds} />
-                      )}
+            <CardContent>
+              {activeStep === 0 && (
+                <EnrollmentCheckInWelcome hasMajorHold={hasMajorHold} holds={holds} />
+              )}
 
-                      {activeStep === 1 && (
-                        <EmergencyContactUpdate
-                          emergencyContact1={emergencyContact1}
-                          emergencyContact2={emergencyContact2}
-                          emergencyContact3={emergencyContact3}
-                          emergencyContactINTL1={emergencyContactINTL1}
-                          emergencyContactINTL2={emergencyContactINTL2}
-                          emergencyContactINTL3={emergencyContactINTL3}
-                          handleChangeEmergContact1={handleChangeEmergContact1}
-                          handleChangeEmergContact2={handleChangeEmergContact2}
-                          handleChangeEmergContact3={handleChangeEmergContact3}
-                          handleCheckEmergContact1={handleCheckEmergContact1}
-                          handleCheckEmergContact2={handleCheckEmergContact2}
-                          handleCheckEmergContact3={handleCheckEmergContact3}
-                        />
-                      )}
+              {activeStep === 1 && (
+                <EmergencyContactUpdate
+                  emergencyContact1={emergencyContact1}
+                  emergencyContact2={emergencyContact2}
+                  emergencyContact3={emergencyContact3}
+                  emergencyContactINTL1={emergencyContactINTL1}
+                  emergencyContactINTL2={emergencyContactINTL2}
+                  emergencyContactINTL3={emergencyContactINTL3}
+                  handleChangeEmergContact1={handleChangeEmergContact1}
+                  handleChangeEmergContact2={handleChangeEmergContact2}
+                  handleChangeEmergContact3={handleChangeEmergContact3}
+                  handleCheckEmergContact1={handleCheckEmergContact1}
+                  handleCheckEmergContact2={handleCheckEmergContact2}
+                  handleCheckEmergContact3={handleCheckEmergContact3}
+                />
+              )}
 
-                      {activeStep === 2 && (
-                        <UpdatePhone
-                          phoneInfo={phoneInfo}
-                          handleChangePhoneInfo={handleChangePhoneInfo}
-                          handleCheckPhoneInfo={handleCheckPhoneInfo}
-                        />
-                      )}
+              {activeStep === 2 && (
+                <UpdatePhone
+                  phoneInfo={phoneInfo}
+                  handleChangePhoneInfo={handleChangePhoneInfo}
+                  handleCheckPhoneInfo={handleCheckPhoneInfo}
+                />
+              )}
 
-                      {activeStep === 3 && (
-                        <PrivacyAgreement
-                          privacyAgreements={privacyAgreements}
-                          handleCheckPrivacyAgreements={handleCheckPrivacyAgreements}
-                        />
-                      )}
+              {activeStep === 3 && (
+                <PrivacyAgreement
+                  privacyAgreements={privacyAgreements}
+                  handleCheckPrivacyAgreements={handleCheckPrivacyAgreements}
+                />
+              )}
 
-                      {/* {activeStep === 4 && (
+              {/* {activeStep === 4 && (
                         <RaceEthnicity
                           demographic={demographic}
                           handleChangeDemographic={handleChangeDemographic}
                           handleCheckDemographic={handleCheckDemographic}
                         />
                       )} */}
-                      {activeStep === 4 && (
-                        <ConfirmCheckIn
-                          emergencyContact1={emergencyContact1}
-                          emergencyContact2={emergencyContact2}
-                          emergencyContact3={emergencyContact3}
-                          phoneInfo={phoneInfo}
-                          // demographic={demographic}
-                        />
-                      )}
-                      {activeStep === 5 && <CompletedCheckIn />}
-                    </Grid>
-                  </Grid>
-                </Grid>
+              {activeStep === 4 && (
+                <ConfirmCheckIn
+                  emergencyContact1={emergencyContact1}
+                  emergencyContact2={emergencyContact2}
+                  emergencyContact3={emergencyContact3}
+                  phoneInfo={phoneInfo}
+                  // demographic={demographic}
+                />
+              )}
+              {activeStep === 5 && <CompletedCheckIn />}
+            </CardContent>
+            <CardActions sx={{ justifyContent: 'center' }}>
+              {activeStep > 0 && activeStep < steps.length - 1 && (
                 <Grid item>
-                  <br />
+                  <Button variant="contained" onClick={handlePrev}>
+                    Back
+                  </Button>
                 </Grid>
+              )}
+              {activeStep < steps.length - 2 && (
                 <Grid item>
-                  <Grid
-                    container
-                    justifyContent="center"
-                    className={styles.button_container}
-                    spacing={2}
+                  <Button
+                    variant="contained"
+                    onClick={handleNext}
+                    disabled={
+                      (activeStep === 0 && (hasMajorHold || holds?.MustRegisterForClasses)) ||
+                      (activeStep === 1 &&
+                        (emergencyContact1.FirstName === '' ||
+                          emergencyContact1.LastName === '' ||
+                          emergencyContact1.Relationship === '' ||
+                          (emergencyContact1.HomePhone === '' &&
+                            emergencyContact1.MobilePhone === ''))) ||
+                      (activeStep === 2 &&
+                        phoneInfo.PersonalPhone === '' &&
+                        phoneInfo.NoPhone === false) ||
+                      (activeStep === 3 &&
+                        (privacyAgreements.FERPA === false ||
+                          privacyAgreements.dataUsage === false ||
+                          privacyAgreements.photoConsent === false))
+                      // (activeStep === 4 && demographic.Ethnicity === '') ||
+                      // (activeStep === 4 &&
+                      //   !(
+                      //     demographic.NativeAmerican ||
+                      //     demographic.Asian ||
+                      //     demographic.Black ||
+                      //     demographic.Hawaiian ||
+                      //     demographic.White ||
+                      //     demographic.None
+                      //   ))
+                    }
                   >
-                    <Grid item>
-                      <Button
-                        style={
-                          activeStep === 0 || activeStep === steps.length - 1
-                            ? { display: 'none' }
-                            : {}
-                        }
-                        variant="contained"
-                        onClick={handlePrev}
-                      >
-                        Back
-                      </Button>
-                    </Grid>
-                    <Grid item>
-                      <Button
-                        variant="contained"
-                        onClick={handleNext}
-                        style={activeStep >= steps.length - 2 ? { display: 'none' } : {}}
-                        disabled={
-                          (activeStep === 0 && (hasMajorHold || holds?.MustRegisterForClasses)) ||
-                          (activeStep === 1 &&
-                            (emergencyContact1.FirstName === '' ||
-                              emergencyContact1.LastName === '' ||
-                              emergencyContact1.Relationship === '' ||
-                              (emergencyContact1.HomePhone === '' &&
-                                emergencyContact1.MobilePhone === ''))) ||
-                          (activeStep === 2 &&
-                            phoneInfo.PersonalPhone === '' &&
-                            phoneInfo.NoPhone === false) ||
-                          (activeStep === 3 &&
-                            (privacyAgreements.FERPA === false ||
-                              privacyAgreements.dataUsage === false ||
-                              privacyAgreements.photoConsent === false))
-                          // (activeStep === 4 && demographic.Ethnicity === '') ||
-                          // (activeStep === 4 &&
-                          //   !(
-                          //     demographic.NativeAmerican ||
-                          //     demographic.Asian ||
-                          //     demographic.Black ||
-                          //     demographic.Hawaiian ||
-                          //     demographic.White ||
-                          //     demographic.None
-                          //   ))
-                        }
-                      >
-                        {activeStep === 0 ? 'Begin Check-In' : 'Next'}
-                      </Button>
-                    </Grid>
-                    <Grid item>
-                      <Button
-                        variant="contained"
-                        onClick={handleSubmit}
-                        style={activeStep === steps.length - 2 ? {} : { display: 'none' }}
-                      >
-                        Submit
-                      </Button>
-                    </Grid>
-                  </Grid>
+                    {activeStep === 0 ? 'Begin Check-In' : 'Next'}
+                  </Button>
                 </Grid>
-              </Grid>
-            </Box>
+              )}
+              {activeStep === steps.length - 2 && (
+                <Grid item>
+                  <Button variant="contained" onClick={handleSubmit}>
+                    Submit
+                  </Button>
+                </Grid>
+              )}
+            </CardActions>
           </Card>
         </Grid>
       </Grid>
