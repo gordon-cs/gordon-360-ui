@@ -1,23 +1,5 @@
 import http from './http';
 import { parse } from 'date-fns';
-import { Session } from './session';
-
-interface DbScheduleCourse {
-  Code: string;
-  Title: string;
-  Role: 'Student' | 'Instructor';
-  Location?: string;
-  MeetingDays: CourseDayID[];
-  /** A time of the format HH:mm:ss, stringified */
-  BeginTime?: string;
-  /** A time of the format HH:mm:ss, stringified */
-  EndTime?: string;
-  /** A date of the format yyyy-MM-dd, stringified */
-  BeginDate?: string;
-  /** A date of the format yyyy-MM-dd, stringified */
-  EndDate?: string;
-  YearTermCode: string;
-}
 
 export interface CourseEvent {
   name: string;
@@ -28,6 +10,7 @@ export interface CourseEvent {
   MeetingDays: CourseDayID[];
   BeginDate: Date;
   EndDate: Date;
+  isSubtermCourse: boolean;
   /**
    * used by `react-big-calendar` to determine which resource (e.g. `Monday`) this event should display for
    */
@@ -38,14 +21,34 @@ export interface CourseEvent {
   allDay?: boolean;
 }
 
-type DbSchedule = {
-  Session: Session;
-  Courses: DbScheduleCourse[];
+export type Term = {
+  YearCode: string;
+  TermCode: string;
+  SubtermCode: string;
+  Description: string;
+  /** A date of the format yyyy-MM-dd, stringified */
+  Start: string;
+  /** A date of the format yyyy-MM-dd, stringified */
+  End: string;
 };
 
-export type Schedule = {
-  Session: Session;
-  Courses: CourseEvent[];
+export type Course = {
+  Code: string;
+  YearCode: string;
+  TermCode: string;
+  SubtermCode: string;
+  Title: string;
+  Role: string;
+  Location?: string;
+  MeetingDays: CourseDayID[];
+  /** A time of the format HH:mm:ss, stringified */
+  BeginTime?: string;
+  /** A time of the format HH:mm:ss, stringified */
+  EndTime?: string;
+  /** A date of the format yyyy-MM-dd, stringified */
+  BeginDate?: string;
+  /** A date of the format yyyy-MM-dd, stringified */
+  EndDate?: string;
 };
 
 export type ScheduleResource = {
@@ -64,18 +67,22 @@ export const scheduleResources = [
 ] as const;
 type CourseDayID = (typeof scheduleResources)[number]['id'];
 
-const getSchedules = async (username: string | undefined): Promise<Schedule[]> => {
-  const params = username ? http.toQueryString({ username }) : '';
-  const schedules = await http.get<DbSchedule[]>(`schedule${params}`);
-  return schedules.map(({ Session, Courses }) => ({
-    Session,
-    Courses: formatCoursesFromDb(Courses),
-  }));
+const getCourses = (
+  username: string,
+  yearCode: string,
+  termCode: string,
+  subtermCode: string,
+): Promise<CourseEvent[]> => {
+  const params = http.toQueryString({ yearCode, termCode, subtermCode });
+  return http.get<Course[]>(`schedule/${username}/courses${params}`).then(formatCoursesFromDb);
 };
+
+const getTerms = (username: string): Promise<Term[]> =>
+  http.get<Term[]>(`Schedule/${username}/terms`);
 
 const getCanReadStudentSchedules = (): Promise<boolean> => http.get(`schedule/canreadstudent/`);
 
-function formatCoursesFromDb(courses: DbScheduleCourse[]): CourseEvent[] {
+function formatCoursesFromDb(courses: Course[]): CourseEvent[] {
   const today = new Date();
   // Don't show async courses as meeting on saturday
   // Because saturday is only included in the schedule if a non-async course meetst that day
@@ -88,6 +95,7 @@ function formatCoursesFromDb(courses: DbScheduleCourse[]): CourseEvent[] {
     const sharedDetails = {
       name: course.Title,
       title: course.Code,
+      isSubtermCourse: Boolean(course.SubtermCode),
       BeginDate,
       EndDate,
     };
@@ -121,7 +129,8 @@ function formatCoursesFromDb(courses: DbScheduleCourse[]): CourseEvent[] {
 }
 
 const scheduleService = {
-  getSchedules,
+  getCourses,
+  getTerms,
   getCanReadStudentSchedules,
 };
 

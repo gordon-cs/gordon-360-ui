@@ -56,8 +56,6 @@ button.rbc-input::-moz-focus-inner {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  background-color: var(--mui-palette-primary-main);
-  color: var(--mui-palette-primary-contrastText);
 }
 
 .rbc-row-segment .rbc-event-content {
@@ -69,8 +67,6 @@ button.rbc-input::-moz-focus-inner {
 }
 
 .rbc-day-slot .rbc-event-content {
-  background-color: var(--mui-palette-primary-main);
-  color: var(--mui-palette-primary-contrastText);
   font-size: 90%;
   width: 100%;
   flex: 1 1 0;
@@ -84,6 +80,7 @@ button.rbc-input::-moz-focus-inner {
 .rbc-day-slot .rbc-background-event {
   border: 1px solid var(--mui-palette-primary-main);
   background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
   display: flex;
   max-height: 100%;
   min-height: 20px;
@@ -91,6 +88,10 @@ button.rbc-input::-moz-focus-inner {
   align-items: flex-start;
   overflow: hidden;
   position: absolute;
+  &.subterm {
+    background-color: var(--mui-palette-secondary-main);
+    color: var(--mui-palette-secondary-contrastText);
+  }
 }
 
 .rbc-time-view {
