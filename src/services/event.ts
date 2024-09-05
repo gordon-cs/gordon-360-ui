@@ -92,19 +92,59 @@ export const EVENT_FILTERS = Object.freeze([
   'Student Life',
 ]);
 
-const getFilteredEvents = (events: Event[], filters: string[], search: string): Event[] => {
+const getFilteredEvents = (
+  events: Event[],
+  filters: string[],
+  search: string,
+  timeFilter: string,
+): Event[] => {
   const matchesSearch = makeMatchesSearch(search);
   const matchesFilters = makeMatchesFilters(filters);
-  if (search && filters.length) {
+  const matchesTimeFilter = makeMatchesTimeFilter(timeFilter);
+  if (search && filters.length && timeFilter) {
+    return events.filter(
+      (event) => matchesSearch(event) && matchesFilters(event) && matchesTimeFilter(event),
+    );
+  } else if (filters.length && timeFilter) {
+    return events.filter((event) => matchesFilters(event) && matchesTimeFilter(event));
+  } else if (search && timeFilter) {
+    return events.filter((event) => matchesSearch(event) && matchesTimeFilter(event));
+  } else if (search && filters.length) {
     return events.filter((event) => matchesSearch(event) && matchesFilters(event));
   } else if (search) {
     return events.filter(matchesSearch);
   } else if (filters.length) {
     return events.filter(matchesFilters);
+  } else if (timeFilter) {
+    return events.filter(matchesTimeFilter);
   } else {
     return events;
   }
 };
+
+/**
+ * Make a closure over a time filter.
+ *
+ * The returned closure determines whether a given `event` falls before the time range
+ *
+ * @param timeFilter The time filter to use
+ * @returns A function that matches a given event against `timeFilter`
+ */
+const makeMatchesTimeFilter =
+  (timeFilter: string) =>
+  (event: Event): boolean => {
+    if (timeFilter == '1 Week') {
+      return new Date(event.StartDate) <= new Date(new Date().setDate(new Date().getDate() + 7));
+    } else if (timeFilter == '2 Weeks') {
+      return new Date(event.StartDate) <= new Date(new Date().setDate(new Date().getDate() + 14));
+    } else if (timeFilter == '1 Month') {
+      return new Date(event.StartDate) <= new Date(new Date().setMonth(new Date().getMonth() + 1));
+    } else if (timeFilter == '4 Months') {
+      return new Date(event.StartDate) <= new Date(new Date().setMonth(new Date().getMonth() + 4));
+    } else {
+      return false;
+    }
+  };
 
 /**
  * Make a closure over a search string.

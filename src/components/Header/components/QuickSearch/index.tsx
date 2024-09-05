@@ -80,15 +80,15 @@ const performSearch = debounce(
 
 type Props =
   | {
-      disableLink: true;
-      customPlaceholderText: string;
-      onSearchSubmit: (person: SearchResult) => void;
+      disableLink?: true;
+      customPlaceholderText?: string;
+      onSearchSubmit?: (person: SearchResult) => void;
       searchFunction?: SearchFunction;
     }
   | {
-      disableLink: false;
-      customPlaceholderText: undefined;
-      onSearchSubmit: undefined;
+      disableLink?: false;
+      customPlaceholderText?: undefined;
+      onSearchSubmit?: undefined;
       searchFunction?: SearchFunction;
     };
 
@@ -106,7 +106,7 @@ const GordonQuickSearch = ({
     ? 'Offline'
     : customPlaceholderText ?? (width < BREAKPOINT_WIDTH ? 'People' : 'People Search');
 
-  const handleInput = (_event: any, value: string) => {
+  const handleInput = (_event: React.SyntheticEvent, value: string) => {
     // remove special characters
     const query = value.replace(specialCharactersRegex, '');
 
@@ -118,7 +118,7 @@ const GordonQuickSearch = ({
     }
   };
 
-  const handleSubmit = (_event: any, person: SearchResult | null) => {
+  const handleSubmit = (_event: React.SyntheticEvent, person: SearchResult | null) => {
     if (!person) return;
     disableLink ? onSearchSubmit!(person) : navigate(`/profile/${person.UserName}`);
   };

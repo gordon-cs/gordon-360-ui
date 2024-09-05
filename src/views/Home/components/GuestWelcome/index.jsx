@@ -74,7 +74,11 @@ const GuestWelcome = () => {
           <Grid container style={{ textAlign: 'center' }}>
             <Card raised className={styles.gw_card}>
               <CardHeader title="Welcome to Gordon 360!" />
-              <CardMedia image={GordonLogoVerticalWhite} component="img" />
+              <CardMedia
+                image={GordonLogoVerticalWhite}
+                component="img"
+                alt="Welcome to Gordon 360"
+              />
               <CardContent>
                 <Typography>
                   As a guest, you have access to a limited view of the site. Login for full access.

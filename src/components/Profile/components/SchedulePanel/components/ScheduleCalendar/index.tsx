@@ -42,7 +42,7 @@ const GordonScheduleCalendar = ({ username, term, isPersonalProfile }: Props) =>
   const activeDays = useMemo(
     () =>
       scheduleResources.filter(
-        (r) => (r.id !== 'S' && r.id !== 'U') || courses.some((c) => c.resourceId === r.id),
+        (r) => (r.id !== 'S' && r.id !== 'U') || courses.some((c) => c.resourceId.includes(r.id)),
       ),
     [courses],
   );
@@ -55,6 +55,7 @@ const GordonScheduleCalendar = ({ username, term, isPersonalProfile }: Props) =>
   return (
     <>
       <Calendar
+        style={{ whiteSpace: 'pre-wrap' }}
         events={courses}
         eventPropGetter={(event) => {
           if (event.isSubtermCourse) {
@@ -70,8 +71,19 @@ const GordonScheduleCalendar = ({ username, term, isPersonalProfile }: Props) =>
         timeslots={4}
         defaultView="day"
         resources={activeDays as unknown as object[]}
-        formats={{ dayHeaderFormat: () => term.Description }}
+        formats={{
+          dayHeaderFormat: () => term.Description,
+        }}
         onSelectEvent={setSelectedCourse}
+        onKeyPressEvent={(selectedEvent, keyPressEvent) => {
+          if (
+            'key' in keyPressEvent &&
+            typeof keyPressEvent.key === 'string' &&
+            keyPressEvent.key === 'Enter'
+          ) {
+            setSelectedCourse(selectedEvent);
+          }
+        }}
       />
 
       {selectedCourse && (

@@ -32,9 +32,9 @@ const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
   const [preview, setPreview] = useState<string | null>(null);
   const [snackbar, setSnackbar] = useState<{
     message: string;
-    severity: AlertColor | null;
+    severity?: AlertColor;
     open: boolean;
-  }>({ message: '', severity: null, open: false });
+  }>({ message: '', severity: undefined, open: false });
   const [cropperData, setCropperData] = useState<{
     cropBoxDim: number | undefined;
     aspectRatio: number;
@@ -159,7 +159,7 @@ const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
         <DialogContent className={styles.dialog_content}>
           <DialogContentText>
             {step === UploadStep.Upload ? (
-              'Drag & Drop a picutre, or Click to Browse Files'
+              'Drag & Drop a picture, or Click to Browse Files'
             ) : (
               <>
                 Use the arrow keys to move the crop box.

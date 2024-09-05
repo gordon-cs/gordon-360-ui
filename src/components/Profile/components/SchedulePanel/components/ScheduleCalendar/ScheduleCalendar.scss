@@ -52,7 +52,7 @@ button.rbc-input::-moz-focus-inner {
 }
 
 .rbc-event-label {
-  font-size: 60%;
+  font-size: 44%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -68,14 +68,19 @@ button.rbc-input::-moz-focus-inner {
 
 .rbc-day-slot .rbc-event-content {
   font-size: 90%;
-  width: 100%;
+  width: 75%;
   flex: 1 1 0;
-  word-wrap: break-word;
+  word-wrap: normal;
   line-height: 1;
   height: 100%;
   min-height: 1em;
 }
-
+@media (max-width: 1152px) {
+  .rbc-row-segment .rbc-event-content,
+  .rbc-day-slot .rbc-event-content {
+    font-size: 70%;
+  }
+}
 .rbc-day-slot .rbc-event,
 .rbc-day-slot .rbc-background-event {
   border: 1px solid var(--mui-palette-primary-main);
@@ -246,7 +251,7 @@ button.rbc-input::-moz-focus-inner {
 
 .rbc-timeslot-group {
   border-bottom: 1px solid var(--mui-palette-neutral-dark);
-  min-height: 40px;
+  min-height: 50px;
   display: flex;
   flex-flow: column nowrap;
 }

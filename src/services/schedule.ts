@@ -14,7 +14,7 @@ export interface CourseEvent {
   /**
    * used by `react-big-calendar` to determine which resource (e.g. `Monday`) this event should display for
    */
-  resourceId: CourseDayID;
+  resourceId: CourseDayID[];
   /**
    * used by `react-big-calendar` to determine whether this event lasts all day
    */
@@ -90,42 +90,50 @@ function formatCoursesFromDb(courses: Course[]): CourseEvent[] {
   // Because saturday is only included in the schedule if a non-async course meetst that day
   const asyncMeetingDays = scheduleResources.slice(0, -1).map((r) => r.id);
 
-  return courses.flatMap((course) => {
+  return courses.map((course) => {
     const BeginDate = parse(course.BeginDate ?? '', 'yyyy-MM-dd', 0);
     const EndDate = parse(course.EndDate ?? '', 'yyyy-MM-dd', 0);
 
+    // Add location info to event's title so it shows in calendar
+    let eventTitle = course.Code;
+    if (course.Location?.includes('ASY')) {
+      eventTitle += ' | Async';
+    } else if (course.Location) {
+      eventTitle += `\n${course.Location}`;
+    }
     const sharedDetails = {
       name: course.Title,
-      title: course.Code,
+      title: eventTitle,
       isSubtermCourse: Boolean(course.SubtermCode),
       BeginDate,
       EndDate,
     };
 
     if (course.Location?.endsWith(' ASY')) {
-      return asyncMeetingDays.map((day) => ({
+      return {
         ...sharedDetails,
-        resourceId: day,
+        resourceId: asyncMeetingDays,
         start: today,
         end: today,
         BeginDate,
         EndDate,
         MeetingDays: asyncMeetingDays,
         allDay: true,
-      }));
+      };
     } else {
       const beginning = parse(course.BeginTime ?? '', 'HH:mm:ss', today);
       const end = parse(course.EndTime ?? '', 'HH:mm:ss', today);
 
-      return course.MeetingDays.map((day) => ({
+      return {
         ...sharedDetails,
-        resourceId: day,
+        resourceId: course.MeetingDays,
         start: beginning,
         end: end,
         BeginDate,
         EndDate,
         MeetingDays: course.MeetingDays,
-      }));
+        Location: course.Location,
+      };
     }
   });
 }

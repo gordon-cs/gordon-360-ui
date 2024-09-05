@@ -22,10 +22,14 @@ type Props = {
   myProf: boolean;
 };
 
+const scheduleOpenKey = 'profile.schedule.isOpen';
 const GordonSchedulePanel = ({ profile, myProf }: Props) => {
   const [loading, setLoading] = useState(true);
   const [terms, setTerms] = useState<Term[]>([]);
   const [selectedTerm, setSelectedTerm] = useState<Term | undefined>();
+  const [isScheduleOpen, setIsScheduleOpen] = useState<boolean>(
+    localStorage.getItem(scheduleOpenKey) !== 'false',
+  );
 
   useEffect(() => {
     const loadTermsAndCourses = async () => {
@@ -45,6 +49,12 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
 
     loadTermsAndCourses();
   }, [profile.AD_Username]);
+  const toggleIsScheduleOpen = () => {
+    setIsScheduleOpen((wasOpen) => {
+      localStorage.setItem(scheduleOpenKey, String(!wasOpen));
+      return !wasOpen;
+    });
+  };
 
   // Don't display Schedule Panel when there are no terms with course schedules
   if (terms?.length < 1) return null;
@@ -55,7 +65,11 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
   };
 
   return (
-    <Accordion TransitionProps={{ unmountOnExit: true }}>
+    <Accordion
+      expanded={isScheduleOpen}
+      onChange={toggleIsScheduleOpen}
+      TransitionProps={{ unmountOnExit: true }}
+    >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon className={styles.expandIcon} />}
         aria-controls="schedule"

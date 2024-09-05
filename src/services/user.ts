@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon';
+import { isToday } from 'date-fns';
 import { Platform, platforms, socialMediaInfo } from 'services/socialMedia';
 import CliftonStrengthsService, { CliftonStrengths } from './cliftonStrengths';
 import http from './http';
@@ -43,6 +43,16 @@ type BaseProfileInfo = {
   OnCampusPhone: string;
   OnCampusPrivatePhone: string;
   OnCampusFax: string;
+  PersonalEmail?: string;
+  WorkEmail?: string;
+  aEmail?: string;
+  PreferredEmail?: string;
+  doNotContact?: boolean;
+  doNotMail?: boolean;
+  WorkPhone?: string;
+  MobilePhone?: string;
+  IsMobilePhonePrivate: number;
+  PreferredPhone?: string;
   Mail_Location: string;
   HomeStreet1: string;
   HomeStreet2: string;
@@ -69,7 +79,8 @@ type BaseProfileInfo = {
   Calendar: string;
   PersonType: string;
   fullName?: string;
-  CliftonStrengths?: CliftonStrengths | null;
+  CliftonStrengths: CliftonStrengths | null;
+  Married?: string;
 };
 
 export type UnformattedFacStaffProfileInfo = BaseProfileInfo & {
@@ -92,6 +103,7 @@ export type UnformattedStudentProfileInfo = BaseProfileInfo & {
   OffCampusCountry: string;
   OffCampusPhone: string;
   OffCampusFax: string;
+  Hall?: string;
   Cohort: string;
   Class: Class;
   Major: string;
@@ -118,7 +130,7 @@ export type UnformattedStudentProfileInfo = BaseProfileInfo & {
   Minor3Description: string;
   ChapelRequired: number;
   ChapelAttended: number;
-  plannedGradYear: string;
+  PlannedGradYear: string;
 };
 
 type UnformattedAlumniProfileInfo = BaseProfileInfo & {
@@ -130,6 +142,9 @@ type UnformattedAlumniProfileInfo = BaseProfileInfo & {
   PreferredClassYear?: string;
   ShareName: string;
   ShareAddress?: string;
+  Majors: string[];
+  Major1Description: string;
+  Major2Description: string;
 };
 
 export type UnformattedProfileInfo =
@@ -154,7 +169,7 @@ export type StudentProfileInfo = {
 
 export type Profile = FacStaffProfileInfo | StudentProfileInfo | AlumniProfileInfo;
 
-type StudentAdvisorInfo = {
+export type StudentAdvisorInfo = {
   Firstname: string;
   Lastname: string;
   AD_Username: string;
@@ -177,16 +192,36 @@ type MealPlanComponent = {
 export type ProfileImages = { def: string; pref?: string };
 
 export type OfficeLocationQuery = {
-  BuildingDescription: string;
+  BuildingCode: string;
   RoomNumber: string;
 };
 
-function isStudent(profile: Profile): profile is StudentProfileInfo;
-function isStudent(profile: UnformattedProfileInfo): profile is UnformattedStudentProfileInfo;
-function isStudent(
+export function isStudent(profile: Profile): profile is StudentProfileInfo;
+export function isStudent(
+  profile: UnformattedProfileInfo,
+): profile is UnformattedStudentProfileInfo;
+export function isStudent(
   profile: UnformattedProfileInfo | Profile,
 ): profile is UnformattedStudentProfileInfo | StudentProfileInfo {
   return profile?.PersonType.includes('stu') || false;
+}
+
+export function isFacStaff(profile: Profile): profile is FacStaffProfileInfo;
+export function isFacStaff(
+  profile: UnformattedProfileInfo,
+): profile is UnformattedFacStaffProfileInfo;
+export function isFacStaff(
+  profile: UnformattedProfileInfo | Profile,
+): profile is UnformattedStudentProfileInfo | StudentProfileInfo {
+  return profile?.PersonType.includes('fac') || false;
+}
+
+export function isAlumni(profile: Profile): profile is AlumniProfileInfo;
+export function isAlumni(profile: UnformattedProfileInfo): profile is UnformattedAlumniProfileInfo;
+export function isAlumni(
+  profile: UnformattedProfileInfo | Profile,
+): profile is UnformattedAlumniProfileInfo | AlumniProfileInfo {
+  return profile?.PersonType.includes('alu') || false;
 }
 
 function formatCountry(profile: UnformattedProfileInfo) {
@@ -221,18 +256,6 @@ const postIDImage = (imageDataURI: string): Promise<void> =>
 const postImage = (imageDataURI: string): Promise<void> =>
   http.postImage('profiles/image', imageDataURI);
 
-// TODO: get chapel credits from useUser, making this obsolete.
-const getChapelCredits = async (): Promise<CLWCredits | null> => {
-  const profile = await getProfile();
-
-  return isStudent(profile)
-    ? {
-        current: profile.ChapelAttended || 0,
-        required: profile.ChapelRequired,
-      }
-    : null;
-};
-
 const getDiningInfo = (): Promise<DiningInfo | string> => http.get('dining');
 
 const getProfile = (username: string = ''): Promise<UnformattedProfileInfo> =>
@@ -241,16 +264,16 @@ const getProfile = (username: string = ''): Promise<UnformattedProfileInfo> =>
 const getAdvisors = (username: string): Promise<StudentAdvisorInfo[]> =>
   http.get(`profiles/Advisors/${username}/`);
 
-const getMailboxCombination = () => http.get('profiles/mailbox-combination/');
-
-const getBuildings = (): Promise<string[]> => http.get(`advancedsearch/buildings`);
+const getMailboxInformation = (): Promise<{ Combination: string }> =>
+  http.get('profiles/mailbox-information/');
 
 const getMailStops = (): Promise<string[]> => http.get(`profiles/mailstops`);
 
-const setMobilePhoneNumber = (value: number) => http.put(`profiles/mobile_phone_number/${value}/`);
+const setMobilePhoneNumber = (value: number | string) =>
+  http.put(`profiles/mobile_phone_number/${value}/`);
 
-const setPlannedGraduationYear = (value: number) => {
-  const body = { ['plannedGradYear']: value };
+const setPlannedGraduationYear = (value: number | string) => {
+  const body = { plannedGradYear: value };
   http.put(`profiles/plannedGradYear`, body);
 };
 
@@ -270,12 +293,16 @@ const setHomePhonePrivacy = (makePrivate: boolean) =>
 const setImagePrivacy = (makePrivate: boolean) =>
   http.put('profiles/image_privacy/' + (makePrivate ? 'N' : 'Y')); // 'Y' = show image, 'N' = don't show image
 
-const getBirthdate = async (): Promise<DateTime> =>
-  DateTime.fromISO(await http.get('profiles/birthdate'));
+const getBirthdate = (): Promise<Date> =>
+  http.get<string>('profiles/birthdate').then((birthdate) => new Date(birthdate));
 
-const isBirthdayToday = async () => {
-  const birthday = await getBirthdate();
-  return birthday?.month === DateTime.now().month && birthday?.day === DateTime.now().day;
+const isBirthdayToday = (): Promise<boolean> => {
+  return getBirthdate().then(
+    (birthdate) =>
+      birthdate.getMonth() == new Date().getMonth() &&
+      birthdate.getDate() == new Date().getDate() &&
+      birthdate.getFullYear() > 1800, // Birth in 1800 means no birthday in database
+  );
 };
 
 const getProfileInfo = async (username: string = ''): Promise<Profile | undefined> => {
@@ -312,7 +339,16 @@ const getProfileInfo = async (username: string = ''): Promise<Profile | undefine
   }
 };
 
-const getEmergencyInfo = async (username: string) => {
+type Contact = {
+  FirstName?: string;
+  LastName?: string;
+  Relationship?: string;
+  MobilePhone: string;
+  HomePhone: string;
+  WorkPhone: string;
+};
+
+const getEmergencyInfo = async (username: string): Promise<Contact[]> => {
   return await http.get(`profiles/emergency-contact/${username}/`);
 };
 
@@ -332,7 +368,7 @@ function updateSocialLink(platform: Platform, link: string) {
 
 type ProfileFieldUpdate = {
   Field: string;
-  Value: string;
+  Value: string | boolean;
   Label: string;
 };
 
@@ -368,14 +404,12 @@ const userService = {
   updateOfficeHours,
   setImagePrivacy,
   getMailStops,
-  getChapelCredits,
   getImage,
   getDiningInfo,
   getProfileInfo,
   getAdvisors,
-  getMailboxCombination,
+  getMailboxInformation,
   getMembershipHistory,
-  getBuildings,
   resetImage,
   postImage,
   postIDImage,
