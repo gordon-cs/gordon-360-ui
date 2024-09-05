@@ -32,6 +32,8 @@ export type Term = {
   End: string;
 };
 
+export const getTermId = (term: Term): string => term.YearCode + term.TermCode + term.SubtermCode;
+
 export type Course = {
   Code: string;
   YearCode: string;

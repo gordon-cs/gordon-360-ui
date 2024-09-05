@@ -15,12 +15,12 @@ import { CourseEvent, scheduleResources } from 'services/schedule';
 
 type Props = {
   course: CourseEvent;
-  myProf: boolean;
+  isPersonalProfile: boolean;
   onClose: () => void;
 };
 
-const ScheduleDialog = ({ course, myProf, onClose }: Props) => {
-  const addToCalendarProps = myProf
+const ScheduleDialog = ({ course, isPersonalProfile, onClose }: Props) => {
+  const addToCalendarProps = isPersonalProfile
     ? {
         name: course.title,
         iCalFileName: course.title,
@@ -56,7 +56,7 @@ const ScheduleDialog = ({ course, myProf, onClose }: Props) => {
           Course Dates: {format(course.BeginDate, 'yyyy-MM-dd')} to
           {format(course.EndDate, ' yyyy-MM-dd')}
         </DialogContentText>
-        {myProf && (
+        {isPersonalProfile && (
           <>
             <br />
             <Divider variant="middle" />

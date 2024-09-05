@@ -12,11 +12,10 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import GordonLoader from 'components/Loader';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
-import ScheduleDialog from './components/ScheduleDialog';
 import styles from './ScheduleHeader.module.css';
-import scheduleService, { CourseEvent, Term } from 'services/schedule';
+import scheduleService, { getTermId, Term } from 'services/schedule';
 import { Profile } from 'services/user';
-import { compareDesc, isAfter, startOfToday } from 'date-fns';
+import { isAfter, startOfToday } from 'date-fns';
 
 type Props = {
   profile: Profile;
@@ -26,43 +25,30 @@ type Props = {
 const GordonSchedulePanel = ({ profile, myProf }: Props) => {
   const [loading, setLoading] = useState(true);
   const [terms, setTerms] = useState<Term[]>([]);
-  const [selectedTerm, setSelectedTerm] = useState<Term | null>(null);
-  const [courses, setCourses] = useState<CourseEvent[]>([]);
-  const [selectedCourse, setSelectedCourse] = useState<CourseEvent | null>(null);
+  const [selectedTerm, setSelectedTerm] = useState<Term | undefined>();
 
   useEffect(() => {
-    setLoading(true);
+    const loadTermsAndCourses = async () => {
+      setLoading(true);
 
-    scheduleService.getTerms(profile.AD_Username).then((terms) => {
+      const terms = await scheduleService.getTerms(profile.AD_Username);
       setTerms(terms);
 
-      const currentTerm = terms
-        .toSorted((a, b) => compareDesc(new Date(a.Start), new Date(b.Start)))
-        .find((term) => isAfter(new Date(term.Start), startOfToday()));
-      const defaultTerm = currentTerm ?? terms[0];
+      const currentTerm = terms.find((term) => isAfter(new Date(term.Start), startOfToday()));
+      // Term defaults to the current term, or else the most recent term
+      const defaultTerm = currentTerm ?? terms.at(0);
+
       setSelectedTerm(defaultTerm);
 
       setLoading(false);
-    });
+    };
+
+    loadTermsAndCourses();
   }, [profile.AD_Username]);
 
   const handleSelectTerm = (event: ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.value);
-    const selectedTerm =
-      terms.find((t) => t.YearCode + t.TermCode + t.SubtermCode === event.target.value) ?? null;
+    const selectedTerm = terms.find((t) => getTermId(t) === event.target.value);
     setSelectedTerm(selectedTerm);
-    if (selectedTerm) {
-      setLoading(true);
-      scheduleService
-        .getCourses(
-          profile.AD_Username,
-          selectedTerm.YearCode,
-          selectedTerm.TermCode,
-          selectedTerm.SubtermCode,
-        )
-        .then(setCourses)
-        .then(() => setLoading(false));
-    }
   };
 
   return (
@@ -73,7 +59,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
         id="schedule-header"
         className={`gc360_header ${styles.accordionHeader}`}
       >
-        <CardHeader title={'Schedule'} />
+        <CardHeader title={'Course Schedule'} />
       </AccordionSummary>
       <AccordionDetails>
         {loading ? (
@@ -84,11 +70,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
               <TextField
                 label="Term"
                 id="schedule-session"
-                value={
-                  selectedTerm
-                    ? selectedTerm.YearCode + selectedTerm.TermCode + selectedTerm.SubtermCode
-                    : ''
-                }
+                value={selectedTerm ? getTermId(selectedTerm) : ''}
                 onChange={handleSelectTerm}
                 select
               >
@@ -108,28 +90,20 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
                 {myProf && (
                   <Grid item className={styles.addCalendarInfoText}>
                     <Typography className={styles.addCalendarInfoText}>
-                      Click on Course to add Schedule to Personal Calendar
+                      Click a course to add it to your calendar
                     </Typography>
                   </Grid>
                 )}
                 <Grid item xs={12} lg={10}>
                   <GordonScheduleCalendar
-                    courses={courses}
-                    termDescription={selectedTerm.Description}
-                    onSelectEvent={setSelectedCourse}
+                    term={selectedTerm}
+                    username={profile.AD_Username}
+                    isPersonalProfile={myProf}
                   />
                 </Grid>
               </>
             )}
           </Grid>
-        )}
-
-        {selectedCourse && selectedTerm && (
-          <ScheduleDialog
-            onClose={() => setSelectedCourse(null)}
-            course={selectedCourse}
-            myProf={myProf}
-          />
         )}
       </AccordionDetails>
     </Accordion>
