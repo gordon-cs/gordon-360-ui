@@ -75,7 +75,7 @@ const Profile = ({ profile, myProf }: Props) => {
       */}
       {(myProf || profile.PersonType?.includes('fac') || canReadStudentSchedules) && (
         <Grid item xs={12} lg={10}>
-          <SchedulePanel profile={profile} myProf={myProf} />
+          <SchedulePanel username={profile.AD_Username} myProf={myProf} />
         </Grid>
       )}
 

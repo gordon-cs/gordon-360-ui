@@ -14,16 +14,15 @@ import GordonLoader from 'components/Loader';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
 import styles from './ScheduleHeader.module.css';
 import scheduleService, { getTermId, Term } from 'services/schedule';
-import { Profile } from 'services/user';
 import { isAfter, startOfToday } from 'date-fns';
 
 type Props = {
-  profile: Profile;
+  username: string;
   myProf: boolean;
 };
 
 const scheduleOpenKey = 'profile.schedule.isOpen';
-const GordonSchedulePanel = ({ profile, myProf }: Props) => {
+const GordonSchedulePanel = ({ username, myProf }: Props) => {
   const [loading, setLoading] = useState(true);
   const [terms, setTerms] = useState<Term[]>([]);
   const [selectedTerm, setSelectedTerm] = useState<Term | undefined>();
@@ -35,7 +34,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
     const loadTermsAndCourses = async () => {
       setLoading(true);
 
-      const terms = await scheduleService.getTerms(profile.AD_Username);
+      const terms = await scheduleService.getTerms(username);
       setTerms(terms);
 
       const currentTerm = terms.find((term) => isAfter(new Date(term.Start), startOfToday()));
@@ -48,7 +47,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
     };
 
     loadTermsAndCourses();
-  }, [profile.AD_Username]);
+  }, [username]);
   const toggleIsScheduleOpen = () => {
     setIsScheduleOpen((wasOpen) => {
       localStorage.setItem(scheduleOpenKey, String(!wasOpen));
@@ -114,7 +113,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
                 <Grid item xs={12} lg={10}>
                   <GordonScheduleCalendar
                     term={selectedTerm}
-                    username={profile.AD_Username}
+                    username={username}
                     isPersonalProfile={myProf}
                   />
                 </Grid>
