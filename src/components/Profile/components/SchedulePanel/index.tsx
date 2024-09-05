@@ -46,6 +46,9 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
     loadTermsAndCourses();
   }, [profile.AD_Username]);
 
+  // Don't display Schedule Panel when there are no terms with course schedules
+  if (terms?.length < 1) return null;
+
   const handleSelectTerm = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedTerm = terms.find((t) => getTermId(t) === event.target.value);
     setSelectedTerm(selectedTerm);
