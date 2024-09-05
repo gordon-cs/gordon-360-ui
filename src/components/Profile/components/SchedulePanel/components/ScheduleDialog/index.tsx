@@ -27,7 +27,7 @@ const ScheduleDialog = ({ course, isPersonalProfile, onClose }: Props) => {
         startDate: format(course.BeginDate, 'yyyy-MM-dd'),
         startTime: course.allDay ? null : format(course.start, 'HH:mm'),
         endTime: course.allDay ? null : format(course.end, 'HH:mm'),
-        description: course.name,
+        description: course.CourseName,
         Location: course.Location,
         buttonStyle: 'round',
         lightMode: localStorage.getItem(STORAGE_COLOR_PREFERENCE_KEY) ?? 'system',
@@ -38,23 +38,26 @@ const ScheduleDialog = ({ course, isPersonalProfile, onClose }: Props) => {
 
   return (
     <Dialog open={Boolean(course)} fullWidth={true} maxWidth="xs">
-      <DialogTitle>{course.title}</DialogTitle>
-      <DialogContent>
+      <DialogTitle>{course.CourseName}</DialogTitle>
+      <DialogContent dividers>
         <DialogContentText>
-          Title: {course.name}
+          Code: {course.CourseCode}
           <br />
           Room: {course.Location}
           <br />
           Time:
           {format(course.start, " hh:mm aaaaa'm' ")}-{format(course.end, " hh:mm aaaaa'm' ")}
           <br />
-          Week Day{course.MeetingDays.length > 1 && <>(s)</>}:{' '}
+          Week Day{course.MeetingDays.length > 1 && <>s</>}:{' '}
           {course.MeetingDays.map((day) => scheduleResources.find((r) => r.id === day)!.title).join(
             ', ',
           )}
           <br />
-          Course Dates: {format(course.BeginDate, 'yyyy-MM-dd')} to
-          {format(course.EndDate, ' yyyy-MM-dd')}
+          Dates:{' '}
+          {course.BeginDate.toLocaleDateString(undefined, {
+            dateStyle: 'long',
+          })}{' '}
+          to {course.EndDate.toLocaleDateString(undefined, { dateStyle: 'long' })}
         </DialogContentText>
         {isPersonalProfile && (
           <>

@@ -2,15 +2,9 @@ import http from './http';
 import { parse } from 'date-fns';
 
 export interface CourseEvent {
-  name: string;
   title: string;
   start: Date;
   end: Date;
-  Location?: string;
-  MeetingDays: CourseDayID[];
-  BeginDate: Date;
-  EndDate: Date;
-  isSubtermCourse: boolean;
   /**
    * used by `react-big-calendar` to determine which resource (e.g. `Monday`) this event should display for
    */
@@ -19,6 +13,14 @@ export interface CourseEvent {
    * used by `react-big-calendar` to determine whether this event lasts all day
    */
   allDay?: boolean;
+
+  CourseName: string;
+  CourseCode: string;
+  Location?: string;
+  MeetingDays: CourseDayID[];
+  BeginDate: Date;
+  EndDate: Date;
+  isSubtermCourse: boolean;
 }
 
 export type Term = {
@@ -102,7 +104,8 @@ function formatCoursesFromDb(courses: Course[]): CourseEvent[] {
       eventTitle += `\n${course.Location}`;
     }
     const sharedDetails = {
-      name: course.Title,
+      CourseName: course.Title,
+      CourseCode: course.Code,
       title: eventTitle,
       isSubtermCourse: Boolean(course.SubtermCode),
       BeginDate,
