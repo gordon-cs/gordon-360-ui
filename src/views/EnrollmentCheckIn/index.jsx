@@ -80,6 +80,7 @@ const EnrollmentCheckIn = (props) => {
     PersonalPhone: '',
     MakePrivate: false,
     NoPhone: false,
+    SMSOptedIn: undefined,
   });
 
   const [privacyAgreements, setPrivacyAgreements] = useState({
@@ -145,6 +146,7 @@ const EnrollmentCheckIn = (props) => {
               PersonalPhone: profile.MobilePhone,
               MakePrivate: Boolean(profile.IsMobilePhonePrivate),
               NoPhone: false,
+              SMSOptedIn: undefined,
             });
           }
         } else {

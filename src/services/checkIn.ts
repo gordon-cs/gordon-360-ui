@@ -38,6 +38,7 @@ type EmergencyContact = {
 type PhoneInfo = {
   PersonalPhone: number;
   MakePrivate: boolean;
+  SMSOptedIn: boolean;
 };
 
 // type Demographic = {
