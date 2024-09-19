@@ -252,7 +252,9 @@ const EnrollmentCheckIn = (props) => {
     checkInService.submitContact(emergencyContact1);
     checkInService.submitContact(emergencyContact2);
     checkInService.submitContact(emergencyContact3);
-    checkInService.submitPhone(phoneInfo);
+    if (!phoneInfo.NoPhone) {
+      checkInService.submitPhone(phoneInfo);
+    }
     // checkInService.submitDemographic(formatDemographic(demographic));
     checkInService.markCompleted(profile.ID);
     setActiveStep(5);
