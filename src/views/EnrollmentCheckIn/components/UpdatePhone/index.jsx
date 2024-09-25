@@ -2,9 +2,12 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
+  FormLabel,
   Grid,
   Input,
   InputLabel,
+  Radio,
+  RadioGroup,
   Typography,
 } from '@mui/material';
 import { forwardRef } from 'react';
@@ -29,7 +32,7 @@ const UpdatePhone = ({ phoneInfo, handleChangePhoneInfo, handleCheckPhoneInfo })
       </Grid>
       <Grid item>
         <FormControl>
-          <InputLabel htmlFor="formatted-text-mask-input"> Phone Number </InputLabel>
+          <InputLabel htmlFor="formatted-text-mask-input">Phone Number</InputLabel>
           <Input
             id="formatted-text-mask-input"
             name="PersonalPhone"
@@ -43,12 +46,31 @@ const UpdatePhone = ({ phoneInfo, handleChangePhoneInfo, handleCheckPhoneInfo })
       </Grid>
       <Grid item>
         <FormControl>
+          <FormLabel>Do you give permission for Gordon College to text you?</FormLabel>
+          <RadioGroup
+            row
+            value={phoneInfo.SMSOptedIn}
+            onChange={handleChangePhoneInfo}
+            name="SMSOptedIn"
+          >
+            <FormControlLabel value={true} control={<Radio />} label="Yes" />
+            <FormControlLabel value={false} control={<Radio />} label="No" />
+          </RadioGroup>
+          <Typography>
+            By checking yes, you agree to receive text messages from Gordon College. Message & data
+            rates may apply. Message frequency varies. Reply HELP for help or STOP to cancel. View
+            Terms of Service and Privacy Policy https://www.gordon.edu/webprivacy.cfm.
+          </Typography>
+        </FormControl>
+      </Grid>
+      <Grid item>
+        <FormControl>
           <FormControlLabel
             control={
               <Checkbox
                 checked={phoneInfo.MakePrivate}
                 disabled={phoneInfo.NoPhone}
-                name={'MakePrivate'}
+                name="MakePrivate"
                 onChange={handleCheckPhoneInfo}
               />
             }
@@ -58,7 +80,7 @@ const UpdatePhone = ({ phoneInfo, handleChangePhoneInfo, handleCheckPhoneInfo })
             control={
               <Checkbox
                 checked={phoneInfo.NoPhone}
-                name={'NoPhone'}
+                name="NoPhone"
                 onChange={handleCheckPhoneInfo}
               />
             }
