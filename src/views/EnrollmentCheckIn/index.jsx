@@ -23,7 +23,7 @@ const steps = [
   'Completed Check In',
 ];
 
-const EnrollmentCheckIn = (props) => {
+const EnrollmentCheckIn = () => {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
   const { profile, loading: loadingProfile } = useUser();
@@ -353,8 +353,9 @@ const EnrollmentCheckIn = (props) => {
                           (emergencyContact1.HomePhone === '' &&
                             emergencyContact1.MobilePhone === ''))) ||
                       (activeStep === 2 &&
-                        phoneInfo.PersonalPhone === '' &&
-                        phoneInfo.NoPhone === false) ||
+                        ((phoneInfo.PersonalPhone === '' && phoneInfo.NoPhone === false) ||
+                          phoneInfo.SMSOptedIn === undefined ||
+                          phoneInfo.SMSOptedIn === null)) ||
                       (activeStep === 3 &&
                         (privacyAgreements.FERPA === false ||
                           privacyAgreements.dataUsage === false ||
