@@ -451,6 +451,9 @@ const ParticipantListing = ({
   };
 
   const participantDetails = () => {
+    const secondaryText = participant.Hall
+      ? `${participant.Role} | ${participant.Hall}`
+      : participant.Role;
     return (
       <>
         <ListItemAvatar>
@@ -462,7 +465,7 @@ const ParticipantListing = ({
           />
         </ListItemAvatar>
 
-        <ListItemText primary={fullName} secondary={participant.Role} />
+        <ListItemText primary={fullName} secondary={secondaryText} />
       </>
     );
   };
