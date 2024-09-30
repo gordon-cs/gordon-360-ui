@@ -9,6 +9,7 @@ import EventsAttended from './views/EventsAttended';
 import Feedback from './views/Feedback';
 import Help from './views/Help';
 import Home from './views/Home';
+import Housing from './views/Housing';
 import IDUploader from './views/IDUploader';
 import InvolvementProfile from './views/InvolvementProfile';
 import InvolvementsAll from './views/InvolvementsAll';
@@ -128,6 +129,11 @@ const routes = [
     name: 'Links',
     path: '/links',
     element: <Links />,
+  },
+  {
+    name: 'Housing',
+    path: '/housing',
+    element: <Housing />,
   },
   {
     name: 'Rec-IM',
