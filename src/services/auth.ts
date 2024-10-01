@@ -8,6 +8,8 @@ const apiRequest = {
 
 const authenticate = () => msalInstance.loginRedirect(apiRequest);
 
+let willRedirectForAccessToken = false;
+
 const acquireAccessToken = async () => {
   const activeAccount = msalInstance.getActiveAccount();
   const accounts = msalInstance.getAllAccounts();
@@ -35,7 +37,13 @@ const acquireAccessToken = async () => {
 
   const authResult = await msalInstance.acquireTokenSilent(request).catch((error) => {
     if (error instanceof InteractionRequiredAuthError) {
-      return msalInstance.acquireTokenRedirect(apiRequest);
+      if (willRedirectForAccessToken) {
+        willRedirectForAccessToken = true;
+        console.log('Interaction Required. Redirecting for access token.');
+        return msalInstance.acquireTokenRedirect(apiRequest);
+      } else {
+        console.log('Interaction Required but already began redirecting for access token');
+      }
     } else {
       throw error;
     }

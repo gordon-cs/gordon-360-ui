@@ -78,6 +78,7 @@ const makeRequest = async <TResponse>(
   body?: HttpRequestBody,
   headers?: Headers,
 ): Promise<TResponse> => {
+  console.log(`${method} request to endpoint ${endpoint}`);
   const response = await fetch(`${apiBaseURL}api/${endpoint}`, {
     method,
     body,
@@ -112,12 +113,9 @@ export const parseResponse = async <TResponse>(res: Response): Promise<TResponse
 
 const handleAuthHeader = async (headers: Headers): Promise<Headers> => {
   if (isAuthenticated()) {
-    try {
-      const token = await getToken();
-      headers.append('Authorization', `Bearer ${token}`);
-    } catch (err) {
-      throw new Error('Token is not available');
-    }
+    console.log('Getting token');
+    const token = await getToken();
+    headers.append('Authorization', `Bearer ${token}`);
   }
   return headers;
 };
