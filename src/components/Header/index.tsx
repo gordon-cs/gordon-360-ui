@@ -6,6 +6,7 @@ import {
   People as PeopleIcon,
   Work as WorkIcon,
   Link as LinkIcon,
+  Home as HomeIcon,
 } from '@mui/icons-material';
 import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Link } from '@mui/material';
 import RecIMIcon from '@mui/icons-material/SportsFootball';
@@ -35,6 +36,7 @@ const TabUrlPatterns = [
   /^\/people$|^\/myprofile|^\/profile/,
   /^\/links$/,
   /^\/recim$/,
+  /^\/housing$/,
 ];
 
 /**
@@ -205,6 +207,7 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
             tabIndex={0}
           />
           {requiresAuthTab('Rec-IM', <RecIMIcon />)}
+          {requiresAuthTab('Housing', <HomeIcon />)}
         </Tabs>
         <div className={styles.side_container}>
           <div className={styles.people_search_container}>
