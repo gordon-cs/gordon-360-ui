@@ -1,4 +1,4 @@
-import { Typography, Card, CardContent, CardHeader, Grid } from '@mui/material';
+import { Typography, Card, CardContent, CardHeader, Grid, Link } from '@mui/material';
 import styles from './CampusSafety.module.scss';
 
 const CampusSafety = () => {
@@ -26,7 +26,15 @@ const CampusSafety = () => {
               titleTypographyProps={{ variant: 'h4' }}
             />
             <CardContent>
-              <Typography variant="body1">Gordon Police Resources</Typography>
+              <Link
+                href="https://www.gordon.edu/police"
+                underline="hover"
+                className={`gc360_text_link`}
+                target="_blank"
+                variant="h5"
+              >
+                Gordon Police Resources
+              </Link>
             </CardContent>
           </Card>
         </Grid>
@@ -42,7 +50,15 @@ const CampusSafety = () => {
               titleTypographyProps={{ variant: 'h4' }}
             />
             <CardContent>
-              <Typography variant="body1">Health Center Resources</Typography>
+              <Link
+                href="https://www.gordon.edu/healthcenter"
+                underline="hover"
+                className={`gc360_text_link`}
+                target="_blank"
+                variant="h5"
+              >
+                Health Center Resources
+              </Link>
             </CardContent>
           </Card>
         </Grid>
@@ -56,7 +72,25 @@ const CampusSafety = () => {
               titleTypographyProps={{ variant: 'h4' }}
             />
             <CardContent>
-              <Typography variant="body1">Title IX Resources</Typography>
+              <Link
+                href="https://www.gordon.edu/titleix"
+                underline="hover"
+                className={`gc360_text_link`}
+                target="_blank"
+                variant="h5"
+              >
+                Gordon Title IX Page
+              </Link>
+              <br />
+              <Link
+                href="https://www.gordon.edu/sexualmisconduct/report"
+                underline="hover"
+                className={`gc360_text_link`}
+                target="_blank"
+                variant="h5"
+              >
+                File a Report
+              </Link>
             </CardContent>
           </Card>
         </Grid>
@@ -72,7 +106,15 @@ const CampusSafety = () => {
               titleTypographyProps={{ variant: 'h4' }}
             />
             <CardContent>
-              <Typography variant="body1">Counseling Center Resources</Typography>
+              <Link
+                href="https://www.gordon.edu/counselingwellness"
+                underline="hover"
+                className={`gc360_text_link`}
+                target="_blank"
+                variant="h5"
+              >
+                Counseling Center Resources
+              </Link>
             </CardContent>
           </Card>
         </Grid>
