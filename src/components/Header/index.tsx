@@ -209,7 +209,7 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
           <Tab
             className={styles.tab}
             icon={<SafetyIcon />}
-            label="Safety"
+            label="Campus Safety"
             component={NavLink}
             to="/campussafety"
             tabIndex={0}

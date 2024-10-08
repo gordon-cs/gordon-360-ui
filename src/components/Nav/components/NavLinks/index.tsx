@@ -129,7 +129,7 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
   const SafetyButton = (
     <GordonNavButton
       onLinkClick={onLinkClick}
-      linkName="Safety"
+      linkName="Campus Safety"
       linkPath="/campussafety"
       LinkIcon={Favorite}
       divider={false}
