@@ -1,9 +1,22 @@
-import { Card, CardContent, CardHeader, Container, Grid, Typography } from '@mui/material';
+import { Card, Grid } from '@mui/material';
+import { useAuthGroups } from 'hooks';
+import { AuthGroup } from 'services/auth';
+import RDView from './components/RDView';
 
-const Housing = () => (
-  <Grid Container>
-    <Card></Card>
-  </Grid>
-);
+const Housing = () => {
+  const isFaculty = useAuthGroups(AuthGroup.Faculty);
+
+  if (isFaculty) {
+    return (
+      <Grid container>
+        <Card>
+          <RDView className="jsx" />
+        </Card>
+      </Grid>
+    );
+  } else {
+    return null;
+  }
+};
 
 export default Housing;
