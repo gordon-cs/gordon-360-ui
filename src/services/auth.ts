@@ -37,7 +37,7 @@ const acquireAccessToken = async () => {
 
   const authResult = await msalInstance.acquireTokenSilent(request).catch((error) => {
     if (error instanceof InteractionRequiredAuthError) {
-      if (willRedirectForAccessToken) {
+      if (!willRedirectForAccessToken) {
         willRedirectForAccessToken = true;
         console.log('Interaction Required. Redirecting for access token.');
         return msalInstance.acquireTokenRedirect(apiRequest);
