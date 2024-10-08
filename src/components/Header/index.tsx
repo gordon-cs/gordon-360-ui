@@ -6,6 +6,7 @@ import {
   People as PeopleIcon,
   Work as WorkIcon,
   Link as LinkIcon,
+  Favorite as SafetyIcon,
 } from '@mui/icons-material';
 import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Link } from '@mui/material';
 import RecIMIcon from '@mui/icons-material/SportsFootball';
@@ -34,6 +35,7 @@ const TabUrlPatterns = [
   /^\/events\/?$/,
   /^\/people$|^\/myprofile|^\/profile/,
   /^\/links$/,
+  /^\/campussafety$/,
   /^\/recim$/,
 ];
 
@@ -202,6 +204,14 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
             label="Links"
             component={NavLink}
             to="/links"
+            tabIndex={0}
+          />
+          <Tab
+            className={styles.tab}
+            icon={<SafetyIcon />}
+            label="Campus Safety"
+            component={NavLink}
+            to="/campussafety"
             tabIndex={0}
           />
           {requiresAuthTab('Rec-IM', <RecIMIcon />)}

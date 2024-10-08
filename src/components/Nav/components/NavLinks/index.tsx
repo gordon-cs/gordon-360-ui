@@ -5,6 +5,7 @@ import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import LinkIcon from '@mui/icons-material/InsertLink';
 import PeopleIcon from '@mui/icons-material/People';
 import WorkIcon from '@mui/icons-material/Work';
+import Favorite from '@mui/icons-material/Favorite';
 import { Divider, List } from '@mui/material';
 import RecIMIcon from '@mui/icons-material/SportsFootball';
 import TranscriptIcon from '@mui/icons-material/Receipt';
@@ -125,6 +126,16 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
     />
   );
 
+  const SafetyButton = (
+    <GordonNavButton
+      onLinkClick={onLinkClick}
+      linkName="Campus Safety"
+      linkPath="/campussafety"
+      LinkIcon={Favorite}
+      divider={false}
+    />
+  );
+
   const recimButton = (
     <GordonNavButton
       unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
@@ -203,6 +214,7 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
         {eventsButton}
         {peopleButton}
         {LinksButton}
+        {SafetyButton}
         {recimButton}
       </List>
 
