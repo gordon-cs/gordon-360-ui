@@ -1,0 +1,16 @@
+.campus_safety {
+  &_card {
+    margin: 1rem;
+  }
+
+  &_title {
+    text-align: center;
+    padding: 1rem;
+    background-color: var(--mui-palette-primary-main);
+    color: var(--mui-palette-primary-contrastText);
+
+    b {
+      color: var(--mui-palette-warning-main);
+    }
+  }
+}
