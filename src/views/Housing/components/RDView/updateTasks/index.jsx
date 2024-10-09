@@ -7,7 +7,7 @@ const UpdateTasks = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div>
+    <>
       <IconButton onClick={() => setOpen(true)} size="large" aria-label="Update RA/AC Tasks">
         <EditIcon fontSize="small" />
       </IconButton>
@@ -20,7 +20,7 @@ const UpdateTasks = () => {
         cancelButtonName="CANCEL"
         cancelButtonClicked={() => setOpen(false)}
       />
-    </div>
+    </>
   );
 };
 
