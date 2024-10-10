@@ -26,12 +26,28 @@ const CampusSafety = () => {
               titleTypographyProps={{ variant: 'h4' }}
             />
             <CardContent>
+              <Typography variant="h5" align="center">
+                Emergency?
+              </Typography>
+              <Typography variant="h5" align="center">
+                Call Gordon Police
+              </Typography>
+              <Typography variant="h5" align="center">
+                P 978-867-3333
+              </Typography>
+              <Typography variant="h5" align="center">
+                Non-Emergency Assistance:
+              </Typography>
+              <Typography variant="h5" align="center">
+                P 978-867-4444
+              </Typography>
               <Link
                 href="https://www.gordon.edu/police"
                 underline="hover"
                 className={`gc360_text_link`}
                 target="_blank"
                 variant="h5"
+                align="center"
               >
                 Gordon Police Resources
               </Link>
