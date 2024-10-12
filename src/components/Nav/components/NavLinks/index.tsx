@@ -5,7 +5,7 @@ import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import LinkIcon from '@mui/icons-material/InsertLink';
 import PeopleIcon from '@mui/icons-material/People';
 import WorkIcon from '@mui/icons-material/Work';
-import Favorite from '@mui/icons-material/Favorite';
+import HealthAndSafetyIcon from '@mui/icons-material/HealthAndSafety';
 import { Divider, List } from '@mui/material';
 import RecIMIcon from '@mui/icons-material/SportsFootball';
 import TranscriptIcon from '@mui/icons-material/Receipt';
@@ -129,9 +129,9 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
   const SafetyButton = (
     <GordonNavButton
       onLinkClick={onLinkClick}
-      linkName="Campus Safety"
+      linkName="Safety"
       linkPath="/campussafety"
-      LinkIcon={Favorite}
+      LinkIcon={HealthAndSafetyIcon}
       divider={false}
     />
   );

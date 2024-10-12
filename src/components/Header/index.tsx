@@ -6,7 +6,7 @@ import {
   People as PeopleIcon,
   Work as WorkIcon,
   Link as LinkIcon,
-  Favorite as SafetyIcon,
+  HealthAndSafety as SafetyIcon,
 } from '@mui/icons-material';
 import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Link } from '@mui/material';
 import RecIMIcon from '@mui/icons-material/SportsFootball';
@@ -209,7 +209,7 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
           <Tab
             className={styles.tab}
             icon={<SafetyIcon />}
-            label="Campus Safety"
+            label="Safety"
             component={NavLink}
             to="/campussafety"
             tabIndex={0}
