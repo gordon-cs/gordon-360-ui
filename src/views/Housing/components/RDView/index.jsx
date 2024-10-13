@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, Container, Grid, Typography } from '@mui/material';
 import { ListItemIcon, ListItemText, ListSubheader, List, ListItem, Link } from '@mui/material';
-import UpdateTasks from './updateTasks';
+import UpdateTasks from './components/updateTasks';
 
 const RDView = () => (
   <Grid container>

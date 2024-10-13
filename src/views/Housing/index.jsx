@@ -3,12 +3,14 @@ import { useAuthGroups } from 'hooks';
 import { AuthGroup } from 'services/auth';
 
 import RDView from './components/RDView';
+import RAView from './components/RAView';
 
 // Components for Resident View
 import MyHall from './components/ResidentView/MyHall';
 import MyRA from './components/ResidentView/MyRA';
 import OnDuty from './components/ResidentView/OnDuty';
 import Resources from './components/ResidentView/Resources';
+
 
 const Housing = () => {
   const isFaculty = useAuthGroups(AuthGroup.Faculty);
@@ -47,6 +49,12 @@ const Housing = () => {
             <Resources className="jsx" />
           </Card>
         </Grid>
+  
+        {/* Figure out how to set up view for RA */}
+        <Card>
+          <RAView className="jsx" />
+        </Card>
+
       </Grid>
     );
   } else {
