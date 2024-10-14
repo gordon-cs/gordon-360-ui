@@ -2,6 +2,7 @@ import { Typography, Card, CardContent, CardHeader, Grid, Link } from '@mui/mate
 import Header from '../../components/Header';
 import styles from './SafetyPage.module.scss';
 
+// Police resources UI
 const policeCard = (
   <Card className={styles.campus_safety_card}>
     <CardHeader
@@ -46,6 +47,7 @@ const policeCard = (
   </Card>
 );
 
+// Title IX resources UI
 const titleIXCard = (
   <Card className={styles.campus_safety_card}>
     <CardHeader
@@ -81,6 +83,7 @@ const titleIXCard = (
   </Card>
 );
 
+// Health Center resources UI
 const healthCenterCard = (
   <Card className={styles.campus_safety_card}>
     <CardHeader
@@ -105,6 +108,7 @@ const healthCenterCard = (
   </Card>
 );
 
+// Counseling Center resources UI
 const counselingCenterCard = (
   <Card className={styles.campus_safety_card}>
     <CardHeader
@@ -140,6 +144,7 @@ const counselingCenterCard = (
   </Card>
 );
 
+// Chapel Office resources UI
 const chapelOfficeCard = (
   <Card className={styles.campus_safety_card}>
     <CardHeader
@@ -168,6 +173,7 @@ const chapelOfficeCard = (
   </Card>
 );
 
+// Primary campus safety resources page component
 const SafetyPage = () => {
   return (
     <>

@@ -1,6 +1,8 @@
 import { Grid, Typography, Box } from '@mui/material';
 import styles from './Header.module.css';
 
+// Page header component, has a option for the safety page, and an option that holds any
+// child element for other pages
 const Header = ({ safetyPage }: { safetyPage: boolean }, children: JSX.Element | null) => {
   return safetyPage ? (
     <Grid container alignItems="center" columnSpacing={4} className={styles.headerMain}>
