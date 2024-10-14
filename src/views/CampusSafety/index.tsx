@@ -1,4 +1,14 @@
-import { Typography, Card, CardContent, CardHeader, Grid, Link } from '@mui/material';
+import {
+  Typography,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Divider,
+  Grid,
+  Link,
+} from '@mui/material';
 import styles from './CampusSafety.module.scss';
 
 const policeCard = (
@@ -53,6 +63,25 @@ const policeCard = (
         >
           Gordon Police Resources
         </Link>
+        <br />
+        <br />
+        <Grid item xs={12}>
+          <br />
+          <Divider orientation="horizontal" variant="middle" sx={{ borderBorderWidth: 10 }} />
+          <br />
+          <Typography variant="h5" align="center">
+            Missing Something?
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <br />
+          <Box textAlign={'center'}>
+            <Button color="secondary" variant="contained">
+              Lost and Found
+            </Button>
+          </Box>
+          <br />
+        </Grid>
       </Grid>
     </CardContent>
   </Card>
