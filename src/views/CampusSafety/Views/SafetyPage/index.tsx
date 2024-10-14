@@ -1,49 +1,37 @@
 import { Typography, Card, CardContent, CardHeader, Grid, Link } from '@mui/material';
+import Header from '../../components/Header';
 import styles from './SafetyPage.module.scss';
 
 const policeCard = (
   <Card className={styles.campus_safety_card}>
     <CardHeader
       className={styles.campus_safety_title}
-      title={
-        <div>
-          <b> Gordon </b>Police
-        </div>
-      }
+      title="Gordon Police"
       titleTypographyProps={{ variant: 'h4' }}
     />
     <CardContent className={styles.campus_safety_card}>
+      <Typography variant="h5" align="center" gutterBottom={true} display="block">
+        Emergency?
+      </Typography>
+      <br />
+      <Typography variant="h5" align="center">
+        Call Gordon Police
+      </Typography>
+      <Typography variant="h5" align="center">
+        P 978-867-<b>3333</b>
+      </Typography>
+      <br />
+      <br />
+      <Typography variant="h5" align="center">
+        Non-Emergency Assistance:
+      </Typography>
+      <Typography variant="h5" align="center">
+        P 978-867-<b>4444</b>
+      </Typography>
+      <br />
+      <hr />
+      <br />
       <Grid container justifyContent={'center'}>
-        <Grid item xs={12}>
-          <Typography variant="h5" align="center">
-            Emergency?
-          </Typography>
-          <br />
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h5" align="center">
-            Call Gordon Police
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h5" align="center">
-            P 978-867-<b>3333</b>
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <br />
-          <br />
-          <Typography variant="h5" align="center">
-            Non-Emergency Assistance:
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h5" align="center">
-            P 978-867-<b>4444</b>
-          </Typography>
-          <br />
-        </Grid>
-
         <Link
           href="https://www.gordon.edu/police"
           underline="hover"
@@ -77,6 +65,7 @@ const titleIXCard = (
           Gordon Title IX Page
         </Link>
       </Grid>
+      <br />
       <Grid container justifyContent={'center'}>
         <Link
           href="https://www.gordon.edu/sexualmisconduct/report"
@@ -135,6 +124,18 @@ const counselingCenterCard = (
           Counseling Center Resources
         </Link>
       </Grid>
+      <br />
+      <Grid container justifyContent={'center'}>
+        <Link
+          href="https://counseling.gordon.edu/TitaniumWeb/WCMenu.aspx"
+          underline="hover"
+          className={`gc360_text_link`}
+          target="_blank"
+          variant="h5"
+        >
+          Request Services
+        </Link>
+      </Grid>
     </CardContent>
   </Card>
 );
@@ -151,37 +152,38 @@ const chapelOfficeCard = (
       titleTypographyProps={{ variant: 'h4' }}
     />
     <CardContent>
-      <Typography variant="body1">Chapel Office Resources</Typography>
+      <Grid container justifyContent={'center'}>
+        <Link
+          href="https://www.gordon.edu/chapel"
+          underline="hover"
+          className={`gc360_text_link`}
+          target="_blank"
+          variant="h5"
+          align="center"
+        >
+          Chapel Information
+        </Link>
+      </Grid>
     </CardContent>
   </Card>
 );
 
 const SafetyPage = () => {
   return (
-    <Grid className={styles.campus_safety} container justifyContent={'center'}>
-      <Grid item xs={12} lg={10}>
-        <Card className={styles.campus_safety_card}>
-          <CardHeader
-            className={styles.campus_safety_title}
-            title={
-              <div>
-                <b>Gordon</b> Campus Safety Resources
-              </div>
-            }
-            titleTypographyProps={{ variant: 'h4' }}
-          />
-        </Card>
+    <>
+      <Header safetyPage={true}></Header>
+      <Grid className={styles.campus_safety} container justifyContent={'center'}>
+        <Grid item xs={12} md={6} lg={5}>
+          {policeCard}
+          {healthCenterCard}
+        </Grid>
+        <Grid item xs={12} md={6} lg={5}>
+          {counselingCenterCard}
+          {titleIXCard}
+          {chapelOfficeCard}
+        </Grid>
       </Grid>
-      <Grid item xs={12} md={6} lg={5}>
-        {policeCard}
-        {healthCenterCard}
-      </Grid>
-      <Grid item xs={12} md={6} lg={5}>
-        {counselingCenterCard}
-        {titleIXCard}
-        {chapelOfficeCard}
-      </Grid>
-    </Grid>
+    </>
   );
 };
 

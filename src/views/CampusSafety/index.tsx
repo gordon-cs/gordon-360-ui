@@ -1,5 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
-import SafetyPage from './Views/SafetyPage';
+import SafetyPage from './views/SafetyPage';
 
 const CampusSafetyApp = () => {
   return (
