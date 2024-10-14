@@ -7,6 +7,8 @@ import { AuthGroup } from 'services/auth';
 const Housing = () => {
   const isFaculty = useAuthGroups(AuthGroup.Faculty);
   const isStudent = useAuthGroups(AuthGroup.Student);
+  const isRA = useAuthGroups(AuthGroup.ResidentAdvisor);
+  const isRD = useAuthGroups(AuthGroup.HousingAdmin);
 
   if (isFaculty) {
     return (
