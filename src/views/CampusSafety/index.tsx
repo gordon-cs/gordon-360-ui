@@ -67,7 +67,7 @@ const policeCard = (
         <br />
         <Grid item xs={12}>
           <br />
-          <Divider orientation="horizontal" variant="middle" sx={{ borderBorderWidth: 10 }} />
+          <Divider orientation="horizontal" variant="middle" />
           <br />
           <Typography variant="h5" align="center">
             Missing Something?
