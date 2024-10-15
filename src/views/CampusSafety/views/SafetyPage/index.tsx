@@ -1,4 +1,4 @@
-import { Typography, Card, CardContent, CardHeader, Grid, Link } from '@mui/material';
+import { Typography, Card, CardContent, CardHeader, Grid, Link, Box } from '@mui/material';
 import Header from '../../components/Header';
 import styles from './SafetyPage.module.scss';
 
@@ -11,16 +11,26 @@ const policeCard = (
       titleTypographyProps={{ variant: 'h4' }}
     />
     <CardContent className={styles.campus_safety_card}>
-      <Typography variant="h5" align="center" gutterBottom={true} display="block">
-        Emergency?
-      </Typography>
-      <br />
-      <Typography variant="h5" align="center">
-        Call Gordon Police
-      </Typography>
-      <Typography variant="h5" align="center">
-        P 978-867-<b>3333</b>
-      </Typography>
+      <Grid container justifyContent={'center'}>
+        <Box className={styles.campus_safety_alert}>
+          <Grid item xs={12}>
+            <Typography variant="h5" align="center">
+              Emergency?
+            </Typography>
+            <br />
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h5" align="center">
+              Call Gordon Police
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h5" align="center">
+              P 978-867-<b>3333</b>
+            </Typography>
+          </Grid>
+        </Box>
+      </Grid>
       <br />
       <br />
       <Typography variant="h5" align="center">
