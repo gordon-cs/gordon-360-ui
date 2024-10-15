@@ -91,6 +91,7 @@ export enum AuthGroup {
   Staff = '360-Staff-SG',
   Student = '360-Student-SG',
   AcademicInfoView = '360-AcademicInfoView-SG',
+  ResidentAdvisor = 'RA-SG',
 }
 
 export {
