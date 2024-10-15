@@ -1,5 +1,5 @@
-import { Typography, Card, CardContent, CardHeader, Grid, Link } from '@mui/material';
-import styles from './CampusSafety.module.scss';
+import { Typography, Card, CardContent, CardHeader, Grid, Link, Box } from '@mui/material';
+import styles from './CampusSafety.module.css';
 
 const policeCard = (
   <Card className={styles.campus_safety_card}>
@@ -14,22 +14,24 @@ const policeCard = (
     />
     <CardContent className={styles.campus_safety_card}>
       <Grid container justifyContent={'center'}>
-        <Grid item xs={12}>
-          <Typography variant="h5" align="center">
-            Emergency?
-          </Typography>
-          <br />
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h5" align="center">
-            Call Gordon Police
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h5" align="center">
-            P 978-867-<b>3333</b>
-          </Typography>
-        </Grid>
+        <Box className={styles.campus_safety_alert}>
+          <Grid item xs={12}>
+            <Typography variant="h5" align="center">
+              Emergency?
+            </Typography>
+            <br />
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h5" align="center">
+              Call Gordon Police
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h5" align="center">
+              P 978-867-<b>3333</b>
+            </Typography>
+          </Grid>
+        </Box>
         <Grid item xs={12}>
           <br />
           <br />
