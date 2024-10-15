@@ -1,7 +1,7 @@
 import { Card, CardContent, Box, CardHeader, Grid, useMediaQuery } from '@mui/material';
-import CustomizedTable from './OnDutyTable';
-import EditDocs from './EditDocs';
-import BasicSelect from './MobileView';
+import CustomizedTable from './components/OnDutyTable';
+import EditDocs from './components/EditDocs';
+import BasicSelect from './components/MobileView';
 
 const RDView = () => {
   const isMobile = useMediaQuery('(max-width:600px)');
