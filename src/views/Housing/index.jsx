@@ -21,9 +21,7 @@ const Housing = () => {
   if (isFaculty) {
     return (
       <Grid container>
-        <Card>
-          <RDView className="jsx" />
-        </Card>
+        <RDView className="jsx" />
       </Grid>
     );
   } else if (isStudent) {
