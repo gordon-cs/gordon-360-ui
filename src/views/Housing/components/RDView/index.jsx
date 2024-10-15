@@ -1,51 +1,74 @@
-import { Card, CardContent, CardHeader, Container, Grid, Typography } from '@mui/material';
-import { ListItemIcon, ListItemText, ListSubheader, List, ListItem, Link } from '@mui/material';
-import UpdateTasks from './updateTasks';
+import { Card, CardContent, Box, CardHeader, Grid, useMediaQuery } from '@mui/material';
+import CustomizedTable from './OnDutyTable';
+import EditDocs from './EditDocs';
+import BasicSelect from './MobileView';
 
-const RDView = () => (
-  <Grid container>
-    <Grid item xs={12} md={12} padding={1}>
-      <Card sx={{ width: '100%' }}>
-        <CardHeader title={`Edit Documents`} className="gc360_header" />
-        <CardContent>
-          <Typography>
-            <List>
-              <ListItem>
-                <Link underline="hover" className={`gc360_text_link`} target="_blank">
-                  <ListItemText primary="RA/AC Task List"></ListItemText>
-                </Link>
-                <Grid item>
-                  <UpdateTasks />
+const RDView = () => {
+  const isMobile = useMediaQuery('(max-width:600px)');
+  return (
+    <Grid container justifyContent={'Center'}>
+      <Box mt={5} />
+      {!isMobile && (
+        <Grid item xs={12} md={20} padding={1}>
+          <Card xs={{ width: '100%' }}>
+            <CardHeader
+              title={
+                <Grid container direction="row" alignItems="center">
+                  <Grid item xs={12} align="center">
+                    RA/AC on Duty by Hall
+                  </Grid>
                 </Grid>
-              </ListItem>
-              <ListItem>
-                <Link
-                  // Change link later when we have a SharePoint Link
-                  href="https://www.microsoft.com/en-us/microsoft-365/sharepoint/collaboration"
-                  underline="hover"
-                  className={`gc360_text_link`}
-                  target="_blank"
-                >
-                  <ListItemText primary="Sharepoint"></ListItemText>
-                </Link>
-              </ListItem>
-              <ListItem>
-                <Link
-                  // Change link later when we have actual Room Range page
-                  href="http://127.0.0.1:5500/index.html"
-                  underline="hover"
-                  className={`gc360_text_link`}
-                  target="_blank"
-                >
-                  <ListItemText primary="Room Ranges"></ListItemText>
-                </Link>
-              </ListItem>
-            </List>
-          </Typography>
-        </CardContent>
-      </Card>
+              }
+              className="gc360_header"
+            />
+            <CardContent>
+              <CustomizedTable />
+            </CardContent>
+          </Card>
+        </Grid>
+      )}
+      {isMobile && (
+        <>
+          <Box mt={5} />
+          <Grid item xs={12} md={20} padding={1}>
+            <Card sx={{ width: '100%' }}>
+              <CardHeader
+                title={
+                  <Grid container direction="row" alignItems="center">
+                    <Grid item xs={12} align="center">
+                      RA/AC on Duty by Hall
+                    </Grid>
+                  </Grid>
+                }
+                className="gc360_header"
+              />
+              <CardContent>
+                <BasicSelect />
+              </CardContent>
+            </Card>
+          </Grid>
+        </>
+      )}
+      <Box mt={5} />
+      <Grid item xs={12} md={20} padding={1}>
+        <Card xs={{ width: '100%' }}>
+          <CardHeader
+            title={
+              <Grid container direction="row" alignItems="center">
+                <Grid item xs={12} align="center">
+                  Editable Documents
+                </Grid>
+              </Grid>
+            }
+            className="gc360_header"
+          />
+          <CardContent>
+            <EditDocs />
+          </CardContent>
+        </Card>
+      </Grid>
     </Grid>
-  </Grid>
-);
+  );
+};
 
 export default RDView;

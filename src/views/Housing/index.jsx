@@ -1,14 +1,15 @@
-import { Card, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
+import { useAuthGroups } from 'hooks';
+import { AuthGroup } from 'services/auth';
 import RDView from './components/RDView';
-import { isFacStaff as checkIsFacStaff, isFacStaff } from 'services/user';
 
 const Housing = () => {
-  if (isFacStaff) {
+  const isFaculty = useAuthGroups(AuthGroup.Faculty);
+
+  if (isFaculty) {
     return (
       <Grid container>
-        <Card>
-          <RDView className="jsx" />
-        </Card>
+        <RDView className="jsx" />
       </Grid>
     );
   } else {
