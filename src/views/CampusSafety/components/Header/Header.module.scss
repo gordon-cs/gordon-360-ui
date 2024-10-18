@@ -1,3 +1,5 @@
+@import '../../../../vars';
+
 .headerMain {
   margin-left: -0.5rem;
   width: calc(100% + 1rem);
@@ -17,4 +19,27 @@
 
 .subtitle {
   color: var(--mui-palette-neutral-contrastText);
+}
+
+.stickyNav {
+  margin-left: -0.5rem;
+  background-color: var(--mui-palette-neutral-light);
+  position: sticky;
+  top: -1rem;
+  margin-bottom: 1rem;
+  z-index: 1; // this component defaults to a higher z-index that overlays quick search
+  width: calc(100% + 1rem);
+  padding: 0.5rem 0.5rem;
+  // clip-path removes box shadow above this nav bar
+  clip-path: inset(0px -10px -10px -10px);
+}
+
+.breadcrumbText {
+  font-size: 0.8em;
+}
+
+@media (min-width: $break-sm) {
+  .breadcrumbText {
+    font-size: 0.9em;
+  }
 }

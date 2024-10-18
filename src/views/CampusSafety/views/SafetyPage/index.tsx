@@ -187,7 +187,7 @@ const chapelOfficeCard = (
 const SafetyPage = () => {
   return (
     <>
-      <Header safetyPage={true}></Header>
+      <Header></Header>
       <Grid className={styles.campus_safety} container justifyContent={'center'}>
         <Grid item xs={12} md={6} lg={5}>
           {policeCard}
