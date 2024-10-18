@@ -1,4 +1,4 @@
-import { Typography, Card, CardContent, CardHeader, Grid, Link, Box } from '@mui/material';
+import { Typography, Card, CardContent, CardHeader, Grid, Link, Box, Button } from '@mui/material';
 import Header from '../../components/Header';
 import styles from './SafetyPage.module.scss';
 
@@ -32,15 +32,12 @@ const policeCard = (
         </Box>
       </Grid>
       <br />
-      <br />
       <Typography variant="h5" align="center">
         Non-Emergency Assistance:
       </Typography>
       <Typography variant="h5" align="center">
         P 978-867-<b>4444</b>
       </Typography>
-      <br />
-      <hr />
       <br />
       <Grid container justifyContent={'center'}>
         <Link
@@ -52,6 +49,21 @@ const policeCard = (
         >
           Gordon Police Resources
         </Link>
+      </Grid>
+      <Grid item xs={12}>
+        <hr />
+        <br />
+        <Typography variant="h5" align="center">
+          Missing Something?
+        </Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <br />
+        <Box textAlign={'center'}>
+          <Button color="secondary" variant="contained" href="/campussafety/lostandfound">
+            Lost and Found
+          </Button>
+        </Box>
       </Grid>
     </CardContent>
   </Card>
