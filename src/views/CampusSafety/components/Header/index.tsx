@@ -7,7 +7,7 @@ const CampusSafetyBreadcrumb = ({
   link,
   children,
 }: {
-  link: Partial<Path>;
+  link: string | null;
   children: JSX.Element;
 }) => {
   if (link) {
@@ -49,7 +49,7 @@ const Header = ({ safetyPage }: { safetyPage?: boolean }, children: JSX.Element 
       <AppBar className={styles.stickyNav}>
         <Breadcrumbs aria-label="breadcrumb">
           {/* Home breadcrumb */}
-          <CampusSafetyBreadcrumb link={location !== '/campussafety' && `/campussafety`}>
+          <CampusSafetyBreadcrumb link={location !== '/campussafety' ? `/campussafety` : null}>
             <Grid container alignItems="center">
               <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
               {'Campus Safety Home'}
