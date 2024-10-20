@@ -17,13 +17,7 @@ const Housing = () => {
       </Grid>
     );
   } else if (isStudent) {
-    return (
-      <Grid container>
-        <Card>
-          <RAView className="jsx" />
-        </Card>
-      </Grid>
-    );
+    return <RAView />;
   } else {
     return null;
   }
