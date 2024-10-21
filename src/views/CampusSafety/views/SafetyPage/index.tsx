@@ -15,7 +15,7 @@ const policeCard = (
         <Box className={styles.campus_safety_alert}>
           <Grid item xs={12}>
             <Typography variant="h5" align="center">
-              Emergency?
+              For Emergencies:
             </Typography>
             <br />
           </Grid>
@@ -158,11 +158,7 @@ const chapelOfficeCard = (
   <Card className={styles.campus_safety_card}>
     <CardHeader
       className={styles.campus_safety_title}
-      title={
-        <div>
-          <b> Chapel </b>Office
-        </div>
-      }
+      title={'Chapel Office'}
       titleTypographyProps={{ variant: 'h5' }}
     />
     <CardContent>
