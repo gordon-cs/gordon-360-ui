@@ -8,7 +8,7 @@ const policeCard = (
     <CardHeader
       className={styles.campus_safety_title}
       title="Gordon Police"
-      titleTypographyProps={{ variant: 'h4' }}
+      titleTypographyProps={{ variant: 'h5' }}
     />
     <CardContent className={styles.campus_safety_card}>
       <Grid container justifyContent={'center'}>
@@ -31,7 +31,6 @@ const policeCard = (
           </Grid>
         </Box>
       </Grid>
-      <br />
       <br />
       <Typography variant="h5" align="center">
         Non-Emergency Assistance:
@@ -63,7 +62,7 @@ const titleIXCard = (
     <CardHeader
       className={styles.campus_safety_title}
       title="Sexual Misconduct Resources"
-      titleTypographyProps={{ variant: 'h4' }}
+      titleTypographyProps={{ variant: 'h5' }}
     />
     <CardContent>
       <Grid container justifyContent={'center'}>
@@ -72,7 +71,7 @@ const titleIXCard = (
           underline="hover"
           className={`gc360_text_link`}
           target="_blank"
-          variant="h5"
+          variant="h6"
         >
           Gordon Title IX Page
         </Link>
@@ -84,7 +83,7 @@ const titleIXCard = (
           underline="hover"
           className={`gc360_text_link`}
           target="_blank"
-          variant="h5"
+          variant="h6"
         >
           File a Report
         </Link>
@@ -99,7 +98,7 @@ const healthCenterCard = (
     <CardHeader
       className={styles.campus_safety_title}
       title="Health Center"
-      titleTypographyProps={{ variant: 'h4' }}
+      titleTypographyProps={{ variant: 'h5' }}
     />
     <CardContent>
       <Grid container justifyContent={'center'}>
@@ -108,7 +107,7 @@ const healthCenterCard = (
           underline="hover"
           className={`gc360_text_link`}
           target="_blank"
-          variant="h5"
+          variant="h6"
           align="center"
         >
           Health Center Resources
@@ -124,7 +123,7 @@ const counselingCenterCard = (
     <CardHeader
       className={styles.campus_safety_title}
       title="Counseling Center"
-      titleTypographyProps={{ variant: 'h4' }}
+      titleTypographyProps={{ variant: 'h5' }}
     />
     <CardContent>
       <Grid container justifyContent={'center'}>
@@ -133,7 +132,7 @@ const counselingCenterCard = (
           underline="hover"
           className={`gc360_text_link`}
           target="_blank"
-          variant="h5"
+          variant="h6"
         >
           Counseling Center Resources
         </Link>
@@ -145,7 +144,7 @@ const counselingCenterCard = (
           underline="hover"
           className={`gc360_text_link`}
           target="_blank"
-          variant="h5"
+          variant="h6"
         >
           Request Services
         </Link>
@@ -164,7 +163,7 @@ const chapelOfficeCard = (
           <b> Chapel </b>Office
         </div>
       }
-      titleTypographyProps={{ variant: 'h4' }}
+      titleTypographyProps={{ variant: 'h5' }}
     />
     <CardContent>
       <Grid container justifyContent={'center'}>
@@ -173,7 +172,7 @@ const chapelOfficeCard = (
           underline="hover"
           className={`gc360_text_link`}
           target="_blank"
-          variant="h5"
+          variant="h6"
           align="center"
         >
           Chapel Information

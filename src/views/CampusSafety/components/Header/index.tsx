@@ -14,9 +14,6 @@ const Header = ({ safetyPage }: { safetyPage: boolean }, children: JSX.Element |
             </Box>{' '}
             Campus Safety Resources
           </Typography>
-          <Typography className={styles.subtitle}>
-            <i>"Helping students help themselves"</i>
-          </Typography>
         </Grid>
       </Grid>
     </Grid>
