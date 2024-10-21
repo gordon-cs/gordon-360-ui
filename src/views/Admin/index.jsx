@@ -1,5 +1,15 @@
+import { useState } from 'react';
 import { useIsAuthenticated } from '@azure/msal-react';
-import { Card, CardHeader, Grid, Link, Typography } from '@mui/material';
+import {
+  Card,
+  CardContent,
+  CardActionArea,
+  CardHeader,
+  CardMedia,
+  Grid,
+  Link,
+  Typography,
+} from '@mui/material';
 import GordonOffline from 'components/GordonOffline';
 import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import { useAuthGroups, useNetworkStatus } from 'hooks';
@@ -14,6 +24,9 @@ const Admin = () => {
   const isOnline = useNetworkStatus();
   const isAuthenticated = useIsAuthenticated();
 
+  // State for all posters
+  const [allPosters, setAllPosters] = useState([]);
+
   if (!isAuthenticated) {
     return <GordonUnauthenticated feature={'the admin page'} />;
   }
@@ -25,6 +38,35 @@ const Admin = () => {
   if (isAdmin) {
     return (
       <Grid container justifyContent="center" spacing={2}>
+        {/* All Posters Section */}
+        <Grid item xs={12} lg={8}>
+          <Card>
+            <CardHeader title="All Posters" className="gc360_header" />
+            <CardContent>
+              <Grid container direction="row" spacing={4}>
+                {allPosters.map((item) => (
+                  <Grid item xs={6} sm={4} md={3} lg={2} key={item.key}>
+                    <Card variant="outlined">
+                      <CardActionArea component="div">
+                        <CardMedia
+                          loading="lazy"
+                          component="img"
+                          alt={item.alt}
+                          src={item.image}
+                          title={item.title}
+                        />
+                        <CardContent>
+                          <Typography className={'Poster Title'}>{item.title}</Typography>
+                        </CardContent>
+                      </CardActionArea>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+            </CardContent>
+          </Card>
+        </Grid>
+
         <Grid item xs={12} lg={8}>
           <InvolvementStatusList status={'Open'} />
         </Grid>
@@ -39,7 +81,7 @@ const Admin = () => {
 
         <Grid item xs={12} lg={8}>
           <Card>
-            <CardHeader title="Site Admins" align="center" class={styles.cardheader} />
+            <CardHeader title="Site Admins" align="center" className={styles.cardheader} />
             <Grid container justifyContent="center">
               <Typography variant="p">
                 Visit{' '}

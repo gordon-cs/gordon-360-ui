@@ -7,21 +7,46 @@ import HamburgerPoster from 'views/Posters/images/HamburgerPoster.jpg';
 import MoviePoster from 'views/Posters/images/MoviePoster.jpg';
 import SportPoster from 'views/Posters/images/sport.jpg';
 
+const pathToDataURL = async (filePath) => {
+  const response = await fetch(filePath); // Fetch file
+  const blob = await response.blob(); // convert response to blob
+  const reader = new FileReader();
+
+  return new Promise((resolve, reject) => {
+    reader.onloadend = () => {
+      resolve(reader.result); // resolve with data url
+    };
+
+    reader.onerror = () => {
+      reject(new Error('Error reading file')); // reject promise on error
+    };
+
+    reader.readAsDataURL(blob); // read blob as data url
+  });
+};
+
 export const DATA = [
   {
     key: '0',
+    displayAfter: '2024-10-18T17:03',
+    displayUntil: '2024-10-20T17:00',
     title: 'Poster Title',
     image: TestPoster,
+    dataImage: await pathToDataURL(TestPoster),
     alt: 'alt text for poster 1',
     desc: 'this is a short descirption for poster 1',
     org: null,
     uploader: 'hunter.simpson',
     status: 'unexpired',
+    clubCode: 'CATHSTU',
   },
   {
     key: '1',
+    displayAfter: '2024-10-18T17:03',
+    displayUntil: '2024-10-20T17:00',
     title: 'Poster 2 Title',
     image: DiscoPoster,
+    dataImage: await pathToDataURL(DiscoPoster),
     alt: 'alt text for poster 2',
     desc: 'this is a short descirption',
     org: 'CATHSTU',
@@ -31,8 +56,11 @@ export const DATA = [
 
   {
     key: '2',
+    displayAfter: '2024-10-18T17:03',
+    displayUntil: '2024-10-20T17:00',
     title: 'Event 3',
     image: TestPoster,
+    dataImage: await pathToDataURL(TestPoster),
     alt: 'alt text for poster hunter',
     desc: 'this is a short descirption',
     org: 'CEC',

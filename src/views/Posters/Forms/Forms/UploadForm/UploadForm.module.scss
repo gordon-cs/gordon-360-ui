@@ -24,6 +24,22 @@
   width: 100%;
 }
 
+/* 
+--mui-palette-error-dark
+--mui-palette-error-main
+--mui-palette-error-light
+
+--mui-palette-warning-dark
+*/
+.deleteButton {
+  background-color: var(--mui-palette-warning-dark);
+  width: 100%;
+}
+
+.deleteButton:hover {
+  background-color: var(--mui-palette-error-dark);
+}
+
 .uploadPosterButton {
   display: flex;
   align-items: center;
