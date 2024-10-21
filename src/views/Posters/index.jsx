@@ -23,6 +23,7 @@ import { useLocation } from 'react-router-dom';
 import CropPoster from './Forms/Forms/CropPoster';
 
 const Posters = () => {
+  const [tempPosterItem, setTempPosterItem] = useState(null);
   const [openUploadForm, setOpenUploadForm] = useState(false);
   const { profile } = useUser();
   const [allInvolvements, setAllInvolvements] = useState([]);
@@ -35,6 +36,13 @@ const Posters = () => {
   const [allPosters, setAllPosters] = useState([]);
   const pizzaSlice = DATA.slice(0, 2);
   const sessionFromURL = new URLSearchParams(location.search).get('session');
+
+  const handleCardClick = (item) => {
+    setTempPosterItem(item); // Store the clicked item for further use in the form dialog
+    setOpenUploadForm(true); // Open the form dialog
+    console.log('handleCardClick');
+    //console.log(myInvolvements)
+  };
 
   useEffect(() => {
     const loadButton = async () => {
@@ -109,7 +117,11 @@ const Posters = () => {
           <Grid item xs={12} md={croppedImage ? 6 : 12}>
             <Card variant="outlined">
               <CardHeader title="Upload Poster" className="gc360_header" />
-              <UploadForm onClose={clearOnClose} onCropSubmit={handleCropSubmit} />
+              <UploadForm
+                onClose={clearOnClose}
+                onCropSubmit={handleCropSubmit}
+                item={tempPosterItem}
+              />
             </Card>
           </Grid>
           <Dialog open={openCropPoster} onClose={() => setOpenCropPoster(false)}>
@@ -159,17 +171,17 @@ const Posters = () => {
                 <Grid item xs={7} align="left">
                   My Upcoming Club Events
                 </Grid>
-                {myInvolvements.length > 0 && (
-                  <Grid item xs={5} align="right">
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => setOpenUploadForm(true)}
-                    >
-                      Upload{'\u00A0'}Poster
-                    </Button>
-                  </Grid>
-                )}
+                {/* myInvolvements.length > 0 && ( */}
+                <Grid item xs={5} align="right">
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => setOpenUploadForm(true)}
+                  >
+                    Upload{'\u00A0'}Poster
+                  </Button>
+                </Grid>
+                {/* )} */}
               </Grid>
             }
             className="gc360_header"
@@ -179,7 +191,7 @@ const Posters = () => {
               {pizzaSlice.map((item) => (
                 <Grid item xs={6} sm={4} md={3} lg={3} key={item.key}>
                   <Card variant="outlined">
-                    <CardActionArea component="div">
+                    <CardActionArea component="div" onClick={() => handleCardClick(item)}>
                       <CardMedia
                         loading="lazy"
                         component="img"

@@ -18,23 +18,41 @@ import involvementService from 'services/involvements';
 import sessionService from 'services/session';
 import { useLocation } from 'react-router-dom';
 import styles from './UploadForm.module.scss';
+import { AuthGroup } from 'services/auth';
+import { useAuthGroups, useNetworkStatus } from 'hooks';
 
-const UploadForm = ({ onClose, onCropSubmit }) => {
+const UploadForm = ({ onClose, onCropSubmit, item }) => {
   const [priorityStatus, setPriorityStatus] = useState('');
   const [selectedClub, setSelectedClub] = useState('');
   const [openCropPoster, setOpenCropPoster] = useState(false);
   const [openPosterCheck, setOpenPosterCheck] = useState(false);
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
+  const [startTime, setStartTime] = useState(item.displayAfter || '');
+  const [endTime, setEndTime] = useState(item.displayUntil || '');
+  const [title, setTitle] = useState(item.title || '');
+  console.log('UploadForm initialized');
+  //console.log(item);
+  const [description, setDescription] = useState(item.desc || '');
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const { profile } = useUser();
   const [myInvolvements, setMyInvolvements] = useState([]);
+  const [isGroupAdmin, setIsGroupAdmin] = useState(false);
   const [selectedSession, setSelectedSession] = useState('');
   const location = useLocation();
   const sessionFromURL = new URLSearchParams(location.search).get('session');
-  const [croppedImage, setCroppedImage] = useState(null);
+  const [croppedImage, setCroppedImage] = useState(item.dataImage || null);
+  console.log('image receivecd');
+  //console.log(croppedImage);
+
+  const deletePoster = () => {
+    console.log('Deleted poster');
+  };
+
+  useEffect(() => {
+    if (item.dataImage) {
+      console.log('dataImage exists, submitting to onCropSubmit');
+      onCropSubmit(item.dataImage);
+    }
+  }, [item.dataImage, onCropSubmit]);
 
   useEffect(() => {
     const loadButton = async () => {
@@ -78,19 +96,25 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
   useEffect(() => {
     const updateInvolvements = async () => {
       if (profile) {
-        setMyInvolvements(
-          await membershipService.get({
-            username: profile.AD_Username,
-            sessionCode: selectedSession,
-            participationTypes: Participation.GroupAdmin,
-          }),
+        const involvements = await membershipService.get({
+          username: profile.AD_Username,
+          sessionCode: selectedSession,
+          participationTypes: Participation.GroupAdmin,
+        });
+        setMyInvolvements(involvements);
+
+        // Check if user is a group admin by looking for Participation.GroupAdmin
+        const isAdmin = involvements.some(
+          (involvement) => involvement === Participation.GroupAdmin,
         );
+        setIsGroupAdmin(isAdmin); // Set the group admin status based on presence
       }
     };
 
     if (selectedSession) {
       updateInvolvements();
     }
+    //console.log(isGroupAdmin);
   }, [selectedSession, profile]);
 
   useEffect(() => {
@@ -100,7 +124,7 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
         endTime &&
         title &&
         description &&
-        selectedClub &&
+        // selectedClub &&
         croppedImage &&
         priorityStatus
       ) {
@@ -109,9 +133,12 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
         setIsSubmitDisabled(true);
       }
     };
+    /*console.log(endTime);
+    console.log(selectedClub);
+    console.log(croppedImage);*/
 
     checkIfFormIsValid();
-  }, [startTime, endTime, title, description, selectedClub, croppedImage, priorityStatus]);
+  }, [startTime, endTime, title, description, croppedImage, priorityStatus]); // selectedClub,
 
   const handleClubChange = (event) => {
     setSelectedClub(event.target.value);
@@ -350,7 +377,7 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
             variant="contained"
             color="primary"
             className={styles.submitButton}
-            disabled={isSubmitDisabled}
+            // disabled={isSubmitDisabled}
           >
             Submit
           </Button>
@@ -365,6 +392,18 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
             Cancel
           </Button>
         </Grid>
+        {(useAuthGroups(AuthGroup.SiteAdmin) || isGroupAdmin) && (
+          <Grid item xs={12} className={styles.gridItem}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={styles.deleteButton}
+              onClick={deletePoster}
+            >
+              Delete
+            </Button>
+          </Grid>
+        )}
       </Grid>
     </form>
   );

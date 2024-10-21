@@ -28,7 +28,7 @@ const BannerSubmission = () => {
     return <GordonOffline feature="Banner Sumission" />;
   }
 
-  if (isAdmin) {
+  if (!isAdmin) {
     return <BannerAdmin />;
   }
 
