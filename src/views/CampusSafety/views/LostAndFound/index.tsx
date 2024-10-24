@@ -5,80 +5,76 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useState, useEffect } from 'react';
 import Header from '../../components/Header';
 import styles from './LostAndFound.module.css'; // Import the external CSS
-import { useTheme } from '@mui/material/styles'; // Access theme
-
-// Define the type for Missing Item
-type MissingItem = {
-  id: string;
-  dateLost: string;
-  location: string;
-  category: string;
-  description: string;
-  status: string;
-};
+import { useTheme } from '@mui/material/styles'; // Access theme if needed
+import lostAndFoundService from 'services/lostAndFound';
+//import lostAndFoundService from '../../services/lostAndFoundService'; // Assuming this is your service
+import { MissingItemReport } from 'services/lostAndFound'; // Import the type from the service
 
 const LostAndFound = () => {
-  const [activeReports, setActiveReports] = useState<MissingItem[]>([]);
-  const [pastReports, setPastReports] = useState<MissingItem[]>([]);
+  const [activeReports, setActiveReports] = useState<MissingItemReport[]>([]);
+  const [pastReports, setPastReports] = useState<MissingItemReport[]>([]);
   const [loading, setLoading] = useState(true);
   const theme = useTheme(); // Access theme if needed
 
-  // Mock Data for demonstration
-  const mockActiveReports: MissingItem[] = [
-    {
-      id: '1',
-      dateLost: '9/9/24',
-      location: 'Probably Bennett',
-      category: 'Electronics',
-      description: 'iPhone 15 pro max, with black case',
-      status: 'lost',
-    },
-    {
-      id: '2',
-      dateLost: '5/4/24',
-      location: 'Barrington',
-      category: 'Books',
-      description: 'Klara and the Sun',
-      status: 'lost',
-    },
-  ];
-
-  const mockPastReports: MissingItem[] = [
-    {
-      id: '3',
-      dateLost: '10/5/24',
-      location: 'KOSC',
-      category: 'Electronics',
-      description: 'MacBook Pro, gray',
-      status: 'found',
-    },
-    {
-      id: '4',
-      dateLost: '4/5/24',
-      location: 'Jenks',
-      category: 'Bottles/Mugs',
-      description: 'Blue hydroflask, with a sticker',
-      status: 'deleted',
-    },
-    {
-      id: '5',
-      dateLost: '11/13/23',
-      location: 'AJ Chapel',
-      category: 'Clothing/Shoes',
-      description: 'Purple vikings hoodie',
-      status: 'expired',
-    },
-  ];
-
   useEffect(() => {
-    setLoading(true);
+    const fetchMissingItems = async () => {
+      try {
+        setLoading(true);
+        const reports: MissingItemReport[] = await lostAndFoundService.getMissingItemReports();
 
-    // Simulate loading the mock data
-    setTimeout(() => {
-      setActiveReports(mockActiveReports);
-      setPastReports(mockPastReports);
-      setLoading(false);
-    }, 1000); // Simulate a loading delay of 1 second
+        // Map the reports into active and past reports
+        const active = reports
+          .filter((report) => report.status !== 'found') // Filter for non-found items
+          .map((report) => ({
+            recordID: report.recordID,
+            firstName: report.firstName,
+            lastName: report.lastName,
+            category: report.category,
+            brand: report.brand,
+            description: report.description,
+            locationLost: report.locationLost,
+            stolen: report.stolen,
+            stolenDescription: report.stolenDescription,
+            dateLost: report.dateLost,
+            dateCreated: report.dateCreated,
+            phoneNumber: report.phoneNumber,
+            altPhone: report.altPhone,
+            emailAddr: report.emailAddr,
+            status: report.status,
+            adminUsername: report.adminUsername,
+          }));
+
+        const past = reports
+          .filter((report) => report.status === 'found') // Filter for found items
+          .map((report) => ({
+            recordID: report.recordID,
+            firstName: report.firstName,
+            lastName: report.lastName,
+            category: report.category,
+            brand: report.brand,
+            description: report.description,
+            locationLost: report.locationLost,
+            stolen: report.stolen,
+            stolenDescription: report.stolenDescription,
+            dateLost: report.dateLost, // Assuming dateLost is a DateTime from Luxon
+            dateCreated: report.dateCreated,
+            phoneNumber: report.phoneNumber,
+            altPhone: report.altPhone,
+            emailAddr: report.emailAddr,
+            status: report.status,
+            adminUsername: report.adminUsername,
+          }));
+
+        setActiveReports(active);
+        setPastReports(past);
+      } catch (error) {
+        console.error('Error fetching missing items:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMissingItems();
   }, []);
 
   const handleEdit = (reportId: string) => {
@@ -170,15 +166,17 @@ const LostAndFound = () => {
               {/* Data Rows */}
               <Grid container spacing={2} marginTop={2}>
                 {activeReports.map((report) => (
-                  <Grid item xs={12} key={report.id}>
+                  <Grid item xs={12} key={report.recordID}>
                     <Card className={styles.dataRow}>
                       <CardContent>
                         <Grid container spacing={2} alignItems="center">
                           <Grid item xs={2.5}>
-                            <Typography align="center">{report.dateLost}</Typography>
+                            <Typography align="center">
+                              {report.dateLost.toLocaleString()}
+                            </Typography>
                           </Grid>
                           <Grid item xs={2.5}>
-                            <Typography align="center">{report.location}</Typography>
+                            <Typography align="center">{report.locationLost}</Typography>
                           </Grid>
                           <Grid item xs={2.5}>
                             <Typography align="center">{report.category}</Typography>
@@ -189,12 +187,18 @@ const LostAndFound = () => {
 
                           {/* Icons */}
                           <Grid item xs={0.5} className={styles.buttonLeft}>
-                            <IconButton onClick={() => handleEdit(report.id)} size="small">
+                            <IconButton
+                              onClick={() => handleEdit(report.recordID.toString())}
+                              size="small"
+                            >
                               <EditIcon fontSize="small" />
                             </IconButton>
                           </Grid>
                           <Grid item xs={0.5} className={styles.buttonRight}>
-                            <IconButton onClick={() => handleDelete(report.id)} size="small">
+                            <IconButton
+                              onClick={() => handleDelete(report.recordID.toString())}
+                              size="small"
+                            >
                               <DeleteIcon fontSize="small" />
                             </IconButton>
                           </Grid>
@@ -238,7 +242,7 @@ const LostAndFound = () => {
               {/* Data Rows */}
               <Grid container spacing={2} marginTop={2}>
                 {pastReports.map((report) => (
-                  <Grid item xs={12} key={report.id}>
+                  <Grid item xs={12} key={report.recordID}>
                     <Card className={styles.dataRow}>
                       <CardContent>
                         <Grid container spacing={2}>
@@ -246,7 +250,7 @@ const LostAndFound = () => {
                             <Typography align="center">{report.dateLost}</Typography>
                           </Grid>
                           <Grid item xs={2.5}>
-                            <Typography align="center">{report.location}</Typography>
+                            <Typography align="center">{report.locationLost}</Typography>
                           </Grid>
                           <Grid item xs={2.5}>
                             <Typography align="center">{report.category}</Typography>
