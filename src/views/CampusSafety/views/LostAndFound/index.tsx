@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import Header from '../../components/Header';
 import styles from './LostAndFound.module.css';
+import lostAndFound from 'services/lostAndFound';
 
 const LostAndFound = () => {
   return (
