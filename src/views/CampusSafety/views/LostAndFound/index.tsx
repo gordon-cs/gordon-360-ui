@@ -4,8 +4,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useState, useEffect } from 'react';
 import Header from '../../components/Header';
-import styles from './LostAndFound.module.css';
-import { useTheme } from '@mui/material/styles'; // Import theme
+import styles from './LostAndFound.module.css'; // Import the external CSS
+import { useTheme } from '@mui/material/styles'; // Access theme
 
 // Define the type for Missing Item
 type MissingItem = {
@@ -21,7 +21,7 @@ const LostAndFound = () => {
   const [activeReports, setActiveReports] = useState<MissingItem[]>([]);
   const [pastReports, setPastReports] = useState<MissingItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const theme = useTheme(); // Access theme
+  const theme = useTheme(); // Access theme if needed
 
   // Mock Data for demonstration
   const mockActiveReports: MissingItem[] = [
@@ -103,11 +103,6 @@ const LostAndFound = () => {
                   <span style={{ color: theme.palette.warning.main }}>Gordon</span> Lost and Found
                 </Typography>
               }
-              sx={{
-                backgroundColor: theme.palette.primary.main,
-                color: theme.palette.primary.contrastText,
-                padding: '20px',
-              }}
             />
             <CardContent>
               <Grid container>
@@ -133,17 +128,7 @@ const LostAndFound = () => {
       <Grid container justifyContent="center" marginTop={3}>
         <Grid item>
           <Button
-            variant="contained"
-            sx={{
-              backgroundColor: theme.palette.info.main, // Correct theme color
-              '&:hover': {
-                backgroundColor: theme.palette.info.dark,
-              },
-              color: theme.palette.primary.contrastText,
-              padding: '10px 30px',
-              fontSize: '1rem',
-              textTransform: 'uppercase',
-            }}
+            className={styles.reportButton} // Refer to external CSS class
             onClick={() => {
               console.log('Report a Missing Item');
             }}
@@ -164,16 +149,7 @@ const LostAndFound = () => {
               </Typography>
 
               {/* Table Header */}
-              <Grid
-                container
-                spacing={2}
-                sx={{
-                  marginTop: '10px',
-                  backgroundColor: theme.palette.primary.main,
-                  color: theme.palette.primary.contrastText,
-                  padding: '10px 0',
-                }}
-              >
+              <Grid container spacing={2} className={styles.headerRow}>
                 <Grid item xs={2.5}>
                   <Typography align="center">Date Lost</Typography>
                 </Grid>
@@ -195,12 +171,7 @@ const LostAndFound = () => {
               <Grid container spacing={2} marginTop={2}>
                 {activeReports.map((report) => (
                   <Grid item xs={12} key={report.id}>
-                    <Card
-                      sx={{
-                        backgroundColor: theme.palette.neutral.light, // Set a proper light background
-                        marginBottom: '10px',
-                      }}
-                    >
+                    <Card className={styles.dataRow}>
                       <CardContent>
                         <Grid container spacing={2} alignItems="center">
                           <Grid item xs={2.5}>
@@ -217,16 +188,12 @@ const LostAndFound = () => {
                           </Grid>
 
                           {/* Icons */}
-                          <Grid
-                            item
-                            xs={0.5}
-                            sx={{ display: 'flex', justifyContent: 'flex-start' }}
-                          >
+                          <Grid item xs={0.5} className={styles.buttonLeft}>
                             <IconButton onClick={() => handleEdit(report.id)} size="small">
                               <EditIcon fontSize="small" />
                             </IconButton>
                           </Grid>
-                          <Grid item xs={0.5} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                          <Grid item xs={0.5} className={styles.buttonRight}>
                             <IconButton onClick={() => handleDelete(report.id)} size="small">
                               <DeleteIcon fontSize="small" />
                             </IconButton>
@@ -250,18 +217,7 @@ const LostAndFound = () => {
               <Typography variant="h5" align="center">
                 My Past Reports
               </Typography>
-
-              {/* Table Header */}
-              <Grid
-                container
-                spacing={2}
-                sx={{
-                  marginTop: '10px',
-                  backgroundColor: theme.palette.primary.main,
-                  color: theme.palette.primary.contrastText,
-                  padding: '10px 0',
-                }}
-              >
+              <Grid container spacing={2} className={styles.headerRow}>
                 <Grid item xs={2.5}>
                   <Typography align="center">Date Lost</Typography>
                 </Grid>
@@ -283,12 +239,7 @@ const LostAndFound = () => {
               <Grid container spacing={2} marginTop={2}>
                 {pastReports.map((report) => (
                   <Grid item xs={12} key={report.id}>
-                    <Card
-                      sx={{
-                        backgroundColor: theme.palette.neutral.light, // Set a proper light background
-                        marginBottom: '10px',
-                      }}
-                    >
+                    <Card className={styles.dataRow}>
                       <CardContent>
                         <Grid container spacing={2}>
                           <Grid item xs={2.5}>
