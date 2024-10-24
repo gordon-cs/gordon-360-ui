@@ -1,10 +1,54 @@
 .card {
   margin: 0.7rem;
+  border-radius: 8px;
 }
 
+/* Title styling */
 .title {
   text-align: center;
   padding: 1rem;
   background-color: var(--mui-palette-primary-main);
   color: var(--mui-palette-primary-contrastText);
+}
+
+/* Styling for the header row (Date Lost, Location, etc.) */
+.headerRow {
+  margin-top: 10px;
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
+  padding: 10px 0;
+}
+
+/* Data row background color */
+.dataRow {
+  background-color: var(--mui-palette-neutral-light);
+  margin-bottom: 10px;
+  padding: 0.5rem;
+  border-radius: 5px;
+}
+
+/* Button styles for hover and padding */
+.reportButton {
+  background-color: var(--mui-palette-info-main);
+  color: var(--mui-palette-primary-contrastText);
+  padding: 10px 30px;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.reportButton:hover {
+  background-color: var(--mui-palette-info-dark);
+}
+
+/* Button alignment */
+.buttonLeft {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.buttonRight {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
