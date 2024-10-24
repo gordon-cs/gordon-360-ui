@@ -11,7 +11,6 @@ import MyRA from './components/ResidentView/MyRA';
 import OnDuty from './components/ResidentView/OnDuty';
 import Resources from './components/ResidentView/Resources';
 
-
 const Housing = () => {
   const isFaculty = useAuthGroups(AuthGroup.Faculty);
   const isStudent = useAuthGroups(AuthGroup.Student);
@@ -49,12 +48,10 @@ const Housing = () => {
             <Resources className="jsx" />
           </Card>
         </Grid>
-  
         {/* Figure out how to set up view for RA */}
         <Card>
           <RAView className="jsx" />
         </Card>
-
       </Grid>
     );
   } else {

@@ -1,6 +1,11 @@
 import { Card, CardContent, CardHeader, Grid, Link, Typography } from '@mui/material';
+import { useUser } from 'hooks';
 
 const MyHall = () => {
+  const { profile } = useUser();
+  if (!profile) {
+    return <div>Loading...</div>;
+  }
   return (
     <Card>
       <CardHeader
@@ -14,11 +19,11 @@ const MyHall = () => {
         className="gc360_header"
       />
       <CardContent>
-        <strong>Hall:</strong>
+        <strong>Hall:</strong> {profile.BuildingDescription ?? profile.Hall}
       </CardContent>
 
       <CardContent>
-        <strong>Room #:</strong>
+        <strong>Room #:</strong> {profile.OnCampusRoom}
       </CardContent>
 
       <CardContent>

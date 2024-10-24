@@ -1,6 +1,7 @@
 import { ListItemText, List, ListItem, Link } from '@mui/material';
 import { Grid, Typography } from '@mui/material';
 import UpdateTasks from '../UpdateTasks';
+import { Link as RouterLink } from 'react-router-dom';
 
 const EditDocs = () => (
   <Typography>
@@ -24,14 +25,9 @@ const EditDocs = () => (
         </Link>
       </ListItem>
       <ListItem>
-        <Link
-          href="http://127.0.0.1:5500/index.html"
-          underline="hover"
-          className="gc360_text_link"
-          target="_blank"
-        >
+        <RouterLink to="/RoomRanges" className="gc360_text_link" style={{ textDecoration: 'none' }}>
           <ListItemText primary="Room Ranges" />
-        </Link>
+        </RouterLink>
       </ListItem>
       <ListItem>
         <Link

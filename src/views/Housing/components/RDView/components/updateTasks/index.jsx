@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; // Import useState for managing open state
+import { useState } from 'react';
 import { IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import GordonDialogBox from 'components/GordonDialogBox';

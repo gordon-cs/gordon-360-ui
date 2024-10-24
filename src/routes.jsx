@@ -22,6 +22,9 @@ import ProfileNotFound from './views/ProfileNotFound';
 import PublicProfile from './views/PublicProfile';
 import Timesheets from './views/Timesheets';
 import RecIM from './views/RecIM';
+import RoomRanges from 'views/Housing/components/RDView/components/RoomRanges';
+import { element } from 'prop-types';
+import { Room } from '@mui/icons-material';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
 const routes = [
@@ -144,6 +147,11 @@ const routes = [
     name: 'Page Not Found',
     path: '*',
     element: <Page404 />,
+  },
+  {
+    name: 'RoomRanges',
+    path: '/RoomRanges',
+    element: <RoomRanges />,
   },
 ];
 
