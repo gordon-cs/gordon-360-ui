@@ -8,24 +8,18 @@ import styles from './LostAndFound.module.css'; // Import the external CSS
 import { useTheme } from '@mui/material/styles'; // Access theme
 import lostAndFound from 'services/lostAndFound';
 
-// Define the type for Missing Item
-type MissingItem = {
-  id: string;
-  dateLost: string;
-  location: string;
-  category: string;
-  description: string;
-  status: string;
-};
-
+/**
+ * @typedef { import('services/lostAndFound').MissingItemReport } MissingItemReport
+ * @returns
+ */
 const LostAndFound = () => {
-  const [activeReports, setActiveReports] = useState<MissingItem[]>([]);
-  const [pastReports, setPastReports] = useState<MissingItem[]>([]);
+  const [activeReports, setActiveReports] = useState<MissingItemReport[]>([]);
+  const [pastReports, setPastReports] = useState<MissingItemReport[]>([]);
   const [loading, setLoading] = useState(true);
   const theme = useTheme(); // Access theme if needed
 
   // Mock Data for demonstration
-  const mockActiveReports: MissingItem[] = [
+  const mockActiveReports: MissingItemReport[] = [
     {
       id: '1',
       dateLost: '9/9/24',
@@ -44,7 +38,7 @@ const LostAndFound = () => {
     },
   ];
 
-  const mockPastReports: MissingItem[] = [
+  const mockPastReports: MissingItemReport[] = [
     {
       id: '3',
       dateLost: '10/5/24',
