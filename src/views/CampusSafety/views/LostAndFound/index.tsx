@@ -123,12 +123,7 @@ const LostAndFound = () => {
       {/* Button to Report a Missing Item */}
       <Grid container justifyContent="center" marginTop={3}>
         <Grid item>
-          <Button
-            className={styles.reportButton} // Refer to external CSS class
-            onClick={() => {
-              console.log('Report a Missing Item');
-            }}
-          >
+          <Button className={styles.reportButton} href="/campussafety/missingitemform">
             Report a Missing Item
           </Button>
         </Grid>

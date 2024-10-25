@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 import SafetyPage from './views/SafetyPage';
 import Page404 from 'views/Page404';
 import LostAndFound from './views/LostAndFound';
+import MissingItemForm from './views/MissingItemForm';
 
 // Routing between Campus Safety App pages
 const CampusSafetyApp = () => {
@@ -9,6 +10,7 @@ const CampusSafetyApp = () => {
     <Routes>
       <Route path="" element={<SafetyPage />} />
       <Route path="/lostandfound" element={<LostAndFound />} />
+      <Route path="/missingitemform" element={<MissingItemForm />} />
       <Route path="*" element={<Page404 />} />
     </Routes>
   );
