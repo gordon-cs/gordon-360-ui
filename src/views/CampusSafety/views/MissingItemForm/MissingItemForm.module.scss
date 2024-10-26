@@ -2,6 +2,14 @@
   margin: 0.7rem;
 }
 
+.description_radio_group {
+  column-count: 2;
+}
+
+.description_select_group {
+  column-count: 3;
+}
+
 .icon {
   color: var(--mui-palette-neutral-400);
   height: 1.5em;
