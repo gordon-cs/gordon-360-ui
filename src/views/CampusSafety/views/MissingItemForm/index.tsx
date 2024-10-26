@@ -10,20 +10,53 @@ const MissingItemForm = () => {
         titleTypographyProps={{ align: 'center' }}
         className="gc360_header"
       />
-      <CardContent>
-        <Grid container justifyContent={'center'}>
-          <Grid item xs={12} sm={6}>
-            <Grid item margin={3}>
-              <TextField fullWidth variant="filled">
-                "Test"
-              </TextField>
-            </Grid>
-            <Grid item margin={3}>
-              <TextField fullWidth variant="filled"></TextField>
-            </Grid>
+
+      <Grid container justifyContent={'center'}>
+        <Grid xs={12} md={6} lg={5}>
+          <Grid item margin={3}>
+            <TextField fullWidth variant="filled" placeholder="First Name"></TextField>
+          </Grid>
+          <Grid item margin={3}>
+            <TextField fullWidth variant="filled" placeholder="Last Name"></TextField>
+          </Grid>
+          <Grid item margin={3}>
+            <TextField fullWidth variant="filled" placeholder="Item Category"></TextField>
+          </Grid>
+          <Grid item margin={3}>
+            <TextField fullWidth variant="filled" placeholder="Item Brand or Make"></TextField>
+          </Grid>
+          <Grid item margin={3}>
+            <TextField
+              fullWidth
+              variant="filled"
+              placeholder="Item Description: Be as detailed as possible"
+            ></TextField>
+          </Grid>
+          <Grid item margin={3}>
+            <TextField
+              fullWidth
+              variant="filled"
+              placeholder="Item Color: Choose ALL that apply"
+            ></TextField>
+          </Grid>
+          <Grid item margin={3}>
+            <TextField
+              fullWidth
+              variant="filled"
+              placeholder="Location Lost: Be as detailed as possible"
+            ></TextField>
+          </Grid>
+          <Grid item margin={3}>
+            <TextField fullWidth variant="filled" placeholder="Date Lost"></TextField>
+          </Grid>
+          <Grid item margin={3}>
+            <TextField fullWidth variant="filled" placeholder="Phone Number"></TextField>
+          </Grid>
+          <Grid item margin={3}>
+            <TextField fullWidth variant="filled" placeholder="Alternate Phone Number"></TextField>
           </Grid>
         </Grid>
-      </CardContent>
+      </Grid>
     </Card>
   );
 };
