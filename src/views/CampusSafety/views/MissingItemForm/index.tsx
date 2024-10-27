@@ -27,16 +27,15 @@ const MissingItemForm = () => {
 
       <Grid container justifyContent={'center'}>
         <Grid sm={5}>
-          <Grid item margin={3}>
+          <Grid margin={2}>
             <TextField fullWidth variant="filled" placeholder="First Name"></TextField>
           </Grid>
-          <Grid item margin={3}>
+          <Grid item margin={2}>
             <TextField fullWidth variant="filled" placeholder="Last Name"></TextField>
           </Grid>
-          <Grid item margin={3} className={styles.description_radio_group}>
+          <Grid item margin={2} className={styles.description_radio_group}>
             <Grid container>
               <FormControl>
-                <FormLabel>Item Description</FormLabel>
                 <RadioGroup>
                   <Grid item>
                     <FormControlLabel
@@ -90,10 +89,10 @@ const MissingItemForm = () => {
               </FormControl>
             </Grid>
           </Grid>
-          <Grid item margin={3}>
+          <Grid item margin={2}>
             <TextField fullWidth variant="filled" placeholder="Item Brand or Make"></TextField>
           </Grid>
-          <Grid item margin={3}>
+          <Grid item margin={2}>
             <TextField
               fullWidth
               multiline
@@ -104,10 +103,9 @@ const MissingItemForm = () => {
           </Grid>
         </Grid>
         <Grid sm={5}>
-          <Grid item margin={3} className={styles.description_select_group}>
+          <Grid item margin={2} className={styles.description_select_group}>
             <Grid container>
               <FormGroup>
-                <FormLabel>Item Color: Choose ALL that apply</FormLabel>
                 <Grid item>
                   <FormControlLabel control={<Checkbox />} label="Black" />
                   <FormControlLabel control={<Checkbox />} label="Blue" />
@@ -132,22 +130,22 @@ const MissingItemForm = () => {
               </FormGroup>
             </Grid>
           </Grid>
-          <Grid item margin={3}>
+          <Grid item margin={2}>
             <TextField
               fullWidth
               multiline
-              minRows={8}
+              minRows={10}
               variant="filled"
               placeholder="Location Lost: Be as detailed as possible"
             ></TextField>
           </Grid>
-          <Grid item margin={3}>
+          <Grid item margin={2}>
             <TextField fullWidth variant="filled" placeholder="Date Lost"></TextField>
           </Grid>
-          <Grid item margin={3}>
+          <Grid item margin={2}>
             <TextField fullWidth variant="filled" placeholder="Phone Number"></TextField>
           </Grid>
-          <Grid item margin={3}>
+          <Grid item margin={2}>
             <TextField fullWidth variant="filled" placeholder="Alternate Phone Number"></TextField>
           </Grid>
         </Grid>

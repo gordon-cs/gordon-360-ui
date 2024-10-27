@@ -4,10 +4,16 @@
 
 .description_radio_group {
   column-count: 2;
+  background-color: var(--mui-palette-neutral-100);
+  padding: 1rem;
+  border-radius: 5px;
 }
 
 .description_select_group {
   column-count: 3;
+  background-color: var(--mui-palette-neutral-100);
+  padding: 1rem;
+  border-radius: 5px;
 }
 
 .icon {
