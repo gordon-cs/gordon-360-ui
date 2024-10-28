@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   List,
   ListItem,
@@ -16,10 +16,23 @@ const RoomRanges = () => {
   const [roomStart, setRoomStart] = useState('');
   const [roomEnd, setRoomEnd] = useState('');
   const [roomRanges, setRoomRanges] = useState([]);
-  const [selectedRoomRange, setSelectedRoomRange] = useState('');
-  const [people, setPeople] = useState(['Mya Randolph', 'Jason Asonye', 'Danya Li', 'Ross Clark']);
-  const [selectedPerson, setSelectedPerson] = useState('');
+  const [selectedRoomRange, setSelectedRoomRange] = useState(null);
+  // Who can be assigned to a room range will later on depend on what hall is choseon
+  const [people, setPeople] = useState(['Person 1', 'Person 2', 'Person 3', 'Person 4']);
+  const [selectedPerson, setSelectedPerson] = useState(null);
   const [assignments, setAssignments] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/Housing/roomrange')
+      .then((response) => response.json())
+      .then((data) => setRoomRanges(data))
+      .catch((error) => console.error('Error fetching room ranges:', error));
+
+    fetch('/api/Housing/RA_Assigned_Ranges')
+      .then((response) => response.json())
+      .then((data) => setAssignments(data))
+      .catch((error) => console.error('Error fetching assigned ranges:', error));
+  }, []);
 
   const clearRoomInputs = () => {
     setBuilding('');
@@ -28,39 +41,77 @@ const RoomRanges = () => {
   };
 
   const clearSelections = () => {
-    setSelectedPerson('');
-    setSelectedRoomRange('');
+    setSelectedPerson(null);
+    setSelectedRoomRange(null);
   };
 
-  // Use the filter method to create a new array excluding the selected room range
-  const removeRoomRange = () => {
-    if (selectedRoomRange !== null) {
-      setRoomRanges((prev) => prev.filter((_, index) => index !== selectedRoomRange));
-    }
-  };
-
-  // Create a new room range from the inputs and update the roomRanges array, then reset the inputs
   const addRoomRange = () => {
     if (building && roomStart && roomEnd) {
-      const newRoomRange = `${building} ${roomStart} - ${roomEnd}`;
-      setRoomRanges((prev) => [...prev, newRoomRange]);
+      const newRoomRange = { Hall_ID: building, Room_Start: roomStart, Room_End: roomEnd };
+
+      fetch('/api/Housing/roomrange', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newRoomRange),
+      })
+        .then((response) => response.json())
+        .then((data) => setRoomRanges((prev) => [...prev, data]))
+        .catch((error) => console.error('Error adding room range:', error));
+
       clearRoomInputs();
     }
   };
 
-  // Creates room assignment which assigns a person to a room and adds it to the assignments array
+  const removeRoomRange = () => {
+    if (selectedRoomRange !== null) {
+      const rangeId = roomRanges[selectedRoomRange].Range_ID;
+
+      fetch(`/api/Housing/roomrange/${rangeId}`, {
+        method: 'DELETE',
+      })
+        .then(() => {
+          setRoomRanges((prev) => prev.filter((_, index) => index !== selectedRoomRange));
+          setSelectedRoomRange(null);
+        })
+        .catch((error) => console.error('Error removing room range:', error));
+    }
+  };
   const assignPersonToRoom = () => {
     if (selectedPerson !== null && selectedRoomRange !== null) {
-      const assignment = `${people[selectedPerson]}: ${roomRanges[selectedRoomRange]}`;
-      setAssignments((prev) => [...prev, assignment]);
-      clearSelections();
+      const assignedRange = {
+        Range_ID: roomRanges[selectedRoomRange].Range_ID,
+        Ra_ID: people[selectedPerson],
+      };
+
+      fetch('/api/Housing/RA_Assigned_Ranges', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(assignedRange),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          const assignment = `${data.Ra_ID}: ${data.Range.Hall_ID} ${data.Range.Room_Start} - ${data.Range.Room_End}`;
+          setAssignments((prev) => [...prev, assignment]);
+          setSelectedPerson(null);
+          setSelectedRoomRange(null);
+        })
+        .catch((error) => console.error('Error assigning person to range:', error));
     }
   };
 
-  // Remove selected assignment from assignments array on the provided index when remove button
-  // next to the persons assignment is clicked
   const removeAssignment = (index) => {
-    setAssignments((prev) => prev.filter((_, i) => i !== index));
+    const assignmentToRemove = assignments[index];
+
+    fetch(
+      `/api/Housing/RA_Assigned_Ranges/${assignmentToRemove.Range_ID}/${assignmentToRemove.Ra_ID}`,
+      {
+        method: 'DELETE',
+      },
+    )
+      .then(() => {
+        setAssignments((prev) => prev.filter((_, i) => i !== index));
+      })
+      .catch((error) => console.error('Error removing assigned range:', error));
   };
 
   return (
@@ -74,7 +125,7 @@ const RoomRanges = () => {
       </Typography>
 
       <FormControl fullWidth>
-        <InputLabel id="Building"> Building </InputLabel>
+        <InputLabel id="Building">Building</InputLabel>
         <Select
           label="select building"
           value={building}
@@ -86,9 +137,15 @@ const RoomRanges = () => {
             sx: { color: 'gray', '&.Mui-focused': { color: 'transparent' } },
           }}
         >
-          <MenuItem value="Ferrin">Ferrin</MenuItem>
-          <MenuItem value="Bromley">Bromley</MenuItem>
-          <MenuItem value="Tavilla">Tavilla</MenuItem>
+          <MenuItem value="Hall 1">Bromley</MenuItem>
+          <MenuItem value="Hall 2">Ferrin</MenuItem>
+          <MenuItem value="Hall 3">Evans</MenuItem>
+          <MenuItem value="Hall 4">Wilson</MenuItem>
+          <MenuItem value="Hall 5">Chase</MenuItem>
+          <MenuItem value="Hall 6">Tavilla</MenuItem>
+          <MenuItem value="Hall 7">Fulton</MenuItem>
+          <MenuItem value="Hall 8">Nyland</MenuItem>
+          <MenuItem value="Hall 9">The Village</MenuItem>
         </Select>
       </FormControl>
 
@@ -140,7 +197,7 @@ const RoomRanges = () => {
               '&:hover': { backgroundColor: 'secondary.main' },
             }}
           >
-            {range}
+            {range.Hall_ID} {range.Room_Start} - {range.Room_End}
           </ListItem>
         ))}
       </List>
@@ -166,7 +223,7 @@ const RoomRanges = () => {
         ))}
       </List>
 
-      <Button variant="contained" onClick={assignPersonToRoom} color="primary" sx={{ mt: 2 }}>
+      <Button variant="contained" onClick={assignPersonToRoom} color="primary">
         Assign Person
       </Button>
 
@@ -176,11 +233,7 @@ const RoomRanges = () => {
 
       <List>
         {assignments.map((assignment, index) => (
-          <ListItem
-            key={index}
-            onClick={() => removeAssignment(index)}
-            sx={{ cursor: 'pointer', color: 'white' }}
-          >
+          <ListItem key={index} sx={{ cursor: 'pointer', color: 'white' }}>
             {assignment}
             <Button onClick={() => removeAssignment(index)} color="secondary" sx={{ ml: 2 }}>
               Remove
