@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import styles from './ReportStolenModal.module.scss';
+import styles from './ReportStolen.module.scss';
 
 type ReportStolenModalProps = {
   open: boolean;

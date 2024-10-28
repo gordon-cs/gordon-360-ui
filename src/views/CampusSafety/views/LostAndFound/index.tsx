@@ -9,7 +9,11 @@ import { useTheme } from '@mui/material/styles'; // Access theme if needed
 import lostAndFoundService from 'services/lostAndFound';
 //import lostAndFoundService from '../../services/lostAndFoundService'; // Assuming this is your service
 import { MissingItemReport } from 'services/lostAndFound'; // Import the type from the service
+import { DateTime } from 'luxon';
 
+const formatDate = (date: string) => {
+  return DateTime.fromISO(date).toFormat('yyyy-MM-dd'); // Adjust format as needed
+};
 const LostAndFound = () => {
   const [activeReports, setActiveReports] = useState<MissingItemReport[]>([]);
   const [pastReports, setPastReports] = useState<MissingItemReport[]>([]);
@@ -30,6 +34,7 @@ const LostAndFound = () => {
             firstName: report.firstName,
             lastName: report.lastName,
             category: report.category,
+            colors: report.colors || [],
             brand: report.brand,
             description: report.description,
             locationLost: report.locationLost,
@@ -51,6 +56,7 @@ const LostAndFound = () => {
             firstName: report.firstName,
             lastName: report.lastName,
             category: report.category,
+            colors: report.colors || [],
             brand: report.brand,
             description: report.description,
             locationLost: report.locationLost,
@@ -166,9 +172,7 @@ const LostAndFound = () => {
                       <CardContent>
                         <Grid container spacing={2} alignItems="center">
                           <Grid item xs={2.5}>
-                            <Typography align="center">
-                              {report.dateLost.toLocaleString()}
-                            </Typography>
+                            <Typography align="center">{formatDate(report.dateLost)}</Typography>
                           </Grid>
                           <Grid item xs={2.5}>
                             <Typography align="center">{report.locationLost}</Typography>
@@ -183,7 +187,7 @@ const LostAndFound = () => {
                           {/* Icons */}
                           <Grid item xs={0.5} className={styles.buttonLeft}>
                             <IconButton
-                              onClick={() => handleEdit(report.recordID.toString())}
+                              onClick={() => handleEdit(report.recordID?.toString() || '')}
                               size="small"
                             >
                               <EditIcon fontSize="small" />
@@ -191,7 +195,7 @@ const LostAndFound = () => {
                           </Grid>
                           <Grid item xs={0.5} className={styles.buttonRight}>
                             <IconButton
-                              onClick={() => handleDelete(report.recordID.toString())}
+                              onClick={() => handleDelete(report.recordID?.toString() || '')}
                               size="small"
                             >
                               <DeleteIcon fontSize="small" />

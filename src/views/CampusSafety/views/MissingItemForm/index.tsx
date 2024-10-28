@@ -20,6 +20,9 @@ import lostAndFoundService from 'services/lostAndFound';
 import ReportStolenModal from './components/reportStolen';
 
 const MissingItemForm = () => {
+  const formatDate = (date: string) => {
+    return DateTime.fromISO(date).toFormat('yyyy-MM-dd');
+  };
   // Form state
   const [formData, setFormData] = useState({
     firstName: '',
@@ -40,12 +43,43 @@ const MissingItemForm = () => {
   const [isModalOpen, setModalOpen] = useState(false);
 
   // Handle form data changes
+  // Handle form data changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
+
+    if (name === 'stolen') {
+      setModalOpen(checked); // Open modal if stolen checkbox is checked
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: checked,
+      }));
+    } else if (name === 'dateLost') {
+      setFormData((prevData) => ({
+        ...prevData,
+        dateLost: value, // Format date for display
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: type === 'checkbox' ? checked : value,
+      }));
+    }
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
     setFormData((prevData) => ({
       ...prevData,
-      [name]: type === 'checkbox' ? checked : value,
+      stolen: false, // Uncheck "stolen" if modal is canceled
     }));
+  };
+
+  const handleModalSubmit = (stolenDescription: string) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      stolenDescription,
+    }));
+    setModalOpen(false);
   };
 
   const handleSubmit = async () => {
@@ -279,6 +313,12 @@ const MissingItemForm = () => {
           </Button>
         </Grid>
       </Grid>
+      {/* Report Stolen Modal */}
+      <ReportStolenModal
+        open={isModalOpen}
+        onClose={handleModalClose}
+        onSubmit={handleModalSubmit}
+      />
     </Card>
   );
 };
