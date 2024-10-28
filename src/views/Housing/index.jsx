@@ -9,17 +9,21 @@ import ResidentView from './components/ResidentView';
 const Housing = () => {
   const isFaculty = useAuthGroups(AuthGroup.Faculty);
   const isStudent = useAuthGroups(AuthGroup.Student);
+  const isRA = useAuthGroups(AuthGroup.ResidentAdvisor);
+  const isRD = useAuthGroups(AuthGroup.HousingAdmin);
 
   if (isFaculty) {
     return (
       <Grid container>
-        <Card>
-          <RDView className="jsx" />
-        </Card>
+        <RDView className="jsx" />
       </Grid>
     );
   } else if (isStudent) {
-    return <ResidentView className="jsx" />;
+    return (
+      <ResidentView className="jsx" />;
+    );
+  } else if (isRA) {
+    <RAView />;
   } else {
     return null;
   }
