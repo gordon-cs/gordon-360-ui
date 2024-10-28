@@ -16,6 +16,28 @@
   border-radius: 5px;
 }
 
+.stolen_container {
+  padding: 0 1.5rem;
+  background-color: var(--mui-palette-neutral-100);
+  border-radius: 5px;
+  //padding: 1rem;
+  //max-width: fit-content;
+}
+
+.actionRow {
+  padding: 0 1.5rem;
+}
+
+.submit_container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.submit_button {
+  font-size: 1.2rem;
+  padding: 0.7rem;
+}
+
 .icon {
   color: var(--mui-palette-neutral-400);
   height: 1.5em;

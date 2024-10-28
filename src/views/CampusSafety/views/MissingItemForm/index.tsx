@@ -1,4 +1,4 @@
-import { CheckBox } from '@mui/icons-material';
+import { useState } from 'react';
 import {
   Card,
   CardContent,
@@ -9,14 +9,63 @@ import {
   FormGroup,
   FormControlLabel,
   FormControl,
-  FormLabel,
   RadioGroup,
   Checkbox,
+  Button,
+  Typography,
 } from '@mui/material';
-import Header from '../../components/Header';
+import { DateTime } from 'luxon';
 import styles from './MissingItemForm.module.scss';
+import lostAndFoundService from 'services/lostAndFound';
+import ReportStolenModal from './components/reportStolen';
 
 const MissingItemForm = () => {
+  // Form state
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    category: '',
+    colors: [], // Ensure colors is an array
+    brand: '',
+    description: '',
+    locationLost: '',
+    stolen: false,
+    dateLost: '',
+    phoneNumber: '',
+    altPhone: '',
+    emailAddr: '',
+    status: 'pending', // Assuming a default status for new reports
+  });
+
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  // Handle form data changes
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const requestData = {
+        ...formData,
+        dateLost: formData.dateLost || DateTime.now().toISO(),
+        dateCreated: DateTime.now().toISO(),
+        status: 'pending', // Set default status
+      };
+
+      // Send data to the backend
+      const newReportId = await lostAndFoundService.createMissingItemReport(requestData);
+      alert(`Report created successfully with ID: ${newReportId}`);
+    } catch (error) {
+      console.error('Error creating missing item report:', error);
+      alert('Failed to create the missing item report.');
+    }
+  };
+
   return (
     <Card className={styles.form_card}>
       <CardHeader
@@ -24,19 +73,32 @@ const MissingItemForm = () => {
         titleTypographyProps={{ align: 'center' }}
         className="gc360_header"
       />
-
       <Grid container justifyContent={'center'}>
-        <Grid sm={5}>
+        <Grid item sm={5}>
           <Grid margin={2}>
-            <TextField fullWidth variant="filled" placeholder="First Name"></TextField>
+            <TextField
+              fullWidth
+              variant="filled"
+              placeholder="First Name"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+            />
           </Grid>
           <Grid item margin={2}>
-            <TextField fullWidth variant="filled" placeholder="Last Name"></TextField>
+            <TextField
+              fullWidth
+              variant="filled"
+              placeholder="Last Name"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+            />
           </Grid>
           <Grid item margin={2} className={styles.description_radio_group}>
             <Grid container>
               <FormControl>
-                <RadioGroup>
+                <RadioGroup name="category" value={formData.category} onChange={handleChange}>
                   <Grid item>
                     <FormControlLabel
                       value="clothing/shoes"
@@ -90,7 +152,14 @@ const MissingItemForm = () => {
             </Grid>
           </Grid>
           <Grid item margin={2}>
-            <TextField fullWidth variant="filled" placeholder="Item Brand or Make"></TextField>
+            <TextField
+              fullWidth
+              variant="filled"
+              placeholder="Item Brand or Make"
+              name="brand"
+              value={formData.brand}
+              onChange={handleChange}
+            />
           </Grid>
           <Grid item margin={2}>
             <TextField
@@ -99,10 +168,13 @@ const MissingItemForm = () => {
               minRows={8}
               variant="filled"
               placeholder="Item Description: Be as detailed as possible"
-            ></TextField>
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+            />
           </Grid>
         </Grid>
-        <Grid sm={5}>
+        <Grid item sm={5}>
           <Grid item margin={2} className={styles.description_select_group}>
             <Grid container>
               <FormGroup>
@@ -137,17 +209,74 @@ const MissingItemForm = () => {
               minRows={10}
               variant="filled"
               placeholder="Location Lost: Be as detailed as possible"
-            ></TextField>
+              name="locationLost"
+              value={formData.locationLost}
+              onChange={handleChange}
+            />
           </Grid>
           <Grid item margin={2}>
-            <TextField fullWidth variant="filled" placeholder="Date Lost"></TextField>
+            <TextField
+              fullWidth
+              variant="filled"
+              placeholder="Date Lost"
+              name="dateLost"
+              type="date"
+              value={formData.dateLost}
+              onChange={handleChange}
+            />
           </Grid>
           <Grid item margin={2}>
-            <TextField fullWidth variant="filled" placeholder="Phone Number"></TextField>
+            <TextField
+              fullWidth
+              variant="filled"
+              placeholder="Phone Number"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+            />
           </Grid>
           <Grid item margin={2}>
-            <TextField fullWidth variant="filled" placeholder="Alternate Phone Number"></TextField>
+            <TextField
+              fullWidth
+              variant="filled"
+              placeholder="Alternate Phone Number"
+              name="altPhone"
+              value={formData.altPhone}
+              onChange={handleChange}
+            />
           </Grid>
+          <Grid item margin={2}>
+            <TextField
+              fullWidth
+              variant="filled"
+              placeholder="Email Address"
+              name="emailAddr"
+              value={formData.emailAddr}
+              onChange={handleChange}
+            />
+          </Grid>
+        </Grid>
+      </Grid>
+      {/* Stolen Checkbox */}
+      <Grid container justifyContent="center" className={styles.stolen_container} marginTop={3}>
+        <Grid item xs={10}>
+          <FormControlLabel
+            control={<Checkbox checked={formData.stolen} onChange={handleChange} name="stolen" />}
+            label="Do you have reason to believe this item was stolen? (This will open a police investigation)"
+          />
+        </Grid>
+      </Grid>
+      {/* Submit Button */}
+      <Grid container justifyContent="flex-end" marginTop={3} className={styles.submit_container}>
+        <Grid item xs={2}>
+          <Button
+            variant="contained"
+            fullWidth
+            className={styles.submit_button}
+            onClick={handleSubmit}
+          >
+            SUBMIT
+          </Button>
         </Grid>
       </Grid>
     </Card>
