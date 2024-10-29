@@ -34,9 +34,7 @@ const ReportStolenModal: React.FC<ReportStolenModalProps> = ({ open, onClose, on
       <DialogContent>
         <Typography variant="body1" align="center" className={styles.notice}>
           If this is an urgent request, call{' '}
-          <a href="tel:9788674444" className={styles.phoneNumber}>
-            978-867-4444
-          </a>
+          <span className={styles.phoneNumber}>978-867-4444</span>
         </Typography>
         <Typography variant="body2" align="center" className={styles.subtext}>
           Otherwise, Gordon Police will contact you soon to investigate.
@@ -50,6 +48,9 @@ const ReportStolenModal: React.FC<ReportStolenModalProps> = ({ open, onClose, on
           value={description}
           onChange={handleDescriptionChange}
           className={styles.textField}
+          InputLabelProps={{
+            style: { whiteSpace: 'normal', wordWrap: 'break-word' },
+          }}
         />
       </DialogContent>
       <DialogActions className={styles.actions}>

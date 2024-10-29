@@ -29,7 +29,7 @@ const MissingItemForm = () => {
     firstName: '',
     lastName: '',
     category: '',
-    colors: [], // Ensure colors is an array
+    colors: [] as string[], // Ensure colors is an array
     brand: '',
     description: '',
     locationLost: '',
@@ -88,6 +88,16 @@ const MissingItemForm = () => {
         [name]: type === 'checkbox' ? checked : value,
       }));
     }
+  };
+
+  // Handle color selection
+  const handleColorChange = (color: string) => {
+    setFormData((prevData) => {
+      const colors = prevData.colors.includes(color)
+        ? prevData.colors.filter((c) => c !== color)
+        : [...prevData.colors, color];
+      return { ...prevData, colors };
+    });
   };
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -153,7 +163,8 @@ const MissingItemForm = () => {
             className="gc360_header"
           />
           <Grid container justifyContent={'center'}>
-            <Grid item sm={5}>
+            <Grid item sm={5} xs={12}>
+              {/* First Name */}
               <Grid margin={2}>
                 <TextField
                   fullWidth
@@ -164,6 +175,7 @@ const MissingItemForm = () => {
                   onChange={handleChange}
                 />
               </Grid>
+              {/* Last Name */}
               <Grid item margin={2}>
                 <TextField
                   fullWidth
@@ -174,75 +186,41 @@ const MissingItemForm = () => {
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid item margin={2} className={styles.description_radio_group}>
-                <Grid container>
-                  <FormControl error={!!validationErrors.category}>
-                    <RadioGroup
-                      name="category"
-                      value={formData.category}
-                      onChange={handleCategoryChange}
-                    >
-                      <Grid item>
-                        <FormControlLabel
-                          value="clothing/shoes"
-                          control={<Radio />}
-                          label="Clothing/Shoes"
-                        />
-                        <FormControlLabel
-                          value="electronics"
-                          control={<Radio />}
-                          label="Electronics"
-                        />
-                        <FormControlLabel
-                          value="jewelry/watches"
-                          control={<Radio />}
-                          label="Jewelry/Watches"
-                        />
-                        <FormControlLabel
-                          value="keys/keychains"
-                          control={<Radio />}
-                          label="Keys/Keychains"
-                        />
-                        <FormControlLabel
-                          value="glasses/sunglasses"
-                          control={<Radio />}
-                          label="Glasses/Sunglasses"
-                        />
-                        <FormControlLabel
-                          value="bottles/mugs"
-                          control={<Radio />}
-                          label="Bottles/Mugs"
-                        />
-                      </Grid>
-                      <Grid item>
-                        <FormControlLabel value="books" control={<Radio />} label="Books" />
-                        <FormControlLabel
-                          value="bags/purses/knapsacks"
-                          control={<Radio />}
-                          label="Bags/Purses"
-                        />
-                        <FormControlLabel
-                          value="office/schoolsupplies"
-                          control={<Radio />}
-                          label="Office/School Supplies"
-                        />
-                        <FormControlLabel
-                          value="ids/wallets"
-                          control={<Radio />}
-                          label="IDs/Wallets"
-                        />
-                        <FormControlLabel
-                          value="currency/creditcards"
-                          control={<Radio />}
-                          label="Currency/Credit Cards"
-                        />
-                        <FormControlLabel value="other" control={<Radio />} label="Other" />
-                      </Grid>
-                    </RadioGroup>
-                    <Typography color="error">{validationErrors.category}</Typography>
-                  </FormControl>
-                </Grid>
+              {/* Item Category */}
+              <Grid item margin={2} className={styles.category_group}>
+                <FormGroup className={styles.radio_group}>
+                  {[
+                    'Clothing/Shoes',
+                    'Electronics',
+                    'Jewelry/Watches',
+                    'Keys/Keychains',
+                    'Glasses',
+                    'Bottles/Mugs',
+                    'Books',
+                    'Bags/Purses',
+                    'Office Supplies',
+                    'IDs/Wallets',
+                    'Cash/Cards',
+                    'Other',
+                  ].map((label) => (
+                    <FormControlLabel
+                      key={label}
+                      control={<Radio />}
+                      label={label}
+                      value={label.toLowerCase().replace(/ /g, '/')}
+                      onChange={(e) =>
+                        setFormData((prevData) => ({
+                          ...prevData,
+                          category: (e.target as HTMLInputElement).value,
+                        }))
+                      }
+                      checked={formData.category === label.toLowerCase().replace(/ /g, '/')}
+                      className={styles.category_item}
+                    />
+                  ))}
+                </FormGroup>
               </Grid>
+
               <Grid item margin={2}>
                 <TextField
                   fullWidth
@@ -270,33 +248,39 @@ const MissingItemForm = () => {
                 />
               </Grid>
             </Grid>
-            <Grid item sm={5}>
-              <Grid item margin={2} className={styles.description_select_group}>
-                <Grid container>
-                  <FormGroup>
-                    <Grid item>
-                      <FormControlLabel control={<Checkbox />} label="Black" />
-                      <FormControlLabel control={<Checkbox />} label="Blue" />
-                      <FormControlLabel control={<Checkbox />} label="Brown" />
-                      <FormControlLabel control={<Checkbox />} label="Gold" />
-                      <FormControlLabel control={<Checkbox />} label="Gray" />
-                      <FormControlLabel control={<Checkbox />} label="Green" />
-                    </Grid>
-                    <Grid item>
-                      <FormControlLabel control={<Checkbox />} label="Maroon" />
-                      <FormControlLabel control={<Checkbox />} label="Orange" />
-                      <FormControlLabel control={<Checkbox />} label="Pink" />
-                      <FormControlLabel control={<Checkbox />} label="Purple" />
-                      <FormControlLabel control={<Checkbox />} label="Red" />
-                      <FormControlLabel control={<Checkbox />} label="Silver" />
-                    </Grid>
-                    <Grid item>
-                      <FormControlLabel control={<Checkbox />} label="Tan" />
-                      <FormControlLabel control={<Checkbox />} label="White" />
-                      <FormControlLabel control={<Checkbox />} label="Yellow" />
-                    </Grid>
-                  </FormGroup>
-                </Grid>
+            <Grid item sm={5} xs={12}>
+              {/* Item Colors */}
+              <Grid item margin={2} className={styles.checkbox_group}>
+                <FormGroup>
+                  {[
+                    'Black',
+                    'Blue',
+                    'Brown',
+                    'Gold',
+                    'Gray',
+                    'Green',
+                    'Maroon',
+                    'Orange',
+                    'Pink',
+                    'Purple',
+                    'Red',
+                    'Silver',
+                    'Tan',
+                    'White',
+                    'Yellow',
+                  ].map((color) => (
+                    <FormControlLabel
+                      key={color}
+                      control={
+                        <Checkbox
+                          checked={formData.colors.includes(color)}
+                          onChange={() => handleColorChange(color)}
+                        />
+                      }
+                      label={color}
+                    />
+                  ))}
+                </FormGroup>
               </Grid>
               <Grid item margin={2}>
                 <TextField
