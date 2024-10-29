@@ -18,11 +18,11 @@ import { ListItemIcon, ListItemText, ListSubheader, List, ListItem, Link } from 
 
 const RAView = () => (
   <Grid container>
-    <Grid container spacing={2}>
-      <Grid item xs={12} md={4}>
+    <Grid container spacing={2} md={4}>
+      <Grid item xs={12} md={12}>
         <TaskList />
       </Grid>
-      <Grid item xs={12} md={4}>
+      <Grid item xs={12} md={12}>
         <Card>
           <CardHeader title={`Helpful Links`} className="gc360_header" />
           <CardContent>
@@ -37,14 +37,25 @@ const RAView = () => (
         </Card>
       </Grid>
     </Grid>
-
-    <Grid item xs={12} md={4} padding={1}>
-      <Button variant="contained">Check-In To Your Shift</Button>
+    <Grid
+      container
+      padding={2}
+      spacing={3}
+      xs={12}
+      md={8}
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+    >
+      <Grid item xs={12} md={12} display="flex" justifyContent="center" alignItems="center">
+        <Button variant="contained" justifyContent="center">
+          Check-In To Your Shift
+        </Button>
+      </Grid>
     </Grid>
-
-    {/* <Grid item xs={12}>
+    <Grid item xs={12}>
       <Schedule />
-    </Grid> */}
+    </Grid>
   </Grid>
 );
 
