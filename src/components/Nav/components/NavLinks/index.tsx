@@ -137,6 +137,18 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
     />
   );
 
+  const housingButton = (
+    <GordonNavButton
+      unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
+      openUnavailableDialog={setDialog}
+      onLinkClick={onLinkClick}
+      linkName={'Housing'}
+      linkPath={'/housing'}
+      LinkIcon={HomeIcon}
+      divider={false}
+    />
+  );
+
   const paletteOptionsButton = (
     <GordonNavButton
       onLinkClick={() => {
@@ -204,6 +216,7 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
         {peopleButton}
         {LinksButton}
         {recimButton}
+        {housingButton}
       </List>
 
       <Divider />
