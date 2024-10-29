@@ -10,6 +10,7 @@ import {
   InputLabel,
 } from '@mui/material';
 import { Select, MenuItem } from '@mui/material';
+import http from '../../../../../../services/http';
 
 const RoomRanges = () => {
   const [building, setBuilding] = useState('');
@@ -23,16 +24,18 @@ const RoomRanges = () => {
   const [assignments, setAssignments] = useState([]);
 
   useEffect(() => {
-    fetch('/api/Housing/roomrange')
-      .then((response) => response.json())
-      .then((data) => setRoomRanges(data))
-      .catch((error) => console.error('Error fetching room ranges:', error));
+    fetchRoomRanges();
+  });
 
-    fetch('/api/Housing/RA_Assigned_Ranges')
-      .then((response) => response.json())
-      .then((data) => setAssignments(data))
-      .catch((error) => console.error('Error fetching assigned ranges:', error));
-  }, []);
+  const fetchRoomRanges = () => {
+    http
+      .get('Housing/room-ranges')
+      .then((response) => {
+        console.log('API response:', response); // Log the entire response object to see structure
+        setRoomRanges(response);
+      })
+      .catch((error) => console.error('Error fetching room ranges:', error));
+  };
 
   const clearRoomInputs = () => {
     setBuilding('');
@@ -47,15 +50,16 @@ const RoomRanges = () => {
 
   const addRoomRange = () => {
     if (building && roomStart && roomEnd) {
-      const newRoomRange = { Hall_ID: building, Room_Start: roomStart, Room_End: roomEnd };
+      const body = { Hall_ID: building, Room_Start: roomStart, Room_End: roomEnd };
 
-      fetch('/api/Housing/roomrange', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newRoomRange),
-      })
-        .then((response) => response.json())
-        .then((data) => setRoomRanges((prev) => [...prev, data]))
+      http
+        .post('Housing/roomrange', body)
+        .then((response) => {
+          setRoomRanges((prev) =>
+            Array.isArray(prev) ? [...prev, response.data] : [response.data],
+          );
+          clearRoomInputs();
+        })
         .catch((error) => console.error('Error adding room range:', error));
 
       clearRoomInputs();
@@ -66,9 +70,8 @@ const RoomRanges = () => {
     if (selectedRoomRange !== null) {
       const rangeId = roomRanges[selectedRoomRange].Range_ID;
 
-      fetch(`/api/Housing/roomrange/${rangeId}`, {
-        method: 'DELETE',
-      })
+      http
+        .delete(`/Housing/roomrange/${rangeId}`)
         .then(() => {
           setRoomRanges((prev) => prev.filter((_, index) => index !== selectedRoomRange));
           setSelectedRoomRange(null);
@@ -76,6 +79,7 @@ const RoomRanges = () => {
         .catch((error) => console.error('Error removing room range:', error));
     }
   };
+
   const assignPersonToRoom = () => {
     if (selectedPerson !== null && selectedRoomRange !== null) {
       const assignedRange = {
@@ -83,11 +87,8 @@ const RoomRanges = () => {
         Ra_ID: people[selectedPerson],
       };
 
-      fetch('/api/Housing/RA_Assigned_Ranges', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(assignedRange),
-      })
+      http
+        .post('/Housing/RA_Assigned_Ranges')
         .then((response) => response.json())
         .then((data) => {
           const assignment = `${data.Ra_ID}: ${data.Range.Hall_ID} ${data.Range.Room_Start} - ${data.Range.Room_End}`;
@@ -99,30 +100,11 @@ const RoomRanges = () => {
     }
   };
 
-  const removeAssignment = (index) => {
-    const assignmentToRemove = assignments[index];
-
-    fetch(
-      `/api/Housing/RA_Assigned_Ranges/${assignmentToRemove.Range_ID}/${assignmentToRemove.Ra_ID}`,
-      {
-        method: 'DELETE',
-      },
-    )
-      .then(() => {
-        setAssignments((prev) => prev.filter((_, i) => i !== index));
-      })
-      .catch((error) => console.error('Error removing assigned range:', error));
-  };
-
   return (
     <Box p={3}>
-      <Typography variant="h4" gutterBottom sx={{ color: 'white' }}>
-        Room Assignment
-      </Typography>
+      <Typography variant="h4">Room Assignment</Typography>
 
-      <Typography variant="h6" sx={{ color: 'white' }}>
-        Add Room Range
-      </Typography>
+      <Typography variant="h6">Add Room Range</Typography>
 
       <FormControl fullWidth>
         <InputLabel id="Building">Building</InputLabel>
@@ -137,15 +119,18 @@ const RoomRanges = () => {
             sx: { color: 'gray', '&.Mui-focused': { color: 'transparent' } },
           }}
         >
-          <MenuItem value="Hall 1">Bromley</MenuItem>
-          <MenuItem value="Hall 2">Ferrin</MenuItem>
-          <MenuItem value="Hall 3">Evans</MenuItem>
-          <MenuItem value="Hall 4">Wilson</MenuItem>
-          <MenuItem value="Hall 5">Chase</MenuItem>
-          <MenuItem value="Hall 6">Tavilla</MenuItem>
-          <MenuItem value="Hall 7">Fulton</MenuItem>
-          <MenuItem value="Hall 8">Nyland</MenuItem>
-          <MenuItem value="Hall 9">The Village</MenuItem>
+          <MenuItem value="BRO">Bromley</MenuItem>
+          <MenuItem value="FER">Ferrin</MenuItem>
+          <MenuItem value="EVN">Evans</MenuItem>
+          <MenuItem value="WIL">Wilson</MenuItem>
+          <MenuItem value="CHA">Chase</MenuItem>
+          <MenuItem value="TAV">Tavilla</MenuItem>
+          <MenuItem value="FUL">Fulton</MenuItem>
+          <MenuItem value="NYL">Nyland</MenuItem>
+          <MenuItem value="GRA">Grace</MenuItem>
+          <MenuItem value="MCI">MacInnis</MenuItem>
+          <MenuItem value="CON">Conrad</MenuItem>
+          <MenuItem value="RID">Rider</MenuItem>
         </Select>
       </FormControl>
 
@@ -155,10 +140,6 @@ const RoomRanges = () => {
         onChange={(e) => setRoomStart(e.target.value)}
         fullWidth
         margin="normal"
-        sx={{ input: { color: 'white' }, bgcolor: 'transparent', border: '1px solid white' }}
-        InputLabelProps={{
-          sx: { color: 'gray', '&.Mui-focused': { color: 'transparent' } },
-        }}
       />
 
       <TextField
@@ -167,80 +148,59 @@ const RoomRanges = () => {
         onChange={(e) => setRoomEnd(e.target.value)}
         fullWidth
         margin="normal"
-        sx={{ input: { color: 'white' }, bgcolor: 'transparent', border: '1px solid white' }}
-        InputLabelProps={{
-          sx: { color: 'gray', '&.Mui-focused': { color: 'transparent' } },
-        }}
       />
 
-      <Button variant="contained" onClick={addRoomRange} color="primary" sx={{ mt: 2 }}>
+      <Button variant="contained" onClick={addRoomRange} sx={{ mt: 2 }}>
         Save Range
       </Button>
 
-      <Button variant="contained" onClick={removeRoomRange} color="secondary" sx={{ mt: 2, ml: 1 }}>
+      <Button variant="contained" onClick={removeRoomRange} sx={{ mt: 2, ml: 1 }}>
         Remove Range
       </Button>
 
-      <Typography variant="h6" sx={{ mt: 3, color: 'white' }}>
-        Room Ranges
-      </Typography>
+      <Typography variant="h6">Room Ranges</Typography>
 
       <List>
-        {roomRanges.map((range, index) => (
-          <ListItem
-            key={index}
-            onClick={() => setSelectedRoomRange(index)}
-            sx={{
-              cursor: 'pointer',
-              backgroundColor: selectedRoomRange === index ? 'primary.main' : 'transparent',
-              color: selectedRoomRange === index ? 'white' : 'white',
-              '&:hover': { backgroundColor: 'secondary.main' },
-            }}
-          >
-            {range.Hall_ID} {range.Room_Start} - {range.Room_End}
-          </ListItem>
-        ))}
+        {roomRanges.length > 0 ? (
+          roomRanges.map((range, index) => (
+            <ListItem key={index} onClick={() => setSelectedRoomRange(index)}>
+              {range.Hall_Id}: {range.Room_Start} - {range.Room_End}
+            </ListItem>
+          ))
+        ) : (
+          <ListItem>No room ranges set</ListItem>
+        )}
       </List>
 
-      <Typography variant="h6" sx={{ mt: 3, color: 'white' }}>
-        Assign Person
-      </Typography>
+      <Typography variant="h6">Assign Person</Typography>
 
-      <List>
-        {people.map((person, index) => (
-          <ListItem
-            key={index}
-            onClick={() => setSelectedPerson(index)}
-            sx={{
-              cursor: 'pointer',
-              backgroundColor: selectedPerson === index ? 'primary.main' : 'transparent',
-              color: selectedPerson === index ? 'white' : 'white',
-              '&:hover': { backgroundColor: 'secondary.main' },
-            }}
-          >
-            {person}
-          </ListItem>
-        ))}
-      </List>
+      {/*<List>*/}
+      {/*  {people.map((person, index) => (*/}
+      {/*    <ListItem*/}
+      {/*      key={index}*/}
+      {/*      onClick={() => setSelectedPerson(index)}*/}
+      {/*    >*/}
+      {/*      {person}*/}
+      {/*    </ListItem>*/}
+      {/*  ))}*/}
+      {/*</List>*/}
 
-      <Button variant="contained" onClick={assignPersonToRoom} color="primary">
+      <Button variant="contained" onClick={assignPersonToRoom}>
         Assign Person
       </Button>
 
-      <Typography variant="h6" sx={{ mt: 3, color: 'white' }}>
-        Assignments
-      </Typography>
+      <Typography variant="h6">Assignments</Typography>
 
-      <List>
-        {assignments.map((assignment, index) => (
-          <ListItem key={index} sx={{ cursor: 'pointer', color: 'white' }}>
-            {assignment}
-            <Button onClick={() => removeAssignment(index)} color="secondary" sx={{ ml: 2 }}>
-              Remove
-            </Button>
-          </ListItem>
-        ))}
-      </List>
+      {/*<List>*/}
+      {/*  {assignments.map((assignment, index) => (*/}
+      {/*    <ListItem key={index}>*/}
+      {/*      {assignment}*/}
+      {/*      <Button onClick={() => removeAssignment(index)}>*/}
+      {/*        Remove*/}
+      {/*      </Button>*/}
+      {/*    </ListItem>*/}
+      {/*  ))}*/}
+      {/*</List>*/}
     </Box>
   );
 };
