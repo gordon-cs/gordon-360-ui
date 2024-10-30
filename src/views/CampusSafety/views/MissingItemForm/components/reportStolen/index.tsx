@@ -37,7 +37,7 @@ const ReportStolenModal: React.FC<ReportStolenModalProps> = ({ open, onClose, on
           <span className={styles.phoneNumber}>978-867-4444</span>
         </Typography>
         <Typography variant="body2" align="center" className={styles.subtext}>
-          Otherwise, Gordon Police will contact you soon to investigate.
+          Otherwise, Gordon Police will contact you soon to follow up.
         </Typography>
         <TextField
           label="Please describe in detail why you believe this item was stolen, to assist the investigation"
