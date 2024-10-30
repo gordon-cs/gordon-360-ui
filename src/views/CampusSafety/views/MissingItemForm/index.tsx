@@ -338,12 +338,13 @@ const MissingItemForm = () => {
           </Grid>
           {/* Stolen Checkbox */}
           <Grid container justifyContent="center" marginTop={3}>
-            <Grid item xs={9.5} className={styles.stolen_container}>
+            <Grid item xs={9.5}>
               <FormControlLabel
+                className={styles.stolen_container}
                 control={
                   <Checkbox checked={formData.stolen} onChange={handleChange} name="stolen" />
                 }
-                label="Do you have reason to believe this item was stolen? (This will open a police investigation)"
+                label="Was this item stolen? (Police staff will reach out)"
               />
             </Grid>
           </Grid>
