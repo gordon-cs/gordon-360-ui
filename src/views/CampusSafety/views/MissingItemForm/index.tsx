@@ -41,19 +41,12 @@ const MissingItemForm = () => {
     status: 'pending', // Assuming a default status for new reports
   });
 
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [isStolenModalOpen, setStolenModalOpen] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
 
   // Required fields
-  const requiredFields = [
-    'category',
-    'locationLost',
-    'phoneNumber',
-    'description',
-    'brand',
-    'emailAddr',
-  ];
+  const requiredFields = ['category', 'locationLost', 'phoneNumber', 'description', 'emailAddr'];
 
   // Validation function
   const validateForm = () => {
@@ -72,7 +65,7 @@ const MissingItemForm = () => {
     const { name, value, type, checked } = e.target;
 
     if (name === 'stolen') {
-      setModalOpen(checked); // Open modal if stolen checkbox is checked
+      setStolenModalOpen(checked); // Open modal if stolen checkbox is checked
       setFormData((prevData) => ({
         ...prevData,
         [name]: checked,
@@ -109,7 +102,7 @@ const MissingItemForm = () => {
   };
 
   const handleModalClose = () => {
-    setModalOpen(false);
+    setStolenModalOpen(false);
     setFormData((prevData) => ({
       ...prevData,
       stolen: false, // Uncheck "stolen" if modal is canceled
@@ -121,7 +114,7 @@ const MissingItemForm = () => {
       ...prevData,
       stolenDescription,
     }));
-    setModalOpen(false);
+    setStolenModalOpen(false);
   };
 
   const handleFormSubmit = () => {
@@ -344,8 +337,8 @@ const MissingItemForm = () => {
             </Grid>
           </Grid>
           {/* Stolen Checkbox */}
-          <Grid container justifyContent="center" className={styles.stolen_container} marginTop={3}>
-            <Grid item xs={10}>
+          <Grid container justifyContent="center" marginTop={3}>
+            <Grid item xs={9.5} className={styles.stolen_container}>
               <FormControlLabel
                 control={
                   <Checkbox checked={formData.stolen} onChange={handleChange} name="stolen" />
@@ -355,12 +348,7 @@ const MissingItemForm = () => {
             </Grid>
           </Grid>
           {/* Submit Button */}
-          <Grid
-            container
-            justifyContent="flex-end"
-            marginTop={3}
-            className={styles.submit_container}
-          >
+          <Grid container justifyContent="flex-end" className={styles.submit_container}>
             <Grid item xs={2}>
               <Button
                 variant="contained"
@@ -373,7 +361,7 @@ const MissingItemForm = () => {
             </Grid>
           </Grid>
           <ReportStolenModal
-            open={isModalOpen}
+            open={isStolenModalOpen}
             onClose={handleModalClose}
             onSubmit={handleModalSubmit}
           />

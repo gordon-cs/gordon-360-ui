@@ -44,11 +44,9 @@
   border-radius: 5px;
 }
 
-// .actionRow {
-//   padding: 0 1.5rem;
-// }
-
 .submit_container {
+  margin: 1rem 0;
+  padding-right: 5rem;
   display: flex;
   justify-content: flex-end;
 }
@@ -85,11 +83,12 @@
 
   .submit_container {
     justify-content: center;
+    padding-right: 0rem;
   }
 
   .submit_button {
     font-size: 1rem;
     padding: 1rem;
-    width: fit-content;
+    min-width: fit-content;
   }
 }
