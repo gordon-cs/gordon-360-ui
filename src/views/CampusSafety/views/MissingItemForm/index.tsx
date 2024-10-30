@@ -1,18 +1,15 @@
 import { useState } from 'react';
 import {
   Card,
-  CardContent,
   CardHeader,
   Grid,
   TextField,
   Radio,
   FormGroup,
   FormControlLabel,
-  FormControl,
-  RadioGroup,
   Checkbox,
   Button,
-  Typography,
+  FormLabel,
 } from '@mui/material';
 import { DateTime } from 'luxon';
 import styles from './MissingItemForm.module.scss';
@@ -21,13 +18,10 @@ import ReportStolenModal from './components/reportStolen';
 import ConfirmReport from './components/confirmReport';
 
 const MissingItemForm = () => {
-  const formatDate = (date: string) => {
-    return DateTime.fromISO(date).toFormat('yyyy-MM-dd');
-  };
   // Form state
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    firstName: '', //TODO add code to autofill this
+    lastName: '', //TODO add code to autofill this
     category: '',
     colors: [] as string[], // Ensure colors is an array
     brand: '',
@@ -35,10 +29,10 @@ const MissingItemForm = () => {
     locationLost: '',
     stolen: false,
     dateLost: '',
-    phoneNumber: '',
+    phoneNumber: '', //TODO add code to autofill this
     altPhone: '',
-    emailAddr: '',
-    status: 'pending', // Assuming a default status for new reports
+    emailAddr: '', //TODO add code to autofill this
+    status: 'active', // Assuming a default status for new reports
   });
 
   const [isStolenModalOpen, setStolenModalOpen] = useState(false);
@@ -46,7 +40,14 @@ const MissingItemForm = () => {
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
 
   // Required fields
-  const requiredFields = ['category', 'locationLost', 'phoneNumber', 'description', 'emailAddr'];
+  const requiredFields = [
+    'firstName',
+    'lastName',
+    'locationLost',
+    'phoneNumber',
+    'description',
+    'emailAddr',
+  ];
 
   // Validation function
   const validateForm = () => {
@@ -91,14 +92,6 @@ const MissingItemForm = () => {
         : [...prevData.colors, color];
       return { ...prevData, colors };
     });
-  };
-
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      category: value,
-    }));
   };
 
   const handleModalClose = () => {
@@ -151,7 +144,7 @@ const MissingItemForm = () => {
       ) : (
         <Card className={styles.form_card}>
           <CardHeader
-            title="Missing Item Report"
+            title={<b>Missing Item Report</b>}
             titleTypographyProps={{ align: 'center' }}
             className="gc360_header"
           />
@@ -180,38 +173,43 @@ const MissingItemForm = () => {
                 />
               </Grid>
               {/* Item Category */}
-              <Grid item margin={2} className={styles.category_group}>
-                <FormGroup className={styles.radio_group}>
-                  {[
-                    'Clothing/Shoes',
-                    'Electronics',
-                    'Jewelry/Watches',
-                    'Keys/Keychains',
-                    'Glasses',
-                    'Bottles/Mugs',
-                    'Books',
-                    'Bags/Purses',
-                    'Office Supplies',
-                    'IDs/Wallets',
-                    'Cash/Cards',
-                    'Other',
-                  ].map((label) => (
-                    <FormControlLabel
-                      key={label}
-                      control={<Radio />}
-                      label={label}
-                      value={label.toLowerCase().replace(/ /g, '/')}
-                      onChange={(e) =>
-                        setFormData((prevData) => ({
-                          ...prevData,
-                          category: (e.target as HTMLInputElement).value,
-                        }))
-                      }
-                      checked={formData.category === label.toLowerCase().replace(/ /g, '/')}
-                      className={styles.category_item}
-                    />
-                  ))}
+              <Grid item margin={2} className={styles.box_background}>
+                <FormGroup>
+                  <FormLabel>Item Category:</FormLabel>
                 </FormGroup>
+                <Grid item className={styles.category_group}>
+                  <FormGroup className={styles.radio_group}>
+                    {[
+                      'Clothing/Shoes',
+                      'Electronics',
+                      'Jewelry/Watches',
+                      'Keys/Keychains',
+                      'Glasses',
+                      'Bottles/Mugs',
+                      'Books',
+                      'Bags/Purses',
+                      'Office Supplies',
+                      'IDs/Wallets',
+                      'Cash/Cards',
+                      'Other',
+                    ].map((label) => (
+                      <FormControlLabel
+                        key={label}
+                        control={<Radio />}
+                        label={label}
+                        value={label.toLowerCase().replace(/ /g, '/')}
+                        onChange={(e) =>
+                          setFormData((prevData) => ({
+                            ...prevData,
+                            category: (e.target as HTMLInputElement).value,
+                          }))
+                        }
+                        checked={formData.category === label.toLowerCase().replace(/ /g, '/')}
+                        className={styles.category_item}
+                      />
+                    ))}
+                  </FormGroup>
+                </Grid>
               </Grid>
 
               <Grid item margin={2}>
@@ -230,7 +228,7 @@ const MissingItemForm = () => {
                 <TextField
                   fullWidth
                   multiline
-                  minRows={8}
+                  minRows={5}
                   variant="filled"
                   placeholder="Item Description: Be as detailed as possible"
                   name="description"
@@ -243,45 +241,52 @@ const MissingItemForm = () => {
             </Grid>
             <Grid item sm={5} xs={12}>
               {/* Item Colors */}
-              <Grid item margin={2} className={styles.checkbox_group}>
+              <Grid item margin={2} className={styles.box_background}>
                 <FormGroup>
-                  {[
-                    'Black',
-                    'Blue',
-                    'Brown',
-                    'Gold',
-                    'Gray',
-                    'Green',
-                    'Maroon',
-                    'Orange',
-                    'Pink',
-                    'Purple',
-                    'Red',
-                    'Silver',
-                    'Tan',
-                    'White',
-                    'Yellow',
-                  ].map((color) => (
-                    <FormControlLabel
-                      key={color}
-                      control={
-                        <Checkbox
-                          checked={formData.colors.includes(color)}
-                          onChange={() => handleColorChange(color)}
-                        />
-                      }
-                      label={color}
-                    />
-                  ))}
+                  <FormLabel>
+                    Item Color: Choose <u>ALL</u> that apply:
+                  </FormLabel>
                 </FormGroup>
+                <Grid item className={styles.checkbox_group}>
+                  <FormGroup>
+                    {[
+                      'Black',
+                      'Blue',
+                      'Brown',
+                      'Gold',
+                      'Gray',
+                      'Green',
+                      'Maroon',
+                      'Orange',
+                      'Pink',
+                      'Purple',
+                      'Red',
+                      'Silver',
+                      'Tan',
+                      'White',
+                      'Yellow',
+                    ].map((color) => (
+                      <FormControlLabel
+                        key={color}
+                        control={
+                          <Checkbox
+                            checked={formData.colors.includes(color)}
+                            onChange={() => handleColorChange(color)}
+                          />
+                        }
+                        label={color}
+                      />
+                    ))}
+                  </FormGroup>
+                </Grid>
               </Grid>
               <Grid item margin={2}>
                 <TextField
                   fullWidth
                   multiline
-                  minRows={10}
+                  minRows={4}
                   variant="filled"
-                  placeholder="Location Lost: Be as detailed as possible"
+                  placeholder={'Location Lost: Be as detailed as possible (or "unknown")'}
                   name="locationLost"
                   value={formData.locationLost}
                   onChange={handleChange}
@@ -344,7 +349,7 @@ const MissingItemForm = () => {
                 control={
                   <Checkbox checked={formData.stolen} onChange={handleChange} name="stolen" />
                 }
-                label="Was this item stolen? (Police staff will reach out)"
+                label="Was this item stolen? (Police staff will follow up)"
               />
             </Grid>
           </Grid>

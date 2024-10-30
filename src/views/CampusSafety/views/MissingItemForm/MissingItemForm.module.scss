@@ -6,36 +6,24 @@
   display: contents;
 }
 
-.errorMessage {
-  position: absolute;
-  bottom: -20px;
-  color: var(--mui-palette-error-light);
+.box_background {
+  background-color: var(--mui-palette-neutral-100);
+  border-radius: 5px;
+  padding: 1rem;
 }
 
 .category_group {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-  background-color: var(--mui-palette-neutral-100);
-  padding: 1rem;
-  border-radius: 5px;
 }
 
 .category_item {
   width: 100%;
 }
 
-.radio_column {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
 .checkbox_group {
   column-count: 3;
   background-color: var(--mui-palette-neutral-100);
-  padding: 1rem;
-  border-radius: 5px;
 }
 
 .stolen_container {
@@ -74,7 +62,7 @@
   }
 
   .checkbox_group {
-    column-count: 1;
+    column-count: 2;
   }
 
   .stolen_container {
