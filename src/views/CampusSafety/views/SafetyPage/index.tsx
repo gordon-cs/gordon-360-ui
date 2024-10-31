@@ -69,7 +69,6 @@ const SafetyPage = () => {
               color="secondary"
               variant="contained"
               onClick={() => {
-                window.scrollTo(0, 0);
                 navigate('/campussafety/lostandfound');
               }}
             >
