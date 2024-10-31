@@ -27,7 +27,7 @@
   position: sticky;
   top: -1rem;
   margin-bottom: 1rem;
-  z-index: 1; // this component defaults to a higher z-index that overlays quick search
+  z-index: 10; // this component defaults to a higher z-index that overlays quick search
   width: calc(100% + 1rem);
   padding: 0.5rem 0.5rem;
   // clip-path removes box shadow above this nav bar
@@ -52,8 +52,31 @@
   }
 }
 
-@media (min-width: $break-sm) {
-  .breadcrumbText {
+/* Medium screens */
+@media (max-width: $break-md) {
+  .headerMain {
+    padding: 1rem 2rem;
+  }
+  .title {
+    font-size: 1.3em;
+  }
+  .subtitle {
     font-size: 0.9em;
+  }
+}
+
+/* Small screens */
+@media (max-width: $break-sm) {
+  .headerMain {
+    padding: 0.5rem 1rem;
+  }
+  .title {
+    font-size: 1.1em;
+  }
+  .subtitle {
+    font-size: 0.8em;
+  }
+  .breadcrumbText {
+    font-size: 0.7em;
   }
 }
