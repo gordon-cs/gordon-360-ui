@@ -151,11 +151,11 @@ const MissingItemForm = () => {
           <Grid container justifyContent={'center'}>
             <Grid item sm={5} xs={12}>
               {/* First Name */}
-              <Grid margin={2}>
+              <Grid item margin={2}>
                 <TextField
                   fullWidth
                   variant="filled"
-                  placeholder="First Name"
+                  label={'First Name'}
                   name="firstName"
                   value={formData.firstName}
                   onChange={handleChange}
@@ -166,7 +166,7 @@ const MissingItemForm = () => {
                 <TextField
                   fullWidth
                   variant="filled"
-                  placeholder="Last Name"
+                  label={'Last Name'}
                   name="lastName"
                   value={formData.lastName}
                   onChange={handleChange}
@@ -216,7 +216,7 @@ const MissingItemForm = () => {
                 <TextField
                   fullWidth
                   variant="filled"
-                  placeholder="Item Brand or Make"
+                  label={'Item Brand or Make'}
                   name="brand"
                   value={formData.brand}
                   onChange={handleChange}
@@ -230,7 +230,7 @@ const MissingItemForm = () => {
                   multiline
                   minRows={5}
                   variant="filled"
-                  placeholder="Item Description: Be as detailed as possible"
+                  label={'Item Description: Be as detailed as possible'}
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
@@ -286,7 +286,7 @@ const MissingItemForm = () => {
                   multiline
                   minRows={4}
                   variant="filled"
-                  placeholder={'Location Lost: Be as detailed as possible (or "unknown")'}
+                  label={'Location Lost: Be as detailed as possible (or "unknown")'}
                   name="locationLost"
                   value={formData.locationLost}
                   onChange={handleChange}
@@ -298,7 +298,8 @@ const MissingItemForm = () => {
                 <TextField
                   fullWidth
                   variant="filled"
-                  placeholder="Date Lost"
+                  label={'Date Lost'}
+                  InputLabelProps={{ shrink: true }} //Shrink label to fit above date placeholder
                   name="dateLost"
                   type="date"
                   value={formData.dateLost}
@@ -309,7 +310,7 @@ const MissingItemForm = () => {
                 <TextField
                   fullWidth
                   variant="filled"
-                  placeholder="Phone Number"
+                  label={'Phone Number'}
                   name="phoneNumber"
                   value={formData.phoneNumber}
                   onChange={handleChange}
@@ -321,7 +322,7 @@ const MissingItemForm = () => {
                 <TextField
                   fullWidth
                   variant="filled"
-                  placeholder="Additional Phone Number"
+                  label={'Additional Phone Number'}
                   name="altPhone"
                   value={formData.altPhone}
                   onChange={handleChange}
@@ -331,7 +332,7 @@ const MissingItemForm = () => {
                 <TextField
                   fullWidth
                   variant="filled"
-                  placeholder="Email Address"
+                  label={'Email Address'}
                   name="emailAddr"
                   value={formData.emailAddr}
                   onChange={handleChange}
