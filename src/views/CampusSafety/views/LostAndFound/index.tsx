@@ -3,6 +3,7 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router';
 import Header from '../../components/Header';
 import styles from './LostAndFound.module.css'; // Import the external CSS
 import { useTheme } from '@mui/material/styles'; // Access theme if needed
@@ -19,6 +20,8 @@ const LostAndFound = () => {
   const [pastReports, setPastReports] = useState<MissingItemReport[]>([]);
   const [loading, setLoading] = useState(true);
   const theme = useTheme(); // Access theme if needed
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMissingItems = async () => {
@@ -129,7 +132,12 @@ const LostAndFound = () => {
       {/* Button to Report a Missing Item */}
       <Grid container justifyContent="center" marginTop={3}>
         <Grid item>
-          <Button className={styles.reportButton} href="/campussafety/missingitemform">
+          <Button
+            className={styles.reportButton}
+            onClick={() => {
+              navigate('/campussafety/lostandfound/missingitemform');
+            }}
+          >
             Report a Missing Item
           </Button>
         </Grid>

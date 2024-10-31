@@ -144,7 +144,7 @@ const MissingItemForm = () => {
       ) : (
         <Card className={styles.form_card}>
           <CardHeader
-            title={<b>Missing Item Report</b>}
+            title={<b>Report a Missing Item</b>}
             titleTypographyProps={{ align: 'center' }}
             className="gc360_header"
           />
