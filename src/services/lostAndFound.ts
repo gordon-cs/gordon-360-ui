@@ -26,6 +26,11 @@ const getMissingItemReports = async (): Promise<MissingItemReport[]> => {
   return response;
 };
 
+const getMissingItemReport = async (id: number): Promise<MissingItemReport> => {
+  const response = await http.get<MissingItemReport>(`lostandfound/missingitemsbyid/${id}`);
+  return response;
+};
+
 const createMissingItemReport = async (
   data: Omit<MissingItemReport, 'recordID'>,
 ): Promise<number> => {
@@ -43,6 +48,7 @@ const createMissingItemReport = async (
 const lostAndFoundService = {
   getMissingItemReports,
   createMissingItemReport,
+  getMissingItemReport,
 };
 
 export default lostAndFoundService;
