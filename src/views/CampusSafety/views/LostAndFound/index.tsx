@@ -6,6 +6,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { Collapse } from '@mui/material';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router';
 import Header from '../../components/Header';
 import styles from './LostAndFound.module.css'; // Import the external CSS
 import { useTheme } from '@mui/material/styles'; // Access theme if needed
@@ -39,7 +40,9 @@ const LostAndFound = () => {
 
         // Map the reports into active and past reports
         const active = reports
-          .filter((report) => report.status !== 'found') // Filter for non-found items
+          .filter((report) => report.status === 'active') // Filter for non-found items
+          .sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime())
+          //Order by date created, descending
           .map((report) => ({
             recordID: report.recordID,
             firstName: report.firstName,
@@ -61,7 +64,9 @@ const LostAndFound = () => {
           }));
 
         const past = reports
-          .filter((report) => report.status === 'found') // Filter for found items
+          .filter((report) => report.status !== 'active') // Filter for found items
+          .sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime())
+          //Order by date created, descending
           .map((report) => ({
             recordID: report.recordID,
             firstName: report.firstName,
