@@ -12,6 +12,7 @@ import {
   FormLabel,
 } from '@mui/material';
 import { DateTime } from 'luxon';
+import Header from 'views/CampusSafety/components/Header';
 import styles from './MissingItemForm.module.scss';
 import lostAndFoundService from 'services/lostAndFound';
 import ReportStolenModal from './components/reportStolen';
@@ -135,6 +136,7 @@ const MissingItemForm = () => {
 
   return (
     <>
+      <Header />
       {showConfirm ? (
         <ConfirmReport
           formData={formData}
@@ -144,7 +146,7 @@ const MissingItemForm = () => {
       ) : (
         <Card className={styles.form_card}>
           <CardHeader
-            title={<b>Missing Item Report</b>}
+            title={<b>Report a Missing Item</b>}
             titleTypographyProps={{ align: 'center' }}
             className="gc360_header"
           />

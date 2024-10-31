@@ -34,8 +34,22 @@
   clip-path: inset(0px -10px -10px -10px);
 }
 
+.breadcrumbContainer {
+  padding: 0.5rem;
+  color: var(--mui-palette-primary-contrastText);
+}
+
 .breadcrumbText {
   font-size: 0.8em;
+}
+
+.breadcrumbLink {
+  text-decoration: none;
+  color: var(--mui-palette-info-main);
+  &:hover {
+    color: var(--mui-palette-info-dark);
+    text-decoration: underline;
+  }
 }
 
 @media (min-width: $break-sm) {

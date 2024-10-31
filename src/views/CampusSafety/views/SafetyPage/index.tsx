@@ -60,7 +60,7 @@ const policeCard = (
       <Grid item xs={12}>
         <br />
         <Box textAlign={'center'}>
-          <Button color="secondary" variant="contained" href="/campussafety/lostandfound">
+          <Button color="secondary" variant="contained" href="/campussafety/LostAndFound">
             Lost and Found
           </Button>
         </Box>
