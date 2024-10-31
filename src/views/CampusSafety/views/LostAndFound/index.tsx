@@ -3,18 +3,25 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router';
 import Header from '../../components/Header';
 import styles from './LostAndFound.module.css'; // Import the external CSS
 import { useTheme } from '@mui/material/styles'; // Access theme if needed
 import lostAndFoundService from 'services/lostAndFound';
 //import lostAndFoundService from '../../services/lostAndFoundService'; // Assuming this is your service
 import { MissingItemReport } from 'services/lostAndFound'; // Import the type from the service
+import { DateTime } from 'luxon';
 
+const formatDate = (date: string) => {
+  return DateTime.fromISO(date).toFormat('yyyy-MM-dd'); // Adjust format as needed
+};
 const LostAndFound = () => {
   const [activeReports, setActiveReports] = useState<MissingItemReport[]>([]);
   const [pastReports, setPastReports] = useState<MissingItemReport[]>([]);
   const [loading, setLoading] = useState(true);
   const theme = useTheme(); // Access theme if needed
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMissingItems = async () => {
@@ -24,12 +31,15 @@ const LostAndFound = () => {
 
         // Map the reports into active and past reports
         const active = reports
-          .filter((report) => report.status !== 'found') // Filter for non-found items
+          .filter((report) => report.status === 'active') // Filter for non-found items
+          .sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime())
+          //Order by date created, descending
           .map((report) => ({
             recordID: report.recordID,
             firstName: report.firstName,
             lastName: report.lastName,
             category: report.category,
+            colors: report.colors || [],
             brand: report.brand,
             description: report.description,
             locationLost: report.locationLost,
@@ -45,12 +55,15 @@ const LostAndFound = () => {
           }));
 
         const past = reports
-          .filter((report) => report.status === 'found') // Filter for found items
+          .filter((report) => report.status !== 'active') // Filter for found items
+          .sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime())
+          //Order by date created, descending
           .map((report) => ({
             recordID: report.recordID,
             firstName: report.firstName,
             lastName: report.lastName,
             category: report.category,
+            colors: report.colors || [],
             brand: report.brand,
             description: report.description,
             locationLost: report.locationLost,
@@ -124,9 +137,9 @@ const LostAndFound = () => {
       <Grid container justifyContent="center" marginTop={3}>
         <Grid item>
           <Button
-            className={styles.reportButton} // Refer to external CSS class
+            className={styles.reportButton}
             onClick={() => {
-              console.log('Report a Missing Item');
+              navigate('/campussafety/lostandfound/missingitemform');
             }}
           >
             Report a Missing Item
@@ -171,9 +184,7 @@ const LostAndFound = () => {
                       <CardContent>
                         <Grid container spacing={2} alignItems="center">
                           <Grid item xs={2.5}>
-                            <Typography align="center">
-                              {report.dateLost.toLocaleString()}
-                            </Typography>
+                            <Typography align="center">{formatDate(report.dateLost)}</Typography>
                           </Grid>
                           <Grid item xs={2.5}>
                             <Typography align="center">{report.locationLost}</Typography>
@@ -188,7 +199,7 @@ const LostAndFound = () => {
                           {/* Icons */}
                           <Grid item xs={0.5} className={styles.buttonLeft}>
                             <IconButton
-                              onClick={() => handleEdit(report.recordID.toString())}
+                              onClick={() => handleEdit(report.recordID?.toString() || '')}
                               size="small"
                             >
                               <EditIcon fontSize="small" />
@@ -196,7 +207,7 @@ const LostAndFound = () => {
                           </Grid>
                           <Grid item xs={0.5} className={styles.buttonRight}>
                             <IconButton
-                              onClick={() => handleDelete(report.recordID.toString())}
+                              onClick={() => handleDelete(report.recordID?.toString() || '')}
                               size="small"
                             >
                               <DeleteIcon fontSize="small" />
