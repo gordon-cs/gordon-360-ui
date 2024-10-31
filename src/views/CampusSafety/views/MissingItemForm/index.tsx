@@ -16,8 +16,11 @@ import styles from './MissingItemForm.module.scss';
 import lostAndFoundService from 'services/lostAndFound';
 import ReportStolenModal from './components/reportStolen';
 import ConfirmReport from './components/confirmReport';
+import { useNavigate } from 'react-router';
 
 const MissingItemForm = () => {
+  const navigate = useNavigate();
+
   // Form state
   const [formData, setFormData] = useState({
     firstName: '', //TODO add code to autofill this
@@ -122,11 +125,12 @@ const MissingItemForm = () => {
         ...formData,
         dateLost: formData.dateLost || DateTime.now().toISO(),
         dateCreated: DateTime.now().toISO(),
-        status: 'pending',
+        status: 'active',
       };
 
       const newReportId = await lostAndFoundService.createMissingItemReport(requestData);
       alert(`Report created successfully with ID: ${newReportId}`);
+      navigate('/campussafety/lostandfound');
     } catch (error) {
       console.error('Error creating missing item report:', error);
       alert('Failed to create the missing item report.');

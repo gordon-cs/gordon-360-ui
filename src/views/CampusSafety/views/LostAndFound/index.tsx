@@ -31,7 +31,9 @@ const LostAndFound = () => {
 
         // Map the reports into active and past reports
         const active = reports
-          .filter((report) => report.status !== 'found') // Filter for non-found items
+          .filter((report) => report.status === 'active') // Filter for non-found items
+          .sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime())
+          //Order by date created, descending
           .map((report) => ({
             recordID: report.recordID,
             firstName: report.firstName,
@@ -53,7 +55,9 @@ const LostAndFound = () => {
           }));
 
         const past = reports
-          .filter((report) => report.status === 'found') // Filter for found items
+          .filter((report) => report.status !== 'active') // Filter for found items
+          .sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime())
+          //Order by date created, descending
           .map((report) => ({
             recordID: report.recordID,
             firstName: report.firstName,
