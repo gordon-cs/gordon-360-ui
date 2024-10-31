@@ -18,20 +18,23 @@ const RoomRanges = () => {
   const [roomEnd, setRoomEnd] = useState('');
   const [roomRanges, setRoomRanges] = useState([]);
   const [selectedRoomRange, setSelectedRoomRange] = useState(null);
+  const [showList, setShowList] = useState(false);
+
   // Who can be assigned to a room range will later on depend on what hall is choseon
-  const [people, setPeople] = useState(['Person 1', 'Person 2', 'Person 3', 'Person 4']);
-  const [selectedPerson, setSelectedPerson] = useState(null);
-  const [assignments, setAssignments] = useState([]);
+  //const [people, setPeople] = useState(['Person 1', 'Person 2', 'Person 3', 'Person 4']);
+  //const [selectedPerson, setSelectedPerson] = useState(null);
+  //const [assignments, setAssignments] = useState([]);
 
   useEffect(() => {
     fetchRoomRanges();
-  });
+  }, []);
 
   const fetchRoomRanges = () => {
+    setTimeout(() => setShowList(true), 1000);
     http
       .get('Housing/room-ranges')
       .then((response) => {
-        console.log('API response:', response); // Log the entire response object to see structure
+        console.log('API response:', response);
         setRoomRanges(response);
       })
       .catch((error) => console.error('Error fetching room ranges:', error));
@@ -44,12 +47,13 @@ const RoomRanges = () => {
   };
 
   const clearSelections = () => {
-    setSelectedPerson(null);
+    //setSelectedPerson(null);
     setSelectedRoomRange(null);
   };
 
   const addRoomRange = () => {
     if (building && roomStart && roomEnd) {
+      setShowList(false);
       const body = { Hall_ID: building, Room_Start: roomStart, Room_End: roomEnd };
 
       http
@@ -59,6 +63,7 @@ const RoomRanges = () => {
             Array.isArray(prev) ? [...prev, response.data] : [response.data],
           );
           clearRoomInputs();
+          fetchRoomRanges();
         })
         .catch((error) => console.error('Error adding room range:', error));
 
@@ -68,10 +73,11 @@ const RoomRanges = () => {
 
   const removeRoomRange = () => {
     if (selectedRoomRange !== null) {
-      const rangeId = roomRanges[selectedRoomRange].Range_ID;
+      const rangeId = roomRanges[selectedRoomRange].RangeID;
+      console.log('range Id:', rangeId);
 
       http
-        .delete(`/Housing/roomrange/${rangeId}`)
+        .del(`Housing/roomrange/${rangeId}`)
         .then(() => {
           setRoomRanges((prev) => prev.filter((_, index) => index !== selectedRoomRange));
           setSelectedRoomRange(null);
@@ -80,25 +86,25 @@ const RoomRanges = () => {
     }
   };
 
-  const assignPersonToRoom = () => {
-    if (selectedPerson !== null && selectedRoomRange !== null) {
-      const assignedRange = {
-        Range_ID: roomRanges[selectedRoomRange].Range_ID,
-        Ra_ID: people[selectedPerson],
-      };
+  //const assignPersonToRoom = () => {
+  //  if (selectedPerson !== null && selectedRoomRange !== null) {
+  //    const assignedRange = {
+  //      Range_ID: roomRanges[selectedRoomRange].Range_ID,
+  //      Ra_ID: people[selectedPerson],
+  //    };
 
-      http
-        .post('/Housing/RA_Assigned_Ranges')
-        .then((response) => response.json())
-        .then((data) => {
-          const assignment = `${data.Ra_ID}: ${data.Range.Hall_ID} ${data.Range.Room_Start} - ${data.Range.Room_End}`;
-          setAssignments((prev) => [...prev, assignment]);
-          setSelectedPerson(null);
-          setSelectedRoomRange(null);
-        })
-        .catch((error) => console.error('Error assigning person to range:', error));
-    }
-  };
+  //    http
+  //      .post('/Housing/RA_Assigned_Ranges')
+  //      .then((response) => response.json())
+  //      .then((data) => {
+  //        const assignment = `${data.Ra_ID}: ${data.Range.Hall_ID} ${data.Range.Room_Start} - ${data.Range.Room_End}`;
+  //        setAssignments((prev) => [...prev, assignment]);
+  //        setSelectedPerson(null);
+  //        setSelectedRoomRange(null);
+  //      })
+  //      .catch((error) => console.error('Error assigning person to range:', error));
+  //  }
+  //};
 
   return (
     <Box p={3}>
@@ -161,14 +167,27 @@ const RoomRanges = () => {
       <Typography variant="h6">Room Ranges</Typography>
 
       <List>
-        {roomRanges.length > 0 ? (
-          roomRanges.map((range, index) => (
-            <ListItem key={index} onClick={() => setSelectedRoomRange(index)}>
-              {range.Hall_Id}: {range.Room_Start} - {range.Room_End}
-            </ListItem>
-          ))
+        {showList ? (
+          roomRanges.length > 0 ? (
+            roomRanges.map((range, index) => (
+              <ListItem
+                key={index}
+                onClick={() => setSelectedRoomRange(index)}
+                sx={{
+                  cursor: 'pointer',
+                  backgroundColor: selectedRoomRange === index ? 'primary.main' : 'transparent',
+                  color: selectedRoomRange === index ? 'black' : 'black',
+                  '&:hover': { backgroundColor: 'secondary.main' },
+                }}
+              >
+                {range.Hall_ID}: {range.Room_Start} - {range.Room_End}
+              </ListItem>
+            ))
+          ) : (
+            <ListItem>No room ranges set</ListItem>
+          )
         ) : (
-          <ListItem>No room ranges set</ListItem>
+          <ListItem>Loading room ranges...</ListItem>
         )}
       </List>
 
@@ -185,9 +204,9 @@ const RoomRanges = () => {
       {/*  ))}*/}
       {/*</List>*/}
 
-      <Button variant="contained" onClick={assignPersonToRoom}>
-        Assign Person
-      </Button>
+      {/*<Button variant="contained" onClick={assignPersonToRoom}>*/}
+      {/*  Assign Person*/}
+      {/*</Button>*/}
 
       <Typography variant="h6">Assignments</Typography>
 
