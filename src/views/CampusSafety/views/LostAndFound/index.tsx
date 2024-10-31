@@ -10,7 +10,6 @@ import { useNavigate } from 'react-router';
 import Header from '../../components/Header';
 import styles from './LostAndFound.module.css'; // Import the external CSS
 import { useTheme } from '@mui/material/styles'; // Access theme if needed
-import { useNavigate } from 'react-router';
 import lostAndFoundService from 'services/lostAndFound';
 //import lostAndFoundService from '../../services/lostAndFoundService'; // Assuming this is your service
 import { MissingItemReport } from 'services/lostAndFound'; // Import the type from the service
