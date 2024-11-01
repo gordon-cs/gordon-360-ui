@@ -126,10 +126,10 @@ const LostAndFound = () => {
 
   const renderReportContent = (report: MissingItemReport) => (
     <>
-      <Grid item xs={width >= 920 ? 2.5 : 12}>
+      <Grid item xs={width >= 900 ? 2.5 : 12}>
         <Typography align="center">{formatDate(report.dateLost)}</Typography>
       </Grid>
-      <Grid item xs={width >= 920 ? 2.5 : 12}>
+      <Grid item xs={width >= 900 ? 2.5 : 12}>
         <Typography
           align="center"
           onClick={() => toggleExpandField(report.recordID?.toString() || '', 'location')}
@@ -141,10 +141,10 @@ const LostAndFound = () => {
             : `${report.locationLost.slice(0, 15)}...`}
         </Typography>
       </Grid>
-      <Grid item xs={width >= 920 ? 2.5 : 12}>
+      <Grid item xs={width >= 900 ? 2.5 : 12}>
         <Typography align="center">{report.category}</Typography>
       </Grid>
-      {width >= 920 && (
+      {width >= 900 && (
         <Grid item xs={2.5}>
           <Typography
             align="center"
@@ -213,7 +213,7 @@ const LostAndFound = () => {
                 My Active <span className={styles.missingText}>Missing</span> Item Reports
               </Typography>
               {/* Render header row only on large screens */}
-              {width >= 920 && (
+              {width >= 900 && (
                 <Grid container spacing={2} className={styles.headerRow}>
                   <Grid item xs={2.5}>
                     <Typography align="center">Date Lost</Typography>
@@ -235,12 +235,12 @@ const LostAndFound = () => {
               {/* Active Reports */}
               {activeReports.map((report) => (
                 <Card
-                  className={`${styles.dataRow} ${width < 600 ? styles.mobileDataRow : ''}`}
+                  className={`${styles.dataRow} ${width < 900 ? styles.mobileDataRow : ''}`}
                   key={report.recordID}
                 >
                   <CardContent>
                     <Grid container spacing={2} alignItems="center">
-                      {width < 600 ? (
+                      {width < 900 ? (
                         <>
                           {/* Display two items per row on mobile */}
                           <Grid item xs={6}>
@@ -304,7 +304,7 @@ const LostAndFound = () => {
                         </>
                       )}
                     </Grid>
-                    {width < 600 && expanded[report.recordID?.toString() || ''] && (
+                    {width < 900 && expanded[report.recordID?.toString() || ''] && (
                       <Collapse
                         in={expanded[report.recordID?.toString() || '']}
                         timeout="auto"
@@ -340,7 +340,7 @@ const LostAndFound = () => {
                 My <span className={styles.missingText}>Past</span> Reports
               </Typography>
               {/* Render header row only on large screens */}
-              {width >= 920 && (
+              {width >= 900 && (
                 <Grid container spacing={2} className={styles.headerRow}>
                   <Grid item xs={2.5}>
                     <Typography align="center">Date Lost</Typography>
@@ -362,12 +362,12 @@ const LostAndFound = () => {
               {/* Past Reports */}
               {pastReports.map((report) => (
                 <Card
-                  className={`${styles.pastDataRow} ${width < 600 ? styles.mobilePastDataRow : ''}`}
+                  className={`${styles.pastDataRow} ${width < 900 ? styles.mobilePastDataRow : ''}`}
                   key={report.recordID}
                 >
                   <CardContent>
                     <Grid container spacing={2} alignItems="center" justifyContent="space-between">
-                      {width < 600 ? (
+                      {width < 900 ? (
                         <>
                           {/* Display two items per row on mobile */}
                           <Grid item xs={6}>
@@ -408,7 +408,7 @@ const LostAndFound = () => {
                         </>
                       )}
                     </Grid>
-                    {width < 600 && expanded[report.recordID?.toString() || ''] && (
+                    {width < 900 && expanded[report.recordID?.toString() || ''] && (
                       <Collapse
                         in={expanded[report.recordID?.toString() || '']}
                         timeout="auto"

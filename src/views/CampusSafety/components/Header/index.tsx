@@ -53,11 +53,16 @@ const Header: React.FC<HeaderProps> = ({ safetyPage = true, children }) => {
         <AppBar className={styles.stickyNav}>
           <Breadcrumbs
             aria-label="breadcrumb"
-            separator={<NavigateNextIcon fontSize="small" />}
+            separator={
+              <NavigateNextIcon
+                fontSize="small"
+                sx={{ color: 'var(--mui-palette-primary-main)' }}
+              />
+            }
             className={styles.breadcrumbContainer}
           >
             {/* Home breadcrumb */}
-            <CampusSafetyBreadcrumb link={pathnames.length > 0 ? '/campussafety' : null}>
+            <CampusSafetyBreadcrumb link={pathnames.length > 1 ? '/campussafety' : null}>
               <Grid container alignItems="center">
                 <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
                 {'Campus Safety Home'}
