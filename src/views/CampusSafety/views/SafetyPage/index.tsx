@@ -69,7 +69,7 @@ const SafetyPage = () => {
               color="secondary"
               variant="contained"
               onClick={() => {
-                navigate('/campussafety/lostandfound');
+                navigate('/campussafety/LostAndFound');
               }}
             >
               Lost and Found

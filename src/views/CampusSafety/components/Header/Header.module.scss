@@ -27,19 +27,77 @@
   position: sticky;
   top: -1rem;
   margin-bottom: 1rem;
-  z-index: 1; // this component defaults to a higher z-index that overlays quick search
+  z-index: 10; // this component defaults to a higher z-index that overlays quick search
   width: calc(100% + 1rem);
   padding: 0.5rem 0.5rem;
   // clip-path removes box shadow above this nav bar
   clip-path: inset(0px -10px -10px -10px);
 }
 
-.breadcrumbText {
-  font-size: 0.8em;
+.breadcrumbContainer {
+  padding: 0.5rem;
+  color: var(--mui-palette-primary-contrastText);
+
+  .MuiBreadcrumbs-separator {
+    color: var(--mui-palette-primary-main);
+  }
 }
 
-@media (min-width: $break-sm) {
-  .breadcrumbText {
+.breadcrumbText {
+  font-size: 0.8em;
+  color: var(--mui-palette-primary-main);
+
+  @media (max-width: $break-sm) {
+    font-size: 0.7em;
+  }
+
+  @media (min-width: $break-sm) {
     font-size: 0.9em;
+  }
+}
+
+.breadcrumbLink {
+  text-decoration: none;
+  color: var(--mui-palette-link-main);
+  &:hover {
+    color: var(--mui-palette-warning-main);
+    text-decoration: underline;
+  }
+
+  // Dark mode-specific adjustments
+  @media (prefers-color-scheme: dark) {
+    color: var(--mui-palette-link-main);
+    &:hover {
+      color: var(--mui-palette-link-light);
+    }
+  }
+}
+
+/* Medium screens */
+@media (max-width: $break-md) {
+  .headerMain {
+    padding: 1rem 2rem;
+  }
+  .title {
+    font-size: 1.3em;
+  }
+  .subtitle {
+    font-size: 0.9em;
+  }
+}
+
+/* Small screens */
+@media (max-width: $break-sm) {
+  .headerMain {
+    padding: 0.5rem 1rem;
+  }
+  .title {
+    font-size: 1.1em;
+  }
+  .subtitle {
+    font-size: 0.8em;
+  }
+  .breadcrumbText {
+    font-size: 0.7em;
   }
 }
