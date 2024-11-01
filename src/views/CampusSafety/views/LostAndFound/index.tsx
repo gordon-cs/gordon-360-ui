@@ -23,7 +23,6 @@ const LostAndFound = () => {
   const [activeReports, setActiveReports] = useState<MissingItemReport[]>([]);
   const [pastReports, setPastReports] = useState<MissingItemReport[]>([]);
   const [loading, setLoading] = useState(true);
-  const theme = useTheme(); // Access theme if needed
   const [width] = useWindowSize();
   const [expanded, setExpanded] = useState<{ [key: string]: boolean }>({});
   const [expandedFields, setExpandedFields] = useState<{
