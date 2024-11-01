@@ -1,7 +1,10 @@
-import { Grid, Typography, Box, AppBar, Breadcrumbs } from '@mui/material';
-import { Link as LinkRouter, useLocation } from 'react-router-dom';
+import { Grid, Typography, Box, AppBar, Breadcrumbs, Button } from '@mui/material';
+import { Link as LinkRouter, useLocation, useNavigate } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import {
+  NavigateNext as NavigateNextIcon,
+  AdminPanelSettings as AdminPanelSettingsIcon,
+} from '@mui/icons-material';
 import styles from './Header.module.css';
 import { useAuthGroups } from 'hooks';
 import { AuthGroup } from 'services/auth';
@@ -31,26 +34,42 @@ type HeaderProps = {
 
 const Header: React.FC<HeaderProps> = ({ children }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const pathnames = location.pathname.split('/').filter((x) => x);
-  const isAdmin = useAuthGroups(AuthGroup.LostAndFoundAdmin);
+  // const isAdmin = useAuthGroups(AuthGroup.LostAndFoundAdmin);
+  const isAdmin = true; //FOR TESTING ONLY
   const isKiosk = useAuthGroups(AuthGroup.LostAndFoundKiosk);
+
+  console.log(pathnames);
 
   return (
     <>
-      <Grid container alignItems="center" columnSpacing={4} className={styles.headerMain}>
-        <Grid item container xs={9} alignItems="center" columnSpacing={2}>
-          <Grid item xs={8}>
+      <Grid container alignItems="center" columnSpacing={1} className={styles.headerMain}>
+        <Grid item container xs={7}>
+          <Grid item xs={12}>
             <Typography className={styles.title}>
               <Box component="span" sx={{ color: 'secondary.main' }}>
                 Gordon
               </Box>{' '}
-              Campus Safety Resources
-            </Typography>
-            <Typography className={styles.subtitle}>
-              <i>"Helping students help themselves"</i>
+              Campus Safety
             </Typography>
           </Grid>
         </Grid>
+        {(isAdmin || isKiosk) && !pathnames.find((x) => x === 'lostandfoundadmin') && (
+          <Grid item xs={5} className={styles.buttonContainer}>
+            <Button
+              color="secondary"
+              className={styles.button}
+              variant="contained"
+              onClick={() => {
+                navigate('/campussafety/lostandfoundadmin');
+              }}
+            >
+              <AdminPanelSettingsIcon sx={{ marginRight: '0.3rem' }} />
+              <b>Lost & Found Admin</b>
+            </Button>
+          </Grid>
+        )}
       </Grid>
       <AppBar className={styles.stickyNav}>
         <Breadcrumbs
