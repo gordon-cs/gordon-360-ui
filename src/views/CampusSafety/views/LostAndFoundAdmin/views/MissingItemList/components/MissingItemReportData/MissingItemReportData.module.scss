@@ -1,0 +1,89 @@
+.container {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.backButton {
+  align-self: start;
+  background-color: var(--mui-palette-error-light); // Uses NauticalRed for "back" button
+  color: var(--mui-palette-primary-contrastText); // White text
+  &:hover {
+    background-color: var(--mui-palette-error-main); // Uses ChristmasRed on hover
+  }
+  margin-bottom: 1rem;
+}
+
+.card {
+  width: 100%;
+  max-width: 900px;
+  padding: 1.5rem;
+  background-color: var(
+    --mui-palette-background-paper
+  ); // DarkGray for dark mode, light background for light mode
+  color: var(--mui-palette-text-primary); // Adjusts text color based on theme
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: var(--mui-palette-primary-main); // GordonBlue
+}
+
+.highlight {
+  color: var(--mui-palette-warning-main); // BarringtonGold for highlighted text
+}
+
+.sectionTitle {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: var(--mui-palette-neutral-contrastText); // White for dark mode, Black for light mode
+}
+
+.stolenButton {
+  background-color: var(--mui-palette-error-main); // ChristmasRed for stolen indicator
+  color: var(--mui-palette-primary-contrastText); // White text
+  font-weight: bold;
+}
+
+.contactButton {
+  background-color: var(--mui-palette-secondary-main); // ScottieCyan for the contact button
+  color: var(--mui-palette-secondary-contrastText); // Black for text
+  font-weight: bold;
+}
+
+.checkboxLabel {
+  color: var(--mui-palette-text-primary); // Adjusts based on theme
+}
+
+.boxBackground {
+  background-color: var(--mui-palette-neutral-100);
+  border-radius: 5px;
+  padding: 1rem;
+  margin-bottom: 1rem; /* Add spacing between sections */
+  border: 4px solid var(--mui-palette-neutral-300); /* Border for separation */
+}
+
+.categoryGroup,
+.checkboxGroup {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+.categoryItem {
+  width: 100%;
+}
+
+.formLabel {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .categoryGroup,
+  .checkboxGroup {
+    grid-template-columns: 1fr;
+  }
+}

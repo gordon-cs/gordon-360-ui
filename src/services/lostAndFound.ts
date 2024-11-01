@@ -19,6 +19,7 @@ export type MissingItemReport = {
   emailAddr: string;
   status: string;
   adminUsername?: string;
+  lastChecked?: string;
 };
 
 const getMissingItemReports = async (): Promise<MissingItemReport[]> => {

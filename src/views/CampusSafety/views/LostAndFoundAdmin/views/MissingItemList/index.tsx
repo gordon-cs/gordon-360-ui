@@ -1,45 +1,79 @@
-import { Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
-import styles from './MissingItemList.module.css';
-import Header from 'views/CampusSafety/components/Header';
+import {
+  Card,
+  CardContent,
+  Typography,
+  Grid,
+  Button,
+  Chip,
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 import lostAndFoundService, { MissingItemReport } from 'services/lostAndFound';
 import GordonLoader from 'components/Loader';
+import Header from 'views/CampusSafety/components/Header';
+import styles from './MissingItemList.module.scss';
+import { DateTime } from 'luxon';
+import { useNavigate } from 'react-router';
+import useMediaQuery from '@mui/material/useMediaQuery';
+
+const categories = [
+  'Clothing/Shoes',
+  'Electronics',
+  'Jewelry/Watches',
+  'Keys/Keychains',
+  'Glasses',
+  'Bottles/Mugs',
+  'Books',
+  'Bags/Purses',
+  'Office Supplies',
+  'IDs/Wallets',
+  'Cash/Cards',
+  'Other',
+];
+
+const colors = [
+  'Black',
+  'Blue',
+  'Brown',
+  'Gold',
+  'Gray',
+  'Green',
+  'Maroon',
+  'Orange',
+  'Pink',
+  'Purple',
+  'Red',
+  'Silver',
+  'Tan',
+  'White',
+  'Yellow',
+];
 
 const MissingItemList = () => {
   const [loading, setLoading] = useState(true);
-  const [activeReports, setActiveReports] = useState<MissingItemReport[]>([]);
+  const [reports, setReports] = useState<MissingItemReport[]>([]);
+  const [filteredReports, setFilteredReports] = useState<MissingItemReport[]>([]);
+  const [status, setStatus] = useState('');
+  const [category, setCategory] = useState('');
+  const [color, setColor] = useState('');
+  const [keywords, setKeywords] = useState('');
+  const navigate = useNavigate();
+  const isMobile = useMediaQuery('(max-width:900px)');
 
   useEffect(() => {
     const fetchMissingItems = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
-        const reports: MissingItemReport[] = await lostAndFoundService.getMissingItemReports();
-
-        // Map the reports into active and past reports
-        const active = reports
-          .filter((report) => report.status === 'active') // Filter for non-found items
-          .sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime())
-          //Order by date created, descending
-          .map((report) => ({
-            recordID: report.recordID,
-            firstName: report.firstName,
-            lastName: report.lastName,
-            category: report.category,
-            colors: report.colors || [],
-            brand: report.brand,
-            description: report.description,
-            locationLost: report.locationLost,
-            stolen: report.stolen,
-            stolenDescription: report.stolenDescription,
-            dateLost: report.dateLost,
-            dateCreated: report.dateCreated,
-            phoneNumber: report.phoneNumber,
-            altPhone: report.altPhone,
-            emailAddr: report.emailAddr,
-            status: report.status,
-            adminUsername: report.adminUsername,
-          }));
-        setActiveReports(active);
+        const fetchedReports = await lostAndFoundService.getMissingItemReports();
+        const sortedReports = fetchedReports.sort(
+          (a, b) => new Date(b.dateLost).getTime() - new Date(a.dateLost).getTime(),
+        );
+        setReports(sortedReports);
+        setFilteredReports(sortedReports);
       } catch (error) {
         console.error('Error fetching missing items:', error);
       } finally {
@@ -49,91 +83,237 @@ const MissingItemList = () => {
     fetchMissingItems();
   }, []);
 
-  const GridWidths = [1.5, 2, 2, 1.5, 3, 2];
+  const handleFilter = () => {
+    let filtered = reports;
+
+    if (status) {
+      filtered = filtered.filter((report) => report.status.toLowerCase() === status.toLowerCase());
+    }
+    if (category) {
+      filtered = filtered.filter(
+        (report) => report.category.toLowerCase() === category.toLowerCase(),
+      );
+    }
+    if (color) {
+      filtered = filtered.filter((report) =>
+        report.colors?.some((col) => col.toLowerCase() === color.toLowerCase()),
+      );
+    }
+    if (keywords) {
+      const keywordLower = keywords.toLowerCase();
+      filtered = filtered.filter(
+        (report) =>
+          `${report.firstName} ${report.lastName}`.toLowerCase().includes(keywordLower) ||
+          report.description.toLowerCase().includes(keywordLower) ||
+          report.locationLost.toLowerCase().includes(keywordLower),
+      );
+    }
+
+    setFilteredReports(filtered);
+  };
+
+  useEffect(() => {
+    handleFilter();
+  }, [status, category, color, keywords]);
+
+  const formatDate = (date: string) => DateTime.fromISO(date).toFormat('MMM d, yyyy');
 
   return (
     <>
       <Header />
-      <Grid container justifyContent={'center'} rowSpacing={3}>
+
+      {/* Filter Bar */}
+      <Grid container justifyContent="center" spacing={2} marginBottom={2}>
         <Grid item xs={11}>
           <Card>
-            <CardHeader
-              title="Filters:"
-              className={`${styles.cardHeader} ${styles.filterBar}`}
-            ></CardHeader>
-            <CardContent>
-              <Typography>PLACEHOLDER</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={11}>
-          <Card>
-            <CardHeader
-              title={<div className={styles.title}>Missing Item Reports</div>}
-              className={styles.cardHeader}
-            ></CardHeader>
-          </Card>
-        </Grid>
-        <Grid item xs={11}>
-          <Card>
-            <CardHeader
-              title={
-                <div className={styles.columnNames}>
-                  <Grid container>
-                    <Grid item xs={GridWidths[0]}>
-                      Date Lost
-                    </Grid>
-                    <Grid item xs={GridWidths[1]}>
-                      Owner's Name
-                    </Grid>
-                    <Grid item xs={GridWidths[2]}>
-                      Location
-                    </Grid>
-                    <Grid item xs={GridWidths[3]}>
-                      Category
-                    </Grid>
-                    <Grid item xs={GridWidths[4]}>
-                      Description
-                    </Grid>
-                    <Grid item xs={GridWidths[5]}>
-                      Last Checked
-                    </Grid>
-                  </Grid>
-                </div>
-              }
-              className={styles.cardHeader}
-            ></CardHeader>
-            <CardContent className={styles.reportList}>
-              <Grid container>
-                {loading ? (
-                  <GordonLoader />
-                ) : (
-                  activeReports.map((report) => (
-                    <Grid container className={styles.reportRows} alignItems={'center'}>
-                      <Grid item xs={GridWidths[0]}>
-                        {report.dateLost}
-                      </Grid>
-                      <Grid item xs={GridWidths[1]}>
-                        {report.firstName + ' ' + report.lastName}
-                      </Grid>
-                      <Grid item xs={GridWidths[2]}>
-                        {report.locationLost}
-                      </Grid>
-                      <Grid item xs={GridWidths[3]}>
-                        {report.category}
-                      </Grid>
-                      <Grid item xs={GridWidths[4]}>
-                        {report.brand + ' | ' + report.description}
-                      </Grid>
-                      <Grid item xs={GridWidths[5]}>
-                        Placeholder
-                      </Grid>
-                    </Grid>
-                  ))
-                )}
+            <CardContent className={styles.filterContainer}>
+              <Typography variant="h6" className={styles.filterTitle}>
+                Filters:
+              </Typography>
+              <Grid container spacing={isMobile ? 1 : 2}>
+                {/* Keywords on a single row */}
+                <Grid item xs={12}>
+                  <TextField
+                    label="Keywords"
+                    variant="outlined"
+                    size="small"
+                    value={keywords}
+                    onChange={(e) => setKeywords(e.target.value)}
+                    className={styles.textField}
+                    fullWidth
+                  />
+                </Grid>
+
+                {/* Status, Color, Category, and Clear button on a single row */}
+                <Grid item xs={isMobile}>
+                  <FormControl size="small" className={styles.formControl} fullWidth>
+                    <InputLabel>Status</InputLabel>
+                    <Select value={status} onChange={(e) => setStatus(e.target.value)}>
+                      <MenuItem value="">All</MenuItem>
+                      <MenuItem value="active">Active</MenuItem>
+                      <MenuItem value="expired">Expired</MenuItem>
+                      <MenuItem value="found">Found</MenuItem>
+                      <MenuItem value="deleted">Deleted</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={isMobile}>
+                  <FormControl size="small" className={styles.formControl} fullWidth>
+                    <InputLabel>Color</InputLabel>
+                    <Select value={color} onChange={(e) => setColor(e.target.value)}>
+                      <MenuItem value="">All</MenuItem>
+                      {colors.map((colorOption) => (
+                        <MenuItem key={colorOption} value={colorOption}>
+                          {colorOption}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={isMobile}>
+                  <FormControl size="small" className={styles.formControl} fullWidth>
+                    <InputLabel>Category</InputLabel>
+                    <Select value={category} onChange={(e) => setCategory(e.target.value)}>
+                      <MenuItem value="">All</MenuItem>
+                      {categories.map((categoryOption) => (
+                        <MenuItem key={categoryOption} value={categoryOption}>
+                          {categoryOption}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={isMobile}>
+                  <Button
+                    onClick={() => {
+                      setStatus('');
+                      setCategory('');
+                      setColor('');
+                      setKeywords('');
+                      handleFilter();
+                    }}
+                    variant="contained"
+                    color="error"
+                    fullWidth
+                  >
+                    Clear
+                  </Button>
+                </Grid>
               </Grid>
             </CardContent>
           </Card>
+        </Grid>
+      </Grid>
+
+      {/* Reports Table */}
+      <Grid container justifyContent="center" spacing={2}>
+        <Grid item xs={11}>
+          {loading ? (
+            <GordonLoader />
+          ) : (
+            <>
+              {!isMobile && (
+                // Header Row for Larger Screens
+                <Grid container className={styles.tableHeader}>
+                  <Grid item xs={2}>
+                    Date Lost
+                  </Grid>
+                  <Grid item xs={2}>
+                    Owner's Name
+                  </Grid>
+                  <Grid item xs={2}>
+                    Location
+                  </Grid>
+                  <Grid item xs={1.5}>
+                    Category
+                  </Grid>
+                  <Grid item xs={3}>
+                    Description
+                  </Grid>
+                  <Grid item xs={1.5}>
+                    Last Checked
+                  </Grid>
+                  <Grid item xs={1}></Grid>
+                </Grid>
+              )}
+              {filteredReports.map((report) =>
+                isMobile ? (
+                  // Mobile Layout
+                  <Card
+                    key={report.recordID}
+                    className={styles.eventCard}
+                    onClick={() =>
+                      navigate(`/campussafety/lostandfoundadmin/missingitem/${report.recordID}`)
+                    }
+                  >
+                    <CardContent>
+                      <Typography variant="h6" className={styles.itemName}>
+                        {report.firstName} {report.lastName}
+                      </Typography>
+                      <Grid container justifyContent="space-between" alignItems="center">
+                        <Typography variant="body2" color="textSecondary">
+                          {formatDate(report.dateLost)}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                          Last Checked: {report.lastChecked || 'Placeholder'}
+                        </Typography>
+                      </Grid>
+                      <Typography variant="body2" color="textSecondary">
+                        Location:{' '}
+                        {report.locationLost.length > 15
+                          ? `${report.locationLost.slice(0, 15)}...`
+                          : report.locationLost}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        Category: {report.category}
+                      </Typography>
+                      {report.stolen && (
+                        <Chip label="Stolen" color="error" className={styles.stolenBadge} />
+                      )}
+                    </CardContent>
+                  </Card>
+                ) : (
+                  // Original Layout for Larger Screens
+                  <Grid
+                    container
+                    key={report.recordID}
+                    className={`${styles.reportRow} ${styles.clickableRow}`}
+                    onClick={() =>
+                      navigate(`/campussafety/lostandfoundadmin/missingitem/${report.recordID}`)
+                    }
+                  >
+                    <Grid item xs={2}>
+                      {formatDate(report.dateLost)}
+                    </Grid>
+                    <Grid item xs={2}>{`${report.firstName} ${report.lastName}`}</Grid>
+                    <Grid item xs={2}>
+                      {report.locationLost.length > 15
+                        ? `${report.locationLost.slice(0, 15)}...`
+                        : report.locationLost}
+                    </Grid>
+                    <Grid item xs={1.5}>
+                      {report.category.length > 8
+                        ? `${report.category.slice(0, 8)}...`
+                        : report.category}
+                    </Grid>
+                    <Grid item xs={3}>
+                      {report.description.length > 20
+                        ? `${report.description.slice(0, 20)}...`
+                        : report.description}
+                    </Grid>
+                    <Grid item xs={1.5}>
+                      {report.lastChecked || 'Placeholder'}
+                    </Grid>
+                    <Grid item xs={1} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                      {report.stolen && (
+                        <Chip label="Stolen" color="error" className={styles.stolenBadge} />
+                      )}
+                    </Grid>
+                  </Grid>
+                ),
+              )}
+            </>
+          )}
         </Grid>
       </Grid>
     </>
