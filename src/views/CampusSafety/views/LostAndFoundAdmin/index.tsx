@@ -26,8 +26,14 @@ const LostAndFoundAdmin = () => {
           <Card>
             <CardHeader title={'LostAndFound Admin'} className={styles.title}></CardHeader>
             <CardContent>
-              <Button color="secondary" variant="contained">
-                <b>Missing Item Reports</b>
+              <Button
+                color="secondary"
+                variant="contained"
+                onClick={() => {
+                  navigate('missingitemdatabase');
+                }}
+              >
+                <b>Missing Item Database</b>
               </Button>
             </CardContent>
           </Card>
