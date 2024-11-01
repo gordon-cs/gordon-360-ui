@@ -14,4 +14,18 @@
 .columnNames {
   font-size: small;
   margin-bottom: -0.5rem;
+  padding-left: 1rem;
+}
+
+.reportList {
+  padding: 0;
+}
+
+.reportRows {
+  height: 4rem;
+  padding-left: 2rem;
+}
+
+.reportRows:nth-child(even) {
+  background-color: var(--mui-palette-neutral-200);
 }

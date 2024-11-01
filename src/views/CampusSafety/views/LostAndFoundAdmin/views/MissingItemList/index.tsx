@@ -46,7 +46,10 @@ const MissingItemList = () => {
         setLoading(false);
       }
     };
-  });
+    fetchMissingItems();
+  }, []);
+
+  const GridWidths = [1.5, 2, 2, 1.5, 3, 2];
 
   return (
     <>
@@ -77,22 +80,22 @@ const MissingItemList = () => {
               title={
                 <div className={styles.columnNames}>
                   <Grid container>
-                    <Grid item xs={1}>
+                    <Grid item xs={GridWidths[0]}>
                       Date Lost
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs={GridWidths[1]}>
                       Owner's Name
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs={GridWidths[2]}>
                       Location
                     </Grid>
-                    <Grid item xs={1}>
+                    <Grid item xs={GridWidths[3]}>
                       Category
                     </Grid>
-                    <Grid item xs={3}>
+                    <Grid item xs={GridWidths[4]}>
                       Description
                     </Grid>
-                    <Grid item xs={2}>
+                    <Grid item xs={GridWidths[5]}>
                       Last Checked
                     </Grid>
                   </Grid>
@@ -100,29 +103,29 @@ const MissingItemList = () => {
               }
               className={styles.cardHeader}
             ></CardHeader>
-            <CardContent>
+            <CardContent className={styles.reportList}>
               <Grid container>
                 {loading ? (
                   <GordonLoader />
                 ) : (
                   activeReports.map((report) => (
-                    <Grid container>
-                      <Grid item xs={1}>
+                    <Grid container className={styles.reportRows} alignItems={'center'}>
+                      <Grid item xs={GridWidths[0]}>
                         {report.dateLost}
                       </Grid>
-                      <Grid item xs={2}>
+                      <Grid item xs={GridWidths[1]}>
                         {report.firstName + ' ' + report.lastName}
                       </Grid>
-                      <Grid item xs={2}>
+                      <Grid item xs={GridWidths[2]}>
                         {report.locationLost}
                       </Grid>
-                      <Grid item xs={1}>
+                      <Grid item xs={GridWidths[3]}>
                         {report.category}
                       </Grid>
-                      <Grid item xs={3}>
+                      <Grid item xs={GridWidths[4]}>
                         {report.brand + ' | ' + report.description}
                       </Grid>
-                      <Grid item xs={2}>
+                      <Grid item xs={GridWidths[5]}>
                         Placeholder
                       </Grid>
                     </Grid>
