@@ -56,7 +56,7 @@ const Header: React.FC<HeaderProps> = ({ safetyPage = true, children }) => {
             separator={
               <NavigateNextIcon
                 fontSize="small"
-                sx={{ color: 'var(--mui-palette-primary-main)' }}
+                sx={{ color: 'var(--mui-palette-primary-contrastText)' }}
               />
             }
             className={styles.breadcrumbContainer}

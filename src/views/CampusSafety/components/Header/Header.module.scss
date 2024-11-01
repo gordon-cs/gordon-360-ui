@@ -39,13 +39,13 @@
   color: var(--mui-palette-primary-contrastText);
 
   .MuiBreadcrumbs-separator {
-    color: var(--mui-palette-primary-main);
+    color: var(--mui-palette-primary-contrastText);
   }
 }
 
 .breadcrumbText {
   font-size: 0.8em;
-  color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
 
   @media (max-width: $break-sm) {
     font-size: 0.7em;
