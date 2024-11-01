@@ -36,16 +36,16 @@
 
 .breadcrumbContainer {
   padding: 0.5rem;
-  color: var(--mui-palette-primary-contrastText);
+  color: var(--mui-palette-neutral-contrastText);
+}
 
-  .MuiBreadcrumbs-separator {
-    color: var(--mui-palette-primary-contrastText);
-  }
+.breadcrumb-separator {
+  color: var(--mui-palette-neutral-contrastText);
 }
 
 .breadcrumbText {
   font-size: 0.8em;
-  color: var(--mui-palette-primary-contrastText);
+  color: var(--mui-palette-neutral-contrastText);
 
   @media (max-width: $break-sm) {
     font-size: 0.7em;
@@ -61,6 +61,7 @@
   color: var(--mui-palette-link-main);
   &:hover {
     color: var(--mui-palette-warning-main);
+    transition: color 0.1s;
     text-decoration: underline;
   }
 

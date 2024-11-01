@@ -53,12 +53,7 @@ const Header: React.FC<HeaderProps> = ({ safetyPage = true, children }) => {
         <AppBar className={styles.stickyNav}>
           <Breadcrumbs
             aria-label="breadcrumb"
-            separator={
-              <NavigateNextIcon
-                fontSize="small"
-                sx={{ color: 'var(--mui-palette-primary-contrastText)' }}
-              />
-            }
+            separator={<NavigateNextIcon fontSize="small" className={styles.breadcrumbSeparator} />}
             className={styles.breadcrumbContainer}
           >
             {/* Home breadcrumb */}
