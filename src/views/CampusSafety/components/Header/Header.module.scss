@@ -37,18 +37,39 @@
 .breadcrumbContainer {
   padding: 0.5rem;
   color: var(--mui-palette-primary-contrastText);
+
+  .MuiBreadcrumbs-separator {
+    color: var(--mui-palette-primary-main);
+  }
 }
 
 .breadcrumbText {
   font-size: 0.8em;
+  color: var(--mui-palette-primary-main);
+
+  @media (max-width: $break-sm) {
+    font-size: 0.7em;
+  }
+
+  @media (min-width: $break-sm) {
+    font-size: 0.9em;
+  }
 }
 
 .breadcrumbLink {
   text-decoration: none;
-  color: var(--mui-palette-info-main);
+  color: var(--mui-palette-link-main);
   &:hover {
-    color: var(--mui-palette-info-dark);
+    color: var(--mui-palette-warning-main);
     text-decoration: underline;
+  }
+
+  // Dark mode-specific adjustments
+  @media (prefers-color-scheme: dark) {
+    color: var(--mui-palette-link-main);
+    &:hover {
+      color: var(--mui-palette-link-light);
+    }
   }
 }
 
