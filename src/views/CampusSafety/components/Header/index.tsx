@@ -56,7 +56,10 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
         <Breadcrumbs
           aria-label="breadcrumb"
           separator={
-            <NavigateNextIcon fontSize="small" sx={{ color: 'var(--mui-palette-primary-main)' }} />
+            <NavigateNextIcon
+              fontSize="small"
+              sx={{ color: 'var(--mui-palette-primary-contrastText)' }}
+            />
           }
           className={styles.breadcrumbContainer}
         >
@@ -85,9 +88,6 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
       </AppBar>
     </>
   );
-
-  // Fallback for non-safety pages with children content
-  return <>{children || null}</>;
 };
 
 export default Header;
