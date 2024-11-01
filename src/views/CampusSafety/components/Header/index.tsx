@@ -40,6 +40,8 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
   const isAdmin = true; //FOR TESTING ONLY
   const isKiosk = useAuthGroups(AuthGroup.LostAndFoundKiosk);
 
+  console.log(pathnames);
+
   return (
     <>
       <Grid container alignItems="center" columnSpacing={1} className={styles.headerMain}>
@@ -53,36 +55,50 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
             </Typography>
           </Grid>
         </Grid>
-        <AppBar className={styles.stickyNav}>
-          <Breadcrumbs
-            aria-label="breadcrumb"
-            separator={<NavigateNextIcon fontSize="small" className={styles.breadcrumbSeparator} />}
-            className={styles.breadcrumbContainer}
-          >
-            {/* Home breadcrumb */}
-            <CampusSafetyBreadcrumb link={pathnames.length > 1 ? '/campussafety' : null}>
-              <Grid container alignItems="center">
-                <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-                {'Campus Safety Home'}
-              </Grid>
-            </CampusSafetyBreadcrumb>
-
-            {/* Only render additional breadcrumbs beyond "Campus Safety Home" */}
-            {pathnames
-              .slice(1) // Start from the second item to avoid redundancy
-              .map((value, index) => {
-                const isLast = index === pathnames.length - 2;
-                const to = `/${pathnames.slice(0, index + 2).join('/')}`;
-
-                return (
-                  <CampusSafetyBreadcrumb key={to} link={!isLast ? to : null}>
-                    {value.replace(/-/g, ' ')}
-                  </CampusSafetyBreadcrumb>
-                );
-              })}
-          </Breadcrumbs>
-        </AppBar>
+        {(isAdmin || isKiosk) && !pathnames.find((x) => x === 'lostandfoundadmin') && (
+          <Grid item xs={5} className={styles.buttonContainer}>
+            <Button
+              color="secondary"
+              className={styles.button}
+              variant="contained"
+              onClick={() => {
+                navigate('/campussafety/lostandfoundadmin');
+              }}
+            >
+              <AdminPanelSettingsIcon sx={{ marginRight: '0.3rem' }} />
+              <b>Lost & Found Admin</b>
+            </Button>
+          </Grid>
+        )}
       </Grid>
+      <AppBar className={styles.stickyNav}>
+        <Breadcrumbs
+          aria-label="breadcrumb"
+          separator={<NavigateNextIcon fontSize="small" className={styles.breadcrumbSeparator} />}
+          className={styles.breadcrumbContainer}
+        >
+          {/* Home breadcrumb */}
+          <CampusSafetyBreadcrumb link={pathnames.length > 1 ? '/campussafety' : null}>
+            <Grid container alignItems="center">
+              <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
+              {'Campus Safety Home'}
+            </Grid>
+          </CampusSafetyBreadcrumb>
+          {/* Only render additional breadcrumbs beyond "Campus Safety Home" */}
+          {pathnames
+            .slice(1) // Start from the second item to avoid redundancy
+            .map((value, index) => {
+              const isLast = index === pathnames.length - 2;
+              const to = `/${pathnames.slice(0, index + 2).join('/')}`;
+
+              return (
+                <CampusSafetyBreadcrumb key={to} link={!isLast ? to : null}>
+                  {value.replace(/-/g, ' ')}
+                </CampusSafetyBreadcrumb>
+              );
+            })}
+        </Breadcrumbs>
+      </AppBar>
     </>
   );
 };
