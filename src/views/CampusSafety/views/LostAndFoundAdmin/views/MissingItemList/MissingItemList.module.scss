@@ -1,16 +1,16 @@
+.filterTitle {
+  color: var(--mui-palette-primary-contrastText); // Warning color for emphasis
+  background-color: var(--mui-palette-primary-main); // Primary color for header
+}
+
 .filterContainer {
   display: flex;
   align-items: center;
   gap: 1rem;
-  background-color: var(--mui-palette-primary-main); // Primary color for header
+
   color: var(--mui-palette-primary-contrastText); // Contrast text color for readability
   padding: 1rem;
   border-radius: 5px;
-}
-
-.filterTitle {
-  font-weight: bold;
-  color: var(--mui-palette-warning-main); // Warning color for emphasis
 }
 
 .textField {
@@ -29,6 +29,10 @@
   text-align: center;
 }
 
+.listContainer {
+  padding: 0rem;
+}
+
 .tableHeader {
   display: flex;
   justify-content: space-between;
@@ -41,12 +45,15 @@
 .reportRow {
   display: flex;
   align-items: center;
+  height: 6rem;
+  min-height: fit-content;
   padding: 1rem;
-  background-color: var(--mui-palette-neutral-200); // Light neutral background
+  // background-color: var(--mui-palette-neutral-200); // Light neutral background
   border-bottom: 1px solid var(--mui-palette-neutral-400);
+  color: var(--mui-palette-neutral-contrastText);
 
   &:nth-child(even) {
-    background-color: var(--mui-palette-neutral-300); // Slightly darker neutral for zebra striping
+    background-color: var(--mui-palette-neutral-100); // Slightly darker neutral for zebra striping
   }
 
   @media (max-width: 900px) {
@@ -57,13 +64,15 @@
 
 .clickableRow {
   cursor: pointer;
+  transition: background-color 0.2s;
 
   &:hover {
-    background-color: var(--mui-palette-neutral-100); // Light hover effect
+    background-color: var(--mui-palette-primary-light); // Light hover effect
   }
 }
 
 .stolenBadge {
+  margin-top: 0.3rem;
   background-color: var(--mui-palette-error-main); // Error color for stolen badge
   color: var(--mui-palette-primary-contrastText);
 }

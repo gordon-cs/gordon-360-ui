@@ -10,6 +10,7 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  CardHeader,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import lostAndFoundService, { MissingItemReport } from 'services/lostAndFound';
@@ -121,15 +122,12 @@ const MissingItemList = () => {
   return (
     <>
       <Header />
-
       {/* Filter Bar */}
       <Grid container justifyContent="center" spacing={2} marginBottom={2}>
         <Grid item xs={11}>
           <Card>
+            <CardHeader title={<b>Filters:</b>} className={styles.filterTitle}></CardHeader>
             <CardContent className={styles.filterContainer}>
-              <Typography variant="h6" className={styles.filterTitle}>
-                Filters:
-              </Typography>
               <Grid container spacing={isMobile ? 1 : 2}>
                 {/* Keywords on a single row */}
                 <Grid item xs={12}>
@@ -208,112 +206,116 @@ const MissingItemList = () => {
       {/* Reports Table */}
       <Grid container justifyContent="center" spacing={2}>
         <Grid item xs={11}>
-          {loading ? (
-            <GordonLoader />
-          ) : (
-            <>
-              {!isMobile && (
-                // Header Row for Larger Screens
-                <Grid container className={styles.tableHeader}>
-                  <Grid item xs={2}>
-                    Date Lost
-                  </Grid>
-                  <Grid item xs={2}>
-                    Owner's Name
-                  </Grid>
-                  <Grid item xs={2}>
-                    Location
-                  </Grid>
-                  <Grid item xs={1.5}>
-                    Category
-                  </Grid>
-                  <Grid item xs={3}>
-                    Description
-                  </Grid>
-                  <Grid item xs={1.5}>
-                    Last Checked
-                  </Grid>
-                  <Grid item xs={1}></Grid>
-                </Grid>
-              )}
-              {filteredReports.map((report) =>
-                isMobile ? (
-                  // Mobile Layout
-                  <Card
-                    key={report.recordID}
-                    className={styles.eventCard}
-                    onClick={() =>
-                      navigate(`/campussafety/lostandfoundadmin/missingitem/${report.recordID}`)
-                    }
-                  >
-                    <CardContent>
-                      <Typography variant="h6" className={styles.itemName}>
-                        {report.firstName} {report.lastName}
-                      </Typography>
-                      <Grid container justifyContent="space-between" alignItems="center">
-                        <Typography variant="body2" color="textSecondary">
-                          {formatDate(report.dateLost)}
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary">
-                          Last Checked: {report.lastChecked || 'Placeholder'}
-                        </Typography>
+          <Card>
+            <CardContent className={styles.listContainer}>
+              {loading ? (
+                <GordonLoader />
+              ) : (
+                <>
+                  {!isMobile && (
+                    // Header Row for Larger Screens
+                    <Grid container className={styles.tableHeader}>
+                      <Grid item xs={2}>
+                        Date Lost
                       </Grid>
-                      <Typography variant="body2" color="textSecondary">
-                        Location:{' '}
-                        {report.locationLost.length > 15
-                          ? `${report.locationLost.slice(0, 15)}...`
-                          : report.locationLost}
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        Category: {report.category}
-                      </Typography>
-                      {report.stolen && (
-                        <Chip label="Stolen" color="error" className={styles.stolenBadge} />
-                      )}
-                    </CardContent>
-                  </Card>
-                ) : (
-                  // Original Layout for Larger Screens
-                  <Grid
-                    container
-                    key={report.recordID}
-                    className={`${styles.reportRow} ${styles.clickableRow}`}
-                    onClick={() =>
-                      navigate(`/campussafety/lostandfoundadmin/missingitem/${report.recordID}`)
-                    }
-                  >
-                    <Grid item xs={2}>
-                      {formatDate(report.dateLost)}
+                      <Grid item xs={2}>
+                        Owner's Name
+                      </Grid>
+                      <Grid item xs={2}>
+                        Location
+                      </Grid>
+                      <Grid item xs={1.5}>
+                        Category
+                      </Grid>
+                      <Grid item xs={3}>
+                        Description
+                      </Grid>
+                      <Grid item xs={1.5}>
+                        Last Checked
+                      </Grid>
+                      <Grid item xs={1}></Grid>
                     </Grid>
-                    <Grid item xs={2}>{`${report.firstName} ${report.lastName}`}</Grid>
-                    <Grid item xs={2}>
-                      {report.locationLost.length > 15
-                        ? `${report.locationLost.slice(0, 15)}...`
-                        : report.locationLost}
-                    </Grid>
-                    <Grid item xs={1.5}>
-                      {report.category.length > 8
-                        ? `${report.category.slice(0, 8)}...`
-                        : report.category}
-                    </Grid>
-                    <Grid item xs={3}>
-                      {report.description.length > 20
-                        ? `${report.description.slice(0, 20)}...`
-                        : report.description}
-                    </Grid>
-                    <Grid item xs={1.5}>
-                      {report.lastChecked || 'Placeholder'}
-                    </Grid>
-                    <Grid item xs={1} style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                      {report.stolen && (
-                        <Chip label="Stolen" color="error" className={styles.stolenBadge} />
-                      )}
-                    </Grid>
-                  </Grid>
-                ),
+                  )}
+                  {filteredReports.map((report) =>
+                    isMobile ? (
+                      // Mobile Layout
+                      <Card
+                        key={report.recordID}
+                        className={styles.eventCard}
+                        onClick={() =>
+                          navigate(`/campussafety/lostandfoundadmin/missingitem/${report.recordID}`)
+                        }
+                      >
+                        <CardContent>
+                          <Typography variant="h6" className={styles.itemName}>
+                            {report.firstName} {report.lastName}
+                          </Typography>
+                          <Grid container justifyContent="space-between" alignItems="center">
+                            <Typography variant="body2" color="textSecondary">
+                              {formatDate(report.dateLost)}
+                            </Typography>
+                            <Typography variant="body2" color="textSecondary">
+                              Last Checked: {report.lastChecked || 'Placeholder'}
+                            </Typography>
+                          </Grid>
+                          <Typography variant="body2" color="textSecondary">
+                            Location:{' '}
+                            {report.locationLost.length > 15
+                              ? `${report.locationLost.slice(0, 15)}...`
+                              : report.locationLost}
+                          </Typography>
+                          <Typography variant="body2" color="textSecondary">
+                            Category: {report.category}
+                          </Typography>
+                          {report.stolen && (
+                            <Chip label="Stolen" color="error" className={styles.stolenBadge} />
+                          )}
+                        </CardContent>
+                      </Card>
+                    ) : (
+                      // Original Layout for Larger Screens
+                      <Grid
+                        container
+                        key={report.recordID}
+                        className={`${styles.reportRow} ${styles.clickableRow}`}
+                        onClick={() =>
+                          navigate(`/campussafety/lostandfoundadmin/missingitem/${report.recordID}`)
+                        }
+                      >
+                        <Grid item xs={2}>
+                          {formatDate(report.dateLost)}
+                        </Grid>
+                        <Grid item xs={2}>{`${report.firstName} ${report.lastName}`}</Grid>
+                        <Grid item xs={2}>
+                          {report.locationLost.length > 15
+                            ? `${report.locationLost.slice(0, 15)}...`
+                            : report.locationLost}
+                        </Grid>
+                        <Grid item xs={1.5}>
+                          {report.category.length > 8
+                            ? `${report.category.slice(0, 8)}...`
+                            : report.category}
+                        </Grid>
+                        <Grid item xs={3}>
+                          {report.description.length > 20
+                            ? `${report.description.slice(0, 20)}...`
+                            : report.description}
+                        </Grid>
+                        <Grid item xs={1.5}>
+                          {report.lastChecked || 'Placeholder'}
+                        </Grid>
+                        <Grid item xs={1} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                          {report.stolen && (
+                            <Chip label="Stolen" color="error" className={styles.stolenBadge} />
+                          )}
+                        </Grid>
+                      </Grid>
+                    ),
+                  )}
+                </>
               )}
-            </>
-          )}
+            </CardContent>
+          </Card>
         </Grid>
       </Grid>
     </>
