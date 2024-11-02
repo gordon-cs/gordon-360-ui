@@ -102,8 +102,14 @@ const LostAndFound = () => {
     console.log(`Editing report: ${reportId}`);
   };
 
-  const handleDelete = (reportId: string) => {
-    console.log(`Deleting report: ${reportId}`);
+  const handleDelete = async (reportId: string) => {
+    try {
+      const reportIdNum = parseInt(reportId);
+      await lostAndFoundService.updateReportStatus(reportIdNum, 'deleted');
+      LostAndFound();
+    } catch (error) {
+      console.error('Error updating item:', error);
+    }
   };
 
   const toggleExpand = (id: string) => {
