@@ -58,7 +58,7 @@ const MissingItemList = () => {
   const [loading, setLoading] = useState(true);
   const [reports, setReports] = useState<MissingItemReport[]>([]);
   const [filteredReports, setFilteredReports] = useState<MissingItemReport[]>([]);
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState(''); //Default value active
   const [category, setCategory] = useState('');
   const [color, setColor] = useState('');
   const [keywords, setKeywords] = useState('');
@@ -74,6 +74,7 @@ const MissingItemList = () => {
           (a, b) => new Date(b.dateLost).getTime() - new Date(a.dateLost).getTime(),
         );
         setReports(sortedReports);
+        setStatus('active'); //set initial filter
         setFilteredReports(sortedReports);
       } catch (error) {
         console.error('Error fetching missing items:', error);
@@ -126,7 +127,15 @@ const MissingItemList = () => {
       <Grid container justifyContent="center" spacing={2} marginBottom={2}>
         <Grid item xs={11}>
           <Card>
-            <CardHeader title={<b>Filters:</b>} className={styles.filterTitle}></CardHeader>
+            <CardHeader
+              title={
+                <span className={styles.filterTitleText}>
+                  <b>Filters: </b>
+                  {filteredReports.length} / {reports.length} reports
+                </span>
+              }
+              className={styles.filterTitle}
+            ></CardHeader>
             <CardContent className={styles.filterContainer}>
               <Grid container spacing={isMobile ? 1 : 2}>
                 {/* Keywords on a single row */}

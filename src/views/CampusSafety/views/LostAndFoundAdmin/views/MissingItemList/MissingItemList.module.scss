@@ -3,6 +3,13 @@
   background-color: var(--mui-palette-primary-main); // Primary color for header
 }
 
+.filterTitleText {
+  font-size: medium;
+  b {
+    font-size: x-large;
+  }
+}
+
 .filterContainer {
   display: flex;
   align-items: center;
