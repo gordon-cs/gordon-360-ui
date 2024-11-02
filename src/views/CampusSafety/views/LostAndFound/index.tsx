@@ -29,6 +29,7 @@ const LostAndFound = () => {
   const [expandedFields, setExpandedFields] = useState<{
     [id: string]: { [field: string]: boolean };
   }>({});
+  const [pageUpdates, setPageUpdates] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -96,7 +97,7 @@ const LostAndFound = () => {
     };
 
     fetchMissingItems();
-  }, []);
+  }, [pageUpdates]);
 
   const handleEdit = (reportId: string) => {
     console.log(`Editing report: ${reportId}`);
@@ -106,7 +107,7 @@ const LostAndFound = () => {
     try {
       const reportIdNum = parseInt(reportId);
       await lostAndFoundService.updateReportStatus(reportIdNum, 'deleted');
-      LostAndFound();
+      setPageUpdates(pageUpdates + 1);
     } catch (error) {
       console.error('Error updating item:', error);
     }

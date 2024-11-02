@@ -46,7 +46,7 @@ const createMissingItemReport = async (
 };
 
 const updateReportStatus = async (id: number, status: string): Promise<void> => {
-  await http.put<void>(`missingitem/${id}/${status}`);
+  await http.put<void>(`lostandfound/missingitem/${id}/${status}`);
 };
 
 const lostAndFoundService = {
