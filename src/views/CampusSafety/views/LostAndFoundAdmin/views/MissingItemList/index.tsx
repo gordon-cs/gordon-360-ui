@@ -286,7 +286,6 @@ const MissingItemList = () => {
                       <Grid
                         container
                         key={report.recordID}
-                        columnGap={0.5}
                         className={`${styles.reportRow} ${styles.clickableRow}`}
                         onClick={() =>
                           navigate(`/campussafety/lostandfoundadmin/missingitem/${report.recordID}`)
