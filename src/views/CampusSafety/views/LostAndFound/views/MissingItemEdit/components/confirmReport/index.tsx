@@ -1,0 +1,85 @@
+import React from 'react';
+import { Card, CardContent, CardHeader, Typography, Button, Grid } from '@mui/material';
+import styles from './ConfirmReport.module.scss';
+
+interface ConfirmReportProps {
+  formData: {
+    firstName: string;
+    lastName: string;
+    category: string;
+    colors: string[];
+    brand: string;
+    description: string;
+    locationLost: string;
+    dateLost: string;
+    phoneNumber: string;
+    emailAddr: string;
+  };
+  onEdit: () => void;
+  onSubmit: () => void;
+}
+
+const ConfirmReport: React.FC<ConfirmReportProps> = ({ formData, onEdit, onSubmit }) => {
+  return (
+    <Card className={styles.confirmCard}>
+      <CardHeader
+        title="Missing Item Report"
+        className={styles.header}
+        titleTypographyProps={{ align: 'center' }}
+      />
+      <CardContent>
+        <Typography variant="h6" align="center" gutterBottom>
+          Confirm the details of your report
+        </Typography>
+        <Grid container spacing={2} className={styles.reportDetails}>
+          <Grid item xs={6}>
+            <Typography>
+              <strong>Name:</strong> {formData.firstName} {formData.lastName}
+            </Typography>
+            <Typography>
+              <strong>Item Category:</strong> {formData.category}
+            </Typography>
+            <Typography>
+              <strong>Item Color:</strong> {formData.colors.join(', ')}
+            </Typography>
+            <Typography>
+              <strong>Item Brand/Make:</strong> {formData.brand}
+            </Typography>
+            <Typography>
+              <strong>Date Lost:</strong> {formData.dateLost}
+            </Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <Typography>
+              <strong>Location Lost:</strong> {formData.locationLost}
+            </Typography>
+            <Typography>
+              <strong>Phone Number:</strong> {formData.phoneNumber}
+            </Typography>
+            <Typography>
+              <strong>Email Address:</strong> {formData.emailAddr}
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography>
+              <strong>Description:</strong> {formData.description}
+            </Typography>
+          </Grid>
+        </Grid>
+        <Grid container justifyContent="space-between" marginTop={2}>
+          <Button variant="outlined" color="primary" onClick={onEdit}>
+            Edit My Report
+          </Button>
+          <Button variant="contained" color="primary" onClick={onSubmit}>
+            File Report
+          </Button>
+        </Grid>
+        <Typography variant="body2" align="center" marginTop={2}>
+          This report will automatically expire in 6 months if your item is not found
+        </Typography>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default ConfirmReport;

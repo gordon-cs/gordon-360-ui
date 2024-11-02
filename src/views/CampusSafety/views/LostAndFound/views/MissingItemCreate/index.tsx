@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { DateTime } from 'luxon';
 import Header from 'views/CampusSafety/components/Header';
-import styles from './MissingItemForm.module.scss';
+import styles from './MissingItemCreate.module.scss';
 import lostAndFoundService from 'services/lostAndFound';
 import ReportStolenModal from './components/reportStolen';
 import ConfirmReport from './components/confirmReport';

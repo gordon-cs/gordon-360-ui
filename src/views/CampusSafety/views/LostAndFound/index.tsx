@@ -100,6 +100,7 @@ const LostAndFound = () => {
 
   const handleEdit = (reportId: string) => {
     console.log(`Editing report: ${reportId}`);
+    navigate('/campussafety/LostAndFound/missingitemformedit');
   };
 
   const handleDelete = (reportId: string) => {
@@ -196,7 +197,7 @@ const LostAndFound = () => {
           <Button
             className={styles.reportButton}
             onClick={() => {
-              navigate('/campussafety/LostAndFound/MissingItemForm');
+              navigate('/campussafety/LostAndFound/missingitemform');
             }}
           >
             Report a Missing Item
