@@ -34,8 +34,8 @@
 }
 
 .tableHeader {
-  display: flex;
-  justify-content: space-between;
+  // display: flex;
+  // justify-content: space-between;
   padding: 1rem;
   background-color: var(--mui-palette-primary-main);
   color: var(--mui-palette-primary-contrastText);
@@ -69,6 +69,12 @@
   &:hover {
     background-color: var(--mui-palette-primary-light); // Light hover effect
   }
+}
+
+.dataCell {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .stolenBadge {

@@ -230,7 +230,7 @@ const MissingItemList = () => {
                       <Grid item xs={3}>
                         Description
                       </Grid>
-                      <Grid item xs={1.5}>
+                      <Grid item xs={1}>
                         Last Checked
                       </Grid>
                       <Grid item xs={1}></Grid>
@@ -277,6 +277,7 @@ const MissingItemList = () => {
                       <Grid
                         container
                         key={report.recordID}
+                        columnGap={0.5}
                         className={`${styles.reportRow} ${styles.clickableRow}`}
                         onClick={() =>
                           navigate(`/campussafety/lostandfoundadmin/missingitem/${report.recordID}`)
@@ -285,23 +286,21 @@ const MissingItemList = () => {
                         <Grid item xs={2}>
                           {formatDate(report.dateLost)}
                         </Grid>
-                        <Grid item xs={2}>{`${report.firstName} ${report.lastName}`}</Grid>
                         <Grid item xs={2}>
-                          {report.locationLost.length > 15
-                            ? `${report.locationLost.slice(0, 15)}...`
-                            : report.locationLost}
+                          <div
+                            className={styles.dataCell}
+                          >{`${report.firstName} ${report.lastName}`}</div>
+                        </Grid>
+                        <Grid item xs={2}>
+                          <div className={styles.dataCell}>{report.locationLost}</div>
                         </Grid>
                         <Grid item xs={1.5}>
-                          {report.category.length > 8
-                            ? `${report.category.slice(0, 8)}...`
-                            : report.category}
+                          <div className={styles.dataCell}>{report.category}</div>
                         </Grid>
                         <Grid item xs={3}>
-                          {report.description.length > 20
-                            ? `${report.description.slice(0, 20)}...`
-                            : report.description}
+                          <div className={styles.dataCell}>{report.description}</div>
                         </Grid>
-                        <Grid item xs={1.5}>
+                        <Grid item xs={1}>
                           {report.lastChecked || 'Placeholder'}
                         </Grid>
                         <Grid item xs={1} style={{ display: 'flex', justifyContent: 'flex-end' }}>
