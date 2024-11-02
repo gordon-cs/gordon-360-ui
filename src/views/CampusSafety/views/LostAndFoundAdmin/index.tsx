@@ -1,15 +1,15 @@
 import styles from './LostAndFoundAdmin.module.css';
 import { AuthGroup } from 'services/auth';
 import { useAuthGroups } from 'hooks';
-import { Card, CardContent, CardHeader, Typography } from '@mui/material';
+import { Card, CardContent, CardHeader } from '@mui/material';
 import { Grid, Button } from '@mui/material';
 import Header from 'views/CampusSafety/components/Header';
 import { useNavigate } from 'react-router';
 import { useEffect } from 'react';
 
 const LostAndFoundAdmin = () => {
-  // const isAdmin = useAuthGroups(AuthGroup.LostAndFoundAdmin);
-  const isAdmin = true; //FOR TESTING PURPOSES
+  const isAdmin = useAuthGroups(AuthGroup.LostAndFoundDevelopers);
+  // const isAdmin = true; //FOR TESTING PURPOSES
   const navigate = useNavigate();
 
   useEffect(() => {

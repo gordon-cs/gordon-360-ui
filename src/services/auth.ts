@@ -109,6 +109,7 @@ export enum AuthGroup {
   AcademicInfoView = '360-AcademicInfoView-SG',
   LostAndFoundAdmin = '360-LostAndFoundAdmin-SG',
   LostAndFoundKiosk = '360-LostAndFoundKiosk-SG',
+  LostAndFoundDevelopers = '360-LostAndFound-Developers-SG',
 }
 
 export {

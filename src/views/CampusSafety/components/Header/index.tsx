@@ -36,11 +36,9 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const pathnames = location.pathname.split('/').filter((x) => x);
-  // const isAdmin = useAuthGroups(AuthGroup.LostAndFoundAdmin);
-  const isAdmin = true; //FOR TESTING ONLY
+  const isAdmin = useAuthGroups(AuthGroup.LostAndFoundDevelopers);
+  // const isAdmin = true; //FOR TESTING ONLY
   const isKiosk = useAuthGroups(AuthGroup.LostAndFoundKiosk);
-
-  console.log(pathnames);
 
   return (
     <>
