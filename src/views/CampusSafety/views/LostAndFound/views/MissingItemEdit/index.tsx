@@ -137,12 +137,14 @@ const MissingItemForm = () => {
       const requestData = {
         ...formData,
         dateLost: formData.dateLost || DateTime.now().toISO(),
-        dateCreated: DateTime.now().toISO(),
+        dateCreated: item?.dateCreated || DateTime.now().toISO(),
         status: 'active',
       };
 
-      const newReportId = await lostAndFoundService.createMissingItemReport(requestData);
-      alert(`Report created successfully with ID: ${newReportId}`);
+      console.log(requestData, itemid, parseInt(itemid || ''));
+
+      await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemid || ''));
+      alert(`Report updated successfully`);
       navigate('/campussafety/lostandfound');
     } catch (error) {
       console.error('Error creating missing item report:', error);
