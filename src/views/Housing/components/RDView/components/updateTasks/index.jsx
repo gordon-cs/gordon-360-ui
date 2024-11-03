@@ -5,7 +5,6 @@ import GordonDialogBox from 'components/GordonDialogBox';
 
 const UpdateTasks = () => {
   const [open, setOpen] = useState(false);
-
   return (
     <>
       <IconButton onClick={() => setOpen(true)} size="large" aria-label="Update RA/AC Tasks">
