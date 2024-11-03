@@ -13,6 +13,7 @@ import { useTheme } from '@mui/material/styles'; // Access theme if needed
 import lostAndFoundService from 'services/lostAndFound';
 //import lostAndFoundService from '../../services/lostAndFoundService'; // Assuming this is your service
 import { MissingItemReport } from 'services/lostAndFound'; // Import the type from the service
+import DeleteConfirmationModal from './components/DeleteConfirmation';
 import { DateTime } from 'luxon';
 import { useWindowSize } from 'hooks';
 
@@ -22,6 +23,7 @@ const formatDate = (date: string) => {
 const LostAndFound = () => {
   const [activeReports, setActiveReports] = useState<MissingItemReport[]>([]);
   const [pastReports, setPastReports] = useState<MissingItemReport[]>([]);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const theme = useTheme(); // Access theme if needed
   const [width] = useWindowSize();
@@ -99,15 +101,24 @@ const LostAndFound = () => {
     fetchMissingItems();
   }, [pageUpdates]);
 
+  const handleChange = () => {
+    setDeleteModalOpen(true);
+  };
+
   const handleEdit = (reportId: string) => {
     console.log(`Editing report: ${reportId}`);
   };
 
-  const handleDelete = async (reportId: string) => {
+  const handleModalClose = () => {
+    setDeleteModalOpen(false);
+  };
+
+  const handleModalSubmit = async (reportId: string) => {
     try {
       const reportIdNum = parseInt(reportId);
       await lostAndFoundService.updateReportStatus(reportIdNum, 'deleted');
       setPageUpdates(pageUpdates + 1);
+      setDeleteModalOpen(false);
     } catch (error) {
       console.error('Error updating item:', error);
     }
@@ -270,10 +281,7 @@ const LostAndFound = () => {
                             >
                               <EditIcon fontSize="small" />
                             </IconButton>
-                            <IconButton
-                              onClick={() => handleDelete(report.recordID?.toString() || '')}
-                              size="small"
-                            >
+                            <IconButton onClick={() => handleChange()} size="small">
                               <DeleteIcon fontSize="small" />
                             </IconButton>
                             <IconButton
@@ -301,13 +309,15 @@ const LostAndFound = () => {
                             </IconButton>
                           </Grid>
                           <Grid item xs={0.5}>
-                            <IconButton
-                              onClick={() => handleDelete(report.recordID?.toString() || '')}
-                              size="small"
-                            >
+                            <IconButton onClick={() => handleChange()} size="small">
                               <DeleteIcon fontSize="small" />
                             </IconButton>
                           </Grid>
+                          <DeleteConfirmationModal
+                            open={isDeleteModalOpen}
+                            onClose={handleModalClose}
+                            onSubmit={() => handleModalSubmit(report.recordID?.toString() || '')}
+                          />
                         </>
                       )}
                     </Grid>
