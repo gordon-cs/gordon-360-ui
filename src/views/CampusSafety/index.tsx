@@ -10,7 +10,7 @@ const CampusSafetyApp = () => {
   return (
     <Routes>
       <Route path="" element={<SafetyPage />} />
-      <Route path="/lostandfound/missingitemformedit/:itemid" element={<MissingItemFormEdit />} />
+      <Route path="/lostandfound/:itemid" element={<MissingItemFormEdit />} />
       <Route path="/lostandfound/missingitemform" element={<MissingItemForm />} />
       <Route path="/lostandfound" element={<LostAndFound />} />
       <Route path="*" element={<Page404 />} />

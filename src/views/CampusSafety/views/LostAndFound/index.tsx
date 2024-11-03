@@ -99,8 +99,7 @@ const LostAndFound = () => {
   }, []);
 
   const handleEdit = (reportId: string) => {
-    console.log(`Editing report: ${reportId}`);
-    navigate('/campussafety/LostAndFound/missingitemformedit/' + reportId);
+    navigate('/campussafety/LostAndFound/' + reportId);
   };
 
   const handleDelete = (reportId: string) => {
