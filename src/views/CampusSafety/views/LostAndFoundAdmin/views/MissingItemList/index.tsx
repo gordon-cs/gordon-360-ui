@@ -288,7 +288,9 @@ const MissingItemList = () => {
                         key={report.recordID}
                         className={`${styles.reportRow} ${styles.clickableRow}`}
                         onClick={() =>
-                          navigate(`/campussafety/lostandfoundadmin/missingitem/${report.recordID}`)
+                          navigate(
+                            `/campussafety/lostandfoundadmin/missingitemdatabase/${report.recordID}`,
+                          )
                         }
                       >
                         <Grid item xs={2}>

@@ -14,7 +14,10 @@ const CampusSafetyApp = () => {
       <Route path="" element={<SafetyPage />} />
       <Route path="/lostandfound/missingitemform" element={<MissingItemForm />} />
       <Route path="/lostandfound" element={<LostAndFound />} />
-      <Route path="/lostandfoundadmin/missingitem/:itemId" element={<MissingItemReportData />} />
+      <Route
+        path="/lostandfoundadmin/missingitemdatabase/:itemId"
+        element={<MissingItemReportData />}
+      />
       <Route path="/lostandfoundadmin/missingitemdatabase" element={<MissingItemList />} />
       <Route path="/lostandfoundadmin" element={<LostAndFoundAdmin />} />
       <Route path="*" element={<Page404 />} />
