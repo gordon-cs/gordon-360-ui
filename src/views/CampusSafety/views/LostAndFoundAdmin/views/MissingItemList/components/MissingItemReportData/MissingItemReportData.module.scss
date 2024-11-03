@@ -18,7 +18,6 @@
 .card {
   width: 100%;
   max-width: 900px;
-  padding: 1.5rem;
   background-color: var(
     --mui-palette-background-paper
   ); // DarkGray for dark mode, light background for light mode
@@ -27,12 +26,8 @@
 
 .title {
   text-align: center;
-  margin-bottom: 1.5rem;
-  color: var(--mui-palette-primary-main); // GordonBlue
-}
-
-.highlight {
-  color: var(--mui-palette-warning-main); // BarringtonGold for highlighted text
+  margin-bottom: 1rem;
+  color: var(--mui-palette-primary-contrastText); // GordonBlue
 }
 
 .sectionTitle {
@@ -42,8 +37,10 @@
 }
 
 .stolenButton {
+  padding: 0.7rem;
+  border-radius: 10px;
   background-color: var(--mui-palette-error-main); // ChristmasRed for stolen indicator
-  color: var(--mui-palette-primary-contrastText); // White text
+  color: var(--mui-palette-error-contrastText); // White text
   font-weight: bold;
 }
 
