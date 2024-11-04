@@ -114,7 +114,6 @@ const LostAndFound = () => {
   const handleDeleteClick = (reportId: string) => {
     setReportToDelete(reportId);
     setDeleteModalOpen(true);
-    console.log(reportId);
   };
 
   const handleModalClose = () => {
