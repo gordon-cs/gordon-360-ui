@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Card,
   CardHeader,
@@ -13,14 +13,48 @@ import {
 } from '@mui/material';
 import { DateTime } from 'luxon';
 import Header from 'views/CampusSafety/components/Header';
-import styles from './MissingItemForm.module.scss';
-import lostAndFoundService from 'services/lostAndFound';
-import ReportStolenModal from './components/reportStolen';
+import styles from './MissingItemEdit.module.scss';
+import lostAndFoundService, { MissingItemReport } from 'services/lostAndFound';
 import ConfirmReport from './components/confirmReport';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
-const MissingItemForm = () => {
+const MissingItemFormEdit = () => {
   const navigate = useNavigate();
+  const { itemid } = useParams<{ itemid: string }>();
+  const [item, setItem] = useState<MissingItemReport | null>(null);
+  const [modified, setModified] = useState<Boolean>(false);
+
+  useEffect(() => {
+    const fetchItem = async () => {
+      try {
+        const fetchedItem = await lostAndFoundService.getMissingItemReport(parseInt(itemid || ''));
+        setItem(fetchedItem);
+      } catch (error) {
+        console.error('Error fetching item:', error);
+      }
+    };
+    fetchItem();
+  }, [itemid]);
+
+  useEffect(() => {
+    setFormData((prevData) => ({
+      ...prevData,
+      firstName: item?.firstName || '',
+      lastName: item?.lastName || '',
+      category: item?.category || '',
+      colors: item?.colors || [],
+      brand: item?.brand || '',
+      description: item?.description || '',
+      locationLost: item?.locationLost || '',
+      stolen: item?.stolen || false,
+      stolenDescription: item?.stolenDescription || '',
+      dateLost: item?.dateLost || '',
+      phoneNumber: item?.phoneNumber || '',
+      altPhone: item?.altPhone || '',
+      emailAddr: item?.emailAddr || '',
+      status: item?.status || '',
+    }));
+  }, [item]);
 
   // Form state
   const [formData, setFormData] = useState({
@@ -32,14 +66,14 @@ const MissingItemForm = () => {
     description: '',
     locationLost: '',
     stolen: false,
+    stolenDescription: '',
     dateLost: '',
     phoneNumber: '', //TODO add code to autofill this
     altPhone: '',
     emailAddr: '', //TODO add code to autofill this
-    status: 'active', // Assuming a default status for new reports
+    status: '', // Assuming a default status for new reports
   });
 
-  const [isStolenModalOpen, setStolenModalOpen] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
 
@@ -67,15 +101,9 @@ const MissingItemForm = () => {
 
   // Handle form data changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setModified(true);
     const { name, value, type, checked } = e.target;
-
-    if (name === 'stolen') {
-      setStolenModalOpen(checked); // Open modal if stolen checkbox is checked
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: checked,
-      }));
-    } else if (name === 'dateLost') {
+    if (name === 'dateLost') {
       setFormData((prevData) => ({
         ...prevData,
         dateLost: value, // Format date for display
@@ -94,24 +122,9 @@ const MissingItemForm = () => {
       const colors = prevData.colors.includes(color)
         ? prevData.colors.filter((c) => c !== color)
         : [...prevData.colors, color];
+      setModified(true);
       return { ...prevData, colors };
     });
-  };
-
-  const handleModalClose = () => {
-    setStolenModalOpen(false);
-    setFormData((prevData) => ({
-      ...prevData,
-      stolen: false, // Uncheck "stolen" if modal is canceled
-    }));
-  };
-
-  const handleModalSubmit = (stolenDescription: string) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      stolenDescription,
-    }));
-    setStolenModalOpen(false);
   };
 
   const handleFormSubmit = () => {
@@ -125,18 +138,22 @@ const MissingItemForm = () => {
       const requestData = {
         ...formData,
         dateLost: formData.dateLost || DateTime.now().toISO(),
-        dateCreated: DateTime.now().toISO(),
+        dateCreated: item?.dateCreated || DateTime.now().toISO(),
         status: 'active',
       };
 
-      const newReportId = await lostAndFoundService.createMissingItemReport(requestData);
-      alert(`Report created successfully with ID: ${newReportId}`);
+      console.log(requestData, itemid, parseInt(itemid || ''));
+
+      await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemid || ''));
+      alert(`Report updated successfully`);
       navigate('/campussafety/lostandfound');
     } catch (error) {
       console.error('Error creating missing item report:', error);
       alert('Failed to create the missing item report.');
     }
   };
+
+  if (!item) return null;
 
   return (
     <>
@@ -204,12 +221,13 @@ const MissingItemForm = () => {
                         control={<Radio />}
                         label={label}
                         value={label.toLowerCase().replace(/ /g, '/')}
-                        onChange={(e) =>
+                        onChange={(e) => {
                           setFormData((prevData) => ({
                             ...prevData,
                             category: (e.target as HTMLInputElement).value,
-                          }))
-                        }
+                          }));
+                          setModified(true);
+                        }}
                         checked={formData.category === label.toLowerCase().replace(/ /g, '/')}
                         className={styles.category_item}
                       />
@@ -349,39 +367,68 @@ const MissingItemForm = () => {
             </Grid>
           </Grid>
           {/* Stolen Checkbox */}
-          <Grid container justifyContent="center" marginTop={3}>
-            <Grid item xs={9.5}>
-              <FormControlLabel
-                className={styles.stolen_container}
-                control={
-                  <Checkbox checked={formData.stolen} onChange={handleChange} name="stolen" />
-                }
-                label="Was this item stolen? (Police staff will follow up)"
-              />
-            </Grid>
-          </Grid>
+          {formData.stolen && (
+            <>
+              <Grid container justifyContent="center" marginTop={3}>
+                <Grid item xs={10}>
+                  <FormControlLabel
+                    className={styles.stolen_container}
+                    control={
+                      <Checkbox
+                        checked={formData.stolen}
+                        onChange={handleChange}
+                        name="stolen"
+                        disabled
+                      />
+                    }
+                    label="Was this item stolen? (Police staff will follow up)"
+                  />
+                </Grid>
+                <Grid item xs={10} justifyContent="center" marginTop={3}>
+                  <TextField
+                    fullWidth
+                    variant="filled"
+                    label={'Stolen - Reason Given'}
+                    name="stolenDescription"
+                    value={formData.stolenDescription}
+                    onChange={handleChange}
+                    error={!!validationErrors.stolenDescription}
+                    helperText={validationErrors.stolenDescription}
+                  />
+                </Grid>
+              </Grid>
+            </>
+          )}
+
           {/* Submit Button */}
           <Grid container justifyContent="flex-end" className={styles.submit_container}>
-            <Grid item xs={2}>
-              <Button
-                variant="contained"
-                fullWidth
-                className={styles.submit_button}
-                onClick={handleFormSubmit}
-              >
-                SUBMIT
-              </Button>
+            <Grid item xs={4}>
+              {modified ? (
+                <Button
+                  variant="contained"
+                  fullWidth
+                  className={styles.submit_button}
+                  onClick={handleFormSubmit}
+                >
+                  Update Report
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  fullWidth
+                  className={styles.submit_button}
+                  onClick={handleFormSubmit}
+                  disabled
+                >
+                  Update Report
+                </Button>
+              )}
             </Grid>
           </Grid>
-          <ReportStolenModal
-            open={isStolenModalOpen}
-            onClose={handleModalClose}
-            onSubmit={handleModalSubmit}
-          />
         </Card>
       )}
     </>
   );
 };
 
-export default MissingItemForm;
+export default MissingItemFormEdit;

@@ -64,6 +64,11 @@ const createMissingItemReport = async (
   return response;
 };
 
+const updateMissingItemReport = async (data: MissingItemReport, reportID: number) => {
+  const response = await http.put(`lostandfound/missingitem/${reportID}`, data);
+  return response;
+};
+
 const updateReportStatus = async (id: number, status: string): Promise<void> => {
   await http.put<void>(`lostandfound/missingitem/${id}/${status}`);
 };
@@ -72,6 +77,7 @@ const lostAndFoundService = {
   getMissingItemReports,
   createMissingItemReport,
   getMissingItemReport,
+  updateMissingItemReport,
   updateReportStatus,
 };
 
