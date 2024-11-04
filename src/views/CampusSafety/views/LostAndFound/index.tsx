@@ -9,26 +9,29 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import Header from '../../components/Header';
 import styles from './LostAndFound.module.css'; // Import the external CSS
-import { useTheme } from '@mui/material/styles'; // Access theme if needed
 import lostAndFoundService from 'services/lostAndFound';
-//import lostAndFoundService from '../../services/lostAndFoundService'; // Assuming this is your service
 import { MissingItemReport } from 'services/lostAndFound'; // Import the type from the service
+import DeleteConfirmationModal from './components/DeleteConfirmation';
 import { DateTime } from 'luxon';
 import { useWindowSize } from 'hooks';
+import { string } from 'prop-types';
 
 const formatDate = (date: string) => {
   return DateTime.fromISO(date).toFormat('MM-dd-yyyy'); // Adjust format as needed
 };
+
 const LostAndFound = () => {
   const [activeReports, setActiveReports] = useState<MissingItemReport[]>([]);
   const [pastReports, setPastReports] = useState<MissingItemReport[]>([]);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [reportToDelete, setReportToDelete] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const theme = useTheme(); // Access theme if needed
   const [width] = useWindowSize();
   const [expanded, setExpanded] = useState<{ [key: string]: boolean }>({});
   const [expandedFields, setExpandedFields] = useState<{
     [id: string]: { [field: string]: boolean };
   }>({});
+  const [pageUpdates, setPageUpdates] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -96,14 +99,37 @@ const LostAndFound = () => {
     };
 
     fetchMissingItems();
-  }, []);
+  }, [pageUpdates]);
+
+  const handleChange = () => {
+    setDeleteModalOpen(true);
+  };
 
   const handleEdit = (reportId: string) => {
     navigate('/campussafety/LostAndFound/' + reportId);
   };
 
-  const handleDelete = (reportId: string) => {
-    console.log(`Deleting report: ${reportId}`);
+  const handleDeleteClick = (reportId: string) => {
+    setReportToDelete(reportId);
+    setDeleteModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setDeleteModalOpen(false);
+    setReportToDelete(null);
+  };
+
+  const handleModalSubmit = async () => {
+    try {
+      //const reportIdNum = parseInt(handleDeleteClick(reportToDelete));
+
+      await lostAndFoundService.updateReportStatus(parseInt(reportToDelete || ''), 'deleted');
+      setPageUpdates(pageUpdates + 1);
+      setDeleteModalOpen(false);
+      setReportToDelete(null);
+    } catch (error) {
+      console.error('Error updating item:', error);
+    }
   };
 
   const toggleExpand = (id: string) => {
@@ -264,7 +290,7 @@ const LostAndFound = () => {
                               <EditIcon fontSize="small" />
                             </IconButton>
                             <IconButton
-                              onClick={() => handleDelete(report.recordID?.toString() || '')}
+                              onClick={() => handleDeleteClick(report.recordID?.toString() || '')}
                               size="small"
                             >
                               <DeleteIcon fontSize="small" />
@@ -295,7 +321,7 @@ const LostAndFound = () => {
                           </Grid>
                           <Grid item xs={0.5}>
                             <IconButton
-                              onClick={() => handleDelete(report.recordID?.toString() || '')}
+                              onClick={() => handleDeleteClick(report.recordID?.toString() || '')}
                               size="small"
                             >
                               <DeleteIcon fontSize="small" />
@@ -331,6 +357,11 @@ const LostAndFound = () => {
           </Card>
         </Grid>
       </Grid>
+      <DeleteConfirmationModal
+        open={isDeleteModalOpen}
+        onClose={handleModalClose}
+        onSubmit={handleModalSubmit}
+      />
       {/* Past Missing Item Reports */}
       <Grid container justifyContent="center" spacing={3} marginTop={3}>
         <Grid item xs={12} sm={10}>

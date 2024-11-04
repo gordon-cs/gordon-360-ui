@@ -18,7 +18,7 @@ import lostAndFoundService, { MissingItemReport } from 'services/lostAndFound';
 import ConfirmReport from './components/confirmReport';
 import { useNavigate, useParams } from 'react-router';
 
-const MissingItemForm = () => {
+const MissingItemFormEdit = () => {
   const navigate = useNavigate();
   const { itemid } = useParams<{ itemid: string }>();
   const [item, setItem] = useState<MissingItemReport | null>(null);
@@ -431,4 +431,4 @@ const MissingItemForm = () => {
   );
 };
 
-export default MissingItemForm;
+export default MissingItemFormEdit;

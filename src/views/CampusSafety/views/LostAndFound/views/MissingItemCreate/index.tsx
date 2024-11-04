@@ -19,7 +19,7 @@ import ReportStolenModal from './components/reportStolen';
 import ConfirmReport from './components/confirmReport';
 import { useNavigate } from 'react-router';
 
-const MissingItemForm = () => {
+const MissingItemFormCreate = () => {
   const navigate = useNavigate();
 
   // Form state
@@ -384,4 +384,4 @@ const MissingItemForm = () => {
   );
 };
 
-export default MissingItemForm;
+export default MissingItemFormCreate;
