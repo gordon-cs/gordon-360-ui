@@ -16,6 +16,7 @@ import { MissingItemReport } from 'services/lostAndFound'; // Import the type fr
 import DeleteConfirmationModal from './components/DeleteConfirmation';
 import { DateTime } from 'luxon';
 import { useWindowSize } from 'hooks';
+import { string } from 'prop-types';
 
 const formatDate = (date: string) => {
   return DateTime.fromISO(date).toFormat('MM-dd-yyyy'); // Adjust format as needed
@@ -24,6 +25,7 @@ const LostAndFound = () => {
   const [activeReports, setActiveReports] = useState<MissingItemReport[]>([]);
   const [pastReports, setPastReports] = useState<MissingItemReport[]>([]);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [reportToDelete, setReportToDelete] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const theme = useTheme(); // Access theme if needed
   const [width] = useWindowSize();
@@ -109,16 +111,25 @@ const LostAndFound = () => {
     console.log(`Editing report: ${reportId}`);
   };
 
-  const handleModalClose = () => {
-    setDeleteModalOpen(false);
+  const handleDeleteClick = (reportId: string) => {
+    setReportToDelete(reportId);
+    setDeleteModalOpen(true);
+    console.log(reportId);
   };
 
-  const handleModalSubmit = async (reportId: string) => {
+  const handleModalClose = () => {
+    setDeleteModalOpen(false);
+    setReportToDelete(null);
+  };
+
+  const handleModalSubmit = async () => {
     try {
-      const reportIdNum = parseInt(reportId);
-      await lostAndFoundService.updateReportStatus(reportIdNum, 'deleted');
+      //const reportIdNum = parseInt(handleDeleteClick(reportToDelete));
+
+      await lostAndFoundService.updateReportStatus(parseInt(reportToDelete || ''), 'deleted');
       setPageUpdates(pageUpdates + 1);
       setDeleteModalOpen(false);
+      setReportToDelete(null);
     } catch (error) {
       console.error('Error updating item:', error);
     }
@@ -281,7 +292,10 @@ const LostAndFound = () => {
                             >
                               <EditIcon fontSize="small" />
                             </IconButton>
-                            <IconButton onClick={() => handleChange()} size="small">
+                            <IconButton
+                              onClick={() => handleDeleteClick(report.recordID?.toString() || '')}
+                              size="small"
+                            >
                               <DeleteIcon fontSize="small" />
                             </IconButton>
                             <IconButton
@@ -309,15 +323,13 @@ const LostAndFound = () => {
                             </IconButton>
                           </Grid>
                           <Grid item xs={0.5}>
-                            <IconButton onClick={() => handleChange()} size="small">
+                            <IconButton
+                              onClick={() => handleDeleteClick(report.recordID?.toString() || '')}
+                              size="small"
+                            >
                               <DeleteIcon fontSize="small" />
                             </IconButton>
                           </Grid>
-                          <DeleteConfirmationModal
-                            open={isDeleteModalOpen}
-                            onClose={handleModalClose}
-                            onSubmit={() => handleModalSubmit(report.recordID?.toString() || '')}
-                          />
                         </>
                       )}
                     </Grid>
@@ -348,6 +360,11 @@ const LostAndFound = () => {
           </Card>
         </Grid>
       </Grid>
+      <DeleteConfirmationModal
+        open={isDeleteModalOpen}
+        onClose={handleModalClose}
+        onSubmit={handleModalSubmit}
+      />
       {/* Past Missing Item Reports */}
       <Grid container justifyContent="center" spacing={3} marginTop={3}>
         <Grid item xs={12} sm={10}>
