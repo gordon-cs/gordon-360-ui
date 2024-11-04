@@ -122,6 +122,7 @@ const MissingItemForm = () => {
       const colors = prevData.colors.includes(color)
         ? prevData.colors.filter((c) => c !== color)
         : [...prevData.colors, color];
+      setModified(true);
       return { ...prevData, colors };
     });
   };
@@ -220,12 +221,13 @@ const MissingItemForm = () => {
                         control={<Radio />}
                         label={label}
                         value={label.toLowerCase().replace(/ /g, '/')}
-                        onChange={(e) =>
+                        onChange={(e) => {
                           setFormData((prevData) => ({
                             ...prevData,
                             category: (e.target as HTMLInputElement).value,
-                          }))
-                        }
+                          }));
+                          setModified(true);
+                        }}
                         checked={formData.category === label.toLowerCase().replace(/ /g, '/')}
                         className={styles.category_item}
                       />
