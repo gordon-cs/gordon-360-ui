@@ -9,9 +9,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import Header from '../../components/Header';
 import styles from './LostAndFound.module.css'; // Import the external CSS
-import { useTheme } from '@mui/material/styles'; // Access theme if needed
 import lostAndFoundService from 'services/lostAndFound';
-//import lostAndFoundService from '../../services/lostAndFoundService'; // Assuming this is your service
 import { MissingItemReport } from 'services/lostAndFound'; // Import the type from the service
 import DeleteConfirmationModal from './components/DeleteConfirmation';
 import { DateTime } from 'luxon';
@@ -21,13 +19,13 @@ import { string } from 'prop-types';
 const formatDate = (date: string) => {
   return DateTime.fromISO(date).toFormat('MM-dd-yyyy'); // Adjust format as needed
 };
+
 const LostAndFound = () => {
   const [activeReports, setActiveReports] = useState<MissingItemReport[]>([]);
   const [pastReports, setPastReports] = useState<MissingItemReport[]>([]);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [reportToDelete, setReportToDelete] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const theme = useTheme(); // Access theme if needed
   const [width] = useWindowSize();
   const [expanded, setExpanded] = useState<{ [key: string]: boolean }>({});
   const [expandedFields, setExpandedFields] = useState<{
