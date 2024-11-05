@@ -1,4 +1,3 @@
-import { Box, Card, Grid } from '@mui/material';
 import { useAuthGroups } from 'hooks';
 import { AuthGroup } from 'services/auth';
 
@@ -13,15 +12,11 @@ const Housing = () => {
   const isRD = useAuthGroups(AuthGroup.HousingAdmin);
 
   if (isFaculty) {
-    return (
-      <Grid container>
-        <RDView className="jsx" />
-      </Grid>
-    );
+    return <RDView />;
   } else if (isStudent) {
-    return <ResidentView className="jsx" />;
+    return <ResidentView />;
   } else if (isRA) {
-    <RAView />;
+    return <RAView />;
   } else {
     return null;
   }

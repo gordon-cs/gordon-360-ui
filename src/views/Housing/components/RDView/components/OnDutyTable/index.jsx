@@ -38,6 +38,14 @@ const OnDutyTable = () => {
   useEffect(() => {
     const mockData = [
       {
+        hall: 'Tavilla',
+        onDuty: 'Jason Asonye',
+        photo: 'https://placehold.jp/150x150.png',
+        preferredContact: '(555)-543-2349',
+        checkInTime: '6:05 PM',
+        hallRD: 'Ryann Soltero',
+      },
+      {
         hall: 'Bromley',
         onDuty: 'Ross Clark',
         photo: 'https://placehold.jp/150x150.png',
@@ -63,7 +71,7 @@ const OnDutyTable = () => {
       },
       {
         hall: 'Wilson',
-        onDuty: 'Jason Asonye',
+        onDuty: 'John Doe',
         photo: 'https://placehold.jp/150x150.png',
         preferredContact: '(555)-222-3333',
         checkInTime: '6:20 PM',
@@ -71,7 +79,7 @@ const OnDutyTable = () => {
       },
       {
         hall: 'Fulton',
-        onDuty: 'John Doe',
+        onDuty: 'Jane Doe',
         photo: 'https://placehold.jp/150x150.png',
         preferredContact: '(555)-444-5555',
         checkInTime: '6:25 PM',
@@ -115,9 +123,9 @@ const OnDutyTable = () => {
                   <img
                     src={row.photo}
                     alt="Profile Picture"
-                    width="40"
-                    height="40"
-                    style={{ marginBottom: '5px', borderRadius: '50%' }}
+                    width="60"
+                    height="60"
+                    style={{ borderRadius: '50%' }}
                   />
                   <span>{row.onDuty}</span>
                 </div>

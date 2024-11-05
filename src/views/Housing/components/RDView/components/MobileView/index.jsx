@@ -17,9 +17,9 @@ const BasicSelect = () => {
       <InputLabel id="select-label">Select a Hall</InputLabel>
       <Select
         labelId="select-label"
-        id="demo-simple-select"
+        id="select"
         value={value}
-        label="Select an option"
+        label="Select a Hall"
         onChange={handleChange}
       >
         <MenuItem value={1}>Bromley</MenuItem>
