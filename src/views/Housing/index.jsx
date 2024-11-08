@@ -21,7 +21,7 @@ const Housing = () => {
   } else if (isStudent) {
     return <ResidentView className="jsx" />;
   } else if (isRA) {
-    <RAView />;
+    return <RAView />;
   } else {
     return null;
   }

@@ -23,21 +23,26 @@ const RAView = () => {
   const [isCheckedIn, setCheckedIn] = useState(false);
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
 
-  const hallName = 'testing';
+  const [hallName, setHallName] = useState('');
 
-  const handleConfirm = (event) => {
+  const handleConfirm = () => {
     setConfirmOpen(true);
-    for (var i = 0; i < hallState.length; i++) {
-      console.log(hallState[i]);
-      if (hallState[i].value && hallName == '') {
-        hallName.concat(hallState[i]).capitalize().string();
-        console.log(hallName);
-      } else if (hallState[i] && hallName != '') {
-        hallName.concat(', ', hallState[i]).capitalize();
-        console.log(hallName);
+
+    var tempName = '';
+
+    for (let hall in hallState) {
+      if (hallState[hall] && tempName == '') {
+        tempName = hall.charAt(0).toUpperCase() + hall.slice(1);
+      } else if (hallState[hall] && tempName != '') {
+        tempName = tempName + ', ' + hall.charAt(0).toUpperCase() + hall.slice(1);
+      } else {
+        continue;
       }
     }
+
+    setHallName(tempName);
   };
 
   const handleSubmit = (event) => {
@@ -59,14 +64,25 @@ const RAView = () => {
     village: false,
   });
 
+  useEffect(() => {
+    var check = false;
+    for (let hall in hallState) {
+      if (hallState[hall]) {
+        check = true;
+        break;
+      }
+    }
+    setIsChecked(check);
+  }, [hallState]);
+
+  const { bromley, chase, evans, ferrin, fulton, nyland, tavilla, wilson, village } = hallState;
+
   const handleHallChecked = (event) => {
     setHallState({
       ...hallState,
       [event.target.name]: event.target.checked,
     });
   };
-
-  const { bromley, chase, evans, ferrin, fulton, nyland, tavilla, wilson, village } = hallState;
 
   return (
     <Grid container>
@@ -99,6 +115,7 @@ const RAView = () => {
             open={open}
             onClose={() => setOpen(false)}
             title={'Choose Which Hall to Check Into'}
+            isButtonDisabled={!isChecked}
             buttonName="Check In"
             buttonClicked={handleConfirm}
             cancelButtonName="CANCEL"
