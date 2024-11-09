@@ -1,9 +1,8 @@
-import { Card, CardContent, CardHeader, Container, Grid, Typography } from '@mui/material';
+import { Card, CardContent, CardHeader, Grid, Typography, Box, Button } from '@mui/material';
 import LinkIcon from '@mui/icons-material/InsertLink';
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
-import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
-import { ListItemIcon, ListItemText, ListSubheader, List, ListItem, Link } from '@mui/material';
+import { ListItemIcon, ListItemText, List, ListItem, Link } from '@mui/material';
 import CanvasIcon from '/src/views/Links/images/Canvas.ico';
 import GordonIcon from '/src/views/Links/images/favicon.ico';
 import GOIcon from '/src/views/Links/images/GoGordonFavicon.ico';
@@ -14,11 +13,20 @@ import FightingScotsIcon from '/src/views/Links/images/fightingscots.svg';
 import OutlookIcon from '/src/views/Links/images/outlook-icon1.png';
 import SchedulerIcon from '/src/views/Links/images/25-live-logo.jpg';
 import ChapelIcon from '/src/views/Links/images/iAttended.png';
+import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
+import ChurchIcon from '@mui/icons-material/Church';
+import FeedbackIcon from '@mui/icons-material/Feedback';
+import SafetyDividerIcon from '@mui/icons-material/SafetyDivider';
+import SpaIcon from '@mui/icons-material/Spa';
+import PsychologyIcon from '@mui/icons-material/Psychology';
+import styles from '/src/views/Links/Links.module.scss';
+import { useNavigate } from 'react-router';
 
 const iconStyle = { width: '1.5rem' };
 
 const Links = () => (
   <Grid container>
+    {/* Academics Card */}
     <Grid item xs={12} md={4} padding={1}>
       <Card>
         <CardHeader title={`Academics`} className="gc360_header" />
@@ -95,6 +103,8 @@ const Links = () => (
         </CardContent>
       </Card>
     </Grid>
+
+    {/* Services Card */}
     <Grid item xs={12} md={4} padding={1}>
       <Card>
         <CardHeader title={`Services`} className="gc360_header" />
@@ -158,6 +168,8 @@ const Links = () => (
         </CardContent>
       </Card>
     </Grid>
+
+    {/* Information Card */}
     <Grid item xs={12} md={4} padding={1}>
       <Card>
         <CardHeader title={`Information`} className="gc360_header" />
@@ -217,6 +229,194 @@ const Links = () => (
                 </Link>
               </ListItem>
             </List>
+          </Typography>
+        </CardContent>
+      </Card>
+    </Grid>
+
+    {/* Gordon Police Card */}
+    <Grid item xs={12} md={4} padding={1}>
+      <Card>
+        <CardHeader title={`Gordon Police`} className="gc360_header" />
+        <CardContent>
+          <Grid container justifyContent={'center'}>
+            <Box className={styles.campus_safety_alert}>
+              <Grid item xs={12}>
+                <Typography align="center">Emergency?</Typography>
+                <br />
+              </Grid>
+              <Grid item xs={12}>
+                <Typography align="center">Call Gordon Police</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography align="center">
+                  P 978-867-<b>3333</b>
+                </Typography>
+              </Grid>
+            </Box>
+          </Grid>
+          <br />
+          <Typography align="center">Non-Emergency Assistance:</Typography>
+          <Typography align="center">
+            P 978-867-<b>4444</b>
+          </Typography>
+          <br />
+          <Grid container justifyContent={'center'}>
+            <Link
+              href="https://www.gordon.edu/police"
+              underline="hover"
+              className={`gc360_text_link`}
+              target="_blank"
+            >
+              Gordon Police Resources
+            </Link>
+          </Grid>
+          <Grid item xs={12}>
+            <hr />
+            <br />
+            <Typography align="center">Missing Something?</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <br />
+            <Box textAlign={'center'}>
+              <Button
+                color="secondary"
+                variant="contained"
+                onClick={() => {
+                  // useNavigate('/campussafety/LostAndFound'); - FIX ROUTE
+                }}
+              >
+                Lost and Found
+              </Button>
+            </Box>
+          </Grid>
+        </CardContent>
+      </Card>
+    </Grid>
+
+    {/* Sexual Misconduct Resources Card */}
+    <Grid item xs={12} md={4} padding={1}>
+      <Card>
+        <CardHeader title={`Sexual Misconduct Resources`} className="gc360_header" />
+        <CardContent>
+          <Typography>
+            <List>
+              <ListItem>
+                <ListItemIcon>
+                  <SafetyDividerIcon style={iconStyle} />
+                </ListItemIcon>
+                <Link
+                  href="https://www.gordon.edu/titleix"
+                  underline="hover"
+                  className={`gc360_text_link`}
+                  target="_blank"
+                >
+                  <ListItemText primary="Gordon Title IX Page" />
+                </Link>
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <FeedbackIcon style={iconStyle} />
+                </ListItemIcon>
+                <Link
+                  href="https://www.gordon.edu/sexualmisconduct/report"
+                  underline="hover"
+                  className={`gc360_text_link`}
+                  target="_blank"
+                >
+                  <ListItemText primary="File a Report" />
+                </Link>
+              </ListItem>
+            </List>
+          </Typography>
+        </CardContent>
+      </Card>
+    </Grid>
+
+    {/* Health Center Card */}
+    <Grid item xs={12} md={4} padding={1}>
+      <Card>
+        <CardHeader title={`Health Center`} className="gc360_header" />
+        <CardContent>
+          <Typography>
+            <List>
+              <ListItem>
+                <ListItemIcon>
+                  <LocalHospitalIcon style={iconStyle} />
+                </ListItemIcon>
+                <Link
+                  href="https://www.gordon.edu/healthcenter"
+                  underline="hover"
+                  className={`gc360_text_link`}
+                  target="_blank"
+                >
+                  <ListItemText primary="Health Center Resources" />
+                </Link>
+              </ListItem>
+            </List>
+          </Typography>
+        </CardContent>
+      </Card>
+    </Grid>
+
+    {/* Counseling Center Card */}
+    <Grid item xs={12} md={4} padding={1}>
+      <Card>
+        <CardHeader title={`Counseling Center Card`} className="gc360_header" />
+        <CardContent>
+          <Typography>
+            <List>
+              <ListItem>
+                <ListItemIcon>
+                  <SpaIcon style={iconStyle} />
+                </ListItemIcon>
+                <Link
+                  href="https://www.gordon.edu/counselingwellness"
+                  underline="hover"
+                  className={`gc360_text_link`}
+                  target="_blank"
+                >
+                  <ListItemText primary="Counseling Center Resources" />
+                </Link>
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <PsychologyIcon style={iconStyle} />
+                </ListItemIcon>
+                <Link
+                  href="https://counseling.gordon.edu/TitaniumWeb/WCMenu.aspx"
+                  underline="hover"
+                  className={`gc360_text_link`}
+                  target="_blank"
+                >
+                  <ListItemText primary="Request Services" />
+                </Link>
+              </ListItem>
+            </List>
+          </Typography>
+        </CardContent>
+      </Card>
+    </Grid>
+
+    {/* Chapel Office Card */}
+    <Grid item xs={12} md={4} padding={1}>
+      <Card>
+        <CardHeader title={`Chapel Office`} className="gc360_header" />
+        <CardContent>
+          <Typography>
+            <ListItem>
+              <ListItemIcon>
+                <ChurchIcon style={iconStyle} />
+              </ListItemIcon>
+              <Link
+                href="https://www.gordon.edu/chapel"
+                underline="hover"
+                className={`gc360_text_link`}
+                target="_blank"
+              >
+                <ListItemText primary="Chapel Information" />
+              </Link>
+            </ListItem>
           </Typography>
         </CardContent>
       </Card>
