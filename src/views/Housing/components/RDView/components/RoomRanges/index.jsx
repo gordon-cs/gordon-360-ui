@@ -119,8 +119,8 @@ const RoomRanges = () => {
         assignmentList();
       })
       .catch((error) => {
-        console.error('Error removing room range:', error);
-        window.alert('Error removing room range: ' + error);
+        console.error('Error removing assignment:', error);
+        window.alert('Error removing assignment: ' + error);
       });
   };
 
