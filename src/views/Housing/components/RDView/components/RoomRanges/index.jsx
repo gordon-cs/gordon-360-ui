@@ -111,6 +111,19 @@ const RoomRanges = () => {
     }
   };
 
+  const removeAssignment = (index) => {
+    const rangeId = assignments[index].Range_ID;
+    http
+      .del(`Housing/assignment/${rangeId}`)
+      .then(() => {
+        assignmentList();
+      })
+      .catch((error) => {
+        console.error('Error removing room range:', error);
+        window.alert('Error removing room range: ' + error);
+      });
+  };
+
   // Post request to API endpoint "Housing/assign-ra" which assigns
   // the user selected RA to the user selected room range
   const assignPersonToRange = () => {
@@ -253,9 +266,7 @@ const RoomRanges = () => {
               <ListItem key={index}>
                 {assignment.Fname} {assignment.Lname}: {assignment.Hall_Name}{' '}
                 {assignment.Room_Start} - {assignment.Room_End}
-                {/*<Button onClick={() => removeAssignment(index)}>*/}
-                {/*  Remove*/}
-                {/*</Button>*/}
+                <Button onClick={() => removeAssignment(index)}>Remove</Button>
               </ListItem>
             );
           })
