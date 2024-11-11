@@ -23,7 +23,8 @@ const MyHall = () => {
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={8}>
             <Typography variant="body1">
-              <strong>Hall:</strong> {profile.BuildingDescription ?? profile.Hall}
+              <strong>Hall:</strong> {profile.BuildingDescription}
+              {/* <strong>Hall:</strong> {profile.OnCampusBuilding} */}
             </Typography>
 
             <Typography variant="body1">

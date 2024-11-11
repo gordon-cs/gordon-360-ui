@@ -1,4 +1,14 @@
-import { Avatar, Card, CardContent, CardHeader, Grid, Link, Typography } from '@mui/material';
+import { useState, useEffect } from 'react';
+import {
+  Avatar,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Link,
+  setRef,
+  Typography,
+} from '@mui/material';
 
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -8,6 +18,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+// import httpUtils from 'services/http';
+import http from '../../../../../../services/http';
+import { useUser } from 'hooks';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -29,6 +42,33 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const MyRAC = () => {
+  const [racName, setRacName] = useState('');
+  const { profile } = useUser();
+
+  // Fetch resident's RA/AC name only if profile, hallID, and roomNumber are available
+  useEffect(() => {
+    if (profile) {
+      const hallID = profile.OnCampusBuilding;
+      const roomNumber = profile.OnCampusRoom;
+
+      const fetchRacName = () => {
+        http
+          .get(`Housing/GetResidentRA/${hallID}/${roomNumber}`)
+          .then((response) => {
+            setRacName(response);
+          })
+          .catch((error) => console.error('Error fetching RA/AC info', error));
+      };
+
+      fetchRacName();
+    }
+  }, [profile]);
+
+  // Show loading state if profile is not yet loaded
+  if (!profile) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <Card>
       <CardHeader
@@ -46,7 +86,7 @@ const MyRAC = () => {
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={8}>
             <Typography variant="body1">
-              <strong>Name:</strong>
+              <strong>Name:</strong> {racName}
             </Typography>
 
             <Typography variant="body1">
