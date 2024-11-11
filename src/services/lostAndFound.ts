@@ -53,12 +53,11 @@ const getMissingItemReport = async (id: number): Promise<MissingItemReport> => {
 const createMissingItemReport = async (
   data: Omit<MissingItemReport, 'recordID'>,
 ): Promise<number> => {
-  // Convert dates to ISO string format and make sure colors is an array
   const formattedData = {
     ...data,
     dateLost: data.dateLost,
     dateCreated: DateTime.now().toISO(),
-    colors: data.colors || [], // Ensure colors is an array
+    colors: data.colors || [],
   };
   const response = await http.post<number>('/LostAndFound/missingitem', formattedData);
   return response;

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Card,
   CardHeader,
@@ -15,6 +15,7 @@ import { DateTime } from 'luxon';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './MissingItemCreate.module.scss';
 import lostAndFoundService from 'services/lostAndFound';
+import userService from 'services/user';
 import ReportStolenModal from './components/reportStolen';
 import ConfirmReport from './components/confirmReport';
 import { useNavigate } from 'react-router';
@@ -22,38 +23,48 @@ import { useNavigate } from 'react-router';
 const MissingItemFormCreate = () => {
   const navigate = useNavigate();
 
-  // Form state
+  const [user, setUser] = useState({
+    firstName: '',
+    lastName: '',
+    emailAddr: '',
+    phoneNumber: '',
+  });
+
   const [formData, setFormData] = useState({
-    firstName: '', //TODO add code to autofill this
-    lastName: '', //TODO add code to autofill this
     category: '',
-    colors: [] as string[], // Ensure colors is an array
+    colors: [] as string[],
     brand: '',
     description: '',
     locationLost: '',
     stolen: false,
     dateLost: '',
-    phoneNumber: '', //TODO add code to autofill this
-    altPhone: '',
-    emailAddr: '', //TODO add code to autofill this
-    status: 'active', // Assuming a default status for new reports
+    status: 'active',
   });
 
   const [isStolenModalOpen, setStolenModalOpen] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
 
-  // Required fields
-  const requiredFields = [
-    'firstName',
-    'lastName',
-    'locationLost',
-    'phoneNumber',
-    'description',
-    'emailAddr',
-  ];
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userInfo = await userService.getProfileInfo();
+        setUser({
+          firstName: userInfo?.FirstName || '',
+          lastName: userInfo?.LastName || '',
+          emailAddr: userInfo?.Email || '',
+          phoneNumber: userInfo?.MobilePhone || '',
+        });
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
 
-  // Validation function
+    fetchUserData();
+  }, []);
+
+  const requiredFields = ['category', 'description', 'locationLost'];
+
   const validateForm = () => {
     const errors: { [key: string]: string } = {};
     requiredFields.forEach((field) => {
@@ -65,20 +76,14 @@ const MissingItemFormCreate = () => {
     return Object.keys(errors).length === 0;
   };
 
-  // Handle form data changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
 
     if (name === 'stolen') {
-      setStolenModalOpen(checked); // Open modal if stolen checkbox is checked
+      setStolenModalOpen(checked);
       setFormData((prevData) => ({
         ...prevData,
         [name]: checked,
-      }));
-    } else if (name === 'dateLost') {
-      setFormData((prevData) => ({
-        ...prevData,
-        dateLost: value, // Format date for display
       }));
     } else {
       setFormData((prevData) => ({
@@ -88,7 +93,6 @@ const MissingItemFormCreate = () => {
     }
   };
 
-  // Handle color selection
   const handleColorChange = (color: string) => {
     setFormData((prevData) => {
       const colors = prevData.colors.includes(color)
@@ -102,7 +106,7 @@ const MissingItemFormCreate = () => {
     setStolenModalOpen(false);
     setFormData((prevData) => ({
       ...prevData,
-      stolen: false, // Uncheck "stolen" if modal is canceled
+      stolen: false,
     }));
   };
 
@@ -124,9 +128,9 @@ const MissingItemFormCreate = () => {
     try {
       const requestData = {
         ...formData,
+        ...user,
         dateLost: formData.dateLost || DateTime.now().toISO(),
         dateCreated: DateTime.now().toISO(),
-        status: 'active',
       };
 
       const newReportId = await lostAndFoundService.createMissingItemReport(requestData);
@@ -143,7 +147,7 @@ const MissingItemFormCreate = () => {
       <Header />
       {showConfirm ? (
         <ConfirmReport
-          formData={formData}
+          formData={{ ...formData, ...user }}
           onEdit={() => setShowConfirm(false)}
           onSubmit={handleReportSubmit}
         />
@@ -154,30 +158,8 @@ const MissingItemFormCreate = () => {
             titleTypographyProps={{ align: 'center' }}
             className="gc360_header"
           />
-          <Grid container justifyContent={'center'}>
+          <Grid container justifyContent="center">
             <Grid item sm={5} xs={12}>
-              {/* First Name */}
-              <Grid item margin={2}>
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  label={'First Name'}
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                />
-              </Grid>
-              {/* Last Name */}
-              <Grid item margin={2}>
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  label={'Last Name'}
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                />
-              </Grid>
               {/* Item Category */}
               <Grid item margin={2} className={styles.box_background}>
                 <FormGroup>
@@ -218,34 +200,6 @@ const MissingItemFormCreate = () => {
                 </Grid>
               </Grid>
 
-              <Grid item margin={2}>
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  label={'Item Brand or Make'}
-                  name="brand"
-                  value={formData.brand}
-                  onChange={handleChange}
-                  error={!!validationErrors.brand}
-                  helperText={validationErrors.brand}
-                />
-              </Grid>
-              <Grid item margin={2}>
-                <TextField
-                  fullWidth
-                  multiline
-                  minRows={5}
-                  variant="filled"
-                  label={'Item Description: Be as detailed as possible'}
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  error={!!validationErrors.description}
-                  helperText={validationErrors.description}
-                />
-              </Grid>
-            </Grid>
-            <Grid item sm={5} xs={12}>
               {/* Item Colors */}
               <Grid item margin={2} className={styles.box_background}>
                 <FormGroup>
@@ -286,13 +240,44 @@ const MissingItemFormCreate = () => {
                   </FormGroup>
                 </Grid>
               </Grid>
+            </Grid>
+            <Grid item sm={5} xs={12}>
+              {/* Item Brand and Description */}
+              <Grid item margin={2}>
+                <TextField
+                  fullWidth
+                  variant="filled"
+                  label={'Item Brand or Make'}
+                  name="brand"
+                  value={formData.brand}
+                  onChange={handleChange}
+                  error={!!validationErrors.brand}
+                  helperText={validationErrors.brand}
+                />
+              </Grid>
+              <Grid item margin={2}>
+                <TextField
+                  fullWidth
+                  multiline
+                  minRows={5}
+                  variant="filled"
+                  label={'Item Description: Be as detailed as possible'}
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  error={!!validationErrors.description}
+                  helperText={validationErrors.description}
+                />
+              </Grid>
+
+              {/* Location Lost and Date Lost */}
               <Grid item margin={2}>
                 <TextField
                   fullWidth
                   multiline
                   minRows={4}
                   variant="filled"
-                  label={'Location Lost: Be as detailed as possible (or "unknown")'}
+                  label={'Location Lost: Be as detailed as possible'}
                   name="locationLost"
                   value={formData.locationLost}
                   onChange={handleChange}
@@ -305,49 +290,19 @@ const MissingItemFormCreate = () => {
                   fullWidth
                   variant="filled"
                   label={'Date Lost'}
-                  InputLabelProps={{ shrink: true }} //Shrink label to fit above date placeholder
+                  InputLabelProps={{ shrink: true }}
                   name="dateLost"
                   type="date"
                   value={formData.dateLost}
                   onChange={handleChange}
-                />
-              </Grid>
-              <Grid item margin={2}>
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  label={'Phone Number'}
-                  name="phoneNumber"
-                  value={formData.phoneNumber}
-                  onChange={handleChange}
-                  error={!!validationErrors.phoneNumber}
-                  helperText={validationErrors.phoneNumber}
-                />
-              </Grid>
-              <Grid item margin={2}>
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  label={'Additional Phone Number'}
-                  name="altPhone"
-                  value={formData.altPhone}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item margin={2}>
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  label={'Email Address'}
-                  name="emailAddr"
-                  value={formData.emailAddr}
-                  onChange={handleChange}
-                  error={!!validationErrors.emailAddr}
-                  helperText={validationErrors.emailAddr}
+                  inputProps={{
+                    max: DateTime.now().toISODate(), // Restrict to today or past dates
+                  }}
                 />
               </Grid>
             </Grid>
           </Grid>
+
           {/* Stolen Checkbox */}
           <Grid container justifyContent="center" marginTop={3}>
             <Grid item xs={9.5}>
@@ -360,6 +315,7 @@ const MissingItemFormCreate = () => {
               />
             </Grid>
           </Grid>
+
           {/* Submit Button */}
           <Grid container justifyContent="flex-end" className={styles.submit_container}>
             <Grid item xs={2}>
@@ -373,6 +329,7 @@ const MissingItemFormCreate = () => {
               </Button>
             </Grid>
           </Grid>
+
           <ReportStolenModal
             open={isStolenModalOpen}
             onClose={handleModalClose}
