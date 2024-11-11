@@ -7,8 +7,8 @@ import http from './http';
  */
 export type MissingItemReport = {
   recordID?: number;
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
   category: string;
   colors: string[]; // Updated to an array of strings
   brand?: string;
@@ -18,11 +18,12 @@ export type MissingItemReport = {
   stolenDescription?: string;
   dateLost: string;
   dateCreated: string;
-  phoneNumber: string;
-  altPhone?: string;
-  emailAddr: string;
+  phone?: string;
+  email?: string;
   status: string;
-  adminUsername?: string;
+  submitterUsername: string;
+  submitterID?: null;
+  forGuest: boolean;
   lastChecked?: string;
 };
 
