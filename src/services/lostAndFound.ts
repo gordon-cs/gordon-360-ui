@@ -37,6 +37,16 @@ const getMissingItemReports = async (): Promise<MissingItemReport[]> => {
 };
 
 /**
+ * Fetch an array containing the full list of all missing item reports for
+ * a currently logged in user.
+ * @returns MissingItemReport[] array of all missing item reports.
+ */
+const getMissingItemReportUser = async (): Promise<MissingItemReport[]> => {
+  const response = await http.get<MissingItemReport[]>('lostandfound/missingitems');
+  return response;
+};
+
+/**
  * Fetch a single missing item report given an ID.
  * @param id the ID of the missing item report to fetch.
  * @returns MissingItemReport a single missing item report matching the ID.
@@ -91,6 +101,7 @@ const lostAndFoundService = {
   getMissingItemReports,
   createMissingItemReport,
   getMissingItemReport,
+  getMissingItemReportUser,
   updateMissingItemReport,
   updateReportStatus,
 };

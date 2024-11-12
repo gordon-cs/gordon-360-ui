@@ -104,13 +104,13 @@ const ReportItemPage = () => {
     status: 'active',
   });
 
-  const [isStolenModalOpen, setStolenModalOpen] = useState(false); // New state variable
+  const [isStolenModalOpen, setStolenModalOpen] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
   const [state, dispatch] = useReducer(reducer, defaultState);
 
   const theme = useTheme();
-  const isLargeScreen = useMediaQuery(theme.breakpoints.up('md')); // 'md' corresponds to 960px
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
 
   const specialCharactersRegex = /[^a-zA-Z0-9'\-.\s]/gm;
 
@@ -141,7 +141,7 @@ const ReportItemPage = () => {
     const { name, value, type, checked } = e.target;
 
     if (name === 'stolen') {
-      setStolenModalOpen(checked); // Open or close the modal based on the checkbox
+      setStolenModalOpen(checked);
       setFormData((prevData) => ({
         ...prevData,
         [name]: checked,
@@ -159,27 +159,36 @@ const ReportItemPage = () => {
     setFormData((prevData) => ({
       ...prevData,
       stolen: false,
-      stolenDescription: '', // Clear stolen description on modal close
+      stolenDescription: '',
     }));
   };
 
   const handleModalSubmit = (stolenDescription: string) => {
     setFormData((prevData) => ({
       ...prevData,
-      stolenDescription, // Capture stolen description from modal
+      stolenDescription,
     }));
     setStolenModalOpen(false);
   };
 
   const validateForm = () => {
     const errors: { [key: string]: string } = {};
-    ['category', 'description', 'locationLost', 'dateLost', 'firstName', 'lastName'].forEach(
-      (field) => {
-        if (!formData[field as keyof typeof formData]) {
-          errors[field] = 'This field is required';
-        }
-      },
-    );
+
+    // Required fields for all reports
+    [
+      'category',
+      'description',
+      'locationLost',
+      'dateLost',
+      'firstName',
+      'lastName',
+      'phoneNumber',
+    ].forEach((field) => {
+      if (!formData[field as keyof typeof formData]) {
+        errors[field] = 'This field is required';
+      }
+    });
+
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -214,6 +223,7 @@ const ReportItemPage = () => {
         dateLost: formData.dateLost || DateTime.now().toISO(),
         dateCreated: DateTime.now().toISO(),
         status: 'active',
+        phone: formData.phoneNumber, // Include phone number
       };
 
       let requestData;
@@ -225,8 +235,7 @@ const ReportItemPage = () => {
           forGuest: true,
           firstName: formData.firstName,
           lastName: formData.lastName,
-          phone: formData.phoneNumber, // Changed to "phone"
-          email: formData.emailAddr, // Changed to "email"
+          email: formData.emailAddr,
         };
       } else {
         // For Gordon person
@@ -234,7 +243,6 @@ const ReportItemPage = () => {
           ...baseData,
           forGuest: false,
           submitterUsername: formData.submitterUsername,
-          // Do not include guest fields
         };
       }
 
@@ -340,34 +348,50 @@ const ReportItemPage = () => {
               </Grid>
 
               {isGordonPerson === 'yes' && (
-                <Grid item margin={2}>
-                  <Autocomplete
-                    loading={state.loading}
-                    options={state.searchResults}
-                    isOptionEqualToValue={(option, value) => option.UserName === value.UserName}
-                    onInputChange={handleInput}
-                    onChange={handleSelect}
-                    renderOption={renderOption}
-                    getOptionLabel={(option) => `${option.FirstName} ${option.LastName}`}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Search Gordon Person"
-                        variant="filled"
-                        fullWidth
-                        InputProps={{
-                          ...params.InputProps,
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <SearchIcon />
-                            </InputAdornment>
-                          ),
-                        }}
-                      />
-                    )}
-                  />
-                </Grid>
+                <>
+                  <Grid item margin={2}>
+                    <Autocomplete
+                      loading={state.loading}
+                      options={state.searchResults}
+                      isOptionEqualToValue={(option, value) => option.UserName === value.UserName}
+                      onInputChange={handleInput}
+                      onChange={handleSelect}
+                      renderOption={renderOption}
+                      getOptionLabel={(option) => `${option.FirstName} ${option.LastName}`}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label="Search Gordon Person"
+                          variant="filled"
+                          fullWidth
+                          InputProps={{
+                            ...params.InputProps,
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <SearchIcon />
+                              </InputAdornment>
+                            ),
+                          }}
+                        />
+                      )}
+                    />
+                  </Grid>
+                  {/* Phone Number Field */}
+                  <Grid item margin={2}>
+                    <TextField
+                      fullWidth
+                      variant="filled"
+                      label="Phone Number"
+                      name="phoneNumber"
+                      value={formData.phoneNumber}
+                      onChange={handleChange}
+                      error={!!validationErrors.phoneNumber}
+                      helperText={validationErrors.phoneNumber}
+                    />
+                  </Grid>
+                </>
               )}
+
               {isGordonPerson === 'no' && (
                 <>
                   {/* First Name */}
@@ -530,7 +554,7 @@ const ReportItemPage = () => {
                   error={!!validationErrors.dateLost}
                   helperText={validationErrors.dateLost}
                   inputProps={{
-                    max: DateTime.now().toISODate(), // Restrict to today or past dates
+                    max: DateTime.now().toISODate(),
                   }}
                 />
               </Grid>

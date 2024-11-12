@@ -38,7 +38,7 @@ const LostAndFound = () => {
     const fetchMissingItems = async () => {
       try {
         setLoading(true);
-        const reports: MissingItemReport[] = await lostAndFoundService.getMissingItemReports();
+        const reports: MissingItemReport[] = await lostAndFoundService.getMissingItemReportUser();
 
         // Map the reports into active and past reports
         const active = reports
