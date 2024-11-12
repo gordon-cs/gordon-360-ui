@@ -44,49 +44,17 @@ const LostAndFound = () => {
         const active = reports
           .filter((report) => report.status === 'active') // Filter for non-found items
           .sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime())
-          //Order by date created, descending
           .map((report) => ({
-            recordID: report.recordID,
-            firstName: report.firstName,
-            lastName: report.lastName,
-            category: report.category,
-            colors: report.colors || [],
-            brand: report.brand,
-            description: report.description,
-            locationLost: report.locationLost,
-            stolen: report.stolen,
-            stolenDescription: report.stolenDescription,
-            dateLost: report.dateLost,
-            dateCreated: report.dateCreated,
-            phoneNumber: report.phoneNumber,
-            altPhone: report.altPhone,
-            emailAddr: report.emailAddr,
-            status: report.status,
-            adminUsername: report.adminUsername,
+            ...report,
+            colors: report.colors || [], // Ensure colors is an array
           }));
 
         const past = reports
           .filter((report) => report.status !== 'active') // Filter for found items
           .sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime())
-          //Order by date created, descending
           .map((report) => ({
-            recordID: report.recordID,
-            firstName: report.firstName,
-            lastName: report.lastName,
-            category: report.category,
-            colors: report.colors || [],
-            brand: report.brand,
-            description: report.description,
-            locationLost: report.locationLost,
-            stolen: report.stolen,
-            stolenDescription: report.stolenDescription,
-            dateLost: report.dateLost, // Assuming dateLost is a DateTime from Luxon
-            dateCreated: report.dateCreated,
-            phoneNumber: report.phoneNumber,
-            altPhone: report.altPhone,
-            emailAddr: report.emailAddr,
-            status: report.status,
-            adminUsername: report.adminUsername,
+            ...report,
+            colors: report.colors || [], // Ensure colors is an array
           }));
 
         setActiveReports(active);
@@ -97,7 +65,6 @@ const LostAndFound = () => {
         setLoading(false);
       }
     };
-
     fetchMissingItems();
   }, [pageUpdates]);
 

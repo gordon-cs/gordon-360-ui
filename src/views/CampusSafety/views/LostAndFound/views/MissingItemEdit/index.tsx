@@ -28,6 +28,7 @@ const MissingItemFormEdit = () => {
     lastName: '',
     emailAddr: '',
     phoneNumber: '',
+    AD_Username: '', // Include AD_Username for submitterUsername
   });
 
   const [formData, setFormData] = useState({
@@ -37,6 +38,7 @@ const MissingItemFormEdit = () => {
     description: '',
     locationLost: '',
     stolen: false,
+    stolenDescription: '',
     dateLost: '',
     status: 'active',
   });
@@ -51,6 +53,7 @@ const MissingItemFormEdit = () => {
         lastName: userInfo?.LastName || '',
         emailAddr: userInfo?.Email || '',
         phoneNumber: userInfo?.MobilePhone || '',
+        AD_Username: userInfo?.AD_Username || '',
       });
     };
     fetchUserData();
@@ -62,11 +65,12 @@ const MissingItemFormEdit = () => {
         const item = await lostAndFoundService.getMissingItemReport(parseInt(itemid));
         setFormData({
           category: item.category,
-          colors: item.colors || '',
+          colors: item.colors || [],
           brand: item.brand || '',
           description: item.description,
           locationLost: item.locationLost,
           stolen: item.stolen,
+          stolenDescription: item.stolenDescription || '',
           dateLost: item.dateLost,
           status: item.status || 'active',
         });
@@ -92,8 +96,10 @@ const MissingItemFormEdit = () => {
     const requestData = {
       ...formData,
       ...user,
+      submitterUsername: user.AD_Username,
       dateLost: formData.dateLost || DateTime.now().toISO(),
       dateCreated: DateTime.now().toISO(),
+      forGuest: false,
     };
     await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemid || ''));
     navigate('/campussafety/lostandfound');

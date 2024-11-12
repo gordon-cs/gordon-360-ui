@@ -28,6 +28,7 @@ const MissingItemFormCreate = () => {
     lastName: '',
     emailAddr: '',
     phoneNumber: '',
+    AD_Username: '', // Add AD_Username to user state
   });
 
   const [formData, setFormData] = useState({
@@ -37,6 +38,7 @@ const MissingItemFormCreate = () => {
     description: '',
     locationLost: '',
     stolen: false,
+    stolenDescription: '', // Added stolenDescription field
     dateLost: '',
     status: 'active',
   });
@@ -54,6 +56,7 @@ const MissingItemFormCreate = () => {
           lastName: userInfo?.LastName || '',
           emailAddr: userInfo?.Email || '',
           phoneNumber: userInfo?.MobilePhone || '',
+          AD_Username: userInfo?.AD_Username || '', // Set AD_Username
         });
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -107,13 +110,14 @@ const MissingItemFormCreate = () => {
     setFormData((prevData) => ({
       ...prevData,
       stolen: false,
+      stolenDescription: '', // Clear stolen description on modal close
     }));
   };
 
   const handleModalSubmit = (stolenDescription: string) => {
     setFormData((prevData) => ({
       ...prevData,
-      stolenDescription,
+      stolenDescription, // Capture stolen description from modal
     }));
     setStolenModalOpen(false);
   };
@@ -131,13 +135,20 @@ const MissingItemFormCreate = () => {
         ...user,
         dateLost: formData.dateLost || DateTime.now().toISO(),
         dateCreated: DateTime.now().toISO(),
+        colors: formData.colors || [],
+        submitterUsername: user.AD_Username,
+        forGuest: false,
       };
+
+      // Log the request data to inspect the payload being sent
+      console.log('Submitting request data:', requestData);
 
       const newReportId = await lostAndFoundService.createMissingItemReport(requestData);
       alert(`Report created successfully with ID: ${newReportId}`);
       navigate('/campussafety/lostandfound');
     } catch (error) {
       console.error('Error creating missing item report:', error);
+
       alert('Failed to create the missing item report.');
     }
   };
