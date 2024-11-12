@@ -1,11 +1,13 @@
-.campus_safety {
-  &_alert {
-    width: 35rem;
-    border-width: 4px;
-    border-radius: 1.5rem;
-    border-style: solid;
-    border-color: var(--mui-palette-error-main);
-    padding: 1rem 7rem;
-    white-space: nowrap;
-  }
+.campus_safety_alert {
+  width: 35rem;
+  border-width: 4px;
+  border-radius: 1.5rem;
+  border-style: solid;
+  border-color: var(--mui-palette-error-main);
+  padding: 1rem 7rem;
+  white-space: nowrap;
+}
+
+.icon_style {
+  width: 1.5rem;
 }
