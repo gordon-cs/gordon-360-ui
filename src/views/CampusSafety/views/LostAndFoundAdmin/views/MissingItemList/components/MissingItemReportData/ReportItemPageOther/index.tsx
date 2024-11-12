@@ -130,7 +130,7 @@ const ReportItemPage = () => {
         ...prevData,
         firstName: selectedPerson.FirstName,
         lastName: selectedPerson.LastName,
-        emailAddr: selectedPerson.UserName + '@gordon.edu',
+        emailAddr: selectedPerson.UserName + '@gordon.edu', //Added @gordon.edu because cant access email directly
         submitterUsername: selectedPerson.UserName,
         forGuest: false,
       }));
