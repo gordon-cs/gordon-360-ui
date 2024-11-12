@@ -32,7 +32,7 @@ export type MissingItemReport = {
  * @returns MissingItemReport[] array of all missing item reports.
  */
 const getMissingItemReports = async (): Promise<MissingItemReport[]> => {
-  const response = await http.get<MissingItemReport[]>('lostandfound/missingitems');
+  const response = await http.get<MissingItemReport[]>('lostandfound/missingitemsall');
   return response;
 };
 

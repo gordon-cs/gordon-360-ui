@@ -14,7 +14,8 @@ interface ConfirmReportProps {
     dateLost: string;
     phoneNumber: string;
     emailAddr: string;
-    stolenDescription?: string; // Add stolenDescription field
+    stolenDescription?: string;
+    forGuest: boolean;
   };
   onEdit: () => void;
   onSubmit: () => void;

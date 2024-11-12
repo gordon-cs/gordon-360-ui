@@ -41,6 +41,7 @@ const MissingItemFormCreate = () => {
     stolenDescription: '', // Added stolenDescription field
     dateLost: '',
     status: 'active',
+    forGuest: false,
   });
 
   const [isStolenModalOpen, setStolenModalOpen] = useState(false);
