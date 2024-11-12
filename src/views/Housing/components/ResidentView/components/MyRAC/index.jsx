@@ -45,7 +45,7 @@ const MyRAC = () => {
   const [raInfo, setRaInfo] = useState('');
   const { profile } = useUser();
 
-  // Fetch resident's RA/AC name only if profile, hallID, and roomNumber are available
+  // Fetch resident's RA/AC information only if profile, hallID, and roomNumber are available
   useEffect(() => {
     if (profile) {
       const hallID = profile.OnCampusBuilding;
@@ -55,6 +55,7 @@ const MyRAC = () => {
         http
           .get(`Housing/GetResidentRA/${hallID}/${roomNumber}`)
           .then((response) => {
+            console.log('response:', response);
             setRaInfo(response);
           })
           .catch((error) => console.error('Error fetching RA/AC info', error));
@@ -86,11 +87,11 @@ const MyRAC = () => {
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={8}>
             <Typography variant="body1">
-              <strong>Name:</strong> {raInfo}
+              <strong>Name:</strong> {raInfo.FirstName} {raInfo.LastName}
             </Typography>
 
             <Typography variant="body1">
-              <strong>Room #:</strong>
+              <strong>Room #:</strong> {raInfo.RoomNumber}
             </Typography>
 
             <Typography variant="body1">
