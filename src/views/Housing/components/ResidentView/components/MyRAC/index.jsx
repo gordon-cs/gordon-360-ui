@@ -42,7 +42,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const MyRAC = () => {
-  const [racName, setRacName] = useState('');
+  const [raInfo, setRaInfo] = useState('');
   const { profile } = useUser();
 
   // Fetch resident's RA/AC name only if profile, hallID, and roomNumber are available
@@ -51,16 +51,16 @@ const MyRAC = () => {
       const hallID = profile.OnCampusBuilding;
       const roomNumber = profile.OnCampusRoom;
 
-      const fetchRacName = () => {
+      const fetchRaInfo = () => {
         http
           .get(`Housing/GetResidentRA/${hallID}/${roomNumber}`)
           .then((response) => {
-            setRacName(response);
+            setRaInfo(response);
           })
           .catch((error) => console.error('Error fetching RA/AC info', error));
       };
 
-      fetchRacName();
+      fetchRaInfo();
     }
   }, [profile]);
 
@@ -86,7 +86,7 @@ const MyRAC = () => {
         <Grid container spacing={2} alignItems="center">
           <Grid item xs={8}>
             <Typography variant="body1">
-              <strong>Name:</strong> {racName}
+              <strong>Name:</strong> {raInfo}
             </Typography>
 
             <Typography variant="body1">
