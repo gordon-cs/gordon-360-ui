@@ -84,11 +84,21 @@ const MissingItemFormCreate = () => {
     const { name, value, type, checked } = e.target;
 
     if (name === 'stolen') {
-      setStolenModalOpen(checked);
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: checked,
-      }));
+      if (checked) {
+        // If the stolen checkbox is checked, open the modal
+        setStolenModalOpen(true);
+        setFormData((prevData) => ({
+          ...prevData,
+          [name]: checked,
+        }));
+      } else {
+        // If the stolen checkbox is unchecked, clear stolenDescription
+        setFormData((prevData) => ({
+          ...prevData,
+          stolen: false,
+          stolenDescription: '',
+        }));
+      }
     } else {
       setFormData((prevData) => ({
         ...prevData,
