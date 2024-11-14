@@ -53,7 +53,7 @@ const MyRAC = () => {
 
       const fetchRaInfo = () => {
         http
-          .get(`Housing/GetResidentRA/${hallID}/${roomNumber}`)
+          .get(`Housing/ra/${hallID}/${roomNumber}`)
           .then((response) => {
             console.log('response:', response);
             setRaInfo(response);

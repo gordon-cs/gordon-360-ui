@@ -30,21 +30,21 @@ const RoomRanges = () => {
     //raList();
   }, []);
 
-  // Fetches the list of room ranges from the API endpoint "Housing/room-ranges"
+  // Fetches the list of room ranges from the API endpoint "Housing/roomrange/all"
   const fetchRoomRanges = () => {
     setTimeout(() => setShowList(true), 1000);
     http
-      .get('Housing/room-ranges')
+      .get('Housing/roomrange/all')
       .then((response) => {
         setRoomRanges(response);
       })
       .catch((error) => console.error('Error fetching room ranges:', error));
   };
 
-  // Fetches the list of all the RAs from the API endpoint "Housing/ras"
+  // Fetches the list of all the RAs from the API endpoint "Housing/ra/all"
   const raList = (build) => {
     http
-      .get('Housing/ras')
+      .get('Housing/ra/all')
       .then((response) => {
         console.log('ra list:', response);
         // Filter through the response to only get RAs whos building codes match the
@@ -55,10 +55,10 @@ const RoomRanges = () => {
       .catch((error) => console.error('Error fetching RA list:', error));
   };
 
-  // Fetches the list of RA room range assignments from the API endpoint "Housing/RangeAssignments"
+  // Fetches the list of RA room range assignments from the API endpoint "Housing/roomrange/assignment/all"
   const assignmentList = () => {
     http
-      .get('Housing/RangeAssignments')
+      .get('Housing/roomrange/assignment/all')
       .then((response) => {
         console.log('Assignments:', response);
         setAssignments(Array.isArray(response) ? response : []);
@@ -115,7 +115,7 @@ const RoomRanges = () => {
   const removeAssignment = (index) => {
     const rangeId = assignments[index].Range_ID;
     http
-      .del(`Housing/assignment/${rangeId}`)
+      .del(`Housing/roomrange/assignment/${rangeId}`)
       .then(() => {
         assignmentList();
       })
@@ -125,7 +125,7 @@ const RoomRanges = () => {
       });
   };
 
-  // Post request to API endpoint "Housing/assign-ra" which assigns
+  // Post request to API endpoint "Housing/roomrange/assign-ra" which assigns
   // the user selected RA to the user selected room range
   const assignPersonToRange = () => {
     if (selectedPerson !== null && selectedRoomRange !== null) {
@@ -134,7 +134,7 @@ const RoomRanges = () => {
         ra_ID: people[selectedPerson].ID,
       };
       http
-        .post('Housing/assign-ra', assignedRange)
+        .post('Housing/roomrange/assign-ra', assignedRange)
         .then((response) => {
           setSelectedPerson(null);
           setSelectedRoomRange(null);
