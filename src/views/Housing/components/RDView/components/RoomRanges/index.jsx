@@ -47,6 +47,7 @@ const RoomRanges = () => {
     http
       .get('Housing/ras')
       .then((response) => {
+        console.log('ra list:', response);
         // Filter through the response to only get RAs whos building codes match the
         // user selected building
         const buildingCodes = response.filter((code) => code.BLDG_Code === build);
