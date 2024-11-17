@@ -35,7 +35,6 @@ const TabUrlPatterns = [
   /^\/events\/?$/,
   /^\/people$|^\/myprofile|^\/profile/,
   /^\/links$/,
-  /^\/campussafety/,
   /^\/recim$/,
 ];
 
@@ -204,14 +203,6 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
             label="Links"
             component={NavLink}
             to="/links"
-            tabIndex={0}
-          />
-          <Tab
-            className={styles.tab}
-            icon={<SafetyIcon />}
-            label="Safety"
-            component={NavLink}
-            to="/campussafety"
             tabIndex={0}
           />
           {requiresAuthTab('Rec-IM', <RecIMIcon />)}

@@ -286,7 +286,7 @@ const Links = () => {
               color="secondary"
               variant="contained"
               onClick={() => {
-                navigate('/campussafety/LostAndFound');
+                navigate('/lostandfound');
               }}
             >
               Lost and Found

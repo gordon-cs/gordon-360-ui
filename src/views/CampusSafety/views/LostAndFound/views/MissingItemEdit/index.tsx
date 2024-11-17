@@ -146,7 +146,7 @@ const MissingItemFormEdit = () => {
 
       await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemid || ''));
       alert(`Report updated successfully`);
-      navigate('/campussafety/lostandfound');
+      navigate('/lostandfound');
     } catch (error) {
       console.error('Error creating missing item report:', error);
       alert('Failed to create the missing item report.');
