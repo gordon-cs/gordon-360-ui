@@ -38,7 +38,7 @@ const getMissingItemReports = async (): Promise<MissingItemReport[]> => {
 
 /**
  * Fetch an array containing the full list of all missing item reports for
- * a currently logged in user.
+ * the currently logged in user.
  * @returns MissingItemReport[] array of all missing item reports.
  */
 const getMissingItemReportUser = async (): Promise<MissingItemReport[]> => {

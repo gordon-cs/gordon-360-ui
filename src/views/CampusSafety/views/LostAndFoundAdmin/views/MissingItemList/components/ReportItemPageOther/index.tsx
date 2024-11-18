@@ -149,11 +149,10 @@ const ReportItemPage = () => {
           [name]: checked,
         }));
       } else {
-        // If the stolen checkbox is unchecked, clear stolenDescription
+        // If the stolen checkbox is unchecked, set stolen to false but do not clear stolenDescription
         setFormData((prevData) => ({
           ...prevData,
           stolen: false,
-          stolenDescription: '',
         }));
       }
     } else {
@@ -169,7 +168,6 @@ const ReportItemPage = () => {
     setFormData((prevData) => ({
       ...prevData,
       stolen: false,
-      stolenDescription: '',
     }));
   };
 
@@ -185,15 +183,22 @@ const ReportItemPage = () => {
     const errors: { [key: string]: string } = {};
 
     // Required fields for all reports
-    [
-      'category',
-      'description',
-      'locationLost',
-      'dateLost',
-      'firstName',
-      'lastName',
-      'phoneNumber',
-    ].forEach((field) => {
+    const requiredFields = ['category', 'description', 'locationLost', 'dateLost'];
+
+    if (isGordonPerson === 'yes') {
+      // For Gordon persons, ensure that a person is selected
+      if (!formData.submitterUsername) {
+        errors['submitterUsername'] = 'Please select a Gordon person';
+      }
+    } else if (isGordonPerson === 'no') {
+      // For guests, require first name, last name, phone number, email
+      requiredFields.push('firstName', 'lastName', 'phoneNumber', 'emailAddr');
+    } else {
+      // If 'isGordonPerson' is not selected
+      errors['isGordonPerson'] = 'Please select if this report is for a Gordon person or not';
+    }
+
+    requiredFields.forEach((field) => {
       if (!formData[field as keyof typeof formData]) {
         errors[field] = 'This field is required';
       }
@@ -205,6 +210,12 @@ const ReportItemPage = () => {
 
   const handleFormSubmit = () => {
     if (validateForm()) {
+      if (!formData.stolen) {
+        setFormData((prevData) => ({
+          ...prevData,
+          stolenDescription: '',
+        }));
+      }
       setShowConfirm(true);
     }
   };
@@ -236,10 +247,18 @@ const ReportItemPage = () => {
         phone: formData.phoneNumber, // Include phone number
       };
 
+      // Include stolenDescription only if stolen is true
+      if (formData.stolen) {
+        baseData.stolenDescription = formData.stolenDescription;
+      } else {
+        baseData.stolenDescription = ''; // Clear stolenDescription
+      }
+
       let requestData;
 
       if (formData.forGuest) {
         // For guest user
+        baseData.phone = formData.phoneNumber;
         requestData = {
           ...baseData,
           forGuest: true,
@@ -334,8 +353,10 @@ const ReportItemPage = () => {
       ) : (
         <Card className={styles.form_card}>
           <CardHeader
-            title={<b>Report an Item</b>}
+            title={<b>Missing Item Report</b>}
+            subheader="(Students, Faculty, and Staff can access this form themselves on 360)"
             titleTypographyProps={{ align: 'center' }}
+            subheaderTypographyProps={{ align: 'center' }}
             className="gc360_header"
           />
           <Grid container justifyContent="center">
@@ -384,19 +405,6 @@ const ReportItemPage = () => {
                           }}
                         />
                       )}
-                    />
-                  </Grid>
-                  {/* Phone Number Field */}
-                  <Grid item margin={2}>
-                    <TextField
-                      fullWidth
-                      variant="filled"
-                      label="Phone Number"
-                      name="phoneNumber"
-                      value={formData.phoneNumber}
-                      onChange={handleChange}
-                      error={!!validationErrors.phoneNumber}
-                      helperText={validationErrors.phoneNumber}
                     />
                   </Grid>
                 </>
@@ -601,6 +609,7 @@ const ReportItemPage = () => {
             open={isStolenModalOpen}
             onClose={handleModalClose}
             onSubmit={handleModalSubmit}
+            stolenDescription={formData.stolenDescription}
           />
         </Card>
       )}

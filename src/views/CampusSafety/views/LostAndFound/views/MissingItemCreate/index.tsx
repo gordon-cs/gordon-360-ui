@@ -18,6 +18,7 @@ import lostAndFoundService from 'services/lostAndFound';
 import userService from 'services/user';
 import ReportStolenModal from './components/reportStolen';
 import ConfirmReport from './components/confirmReport';
+//import ConfirmReport from './components/confirmReport';
 import { useNavigate } from 'react-router';
 
 const MissingItemFormCreate = () => {
@@ -92,11 +93,10 @@ const MissingItemFormCreate = () => {
           [name]: checked,
         }));
       } else {
-        // If the stolen checkbox is unchecked, clear stolenDescription
+        // If the stolen checkbox is unchecked, set stolen to false but do not clear stolenDescription
         setFormData((prevData) => ({
           ...prevData,
           stolen: false,
-          stolenDescription: '',
         }));
       }
     } else {
@@ -121,7 +121,6 @@ const MissingItemFormCreate = () => {
     setFormData((prevData) => ({
       ...prevData,
       stolen: false,
-      stolenDescription: '', // Clear stolen description on modal close
     }));
   };
 
@@ -135,6 +134,12 @@ const MissingItemFormCreate = () => {
 
   const handleFormSubmit = () => {
     if (validateForm()) {
+      if (!formData.stolen) {
+        setFormData((prevData) => ({
+          ...prevData,
+          stolenDescription: '',
+        }));
+      }
       setShowConfirm(true);
     }
   };
@@ -151,15 +156,10 @@ const MissingItemFormCreate = () => {
         forGuest: false,
       };
 
-      // Log the request data to inspect the payload being sent
-      console.log('Submitting request data:', requestData);
-
       const newReportId = await lostAndFoundService.createMissingItemReport(requestData);
       alert(`Report created successfully with ID: ${newReportId}`);
       navigate('/campussafety/lostandfound');
     } catch (error) {
-      console.error('Error creating missing item report:', error);
-
       alert('Failed to create the missing item report.');
     }
   };
@@ -356,6 +356,7 @@ const MissingItemFormCreate = () => {
             open={isStolenModalOpen}
             onClose={handleModalClose}
             onSubmit={handleModalSubmit}
+            stolenDescription={formData.stolenDescription}
           />
         </Card>
       )}

@@ -7,7 +7,7 @@ import MissingItemFormCreate from './views/LostAndFound/views/MissingItemCreate'
 import LostAndFoundAdmin from './views/LostAndFoundAdmin';
 import MissingItemList from './views/LostAndFoundAdmin/views/MissingItemList';
 import MissingItemReportData from './views/LostAndFoundAdmin/views/MissingItemList/components/MissingItemReportData';
-import ReportItemPage from './views/LostAndFoundAdmin/views/MissingItemList/components/MissingItemReportData/ReportItemPageOther';
+import ReportItemPage from './views/LostAndFoundAdmin/views/MissingItemList/components/ReportItemPageOther';
 
 // Routing between Campus Safety App pages
 const CampusSafetyApp = () => {
