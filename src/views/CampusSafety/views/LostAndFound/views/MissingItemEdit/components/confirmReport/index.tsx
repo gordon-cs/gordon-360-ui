@@ -14,6 +14,7 @@ interface ConfirmReportProps {
     dateLost: string;
     phoneNumber: string;
     emailAddr: string;
+    stolenDescription?: string; // Add stolenDescription field
   };
   onEdit: () => void;
   onSubmit: () => void;
@@ -65,6 +66,14 @@ const ConfirmReport: React.FC<ConfirmReportProps> = ({ formData, onEdit, onSubmi
               <strong>Description:</strong> {formData.description}
             </Typography>
           </Grid>
+          {/* Conditionally render the stolen description if it exists */}
+          {formData.stolenDescription && (
+            <Grid item xs={12}>
+              <Typography>
+                <strong>Stolen Description:</strong> {formData.stolenDescription}
+              </Typography>
+            </Grid>
+          )}
         </Grid>
         <Grid container justifyContent="space-between" marginTop={2}>
           <Button variant="outlined" color="primary" onClick={onEdit}>
