@@ -49,7 +49,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
               <Box component="span" sx={{ color: 'secondary.main' }}>
                 Gordon
               </Box>{' '}
-              Campus Safety
+              Lost and Found
             </Typography>
           </Grid>
         </Grid>
