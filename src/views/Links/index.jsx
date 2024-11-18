@@ -19,17 +19,30 @@ import FeedbackIcon from '@mui/icons-material/Feedback';
 import SafetyDividerIcon from '@mui/icons-material/SafetyDivider';
 import SpaIcon from '@mui/icons-material/Spa';
 import PsychologyIcon from '@mui/icons-material/Psychology';
+import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
+import CallIcon from '@mui/icons-material/Call';
+import CategoryIcon from '@mui/icons-material/Category';
+import ReportIcon from '@mui/icons-material/Report';
+// import EmergencyIcon from '@mui/icons-material/Emergency';
 import styles from '/src/views/Links/Links.module.scss';
 import { useNavigate } from 'react-router';
+import { styled } from '@mui/material/styles';
 
 const Links = () => {
   const navigate = useNavigate();
+
+  const CardContentWithPadding = styled(CardContent)(`
+    padding: 8px;
+    &:last-child {
+      padding-bottom: 8px;
+    }
+  `);
 
   // Academics Resources UI
   const academicsCard = (
     <Card>
       <CardHeader title={`Academics`} className="gc360_header" />
-      <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+      <CardContentWithPadding>
         <Typography>
           <List>
             <ListItem>
@@ -114,7 +127,7 @@ const Links = () => {
             </ListItem>
           </List>
         </Typography>
-      </CardContent>
+      </CardContentWithPadding>
     </Card>
   );
 
@@ -122,7 +135,7 @@ const Links = () => {
   const servicesCard = (
     <Card>
       <CardHeader title={`Services`} className="gc360_header" />
-      <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+      <CardContentWithPadding>
         <Typography>
           <List>
             <ListItem>
@@ -191,7 +204,7 @@ const Links = () => {
             </ListItem>
           </List>
         </Typography>
-      </CardContent>
+      </CardContentWithPadding>
     </Card>
   );
 
@@ -199,7 +212,7 @@ const Links = () => {
   const informationCard = (
     <Card>
       <CardHeader title={`Information`} className="gc360_header" />
-      <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+      <CardContentWithPadding>
         <Typography>
           <List>
             <ListItem>
@@ -272,7 +285,7 @@ const Links = () => {
             </ListItem>
           </List>
         </Typography>
-      </CardContent>
+      </CardContentWithPadding>
     </Card>
   );
 
@@ -280,27 +293,74 @@ const Links = () => {
   const policeCard = (
     <Card>
       <CardHeader title={`Gordon Police`} className="gc360_header" />
-      <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
-        <Grid container justifyContent={'center'}>
+      <CardContentWithPadding>
+        <Typography>
+          <List>
+            <ListItem>
+              <ListItemIcon>
+                <LocalPoliceIcon className={styles.icon_style} />
+              </ListItemIcon>
+              <Link
+                href="https://www.gordon.edu/police"
+                underline="hover"
+                className={`gc360_text_link`}
+                target="_blank"
+              >
+                <ListItemText
+                  primary="Gordon Police Resources"
+                  primaryTypographyProps={{ className: styles.link_style }}
+                />
+              </Link>
+            </ListItem>
+            <ListItem>
+              <ListItemIcon>
+                <CategoryIcon className={styles.icon_style} />
+              </ListItemIcon>
+              <Link
+                onClick={() => {
+                  navigate('/lostandfound');
+                }}
+                underline="hover"
+                className={`gc360_text_link`}
+                target="_blank"
+              >
+                <ListItemText
+                  primary="Lost and Found"
+                  primaryTypographyProps={{ className: styles.link_style }}
+                />
+              </Link>
+            </ListItem>
+            <hr />
+            <ListItem>
+              <ListItemIcon>
+                <ReportIcon className={styles.icon_style} color="error" />
+              </ListItemIcon>
+              <ListItemText>
+                Emergency Number: 978-867-<b>3333</b>
+              </ListItemText>
+            </ListItem>
+            <ListItem>
+              <ListItemIcon>
+                <CallIcon className={styles.icon_style} />
+              </ListItemIcon>
+              <ListItemText>
+                Non-Emergency Number: 978-867-<b>4444</b>
+              </ListItemText>
+            </ListItem>
+          </List>
+        </Typography>
+        {/* <Grid container justifyContent={'center'}>
           <Box className={styles.campus_safety_alert}>
             <Grid item xs={12}>
-              <Typography align="center">Emergency?</Typography>
-              <br />
-            </Grid>
-            <Grid item xs={12}>
-              <Typography align="center">Call Gordon Police</Typography>
-            </Grid>
-            <Grid item xs={12}>
               <Typography align="center">
-                P 978-867-<b>3333</b>
+                Emergency Number: 978-867-<b>3333</b>
               </Typography>
             </Grid>
           </Box>
         </Grid>
         <br />
-        <Typography align="center">Non-Emergency Assistance:</Typography>
         <Typography align="center">
-          P 978-867-<b>4444</b>
+          Non-Emergency Number: 978-867-<b>4444</b>
         </Typography>
         <br />
         <Grid container justifyContent={'center'}>
@@ -331,8 +391,8 @@ const Links = () => {
               Lost and Found
             </Button>
           </Box>
-        </Grid>
-      </CardContent>
+        </Grid> */}
+      </CardContentWithPadding>
     </Card>
   );
 
@@ -340,7 +400,7 @@ const Links = () => {
   const titleXICard = (
     <Card>
       <CardHeader title={`Sexual Misconduct Resources`} className="gc360_header" />
-      <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+      <CardContentWithPadding>
         <Typography>
           <List>
             <ListItem>
@@ -377,7 +437,7 @@ const Links = () => {
             </ListItem>
           </List>
         </Typography>
-      </CardContent>
+      </CardContentWithPadding>
     </Card>
   );
 
@@ -385,7 +445,7 @@ const Links = () => {
   const healthCenterCard = (
     <Card>
       <CardHeader title={`Health Center`} className="gc360_header" />
-      <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+      <CardContentWithPadding>
         <Typography>
           <List>
             <ListItem>
@@ -406,7 +466,7 @@ const Links = () => {
             </ListItem>
           </List>
         </Typography>
-      </CardContent>
+      </CardContentWithPadding>
     </Card>
   );
 
@@ -414,7 +474,7 @@ const Links = () => {
   const counselingCenterCard = (
     <Card>
       <CardHeader title={`Counseling Center`} className="gc360_header" />
-      <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+      <CardContentWithPadding>
         <Typography>
           <List>
             <ListItem>
@@ -451,7 +511,7 @@ const Links = () => {
             </ListItem>
           </List>
         </Typography>
-      </CardContent>
+      </CardContentWithPadding>
     </Card>
   );
 
@@ -459,7 +519,7 @@ const Links = () => {
   const chapelCard = (
     <Card>
       <CardHeader title={`Chapel Office`} className="gc360_header" />
-      <CardContent sx={{ p: 0, '&:last-child': { pb: 0 } }}>
+      <CardContentWithPadding>
         <Typography>
           <ListItem>
             <ListItemIcon>
@@ -478,7 +538,7 @@ const Links = () => {
             </Link>
           </ListItem>
         </Typography>
-      </CardContent>
+      </CardContentWithPadding>
     </Card>
   );
 
