@@ -57,7 +57,7 @@ const addRoomRange = (newRange: NewRoomRange): Promise<RoomRange[]> =>
 // deletes the user selected room range
 const removeRoomRange = (rangeID: number) => http.del(`Housing/roomrange/${rangeID}`);
 
-const removeAssignment = (rangeID: number) => http.del(`Housing/roomrange/assignment/{rangeId}`);
+const removeAssignment = (rangeID: number) => http.del(`Housing/roomrange/assignment/${rangeID}`);
 
 // Post request to API endpoint "Housing/roomrage/assign-ra" which assigns
 // the user selected RA to the user selected room range

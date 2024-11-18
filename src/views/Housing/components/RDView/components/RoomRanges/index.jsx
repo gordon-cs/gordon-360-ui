@@ -37,6 +37,7 @@ const RoomRanges = () => {
     fetchRoomRanges()
       .then((response) => {
         setRoomRanges(response);
+        console.log(response);
       })
       .catch((error) => console.error('Error fetching room ranges:', error));
     fetchAssignmentList();
@@ -58,10 +59,16 @@ const RoomRanges = () => {
   };
 
   const onClickRoomRange = () => {
-    addRoomRange()
+    const body = { Hall_ID: building, Room_Start: roomStart, Room_End: roomEnd };
+    addRoomRange(body)
       .then((response) => {
         clearRoomInputs();
-        fetchRoomRanges();
+        fetchRoomRanges()
+          .then((response) => {
+            setRoomRanges(response);
+            console.log(response);
+          })
+          .catch((error) => console.error('Error fetching room ranges:', error));
       })
       .catch((error) => {
         console.error('Error adding room range:', error);
@@ -72,9 +79,17 @@ const RoomRanges = () => {
   };
 
   const onClickRemoveRoomRange = () => {
-    removeRoomRange()
+    console.log(selectedRoomRange);
+    const range_id = roomRanges[selectedRoomRange].RangeID;
+    console.log(range_id);
+    removeRoomRange(range_id)
       .then(() => {
-        fetchRoomRanges();
+        fetchRoomRanges()
+          .then((response) => {
+            setRoomRanges(response);
+            console.log(response);
+          })
+          .catch((error) => console.error('Error fetching room ranges:', error));
         setSelectedRoomRange(null);
       })
       .catch((error) => {
@@ -173,7 +188,14 @@ const RoomRanges = () => {
         Save Range
       </Button>
 
-      <Button variant="contained" onClick={onClickRemoveRoomRange} sx={{ mt: 2, ml: 1 }}>
+      <Button
+        variant="contained"
+        onClick={(e) => {
+          e.stopPropagation(); // Prevent triggering list item click
+          onClickRemoveRoomRange();
+        }}
+        sx={{ mt: 2, ml: 1 }}
+      >
         Remove Range
       </Button>
 
