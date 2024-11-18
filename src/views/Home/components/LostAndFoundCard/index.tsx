@@ -21,29 +21,22 @@ const LostAndFoundCard = () => {
         className="gc360_header"
       />
       <CardContent>
-        <Grid container direction="row">
+        <Grid container direction="row" justifyContent="space-between">
           <Grid item xs={5}>
             <Button
               variant="contained"
               color="secondary"
               component={Link}
-              to="/campussafety/LostAndFound/missingitemform"
+              to="/LostAndFound/missingitemform"
             >
               Report Lost Item
             </Button>
           </Grid>
-          <Box alignItems={'right'}>
-            <Grid item xs={5}>
-              <Button
-                variant="contained"
-                color="secondary"
-                component={Link}
-                to="/campussafety/LostAndFound"
-              >
-                Report Found Item
-              </Button>
-            </Grid>
-          </Box>
+          <Grid item xs={5}>
+            <Button variant="contained" color="secondary" component={Link} to="LostAndFound">
+              Report Found Item
+            </Button>
+          </Grid>
         </Grid>
       </CardContent>
     </Card>
