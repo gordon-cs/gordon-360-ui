@@ -58,7 +58,7 @@ const MissingItemList = () => {
   const [loading, setLoading] = useState(true);
   const [reports, setReports] = useState<MissingItemReport[]>([]);
   const [filteredReports, setFilteredReports] = useState<MissingItemReport[]>([]);
-  const [status, setStatus] = useState(''); //Default value active
+  const [status, setStatus] = useState(''); // Default value active
   const [category, setCategory] = useState('');
   const [color, setColor] = useState('');
   const [keywords, setKeywords] = useState('');
@@ -74,7 +74,7 @@ const MissingItemList = () => {
           (a, b) => new Date(b.dateLost).getTime() - new Date(a.dateLost).getTime(),
         );
         setReports(sortedReports);
-        setStatus('active'); //set initial filter
+        setStatus('active'); // Set initial filter
         setFilteredReports(sortedReports);
       } catch (error) {
         console.error('Error fetching missing items:', error);
@@ -137,73 +137,94 @@ const MissingItemList = () => {
               className={styles.filterTitle}
             ></CardHeader>
             <CardContent className={styles.filterContainer}>
-              <Grid container spacing={isMobile ? 1 : 2}>
-                {/* Keywords on a single row */}
-                <Grid item xs={12}>
-                  <TextField
-                    label="Keywords"
-                    variant="outlined"
-                    size="small"
-                    value={keywords}
-                    onChange={(e) => setKeywords(e.target.value)}
-                    className={styles.textField}
-                    fullWidth
-                  />
-                </Grid>
+              <Grid
+                container
+                spacing={isMobile ? 1 : 2}
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <Grid item xs={12} sm={9}>
+                  <Grid container spacing={isMobile ? 1 : 2}>
+                    {/* Keywords on a single row */}
+                    <Grid item xs={12}>
+                      <TextField
+                        label="Keywords"
+                        variant="outlined"
+                        size="small"
+                        value={keywords}
+                        onChange={(e) => setKeywords(e.target.value)}
+                        className={styles.textField}
+                        fullWidth
+                      />
+                    </Grid>
 
-                {/* Status, Color, Category, and Clear button on a single row */}
-                <Grid item xs={isMobile}>
-                  <FormControl size="small" className={styles.formControl} fullWidth>
-                    <InputLabel>Status</InputLabel>
-                    <Select value={status} onChange={(e) => setStatus(e.target.value)}>
-                      <MenuItem value="">All</MenuItem>
-                      <MenuItem value="active">Active</MenuItem>
-                      <MenuItem value="expired">Expired</MenuItem>
-                      <MenuItem value="found">Found</MenuItem>
-                      <MenuItem value="deleted">Deleted</MenuItem>
-                    </Select>
-                  </FormControl>
+                    {/* Status, Color, Category, and Clear button on a single row */}
+                    <Grid item xs={isMobile}>
+                      <FormControl size="small" className={styles.formControl} fullWidth>
+                        <InputLabel>Status</InputLabel>
+                        <Select value={status} onChange={(e) => setStatus(e.target.value)}>
+                          <MenuItem value="">All</MenuItem>
+                          <MenuItem value="active">Active</MenuItem>
+                          <MenuItem value="expired">Expired</MenuItem>
+                          <MenuItem value="found">Found</MenuItem>
+                          <MenuItem value="deleted">Deleted</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={isMobile}>
+                      <FormControl size="small" className={styles.formControl} fullWidth>
+                        <InputLabel>Color</InputLabel>
+                        <Select value={color} onChange={(e) => setColor(e.target.value)}>
+                          <MenuItem value="">All</MenuItem>
+                          {colors.map((colorOption) => (
+                            <MenuItem key={colorOption} value={colorOption}>
+                              {colorOption}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={isMobile}>
+                      <FormControl size="small" className={styles.formControl} fullWidth>
+                        <InputLabel>Category</InputLabel>
+                        <Select value={category} onChange={(e) => setCategory(e.target.value)}>
+                          <MenuItem value="">All</MenuItem>
+                          {categories.map((categoryOption) => (
+                            <MenuItem key={categoryOption} value={categoryOption}>
+                              {categoryOption}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={isMobile}>
+                      <Button
+                        onClick={() => {
+                          setStatus('');
+                          setCategory('');
+                          setColor('');
+                          setKeywords('');
+                          handleFilter();
+                        }}
+                        variant="contained"
+                        color="error"
+                        fullWidth
+                      >
+                        Clear
+                      </Button>
+                    </Grid>
+                  </Grid>
                 </Grid>
-                <Grid item xs={isMobile}>
-                  <FormControl size="small" className={styles.formControl} fullWidth>
-                    <InputLabel>Color</InputLabel>
-                    <Select value={color} onChange={(e) => setColor(e.target.value)}>
-                      <MenuItem value="">All</MenuItem>
-                      {colors.map((colorOption) => (
-                        <MenuItem key={colorOption} value={colorOption}>
-                          {colorOption}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={isMobile}>
-                  <FormControl size="small" className={styles.formControl} fullWidth>
-                    <InputLabel>Category</InputLabel>
-                    <Select value={category} onChange={(e) => setCategory(e.target.value)}>
-                      <MenuItem value="">All</MenuItem>
-                      {categories.map((categoryOption) => (
-                        <MenuItem key={categoryOption} value={categoryOption}>
-                          {categoryOption}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={isMobile}>
+                {/*Button: Report Item for others */}
+                <Grid item xs={12} sm={3} style={{ textAlign: isMobile ? 'center' : 'right' }}>
                   <Button
-                    onClick={() => {
-                      setStatus('');
-                      setCategory('');
-                      setColor('');
-                      setKeywords('');
-                      handleFilter();
-                    }}
                     variant="contained"
-                    color="error"
-                    fullWidth
+                    color="primary"
+                    onClick={() => navigate('/campussafety/lostandfoundadmin/reportitemforothers')}
+                    fullWidth={isMobile}
+                    className={styles.reportButton}
                   >
-                    Clear
+                    Report Item for others
                   </Button>
                 </Grid>
               </Grid>

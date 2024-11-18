@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Button,
   Dialog,
@@ -14,10 +14,22 @@ type ReportStolenModalProps = {
   open: boolean;
   onClose: () => void;
   onSubmit: (description: string) => void;
+  stolenDescription: string;
 };
 
-const ReportStolenModal: React.FC<ReportStolenModalProps> = ({ open, onClose, onSubmit }) => {
-  const [description, setDescription] = React.useState('');
+const ReportStolenModal: React.FC<ReportStolenModalProps> = ({
+  open,
+  onClose,
+  onSubmit,
+  stolenDescription,
+}) => {
+  const [description, setDescription] = React.useState(stolenDescription);
+  useEffect(() => {
+    if (open) {
+      // When modal opens, set description to the existing stolenDescription
+      setDescription(stolenDescription);
+    }
+  }, [open, stolenDescription]);
 
   const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDescription(e.target.value);
@@ -25,7 +37,7 @@ const ReportStolenModal: React.FC<ReportStolenModalProps> = ({ open, onClose, on
 
   const handleSubmit = () => {
     onSubmit(description);
-    setDescription('');
+    //setDescription('');
   };
 
   return (
