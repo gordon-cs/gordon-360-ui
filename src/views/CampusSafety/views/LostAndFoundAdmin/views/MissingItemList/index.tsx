@@ -273,7 +273,7 @@ const MissingItemList = () => {
                         key={report.recordID}
                         className={styles.eventCard}
                         onClick={() =>
-                          navigate(`/campussafety/lostandfoundadmin/missingitem/${report.recordID}`)
+                          navigate(`/lostandfound/lostandfoundadmin/missingitem/${report.recordID}`)
                         }
                       >
                         <CardContent>
@@ -310,7 +310,7 @@ const MissingItemList = () => {
                         className={`${styles.reportRow} ${styles.clickableRow}`}
                         onClick={() =>
                           navigate(
-                            `/campussafety/lostandfoundadmin/missingitemdatabase/${report.recordID}`,
+                            `/lostandfound/lostandfoundadmin/missingitemdatabase/${report.recordID}`,
                           )
                         }
                       >

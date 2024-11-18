@@ -15,7 +15,7 @@ type CampusSafetyBreadcrumbProps = {
   children: React.ReactNode;
 };
 
-const CampusSafetyBreadcrumb: React.FC<CampusSafetyBreadcrumbProps> = ({ link, children }) => {
+const LostAndFoundBreadcrumb: React.FC<CampusSafetyBreadcrumbProps> = ({ link, children }) => {
   return link ? (
     <LinkRouter to={link} className={`${styles.breadcrumbText} ${styles.breadcrumbLink}`}>
       {children}
@@ -61,7 +61,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
                 className={styles.button}
                 variant="contained"
                 onClick={() => {
-                  navigate('/campussafety/lostandfoundadmin');
+                  navigate('/lostandfound/lostandfoundadmin');
                 }}
               >
                 <AdminPanelSettingsIcon sx={{ marginRight: '0.3rem' }} />
@@ -77,13 +77,13 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
           className={styles.breadcrumbContainer}
         >
           {/* Home breadcrumb */}
-          <CampusSafetyBreadcrumb link={pathnames.length > 1 ? '/campussafety' : null}>
+          <LostAndFoundBreadcrumb link={pathnames.length > 1 ? '/lostandfound' : null}>
             <Grid container alignItems="center">
               <HomeIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-              {'Campus Safety Home'}
+              {'Lost And Found Home'}
             </Grid>
-          </CampusSafetyBreadcrumb>
-          {/* Only render additional breadcrumbs beyond "Campus Safety Home" */}
+          </LostAndFoundBreadcrumb>
+          {/* Only render additional breadcrumbs beyond "Lost And Found Home" */}
           {pathnames
             .slice(1) // Start from the second item to avoid redundancy
             .map((value, index) => {
@@ -91,9 +91,9 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
               const to = `/${pathnames.slice(0, index + 2).join('/')}`;
 
               return (
-                <CampusSafetyBreadcrumb key={to} link={!isLast ? to : null}>
+                <LostAndFoundBreadcrumb key={to} link={!isLast ? to : null}>
                   {value.replace(/-/g, ' ')}
-                </CampusSafetyBreadcrumb>
+                </LostAndFoundBreadcrumb>
               );
             })}
         </Breadcrumbs>

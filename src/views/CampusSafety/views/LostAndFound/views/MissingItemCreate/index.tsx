@@ -158,7 +158,7 @@ const MissingItemFormCreate = () => {
 
       const newReportId = await lostAndFoundService.createMissingItemReport(requestData);
       alert(`Report created successfully with ID: ${newReportId}`);
-      navigate('/campussafety/lostandfound');
+      navigate('/lostandfound');
     } catch (error) {
       alert('Failed to create the missing item report.');
     }

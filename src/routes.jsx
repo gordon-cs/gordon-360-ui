@@ -136,8 +136,8 @@ const routes = [
     element: <RecIM />,
   },
   {
-    name: 'CampusSafety',
-    path: '/CampusSafety/*',
+    name: 'LostAndFound',
+    path: '/lostandfound/*',
     element: <CampusSafety />,
   },
   {

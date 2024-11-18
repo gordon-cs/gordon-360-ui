@@ -102,7 +102,7 @@ const MissingItemFormEdit = () => {
       forGuest: false,
     };
     await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemid || ''));
-    navigate('/campussafety/lostandfound');
+    navigate('/lostandfound');
   };
 
   return (
