@@ -53,21 +53,22 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
             </Typography>
           </Grid>
         </Grid>
-        {(isAdmin || isKiosk) && !pathnames.find((x) => x === 'lostandfoundadmin') && (
-          <Grid item xs={5} className={styles.buttonContainer}>
-            <Button
-              color="secondary"
-              className={styles.button}
-              variant="contained"
-              onClick={() => {
-                navigate('/campussafety/lostandfoundadmin');
-              }}
-            >
-              <AdminPanelSettingsIcon sx={{ marginRight: '0.3rem' }} />
-              <b>Lost & Found Admin</b>
-            </Button>
-          </Grid>
-        )}
+        {(isAdmin || isKiosk) &&
+          !pathnames.find((x) => x.toLowerCase() === 'lostandfoundadmin') && (
+            <Grid item xs={5} className={styles.buttonContainer}>
+              <Button
+                color="secondary"
+                className={styles.button}
+                variant="contained"
+                onClick={() => {
+                  navigate('/campussafety/lostandfoundadmin');
+                }}
+              >
+                <AdminPanelSettingsIcon sx={{ marginRight: '0.3rem' }} />
+                <b>Lost & Found Admin</b>
+              </Button>
+            </Grid>
+          )}
       </Grid>
       <AppBar className={styles.stickyNav}>
         <Breadcrumbs

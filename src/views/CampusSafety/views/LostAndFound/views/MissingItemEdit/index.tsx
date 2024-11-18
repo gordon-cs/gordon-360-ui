@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Card,
   CardHeader,
@@ -14,187 +14,111 @@ import {
 import { DateTime } from 'luxon';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './MissingItemEdit.module.scss';
-import lostAndFoundService, { MissingItemReport } from 'services/lostAndFound';
+import lostAndFoundService from 'services/lostAndFound';
+import userService from 'services/user';
 import ConfirmReport from './components/confirmReport';
 import { useNavigate, useParams } from 'react-router';
 
 const MissingItemFormEdit = () => {
   const navigate = useNavigate();
   const { itemid } = useParams<{ itemid: string }>();
-  const [item, setItem] = useState<MissingItemReport | null>(null);
-  const [modified, setModified] = useState<Boolean>(false);
 
-  useEffect(() => {
-    const fetchItem = async () => {
-      try {
-        const fetchedItem = await lostAndFoundService.getMissingItemReport(parseInt(itemid || ''));
-        setItem(fetchedItem);
-      } catch (error) {
-        console.error('Error fetching item:', error);
-      }
-    };
-    fetchItem();
-  }, [itemid]);
+  const [user, setUser] = useState({
+    firstName: '',
+    lastName: '',
+    emailAddr: '',
+    phoneNumber: '',
+    AD_Username: '', // Include AD_Username for submitterUsername
+  });
 
-  useEffect(() => {
-    setFormData((prevData) => ({
-      ...prevData,
-      firstName: item?.firstName || '',
-      lastName: item?.lastName || '',
-      category: item?.category || '',
-      colors: item?.colors || [],
-      brand: item?.brand || '',
-      description: item?.description || '',
-      locationLost: item?.locationLost || '',
-      stolen: item?.stolen || false,
-      stolenDescription: item?.stolenDescription || '',
-      dateLost: item?.dateLost || '',
-      phoneNumber: item?.phoneNumber || '',
-      altPhone: item?.altPhone || '',
-      emailAddr: item?.emailAddr || '',
-      status: item?.status || '',
-    }));
-  }, [item]);
-
-  // Form state
   const [formData, setFormData] = useState({
-    firstName: '', //TODO add code to autofill this
-    lastName: '', //TODO add code to autofill this
     category: '',
-    colors: [] as string[], // Ensure colors is an array
+    colors: [] as string[],
     brand: '',
     description: '',
     locationLost: '',
     stolen: false,
     stolenDescription: '',
     dateLost: '',
-    phoneNumber: '', //TODO add code to autofill this
-    altPhone: '',
-    emailAddr: '', //TODO add code to autofill this
-    status: '', // Assuming a default status for new reports
+    status: 'active',
   });
 
   const [showConfirm, setShowConfirm] = useState(false);
-  const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
 
-  // Required fields
-  const requiredFields = [
-    'firstName',
-    'lastName',
-    'locationLost',
-    'phoneNumber',
-    'description',
-    'emailAddr',
-  ];
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userInfo = await userService.getProfileInfo();
+      setUser({
+        firstName: userInfo?.FirstName || '',
+        lastName: userInfo?.LastName || '',
+        emailAddr: userInfo?.Email || '',
+        phoneNumber: userInfo?.MobilePhone || '',
+        AD_Username: userInfo?.AD_Username || '',
+      });
+    };
+    fetchUserData();
+  }, []);
 
-  // Validation function
-  const validateForm = () => {
-    const errors: { [key: string]: string } = {};
-    requiredFields.forEach((field) => {
-      if (!formData[field as keyof typeof formData]) {
-        errors[field] = 'This field is required';
+  useEffect(() => {
+    const fetchItemData = async () => {
+      if (itemid) {
+        const item = await lostAndFoundService.getMissingItemReport(parseInt(itemid));
+        setFormData({
+          category: item.category,
+          colors: item.colors || [],
+          brand: item.brand || '',
+          description: item.description,
+          locationLost: item.locationLost,
+          stolen: item.stolen,
+          stolenDescription: item.stolenDescription || '',
+          dateLost: item.dateLost,
+          status: item.status || 'active',
+        });
       }
-    });
-    setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
+    };
+    fetchItemData();
+  }, [itemid]);
 
-  // Handle form data changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setModified(true);
-    const { name, value, type, checked } = e.target;
-    if (name === 'dateLost') {
-      setFormData((prevData) => ({
-        ...prevData,
-        dateLost: value, // Format date for display
-      }));
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: type === 'checkbox' ? checked : value,
-      }));
-    }
-  };
-
-  // Handle color selection
   const handleColorChange = (color: string) => {
     setFormData((prevData) => {
       const colors = prevData.colors.includes(color)
         ? prevData.colors.filter((c) => c !== color)
         : [...prevData.colors, color];
-      setModified(true);
       return { ...prevData, colors };
     });
   };
 
   const handleFormSubmit = () => {
-    if (validateForm()) {
-      setShowConfirm(true);
-    }
+    setShowConfirm(true);
   };
 
   const handleReportSubmit = async () => {
-    try {
-      const requestData = {
-        ...formData,
-        dateLost: formData.dateLost || DateTime.now().toISO(),
-        dateCreated: item?.dateCreated || DateTime.now().toISO(),
-        status: 'active',
-      };
-
-      console.log(requestData, itemid, parseInt(itemid || ''));
-
-      await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemid || ''));
-      alert(`Report updated successfully`);
-      navigate('/campussafety/lostandfound');
-    } catch (error) {
-      console.error('Error creating missing item report:', error);
-      alert('Failed to create the missing item report.');
-    }
+    const requestData = {
+      ...formData,
+      ...user,
+      submitterUsername: user.AD_Username,
+      dateLost: formData.dateLost || DateTime.now().toISO(),
+      dateCreated: DateTime.now().toISO(),
+      forGuest: false,
+    };
+    await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemid || ''));
+    navigate('/campussafety/lostandfound');
   };
-
-  if (!item) return null;
 
   return (
     <>
       <Header />
       {showConfirm ? (
         <ConfirmReport
-          formData={formData}
+          formData={{ ...formData, ...user }}
           onEdit={() => setShowConfirm(false)}
           onSubmit={handleReportSubmit}
         />
       ) : (
         <Card className={styles.form_card}>
-          <CardHeader
-            title={<b>Report a Missing Item</b>}
-            titleTypographyProps={{ align: 'center' }}
-            className="gc360_header"
-          />
-          <Grid container justifyContent={'center'}>
+          <CardHeader title="Edit Missing Item" className="gc360_header" />
+          <Grid container justifyContent="center">
             <Grid item sm={5} xs={12}>
-              {/* First Name */}
-              <Grid item margin={2}>
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  label={'First Name'}
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                />
-              </Grid>
-              {/* Last Name */}
-              <Grid item margin={2}>
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  label={'Last Name'}
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                />
-              </Grid>
               {/* Item Category */}
               <Grid item margin={2} className={styles.box_background}>
                 <FormGroup>
@@ -221,13 +145,12 @@ const MissingItemFormEdit = () => {
                         control={<Radio />}
                         label={label}
                         value={label.toLowerCase().replace(/ /g, '/')}
-                        onChange={(e) => {
+                        onChange={(e) =>
                           setFormData((prevData) => ({
                             ...prevData,
                             category: (e.target as HTMLInputElement).value,
-                          }));
-                          setModified(true);
-                        }}
+                          }))
+                        }
                         checked={formData.category === label.toLowerCase().replace(/ /g, '/')}
                         className={styles.category_item}
                       />
@@ -236,34 +159,6 @@ const MissingItemFormEdit = () => {
                 </Grid>
               </Grid>
 
-              <Grid item margin={2}>
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  label={'Item Brand or Make'}
-                  name="brand"
-                  value={formData.brand}
-                  onChange={handleChange}
-                  error={!!validationErrors.brand}
-                  helperText={validationErrors.brand}
-                />
-              </Grid>
-              <Grid item margin={2}>
-                <TextField
-                  fullWidth
-                  multiline
-                  minRows={5}
-                  variant="filled"
-                  label={'Item Description: Be as detailed as possible'}
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  error={!!validationErrors.description}
-                  helperText={validationErrors.description}
-                />
-              </Grid>
-            </Grid>
-            <Grid item sm={5} xs={12}>
               {/* Item Colors */}
               <Grid item margin={2} className={styles.box_background}>
                 <FormGroup>
@@ -304,125 +199,69 @@ const MissingItemFormEdit = () => {
                   </FormGroup>
                 </Grid>
               </Grid>
+            </Grid>
+
+            <Grid item sm={5} xs={12}>
+              <Grid item margin={2}>
+                <TextField
+                  fullWidth
+                  variant="filled"
+                  label="Item Brand or Make"
+                  name="brand"
+                  value={formData.brand}
+                  onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
+                />
+              </Grid>
+              <Grid item margin={2}>
+                <TextField
+                  fullWidth
+                  multiline
+                  minRows={5}
+                  variant="filled"
+                  label="Item Description"
+                  name="description"
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                />
+              </Grid>
               <Grid item margin={2}>
                 <TextField
                   fullWidth
                   multiline
                   minRows={4}
                   variant="filled"
-                  label={'Location Lost: Be as detailed as possible (or "unknown")'}
+                  label="Location Lost"
                   name="locationLost"
                   value={formData.locationLost}
-                  onChange={handleChange}
-                  error={!!validationErrors.locationLost}
-                  helperText={validationErrors.locationLost}
+                  onChange={(e) => setFormData({ ...formData, locationLost: e.target.value })}
                 />
               </Grid>
               <Grid item margin={2}>
                 <TextField
                   fullWidth
                   variant="filled"
-                  label={'Date Lost'}
-                  InputLabelProps={{ shrink: true }} //Shrink label to fit above date placeholder
+                  label="Date Lost"
+                  InputLabelProps={{ shrink: true }}
                   name="dateLost"
                   type="date"
                   value={formData.dateLost}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item margin={2}>
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  label={'Phone Number'}
-                  name="phoneNumber"
-                  value={formData.phoneNumber}
-                  onChange={handleChange}
-                  error={!!validationErrors.phoneNumber}
-                  helperText={validationErrors.phoneNumber}
-                />
-              </Grid>
-              <Grid item margin={2}>
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  label={'Additional Phone Number'}
-                  name="altPhone"
-                  value={formData.altPhone}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item margin={2}>
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  label={'Email Address'}
-                  name="emailAddr"
-                  value={formData.emailAddr}
-                  onChange={handleChange}
-                  error={!!validationErrors.emailAddr}
-                  helperText={validationErrors.emailAddr}
+                  onChange={(e) => setFormData({ ...formData, dateLost: e.target.value })}
+                  inputProps={{ max: DateTime.now().toISODate() }}
                 />
               </Grid>
             </Grid>
           </Grid>
-          {/* Stolen Checkbox */}
-          {formData.stolen && (
-            <>
-              <Grid container justifyContent="center" marginTop={3}>
-                <Grid item xs={10}>
-                  <FormControlLabel
-                    className={styles.stolen_container}
-                    control={
-                      <Checkbox
-                        checked={formData.stolen}
-                        onChange={handleChange}
-                        name="stolen"
-                        disabled
-                      />
-                    }
-                    label="Was this item stolen? (Police staff will follow up)"
-                  />
-                </Grid>
-                <Grid item xs={10} justifyContent="center" marginTop={3}>
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    label={'Stolen - Reason Given'}
-                    name="stolenDescription"
-                    value={formData.stolenDescription}
-                    onChange={handleChange}
-                    error={!!validationErrors.stolenDescription}
-                    helperText={validationErrors.stolenDescription}
-                  />
-                </Grid>
-              </Grid>
-            </>
-          )}
 
-          {/* Submit Button */}
           <Grid container justifyContent="flex-end" className={styles.submit_container}>
-            <Grid item xs={4}>
-              {modified ? (
-                <Button
-                  variant="contained"
-                  fullWidth
-                  className={styles.submit_button}
-                  onClick={handleFormSubmit}
-                >
-                  Update Report
-                </Button>
-              ) : (
-                <Button
-                  variant="contained"
-                  fullWidth
-                  className={styles.submit_button}
-                  onClick={handleFormSubmit}
-                  disabled
-                >
-                  Update Report
-                </Button>
-              )}
+            <Grid item xs={2}>
+              <Button
+                variant="contained"
+                fullWidth
+                className={styles.submit_button}
+                onClick={handleFormSubmit}
+              >
+                Update Report
+              </Button>
             </Grid>
           </Grid>
         </Card>
