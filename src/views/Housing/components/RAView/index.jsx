@@ -18,14 +18,63 @@ import Schedule from './components/Schedule';
 import { React, useEffect, useState } from 'react';
 import { ListItemIcon, ListItemText, ListSubheader, List, ListItem, Link } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
+import http from '../../../../../../gordon-360-ui(Main)/src/services/http';
+import { useUser } from 'hooks';
 
 const RAView = () => {
   const [isCheckedIn, setCheckedIn] = useState(false);
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const { profile } = useUser();
 
   const [hallName, setHallName] = useState('');
+
+  // check if the RA is currently checked in
+  const checkIfCheckedIn = async () => {
+    try {
+      const data = await http.get(`Housing/is-on-call/${profile.ID}`);
+      console.log('API Response:', data);
+
+      if (data && typeof data.IsOnCall === 'boolean') {
+        setCheckedIn(data.IsOnCall);
+      } else {
+        console.warn('Unexpected API response structure:', data);
+      }
+    } catch (error) {
+      if (error.response) {
+        console.error('Error response:', error.response.data);
+      } else {
+        console.error('Error:', error.message);
+      }
+    }
+  };
+
+  // Auto select a hall on checkin prompt based on RA housing
+  const initializeHallFromProfile = () => {
+    if (profile?.hall) {
+      console.log('RA Living Hall from Profile:', profile.hall);
+
+      setHallState((prevState) => {
+        const isVillageDorm = ['CON', 'GRA', 'RID', 'MCI'].includes(profile.hall); // Check if the hall is part of the village
+
+        return {
+          ...prevState,
+          [profile.hall]: true, // Automatically check off the specific hall
+          village: isVillageDorm, // Check off "village" if the hall is part of it
+        };
+      });
+    } else {
+      console.warn('No HallCode found in profile.');
+    }
+  };
+
+  useEffect(() => {
+    if (profile?.ID) {
+      checkIfCheckedIn();
+      initializeHallFromProfile();
+    }
+  }, [profile?.ID]);
 
   const handleConfirm = () => {
     setConfirmOpen(true);
@@ -33,9 +82,10 @@ const RAView = () => {
     var tempName = '';
 
     for (let hall in hallState) {
-      if (hallState[hall] && tempName == '') {
+      if (hallState[hall] && tempName == '' && hall !== 'village') {
+        //exclude village, use actual building codes
         tempName = hall.charAt(0).toUpperCase() + hall.slice(1);
-      } else if (hallState[hall] && tempName != '') {
+      } else if (hallState[hall] && tempName != '' && hall !== 'village') {
         tempName = tempName + ', ' + hall.charAt(0).toUpperCase() + hall.slice(1);
       } else {
         continue;
@@ -45,22 +95,40 @@ const RAView = () => {
     setHallName(tempName);
   };
 
-  const handleSubmit = (event) => {
-    setCheckedIn({ ...isCheckedIn, [event.target.name]: event.target.value });
-    // isCheckedIn will need to be updated by the API later...
-    setConfirmOpen(false);
-    setOpen(false);
+  const handleSubmit = async () => {
+    const selectedHallCodes = Object.keys(hallState).filter(
+      (hall) => hallState[hall] && hall !== 'village',
+    ); //exclude village for checkin
+
+    if (!profile?.ID || selectedHallCodes.length === 0) {
+      alert('Please select a hall and ensure profile information is loaded before checking in.');
+      return;
+    }
+
+    try {
+      await http.post('Housing/ra-checkin', {
+        RA_ID: profile.ID,
+        Hall_ID: selectedHallCodes, // Send hall codes to the API
+      });
+      setCheckedIn(true);
+      setConfirmOpen(false);
+      setOpen(false);
+      alert(`Successfully checked into ${hallName}`);
+    } catch (error) {
+      console.error('Error checking in:', error);
+      alert('Failed to check in. Please try again.');
+    }
   };
 
   const [hallState, setHallState] = useState({
-    bromley: false,
-    chase: false,
-    evans: false,
-    ferrin: false,
-    fulton: false,
-    nyland: false,
-    tavilla: false,
-    wilson: false,
+    BRO: false,
+    CHA: false,
+    EVN: false,
+    FER: false,
+    FUL: false,
+    NYL: false,
+    TAV: false,
+    WIL: false,
     village: false,
   });
 
@@ -75,12 +143,30 @@ const RAView = () => {
     setIsChecked(check);
   }, [hallState]);
 
-  const { bromley, chase, evans, ferrin, fulton, nyland, tavilla, wilson, village } = hallState;
+  const { BRO, CHA, EVN, FER, FUL, NYL, TAV, WIL, village } = hallState;
 
   const handleHallChecked = (event) => {
-    setHallState({
-      ...hallState,
-      [event.target.name]: event.target.checked,
+    const { name, checked } = event.target;
+
+    setHallState((prevState) => {
+      const updatedState = { ...prevState, [name]: checked };
+
+      //when village checked mark needed halls
+      if (name === 'village' && checked) {
+        updatedState.CON = true;
+        updatedState.GRA = true;
+        updatedState.RID = true;
+        updatedState.MCI = true;
+      }
+
+      if (name === 'village' && !checked) {
+        updatedState.CON = false;
+        updatedState.GRA = false;
+        updatedState.RID = false;
+        updatedState.MCI = false;
+      }
+
+      return updatedState;
     });
   };
 
@@ -92,7 +178,7 @@ const RAView = () => {
         </Grid>
         <Grid item xs={12} md={4}>
           <Card>
-            <CardHeader title={`Helpful Links`} className="gc360_header" />
+            <CardHeader title={'Helpful Links'} className="gc360_header" />
             <CardContent>
               <Typography>
                 <List>
@@ -126,60 +212,60 @@ const RAView = () => {
                 <FormLabel error>Select a Hall</FormLabel>
                 <FormGroup>
                   <FormControlLabel
-                    checked={bromley}
+                    checked={BRO}
                     control={<Checkbox />}
                     onChange={handleHallChecked}
                     label="Bromley"
-                    name="bromley"
+                    name="BRO"
                   />
                   <FormControlLabel
-                    checked={chase}
+                    checked={CHA}
                     control={<Checkbox />}
                     onChange={handleHallChecked}
                     label="Chase"
-                    name="chase"
+                    name="CHA"
                   />
                   <FormControlLabel
-                    checked={evans}
+                    checked={EVN}
                     control={<Checkbox />}
                     onChange={handleHallChecked}
                     label="Evans"
-                    name="evans"
+                    name="EVN"
                   />
                   <FormControlLabel
-                    checked={ferrin}
+                    checked={FER}
                     control={<Checkbox />}
                     onChange={handleHallChecked}
                     label="Ferrin"
-                    name="ferrin"
+                    name="FER"
                   />
                   <FormControlLabel
-                    checked={fulton}
+                    checked={FUL}
                     control={<Checkbox />}
                     onChange={handleHallChecked}
                     label="Fulton"
-                    name="fulton"
+                    name="FUL"
                   />
                   <FormControlLabel
-                    checked={nyland}
+                    checked={NYL}
                     control={<Checkbox />}
                     onChange={handleHallChecked}
                     label="Nyland"
-                    name="nyland"
+                    name="NYL"
                   />
                   <FormControlLabel
-                    checked={tavilla}
+                    checked={TAV}
                     control={<Checkbox />}
                     onChange={handleHallChecked}
                     label="Tavilla"
-                    name="tavilla"
+                    name="TAV"
                   />
                   <FormControlLabel
-                    checked={wilson}
+                    checked={WIL}
                     control={<Checkbox />}
                     onChange={handleHallChecked}
                     label="Wilson"
-                    name="wilson"
+                    name="WIL"
                   />
                   <FormControlLabel
                     checked={village}
