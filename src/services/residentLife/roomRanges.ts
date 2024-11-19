@@ -43,7 +43,7 @@ type RA = {
 const fetchRoomRanges = (): Promise<RoomRange[]> => http.get('Housing/roomrange/all');
 
 // Fetches the list of all the RAs from the API endpoint "Housing/ra/all"
-const raList = (building: string): Promise<RA[]> => http.get('Housing/ra/all');
+const raList = (): Promise<RA[]> => http.get('Housing/ra/all');
 
 // Fetches the list of RA room range assignments from the API endpoint "Housing/roomrange/assignment/all"
 const fetchAssignmentList = (): Promise<Assignment[]> =>
