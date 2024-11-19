@@ -33,6 +33,9 @@ const RoomRanges = () => {
   const [people, setPeople] = useState([]);
   const [selectedPerson, setSelectedPerson] = useState(null);
   const [assignments, setAssignments] = useState([]);
+  const [filteredRoomRanges, setFilteredRoomRanges] = useState([]);
+  const [filteredAssignments, setFilteredAssignments] = useState([]);
+  const [filteredPeople, setFilteredPeople] = useState([]);
 
   // Every function that will run when the page is loaded/refreshed
   useEffect(() => {
@@ -51,6 +54,24 @@ const RoomRanges = () => {
       .catch((error) => console.error('Error fetching RA range assignment list:', error));
     //raList();
   }, []);
+
+  // Filter room ranges and RAs based on selected building
+  useEffect(() => {
+    if (building) {
+      const filteredRanges = roomRanges.filter((range) => range.Hall_ID === building);
+      setFilteredRoomRanges(filteredRanges);
+
+      const filteredRAs = people.filter((person) => person.BLDG_Code === building);
+      setFilteredPeople(filteredRAs);
+
+      const filteredAssign = assignments.filter((assignment) => assignment.Hall_ID === building);
+      setFilteredAssignments(filteredAssign);
+    } else {
+      setFilteredRoomRanges([]);
+      setFilteredPeople([]);
+      setFilteredAssignments([]);
+    }
+  }, [building, roomRanges, people, assignments]);
 
   const clearRoomInputs = () => {
     setRoomStart('');
@@ -158,17 +179,18 @@ const RoomRanges = () => {
         Room Assignment
       </Typography>
 
+      {/* New Building Selection Section */}
       <Card variant="outlined" sx={{ mb: 3 }}>
         <CardContent>
-          <Typography variant="h6">Add Room Range</Typography>
+          <Typography variant="h6">Building Selection</Typography>
           <Typography variant="body1" gutterBottom>
-            Select a building and specify a start and end room number. Click "Save Range" to add it
-            to the list of room ranges.
+            Select a building to update the list of available RAs and room ranges for that building.
+            This will also adjust the assignments you can view or modify.
           </Typography>
           <FormControl fullWidth>
             <InputLabel id="Building">Building</InputLabel>
             <Select
-              label="select building"
+              label="Select building"
               value={building}
               onChange={(e) => {
                 setBuilding(e.target.value);
@@ -191,6 +213,17 @@ const RoomRanges = () => {
               <MenuItem value="RID">Rider</MenuItem>
             </Select>
           </FormControl>
+        </CardContent>
+      </Card>
+
+      {/* Room Range Section */}
+      <Card variant="outlined" sx={{ mb: 3 }}>
+        <CardContent>
+          <Typography variant="h6">Add Room Range</Typography>
+          <Typography variant="body1" gutterBottom>
+            Select a building and specify a start and end room number. Click "Save Range" to add it
+            to the list of room ranges.
+          </Typography>
           <TextField
             label="Room Start"
             value={roomStart}
@@ -213,52 +246,30 @@ const RoomRanges = () => {
         </CardActions>
       </Card>
 
+      {/* Room Range Section */}
       <Card variant="outlined" sx={{ mb: 3 }}>
         <CardContent>
           <Typography variant="h6">Room Ranges</Typography>
-          <Typography variant="body1" gutterBottom>
-            The list below shows the current room ranges. Click on a range to select it, then use
-            "Remove" to delete it.
-          </Typography>
           <List>
             {showList ? (
-              roomRanges.length > 0 ? (
-                roomRanges.map((range, index) => (
+              filteredRoomRanges.length > 0 ? (
+                filteredRoomRanges.map((range, index) => (
                   <ListItem
                     key={index}
                     onClick={() => setSelectedRoomRange(index)}
                     sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 1,
                       cursor: 'pointer',
                       backgroundColor:
                         selectedRoomRange === index ? 'rgba(0, 0, 0, 0.1)' : 'transparent',
-                      '&:hover .remove-btn': {
-                        borderColor: 'black',
-                        color: 'black',
-                      },
                     }}
                   >
                     <Box>
                       {range.Hall_ID}: {range.Room_Start} - {range.Room_End}
                     </Box>
-                    <Button
-                      variant="outlined"
-                      color="secondary"
-                      size="small"
-                      onClick={(e) => {
-                        e.stopPropagation(); // Prevent triggering list item click
-                        onClickRemoveRoomRange();
-                      }}
-                      className="remove-btn"
-                    >
-                      Remove
-                    </Button>
                   </ListItem>
                 ))
               ) : (
-                <ListItem>No room ranges set</ListItem>
+                <ListItem>No room ranges for selected building</ListItem>
               )
             ) : (
               <ListItem>Loading room ranges...</ListItem>
@@ -266,24 +277,19 @@ const RoomRanges = () => {
           </List>
         </CardContent>
       </Card>
-      <Typography variant="h6">Add Room Range</Typography>
 
+      {/* Assign Person */}
       <Card variant="outlined" sx={{ mb: 3 }}>
         <CardContent>
           <Typography variant="h6">Assign Person</Typography>
-          <Typography variant="body1" gutterBottom>
-            Select a person from the list below to assign to the chosen room range. The list is
-            populated based on the selected building in the 'Add Room Range' section.
-          </Typography>
           <List>
-            {people.map((person, index) => (
+            {filteredPeople.map((person, index) => (
               <ListItem
                 key={index}
                 onClick={() => setSelectedPerson(index)}
                 sx={{
                   cursor: 'pointer',
                   backgroundColor: selectedPerson === index ? 'primary.main' : 'transparent',
-                  '&:hover': { backgroundColor: 'secondary.main' },
                 }}
               >
                 {person.FirstName} {person.LastName}
@@ -298,23 +304,14 @@ const RoomRanges = () => {
         </CardActions>
       </Card>
 
+      {/* Assignments */}
       <Card variant="outlined">
         <CardContent>
           <Typography variant="h6">Assignments</Typography>
-          <Typography variant="body1" gutterBottom>
-            View current assignments below. Click "Remove" next to an assignment to delete it.
-          </Typography>
           <List>
-            {assignments.length > 0 ? (
-              assignments.map((assignment, index) => (
-                <ListItem
-                  key={index}
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 1,
-                  }}
-                >
+            {filteredAssignments.length > 0 ? (
+              filteredAssignments.map((assignment, index) => (
+                <ListItem key={index}>
                   <Box>
                     {assignment.Fname} {assignment.Lname}: {assignment.Hall_Name}{' '}
                     {assignment.Room_Start} - {assignment.Room_End}
@@ -324,19 +321,13 @@ const RoomRanges = () => {
                     color="secondary"
                     size="small"
                     onClick={() => onClickRemoveAssignment(index)}
-                    sx={{
-                      '&:hover': {
-                        borderColor: 'black',
-                        color: 'black',
-                      },
-                    }}
                   >
                     Remove
                   </Button>
                 </ListItem>
               ))
             ) : (
-              <ListItem>No Assignments set</ListItem>
+              <ListItem>No Assignments for selected building</ListItem>
             )}
           </List>
         </CardContent>

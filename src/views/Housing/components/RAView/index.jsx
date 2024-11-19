@@ -18,7 +18,7 @@ import Schedule from './components/Schedule';
 import { React, useEffect, useState } from 'react';
 import { ListItemIcon, ListItemText, ListSubheader, List, ListItem, Link } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
-import http from '../../../../../../gordon-360-ui(Main)/src/services/http';
+import { checkIfCheckedIn, submitCheckIn } from 'services/residentLife/RA_Checkin';
 import { useUser } from 'hooks';
 
 const RAView = () => {
@@ -30,50 +30,28 @@ const RAView = () => {
 
   const [hallName, setHallName] = useState('');
 
-  // check if the RA is currently checked in
-  const checkIfCheckedIn = async () => {
-    try {
-      const data = await http.get(`Housing/is-on-call/${profile.ID}`);
-      console.log('API Response:', data);
-
-      if (data && typeof data.IsOnCall === 'boolean') {
-        setCheckedIn(data.IsOnCall);
-      } else {
-        console.warn('Unexpected API response structure:', data);
-      }
-    } catch (error) {
-      if (error.response) {
-        console.error('Error response:', error.response.data);
-      } else {
-        console.error('Error:', error.message);
-      }
-    }
-  };
-
-  // Auto select a hall on checkin prompt based on RA housing
-  const initializeHallFromProfile = () => {
-    if (profile?.hall) {
-      console.log('RA Living Hall from Profile:', profile.hall);
-
-      setHallState((prevState) => {
-        const isVillageDorm = ['CON', 'GRA', 'RID', 'MCI'].includes(profile.hall); // Check if the hall is part of the village
-
-        return {
-          ...prevState,
-          [profile.hall]: true, // Automatically check off the specific hall
-          village: isVillageDorm, // Check off "village" if the hall is part of it
-        };
-      });
-    } else {
-      console.warn('No HallCode found in profile.');
-    }
-  };
-
+  // Fetch check-in status and initialize hall data
   useEffect(() => {
-    if (profile?.ID) {
-      checkIfCheckedIn();
-      initializeHallFromProfile();
-    }
+    const fetchData = async () => {
+      if (profile?.ID) {
+        try {
+          const isChecked = await checkIfCheckedIn(profile.ID);
+          setCheckedIn(isChecked);
+
+          if (profile.hall) {
+            setHallState((prevState) => ({
+              ...prevState,
+              [profile.hall]: true,
+              village: ['CON', 'GRA', 'RID', 'MCI'].includes(profile.hall),
+            }));
+          }
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      }
+    };
+
+    fetchData();
   }, [profile?.ID]);
 
   const handleConfirm = () => {
@@ -106,10 +84,7 @@ const RAView = () => {
     }
 
     try {
-      await http.post('Housing/ra-checkin', {
-        RA_ID: profile.ID,
-        Hall_ID: selectedHallCodes, // Send hall codes to the API
-      });
+      await submitCheckIn(profile.ID, selectedHallCodes);
       setCheckedIn(true);
       setConfirmOpen(false);
       setOpen(false);
