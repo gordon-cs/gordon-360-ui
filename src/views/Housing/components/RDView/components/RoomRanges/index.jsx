@@ -37,25 +37,26 @@ const RoomRanges = () => {
   const [filteredAssignments, setFilteredAssignments] = useState([]);
   const [filteredPeople, setFilteredPeople] = useState([]);
 
-  // Every function that will run when the page is loaded/refreshed
+  // Fetch data when the page loads
   useEffect(() => {
     setTimeout(() => setShowList(true), 1000);
+
     fetchRoomRanges()
       .then((response) => {
         setRoomRanges(response);
-        console.log(response);
+        console.log('Room Ranges:', response);
       })
       .catch((error) => console.error('Error fetching room ranges:', error));
+
     fetchAssignmentList()
       .then((response) => {
         console.log('Assignments:', response);
         setAssignments(response);
       })
-      .catch((error) => console.error('Error fetching RA range assignment list:', error));
-    //raList();
+      .catch((error) => console.error('Error fetching assignments:', error));
   }, []);
 
-  // Filter room ranges and RAs based on selected building
+  // Update filtered data when building changes
   useEffect(() => {
     if (building) {
       const filteredRanges = roomRanges.filter((range) => range.Hall_ID === building);
@@ -79,12 +80,12 @@ const RoomRanges = () => {
   };
 
   const fetchRaList = (building) => {
-    console.log(building);
+    console.log('Selected Building:', building);
     raList()
       .then((response) => {
         const buildingCodes = response.filter((code) => code.BLDG_Code === building);
         setPeople(response ? buildingCodes : []);
-        console.log(response);
+        console.log('RA List:', response);
       })
       .catch((error) => console.error('Error fetching RAs:', error));
   };
@@ -93,49 +94,38 @@ const RoomRanges = () => {
     if (building && roomStart && roomEnd) {
       const body = { Hall_ID: building, Room_Start: roomStart, Room_End: roomEnd };
       addRoomRange(body)
-        .then((response) => {
+        .then(() => {
           clearRoomInputs();
           fetchRoomRanges()
-            .then((response) => {
-              setRoomRanges(response);
-              console.log(response);
-            })
+            .then((response) => setRoomRanges(response))
             .catch((error) => console.error('Error fetching room ranges:', error));
         })
         .catch((error) => {
           console.error('Error adding room range:', error);
-          window.alert('Error adding room range: ' + error);
-          fetchRoomRanges();
+          alert('Error adding room range: ' + error);
         });
-      clearRoomInputs();
     }
   };
 
-  const onClickRemoveRoomRange = () => {
-    console.log(selectedRoomRange);
-    const range_id = roomRanges[selectedRoomRange].RangeID;
-    console.log(range_id);
-    removeRoomRange(range_id)
+  const onClickRemoveRoomRange = (rangeId) => {
+    removeRoomRange(rangeId)
       .then(() => {
         fetchRoomRanges()
-          .then((response) => {
-            setRoomRanges(response);
-            console.log(response);
-          })
+          .then((response) => setRoomRanges(response))
           .catch((error) => console.error('Error fetching room ranges:', error));
         setSelectedRoomRange(null);
       })
       .catch((error) => {
         console.error('Error removing room range:', error);
-        window.alert('Error removing room range: ' + error);
+        alert('Error removing room range: ' + error);
       });
   };
 
   const onClickAssignPerson = () => {
-    if (selectedPerson !== null && selectedRoomRange !== null) {
+    if (selectedPerson && selectedRoomRange) {
       const newRange = {
-        Range_ID: roomRanges[selectedRoomRange].RangeID,
-        Ra_ID: people[selectedPerson].ID,
+        Range_ID: selectedRoomRange,
+        Ra_ID: selectedPerson,
       };
 
       assignPersonToRange(newRange)
@@ -143,33 +133,26 @@ const RoomRanges = () => {
           setSelectedPerson(null);
           setSelectedRoomRange(null);
           fetchAssignmentList()
-            .then((response) => {
-              console.log('Assignments:', response);
-              setAssignments(response);
-            })
-            .catch((error) => console.error('Error fetching RA range assignment list:', error));
+            .then((response) => setAssignments(response))
+            .catch((error) => console.error('Error fetching assignments:', error));
         })
         .catch((error) => {
-          console.error('Error assigning person to range: ', error);
-          window.alert('Error assigning person to range: ' + error);
+          console.error('Error assigning person to range:', error);
+          alert('Error assigning person to range: ' + error);
         });
     }
   };
 
-  const onClickRemoveAssignment = (index) => {
-    const rangeId = assignments[index].Range_ID;
+  const onClickRemoveAssignment = (rangeId) => {
     removeAssignment(rangeId)
       .then(() => {
         fetchAssignmentList()
-          .then((response) => {
-            console.log('Assignments:', response);
-            setAssignments(response);
-          })
-          .catch((error) => console.error('Error fetching RA range assignment list:', error));
+          .then((response) => setAssignments(response))
+          .catch((error) => console.error('Error fetching assignments:', error));
       })
       .catch((error) => {
         console.error('Error removing assignment:', error);
-        window.alert('Error removing assignment: ' + error);
+        alert('Error removing assignment: ' + error);
       });
   };
 
@@ -179,7 +162,7 @@ const RoomRanges = () => {
         Room Assignment
       </Typography>
 
-      {/* New Building Selection Section */}
+      {/* Building Selection Section */}
       <Card variant="outlined" sx={{ mb: 3 }}>
         <CardContent>
           <Typography variant="h6">Building Selection</Typography>
@@ -216,7 +199,7 @@ const RoomRanges = () => {
         </CardContent>
       </Card>
 
-      {/* Room Range Section */}
+      {/* Add Room Range Section */}
       <Card variant="outlined" sx={{ mb: 3 }}>
         <CardContent>
           <Typography variant="h6">Add Room Range</Typography>
@@ -246,26 +229,37 @@ const RoomRanges = () => {
         </CardActions>
       </Card>
 
-      {/* Room Range Section */}
+      {/* Room Ranges Section */}
       <Card variant="outlined" sx={{ mb: 3 }}>
         <CardContent>
           <Typography variant="h6">Room Ranges</Typography>
           <List>
             {showList ? (
               filteredRoomRanges.length > 0 ? (
-                filteredRoomRanges.map((range, index) => (
+                filteredRoomRanges.map((range) => (
                   <ListItem
-                    key={index}
-                    onClick={() => setSelectedRoomRange(index)}
+                    key={range.RangeID}
+                    onClick={() => setSelectedRoomRange(range.RangeID)}
                     sx={{
                       cursor: 'pointer',
                       backgroundColor:
-                        selectedRoomRange === index ? 'rgba(0, 0, 0, 0.1)' : 'transparent',
+                        selectedRoomRange === range.RangeID ? 'rgba(0, 0, 0, 0.1)' : 'transparent',
                     }}
                   >
                     <Box>
                       {range.Hall_ID}: {range.Room_Start} - {range.Room_End}
                     </Box>
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      size="small"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onClickRemoveRoomRange(range.RangeID);
+                      }}
+                    >
+                      Remove
+                    </Button>
                   </ListItem>
                 ))
               ) : (
@@ -278,18 +272,18 @@ const RoomRanges = () => {
         </CardContent>
       </Card>
 
-      {/* Assign Person */}
+      {/* Assign Person Section */}
       <Card variant="outlined" sx={{ mb: 3 }}>
         <CardContent>
           <Typography variant="h6">Assign Person</Typography>
           <List>
-            {filteredPeople.map((person, index) => (
+            {filteredPeople.map((person) => (
               <ListItem
-                key={index}
-                onClick={() => setSelectedPerson(index)}
+                key={person.ID}
+                onClick={() => setSelectedPerson(person.ID)}
                 sx={{
                   cursor: 'pointer',
-                  backgroundColor: selectedPerson === index ? 'primary.main' : 'transparent',
+                  backgroundColor: selectedPerson === person.ID ? 'primary.main' : 'transparent',
                 }}
               >
                 {person.FirstName} {person.LastName}
@@ -304,14 +298,14 @@ const RoomRanges = () => {
         </CardActions>
       </Card>
 
-      {/* Assignments */}
+      {/* Assignments Section */}
       <Card variant="outlined">
         <CardContent>
           <Typography variant="h6">Assignments</Typography>
           <List>
             {filteredAssignments.length > 0 ? (
-              filteredAssignments.map((assignment, index) => (
-                <ListItem key={index}>
+              filteredAssignments.map((assignment) => (
+                <ListItem key={assignment.Range_ID}>
                   <Box>
                     {assignment.Fname} {assignment.Lname}: {assignment.Hall_Name}{' '}
                     {assignment.Room_Start} - {assignment.Room_End}
@@ -320,7 +314,7 @@ const RoomRanges = () => {
                     variant="outlined"
                     color="secondary"
                     size="small"
-                    onClick={() => onClickRemoveAssignment(index)}
+                    onClick={() => onClickRemoveAssignment(assignment.Range_ID)}
                   >
                     Remove
                   </Button>
