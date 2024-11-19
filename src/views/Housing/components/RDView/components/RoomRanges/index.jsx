@@ -13,7 +13,7 @@ import { Select, MenuItem } from '@mui/material';
 import {
   fetchRoomRanges,
   raList,
-  assignmentList,
+  fetchAssignmentList,
   addRoomRange,
   removeRoomRange,
   removeAssignment,
@@ -40,18 +40,14 @@ const RoomRanges = () => {
         console.log(response);
       })
       .catch((error) => console.error('Error fetching room ranges:', error));
-    fetchAssignmentList();
-    //raList();
-  }, []);
-
-  const fetchAssignmentList = () => {
-    assignmentList()
+    fetchAssignmentList()
       .then((response) => {
         console.log('Assignments:', response);
-        setAssignments(Array.isArray(response) ? response : []);
+        setAssignments(response);
       })
       .catch((error) => console.error('Error fetching RA range assignment list:', error));
-  };
+    //raList();
+  }, []);
 
   const clearRoomInputs = () => {
     setRoomStart('');
@@ -59,23 +55,25 @@ const RoomRanges = () => {
   };
 
   const onClickRoomRange = () => {
-    const body = { Hall_ID: building, Room_Start: roomStart, Room_End: roomEnd };
-    addRoomRange(body)
-      .then((response) => {
-        clearRoomInputs();
-        fetchRoomRanges()
-          .then((response) => {
-            setRoomRanges(response);
-            console.log(response);
-          })
-          .catch((error) => console.error('Error fetching room ranges:', error));
-      })
-      .catch((error) => {
-        console.error('Error adding room range:', error);
-        window.alert('Error adding room range: ' + error);
-        fetchRoomRanges();
-      });
-    clearRoomInputs();
+    if (building && roomStart && roomEnd) {
+      const body = { Hall_ID: building, Room_Start: roomStart, Room_End: roomEnd };
+      addRoomRange(body)
+        .then((response) => {
+          clearRoomInputs();
+          fetchRoomRanges()
+            .then((response) => {
+              setRoomRanges(response);
+              console.log(response);
+            })
+            .catch((error) => console.error('Error fetching room ranges:', error));
+        })
+        .catch((error) => {
+          console.error('Error adding room range:', error);
+          window.alert('Error adding room range: ' + error);
+          fetchRoomRanges();
+        });
+      clearRoomInputs();
+    }
   };
 
   const onClickRemoveRoomRange = () => {
@@ -98,28 +96,44 @@ const RoomRanges = () => {
       });
   };
 
+  const onClickAssignPerson = () => {
+    if (selectedPerson !== null && selectedRoomRange !== null) {
+      const assignedRange = {
+        Range_ID: roomRanges[selectedRoomRange].RangeID,
+        Ra_ID: people[selectedPerson].ID,
+      };
+      assignPersonToRange(assignedRange)
+        .then(() => {
+          setSelectedPerson(null);
+          setSelectedRoomRange(null);
+        })
+        .catch((error) => {
+          console.error('Error assigning person to range: ', error);
+          window.alert('Error assigning person to range: ' + error);
+        });
+      fetchAssignmentList()
+        .then((response) => {
+          console.log('Assignments:', response);
+          setAssignments(response);
+        })
+        .catch((error) => console.error('Error fetching RA range assignment list:', error));
+    }
+  };
+
   const onClickRemoveAssignment = (index) => {
     const rangeId = assignments[index].Range_ID;
     removeAssignment(rangeId)
       .then(() => {
-        fetchAssignmentList();
+        fetchAssignmentList()
+          .then((response) => {
+            console.log('Assignments:', response);
+            setAssignments(response);
+          })
+          .catch((error) => console.error('Error fetching RA range assignment list:', error));
       })
       .catch((error) => {
         console.error('Error removing assignment:', error);
         window.alert('Error removing assignment: ' + error);
-      });
-  };
-
-  const onClickAssignPerson = () => {
-    assignPersonToRange()
-      .then((response) => {
-        setSelectedPerson(null);
-        setSelectedRoomRange(null);
-        fetchAssignmentList();
-      })
-      .catch((error) => {
-        console.error('Error assigning person to range: ', error);
-        window.alert('Error assigning person to range: ' + error);
       });
   };
 

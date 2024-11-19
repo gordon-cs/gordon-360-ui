@@ -15,7 +15,7 @@ type NewRoomRange = {
 
 type AssignedRange = {
   Range_ID: number;
-  RA_ID: string;
+  Ra_ID: string;
 };
 
 type Assignment = {
@@ -46,7 +46,8 @@ const fetchRoomRanges = (): Promise<RoomRange[]> => http.get('Housing/roomrange/
 const raList = (building: string): Promise<RA[]> => http.get('Housing/ra/all');
 
 // Fetches the list of RA room range assignments from the API endpoint "Housing/roomrange/assignment/all"
-const assignmentList = (): Promise<Assignment[]> => http.get('Housing/roomrange/assignment/all');
+const fetchAssignmentList = (): Promise<Assignment[]> =>
+  http.get('Housing/roomrange/assignment/all');
 
 // Post request to the API endpoint "Housing/roomrange" which adds the user inputed room range
 // to our "Hall_Assignment_Ranges" database which the FetchRoomRanges() function pulls from
@@ -67,7 +68,7 @@ const assignPersonToRange = (newRange: AssignedRange) =>
 export {
   fetchRoomRanges,
   raList,
-  assignmentList,
+  fetchAssignmentList,
   addRoomRange,
   removeRoomRange,
   removeAssignment,
