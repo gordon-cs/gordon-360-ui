@@ -6,12 +6,12 @@ import RAView from './components/RAView';
 import ResidentView from './components/ResidentView';
 
 const Housing = () => {
-  const isFaculty = useAuthGroups(AuthGroup.Faculty);
+  const isFaculty = useAuthGroups(AuthGroup.Staff);
   const isStudent = useAuthGroups(AuthGroup.Student);
   const isRA = useAuthGroups(AuthGroup.ResidentAdvisor);
   const isRD = useAuthGroups(AuthGroup.HousingAdmin);
 
-  if (isRD) {
+  if (isFaculty) {
     return <RDView />;
   } else if (isStudent) {
     return <ResidentView />;
