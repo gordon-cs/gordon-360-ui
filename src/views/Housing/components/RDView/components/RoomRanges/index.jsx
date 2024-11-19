@@ -13,7 +13,15 @@ import {
   CardActions,
 } from '@mui/material';
 import { Select, MenuItem } from '@mui/material';
-import http from '../../../../../../services/http';
+import {
+  fetchRoomRanges,
+  raList,
+  fetchAssignmentList,
+  addRoomRange,
+  removeRoomRange,
+  removeAssignment,
+  assignPersonToRange,
+} from 'services/residentLife/roomRanges';
 
 const RoomRanges = () => {
   const [building, setBuilding] = useState('');
@@ -28,59 +36,50 @@ const RoomRanges = () => {
 
   // Every function that will run when the page is loaded/refreshed
   useEffect(() => {
-    fetchRoomRanges();
-    assignmentList();
+    setTimeout(() => setShowList(true), 1000);
+    fetchRoomRanges()
+      .then((response) => {
+        setRoomRanges(response);
+        console.log(response);
+      })
+      .catch((error) => console.error('Error fetching room ranges:', error));
+    fetchAssignmentList()
+      .then((response) => {
+        console.log('Assignments:', response);
+        setAssignments(response);
+      })
+      .catch((error) => console.error('Error fetching RA range assignment list:', error));
     //raList();
   }, []);
-
-  // Fetches the list of room ranges from the API endpoint "Housing/room-ranges"
-  const fetchRoomRanges = () => {
-    setTimeout(() => setShowList(true), 1000);
-    http
-      .get('Housing/room-ranges')
-      .then((response) => setRoomRanges(response))
-      .catch((error) => console.error('Error fetching room ranges:', error));
-  };
-
-  // Fetches the list of all the RAs from the API endpoint "Housing/ras"
-  const raList = (build) => {
-    http
-      .get('Housing/ras')
-      .then((response) => {
-        console.log('ra list:', response);
-        // Filter through the response to only get RAs whos building codes match the
-        // user selected building
-        const buildingCodes = response.filter((code) => code.BLDG_Code === build);
-        setPeople(Array.isArray(response) ? buildingCodes : []);
-      })
-      .catch((error) => console.error('Error fetching RA list:', error));
-  };
-
-  // Fetches the list of RA room range assignments from the API endpoint "Housing/RangeAssignments"
-  const assignmentList = () => {
-    http
-      .get('Housing/RangeAssignments')
-      .then((response) => setAssignments(Array.isArray(response) ? response : []))
-      .catch((error) => console.error('Error fetching RA range assignment list:', error));
-  };
 
   const clearRoomInputs = () => {
     setRoomStart('');
     setRoomEnd('');
   };
 
-  // Post request to the API endpoint "Housing/roomrange" which adds the user inputed room range
-  // to our "Hall_Assignment_Ranges" database which the FetchRoomRanges() function pulls from
-  const addRoomRange = () => {
+  const fetchRaList = (building) => {
+    console.log(building);
+    raList()
+      .then((response) => {
+        const buildingCodes = response.filter((code) => code.BLDG_Code === building);
+        setPeople(response ? buildingCodes : []);
+        console.log(response);
+      })
+      .catch((error) => console.error('Error fetching RAs:', error));
+  };
+
+  const onClickAddRoomRange = () => {
     if (building && roomStart && roomEnd) {
-      console.log('building', building);
-      setShowList(false);
       const body = { Hall_ID: building, Room_Start: roomStart, Room_End: roomEnd };
-      http
-        .post('Housing/roomrange', body)
-        .then(() => {
+      addRoomRange(body)
+        .then((response) => {
           clearRoomInputs();
-          fetchRoomRanges();
+          fetchRoomRanges()
+            .then((response) => {
+              setRoomRanges(response);
+              console.log(response);
+            })
+            .catch((error) => console.error('Error fetching room ranges:', error));
         })
         .catch((error) => {
           console.error('Error adding room range:', error);
@@ -91,48 +90,66 @@ const RoomRanges = () => {
     }
   };
 
-  const removeRoomRange = (index) => {
-    const rangeId = roomRanges[index].RangeID;
-    http
-      .del(`Housing/roomrange/${rangeId}`)
-      .then(() => fetchRoomRanges())
+  const onClickRemoveRoomRange = () => {
+    console.log(selectedRoomRange);
+    const range_id = roomRanges[selectedRoomRange].RangeID;
+    console.log(range_id);
+    removeRoomRange(range_id)
+      .then(() => {
+        fetchRoomRanges()
+          .then((response) => {
+            setRoomRanges(response);
+            console.log(response);
+          })
+          .catch((error) => console.error('Error fetching room ranges:', error));
+        setSelectedRoomRange(null);
+      })
       .catch((error) => {
         console.error('Error removing room range:', error);
         window.alert('Error removing room range: ' + error);
       });
   };
 
-  const removeAssignment = (index) => {
-    const rangeId = assignments[index].Range_ID;
-    http
-      .del(`Housing/assignment/${rangeId}`)
-      .then(() => assignmentList())
-      .catch((error) => {
-        console.error('Error removing assignment:', error);
-        window.alert('Error removing assignment: ' + error);
-      });
-  };
-
-  // Post request to API endpoint "Housing/assign-ra" which assigns
-  // the user selected RA to the user selected room range
-  const assignPersonToRange = () => {
+  const onClickAssignPerson = () => {
     if (selectedPerson !== null && selectedRoomRange !== null) {
-      const assignedRange = {
-        range_ID: roomRanges[selectedRoomRange].RangeID,
-        ra_ID: people[selectedPerson].ID,
+      const newRange = {
+        Range_ID: roomRanges[selectedRoomRange].RangeID,
+        Ra_ID: people[selectedPerson].ID,
       };
-      http
-        .post('Housing/assign-ra', assignedRange)
+
+      assignPersonToRange(newRange)
         .then(() => {
           setSelectedPerson(null);
           setSelectedRoomRange(null);
-          assignmentList();
+          fetchAssignmentList()
+            .then((response) => {
+              console.log('Assignments:', response);
+              setAssignments(response);
+            })
+            .catch((error) => console.error('Error fetching RA range assignment list:', error));
         })
         .catch((error) => {
           console.error('Error assigning person to range: ', error);
           window.alert('Error assigning person to range: ' + error);
         });
     }
+  };
+
+  const onClickRemoveAssignment = (index) => {
+    const rangeId = assignments[index].Range_ID;
+    removeAssignment(rangeId)
+      .then(() => {
+        fetchAssignmentList()
+          .then((response) => {
+            console.log('Assignments:', response);
+            setAssignments(response);
+          })
+          .catch((error) => console.error('Error fetching RA range assignment list:', error));
+      })
+      .catch((error) => {
+        console.error('Error removing assignment:', error);
+        window.alert('Error removing assignment: ' + error);
+      });
   };
 
   return (
@@ -155,7 +172,7 @@ const RoomRanges = () => {
               value={building}
               onChange={(e) => {
                 setBuilding(e.target.value);
-                raList(e.target.value);
+                fetchRaList(e.target.value);
               }}
               fullWidth
               margin="normal"
@@ -190,7 +207,7 @@ const RoomRanges = () => {
           />
         </CardContent>
         <CardActions>
-          <Button variant="contained" onClick={addRoomRange}>
+          <Button variant="contained" onClick={onClickAddRoomRange}>
             Save Range
           </Button>
         </CardActions>
@@ -232,7 +249,7 @@ const RoomRanges = () => {
                       size="small"
                       onClick={(e) => {
                         e.stopPropagation(); // Prevent triggering list item click
-                        removeRoomRange(index);
+                        onClickRemoveRoomRange();
                       }}
                       className="remove-btn"
                     >
@@ -249,6 +266,7 @@ const RoomRanges = () => {
           </List>
         </CardContent>
       </Card>
+      <Typography variant="h6">Add Room Range</Typography>
 
       <Card variant="outlined" sx={{ mb: 3 }}>
         <CardContent>
@@ -274,7 +292,7 @@ const RoomRanges = () => {
           </List>
         </CardContent>
         <CardActions>
-          <Button variant="contained" onClick={assignPersonToRange}>
+          <Button variant="contained" onClick={onClickAssignPerson}>
             Assign Person
           </Button>
         </CardActions>
@@ -305,7 +323,7 @@ const RoomRanges = () => {
                     variant="outlined"
                     color="secondary"
                     size="small"
-                    onClick={() => removeAssignment(index)}
+                    onClick={() => onClickRemoveAssignment(index)}
                     sx={{
                       '&:hover': {
                         borderColor: 'black',

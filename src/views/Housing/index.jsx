@@ -11,7 +11,7 @@ const Housing = () => {
   const isRA = useAuthGroups(AuthGroup.ResidentAdvisor);
   const isRD = useAuthGroups(AuthGroup.HousingAdmin);
 
-  if (isFaculty) {
+  if (isRD) {
     return <RDView />;
   } else if (isStudent) {
     return <ResidentView />;
