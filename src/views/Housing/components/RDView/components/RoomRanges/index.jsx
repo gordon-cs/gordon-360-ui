@@ -266,8 +266,7 @@ const RoomRanges = () => {
           </List>
         </CardContent>
       </Card>
-
-      <Typography variant="h6">Room Ranges</Typography>
+      <Typography variant="h6">Add Room Range</Typography>
 
       <Card variant="outlined" sx={{ mb: 3 }}>
         <CardContent>
