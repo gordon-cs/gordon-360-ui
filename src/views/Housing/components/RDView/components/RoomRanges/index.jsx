@@ -98,25 +98,26 @@ const RoomRanges = () => {
 
   const onClickAssignPerson = () => {
     if (selectedPerson !== null && selectedRoomRange !== null) {
-      const assignedRange = {
+      const newRange = {
         Range_ID: roomRanges[selectedRoomRange].RangeID,
         Ra_ID: people[selectedPerson].ID,
       };
-      assignPersonToRange(assignedRange)
+
+      assignPersonToRange(newRange)
         .then(() => {
           setSelectedPerson(null);
           setSelectedRoomRange(null);
+          fetchAssignmentList()
+            .then((response) => {
+              console.log('Assignments:', response);
+              setAssignments(response);
+            })
+            .catch((error) => console.error('Error fetching RA range assignment list:', error));
         })
         .catch((error) => {
           console.error('Error assigning person to range: ', error);
           window.alert('Error assigning person to range: ' + error);
         });
-      fetchAssignmentList()
-        .then((response) => {
-          console.log('Assignments:', response);
-          setAssignments(response);
-        })
-        .catch((error) => console.error('Error fetching RA range assignment list:', error));
     }
   };
 
@@ -272,7 +273,13 @@ const RoomRanges = () => {
               <ListItem key={index}>
                 {assignment.Fname} {assignment.Lname}: {assignment.Hall_Name}{' '}
                 {assignment.Room_Start} - {assignment.Room_End}
-                <Button onClick={onClickRemoveAssignment(index)}>Remove</Button>
+                <Button
+                  onClick={() => {
+                    onClickRemoveAssignment(index);
+                  }}
+                >
+                  Remove
+                </Button>
               </ListItem>
             );
           })
