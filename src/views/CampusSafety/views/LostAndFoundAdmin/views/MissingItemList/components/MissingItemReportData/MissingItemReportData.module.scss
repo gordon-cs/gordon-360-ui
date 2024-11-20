@@ -39,25 +39,13 @@
   font-weight: bold;
 }
 
-.contactButton {
-  background-color: var(--mui-palette-secondary-main); // ScottieCyan for the contact button
-  color: var(--mui-palette-secondary-contrastText); // Black for text
-  font-weight: bold;
-}
-
-.formLabel {
-  font-weight: bold;
-  margin-bottom: 0.5rem;
+.actionsHeader {
+  text-align: center;
 }
 
 @media (max-width: 768px) {
   .categoryGroup,
   .checkboxGroup {
     grid-template-columns: 1fr;
-  }
-
-  .title {
-    font-size: xx-small;
-    // color: var(--mui-palette-primary-main);
   }
 }
