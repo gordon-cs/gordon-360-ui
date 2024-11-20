@@ -1,5 +1,6 @@
+@import '../../../../../../../../vars';
+
 .container {
-  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -17,7 +18,6 @@
 
 .card {
   width: 100%;
-  max-width: 900px;
   background-color: var(
     --mui-palette-background-paper
   ); // DarkGray for dark mode, light background for light mode
@@ -26,14 +26,9 @@
 
 .title {
   text-align: center;
-  margin-bottom: 1rem;
-  color: var(--mui-palette-primary-contrastText); // GordonBlue
-}
-
-.sectionTitle {
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-  color: var(--mui-palette-neutral-contrastText); // White for dark mode, Black for light mode
+  & b {
+    color: var(--mui-palette-warning-main);
+  }
 }
 
 .stolenButton {
@@ -50,29 +45,6 @@
   font-weight: bold;
 }
 
-.checkboxLabel {
-  color: var(--mui-palette-text-primary); // Adjusts based on theme
-}
-
-.boxBackground {
-  background-color: var(--mui-palette-neutral-100);
-  border-radius: 5px;
-  padding: 1rem;
-  margin-bottom: 1rem; /* Add spacing between sections */
-  border: 4px solid var(--mui-palette-neutral-300); /* Border for separation */
-}
-
-.categoryGroup,
-.checkboxGroup {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.5rem;
-}
-
-.categoryItem {
-  width: 100%;
-}
-
 .formLabel {
   font-weight: bold;
   margin-bottom: 0.5rem;
@@ -82,5 +54,10 @@
   .categoryGroup,
   .checkboxGroup {
     grid-template-columns: 1fr;
+  }
+
+  .title {
+    font-size: xx-small;
+    // color: var(--mui-palette-primary-main);
   }
 }
