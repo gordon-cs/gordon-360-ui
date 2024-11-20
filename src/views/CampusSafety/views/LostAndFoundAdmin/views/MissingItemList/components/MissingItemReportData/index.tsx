@@ -1,15 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import {
-  Card,
-  CardContent,
-  Grid,
-  Button,
-  Checkbox,
-  FormControlLabel,
-  TextField,
-  FormLabel,
-  CardHeader,
-} from '@mui/material';
+import { Card, CardContent, Grid, Button, TextField, CardHeader } from '@mui/material';
 import styles from './MissingItemReportData.module.scss';
 import { useEffect, useState } from 'react';
 import lostAndFoundService from 'services/lostAndFound';
