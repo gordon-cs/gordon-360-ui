@@ -7,103 +7,116 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
+import { fetchOnDutyData } from 'services/residentLife/RA_OnCall';
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
+// Styling for table links (RA/RD profile and Teams link) using existing colors
+const StyledLink = styled('a')(({ theme }) => ({
+  color: theme.palette.primary.main,
+  textDecoration: 'none',
+  '&:hover': {
+    color: theme.palette.warning.main,
   },
 }));
 
+// styling for table components
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.background.paper,
+    color: theme.palette.text.primary,
+    fontWeight: 'bold',
+    fontSize: '1rem',
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: '0.875rem',
+  },
+}));
+
+// alternating backgrounds for rows
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
     backgroundColor: theme.palette.action.hover,
   },
-  '&:last-child td, &:last-child th': {
-    border: 0,
+  '&:hover': {
+    backgroundColor: theme.palette.action.selected,
   },
 }));
 
-function createData(hall, onDuty, photo, preferredContact, checkInTime, hallRD) {
-  return { hall, onDuty, photo, preferredContact, checkInTime, hallRD };
-}
+const StyledTableContainer = styled(TableContainer)(({ theme }) => ({
+  border: `1px solid ${theme.palette.divider}`,
+  borderRadius: theme.shape.borderRadius,
+  boxShadow: theme.shadows[2],
+}));
+
+// takes phone number from api return and makes readable version
+const formatPhoneNumber = (phoneNumber) => {
+  if (!phoneNumber || phoneNumber.length !== 10) return phoneNumber;
+  return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6)}`;
+};
+// format the photo, RA name, and RA profile link into an item for the table
+const makeRAPhoto = (item) => (
+  <Box textAlign="center">
+    <StyledLink href={item.RA_Profile_Link} target="_blank" rel="noopener noreferrer">
+      <Avatar
+        src={item.RA_Photo || 'https://placehold.jp/150x150.png'}
+        alt={`${item.RA_Name}'s profile`}
+        sx={{ width: 60, height: 60, margin: '0 auto' }}
+      />
+      <Box component="span" mt={1} display="block">
+        {item.RA_Name}
+      </Box>
+    </StyledLink>
+  </Box>
+);
 
 const OnDutyTable = () => {
   const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // This data will later be fetched from the API instead of being hard coded
   useEffect(() => {
-    const mockData = [
-      {
-        hall: 'Tavilla',
-        onDuty: 'Jason Asonye',
-        photo: 'https://placehold.jp/150x150.png',
-        preferredContact: '(555)-543-2349',
-        checkInTime: '6:05 PM',
-        hallRD: 'Ryann Soltero',
-      },
-      {
-        hall: 'Bromley',
-        onDuty: 'Ross Clark',
-        photo: 'https://placehold.jp/150x150.png',
-        preferredContact: '(555)-398-9398',
-        checkInTime: '6:05 PM',
-        hallRD: 'Porter Sprigg',
-      },
-      {
-        hall: 'Ferrin',
-        onDuty: 'Mya Randolph',
-        photo: 'https://placehold.jp/150x150.png',
-        preferredContact: 'Teams Link',
-        checkInTime: '6:10 PM',
-        hallRD: 'Melanie Soderlund',
-      },
-      {
-        hall: 'Evans',
-        onDuty: 'Danya Li',
-        photo: 'https://placehold.jp/150x150.png',
-        preferredContact: '(555)-987-6543',
-        checkInTime: '6:15 PM',
-        hallRD: 'Amber Cook',
-      },
-      {
-        hall: 'Wilson',
-        onDuty: 'John Doe',
-        photo: 'https://placehold.jp/150x150.png',
-        preferredContact: '(555)-222-3333',
-        checkInTime: '6:20 PM',
-        hallRD: 'Kernna Wade',
-      },
-      {
-        hall: 'Fulton',
-        onDuty: 'Jane Doe',
-        photo: 'https://placehold.jp/150x150.png',
-        preferredContact: '(555)-444-5555',
-        checkInTime: '6:25 PM',
-        hallRD: 'Jane Doe',
-      },
-    ];
+    const loadOnDutyData = async () => {
+      try {
+        const response = await fetchOnDutyData();
+        // map response data to table row objects
+        const fetchedRows = response.map((item) => ({
+          hall: item.Hall_Name,
+          onDutyPhoto: makeRAPhoto(item),
+          preferredContact: item.PreferredContact.includes('http') ? (
+            <StyledLink href={item.PreferredContact} target="_blank" rel="noopener noreferrer">
+              Teams
+            </StyledLink>
+          ) : (
+            formatPhoneNumber(item.PreferredContact)
+          ),
+          checkInTime: new Date(item.Check_in_time).toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+          }),
+          hallRD: (
+            <StyledLink href={item.RD_Profile_Link} target="_blank" rel="noopener noreferrer">
+              {item.RD_Name}
+            </StyledLink>
+          ),
+        }));
 
-    // Simulate setting the data as if it were fetched from an API
-    const fetchedRows = mockData.map((item) =>
-      createData(
-        item.hall,
-        item.onDuty,
-        item.photo,
-        item.preferredContact,
-        item.checkInTime,
-        item.hallRD,
-      ),
-    );
+        setRows(fetchedRows);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error loading on-duty data:', err);
+        setLoading(false);
+      }
+    };
 
-    setRows(fetchedRows);
+    loadOnDutyData();
   }, []);
 
+  if (loading) {
+    return <p>Loading on-duty data...</p>;
+  }
+
   return (
-    <TableContainer component={Paper} sx={{ maxHeight: 300, overflowY: 'auto' }}>
+    <StyledTableContainer component={Paper} sx={{ maxHeight: 400, overflowY: 'auto' }}>
       <Table stickyHeader sx={{ minWidth: 650 }} aria-label="customized table">
         <TableHead>
           <TableRow>
@@ -118,18 +131,7 @@ const OnDutyTable = () => {
           {rows.map((row, index) => (
             <StyledTableRow key={index}>
               <StyledTableCell align="center">{row.hall}</StyledTableCell>
-              <StyledTableCell align="center">
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <img
-                    src={row.photo}
-                    alt="Profile Picture"
-                    width="60"
-                    height="60"
-                    style={{ borderRadius: '50%' }}
-                  />
-                  <span>{row.onDuty}</span>
-                </div>
-              </StyledTableCell>
+              <StyledTableCell align="center">{row.onDutyPhoto}</StyledTableCell>
               <StyledTableCell align="center">{row.preferredContact}</StyledTableCell>
               <StyledTableCell align="center">{row.checkInTime}</StyledTableCell>
               <StyledTableCell align="center">{row.hallRD}</StyledTableCell>
@@ -137,7 +139,7 @@ const OnDutyTable = () => {
           ))}
         </TableBody>
       </Table>
-    </TableContainer>
+    </StyledTableContainer>
   );
 };
 
