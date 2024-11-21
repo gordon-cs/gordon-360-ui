@@ -78,8 +78,29 @@ const OnDutyTable = () => {
     const loadOnDutyData = async () => {
       try {
         const response = await fetchOnDutyData();
-        // map response data to table row objects
-        const fetchedRows = response.map((item) => ({
+
+        // Consolidate Village dorms into a single row to display
+        const villageHalls = ['CON', 'RID', 'GRA', 'MCI'];
+        const villageData = response.filter((item) => villageHalls.includes(item.Hall_ID));
+        const otherHalls = response.filter((item) => !villageHalls.includes(item.Hall_ID));
+
+        const consolidatedData = [];
+
+        if (villageData.length > 0) {
+          const consolidatedVillage = {
+            Hall_Name: 'The Village',
+            RA_Photo: villageData[0].RA_Photo,
+            RA_Name: villageData[0].RA_Name,
+            RA_Profile_Link: villageData[0].RA_Profile_Link,
+            PreferredContact: villageData[0].PreferredContact,
+            Check_in_time: villageData[0].Check_in_time,
+            RD_Name: villageData[0].RD_Name,
+            RD_Profile_Link: villageData[0].RD_Profile_Link,
+          };
+          consolidatedData.push(consolidatedVillage);
+        }
+
+        const fetchedRows = [...otherHalls, ...consolidatedData].map((item) => ({
           hall: item.Hall_Name,
           onDutyPhoto: makeRAPhoto(item),
           preferredContact: item.PreferredContact.includes('http') ? (
