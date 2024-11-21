@@ -298,6 +298,23 @@ const Links = () => {
           <List>
             <ListItem>
               <ListItemIcon>
+                <ReportIcon className={styles.icon_style} color="error" />
+              </ListItemIcon>
+              <ListItemText className={styles.text_style}>
+                Emergency Number: 978-867-<b>3333</b>
+              </ListItemText>
+            </ListItem>
+            <ListItem>
+              <ListItemIcon>
+                <CallIcon className={styles.icon_style} />
+              </ListItemIcon>
+              <ListItemText>
+                Non-Emergency Number: 978-867-<b>4444</b>
+              </ListItemText>
+            </ListItem>
+            <hr />
+            <ListItem>
+              <ListItemIcon>
                 <LocalPoliceIcon className={styles.icon_style} />
               </ListItemIcon>
               <Link
@@ -313,39 +330,22 @@ const Links = () => {
               </Link>
             </ListItem>
             <ListItem>
-              <ListItemIcon>
-                <CategoryIcon className={styles.icon_style} />
-              </ListItemIcon>
-              <Link
-                onClick={() => {
-                  navigate('/lostandfound');
-                }}
-                underline="hover"
-                className={`gc360_text_link`}
-                target="_blank"
-              >
-                <ListItemText
-                  primary="Lost and Found"
-                  primaryTypographyProps={{ className: styles.link_style }}
-                />
-              </Link>
-            </ListItem>
-            <hr />
-            <ListItem>
-              <ListItemIcon>
-                <ReportIcon className={styles.icon_style} color="error" />
-              </ListItemIcon>
-              <ListItemText>
-                Emergency Number: 978-867-<b>3333</b>
-              </ListItemText>
-            </ListItem>
-            <ListItem>
-              <ListItemIcon>
-                <CallIcon className={styles.icon_style} />
-              </ListItemIcon>
-              <ListItemText>
-                Non-Emergency Number: 978-867-<b>4444</b>
-              </ListItemText>
+              <Grid container justifyContent={'center'}>
+                <Box textAlign={'center'}>
+                  <Button
+                    color="secondary"
+                    variant="contained"
+                    onClick={() => {
+                      navigate('/lostandfound');
+                    }}
+                  >
+                    <ListItemText
+                      primary="Lost and Found"
+                      primaryTypographyProps={{ className: styles.link_style }}
+                    />
+                  </Button>
+                </Box>
+              </Grid>
             </ListItem>
           </List>
         </Typography>
