@@ -21,28 +21,18 @@ import SpaIcon from '@mui/icons-material/Spa';
 import PsychologyIcon from '@mui/icons-material/Psychology';
 import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import CallIcon from '@mui/icons-material/Call';
-import CategoryIcon from '@mui/icons-material/Category';
 import ReportIcon from '@mui/icons-material/Report';
-// import EmergencyIcon from '@mui/icons-material/Emergency';
 import styles from '/src/views/Links/Links.module.scss';
 import { useNavigate } from 'react-router';
-import { styled } from '@mui/material/styles';
 
 const Links = () => {
   const navigate = useNavigate();
-
-  const CardContentWithPadding = styled(CardContent)(`
-    padding: 8px;
-    &:last-child {
-      padding-bottom: 8px;
-    }
-  `);
 
   // Academics Resources UI
   const academicsCard = (
     <Card>
       <CardHeader title={`Academics`} className="gc360_header" />
-      <CardContentWithPadding>
+      <CardContent className={styles.card_padding}>
         <Typography>
           <List>
             <ListItem>
@@ -55,10 +45,7 @@ const Links = () => {
                 className={`gc360_text_link`}
                 target="_blank"
               >
-                <ListItemText
-                  primary="Gordon College"
-                  primaryTypographyProps={{ className: styles.link_style }}
-                />
+                <ListItemText primary="Gordon College" />
               </Link>
             </ListItem>
             <ListItem>
@@ -71,10 +58,7 @@ const Links = () => {
                 className={`gc360_text_link`}
                 target="_blank"
               >
-                <ListItemText
-                  primary="My Gordon"
-                  primaryTypographyProps={{ className: styles.link_style }}
-                />
+                <ListItemText primary="My Gordon" />
               </Link>
             </ListItem>
             <ListItem>
@@ -87,10 +71,7 @@ const Links = () => {
                 className={`gc360_text_link`}
                 target="_blank"
               >
-                <ListItemText
-                  primary="Canvas"
-                  primaryTypographyProps={{ className: styles.link_style }}
-                />
+                <ListItemText primary="Canvas" />
               </Link>
             </ListItem>
             <ListItem>
@@ -103,10 +84,7 @@ const Links = () => {
                 className={`gc360_text_link`}
                 target="_blank"
               >
-                <ListItemText
-                  primary="Gordon Email"
-                  primaryTypographyProps={{ className: styles.link_style }}
-                />
+                <ListItemText primary="Gordon Email" />
               </Link>
             </ListItem>
             <ListItem>
@@ -119,15 +97,12 @@ const Links = () => {
                 className={`gc360_text_link`}
                 target="_blank"
               >
-                <ListItemText
-                  primary="Go Gordon"
-                  primaryTypographyProps={{ className: styles.link_style }}
-                />
+                <ListItemText primary="Go Gordon" />
               </Link>
             </ListItem>
           </List>
         </Typography>
-      </CardContentWithPadding>
+      </CardContent>
     </Card>
   );
 
@@ -135,7 +110,7 @@ const Links = () => {
   const servicesCard = (
     <Card>
       <CardHeader title={`Services`} className="gc360_header" />
-      <CardContentWithPadding>
+      <CardContent className={styles.card_padding}>
         <Typography>
           <List>
             <ListItem>
@@ -148,10 +123,7 @@ const Links = () => {
                 className={`gc360_text_link`}
                 target="_blank"
               >
-                <ListItemText
-                  primary="Criterion (Timesheets)"
-                  primaryTypographyProps={{ className: styles.link_style }}
-                />
+                <ListItemText primary="Criterion (Timesheets)" />
               </Link>
             </ListItem>
             <ListItem>
@@ -164,10 +136,7 @@ const Links = () => {
                 className={`gc360_text_link`}
                 target="_blank"
               >
-                <ListItemText
-                  primary="Handshake"
-                  primaryTypographyProps={{ className: styles.link_style }}
-                />
+                <ListItemText primary="Handshake" />
               </Link>
             </ListItem>
             <ListItem>
@@ -180,10 +149,7 @@ const Links = () => {
                 className={`gc360_text_link`}
                 target="_blank"
               >
-                <ListItemText
-                  primary="25Live (Scheduling)"
-                  primaryTypographyProps={{ className: styles.link_style }}
-                />
+                <ListItemText primary="25Live (Scheduling)" />
               </Link>
             </ListItem>
             <ListItem>
@@ -196,15 +162,12 @@ const Links = () => {
                 className={`gc360_text_link`}
                 target="_blank"
               >
-                <ListItemText
-                  primary="iAttended"
-                  primaryTypographyProps={{ className: styles.link_style }}
-                />
+                <ListItemText primary="iAttended" />
               </Link>
             </ListItem>
           </List>
         </Typography>
-      </CardContentWithPadding>
+      </CardContent>
     </Card>
   );
 
@@ -212,7 +175,7 @@ const Links = () => {
   const informationCard = (
     <Card>
       <CardHeader title={`Information`} className="gc360_header" />
-      <CardContentWithPadding>
+      <CardContent className={styles.card_padding}>
         <Typography>
           <List>
             <ListItem>
@@ -229,10 +192,7 @@ const Links = () => {
                 className={`gc360_text_link`}
                 target="_blank"
               >
-                <ListItemText
-                  primary="Fighting Scots"
-                  primaryTypographyProps={{ className: styles.link_style }}
-                />
+                <ListItemText primary="Fighting Scots" />
               </Link>
             </ListItem>
             <ListItem>
@@ -245,10 +205,7 @@ const Links = () => {
                 className={`gc360_text_link`}
                 target="_blank"
               >
-                <ListItemText
-                  primary="The Bell"
-                  primaryTypographyProps={{ className: styles.link_style }}
-                />
+                <ListItemText primary="The Bell" />
               </Link>
             </ListItem>
             <ListItem>
@@ -261,10 +218,7 @@ const Links = () => {
                 className={`gc360_text_link`}
                 target="_blank"
               >
-                <ListItemText
-                  primary="Sexual Discrimination and Harassment"
-                  primaryTypographyProps={{ className: styles.link_style }}
-                />
+                <ListItemText primary="Sexual Discrimination and Harassment" />
               </Link>
             </ListItem>
             <ListItem>
@@ -277,15 +231,12 @@ const Links = () => {
                 className={`gc360_text_link`}
                 target="_blank"
               >
-                <ListItemText
-                  primary="Gordon College Maps"
-                  primaryTypographyProps={{ className: styles.link_style }}
-                />
+                <ListItemText primary="Gordon College Maps" />
               </Link>
             </ListItem>
           </List>
         </Typography>
-      </CardContentWithPadding>
+      </CardContent>
     </Card>
   );
 
@@ -293,7 +244,7 @@ const Links = () => {
   const policeCard = (
     <Card>
       <CardHeader title={`Gordon Police`} className="gc360_header" />
-      <CardContentWithPadding>
+      <CardContent className={styles.card_padding}>
         <Typography>
           <List>
             <ListItem>
@@ -323,10 +274,7 @@ const Links = () => {
                 className={`gc360_text_link`}
                 target="_blank"
               >
-                <ListItemText
-                  primary="Gordon Police Resources"
-                  primaryTypographyProps={{ className: styles.link_style }}
-                />
+                <ListItemText primary="Gordon Police Resources" />
               </Link>
             </ListItem>
             <ListItem>
@@ -339,60 +287,14 @@ const Links = () => {
                       navigate('/lostandfound');
                     }}
                   >
-                    <ListItemText
-                      primary="Lost and Found"
-                      primaryTypographyProps={{ className: styles.link_style }}
-                    />
+                    <ListItemText primary="Lost and Found" />
                   </Button>
                 </Box>
               </Grid>
             </ListItem>
           </List>
         </Typography>
-        {/* <Grid container justifyContent={'center'}>
-          <Box className={styles.campus_safety_alert}>
-            <Grid item xs={12}>
-              <Typography align="center">
-                Emergency Number: 978-867-<b>3333</b>
-              </Typography>
-            </Grid>
-          </Box>
-        </Grid>
-        <br />
-        <Typography align="center">
-          Non-Emergency Number: 978-867-<b>4444</b>
-        </Typography>
-        <br />
-        <Grid container justifyContent={'center'}>
-          <Link
-            href="https://www.gordon.edu/police"
-            underline="hover"
-            className={`gc360_text_link`}
-            target="_blank"
-          >
-            Gordon Police Resources
-          </Link>
-        </Grid>
-        <Grid item xs={12}>
-          <hr />
-          <br />
-          <Typography align="center">Missing Something?</Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <br />
-          <Box textAlign={'center'}>
-            <Button
-              color="secondary"
-              variant="contained"
-              onClick={() => {
-                navigate('/lostandfound');
-              }}
-            >
-              Lost and Found
-            </Button>
-          </Box>
-        </Grid> */}
-      </CardContentWithPadding>
+      </CardContent>
     </Card>
   );
 
@@ -400,7 +302,7 @@ const Links = () => {
   const titleXICard = (
     <Card>
       <CardHeader title={`Sexual Misconduct Resources`} className="gc360_header" />
-      <CardContentWithPadding>
+      <CardContent className={styles.card_padding}>
         <Typography>
           <List>
             <ListItem>
@@ -413,10 +315,7 @@ const Links = () => {
                 className={`gc360_text_link`}
                 target="_blank"
               >
-                <ListItemText
-                  primary="Gordon Title IX Page"
-                  primaryTypographyProps={{ className: styles.link_style }}
-                />
+                <ListItemText primary="Gordon Title IX Page" />
               </Link>
             </ListItem>
             <ListItem>
@@ -429,15 +328,12 @@ const Links = () => {
                 className={`gc360_text_link`}
                 target="_blank"
               >
-                <ListItemText
-                  primary="File a Report"
-                  primaryTypographyProps={{ className: styles.link_style }}
-                />
+                <ListItemText primary="File a Report" />
               </Link>
             </ListItem>
           </List>
         </Typography>
-      </CardContentWithPadding>
+      </CardContent>
     </Card>
   );
 
@@ -445,7 +341,7 @@ const Links = () => {
   const healthCenterCard = (
     <Card>
       <CardHeader title={`Health Center`} className="gc360_header" />
-      <CardContentWithPadding>
+      <CardContent className={styles.card_padding}>
         <Typography>
           <List>
             <ListItem>
@@ -458,15 +354,12 @@ const Links = () => {
                 className={`gc360_text_link`}
                 target="_blank"
               >
-                <ListItemText
-                  primary="Health Center Resources"
-                  primaryTypographyProps={{ className: styles.link_style }}
-                />
+                <ListItemText primary="Health Center Resources" />
               </Link>
             </ListItem>
           </List>
         </Typography>
-      </CardContentWithPadding>
+      </CardContent>
     </Card>
   );
 
@@ -474,7 +367,7 @@ const Links = () => {
   const counselingCenterCard = (
     <Card>
       <CardHeader title={`Counseling Center`} className="gc360_header" />
-      <CardContentWithPadding>
+      <CardContent className={styles.card_padding}>
         <Typography>
           <List>
             <ListItem>
@@ -487,10 +380,7 @@ const Links = () => {
                 className={`gc360_text_link`}
                 target="_blank"
               >
-                <ListItemText
-                  primary="Counseling Center Resources"
-                  primaryTypographyProps={{ className: styles.link_style }}
-                />
+                <ListItemText primary="Counseling Center Resources" />
               </Link>
             </ListItem>
             <ListItem>
@@ -503,15 +393,12 @@ const Links = () => {
                 className={`gc360_text_link`}
                 target="_blank"
               >
-                <ListItemText
-                  primary="Request Services"
-                  primaryTypographyProps={{ className: styles.link_style }}
-                />
+                <ListItemText primary="Request Services" />
               </Link>
             </ListItem>
           </List>
         </Typography>
-      </CardContentWithPadding>
+      </CardContent>
     </Card>
   );
 
@@ -519,7 +406,7 @@ const Links = () => {
   const chapelCard = (
     <Card>
       <CardHeader title={`Chapel Office`} className="gc360_header" />
-      <CardContentWithPadding>
+      <CardContent className={styles.card_padding}>
         <Typography>
           <ListItem>
             <ListItemIcon>
@@ -531,14 +418,11 @@ const Links = () => {
               className={`gc360_text_link`}
               target="_blank"
             >
-              <ListItemText
-                primary="Chapel Information"
-                primaryTypographyProps={{ className: styles.link_style }}
-              />
+              <ListItemText primary="Chapel Information" />
             </Link>
           </ListItem>
         </Typography>
-      </CardContentWithPadding>
+      </CardContent>
     </Card>
   );
 

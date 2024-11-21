@@ -12,10 +12,13 @@
   width: 1.5rem;
 }
 
-.link_style {
-  font-size: 1em;
-}
-
 .text_style {
   color: var(--mui-palette-error-main);
+}
+
+.card_padding {
+  padding: 8px;
+  &:last-child {
+    padding-bottom: 8px;
+  }
 }
