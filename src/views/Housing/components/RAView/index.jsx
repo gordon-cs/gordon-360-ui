@@ -54,19 +54,32 @@ const RAView = () => {
     fetchData();
   }, [profile?.ID]);
 
+  const hallCodeToNameMap = {
+    BRO: 'Bromley',
+    CHA: 'Chase',
+    EVN: 'Evans',
+    FER: 'Ferrin',
+    FUL: 'Fulton',
+    NYL: 'Nyland',
+    TAV: 'Tavilla',
+    WIL: 'Wilson',
+    CON: 'Conrad',
+    GRA: 'Grace',
+    RID: 'Rider',
+    MCI: 'MacInnis',
+    village: 'The Village',
+  };
+
   const handleConfirm = () => {
     setConfirmOpen(true);
 
-    var tempName = '';
+    let tempName = '';
 
     for (let hall in hallState) {
-      if (hallState[hall] && tempName == '' && hall !== 'village') {
-        //exclude village, use actual building codes
-        tempName = hall.charAt(0).toUpperCase() + hall.slice(1);
-      } else if (hallState[hall] && tempName != '' && hall !== 'village') {
-        tempName = tempName + ', ' + hall.charAt(0).toUpperCase() + hall.slice(1);
-      } else {
-        continue;
+      if (hallState[hall] && hall !== 'village') {
+        // Map hall codes to names using the mapping object
+        const hallName = hallCodeToNameMap[hall];
+        tempName = tempName ? `${tempName}, ${hallName}` : hallName;
       }
     }
 
@@ -266,7 +279,8 @@ const RAView = () => {
           >
             <Grid item>
               <Typography>
-                NOTE: You are checking into {hallName} to be on duty. Is this what you meant to do?
+                NOTE: You are checking into {hallName || 'Unknown Hall'} to be on duty. Is this what
+                you meant to do?
               </Typography>
             </Grid>
           </GordonDialogBox>
