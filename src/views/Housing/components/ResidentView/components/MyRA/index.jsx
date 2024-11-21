@@ -18,9 +18,12 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-// import httpUtils from 'services/http';
-import http from '../../../../../../services/http';
+import { fetchRaInfo } from 'services/residentLife/RA_Info';
 import { useUser } from 'hooks';
+
+// Default image
+const COLOR_80808026_1X1 =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNsUAMAASwAqHb28sMAAAAASUVORK5CYII=';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -41,33 +44,27 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-const MyRAC = () => {
-  const [raInfo, setRaInfo] = useState('');
+const MyRA = () => {
+  const [raInfo, setRaInfo] = useState({});
   const { profile } = useUser();
 
-  // Fetch resident's RA/AC information only if profile, hallID, and roomNumber are available
   useEffect(() => {
     if (profile) {
       const hallID = profile.OnCampusBuilding;
       const roomNumber = profile.OnCampusRoom;
+      console.log('hallID', hallID);
+      console.log('roomNumber', roomNumber);
 
-      const fetchRaInfo = () => {
-        http
-          .get(`Housing/GetResidentRA/${hallID}/${roomNumber}`)
-          .then((response) => {
-            console.log('response:', response);
-            setRaInfo(response);
-          })
-          .catch((error) => console.error('Error fetching RA/AC info', error));
-      };
-
-      fetchRaInfo();
+      fetchRaInfo(hallID, roomNumber).then((response) => {
+        setRaInfo(response);
+        console.log('RA Info:', response);
+      });
     }
   }, [profile]);
 
   // Show loading state if profile is not yet loaded
   if (!profile) {
-    return <div>Loading...</div>;
+    return <Typography>Loading...</Typography>;
   }
 
   return (
@@ -85,6 +82,7 @@ const MyRAC = () => {
 
       <CardContent>
         <Grid container spacing={2} alignItems="center">
+          {/* Text Section */}
           <Grid item xs={8}>
             <Typography variant="body1">
               <strong>Name:</strong> {raInfo.FirstName} {raInfo.LastName}
@@ -95,24 +93,30 @@ const MyRAC = () => {
             </Typography>
 
             <Typography variant="body1">
-              <strong>Current Status:</strong>
+              <strong>Current Status:</strong> TBD
             </Typography>
 
             <Typography variant="body1">
-              <strong>Future Status:</strong>
+              <strong>Future Status:</strong> TBD
             </Typography>
           </Grid>
 
+          {/* Avatar Section */}
           <Grid item xs={4}>
             <Avatar
-              src={'defaultProfilePicture.png'}
+              src={raInfo.PhotoURL || COLOR_80808026_1X1}
               alt="Profile"
-              sx={{ width: 90, height: 90, borderRadius: '50%' }}
+              sx={{
+                width: { xs: 80, sm: 110, md: 80, lg: 120 },
+                height: { xs: 80, sm: 110, md: 80, lg: 120 },
+                borderRadius: '50%',
+              }}
             />
           </Grid>
         </Grid>
       </CardContent>
 
+      {/* RA Schedule */}
       <CardContent>
         <TableContainer>
           <Table>
@@ -146,11 +150,14 @@ const MyRAC = () => {
               </StyledTableRow>
             </TableBody>
           </Table>
-          <p align="right">*Times listed above are approximate and for reference only.</p>
+
+          <Typography variant="caption" align="right" display="block" mt={1}>
+            *Times listed above are approximate and for reference only.
+          </Typography>
         </TableContainer>
       </CardContent>
     </Card>
   );
 };
 
-export default MyRAC;
+export default MyRA;

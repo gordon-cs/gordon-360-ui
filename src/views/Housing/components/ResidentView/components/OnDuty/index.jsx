@@ -1,13 +1,15 @@
-import { Avatar, Card, CardContent, CardHeader, Grid, Link, Typography } from '@mui/material';
+import { Avatar, Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
 
 const OnDuty = () => {
   return (
     <Card>
       <CardHeader
         title={
-          <Grid container direction="row" alignItems="center">
+          <Grid container justifyContent="center" alignItems="center">
             <Grid item xs={12} align="center">
-              Who's On Duty?
+              <Typography variant="h6" component="div">
+                Who's On Duty?
+              </Typography>
             </Grid>
           </Grid>
         }
@@ -15,25 +17,29 @@ const OnDuty = () => {
       />
       <CardContent>
         <Grid container spacing={2} alignItems="center">
+          {/* Text Section */}
           <Grid item xs={8}>
             <Typography variant="body1">
               <strong>Name:</strong>
             </Typography>
-
             <Typography variant="body1">
               <strong>Room #:</strong>
             </Typography>
-
             <Typography variant="body1">
               <strong>Phone:</strong>
             </Typography>
           </Grid>
 
+          {/* Avatar Section */}
           <Grid item xs={4}>
             <Avatar
               src={'defaultProfilePicture.png'}
               alt="Profile"
-              sx={{ width: 90, height: 90, borderRadius: '50%' }}
+              sx={{
+                width: { xs: 80, sm: 110, md: 80, lg: 120 },
+                height: { xs: 80, sm: 110, md: 80, lg: 120 },
+                borderRadius: '50%',
+              }}
             />
           </Grid>
         </Grid>

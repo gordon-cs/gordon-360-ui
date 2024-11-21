@@ -2,30 +2,40 @@ import { Box, Card, Grid } from '@mui/material';
 
 // Components for Resident View
 import MyHall from './components/MyHall';
-import MyRAC from './components/MyRAC';
+import MyRAC from './components/MyRA';
 import OnDuty from './components/OnDuty';
 import Resources from './components/Resources';
 
 const ResidentView = () => (
-  <Grid container>
-    <Box ml={5} /> {/* margin-left for all elements */}
-    <Grid item xs={12} md={4} padding={1}>
+  <Grid
+    container
+    spacing={3} // Increase spacing between sections
+    padding={3} // Add padding around the container
+  >
+    {/* OnDuty and MyHall Section */}
+    <Grid item xs={12} md={4}>
       <Card>
-        <OnDuty className="jsx" />
+        <OnDuty />
       </Card>
-      <Box mt={5} /> {/* margin-top between OnDuty and MyHall cards */}
+      <Box mt={3} /> {/* Increase space between cards */}
       <Card>
-        <MyHall className="jsx" />
-      </Card>
-    </Grid>
-    <Box mr={50} /> {/* margin-right of 35 between My Hall and MyRA cards */}
-    <Grid item xs={12} md={4} padding={1}>
-      <Card>
-        <MyRAC className="jsx" />
+        <MyHall />
       </Card>
     </Grid>
-    <Box padding={4} /> {/* margin-top between MyRA and Resources cards */}
-    <Resources className="jsx" />
+
+    {/* Responsive spacer between MyHall and MyRAC */}
+    <Grid item xs={false} md={4} lg={4} xl={4} />
+
+    {/* MyRAC Section */}
+    <Grid item xs={12} md={4}>
+      <Card>
+        <MyRAC />
+      </Card>
+    </Grid>
+    {/* Resources Section */}
+    <Grid item xs={12}>
+      <Resources />
+    </Grid>
   </Grid>
 );
 
