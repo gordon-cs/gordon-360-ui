@@ -11,6 +11,7 @@ const Housing = () => {
   const isStudent = useAuthGroups(AuthGroup.Student);
   const isRA = useAuthGroups(AuthGroup.ResidentAdvisor);
   const isRD = useAuthGroups(AuthGroup.HousingAdmin);
+  // need to call hooks separately then join into one variable
   const isPolice = useAuthGroups(AuthGroup.Police);
   const isPlantStaff = useAuthGroups(AuthGroup.PLTStaff);
   const hasStandardAccess = isPolice || isPlantStaff;
