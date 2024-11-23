@@ -52,7 +52,7 @@ const MissingItemFormCreate = () => {
   const [isStolenModalOpen, setStolenModalOpen] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
-  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
+  const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -162,7 +162,6 @@ const MissingItemFormCreate = () => {
       };
 
       const newReportId = await lostAndFoundService.createMissingItemReport(requestData);
-      createSnackbar(`Report created sucessfully with ID: ${newReportId}`, `success`);
       navigate('/lostandfound');
     } catch (error) {
       createSnackbar(`Failed to create the missing item report.`, `error`);

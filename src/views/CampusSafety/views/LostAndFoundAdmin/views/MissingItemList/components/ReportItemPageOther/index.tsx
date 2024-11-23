@@ -27,6 +27,7 @@ import styles from './ReportItemPage.module.scss';
 import lostAndFoundService from 'services/lostAndFound';
 import quickSearchService, { SearchResult } from 'services/quickSearch';
 import ConfirmReport from 'views/CampusSafety/views/LostAndFound/views/MissingItemCreate/components/confirmReport';
+import GordonSnackbar from 'components/Snackbar';
 import ReportStolenModal from 'views/CampusSafety/views/LostAndFound/views/MissingItemCreate/components/reportStolen';
 
 const MIN_QUERY_LENGTH = 2;
@@ -113,7 +114,7 @@ const ReportItemPage = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
   const [state, dispatch] = useReducer(reducer, defaultState);
-  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
+  const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
 
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
@@ -281,11 +282,11 @@ const ReportItemPage = () => {
         };
       }
 
-      await lostAndFoundService.createMissingItemReport(requestData);
+      const newReportId = await lostAndFoundService.createMissingItemReport(requestData);
       // Redirect to the missing item database after successful submission
       navigate('/lostandfound/lostandfoundadmin/missingitemdatabase');
     } catch (error) {
-      console.error('Error creating report:', error);
+      createSnackbar(`Failed to create the missing item report.`, `error`);
     }
   };
 
@@ -351,11 +352,19 @@ const ReportItemPage = () => {
     <>
       <Header />
       {showConfirm ? (
-        <ConfirmReport
-          formData={formData}
-          onEdit={() => setShowConfirm(false)}
-          onSubmit={handleReportSubmit}
-        />
+        <>
+          <ConfirmReport
+            formData={formData}
+            onEdit={() => setShowConfirm(false)}
+            onSubmit={handleReportSubmit}
+          />
+          <GordonSnackbar
+            open={snackbar.open}
+            text={snackbar.message}
+            severity={snackbar.severity}
+            onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+          />
+        </>
       ) : (
         <Card className={styles.form_card}>
           <CardHeader
