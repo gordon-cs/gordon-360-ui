@@ -283,7 +283,7 @@ const ReportItemPage = () => {
 
       await lostAndFoundService.createMissingItemReport(requestData);
       // Redirect to the missing item database after successful submission
-      navigate('/campussafety/lostandfoundadmin/missingitemdatabase');
+      navigate('/lostandfound/lostandfoundadmin/missingitemdatabase');
     } catch (error) {
       console.error('Error creating report:', error);
     }

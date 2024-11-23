@@ -220,7 +220,7 @@ const MissingItemList = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => navigate('/campussafety/lostandfoundadmin/reportitemforothers')}
+                    onClick={() => navigate('/lostandfound/lostandfoundadmin/reportitemforothers')}
                     fullWidth={isMobile}
                     className={styles.reportButton}
                   >
