@@ -18,6 +18,7 @@ import { DateTime } from 'luxon';
 import Header from 'views/CampusSafety/components/Header';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
+import userService from 'services/user';
 
 const MissingItemReportData = () => {
   const { itemId } = useParams<{ itemId: string }>();
@@ -28,10 +29,31 @@ const MissingItemReportData = () => {
   const [newActionModalOpen, setNewActionModalOpen] = useState<boolean>(false);
   const [actionLoaded, setActionLoaded] = useState<number>(0);
   const [selectedActionID, setSelectedActionID] = useState<number>(0);
+  const [actionsUpdated, setActionsUpdated] = useState<number>(0);
+  const [username, setUsername] = useState({ AD_Username: '' });
   const selectedAction = useRef<MissingAdminAction | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
   const isWidescreen = useMediaQuery('(min-width:1000px)');
   const isMobile = useMediaQuery('(max-width:470px)');
+
+  const [newActionFormData, setNewActionFormData] = useState({ action: '', actionNote: '' });
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userInfo = await userService.getProfileInfo();
+        setUsername({
+          AD_Username: userInfo?.AD_Username || '', // Set AD_Username
+        });
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    setActionsUpdated(1);
+
+    fetchUserData();
+  }, []);
 
   useEffect(() => {
     const fetchItem = async () => {
@@ -42,6 +64,11 @@ const MissingItemReportData = () => {
         console.error('Error fetching item:', error);
       }
     };
+    fetchItem();
+    setLoading(false);
+  }, [itemId]);
+
+  useEffect(() => {
     const fetchAdminActions = async () => {
       try {
         const fetchedAdminActions = await lostAndFoundService.getAdminActions(
@@ -52,20 +79,18 @@ const MissingItemReportData = () => {
         console.error('Error fetching admin actions:', error);
       }
     };
-    fetchItem();
     fetchAdminActions();
-    setLoading(false);
-  }, [itemId]);
+  }, [actionsUpdated, itemId]);
 
   useEffect(() => {
     var index = adminActionsArray?.findIndex((x) => x.ID === selectedActionID);
     !index ? (index = 0) : (index = index);
     selectedAction.current = adminActionsArray?.at(index);
     setActionLoaded(actionLoaded + 1);
-  }, [adminActionsArray, selectedActionID]);
+  }, [selectedActionID]);
 
   useEffect(() => {
-    if (actionLoaded > 2) {
+    if (actionLoaded > 1) {
       setActionDetailsModalOpen(true);
     }
   }, [actionLoaded]);
@@ -74,11 +99,35 @@ const MissingItemReportData = () => {
     setNewActionModalOpen(true);
   };
 
-  const handleActionClicked = (id: number) => {
-    setSelectedActionID(id);
+  const handleActionClicked = (id: number | undefined) => {
+    console.log('action clicked', id);
+    setSelectedActionID(id || 0);
+  };
+
+  const handleNewActionFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+
+    setNewActionFormData((prevData) => ({
+      ...prevData,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
+  const handleNewActionSubmit = async () => {
+    console.log('submitting form', newActionFormData);
+    let requestData = {
+      ...newActionFormData,
+      missingID: parseInt(itemId || ''),
+      actionDate: DateTime.now().toISO(),
+      username: username.AD_Username,
+    };
+    await lostAndFoundService.createAdminAction(parseInt(itemId ? itemId : ''), requestData);
+    setActionsUpdated(actionsUpdated + 1);
+    closeModal();
   };
 
   const closeModal = () => {
+    setNewActionFormData({ action: '', actionNote: '' });
     setActionDetailsModalOpen(false);
     setNewActionModalOpen(false);
   };
@@ -135,36 +184,47 @@ const MissingItemReportData = () => {
               </Grid>
             </Grid>
             <Grid container className={styles.table}>
-              {adminActionsArray?.map((adminAction) => {
-                return (
-                  <>
-                    <Grid
-                      container
-                      item
-                      className={styles.tableRow}
-                      onClick={() => {
-                        handleActionClicked(adminAction.ID);
-                      }}
-                    >
-                      <Grid item xs={1} className={styles.tableColumn}>
-                        <Launch color="secondary" />
+              {adminActionsArray?.length === 0 ? (
+                <>
+                  <Grid item xs={0.5} />
+                  <Grid item xs={11}>
+                    <div className={styles.dataCell}>No actions yet...</div>
+                  </Grid>
+                </>
+              ) : (
+                adminActionsArray?.map((adminAction) => {
+                  return (
+                    <>
+                      <Grid
+                        container
+                        item
+                        className={styles.tableRow}
+                        onClick={() => {
+                          handleActionClicked(adminAction.ID);
+                        }}
+                      >
+                        <Grid item xs={1} className={styles.tableColumn}>
+                          <Launch color="secondary" />
+                        </Grid>
+                        <Grid item xs={2} className={styles.tableColumn}>
+                          <div className={styles.dataCell}>
+                            {formatDate(adminAction.actionDate)}
+                          </div>
+                        </Grid>
+                        <Grid item xs={3} className={styles.tableColumn}>
+                          <div className={styles.dataCell}>{adminAction.action}</div>
+                        </Grid>
+                        <Grid item xs={3} className={styles.tableColumn}>
+                          <div className={styles.dataCell}>{adminAction.username}</div>
+                        </Grid>
+                        <Grid item xs={3} className={styles.tableColumn}>
+                          <div className={styles.dataCell}>{adminAction.actionNote}</div>
+                        </Grid>
                       </Grid>
-                      <Grid item xs={2} className={styles.tableColumn}>
-                        <div className={styles.dataCell}>{formatDate(adminAction.actionDate)}</div>
-                      </Grid>
-                      <Grid item xs={3} className={styles.tableColumn}>
-                        <div className={styles.dataCell}>{adminAction.action}</div>
-                      </Grid>
-                      <Grid item xs={3} className={styles.tableColumn}>
-                        <div className={styles.dataCell}>{adminAction.username}</div>
-                      </Grid>
-                      <Grid item xs={3} className={styles.tableColumn}>
-                        <div className={styles.dataCell}>{adminAction.actionNote}</div>
-                      </Grid>
-                    </Grid>
-                  </>
-                );
-              })}
+                    </>
+                  );
+                })
+              )}
             </Grid>
           </CardContent>
         </Card>
@@ -204,9 +264,37 @@ const MissingItemReportData = () => {
       <GordonDialogBox
         open={newActionModalOpen}
         title={'Record NEW Action'}
+        buttonClicked={handleNewActionSubmit}
+        buttonName="Submit"
         cancelButtonClicked={closeModal}
         cancelButtonName="close"
-      ></GordonDialogBox>
+      >
+        <Grid container className={styles.newActionModal} rowGap={2}>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              variant="filled"
+              label={'Action'}
+              name="action"
+              value={newActionFormData.action}
+              onChange={handleNewActionFormChange}
+            />
+          </Grid>
+          <Typography>Add notes to record what you did</Typography>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              variant="filled"
+              multiline
+              minRows={3}
+              label={'Action Notes'}
+              name="actionNote"
+              value={newActionFormData.actionNote}
+              onChange={handleNewActionFormChange}
+            />
+          </Grid>
+        </Grid>
+      </GordonDialogBox>
     );
   };
 

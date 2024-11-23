@@ -32,7 +32,7 @@ export type MissingItemReport = {
  * report for communication with the backend.
  */
 export type MissingAdminAction = {
-  ID: number;
+  ID?: number;
   missingID: number;
   action: string;
   actionDate: string;
@@ -109,7 +109,7 @@ const createAdminAction = async (
   id: number,
   data: Omit<MissingAdminAction, 'id'>,
 ): Promise<number> => {
-  const response = await http.post<number>(`lostandfound/missingitem/${id}/actiontaken`);
+  const response = await http.post<number>(`lostandfound/missingitem/${id}/actiontaken`, data);
   return response;
 };
 
