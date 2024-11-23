@@ -60,7 +60,7 @@
   height: 30px;
   cursor: pointer;
   transition: background-color 0.2s;
-  &:nth-child(even) {
+  &:nth-child(odd) {
     background-color: var(--mui-palette-neutral-100); // Slightly darker neutral for zebra striping
   }
   &:hover {
