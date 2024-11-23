@@ -1,4 +1,4 @@
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   Card,
   CardContent,
@@ -9,7 +9,7 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import { Javascript, Key, Launch } from '@mui/icons-material';
+import { Key, Launch } from '@mui/icons-material';
 import styles from './MissingItemReportData.module.scss';
 import { useEffect, useRef, useState } from 'react';
 import lostAndFoundService from 'services/lostAndFound';
