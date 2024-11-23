@@ -20,7 +20,7 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { DateTime } from 'luxon';
-import { useReducer, useEffect, useState, HTMLAttributes } from 'react';
+import { useReducer, useEffect, useState, HTMLAttributes, useCallback } from 'react';
 import { useNavigate } from 'react-router';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './ReportItemPage.module.scss';
@@ -85,6 +85,11 @@ const performSearch = debounce(async (query: string, dispatch: React.Dispatch<Ac
 
 const ReportItemPage = () => {
   const navigate = useNavigate();
+
+  const createSnackbar = useCallback((message, severity) => {
+    setSnackbar({ message, severity, open: true });
+  }, []);
+
   const [isGordonPerson, setIsGordonPerson] = useState('');
   const [formData, setFormData] = useState({
     firstName: '',
@@ -108,6 +113,7 @@ const ReportItemPage = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
   const [state, dispatch] = useReducer(reducer, defaultState);
+  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
 
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));

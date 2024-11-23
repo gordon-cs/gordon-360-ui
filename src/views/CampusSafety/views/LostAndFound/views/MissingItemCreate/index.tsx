@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   Card,
   CardHeader,
@@ -18,11 +18,15 @@ import lostAndFoundService from 'services/lostAndFound';
 import userService from 'services/user';
 import ReportStolenModal from './components/reportStolen';
 import ConfirmReport from './components/confirmReport';
-//import ConfirmReport from './components/confirmReport';
+import GordonSnackbar from 'components/Snackbar';
 import { useNavigate } from 'react-router';
 
 const MissingItemFormCreate = () => {
   const navigate = useNavigate();
+
+  const createSnackbar = useCallback((message, severity) => {
+    setSnackbar({ message, severity, open: true });
+  }, []);
 
   const [user, setUser] = useState({
     firstName: '',
@@ -48,6 +52,7 @@ const MissingItemFormCreate = () => {
   const [isStolenModalOpen, setStolenModalOpen] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
+  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -157,10 +162,10 @@ const MissingItemFormCreate = () => {
       };
 
       const newReportId = await lostAndFoundService.createMissingItemReport(requestData);
-      alert(`Report created successfully with ID: ${newReportId}`);
+      createSnackbar(`Report created sucessfully with ID: ${newReportId}`, `success`);
       navigate('/lostandfound');
     } catch (error) {
-      alert('Failed to create the missing item report.');
+      createSnackbar(`Failed to create the missing item report.`, `error`);
     }
   };
 
@@ -168,11 +173,19 @@ const MissingItemFormCreate = () => {
     <>
       <Header />
       {showConfirm ? (
-        <ConfirmReport
-          formData={{ ...formData, ...user }}
-          onEdit={() => setShowConfirm(false)}
-          onSubmit={handleReportSubmit}
-        />
+        <>
+          <ConfirmReport
+            formData={{ ...formData, ...user }}
+            onEdit={() => setShowConfirm(false)}
+            onSubmit={handleReportSubmit}
+          />
+          <GordonSnackbar
+            open={snackbar.open}
+            text={snackbar.message}
+            severity={snackbar.severity}
+            onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+          />
+        </>
       ) : (
         <Card className={styles.form_card}>
           <CardHeader
