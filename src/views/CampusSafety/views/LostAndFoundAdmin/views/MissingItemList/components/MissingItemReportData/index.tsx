@@ -221,7 +221,7 @@ const MissingItemReportData = () => {
                 <div className={styles.dataCell}>Notes</div>
               </Grid>
             </Grid>
-            <Grid container className={styles.table}>
+            <Grid container>
               {adminActionsArray?.length === 0 ? (
                 <>
                   <Grid item xs={0.5} />
