@@ -21,25 +21,37 @@ import GordonDialogBox from 'components/GordonDialogBox';
 import userService from 'services/user';
 
 const MissingItemReportData = () => {
-  const { itemId } = useParams<{ itemId: string }>();
   const navigate = useNavigate();
-  const [item, setItem] = useState<MissingItemReport | null>(null);
-  const [adminActionsArray, setAdminActionsArray] = useState<MissingAdminAction[] | null>(null);
-  const [actionDetailsModalLoading, setActionDetailsModalLoading] = useState<boolean>(false);
-  const [actionDetailsModalOpen, setActionDetailsModalOpen] = useState<boolean>(false);
-  const [newActionModalOpen, setNewActionModalOpen] = useState<boolean>(false);
-  const [actionLoaded, setActionLoaded] = useState<boolean>(false);
-  const [selectedActionID, setSelectedActionID] = useState<number>(0);
-  const [actionsUpdated, setActionsUpdated] = useState<number>(0);
   const [username, setUsername] = useState({ AD_Username: '' });
-  const selectedAction = useRef<MissingAdminAction | undefined>(undefined);
+
+  // Pull the itemId from the url
+  const { itemId } = useParams<{ itemId: string }>();
+
+  // Page State
   const [loading, setLoading] = useState<boolean>(true);
   const isWidescreen = useMediaQuery('(min-width:1000px)');
   const isMobile = useMediaQuery('(max-width:470px)');
-
   const [newActionFormData, setNewActionFormData] = useState({ action: '', actionNote: '' });
+  const [actionDetailsModalOpen, setActionDetailsModalOpen] = useState<boolean>(false);
+  const [newActionModalOpen, setNewActionModalOpen] = useState<boolean>(false);
 
+  // Used for details modal with dynamic content that must be set asynchronously before modal opens
+  const [actionDetailsModalLoading, setActionDetailsModalLoading] = useState<boolean>(false);
+
+  // The missing item report
+  const [item, setItem] = useState<MissingItemReport | null>(null);
+
+  const [adminActionsArray, setAdminActionsArray] = useState<MissingAdminAction[] | null>(null);
+
+  // Keeps track of whether the admin actions array was updated recently and hasn't been fetched
+  const [actionsUpdated, setActionsUpdated] = useState<boolean>(false);
+
+  const [selectedActionID, setSelectedActionID] = useState<number>(0);
+  const selectedAction = useRef<MissingAdminAction | undefined>(undefined);
+
+  // Triggered on first render
   useEffect(() => {
+    // Get the username of the currently signed in user, for use in the AdminActions form
     const fetchUserData = async () => {
       try {
         const userInfo = await userService.getProfileInfo();
@@ -51,12 +63,7 @@ const MissingItemReportData = () => {
       }
     };
 
-    setActionsUpdated(1);
-
-    fetchUserData();
-  }, []);
-
-  useEffect(() => {
+    // Fetch the missing item report from the backend.
     const fetchItem = async () => {
       try {
         const fetchedItem = await lostAndFoundService.getMissingItemReport(parseInt(itemId || ''));
@@ -65,11 +72,16 @@ const MissingItemReportData = () => {
         console.error('Error fetching item:', error);
       }
     };
+
+    fetchUserData();
     fetchItem();
     setLoading(false);
   }, [itemId]);
 
+  // Triggered on first render, and whenever  actions have been updated
+  // (i.e. when an admin user creates a new admin action).
   useEffect(() => {
+    // Fetch admin actions array from the backend.
     const fetchAdminActions = async () => {
       try {
         const fetchedAdminActions = await lostAndFoundService.getAdminActions(
@@ -81,38 +93,69 @@ const MissingItemReportData = () => {
       }
     };
     fetchAdminActions();
+    // Reset actions updated
+    setActionsUpdated(false);
   }, [actionsUpdated, itemId]);
 
+  /*
+   *
+   * Modal lifecycle methods
+   */
+
+  // Close any open modals
+  const closeModal = () => {
+    setNewActionFormData({ action: '', actionNote: '' });
+    setActionDetailsModalOpen(false);
+    setNewActionModalOpen(false);
+  };
+
+  /*
+   *
+   * Action details modal lifecycle methods
+   */
+
+  // Set the ID of the action clicked, and set the modal to loading, to allow time for the selected
+  // action object to update before the modal opens.
+  const handleActionClicked = (id: number | undefined) => {
+    setSelectedActionID(id || 0);
+    setActionDetailsModalLoading(true);
+  };
+
   useEffect(() => {
+    // If the actions array, or the selected action ID are modified, update the selected action object
+    // for use in the modal
     var index = adminActionsArray?.findIndex((x) => x.ID === selectedActionID);
     !index ? (index = 0) : (index = index);
     selectedAction.current = adminActionsArray?.at(index);
+
+    // if the modal is set to loading (when user clicks on an action), open the modal, and set modal
+    // loading to false
     if (actionDetailsModalLoading) {
       setActionDetailsModalOpen(true);
       setActionDetailsModalLoading(false);
     }
   }, [selectedActionID, actionDetailsModalLoading, adminActionsArray]);
 
+  /*
+   *
+   * New action form lifecycle methods
+   */
+
+  // Opens the create new action modal
   const newActionHandler = () => {
     setNewActionModalOpen(true);
   };
 
-  const handleActionClicked = (id: number | undefined) => {
-    setSelectedActionID(id || 0);
-    setActionDetailsModalLoading(true);
-  };
-
   const handleNewActionFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-
+    const { name, value } = e.target;
     setNewActionFormData((prevData) => ({
       ...prevData,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: value,
     }));
   };
 
   const handleNewActionSubmit = async () => {
-    console.log('submitting form', newActionFormData);
+    // Combine form data into the data format for the backend request
     let requestData = {
       ...newActionFormData,
       missingID: parseInt(itemId || ''),
@@ -120,21 +163,18 @@ const MissingItemReportData = () => {
       username: username.AD_Username,
     };
     await lostAndFoundService.createAdminAction(parseInt(itemId ? itemId : ''), requestData);
-    setActionsUpdated(actionsUpdated + 1);
+    // Since a new action was created, trigger an update, which will fetch the new actions list
+    // from the backend
+    setActionsUpdated(true);
     closeModal();
   };
 
-  const closeModal = () => {
-    setNewActionFormData({ action: '', actionNote: '' });
-    setActionDetailsModalOpen(false);
-    setNewActionModalOpen(false);
-  };
+  // Format date strings for display
+  const formatDate = (date: string) => DateTime.fromISO(date).toFormat('M/d/yy');
 
   if (!item) return null;
 
   const formattedDateLost = DateTime.fromISO(item.dateLost).toFormat('MM-dd-yy');
-
-  const formatDate = (date: string) => DateTime.fromISO(date).toFormat('M/d/yy');
 
   // Component for admin actions card, holding the admin actions UI elements
   const adminActions = () => {
@@ -234,7 +274,7 @@ const MissingItemReportData = () => {
     return (
       <GordonDialogBox
         open={actionDetailsModalOpen}
-        title={'History Detail'}
+        title={'Action Details'}
         cancelButtonClicked={closeModal}
         cancelButtonName="close"
       >
