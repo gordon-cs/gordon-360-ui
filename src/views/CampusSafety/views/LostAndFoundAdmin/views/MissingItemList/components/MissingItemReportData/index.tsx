@@ -25,9 +25,10 @@ const MissingItemReportData = () => {
   const navigate = useNavigate();
   const [item, setItem] = useState<MissingItemReport | null>(null);
   const [adminActionsArray, setAdminActionsArray] = useState<MissingAdminAction[] | null>(null);
+  const [actionDetailsModalLoading, setActionDetailsModalLoading] = useState<boolean>(false);
   const [actionDetailsModalOpen, setActionDetailsModalOpen] = useState<boolean>(false);
   const [newActionModalOpen, setNewActionModalOpen] = useState<boolean>(false);
-  const [actionLoaded, setActionLoaded] = useState<number>(0);
+  const [actionLoaded, setActionLoaded] = useState<boolean>(false);
   const [selectedActionID, setSelectedActionID] = useState<number>(0);
   const [actionsUpdated, setActionsUpdated] = useState<number>(0);
   const [username, setUsername] = useState({ AD_Username: '' });
@@ -86,22 +87,19 @@ const MissingItemReportData = () => {
     var index = adminActionsArray?.findIndex((x) => x.ID === selectedActionID);
     !index ? (index = 0) : (index = index);
     selectedAction.current = adminActionsArray?.at(index);
-    setActionLoaded(actionLoaded + 1);
-  }, [selectedActionID]);
-
-  useEffect(() => {
-    if (actionLoaded > 1) {
+    if (actionDetailsModalLoading) {
       setActionDetailsModalOpen(true);
+      setActionDetailsModalLoading(false);
     }
-  }, [actionLoaded]);
+  }, [selectedActionID, actionDetailsModalLoading, adminActionsArray]);
 
   const newActionHandler = () => {
     setNewActionModalOpen(true);
   };
 
   const handleActionClicked = (id: number | undefined) => {
-    console.log('action clicked', id);
     setSelectedActionID(id || 0);
+    setActionDetailsModalLoading(true);
   };
 
   const handleNewActionFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
