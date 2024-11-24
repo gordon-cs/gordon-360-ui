@@ -10,6 +10,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import lostAndFoundService from 'services/lostAndFound';
 import styles from '../../../../views/CampusSafety/views/LostAndFound/LostAndFound.module.css'; // Import the external CSS
@@ -25,7 +26,7 @@ const LostAndFoundCard = () => {
   const [activeReports, setActiveReports] = useState<MissingItemReport[]>([]);
   const [loading, setLoading] = useState(true);
   const [width] = useWindowSize();
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMissingItems = async () => {
@@ -122,36 +123,38 @@ const LostAndFoundCard = () => {
           </Grid>
         )}
         {activeReports.map((report) => (
-          <Card
-            className={`${styles.dataRow} ${width < 900 ? styles.mobileDataRow : ''}`}
-            key={report.recordID}
-          >
-            <CardContent>
-              <Grid container spacing={2} alignItems="center">
-                {width < 900 ? (
-                  <>
-                    {/* Display two items per row on mobile */}
-                    <Grid item xs={3}>
-                      <Typography align="center">{formatDate(report.dateLost)}</Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <Typography align="center">
-                        {report.locationLost.length > 15
-                          ? report.locationLost.slice(0, 15) + '...'
-                          : report.locationLost}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <Typography align="center">{report.category}</Typography>
-                    </Grid>
-                  </>
-                ) : (
-                  // Desktop layout
-                  <>{renderReportContent(report)}</>
-                )}
-              </Grid>
-            </CardContent>
-          </Card>
+          <Link to="/lostandfound">
+            <Card
+              className={`${styles.dataRow} ${width < 900 ? styles.mobileDataRow : ''}`}
+              key={report.recordID}
+            >
+              <CardContent>
+                <Grid container spacing={2} alignItems="center">
+                  {width < 900 ? (
+                    <>
+                      {/* Display two items per row on mobile */}
+                      <Grid item xs={3}>
+                        <Typography align="center">{formatDate(report.dateLost)}</Typography>
+                      </Grid>
+                      <Grid item xs={3}>
+                        <Typography align="center">
+                          {report.locationLost.length > 15
+                            ? report.locationLost.slice(0, 15) + '...'
+                            : report.locationLost}
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={3}>
+                        <Typography align="center">{report.category}</Typography>
+                      </Grid>
+                    </>
+                  ) : (
+                    // Desktop layout
+                    <>{renderReportContent(report)}</>
+                  )}
+                </Grid>
+              </CardContent>
+            </Card>
+          </Link>
         ))}
       </CardContent>
     </Card>
