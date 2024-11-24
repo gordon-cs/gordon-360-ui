@@ -5,6 +5,7 @@ import { fetchRdInfo } from 'services/residentLife/ResidentStaff';
 
 const MyHall = () => {
   const [rdInfo, setRdInfo] = useState({});
+  const [rdProfileLink, setRdProfileLink] = useState('');
   const { profile } = useUser();
 
   useEffect(() => {
@@ -18,6 +19,16 @@ const MyHall = () => {
       });
     }
   }, [profile]);
+
+  useEffect(() => {
+    if (rdInfo) {
+      const fullName = rdInfo.RD_Name || '';
+      const [firstName, lastName] = fullName.split(' ');
+      const userName = `${firstName}.${lastName}`;
+      console.log('RD Username', userName);
+      setRdProfileLink(`https://360.gordon.edu/profile/${userName}`);
+    }
+  }, [rdInfo]);
 
   // Show loading state if profile is not yet loaded
   if (!profile) {
@@ -49,7 +60,14 @@ const MyHall = () => {
             </Typography>
 
             <Typography variant="body1">
-              <strong>RD:</strong> {rdInfo.RD_Name}
+              <a
+                href={rdProfileLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: 'inherit', textDecoration: 'none' }}
+              >
+                <strong>RD:</strong> {rdInfo.RD_Name}
+              </a>
             </Typography>
           </Grid>
 
@@ -72,8 +90,3 @@ const MyHall = () => {
 };
 
 export default MyHall;
-
-// Will use later
-// src/services/user.ts
-//  - getImage
-//  - getProfile
