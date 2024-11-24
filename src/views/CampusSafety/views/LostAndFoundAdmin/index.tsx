@@ -14,7 +14,7 @@ const LostAndFoundAdmin = () => {
 
   useEffect(() => {
     if (!isAdmin) {
-      navigate('/campussafety'); // Leave the page if user is not an admin
+      navigate('/lostandfound'); // Leave the page if user is not an admin
     }
   });
 

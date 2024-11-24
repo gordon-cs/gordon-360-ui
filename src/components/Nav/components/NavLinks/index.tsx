@@ -126,16 +126,6 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
     />
   );
 
-  const SafetyButton = (
-    <GordonNavButton
-      onLinkClick={onLinkClick}
-      linkName="Safety"
-      linkPath="/campussafety"
-      LinkIcon={HealthAndSafetyIcon}
-      divider={false}
-    />
-  );
-
   const recimButton = (
     <GordonNavButton
       unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
@@ -214,7 +204,6 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
         {eventsButton}
         {peopleButton}
         {LinksButton}
-        {SafetyButton}
         {recimButton}
       </List>
 
