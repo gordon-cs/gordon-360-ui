@@ -1,10 +1,27 @@
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, Grid, Link, Typography, Avatar } from '@mui/material';
 import { useUser } from 'hooks';
+import { fetchRdInfo } from 'services/residentLife/ResidentStaff';
 
 const MyHall = () => {
+  const [rdInfo, setRdInfo] = useState({});
   const { profile } = useUser();
+
+  useEffect(() => {
+    if (profile) {
+      const hallID = profile.OnCampusBuilding;
+      console.log('hallID', hallID);
+
+      fetchRdInfo(hallID).then((response) => {
+        setRdInfo(response);
+        console.log('RD Info', response);
+      });
+    }
+  }, [profile]);
+
+  // Show loading state if profile is not yet loaded
   if (!profile) {
-    return <div>Loading...</div>;
+    return <Typography>Loading...</Typography>;
   }
 
   return (
@@ -32,7 +49,7 @@ const MyHall = () => {
             </Typography>
 
             <Typography variant="body1">
-              <strong>RD:</strong>
+              <strong>RD:</strong> {rdInfo.RD_Name}
             </Typography>
           </Grid>
 
