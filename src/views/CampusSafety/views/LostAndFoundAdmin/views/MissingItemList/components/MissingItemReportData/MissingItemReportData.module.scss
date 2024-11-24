@@ -1,5 +1,11 @@
 @import '../../../../../../../../vars';
 
+.newActionModal {
+  padding-top: 10px;
+  width: 70vw;
+  max-width: 100%;
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -24,6 +30,10 @@
   color: var(--mui-palette-text-primary); // Adjusts text color based on theme
 }
 
+.actionsCard {
+  padding: 0;
+}
+
 .title {
   text-align: center;
   & b {
@@ -39,25 +49,43 @@
   font-weight: bold;
 }
 
-.contactButton {
-  background-color: var(--mui-palette-secondary-main); // ScottieCyan for the contact button
-  color: var(--mui-palette-secondary-contrastText); // Black for text
-  font-weight: bold;
+.tableHeader {
+  height: 30px;
 }
 
-.formLabel {
-  font-weight: bold;
-  margin-bottom: 0.5rem;
+.tableRow {
+  height: 30px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  &:nth-child(odd) {
+    background-color: var(--mui-palette-neutral-100); // Slightly darker neutral for zebra striping
+  }
+  &:hover {
+    background-color: var(--mui-palette-primary-light); // Light hover effect
+  }
+}
+
+.tableColumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.actionsHeader {
+  text-align: center;
+}
+
+.dataCell {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-right: 0.5rem;
+  height: fit-content;
 }
 
 @media (max-width: 768px) {
   .categoryGroup,
   .checkboxGroup {
     grid-template-columns: 1fr;
-  }
-
-  .title {
-    font-size: xx-small;
-    // color: var(--mui-palette-primary-main);
   }
 }
