@@ -132,40 +132,88 @@ const LostAndFoundCard = () => {
                 </Grid>
               </Grid>
             )}
-        {activeReports.map((report) => (
-          <Link to="/lostandfound">
-            <Card
-              className={`${styles.dataRow} ${width < 900 ? styles.mobileDataRow : ''}`}
-              key={report.recordID}
-            >
-              <CardContent>
-                <Grid container spacing={2} alignItems="center">
-                  {width < 900 ? (
-                    <>
-                      {/* Display two items per row on mobile */}
-                      <Grid item xs={3}>
-                        <Typography align="center">{formatDate(report.dateLost)}</Typography>
+        {activeReports?.length > 3 ? (
+          <>
+            {activeReports.slice(0, 3).map((report) => (
+              <>
+                <Link to="/lostandfound">
+                  <Card
+                    className={`${styles.dataRow} ${width < 900 ? styles.mobileDataRow : ''}`}
+                    key={report.recordID}
+                  >
+                    <CardContent>
+                      <Grid container spacing={2} alignItems="center">
+                        {width < 900 ? (
+                          <>
+                            {/* Display two items per row on mobile */}
+                            <Grid item xs={3}>
+                              <Typography align="center">{formatDate(report.dateLost)}</Typography>
+                            </Grid>
+                            <Grid item xs={3}>
+                              <Typography align="center">
+                                {report.locationLost.length > 15
+                                  ? report.locationLost.slice(0, 15) + '...'
+                                  : report.locationLost}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={3}>
+                              <Typography align="center">{report.category}</Typography>
+                            </Grid>
+                          </>
+                        ) : (
+                          // Desktop layout
+                          <>{renderReportContent(report)}</>
+                        )}
                       </Grid>
-                      <Grid item xs={3}>
-                        <Typography align="center">
-                          {report.locationLost.length > 15
-                            ? report.locationLost.slice(0, 15) + '...'
-                            : report.locationLost}
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={3}>
-                        <Typography align="center">{report.category}</Typography>
-                      </Grid>
-                    </>
-                  ) : (
-                    // Desktop layout
-                    <>{renderReportContent(report)}</>
-                  )}
-                </Grid>
-              </CardContent>
-            </Card>
-          </Link>
-        ))}
+                    </CardContent>
+                  </Card>
+                </Link>
+              </>
+            ))}
+            <Grid item alignItems="center">
+              <br />
+              <Typography variant="h5" align="center">
+                {activeReports.length - 3} more item(s) not shown.
+              </Typography>
+              <br />
+            </Grid>
+          </>
+        ) : (
+          activeReports.map((report) => (
+            <Link to="/lostandfound">
+              <Card
+                className={`${styles.dataRow} ${width < 900 ? styles.mobileDataRow : ''}`}
+                key={report.recordID}
+              >
+                <CardContent>
+                  <Grid container spacing={2} alignItems="center">
+                    {width < 900 ? (
+                      <>
+                        {/* Display two items per row on mobile */}
+                        <Grid item xs={3}>
+                          <Typography align="center">{formatDate(report.dateLost)}</Typography>
+                        </Grid>
+                        <Grid item xs={3}>
+                          <Typography align="center">
+                            {report.locationLost.length > 15
+                              ? report.locationLost.slice(0, 15) + '...'
+                              : report.locationLost}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={3}>
+                          <Typography align="center">{report.category}</Typography>
+                        </Grid>
+                      </>
+                    ) : (
+                      // Desktop layout
+                      <>{renderReportContent(report)}</>
+                    )}
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Link>
+          ))
+        )}
       </CardContent>
     </Card>
   );
