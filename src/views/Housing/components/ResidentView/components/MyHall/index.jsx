@@ -1,10 +1,38 @@
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, Grid, Link, Typography, Avatar } from '@mui/material';
 import { useUser } from 'hooks';
+import { fetchRdInfo } from 'services/residentLife/ResidentStaff';
 
 const MyHall = () => {
+  const [rdInfo, setRdInfo] = useState({});
+  const [rdProfileLink, setRdProfileLink] = useState('');
   const { profile } = useUser();
+
+  useEffect(() => {
+    if (profile) {
+      const hallID = profile.OnCampusBuilding;
+      console.log('hallID', hallID);
+
+      fetchRdInfo(hallID).then((response) => {
+        setRdInfo(response);
+        console.log('RD Info', response);
+      });
+    }
+  }, [profile]);
+
+  useEffect(() => {
+    if (rdInfo) {
+      const fullName = rdInfo.RD_Name || '';
+      const [firstName, lastName] = fullName.split(' ');
+      const userName = `${firstName}.${lastName}`;
+      console.log('RD Username', userName);
+      setRdProfileLink(`https://360.gordon.edu/profile/${userName}`);
+    }
+  }, [rdInfo]);
+
+  // Show loading state if profile is not yet loaded
   if (!profile) {
-    return <div>Loading...</div>;
+    return <Typography>Loading...</Typography>;
   }
 
   return (
@@ -32,7 +60,14 @@ const MyHall = () => {
             </Typography>
 
             <Typography variant="body1">
-              <strong>RD:</strong>
+              <a
+                href={rdProfileLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: 'inherit', textDecoration: 'none' }}
+              >
+                <strong>RD:</strong> {rdInfo.RD_Name}
+              </a>
             </Typography>
           </Grid>
 
@@ -55,8 +90,3 @@ const MyHall = () => {
 };
 
 export default MyHall;
-
-// Will use later
-// src/services/user.ts
-//  - getImage
-//  - getProfile
