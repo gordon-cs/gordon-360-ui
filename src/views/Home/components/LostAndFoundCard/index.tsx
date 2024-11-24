@@ -21,6 +21,16 @@ const formatDate = (date: string) => {
   return DateTime.fromISO(date).toFormat('MM-dd-yyyy'); // Adjust format as needed
 };
 
+const noReports = (
+  <Grid item alignItems="center">
+    <br />
+    <Typography variant="h5" align="center">
+      No Missing Items Reported Yet
+    </Typography>
+    <br />
+  </Grid>
+);
+
 const LostAndFoundCard = () => {
   const [activeReports, setActiveReports] = useState<MissingItemReport[]>([]);
   const [loading, setLoading] = useState(true);
@@ -107,19 +117,21 @@ const LostAndFoundCard = () => {
             </Button>
           </Grid>
         </Grid>
-        {width >= 900 && (
-          <Grid container spacing={2} className={styles.headerRow}>
-            <Grid item xs={4}>
-              <Typography align="center">Date Lost</Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography align="center">Location Lost</Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography align="center">Description</Typography>
-            </Grid>
-          </Grid>
-        )}
+        {activeReports?.length < 1
+          ? noReports
+          : width >= 900 && (
+              <Grid container spacing={2} className={styles.headerRow}>
+                <Grid item xs={4}>
+                  <Typography align="center">Date Lost</Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography align="center">Location Lost</Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography align="center">Description</Typography>
+                </Grid>
+              </Grid>
+            )}
         {activeReports.map((report) => (
           <Link to="/lostandfound">
             <Card
