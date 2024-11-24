@@ -101,19 +101,19 @@ const LostAndFoundCard = () => {
       />
       <CardContent>
         <Grid container direction="row" justifyContent="space-between">
-          <Grid item xs={5}>
+          <Grid item xs={6}>
             <Button
               variant="contained"
               color="secondary"
               component={Link}
               to="/LostAndFound/missingitemform"
             >
-              Report Lost Item
+              Report Lost
             </Button>
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs={6}>
             <Button variant="contained" color="secondary" component={Link} to="/LostAndFound">
-              Report Found Item
+              Report Found
             </Button>
           </Grid>
         </Grid>
