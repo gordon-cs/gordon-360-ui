@@ -16,6 +16,11 @@ const LostAndFoundCard = () => {
             <Grid item xs={7}>
               Lost and Found
             </Grid>
+            <Grid item xs={5}>
+              <Button variant="contained" color="secondary" component={Link} to="/LostAndFound">
+                Lost and Found Page
+              </Button>
+            </Grid>
           </Grid>
         }
         className="gc360_header"
@@ -33,7 +38,7 @@ const LostAndFoundCard = () => {
             </Button>
           </Grid>
           <Grid item xs={5}>
-            <Button variant="contained" color="secondary" component={Link} to="LostAndFound">
+            <Button variant="contained" color="secondary" component={Link} to="/LostAndFound">
               Report Found Item
             </Button>
           </Grid>
