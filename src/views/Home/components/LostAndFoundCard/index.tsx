@@ -10,7 +10,6 @@ import {
   Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import lostAndFoundService from 'services/lostAndFound';
 import styles from '../../../../views/CampusSafety/views/LostAndFound/LostAndFound.module.css'; // Import the external CSS
@@ -26,7 +25,6 @@ const LostAndFoundCard = () => {
   const [activeReports, setActiveReports] = useState<MissingItemReport[]>([]);
   const [loading, setLoading] = useState(true);
   const [width] = useWindowSize();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMissingItems = async () => {
