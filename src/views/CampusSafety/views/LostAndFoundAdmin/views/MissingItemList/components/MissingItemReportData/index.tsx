@@ -9,7 +9,7 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import { Key, Launch } from '@mui/icons-material';
+import { Add, Key, Launch } from '@mui/icons-material';
 import styles from './MissingItemReportData.module.scss';
 import { useEffect, useRef, useState } from 'react';
 import lostAndFoundService from 'services/lostAndFound';
@@ -196,6 +196,7 @@ const MissingItemReportData = () => {
                 </Grid>
                 <Grid container item xs={6.5} direction="row-reverse">
                   <Button variant="contained" color="secondary" onClick={newActionHandler}>
+                    <Add />
                     New Action
                   </Button>
                 </Grid>
