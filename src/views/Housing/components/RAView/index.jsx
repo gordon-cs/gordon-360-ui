@@ -26,7 +26,7 @@ import { React, useEffect, useState } from 'react';
 import { ListItemIcon, ListItemText, ListSubheader, List, ListItem, Link } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { checkIfCheckedIn, submitCheckIn } from 'services/residentLife/RA_Checkin';
-import { preferredContact } from 'services/residentLife/RA_Info';
+import { preferredContact } from 'services/residentLife/ResidentStaff';
 import { useUser } from 'hooks';
 
 const RAView = () => {
@@ -225,17 +225,17 @@ const RAView = () => {
                   >
                     <FormControlLabel value="teams" control={<Radio />} label="Teams" />
                     <FormControlLabel value="phone" control={<Radio />} label="Phone" />
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleContactSubmit}
+                      disabled={!selectedContact}
+                      sx={{ mt: 2 }}
+                    >
+                      Submit
+                    </Button>
                   </RadioGroup>
                 </FormControl>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleContactSubmit}
-                  disabled={!selectedContact}
-                  sx={{ mt: 2 }}
-                >
-                  Submit
-                </Button>
               </AccordionDetails>
             </Accordion>
             <Typography sx={{ mt: 2, color: 'text.secondary', fontStyle: 'italic' }}>
