@@ -12,13 +12,21 @@ import {
   FormLabel,
   Grid,
   Typography,
+  Radio,
+  RadioGroup,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+
 import TaskList from './components/TaskList';
 import Schedule from './components/Schedule';
 import { React, useEffect, useState } from 'react';
 import { ListItemIcon, ListItemText, ListSubheader, List, ListItem, Link } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { checkIfCheckedIn, submitCheckIn } from 'services/residentLife/RA_Checkin';
+import { preferredContact } from 'services/residentLife/RA_Info';
 import { useUser } from 'hooks';
 
 const RAView = () => {
@@ -27,7 +35,7 @@ const RAView = () => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const { profile } = useUser();
-
+  const [selectedContact, setSelectedContact] = useState('');
   const [hallName, setHallName] = useState('');
 
   // Fetch check-in status and initialize hall data
@@ -158,6 +166,25 @@ const RAView = () => {
     });
   };
 
+  const handleContactChange = (event) => {
+    setSelectedContact(event.target.value);
+  };
+
+  const handleContactSubmit = async () => {
+    if (!selectedContact) {
+      alert('Please select a contact method before submitting.');
+      return;
+    }
+
+    try {
+      await preferredContact(profile.ID, selectedContact);
+      alert('Preferred contact method successfully updated.');
+    } catch (error) {
+      console.error('Error updating preferred contact method:', error);
+      alert('Failed to update contact method. Please try again.');
+    }
+  };
+
   return (
     <Grid container>
       <Grid container spacing={2}>
@@ -178,6 +205,44 @@ const RAView = () => {
             </CardContent>
           </Card>
         </Grid>
+      </Grid>
+
+      <Grid item xs={12} md={4}>
+        <Card>
+          <CardHeader title={'Preferred Contact Method'} className="gc360_header" />
+          <CardContent>
+            <Accordion>
+              <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
+                <Typography>Select Contact Method</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <FormControl component="fieldset">
+                  <RadioGroup
+                    aria-label="preferred-contact"
+                    name="preferred-contact"
+                    value={selectedContact}
+                    onChange={handleContactChange}
+                  >
+                    <FormControlLabel value="teams" control={<Radio />} label="Teams" />
+                    <FormControlLabel value="phone" control={<Radio />} label="Phone" />
+                  </RadioGroup>
+                </FormControl>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleContactSubmit}
+                  disabled={!selectedContact}
+                  sx={{ mt: 2 }}
+                >
+                  Submit
+                </Button>
+              </AccordionDetails>
+            </Accordion>
+            <Typography sx={{ mt: 2, color: 'text.secondary', fontStyle: 'italic' }}>
+              *This is your preferred method to be contacted by your hall's residents.
+            </Typography>
+          </CardContent>
+        </Card>
       </Grid>
 
       <Grid item xs={12} md={4} padding={1}>
