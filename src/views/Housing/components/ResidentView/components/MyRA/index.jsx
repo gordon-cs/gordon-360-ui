@@ -18,7 +18,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { fetchRaInfo } from 'services/residentLife/RA_Info';
+import { fetchRaInfo } from 'services/residentLife/ResidentStaff';
 import { useUser } from 'hooks';
 
 // Default image
@@ -130,23 +130,23 @@ const MyRA = () => {
             <TableBody>
               {/* ROW 1 */}
               <StyledTableRow>
-                <StyledTableCell align="center">In Class</StyledTableCell>
-                <StyledTableCell align="center">9:10am</StyledTableCell>
-                <StyledTableCell align="center">10:10am</StyledTableCell>
+                <StyledTableCell align="center">TBD</StyledTableCell>
+                <StyledTableCell align="center"></StyledTableCell>
+                <StyledTableCell align="center"></StyledTableCell>
               </StyledTableRow>
 
               {/* ROW 2 */}
               <StyledTableRow>
-                <StyledTableCell align="center">In Dorm</StyledTableCell>
-                <StyledTableCell align="center">10:15am</StyledTableCell>
-                <StyledTableCell align="center">12:30pm</StyledTableCell>
+                <StyledTableCell align="center">TBD</StyledTableCell>
+                <StyledTableCell align="center"></StyledTableCell>
+                <StyledTableCell align="center"></StyledTableCell>
               </StyledTableRow>
 
               {/* ROW 3 */}
               <StyledTableRow>
-                <StyledTableCell align="center">Off Campus</StyledTableCell>
-                <StyledTableCell align="center">12:45pm</StyledTableCell>
-                <StyledTableCell align="center">2:45pm</StyledTableCell>
+                <StyledTableCell align="center">TBD</StyledTableCell>
+                <StyledTableCell align="center"></StyledTableCell>
+                <StyledTableCell align="center"></StyledTableCell>
               </StyledTableRow>
             </TableBody>
           </Table>
