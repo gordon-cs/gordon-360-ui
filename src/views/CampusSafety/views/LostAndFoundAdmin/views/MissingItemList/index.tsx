@@ -266,14 +266,16 @@ const MissingItemList = () => {
                       <Grid item xs={1}></Grid>
                     </Grid>
                   )}
-                  {filteredReports.map((report) =>
+                  {filteredReports.map((report, index) =>
                     isMobile ? (
                       // Mobile Layout
                       <Card
                         key={report.recordID}
-                        className={styles.eventCard}
+                        className={`${styles.clickableRow}`}
                         onClick={() =>
-                          navigate(`/lostandfound/lostandfoundadmin/missingitem/${report.recordID}`)
+                          navigate(
+                            `/lostandfound/lostandfoundadmin/missingitemdatabase/${report.recordID}`,
+                          )
                         }
                       >
                         <CardContent>
