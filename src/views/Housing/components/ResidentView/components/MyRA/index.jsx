@@ -65,7 +65,13 @@ const MyRA = () => {
 
   useEffect(() => {
     if (raInfo) {
-      setRaProfileLink(`https://360.gordon.edu/profile/${raInfo.FirstName}.${raInfo.LastName}`);
+      const email = raInfo.Email;
+      if (email) {
+        const [firstName, lastName] = email.split('@')[0].split('.');
+        console.log('Split firstName:', firstName);
+        console.log('Split lastName:', lastName);
+        setRaProfileLink(`https://360.gordon.edu/profile/${firstName}.${lastName}`);
+      }
     }
   }, [raInfo]);
 
@@ -99,7 +105,7 @@ const MyRA = () => {
                 rel="noopener noreferrer"
                 style={{ textDecoration: 'none', color: 'inherit' }}
               >
-                <strong>RD:</strong> {raInfo.FirstName} {raInfo.LastName}
+                <strong>RA:</strong> {raInfo.FirstName} {raInfo.LastName}
               </Link>
             </Typography>
 

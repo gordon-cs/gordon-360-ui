@@ -22,11 +22,13 @@ const MyHall = () => {
 
   useEffect(() => {
     if (rdInfo) {
-      const fullName = rdInfo.RD_Name || '';
-      const [firstName, lastName] = fullName.split(' ');
-      const userName = `${firstName}.${lastName}`;
-      console.log('RD Username', userName);
-      setRdProfileLink(`https://360.gordon.edu/profile/${userName}`);
+      const email = rdInfo.RD_Email;
+      if (email) {
+        const [firstName, lastName] = email.split('@')[0].split('.');
+        console.log('Split firstName:', firstName);
+        console.log('Split lastName:', lastName);
+        setRdProfileLink(`https://360.gordon.edu/profile/${firstName}.${lastName}`);
+      }
     }
   }, [rdInfo]);
 
