@@ -46,6 +46,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const MyRA = () => {
   const [raInfo, setRaInfo] = useState({});
+  const [raProfileLink, setRaProfileLink] = useState('');
   const { profile } = useUser();
 
   useEffect(() => {
@@ -61,6 +62,12 @@ const MyRA = () => {
       });
     }
   }, [profile]);
+
+  useEffect(() => {
+    if (raInfo) {
+      setRaProfileLink(`https://360.gordon.edu/profile/${raInfo.FirstName}.${raInfo.LastName}`);
+    }
+  }, [raInfo]);
 
   // Show loading state if profile is not yet loaded
   if (!profile) {
@@ -85,7 +92,15 @@ const MyRA = () => {
           {/* Text Section */}
           <Grid item xs={8}>
             <Typography variant="body1">
-              <strong>Name:</strong> {raInfo.FirstName} {raInfo.LastName}
+              <Link
+                href={raProfileLink}
+                className="gc360_text_link"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                <strong>RD:</strong> {raInfo.FirstName} {raInfo.LastName}
+              </Link>
             </Typography>
 
             <Typography variant="body1">
@@ -93,11 +108,11 @@ const MyRA = () => {
             </Typography>
 
             <Typography variant="body1">
-              <strong>Current Status:</strong> TBD
+              <strong>Current Status:</strong> In Class
             </Typography>
 
             <Typography variant="body1">
-              <strong>Future Status:</strong> TBD
+              <strong>Future Status:</strong> Busy
             </Typography>
           </Grid>
 
@@ -128,25 +143,22 @@ const MyRA = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {/* ROW 1 */}
               <StyledTableRow>
-                <StyledTableCell align="center">TBD</StyledTableCell>
-                <StyledTableCell align="center"></StyledTableCell>
-                <StyledTableCell align="center"></StyledTableCell>
+                <StyledTableCell align="center">In Class</StyledTableCell>
+                <StyledTableCell align="center">9:10 AM</StyledTableCell>
+                <StyledTableCell align="center">10:10 PM</StyledTableCell>
               </StyledTableRow>
 
-              {/* ROW 2 */}
               <StyledTableRow>
-                <StyledTableCell align="center">TBD</StyledTableCell>
-                <StyledTableCell align="center"></StyledTableCell>
-                <StyledTableCell align="center"></StyledTableCell>
+                <StyledTableCell align="center">Busy</StyledTableCell>
+                <StyledTableCell align="center">10:10 PM</StyledTableCell>
+                <StyledTableCell align="center">2:00 PM</StyledTableCell>
               </StyledTableRow>
 
-              {/* ROW 3 */}
               <StyledTableRow>
-                <StyledTableCell align="center">TBD</StyledTableCell>
-                <StyledTableCell align="center"></StyledTableCell>
-                <StyledTableCell align="center"></StyledTableCell>
+                <StyledTableCell align="center">Available</StyledTableCell>
+                <StyledTableCell align="center">2:00 PM</StyledTableCell>
+                <StyledTableCell align="center">4:00 PM</StyledTableCell>
               </StyledTableRow>
             </TableBody>
           </Table>
