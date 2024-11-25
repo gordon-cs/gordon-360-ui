@@ -60,14 +60,15 @@ const MyHall = () => {
             </Typography>
 
             <Typography variant="body1">
-              <a
+              <Link
                 href={rdProfileLink}
+                className="gc360_text_link"
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ color: 'inherit', textDecoration: 'none' }}
+                style={{ textDecoration: 'none', color: 'inherit' }}
               >
                 <strong>RD:</strong> {rdInfo.RD_Name}
-              </a>
+              </Link>
             </Typography>
           </Grid>
 
