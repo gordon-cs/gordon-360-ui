@@ -271,9 +271,7 @@ const MissingItemList = () => {
                       // Mobile Layout
                       <Card
                         key={report.recordID}
-                        className={`${styles.eventCard} ${
-                          index % 2 === 0 ? styles.evenRow : styles.oddRow
-                        } ${styles.clickableRow}`}
+                        className={`${styles.clickableRow}`}
                         onClick={() =>
                           navigate(
                             `/lostandfound/lostandfoundadmin/missingitemdatabase/${report.recordID}`,

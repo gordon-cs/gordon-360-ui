@@ -28,14 +28,6 @@
   min-width: 120px;
 }
 
-.evenRow {
-  background-color: var(--mui-palette-neutral-100); /* Light background for even rows */
-}
-
-.oddRow {
-  background-color: var(--mui-palette-neutral-50); /* Slightly darker background for odd rows */
-}
-
 .cardHeader {
   background-color: var(--mui-palette-primary-main);
   color: var(--mui-palette-primary-contrastText);
@@ -80,6 +72,9 @@
 .clickableRow {
   cursor: pointer;
   transition: background-color 0.2s;
+  &:nth-child(even) {
+    background-color: var(--mui-palette-neutral-100); // Slightly darker neutral for zebra striping
+  }
   &:hover {
     background-color: var(--mui-palette-primary-light); // Light hover effect
   }
