@@ -28,6 +28,14 @@
   min-width: 120px;
 }
 
+.evenRow {
+  background-color: var(--mui-palette-neutral-100); /* Light background for even rows */
+}
+
+.oddRow {
+  background-color: var(--mui-palette-neutral-50); /* Slightly darker background for odd rows */
+}
+
 .cardHeader {
   background-color: var(--mui-palette-primary-main);
   color: var(--mui-palette-primary-contrastText);
