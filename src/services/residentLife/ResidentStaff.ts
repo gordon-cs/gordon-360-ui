@@ -11,6 +11,11 @@ type RA = {
   ID: string;
 };
 
+type Contact = {
+  raId: string;
+  preferredContactMethod: string;
+};
+
 type RD = {
   HallName: string;
   BuildingCode: string;
@@ -26,4 +31,8 @@ const fetchRaInfo = (hallId: string, roomNumber: number): Promise<RA[]> =>
 // Fetches the information of an RD from the API endpoint "Housing/rd/{hallId}"
 const fetchRdInfo = (hallId: string): Promise<RD[]> => http.get(`Housing/rd/${hallId}`);
 
-export { fetchRaInfo, fetchRdInfo };
+// Adds the information of which method of contact the RA/AC prefers to the database
+const preferredContact = (raId: string, preferredContactMethod: string): Promise<Contact> =>
+  http.post(`Housing/ra/contact?raId=${raId}&preferredContactMethod=${preferredContactMethod}`);
+
+export { fetchRaInfo, fetchRdInfo, preferredContact };
