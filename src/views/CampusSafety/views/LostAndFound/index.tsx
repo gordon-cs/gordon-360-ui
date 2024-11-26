@@ -1,7 +1,5 @@
 import { Card, CardContent, CardHeader, Grid, Typography, IconButton, Button } from '@mui/material';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { InfoOutlined, Edit, Delete, ExpandMore, ExpandLess } from '@mui/icons-material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { Collapse } from '@mui/material';
@@ -169,31 +167,44 @@ const LostAndFound = () => {
             />
             <CardContent>
               <Grid container alignItems="center">
-                <Grid item xs={12} sm={0.5}>
-                  <InfoOutlinedIcon />
-                </Grid>
                 <Grid item xs={12} sm={11}>
                   <Typography variant="body1" align="center">
-                    Police staff will view reports, and you will be notified if your item is found.
+                    <InfoOutlined /> Police staff will view reports, and you will be notified if
+                    your item is found.
                   </Typography>
+                  {/* Button to Report a Missing Item */}
+                  <Grid
+                    container
+                    justifyContent="center"
+                    marginTop={3}
+                    columnSpacing={5}
+                    rowSpacing={3}
+                  >
+                    <Grid item>
+                      <Button
+                        className={styles.reportButton}
+                        onClick={() => {
+                          navigate('/lostandfound/missingitemform');
+                        }}
+                      >
+                        Report a Missing Item
+                      </Button>
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        className={styles.reportButton}
+                        onClick={() => {
+                          navigate('/lostandfound/reportFound');
+                        }}
+                      >
+                        Report a Found Item
+                      </Button>
+                    </Grid>
+                  </Grid>
                 </Grid>
               </Grid>
             </CardContent>
           </Card>
-        </Grid>
-      </Grid>
-
-      {/* Button to Report a Missing Item */}
-      <Grid container justifyContent="center" marginTop={3}>
-        <Grid item>
-          <Button
-            className={styles.reportButton}
-            onClick={() => {
-              navigate('/lostandfound/missingitemform');
-            }}
-          >
-            Report a Missing Item
-          </Button>
         </Grid>
       </Grid>
 
@@ -254,22 +265,22 @@ const LostAndFound = () => {
                               onClick={() => handleEdit(report.recordID?.toString() || '')}
                               size="small"
                             >
-                              <EditIcon fontSize="small" />
+                              <Edit fontSize="small" />
                             </IconButton>
                             <IconButton
                               onClick={() => handleDeleteClick(report.recordID?.toString() || '')}
                               size="small"
                             >
-                              <DeleteIcon fontSize="small" />
+                              <Delete fontSize="small" />
                             </IconButton>
                             <IconButton
                               onClick={() => toggleExpand(report.recordID?.toString() || '')}
                               size="small"
                             >
                               {expanded[report.recordID?.toString() || ''] ? (
-                                <ExpandLessIcon />
+                                <ExpandLess />
                               ) : (
-                                <ExpandMoreIcon />
+                                <ExpandMore />
                               )}
                             </IconButton>
                           </Grid>
@@ -283,7 +294,7 @@ const LostAndFound = () => {
                               onClick={() => handleEdit(report.recordID?.toString() || '')}
                               size="small"
                             >
-                              <EditIcon fontSize="small" />
+                              <Edit fontSize="small" />
                             </IconButton>
                           </Grid>
                           <Grid item xs={0.5}>
@@ -291,7 +302,7 @@ const LostAndFound = () => {
                               onClick={() => handleDeleteClick(report.recordID?.toString() || '')}
                               size="small"
                             >
-                              <DeleteIcon fontSize="small" />
+                              <Delete fontSize="small" />
                             </IconButton>
                           </Grid>
                         </>
@@ -390,9 +401,9 @@ const LostAndFound = () => {
                               size="small"
                             >
                               {expanded[report.recordID?.toString() || ''] ? (
-                                <ExpandLessIcon />
+                                <ExpandLess />
                               ) : (
-                                <ExpandMoreIcon />
+                                <ExpandMore />
                               )}
                             </IconButton>
                           </Grid>

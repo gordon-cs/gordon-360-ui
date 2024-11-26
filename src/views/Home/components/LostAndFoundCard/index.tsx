@@ -106,13 +106,18 @@ const LostAndFoundCard = () => {
               variant="contained"
               color="secondary"
               component={Link}
-              to="/LostAndFound/missingitemform"
+              to="/lostandfound/missingitemform"
             >
               Report Lost
             </Button>
           </Grid>
           <Grid item xs={6}>
-            <Button variant="contained" color="secondary" component={Link} to="/LostAndFound">
+            <Button
+              variant="contained"
+              color="secondary"
+              component={Link}
+              to="/lostandfound/reportfound"
+            >
               Report Found
             </Button>
           </Grid>
