@@ -30,7 +30,9 @@ const Providers = ({
         <NetworkContextProvider>
           <CssVarsProvider theme={theme360}>
             <UserContextProvider>
-              <BrowserRouter future={{ v7_relativeSplatPath: true }}>{children}</BrowserRouter>
+              <BrowserRouter future={{ v7_relativeSplatPath: true, v7_startTransition: true }}>
+                {children}
+              </BrowserRouter>
             </UserContextProvider>
           </CssVarsProvider>
         </NetworkContextProvider>
