@@ -1,7 +1,7 @@
 import { Typography } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 const WaiverForm = ({ username, createSnackbar, openWaiverForm, setOpenWaiverForm, onClose }) => {
   const navigate = useNavigate();

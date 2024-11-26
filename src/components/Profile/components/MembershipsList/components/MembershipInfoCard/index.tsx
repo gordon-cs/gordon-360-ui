@@ -11,7 +11,7 @@ import {
   AlertColor,
 } from '@mui/material/';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import styles from './MembershipInfoCard.module.css';
 import membershipService, { MembershipHistory, MembershipView } from 'services/membership';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';

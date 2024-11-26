@@ -1,5 +1,5 @@
 import { Grid, AppBar, Breadcrumbs, Typography, useMediaQuery } from '@mui/material';
-import { Link as LinkRouter } from 'react-router-dom';
+import { Link as LinkRouter } from 'react-router';
 import styles from './Header.module.css';
 import HomeIcon from '@mui/icons-material/Home';
 import { windowBreakWidths } from 'theme';
@@ -56,7 +56,7 @@ const Header = ({ match, team, activity, admin, children }) => {
           {match && (
             <RecIMBreadcrumb>
               {largeWidth
-                ? `Match: ${match.Team?.[0]?.Name ?? 'TBD'} vs 
+                ? `Match: ${match.Team?.[0]?.Name ?? 'TBD'} vs
               ${match.Team?.[1]?.Name ?? 'TBD'}`
                 : `Match: ${truncate(match.Team?.[0]?.Name ?? 'TBD')} vs ${truncate(
                     match.Team?.[1]?.Name ?? 'TBD',

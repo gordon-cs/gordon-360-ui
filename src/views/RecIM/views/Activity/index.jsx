@@ -18,7 +18,7 @@ import { theme360 } from 'theme';
 import { styled } from '@mui/material/styles';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useEffect, useState, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 import { useUser } from 'hooks';
 import GordonLoader from 'components/Loader';
 import GordonUnauthenticated from 'components/GordonUnauthenticated';

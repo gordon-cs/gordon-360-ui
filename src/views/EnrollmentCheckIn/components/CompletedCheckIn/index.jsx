@@ -1,6 +1,6 @@
 import { Button, Grid, Typography } from '@mui/material';
 import { useUser } from 'hooks';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 // @TODO CSSMODULES - outside directory
 import styles from './CompletedCheckIn.module.css';
 

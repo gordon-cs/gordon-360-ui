@@ -1,6 +1,6 @@
 import { Grid, Typography, Card, CardActionArea, CardMedia, CardContent } from '@mui/material';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import styles from './InvolvementsGrid.module.css';
 
 const InvolvementsGrid = ({ involvements, sessionCode, noInvolvementsText }) => {

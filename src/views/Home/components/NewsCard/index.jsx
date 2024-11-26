@@ -1,6 +1,6 @@
 import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import newsService from 'services/news';
 import NewsItem from 'views/News/components/NewsItem';
 

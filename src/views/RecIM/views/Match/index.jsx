@@ -8,7 +8,7 @@ import {
   Menu,
   MenuItem,
 } from '@mui/material';
-import { useNavigate, useParams, Link as LinkRouter } from 'react-router-dom';
+import { useNavigate, useParams, Link as LinkRouter } from 'react-router';
 import { useUser } from 'hooks';
 import { useState, useEffect, useCallback } from 'react';
 import GordonLoader from 'components/Loader';

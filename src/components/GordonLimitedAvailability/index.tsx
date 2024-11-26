@@ -7,7 +7,7 @@ import {
   Container,
   Typography,
 } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 const GordonLimitedAvailability = ({
   pageName = '',

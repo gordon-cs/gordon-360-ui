@@ -5,7 +5,7 @@ import { useUser } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import styles from './NewsItem.module.css';
 
 const NewsItem = ({ posting, unapproved, size, handleNewsItemEdit, handleNewsItemDelete }) => {

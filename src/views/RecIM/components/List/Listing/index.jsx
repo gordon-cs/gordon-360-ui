@@ -20,7 +20,7 @@ import {
   CardContent,
 } from '@mui/material';
 import styles from './Listing.module.css';
-import { Link, NavLink, useParams } from 'react-router-dom';
+import { Link, NavLink, useParams } from 'react-router';
 import { useState, useEffect } from 'react';
 import user from 'services/user';
 import { isPast } from 'date-fns';

@@ -2,7 +2,7 @@ import { InputAdornment, MenuItem, TextField, Typography, Autocomplete } from '@
 import SearchIcon from '@mui/icons-material/Search';
 import { useNetworkStatus, useWindowSize } from 'hooks';
 import { Dispatch, HTMLAttributes, useReducer } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 import quickSearchService from 'services/quickSearch';
 import styles from './QuickSearch.module.css';
 import { debounce } from 'lodash';

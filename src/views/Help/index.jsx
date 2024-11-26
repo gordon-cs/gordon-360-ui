@@ -1,5 +1,5 @@
+import { Link } from 'react-router';
 import styles from './Help.module.css';
-import { HashLink as Link } from 'react-router-hash-link';
 import { Typography, Grid, Button, Card, CardHeader, CardContent } from '@mui/material';
 
 const Help = () => {

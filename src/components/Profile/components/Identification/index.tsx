@@ -25,7 +25,7 @@ import { useEffect, useRef, useState, ReactNode } from 'react';
 import Cropper, { ReactCropperElement } from 'react-cropper';
 import ZoomEvent from 'react-cropper';
 import Dropzone from 'react-dropzone';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { Class } from 'services/peopleSearch';
 import user from 'services/user';
 import { windowBreakWidths } from 'theme';

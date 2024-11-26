@@ -4,7 +4,7 @@ import EventList from 'components/EventList';
 import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import GordonLoader from 'components/Loader';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import event from 'services/event';
 import styles from './EventsAttended.module.css';
 

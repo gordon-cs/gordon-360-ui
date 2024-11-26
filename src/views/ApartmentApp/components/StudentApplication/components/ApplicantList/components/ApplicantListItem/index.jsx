@@ -13,7 +13,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { Fragment, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { Class } from 'services/peopleSearch';
 import user from 'services/user';
 import styles from '../../../../../../ApartmentApp.module.css';

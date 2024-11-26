@@ -3,7 +3,7 @@
 import { Series, BracketInfo, getBracketInfo } from 'services/recim/series';
 // import { standardDate } from '../Helpers';
 // import { IRenderSeedProps } from 'react-brackets';
-// import { Link } from 'react-router-dom';
+// import { Link } from 'react-router';
 // import styles from './RecIMBracket.module.css';
 // import GordonLoader from 'components/Loader';
 

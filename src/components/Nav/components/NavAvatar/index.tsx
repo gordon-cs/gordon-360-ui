@@ -2,7 +2,7 @@ import { Avatar, Button, Typography } from '@mui/material';
 import GordonLoader from 'components/Loader';
 import { useUser } from 'hooks';
 import { useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router';
 import styles from './NavAvatar.module.css';
 
 type Props = {

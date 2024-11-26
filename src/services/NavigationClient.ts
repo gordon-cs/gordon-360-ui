@@ -1,5 +1,5 @@
 import { NavigationClient, NavigationOptions } from '@azure/msal-browser';
-import { NavigateFunction } from 'react-router-dom';
+import { NavigateFunction } from 'react-router';
 
 /**
  * This is an example for overriding the default function MSAL uses to navigate to other urls in your webpage
@@ -14,7 +14,7 @@ export class CustomNavigationClient extends NavigationClient {
 
   /**
    * Navigates to other pages within the same web application
-   * You can use the useNavigate hook provided by react-router-dom to take advantage of client-side routing
+   * You can use the useNavigate hook provided by react-router to take advantage of client-side routing
    * @param url the url to navigate to
    * @param options the options to navigat with
    * @returns false if navigation failed

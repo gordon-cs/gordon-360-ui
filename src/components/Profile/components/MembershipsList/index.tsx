@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import GordonLoader from 'components/Loader';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import membershipService, { MembershipHistory } from 'services/membership';
 import MembershipInfoCard from './components/MembershipInfoCard';
 import styles from './MembershipsList.module.css';

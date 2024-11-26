@@ -10,7 +10,7 @@ import {
   MenuItem,
 } from '@mui/material';
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router';
 import styles from './Team.module.css';
 import GordonLoader from 'components/Loader';
 import GordonUnauthenticated from 'components/GordonUnauthenticated';

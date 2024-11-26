@@ -5,7 +5,7 @@ import GordonLoader from 'components/Loader';
 import Profile from 'components/Profile';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import userService from 'services/user';
 import ProfileNotFound from 'views/ProfileNotFound';
 

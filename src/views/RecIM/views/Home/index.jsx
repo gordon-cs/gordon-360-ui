@@ -27,7 +27,7 @@ import GordonSnackbar from 'components/Snackbar';
 import { isFuture } from 'date-fns';
 import { useUser } from 'hooks';
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { getActivities } from 'services/recim/activity';
 import {
   editParticipantAllowEmails,

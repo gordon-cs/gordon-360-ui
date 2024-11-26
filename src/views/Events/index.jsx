@@ -16,7 +16,6 @@ import {
   Select,
   TextField,
 } from '@mui/material';
-import { HashLink } from 'react-router-hash-link';
 import AddIcon from '@mui/icons-material/Add';
 import EventIcon from '@mui/icons-material/Event';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -27,7 +26,7 @@ import GordonLoader from 'components/Loader';
 import { useWindowSize } from 'hooks';
 import { useEffect, useMemo, useState } from 'react';
 import gordonEvent, { EVENT_FILTERS } from 'services/event';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link as RouterLink } from 'react-router';
 import styles from './Events.module.css';
 
 const Events = () => {
@@ -159,7 +158,7 @@ const Events = () => {
           <Button
             variant="contained"
             color="secondary"
-            component={HashLink}
+            component={RouterLink}
             to="#top"
             smooth
             id="bottom"
@@ -180,7 +179,7 @@ const Events = () => {
           <Button
             variant="contained"
             color="secondary"
-            component={HashLink}
+            component={RouterLink}
             to="#top"
             smooth
             id="bottom"
@@ -324,7 +323,7 @@ const Events = () => {
                     <Button
                       variant="contained"
                       color="secondary"
-                      component={HashLink}
+                      component={RouterLink}
                       to="#bottom"
                       smooth
                       id="top"
@@ -484,7 +483,7 @@ const Events = () => {
                   <Button
                     variant="contained"
                     color="secondary"
-                    component={HashLink}
+                    component={RouterLink}
                     to="#bottom"
                     smooth
                     id="top"

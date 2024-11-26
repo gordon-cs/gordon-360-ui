@@ -2,9 +2,9 @@ import { useMsal } from '@azure/msal-react';
 import AppRedirect from 'components/AppRedirect';
 import BirthdayMessage from 'components/BirthdayMessage';
 import { useWatchSystemColorScheme } from 'hooks';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router';
 import { CustomNavigationClient } from 'services/NavigationClient';
 import analytics from 'services/analytics';
 import './app.global.css';
@@ -17,6 +17,30 @@ import routes from './routes';
 const App = () => {
   useWatchSystemColorScheme();
   const location = useLocation();
+  const lastHash = useRef('');
+
+  /**
+   * When the location changes, if there's a hash component, scroll the page
+   * to the element with the matching ID
+   *
+   * Note: this only works for scrolling WITHIN a page.
+   * It will not work when navigating to a new page, because the elements aren't rendered into the
+   * DOM before this useEffect runs
+   */
+  useEffect(() => {
+    if (location.hash) {
+      lastHash.current = location.hash.slice(1); // safe hash for further use after navigation
+    }
+
+    // if the current URL has a hash component matching the ID of an element
+    if (lastHash.current && document.getElementById(lastHash.current)) {
+      // Scroll the element with ID = hash into view
+      document
+        .getElementById(lastHash.current)
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      lastHash.current = '';
+    }
+  }, [location]);
 
   useEffect(() => {
     analytics.onPageView();

@@ -20,7 +20,7 @@ import {
   MatchHistoryListing,
   ExpandableTeamListing,
 } from './Listing';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import styles from './List.module.css';
 import { getFullDate, standardDate } from '../Helpers';
 import { TabPanel } from '../TabPanel';

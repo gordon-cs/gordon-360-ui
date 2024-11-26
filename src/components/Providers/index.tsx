@@ -8,7 +8,7 @@ import { IPublicClientApplication } from '@azure/msal-browser';
 import { MsalProvider } from '@azure/msal-react';
 import { useEffect } from 'react';
 import analytics from 'services/analytics';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router';
 
 const Providers = ({
   msalInstance,
@@ -30,9 +30,7 @@ const Providers = ({
         <NetworkContextProvider>
           <CssVarsProvider theme={theme360}>
             <UserContextProvider>
-              <BrowserRouter future={{ v7_relativeSplatPath: true, v7_startTransition: true }}>
-                {children}
-              </BrowserRouter>
+              <BrowserRouter>{children}</BrowserRouter>
             </UserContextProvider>
           </CssVarsProvider>
         </NetworkContextProvider>
