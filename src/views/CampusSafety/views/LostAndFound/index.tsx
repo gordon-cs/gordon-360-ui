@@ -1,7 +1,5 @@
 import { Card, CardContent, CardHeader, Grid, Typography, IconButton, Button } from '@mui/material';
 import { InfoOutlined, Edit, Delete, ExpandMore, ExpandLess } from '@mui/icons-material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { Collapse } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
@@ -12,7 +10,6 @@ import { MissingItemReport } from 'services/lostAndFound'; // Import the type fr
 import DeleteConfirmationModal from './components/DeleteConfirmation';
 import { DateTime } from 'luxon';
 import { useWindowSize } from 'hooks';
-import { string } from 'prop-types';
 
 const formatDate = (date: string) => {
   return DateTime.fromISO(date).toFormat('MM-dd-yyyy'); // Adjust format as needed
