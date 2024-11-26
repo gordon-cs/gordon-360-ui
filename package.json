@@ -34,7 +34,7 @@
     "react-image-gallery": "^1.3.0",
     "react-imask": "^7.4.0",
     "react-router": "^6.22.1",
-    "react-router-dom": "^6.22.1",
+    "react-router-dom": "^6.28.0",
     "react-router-hash-link": "^2.4.3",
     "react-to-print": "^2.15.1",
     "react-visibility-sensor": "^5.1.1",
@@ -59,7 +59,7 @@
     "sass": "^1.71.1",
     "stylelint": "^16.2.1",
     "stylelint-config-recommended-scss": "^14.0.0",
-    "typescript": "^5.3.3",
+    "typescript": "^5.7.2",
     "vite": "^5.1.7",
     "vite-tsconfig-paths": "^4.3.0"
   },
