@@ -172,7 +172,7 @@ const LostAndFound = () => {
                       variant="contained"
                       color="secondary"
                       onClick={() => {
-                        navigate('/lostandfound/reportFound');
+                        navigate('/lostandfound/reportfound');
                       }}
                     >
                       <WhereToVote />

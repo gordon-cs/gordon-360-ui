@@ -41,6 +41,8 @@ const LostAndFoundCard = () => {
   const navigate = useNavigate();
   const isMobile = useMediaQuery('(max-width:375px)');
 
+  const numReportsToDisplay = 4;
+
   useEffect(() => {
     const fetchMissingItems = async () => {
       try {
@@ -56,9 +58,10 @@ const LostAndFoundCard = () => {
             colors: report.colors || [], // Ensure colors is an array
           }));
 
-        if (active.length > 3) {
-          setCountNotIncluded(active.length - 3);
-          active = active.slice(0, 3);
+        // Trim reports down to 3 reports
+        if (active.length > numReportsToDisplay) {
+          setCountNotIncluded(active.length - numReportsToDisplay);
+          active = active.slice(0, numReportsToDisplay);
         }
 
         setActiveReports(active);
