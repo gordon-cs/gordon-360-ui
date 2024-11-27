@@ -1,4 +1,5 @@
 import { NavigationClient, NavigationOptions } from '@azure/msal-browser';
+import { ReactJSXElement } from '@emotion/react/types/jsx-namespace';
 import { NavigateFunction } from 'react-router-dom';
 
 /**
@@ -6,11 +7,22 @@ import { NavigateFunction } from 'react-router-dom';
  */
 export class CustomNavigationClient extends NavigationClient {
   private navigate: NavigateFunction;
+  private mainComponentRef: React.MutableRefObject<HTMLElement>;
 
-  constructor(navigate: NavigateFunction) {
+  constructor(navigate: NavigateFunction, mainComponentRef: React.MutableRefObject<HTMLElement>) {
     super();
     this.navigate = navigate;
+    this.mainComponentRef = mainComponentRef;
+    this.scrollToTop();
   }
+
+  private scrollToTop = () => {
+    if (this.mainComponentRef != null && this.mainComponentRef.current != null) {
+      this.mainComponentRef.current.scroll({
+        top: 0,
+      });
+    }
+  };
 
   /**
    * Navigates to other pages within the same web application

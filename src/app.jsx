@@ -2,7 +2,7 @@ import { useMsal } from '@azure/msal-react';
 import AppRedirect from 'components/AppRedirect';
 import BirthdayMessage from 'components/BirthdayMessage';
 import { useWatchSystemColorScheme } from 'hooks';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { CustomNavigationClient } from 'services/NavigationClient';
@@ -17,6 +17,7 @@ import routes from './routes';
 const App = () => {
   useWatchSystemColorScheme();
   const location = useLocation();
+  const mainRef = useRef(null);
 
   useEffect(() => {
     analytics.onPageView();
@@ -25,7 +26,7 @@ const App = () => {
   // Setup custom navigation so that MSAL uses react-router for navigation
   const { instance } = useMsal();
   const navigate = useNavigate();
-  const navigaitonClient = new CustomNavigationClient(navigate);
+  const navigaitonClient = new CustomNavigationClient(navigate, mainRef);
   instance.setNavigationClient(navigaitonClient);
 
   const [drawerOpen, setDrawerOpen] = useState();
@@ -38,7 +39,7 @@ const App = () => {
     <ErrorBoundary>
       <GordonHeader onDrawerToggle={onDrawerToggle} />
       <GordonNav onDrawerToggle={onDrawerToggle} drawerOpen={drawerOpen} />
-      <main className={styles.app_main}>
+      <main className={styles.app_main} ref={mainRef}>
         <BirthdayMessage />
         <AppRedirect />
         <Routes>
