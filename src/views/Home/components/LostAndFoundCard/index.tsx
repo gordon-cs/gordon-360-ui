@@ -1,14 +1,4 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Collapse,
-  Grid,
-  IconButton,
-  Typography,
-} from '@mui/material';
+import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import lostAndFoundService from 'services/lostAndFound';
@@ -16,6 +6,7 @@ import styles from '../../../../views/CampusSafety/views/LostAndFound/LostAndFou
 import { MissingItemReport } from 'services/lostAndFound'; // Import the type from the service
 import { DateTime } from 'luxon';
 import { useWindowSize } from 'hooks';
+import { Launch } from '@mui/icons-material';
 
 const formatDate = (date: string) => {
   return DateTime.fromISO(date).toFormat('MM-dd-yyyy'); // Adjust format as needed
@@ -59,7 +50,7 @@ const LostAndFoundCard = () => {
       }
     };
     fetchMissingItems();
-  });
+  }, []);
 
   const renderReportContent = (report: MissingItemReport) => (
     <>
@@ -90,10 +81,8 @@ const LostAndFoundCard = () => {
             <Grid item xs={7}>
               Lost and Found
             </Grid>
-            <Grid item xs={5}>
-              <Button variant="contained" color="secondary" component={Link} to="/LostAndFound">
-                Lost and Found Page
-              </Button>
+            <Grid container direction="row" justifyContent={'flex-end'} item xs={5}>
+              <Launch color="secondary" />
             </Grid>
           </Grid>
         }
@@ -111,7 +100,7 @@ const LostAndFoundCard = () => {
               Report Lost
             </Button>
           </Grid>
-          <Grid item xs={6}>
+          <Grid container item xs={6} direction="row" justifyContent={'flex-end'}>
             <Button
               variant="contained"
               color="secondary"

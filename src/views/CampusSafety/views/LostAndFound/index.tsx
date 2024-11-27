@@ -1,12 +1,19 @@
-import { Card, CardContent, CardHeader, Grid, Typography, IconButton, Button } from '@mui/material';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Typography,
+  IconButton,
+  Button,
+  useMediaQuery,
+} from '@mui/material';
 import {
   InfoOutlined,
   Edit,
-  Delete,
-  ExpandMore,
-  ExpandLess,
   NotListedLocation,
   WhereToVote,
+  DeleteForeverOutlined,
 } from '@mui/icons-material';
 import { Collapse } from '@mui/material';
 import { useState, useEffect } from 'react';
@@ -36,6 +43,7 @@ const LostAndFound = () => {
   }>({});
   const [pageUpdates, setPageUpdates] = useState(0);
   const navigate = useNavigate();
+  const isMobile = useMediaQuery('(max-width:900px)');
 
   useEffect(() => {
     const fetchMissingItems = async () => {
@@ -70,10 +78,6 @@ const LostAndFound = () => {
     };
     fetchMissingItems();
   }, [pageUpdates]);
-
-  const handleChange = () => {
-    setDeleteModalOpen(true);
-  };
 
   const handleEdit = (reportId: string) => {
     navigate('/lostandfound/' + reportId);
@@ -197,27 +201,35 @@ const LostAndFound = () => {
   );
 
   // The row labelling the column names for the report grid
-  const reportHeader = () => (
+  const reportHeader = (actions: boolean = true) => (
     <Card>
       <CardHeader
         className="gc360_header"
         title={
           <Grid container>
-            <Grid item xs={2}>
-              <Typography>Date Lost</Typography>
-            </Grid>
-            <Grid item xs={2.5}>
-              <Typography>Location</Typography>
-            </Grid>
-            <Grid item xs={2.5}>
-              <Typography>Category</Typography>
-            </Grid>
-            <Grid item xs={2.5}>
-              <Typography>Description</Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography>Actions</Typography>
-            </Grid>
+            {isMobile ? (
+              <Grid item xs={10.5} />
+            ) : (
+              <>
+                <Grid item xs={2}>
+                  <Typography>Date Lost</Typography>
+                </Grid>
+                <Grid item xs={2.5}>
+                  <Typography>Location</Typography>
+                </Grid>
+                <Grid item xs={2.5}>
+                  <Typography>Category</Typography>
+                </Grid>
+                <Grid item xs={3.5}>
+                  <Typography>Description</Typography>
+                </Grid>
+              </>
+            )}
+            {actions ? (
+              <Grid container item xs={1.5} justifyContent="flex-end">
+                <Typography>Actions</Typography>
+              </Grid>
+            ) : null}
           </Grid>
         }
       />
@@ -226,98 +238,122 @@ const LostAndFound = () => {
 
   // Component defining each row of the report grid
   const reportRow = (report: MissingItemReport) => (
-    <Card
-      className={`${styles.dataRow} ${width < 900 ? styles.mobileDataRow : ''}`}
-      key={report.recordID}
-    >
-      <CardContent>
-        <Grid container spacing={2} alignItems="center">
-          {width < 900 ? (
-            <>
-              {/* Display two items per row on mobile */}
-              <Grid item xs={6}>
-                <Typography align="center">{formatDate(report.dateLost)}</Typography>
+    <Card className={styles.dataRow}>
+      <CardContent
+        className={styles.dataContent}
+        sx={{
+          '&:last-child': {
+            paddingBottom: '0px', // Remove the bottom padding on the row card
+          },
+        }}
+      >
+        {isMobile ? (
+          <>
+            {/* Mobile View */}
+            <Grid container>
+              <Grid
+                container
+                item
+                xs={11.5}
+                columnGap={1}
+                rowGap={1}
+                onClick={
+                  report.status.toLowerCase() === 'active'
+                    ? () => handleEdit(report.recordID?.toString() || '')
+                    : () => {}
+                }
+              >
+                <Grid item xs={5.5} sm={5.5} className={styles.alignData}>
+                  <b>Date Lost:</b> <div>{formatDate(report.dateLost)}</div>
+                </Grid>
+                <Grid item xs={5.5} sm={5.5} className={styles.alignData}>
+                  <b>Category:</b>
+                  <div>{report.category}</div>
+                </Grid>
+                <Grid item xs={12} sm={5.5} className={styles.alignData}>
+                  <b>Location:</b>
+                  <div className={styles.dataCell}>{report.locationLost}</div>
+                </Grid>
+
+                <Grid item xs={12} sm={5.5} className={styles.alignData}>
+                  <b>Description:</b>
+                  <div className={styles.dataCell}>{report.description}</div>
+                </Grid>
               </Grid>
-              <Grid item xs={6}>
-                <Typography align="center">
-                  {report.locationLost.length > 15
-                    ? report.locationLost.slice(0, 15) + '...'
-                    : report.locationLost}
-                </Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography align="center">{report.category}</Typography>
-              </Grid>
-              <Grid item xs={6} className={styles.actionsRow}>
-                <IconButton
-                  onClick={() => handleEdit(report.recordID?.toString() || '')}
-                  size="small"
-                >
-                  <Edit fontSize="small" />
-                </IconButton>
-                <IconButton
-                  onClick={() => handleDeleteClick(report.recordID?.toString() || '')}
-                  size="small"
-                >
-                  <Delete fontSize="small" />
-                </IconButton>
-                <IconButton
-                  onClick={() => toggleExpand(report.recordID?.toString() || '')}
-                  size="small"
-                >
-                  {expanded[report.recordID?.toString() || ''] ? <ExpandLess /> : <ExpandMore />}
-                </IconButton>
-              </Grid>
-            </>
-          ) : (
-            // Desktop layout
-            <>
-              <Grid item xs={2}>
+              {report.status.toLowerCase() === 'active' ? (
+                <>
+                  <Grid container item xs={0.5} justifyContent="flex-end">
+                    <Grid item xs={12} className={styles.alignData}>
+                      <IconButton
+                        onClick={() => handleEdit(report.recordID?.toString() || '')}
+                        size="small"
+                      >
+                        <Edit />
+                      </IconButton>
+                    </Grid>
+                    <Grid item xs={12} className={styles.alignData}>
+                      <IconButton
+                        onClick={() => handleDeleteClick(report.recordID?.toString() || '')}
+                        size="small"
+                      >
+                        <DeleteForeverOutlined color="error" />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                </>
+              ) : null}{' '}
+            </Grid>
+          </>
+        ) : (
+          /*Desktop View*/
+          <Grid container>
+            <Grid
+              container
+              item
+              xs={11.5}
+              className={styles.clickableRow}
+              onClick={
+                report.status.toLowerCase() === 'active'
+                  ? () => handleEdit(report.recordID?.toString() || '')
+                  : () => {}
+              }
+            >
+              <Grid item xs={2.1} className={styles.alignData}>
                 <div className={styles.dataCell}>{formatDate(report.dateLost)}</div>
               </Grid>
-              <Grid item xs={2.5}>
+              <Grid item xs={2.6} className={styles.alignData}>
                 <div className={styles.dataCell}>{report.locationLost}</div>
               </Grid>
-              <Grid item xs={2.5}>
+              <Grid item xs={2.6} className={styles.alignData}>
                 <div className={styles.dataCell}>{report.category}</div>
               </Grid>
-              <Grid item xs={2.5}>
+              <Grid item xs={4.5} className={styles.alignData}>
                 <div className={styles.dataCell}>{report.description}</div>
               </Grid>
-              <Grid item xs={0.5}>
-                <IconButton
-                  onClick={() => handleEdit(report.recordID?.toString() || '')}
-                  size="small"
-                >
-                  <Edit fontSize="small" />
-                </IconButton>
-              </Grid>
-              <Grid item xs={0.5}>
-                <IconButton
-                  onClick={() => handleDeleteClick(report.recordID?.toString() || '')}
-                  size="small"
-                >
-                  <Delete fontSize="small" />
-                </IconButton>
-              </Grid>
-            </>
-          )}
-        </Grid>
-        {width < 900 && expanded[report.recordID?.toString() || ''] && (
-          <Collapse in={expanded[report.recordID?.toString() || '']} timeout="auto" unmountOnExit>
-            <Grid container spacing={1} marginTop={1}>
-              <Grid item xs={12}>
-                <Typography variant="body2" align="center">
-                  <strong>Full Location:</strong> {report.locationLost}
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant="body2" align="center">
-                  <strong>Description:</strong> {report.description}
-                </Typography>
-              </Grid>
             </Grid>
-          </Collapse>
+            {report.status.toLowerCase() === 'active' ? (
+              <>
+                <Grid container item xs={0.5} justifyContent="flex-end" columnGap={1}>
+                  <Grid item xs={4} className={styles.alignData}>
+                    <IconButton
+                      onClick={() => handleEdit(report.recordID?.toString() || '')}
+                      size="small"
+                    >
+                      <Edit />
+                    </IconButton>
+                  </Grid>
+                  <Grid item xs={4} className={styles.alignData}>
+                    <IconButton
+                      onClick={() => handleDeleteClick(report.recordID?.toString() || '')}
+                      size="small"
+                    >
+                      <DeleteForeverOutlined color="error" />
+                    </IconButton>
+                  </Grid>
+                </Grid>
+              </>
+            ) : null}
+          </Grid>
         )}
       </CardContent>
     </Card>
@@ -339,7 +375,7 @@ const LostAndFound = () => {
                 My Active <span className={styles.yellowText}>Lost</span> Item Reports
               </Typography>
               {/* Render header row only on large screens */}
-              {width >= 900 && reportHeader()}
+              {reportHeader()}
               {/* Active Reports */}
               {activeReports.map((report) => reportRow(report))}
             </CardContent>
@@ -361,7 +397,7 @@ const LostAndFound = () => {
                 My <span className={styles.yellowText}>Past</span> Reports
               </Typography>
               {/* Render header row only on large screens */}
-              {width >= 900 && reportHeader()}
+              {reportHeader(false)}
               {/* Past Reports */}
               {pastReports.map((report) => reportRow(report))}
             </CardContent>
