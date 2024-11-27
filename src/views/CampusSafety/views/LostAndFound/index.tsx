@@ -15,7 +15,6 @@ import {
   WhereToVote,
   DeleteForeverOutlined,
 } from '@mui/icons-material';
-import { Collapse } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import Header from '../../components/Header';
@@ -36,11 +35,6 @@ const LostAndFound = () => {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [reportToDelete, setReportToDelete] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [width] = useWindowSize();
-  const [expanded, setExpanded] = useState<{ [key: string]: boolean }>({});
-  const [expandedFields, setExpandedFields] = useState<{
-    [id: string]: { [field: string]: boolean };
-  }>({});
   const [pageUpdates, setPageUpdates] = useState(0);
   const navigate = useNavigate();
   const isMobile = useMediaQuery('(max-width:900px)');
@@ -79,20 +73,24 @@ const LostAndFound = () => {
     fetchMissingItems();
   }, [pageUpdates]);
 
+  // Move to the edit page
   const handleEdit = (reportId: string) => {
     navigate('/lostandfound/' + reportId);
   };
 
+  // Open the delete modal, and select the report to delete
   const handleDeleteClick = (reportId: string) => {
     setReportToDelete(reportId);
     setDeleteModalOpen(true);
   };
 
+  // Close the delete modal
   const handleModalClose = () => {
     setDeleteModalOpen(false);
     setReportToDelete(null);
   };
 
+  // Delete the report
   const handleModalSubmit = async () => {
     try {
       //const reportIdNum = parseInt(handleDeleteClick(reportToDelete));
@@ -104,10 +102,6 @@ const LostAndFound = () => {
     } catch (error) {
       console.error('Error updating item:', error);
     }
-  };
-
-  const toggleExpand = (id: string) => {
-    setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
   /*
