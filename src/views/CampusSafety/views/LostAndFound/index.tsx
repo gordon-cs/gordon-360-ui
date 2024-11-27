@@ -118,7 +118,7 @@ const LostAndFound = () => {
             className="gc360_header"
             title={
               <Typography variant="h4" align="center">
-                <span className={styles.gordonText}>Gordon</span> Lost and Found
+                <span className={styles.yellowText}>Gordon</span> Lost and Found
               </Typography>
             }
           />
@@ -198,9 +198,9 @@ const LostAndFound = () => {
   const reportHeader = (actions: boolean = true) => (
     <Card>
       <CardHeader
-        className="gc360_header"
+        className={`gc360_header ${styles.headerPadding}`}
         title={
-          <Grid container>
+          <Grid container className={styles.headerText}>
             {isMobile ? (
               <Grid item xs={10.5} />
             ) : (
@@ -232,7 +232,11 @@ const LostAndFound = () => {
 
   // Component defining each row of the report grid
   const reportRow = (report: MissingItemReport) => (
-    <Card className={styles.dataRow}>
+    <Card
+      className={`${styles.dataRow} ${
+        report.status.toLowerCase() === 'active' ? styles.clickableRow : ''
+      }`}
+    >
       <CardContent
         className={styles.dataContent}
         sx={{
@@ -262,7 +266,7 @@ const LostAndFound = () => {
                 </Grid>
                 <Grid item xs={5.5} sm={5.5} className={styles.alignData}>
                   <b>Category:</b>
-                  <div>{report.category}</div>
+                  <div className={styles.wrapText}>{report.category}</div>
                 </Grid>
                 <Grid item xs={12} sm={5.5} className={styles.alignData}>
                   <b>Location:</b>
@@ -305,7 +309,7 @@ const LostAndFound = () => {
               container
               item
               xs={11.5}
-              className={styles.clickableRow}
+              className={styles.rowPadding}
               onClick={
                 report.status.toLowerCase() === 'active'
                   ? () => handleEdit(report.recordID?.toString() || '')
@@ -362,18 +366,23 @@ const LostAndFound = () => {
 
       {/* Active Missing Item Reports */}
       <Grid container justifyContent="center" spacing={3} marginTop={3}>
-        <Grid item xs={12} sm={10}>
+        <Grid item xs={12} md={10}>
           <Card>
-            <CardContent>
-              <Typography variant="h5" align="center">
-                My Active <span className={styles.yellowText}>Lost</span> Item Reports
-              </Typography>
-              {/* Render header row only on large screens */}
-              {reportHeader()}
-              {/* Active Reports */}
-              {activeReports.map((report) => reportRow(report))}
-            </CardContent>
+            <CardHeader
+              className="gc360_header"
+              title={
+                <Typography variant="h5" align="center">
+                  My Active <span className={styles.yellowText}>Lost</span> Item Reports
+                </Typography>
+              }
+            />
           </Card>
+        </Grid>
+        <Grid item xs={12} md={10}>
+          {/* Render header row only on large screens */}
+          {reportHeader()}
+          {/* Active Reports */}
+          {activeReports.map((report) => reportRow(report))}
         </Grid>
       </Grid>
       <DeleteConfirmationModal
@@ -384,20 +393,27 @@ const LostAndFound = () => {
 
       {/* Past Missing Item Reports */}
       <Grid container justifyContent="center" spacing={3} marginTop={3}>
-        <Grid item xs={12} sm={10}>
-          <Card className={styles.card}>
-            <CardContent>
-              <Typography variant="h5" align="center">
-                My <span className={styles.yellowText}>Past</span> Reports
-              </Typography>
-              {/* Render header row only on large screens */}
-              {reportHeader(false)}
-              {/* Past Reports */}
-              {pastReports.map((report) => reportRow(report))}
-            </CardContent>
+        <Grid item xs={12} md={10}>
+          <Card>
+            <CardHeader
+              className="gc360_header"
+              title={
+                <Typography variant="h6" align="left">
+                  My Past Reports
+                </Typography>
+              }
+            />
           </Card>
         </Grid>
+        <Grid item xs={12} md={10}>
+          {/* Render header row only on large screens */}
+          {reportHeader(false)}
+          {/* Past Reports */}
+          {pastReports.map((report) => reportRow(report))}
+        </Grid>
       </Grid>
+      <br />
+      <br />
     </>
   );
 };
