@@ -20,6 +20,7 @@
 }
 
 .clickableRow {
+  cursor: pointer;
   &:hover {
     background-color: var(--mui-palette-primary-light); // Light hover effect
   }
@@ -65,6 +66,6 @@
 @media (max-width: 900px) {
   .dataRow {
     border-radius: 0;
-    border-bottom: 1px solid var(--mui-palette-neutral-contrastText);
+    border-bottom: 0.5px solid var(--mui-palette-neutral-contrastText);
   }
 }
