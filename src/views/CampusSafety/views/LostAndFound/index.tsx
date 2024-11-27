@@ -117,7 +117,7 @@ const LostAndFound = () => {
       <Grid item xs={12} md={10}>
         <Card className={styles.card}>
           <CardHeader
-            className={styles.title}
+            className="gc360_header"
             title={
               <Typography variant="h4" align="center">
                 <span className={styles.gordonText}>Gordon</span> Lost and Found
@@ -336,7 +336,7 @@ const LostAndFound = () => {
           <Card>
             <CardContent>
               <Typography variant="h5" align="center">
-                My Active <span className={styles.missingText}>Lost</span> Item Reports
+                My Active <span className={styles.yellowText}>Lost</span> Item Reports
               </Typography>
               {/* Render header row only on large screens */}
               {width >= 900 && reportHeader()}
@@ -358,7 +358,7 @@ const LostAndFound = () => {
           <Card className={styles.card}>
             <CardContent>
               <Typography variant="h5" align="center">
-                My <span className={styles.missingText}>Past</span> Reports
+                My <span className={styles.yellowText}>Past</span> Reports
               </Typography>
               {/* Render header row only on large screens */}
               {width >= 900 && reportHeader()}
