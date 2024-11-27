@@ -10,7 +10,15 @@ const ReportFound = () => {
     <>
       <Header />
       <Card>
-        <CardHeader title={'Report a Found Item'} className="gc360_header" />
+        <CardHeader
+          title={
+            <b>
+              Report a <u>Found</u> Item
+            </b>
+          }
+          titleTypographyProps={{ align: 'center' }}
+          className="gc360_header"
+        />
         <CardContent>
           <Typography>If you've found an item somewhere on campus:</Typography>
           <ul>

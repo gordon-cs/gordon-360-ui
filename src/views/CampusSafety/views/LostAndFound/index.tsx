@@ -7,6 +7,7 @@ import {
   IconButton,
   Button,
   useMediaQuery,
+  Tooltip,
 } from '@mui/material';
 import {
   InfoOutlined,
@@ -125,7 +126,7 @@ const LostAndFound = () => {
           <CardContent>
             <Grid container alignItems="center">
               <Grid item xs={12} sm={11}>
-                <div className={styles.infoBox}>
+                <div className={styles.disclaimer}>
                   <InfoOutlined />
                   <Grid container item rowGap={1}>
                     <Grid item xs={12}>
@@ -237,51 +238,103 @@ const LostAndFound = () => {
         report.status.toLowerCase() === 'active' ? styles.clickableRow : ''
       }`}
     >
-      <CardContent
-        className={styles.dataContent}
-        sx={{
-          '&:last-child': {
-            paddingBottom: '0px', // Remove the bottom padding on the row card
-          },
-        }}
-      >
-        {isMobile ? (
-          <>
-            {/* Mobile View */}
+      <Tooltip title="Click to view and edit">
+        <CardContent
+          className={styles.dataContent}
+          sx={{
+            '&:last-child': {
+              paddingBottom: '0px', // Remove the bottom padding on the row card
+            },
+          }}
+        >
+          {isMobile ? (
+            <>
+              {/* Mobile View */}
+              <Grid container>
+                <Grid
+                  container
+                  item
+                  xs={11.5}
+                  columnGap={1}
+                  rowGap={1}
+                  onClick={
+                    report.status.toLowerCase() === 'active'
+                      ? () => handleEdit(report.recordID?.toString() || '')
+                      : () => {}
+                  }
+                >
+                  <Grid item xs={5.5} sm={5.5} className={styles.alignData}>
+                    <b>Date Lost:</b> <div>{formatDate(report.dateLost)}</div>
+                  </Grid>
+                  <Grid item xs={5.5} sm={5.5} className={styles.alignData}>
+                    <b>Category:</b>
+                    <div className={styles.wrapText}>{report.category}</div>
+                  </Grid>
+                  <Grid item xs={12} sm={5.5} className={styles.alignData}>
+                    <b>Location:</b>
+                    <div className={styles.dataCell}>{report.locationLost}</div>
+                  </Grid>
+
+                  <Grid item xs={12} sm={5.5} className={styles.alignData}>
+                    <b>Description:</b>
+                    <div className={styles.dataCell}>{report.description}</div>
+                  </Grid>
+                </Grid>
+                {report.status.toLowerCase() === 'active' ? (
+                  <>
+                    <Grid container item xs={0.5} justifyContent="flex-end">
+                      <Grid item xs={12} className={styles.alignData}>
+                        <IconButton
+                          onClick={() => handleEdit(report.recordID?.toString() || '')}
+                          size="small"
+                        >
+                          <Edit />
+                        </IconButton>
+                      </Grid>
+                      <Grid item xs={12} className={styles.alignData}>
+                        <IconButton
+                          onClick={() => handleDeleteClick(report.recordID?.toString() || '')}
+                          size="small"
+                        >
+                          <DeleteForeverOutlined color="error" />
+                        </IconButton>
+                      </Grid>
+                    </Grid>
+                  </>
+                ) : null}{' '}
+              </Grid>
+            </>
+          ) : (
+            /*Desktop View*/
             <Grid container>
               <Grid
                 container
                 item
                 xs={11.5}
-                columnGap={1}
-                rowGap={1}
+                className={styles.rowPadding}
                 onClick={
                   report.status.toLowerCase() === 'active'
                     ? () => handleEdit(report.recordID?.toString() || '')
                     : () => {}
                 }
               >
-                <Grid item xs={5.5} sm={5.5} className={styles.alignData}>
-                  <b>Date Lost:</b> <div>{formatDate(report.dateLost)}</div>
+                <Grid item xs={2.1} className={styles.alignData}>
+                  <div className={styles.dataCell}>{formatDate(report.dateLost)}</div>
                 </Grid>
-                <Grid item xs={5.5} sm={5.5} className={styles.alignData}>
-                  <b>Category:</b>
-                  <div className={styles.wrapText}>{report.category}</div>
-                </Grid>
-                <Grid item xs={12} sm={5.5} className={styles.alignData}>
-                  <b>Location:</b>
+                <Grid item xs={2.6} className={styles.alignData}>
                   <div className={styles.dataCell}>{report.locationLost}</div>
                 </Grid>
-
-                <Grid item xs={12} sm={5.5} className={styles.alignData}>
-                  <b>Description:</b>
+                <Grid item xs={2.6} className={styles.alignData}>
+                  <div className={styles.dataCell}>{report.category}</div>
+                </Grid>
+                <Grid item xs={4.5} className={styles.alignData}>
                   <div className={styles.dataCell}>{report.description}</div>
                 </Grid>
               </Grid>
               {report.status.toLowerCase() === 'active' ? (
                 <>
-                  <Grid container item xs={0.5} justifyContent="flex-end">
-                    <Grid item xs={12} className={styles.alignData}>
+                  <Grid container item xs={0.5} justifyContent="flex-end" columnGap={1}>
+                    <Grid item xs={4} className={styles.alignData}>
                       <IconButton
                         onClick={() => handleEdit(report.recordID?.toString() || '')}
                         size="small"
@@ -289,7 +342,7 @@ const LostAndFound = () => {
                         <Edit />
                       </IconButton>
                     </Grid>
-                    <Grid item xs={12} className={styles.alignData}>
+                    <Grid item xs={4} className={styles.alignData}>
                       <IconButton
                         onClick={() => handleDeleteClick(report.recordID?.toString() || '')}
                         size="small"
@@ -299,61 +352,11 @@ const LostAndFound = () => {
                     </Grid>
                   </Grid>
                 </>
-              ) : null}{' '}
+              ) : null}
             </Grid>
-          </>
-        ) : (
-          /*Desktop View*/
-          <Grid container>
-            <Grid
-              container
-              item
-              xs={11.5}
-              className={styles.rowPadding}
-              onClick={
-                report.status.toLowerCase() === 'active'
-                  ? () => handleEdit(report.recordID?.toString() || '')
-                  : () => {}
-              }
-            >
-              <Grid item xs={2.1} className={styles.alignData}>
-                <div className={styles.dataCell}>{formatDate(report.dateLost)}</div>
-              </Grid>
-              <Grid item xs={2.6} className={styles.alignData}>
-                <div className={styles.dataCell}>{report.locationLost}</div>
-              </Grid>
-              <Grid item xs={2.6} className={styles.alignData}>
-                <div className={styles.dataCell}>{report.category}</div>
-              </Grid>
-              <Grid item xs={4.5} className={styles.alignData}>
-                <div className={styles.dataCell}>{report.description}</div>
-              </Grid>
-            </Grid>
-            {report.status.toLowerCase() === 'active' ? (
-              <>
-                <Grid container item xs={0.5} justifyContent="flex-end" columnGap={1}>
-                  <Grid item xs={4} className={styles.alignData}>
-                    <IconButton
-                      onClick={() => handleEdit(report.recordID?.toString() || '')}
-                      size="small"
-                    >
-                      <Edit />
-                    </IconButton>
-                  </Grid>
-                  <Grid item xs={4} className={styles.alignData}>
-                    <IconButton
-                      onClick={() => handleDeleteClick(report.recordID?.toString() || '')}
-                      size="small"
-                    >
-                      <DeleteForeverOutlined color="error" />
-                    </IconButton>
-                  </Grid>
-                </Grid>
-              </>
-            ) : null}
-          </Grid>
-        )}
-      </CardContent>
+          )}
+        </CardContent>
+      </Tooltip>
     </Card>
   );
 
