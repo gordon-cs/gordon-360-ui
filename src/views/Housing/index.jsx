@@ -19,6 +19,7 @@ const Housing = () => {
   if (isFaculty) {
     return <RDView />;
   } else if (isStudent) {
+    // return <RDView />;
     return <ResidentView />;
   } else if (isRA) {
     return <RAView />;
