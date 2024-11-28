@@ -8,6 +8,13 @@ import {
   CardHeader,
   Typography,
   useMediaQuery,
+  Select,
+  MenuItem,
+  InputLabel,
+  SelectChangeEvent,
+  FormControl,
+  FormControlLabel,
+  Switch,
 } from '@mui/material';
 import { Add, Key, Launch } from '@mui/icons-material';
 import styles from './MissingItemReportData.module.scss';
@@ -32,9 +39,23 @@ const MissingItemReportData = () => {
   const isWidescreen = useMediaQuery('(min-width:1000px)');
   const isMobile = useMediaQuery('(max-width:600px)');
 
-  // Used for
+  // New Action form state variables
   const [newActionFormData, setNewActionFormData] = useState({ action: '', actionNote: '' });
   const [newActionModalOpen, setNewActionModalOpen] = useState<boolean>(false);
+  const actionTypes = ['Checked', 'Custom'];
+
+  type AdminActionChecked = {
+    foundID?: string; // ID of the in-stock found item
+    contactMethod?: string; //Possible values [email, phone]
+    response?: string; //Possible values [“owner will pick up”, “owner does not want”, "None"]
+  };
+
+  const [checkedItemFound, setCheckedItemFound] = useState<boolean>(false);
+  const [checkedActionFormData, setCheckedActionFormData] = useState<AdminActionChecked>({
+    foundID: undefined,
+    contactMethod: undefined,
+    response: undefined,
+  });
 
   // Used for details modal with dynamic content that must be set asynchronously before modal opens
   const [actionDetailsModalOpen, setActionDetailsModalOpen] = useState<boolean>(false);
@@ -148,15 +169,58 @@ const MissingItemReportData = () => {
     setNewActionModalOpen(true);
   };
 
-  const handleNewActionFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    // Update the main action form whenever one of the custom action forms are updated.
+    if (newActionFormData.action === 'Checked') {
+      setNewActionFormData((prevData) => ({
+        ...prevData,
+        actionNote: JSON.stringify(checkedActionFormData),
+      }));
+    }
+  }, [checkedActionFormData, newActionFormData.action]);
+
+  const updateForm = async (name: string, newValue: string) => {
+    // When changing the action type
+    if (name === 'action') {
+      // Reset all form data, and update the action
+      setCheckedItemFound(false);
+      setCheckedActionFormData({
+        foundID: undefined,
+        contactMethod: undefined,
+        response: undefined,
+      });
+      setNewActionFormData((prevData) => ({
+        ...prevData,
+        action: newValue,
+      }));
+    }
+
+    // Update form, method is based on the action type.
+    if (newActionFormData.action === 'Custom') {
+      setNewActionFormData((prevData) => ({
+        ...prevData,
+        [name]: newValue,
+      }));
+    } else if (newActionFormData.action === 'Checked') {
+      setCheckedActionFormData((prevData) => ({
+        ...prevData,
+        [name]: newValue,
+      }));
+    }
+  };
+
+  const handleNewActionFormChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent,
+  ) => {
     const { name, value } = e.target;
-    setNewActionFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    updateForm(name, value);
   };
 
   const handleNewActionSubmit = async () => {
+    if (checkedItemFound) {
+      await lostAndFoundService.updateReportStatus(parseInt(itemId ? itemId : ''), 'Found');
+    }
+
     // Combine form data into the data format for the backend request
     let requestData = {
       ...newActionFormData,
@@ -301,6 +365,98 @@ const MissingItemReportData = () => {
     );
   };
 
+  // Conditional component of the new item form, form fields change based on the selected action type
+  const newActionForm = () => {
+    switch (newActionFormData.action) {
+      case 'Custom': {
+        return (
+          <>
+            <Typography>Add notes to record what you did</Typography>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                variant="filled"
+                multiline
+                minRows={3}
+                label={'Action Notes'}
+                name="actionNote"
+                value={newActionFormData.actionNote}
+                onChange={handleNewActionFormChange}
+              />
+            </Grid>
+          </>
+        );
+      }
+      case 'Checked': {
+        return (
+          <>
+            <Typography>
+              Check the list of found items, to see if this item has been found
+            </Typography>
+            <FormControlLabel
+              control={
+                <Switch
+                  value={checkedItemFound}
+                  onChange={() => {
+                    setCheckedItemFound(checkedItemFound ? false : true);
+                  }}
+                />
+              }
+              label="Item has been Found"
+            />
+            {checkedItemFound ? (
+              <>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    variant="filled"
+                    label={'ID of the in-stock Found Item'}
+                    name="foundID"
+                    value={checkedActionFormData?.foundID}
+                    onChange={handleNewActionFormChange}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControl fullWidth>
+                    <InputLabel>Contact Method</InputLabel>
+                    <Select
+                      fullWidth
+                      variant="filled"
+                      label="Contact Method"
+                      name="contactMethod"
+                      value={checkedActionFormData?.contactMethod}
+                      onChange={handleNewActionFormChange}
+                    >
+                      <MenuItem value={'Email'}>Email</MenuItem>
+                      <MenuItem value={'Phone'}>Phone</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControl fullWidth>
+                    <InputLabel>Response</InputLabel>
+                    <Select
+                      fullWidth
+                      variant="filled"
+                      label="Response"
+                      name="response"
+                      value={checkedActionFormData?.response}
+                      onChange={handleNewActionFormChange}
+                    >
+                      <MenuItem value={'Owner will pick up'}>Owner will pick up</MenuItem>
+                      <MenuItem value={'Owner does not want'}>Owner does not want</MenuItem>
+                      <MenuItem value={'Owner does not want'}>None</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </>
+            ) : null}
+          </>
+        );
+      }
+    }
+  };
+
   const newActionModal = () => {
     return (
       <GordonDialogBox
@@ -313,28 +469,25 @@ const MissingItemReportData = () => {
       >
         <Grid container className={styles.newActionModal} rowGap={2}>
           <Grid item xs={12}>
-            <TextField
-              fullWidth
-              variant="filled"
-              label={'Action'}
-              name="action"
-              value={newActionFormData.action}
-              onChange={handleNewActionFormChange}
-            />
+            <FormControl fullWidth>
+              <InputLabel>Action Type</InputLabel>
+              <Select
+                fullWidth
+                variant="filled"
+                label="Action Type"
+                name="action"
+                value={newActionFormData.action}
+                onChange={handleNewActionFormChange}
+              >
+                {actionTypes.map((actionType) => (
+                  <MenuItem value={actionType}>
+                    {actionType === 'Checked' ? 'Check if Found' : actionType}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
-          <Typography>Add notes to record what you did</Typography>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              variant="filled"
-              multiline
-              minRows={3}
-              label={'Action Notes'}
-              name="actionNote"
-              value={newActionFormData.actionNote}
-              onChange={handleNewActionFormChange}
-            />
-          </Grid>
+          {newActionForm()}
         </Grid>
       </GordonDialogBox>
     );
