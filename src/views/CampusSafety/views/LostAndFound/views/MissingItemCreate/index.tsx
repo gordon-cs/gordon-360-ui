@@ -75,6 +75,18 @@ const MissingItemFormCreate = () => {
     fetchUserData();
   }, []);
 
+  // Catch browser reloads, and show warning message about unsaved changes.
+  useEffect(() => {
+    function handleBeforeUnload(event: BeforeUnloadEvent) {
+      event.preventDefault();
+      return (event.returnValue = '');
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload, { capture: true });
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload, { capture: true });
+    };
+  }, []);
+
   const requiredFields = ['category', 'description', 'locationLost'];
 
   const validateForm = () => {
