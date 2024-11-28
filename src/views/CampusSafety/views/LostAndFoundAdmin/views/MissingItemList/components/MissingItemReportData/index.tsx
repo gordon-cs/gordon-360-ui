@@ -30,12 +30,14 @@ const MissingItemReportData = () => {
   // Page State
   const [loading, setLoading] = useState<boolean>(true);
   const isWidescreen = useMediaQuery('(min-width:1000px)');
-  const isMobile = useMediaQuery('(max-width:470px)');
+  const isMobile = useMediaQuery('(max-width:600px)');
+
+  // Used for
   const [newActionFormData, setNewActionFormData] = useState({ action: '', actionNote: '' });
-  const [actionDetailsModalOpen, setActionDetailsModalOpen] = useState<boolean>(false);
   const [newActionModalOpen, setNewActionModalOpen] = useState<boolean>(false);
 
   // Used for details modal with dynamic content that must be set asynchronously before modal opens
+  const [actionDetailsModalOpen, setActionDetailsModalOpen] = useState<boolean>(false);
   const [actionDetailsModalLoading, setActionDetailsModalLoading] = useState<boolean>(false);
 
   // The missing item report
@@ -209,18 +211,20 @@ const MissingItemReportData = () => {
               <Grid item xs={1}>
                 <Key />
               </Grid>
-              <Grid item xs={2}>
+              <Grid item xs={3} sm={2}>
                 <div className={styles.dataCell}>Date</div>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={4} sm={3}>
                 <div className={styles.dataCell}>Action</div>
               </Grid>
-              <Grid item xs={3}>
+              <Grid item xs={4} sm={3}>
                 <div className={styles.dataCell}>User</div>
               </Grid>
-              <Grid item xs={3}>
-                <div className={styles.dataCell}>Notes</div>
-              </Grid>
+              {!isMobile ? (
+                <Grid item xs={3}>
+                  <div className={styles.dataCell}>Notes</div>
+                </Grid>
+              ) : null}
             </Grid>
             <Grid container>
               {adminActionsArray?.length === 0 ? (
@@ -245,20 +249,22 @@ const MissingItemReportData = () => {
                         <Grid item xs={1} className={styles.tableColumn}>
                           <Launch color="secondary" />
                         </Grid>
-                        <Grid item xs={2} className={styles.tableColumn}>
+                        <Grid item xs={3} sm={2} className={styles.tableColumn}>
                           <div className={styles.dataCell}>
                             {formatDate(adminAction.actionDate)}
                           </div>
                         </Grid>
-                        <Grid item xs={3} className={styles.tableColumn}>
+                        <Grid item xs={4} sm={3} className={styles.tableColumn}>
                           <div className={styles.dataCell}>{adminAction.action}</div>
                         </Grid>
-                        <Grid item xs={3} className={styles.tableColumn}>
+                        <Grid item xs={4} sm={3} className={styles.tableColumn}>
                           <div className={styles.dataCell}>{adminAction.username}</div>
                         </Grid>
-                        <Grid item xs={3} className={styles.tableColumn}>
-                          <div className={styles.dataCell}>{adminAction.actionNote}</div>
-                        </Grid>
+                        {!isMobile ? (
+                          <Grid item xs={3} className={styles.tableColumn}>
+                            <div className={styles.dataCell}>{adminAction.actionNote}</div>
+                          </Grid>
+                        ) : null}
                       </Grid>
                     </>
                   );
@@ -279,18 +285,18 @@ const MissingItemReportData = () => {
         cancelButtonClicked={closeModal}
         cancelButtonName="close"
       >
-        <Grid container>
-          <Grid item xs={5}>
+        <Grid container rowGap={1}>
+          <Grid item xs={12} sm={5}>
             <b>Date</b>{' '}
             {selectedAction.current ? formatDate(selectedAction.current.actionDate) : ''}
           </Grid>
-          <Grid item xs={7}>
+          <Grid item xs={12} sm={7}>
             <b>Action</b> {selectedAction.current ? selectedAction.current.action : ''}
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs={12} sm={5}>
             <b>User</b> {selectedAction.current ? selectedAction.current.username : ''}
           </Grid>
-          <Grid item xs={7}>
+          <Grid item xs={12} sm={7}>
             <b>Notes</b> {selectedAction.current ? selectedAction.current.actionNote : ''}
           </Grid>
         </Grid>
