@@ -237,36 +237,33 @@ const MissingItemReportData = () => {
               ) : (
                 adminActionsArray?.map((adminAction) => {
                   return (
-                    <>
-                      <Grid
-                        container
-                        item
-                        className={styles.tableRow}
-                        onClick={() => {
-                          handleActionClicked(adminAction.ID);
-                        }}
-                      >
-                        <Grid item xs={1} className={styles.tableColumn}>
-                          <Launch color="secondary" />
-                        </Grid>
-                        <Grid item xs={3} sm={2} className={styles.tableColumn}>
-                          <div className={styles.dataCell}>
-                            {formatDate(adminAction.actionDate)}
-                          </div>
-                        </Grid>
-                        <Grid item xs={4} sm={3} className={styles.tableColumn}>
-                          <div className={styles.dataCell}>{adminAction.action}</div>
-                        </Grid>
-                        <Grid item xs={4} sm={3} className={styles.tableColumn}>
-                          <div className={styles.dataCell}>{adminAction.username}</div>
-                        </Grid>
-                        {!isMobile ? (
-                          <Grid item xs={3} className={styles.tableColumn}>
-                            <div className={styles.dataCell}>{adminAction.actionNote}</div>
-                          </Grid>
-                        ) : null}
+                    <Grid
+                      key={adminAction.ID}
+                      container
+                      item
+                      className={styles.tableRow}
+                      onClick={() => {
+                        handleActionClicked(adminAction.ID);
+                      }}
+                    >
+                      <Grid item xs={1} className={styles.tableColumn}>
+                        <Launch color="secondary" />
                       </Grid>
-                    </>
+                      <Grid item xs={3} sm={2} className={styles.tableColumn}>
+                        <div className={styles.dataCell}>{formatDate(adminAction.actionDate)}</div>
+                      </Grid>
+                      <Grid item xs={4} sm={3} className={styles.tableColumn}>
+                        <div className={styles.dataCell}>{adminAction.action}</div>
+                      </Grid>
+                      <Grid item xs={4} sm={3} className={styles.tableColumn}>
+                        <div className={styles.dataCell}>{adminAction.username}</div>
+                      </Grid>
+                      {!isMobile ? (
+                        <Grid item xs={3} className={styles.tableColumn}>
+                          <div className={styles.dataCell}>{adminAction.actionNote}</div>
+                        </Grid>
+                      ) : null}
+                    </Grid>
                   );
                 })
               )}
