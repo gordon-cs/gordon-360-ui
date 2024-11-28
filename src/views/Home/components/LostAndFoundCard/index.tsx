@@ -67,6 +67,7 @@ const LostAndFoundCard = () => {
         setActiveReports(active);
       } catch (error) {
         console.error('Error fetching missing items:', error);
+        setActiveReports([]);
       } finally {
         setLoading(false);
       }
