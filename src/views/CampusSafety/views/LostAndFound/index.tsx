@@ -79,23 +79,21 @@ const LostAndFound = () => {
     navigate('/lostandfound/' + reportId);
   };
 
-  // Open the delete modal, and select the report to delete
+  // Given the report that was clicked on, open the delete modal for that report.
   const handleDeleteClick = (reportId: string) => {
     setReportToDelete(reportId);
     setDeleteModalOpen(true);
   };
 
-  // Close the delete modal
+  // Close and cancel the delete modal
   const handleModalClose = () => {
     setDeleteModalOpen(false);
     setReportToDelete(null);
   };
 
-  // Delete the report
+  // Call the API to mark the report as deleted if the user selects it.
   const handleModalSubmit = async () => {
     try {
-      //const reportIdNum = parseInt(handleDeleteClick(reportToDelete));
-
       await lostAndFoundService.updateReportStatus(parseInt(reportToDelete || ''), 'deleted');
       setPageUpdates(pageUpdates + 1);
       setDeleteModalOpen(false);
@@ -256,7 +254,6 @@ const LostAndFound = () => {
                   item
                   xs={11.5}
                   columnGap={1}
-                  rowGap={1}
                   onClick={
                     report.status.toLowerCase() === 'active'
                       ? () => handleEdit(report.recordID?.toString() || '')

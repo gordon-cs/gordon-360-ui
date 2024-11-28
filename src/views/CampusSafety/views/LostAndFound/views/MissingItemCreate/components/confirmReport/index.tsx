@@ -1,4 +1,3 @@
-import React from 'react';
 import { Card, CardContent, CardHeader, Typography, Button, Grid } from '@mui/material';
 import styles from './ConfirmReport.module.scss';
 
@@ -88,7 +87,7 @@ const ConfirmReport: React.FC<ConfirmReportProps> = ({ formData, onEdit, onSubmi
           <Button variant="outlined" color="primary" onClick={onEdit}>
             Edit My Report
           </Button>
-          <Button variant="contained" color="primary" onClick={onSubmit}>
+          <Button variant="contained" color="secondary" onClick={onSubmit}>
             File Report
           </Button>
         </Grid>
