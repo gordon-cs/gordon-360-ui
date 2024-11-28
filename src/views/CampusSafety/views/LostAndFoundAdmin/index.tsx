@@ -5,32 +5,13 @@ import { Card, CardContent, CardHeader, Typography } from '@mui/material';
 import { Grid, Button } from '@mui/material';
 import Header from 'views/CampusSafety/components/Header';
 import { useNavigate } from 'react-router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Construction, Person, Storage } from '@mui/icons-material';
-import lostAndFoundService, { MissingItemReport } from 'services/lostAndFound';
 
 const LostAndFoundAdmin = () => {
   const isAdmin = useAuthGroups(AuthGroup.LostAndFoundDevelopers);
   // const isAdmin = true; //FOR TESTING PURPOSES
   const navigate = useNavigate();
-  const [missingReports, setMissingReports] = useState<MissingItemReport[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    const fetchMissingItems = async () => {
-      setLoading(true);
-      try {
-        const fetchedReports = await lostAndFoundService.getMissingItemReports();
-        setMissingReports(fetchedReports);
-      } catch (error) {
-        console.error('Error fetching missing items:', error);
-        setMissingReports([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchMissingItems();
-  }, []);
 
   useEffect(() => {
     if (!isAdmin) {
@@ -38,19 +19,9 @@ const LostAndFoundAdmin = () => {
     }
   });
 
-  const MissingDatabaseSummary = (
-    <>
-      Active: {missingReports.filter((report) => report.status === 'active').length} {' | '} Total:{' '}
-      {missingReports.length}
-    </>
-  );
-
   const LostItemDatabase = (
     <>
       <Grid container rowGap={1}>
-        <Grid item xs={12}>
-          {MissingDatabaseSummary}
-        </Grid>
         <Grid item xs={12}>
           <Button
             color="secondary"
