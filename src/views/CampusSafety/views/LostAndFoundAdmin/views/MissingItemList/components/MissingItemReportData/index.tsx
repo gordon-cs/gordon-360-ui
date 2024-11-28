@@ -357,7 +357,12 @@ const MissingItemReportData = () => {
                   <>
                     <Grid container alignItems="center">
                       <Grid item xs={1}>
-                        <Button className={styles.backButton} onClick={() => navigate(-1)}>
+                        <Button
+                          className={styles.backButton}
+                          onClick={() =>
+                            navigate('/lostandfound/lostandfoundadmin/missingitemdatabase')
+                          }
+                        >
                           Back
                         </Button>
                       </Grid>
