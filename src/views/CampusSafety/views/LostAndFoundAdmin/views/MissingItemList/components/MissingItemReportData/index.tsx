@@ -245,6 +245,30 @@ const MissingItemReportData = () => {
 
   const formattedDateLost = DateTime.fromISO(item.dateLost).toFormat('MM-dd-yy');
 
+  const statusChip = (
+    <Chip
+      label={
+        <Typography variant="subtitle1">
+          <u>
+            <b>{item.status[0].toUpperCase() + item.status.slice(1)}</b>
+          </u>
+        </Typography>
+      }
+      //@ts-ignore
+      color={
+        item.status.toLowerCase() === 'active'
+          ? 'secondary'
+          : item.status.toLowerCase() === 'found'
+            ? 'success'
+            : item.status.toLowerCase() === 'expired'
+              ? 'neutral'
+              : item.status.toLowerCase() === 'deleted'
+                ? 'error'
+                : 'neutral'
+      }
+    />
+  );
+
   // Component for admin actions card, holding the admin actions UI elements
   const adminActions = () => {
     return (
@@ -512,8 +536,8 @@ const MissingItemReportData = () => {
               <CardHeader
                 title={
                   <>
-                    <Grid container alignItems="center">
-                      <Grid item xs={1}>
+                    <Grid container rowGap={1}>
+                      <Grid container item xs={12} md={1}>
                         <Button
                           className={styles.backButton}
                           onClick={() =>
@@ -523,10 +547,21 @@ const MissingItemReportData = () => {
                           Back
                         </Button>
                       </Grid>
-                      <Grid item sm={11} xs={12}>
+                      <Grid
+                        container
+                        item
+                        columnGap={2}
+                        rowGap={1}
+                        xs={12}
+                        md={10}
+                        justifyContent="center"
+                      >
                         <div>
-                          <b>Missing</b> Item Report Details
+                          <b className={styles.yellowText}>Lost</b> Item Report Details
                         </div>
+                        <Typography>
+                          <em>Status:</em> {statusChip}
+                        </Typography>
                       </Grid>
                     </Grid>
                   </>
@@ -630,18 +665,7 @@ const MissingItemReportData = () => {
                           InputProps={{ readOnly: true }}
                         />
                       </Grid>
-                      <Grid item xs={12}>
-                        <Chip
-                          label={'Status: ' + item.status[0].toUpperCase() + item.status.slice(1)}
-                          color={
-                            item.status.toLowerCase() === 'active'
-                              ? 'warning'
-                              : item.status.toLowerCase() === 'found'
-                                ? 'success'
-                                : 'neutral'
-                          }
-                        />
-                      </Grid>
+
                       {/* Stolen information (if marked stolen) */}
                       {item.stolen ? (
                         <>
