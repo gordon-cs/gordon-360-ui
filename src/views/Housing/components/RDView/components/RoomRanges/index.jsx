@@ -22,6 +22,7 @@ import {
   removeAssignment,
   assignPersonToRange,
 } from 'services/residentLife/roomRanges';
+import { FaUnderline } from 'react-icons/fa';
 
 const RoomRanges = () => {
   const [building, setBuilding] = useState('');
@@ -158,9 +159,21 @@ const RoomRanges = () => {
 
   return (
     <Box p={3}>
-      <Typography variant="h4" gutterBottom>
-        Room Assignment
-      </Typography>
+      <Card
+        variant="outlined"
+        sx={{
+          backgroundColor: 'transparent',
+          boxShadow: 'none',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          textAlign: 'center',
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          Room Assignment
+        </Typography>
+      </Card>
 
       {/* Building Selection Section */}
       <Card variant="outlined" sx={{ mb: 3 }}>
@@ -253,6 +266,7 @@ const RoomRanges = () => {
                       variant="outlined"
                       color="secondary"
                       size="small"
+                      sx={{ ml: 1 }}
                       onClick={(e) => {
                         e.stopPropagation();
                         onClickRemoveRoomRange(range.RangeID);
@@ -284,6 +298,16 @@ const RoomRanges = () => {
                 sx={{
                   cursor: 'pointer',
                   backgroundColor: selectedPerson === person.ID ? 'primary.main' : 'transparent',
+                  color: selectedPerson === person.ID ? 'white' : 'inherit',
+                  '&:hover': {
+                    textDecoration: 'none',
+                    backgroundColor: 'primary.main',
+                    color: 'white',
+                    '@media (hover: none)': {
+                      backgroundColor: 'transparent',
+                      color: 'inherit',
+                    },
+                  },
                 }}
               >
                 {person.FirstName} {person.LastName}
@@ -291,6 +315,7 @@ const RoomRanges = () => {
             ))}
           </List>
         </CardContent>
+
         <CardActions>
           <Button variant="contained" onClick={onClickAssignPerson}>
             Assign Person
@@ -310,10 +335,12 @@ const RoomRanges = () => {
                     {assignment.Fname} {assignment.Lname}: {assignment.Hall_Name}{' '}
                     {assignment.Room_Start} - {assignment.Room_End}
                   </Box>
+
                   <Button
                     variant="outlined"
                     color="secondary"
                     size="small"
+                    sx={{ ml: 1 }}
                     onClick={() => onClickRemoveAssignment(assignment.Range_ID)}
                   >
                     Remove
