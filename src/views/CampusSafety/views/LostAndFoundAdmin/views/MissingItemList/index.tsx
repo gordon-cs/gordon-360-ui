@@ -118,7 +118,17 @@ const MissingItemList = () => {
     handleFilter();
   }, [status, category, color, keywords]);
 
-  const formatDate = (date: string) => DateTime.fromISO(date).toFormat('MMM d, yyyy');
+  const formatDate = (date: string) => DateTime.fromISO(date).toFormat('MM/dd/yy');
+
+  const displayLastCheckedDate = (report: MissingItemReport) => {
+    var dateString = report.adminActions?.find((action) => {
+      return action.action === 'Checked';
+    })?.actionDate;
+    if (dateString !== '' && dateString !== undefined) {
+      return formatDate(dateString);
+    }
+    return 'Never';
+  };
 
   return (
     <>
@@ -287,7 +297,7 @@ const MissingItemList = () => {
                               {formatDate(report.dateLost)}
                             </Typography>
                             <Typography variant="body2" color="textSecondary">
-                              Last Checked: {report.lastChecked || 'Placeholder'}
+                              Last Checked: {displayLastCheckedDate(report)}
                             </Typography>
                           </Grid>
                           <Typography variant="body2" color="textSecondary">
@@ -334,7 +344,7 @@ const MissingItemList = () => {
                           <div className={styles.dataCell}>{report.description}</div>
                         </Grid>
                         <Grid item xs={1}>
-                          {report.lastChecked || 'Placeholder'}
+                          {displayLastCheckedDate(report)}
                         </Grid>
                         <Grid item xs={1} style={{ display: 'flex', justifyContent: 'flex-end' }}>
                           {report.stolen && (

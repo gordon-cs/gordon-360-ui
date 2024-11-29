@@ -24,7 +24,7 @@ export type MissingItemReport = {
   submitterUsername: string;
   submitterID?: null;
   forGuest: boolean;
-  lastChecked?: string;
+  adminActions?: MissingAdminAction[];
 };
 
 /**
