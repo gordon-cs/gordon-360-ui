@@ -14,7 +14,8 @@ import {
   SelectChangeEvent,
   FormControl,
   FormControlLabel,
-  Switch,
+  Checkbox,
+  Chip,
 } from '@mui/material';
 import { Add, Key, Launch } from '@mui/icons-material';
 import styles from './MissingItemReportData.module.scss';
@@ -33,6 +34,7 @@ const MissingItemReportData = () => {
 
   // Pull the itemId from the url
   const { itemId } = useParams<{ itemId: string }>();
+  const [reportUpdated, setReportUpdated] = useState<number>(0);
 
   // Page State
   const [loading, setLoading] = useState<boolean>(true);
@@ -50,7 +52,7 @@ const MissingItemReportData = () => {
     response?: string; //Possible values [“owner will pick up”, “owner does not want”, "None"]
   };
 
-  const [checkedItemFound, setCheckedItemFound] = useState<boolean>(false);
+  const [checkedItemNotFound, setcheckedItemNotFound] = useState<boolean>(false);
   const [checkedActionFormData, setCheckedActionFormData] = useState<AdminActionChecked>({
     foundID: undefined,
     contactMethod: undefined,
@@ -99,7 +101,7 @@ const MissingItemReportData = () => {
     fetchUserData();
     fetchItem();
     setLoading(false);
-  }, [itemId]);
+  }, [itemId, reportUpdated]);
 
   // Triggered on first render, and whenever  actions have been updated
   // (i.e. when an admin user creates a new admin action).
@@ -183,7 +185,7 @@ const MissingItemReportData = () => {
     // When changing the action type
     if (name === 'action') {
       // Reset all form data, and update the action
-      setCheckedItemFound(false);
+      setcheckedItemNotFound(false);
       setCheckedActionFormData({
         foundID: undefined,
         contactMethod: undefined,
@@ -217,8 +219,9 @@ const MissingItemReportData = () => {
   };
 
   const handleNewActionSubmit = async () => {
-    if (checkedItemFound) {
+    if (!checkedItemNotFound && newActionFormData.action === 'Checked') {
       await lostAndFoundService.updateReportStatus(parseInt(itemId ? itemId : ''), 'Found');
+      setReportUpdated(reportUpdated + 1);
     }
 
     // Combine form data into the data format for the backend request
@@ -371,7 +374,7 @@ const MissingItemReportData = () => {
       case 'Custom': {
         return (
           <>
-            <Typography>Add notes to record what you did</Typography>
+            <Typography>Describe what you did</Typography>
             <Grid item xs={12}>
               <TextField
                 fullWidth
@@ -391,21 +394,25 @@ const MissingItemReportData = () => {
         return (
           <>
             <Typography>
-              Check the list of found items, to see if this item has been found
+              Check the list of found items in FileMaker, to see if this item has been found
             </Typography>
             <FormControlLabel
               control={
-                <Switch
-                  value={checkedItemFound}
+                <Checkbox
+                  value={checkedItemNotFound}
                   onChange={() => {
-                    setCheckedItemFound(checkedItemFound ? false : true);
+                    setcheckedItemNotFound(checkedItemNotFound ? false : true);
                   }}
                 />
               }
-              label="Item has been Found"
+              label={'Mark Item as not found on this date'}
             />
-            {checkedItemFound ? (
+            {!checkedItemNotFound ? (
               <>
+                <Typography>
+                  If this item has been found, fill out this form, and contact the owner of the
+                  item.
+                </Typography>
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
@@ -445,7 +452,7 @@ const MissingItemReportData = () => {
                     >
                       <MenuItem value={'Owner will pick up'}>Owner will pick up</MenuItem>
                       <MenuItem value={'Owner does not want'}>Owner does not want</MenuItem>
-                      <MenuItem value={'Owner does not want'}>None</MenuItem>
+                      <MenuItem value={'None'}>None</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>
@@ -621,6 +628,18 @@ const MissingItemReportData = () => {
                           fullWidth
                           value={formattedDateLost}
                           InputProps={{ readOnly: true }}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Chip
+                          label={'Status: ' + item.status[0].toUpperCase() + item.status.slice(1)}
+                          color={
+                            item.status.toLowerCase() === 'active'
+                              ? 'warning'
+                              : item.status.toLowerCase() === 'found'
+                                ? 'success'
+                                : 'neutral'
+                          }
                         />
                       </Grid>
                       {/* Stolen information (if marked stolen) */}
