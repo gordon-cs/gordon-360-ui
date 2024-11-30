@@ -8,8 +8,10 @@ type RA = {
   PreferredContact: string;
   Check_in_time: Date;
   RD_Email: string;
+  RD_Name: string;
   RA_Profile_Link: string;
   RD_Profile_Link: string;
+  RA_Photo: string;
 };
 
 const fetchOnDutyData = async () => {
@@ -22,6 +24,6 @@ const fetchOnDutyData = async () => {
 };
 
 // Fetches the information of an On Call RA from the API endpoint "Housing/ra/on-call/{hallId}"
-const fetchOnDutyRA = (hallId: string): Promise<RA[]> => http.get(`ra/on-call/${hallId}`);
+const fetchOnDutyRA = (hallId: string): Promise<RA[]> => http.get(`Housing/ra/on-call/${hallId}`);
 
 export { fetchOnDutyData, fetchOnDutyRA };

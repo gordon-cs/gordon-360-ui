@@ -22,6 +22,11 @@ const OnDuty = () => {
     }
   }, [profile]);
 
+  // Show loading state if profile is not yet loaded
+  if (!profile) {
+    return <Typography>Loading...</Typography>;
+  }
+
   return (
     <Card>
       <CardHeader
