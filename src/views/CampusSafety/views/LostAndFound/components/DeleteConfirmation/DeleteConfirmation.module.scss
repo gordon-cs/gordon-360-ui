@@ -12,8 +12,7 @@
   text-align: center;
   font-weight: 500;
   font-size: 1rem;
-  color: var(--mui-palette-info-light); // SnowDay
-
+  color: var(--mui-palette-secondary-main); // SnowDay
   @media (max-width: 600px) {
     font-size: 0.9rem; // Adjust for smaller screens
   }
@@ -22,7 +21,7 @@
 .subtext {
   text-align: center;
   margin-top: 0.5rem;
-  color: var(--mui-palette-neutral-500); // Light Gray
+  color: var(--mui-palette-neutral-700); // Light Gray
   font-size: 0.9rem;
 
   @media (max-width: 600px) {
