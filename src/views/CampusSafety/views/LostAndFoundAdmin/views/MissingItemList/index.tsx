@@ -118,8 +118,10 @@ const MissingItemList = () => {
     handleFilter();
   }, [status, category, color, keywords]);
 
-  const formatDate = (date: string) => DateTime.fromISO(date).toFormat('MM/dd/yy');
+  const dateFormat = 'MM/dd/yy';
+  const formatDate = (date: string) => DateTime.fromISO(date).toFormat(dateFormat);
 
+  // Find and format the last checked date based on the list of admin actions for a given report.
   const displayLastCheckedDate = (report: MissingItemReport) => {
     var dateString = report.adminActions?.findLast((action) => {
       return action.action === 'Checked';
@@ -128,6 +130,23 @@ const MissingItemList = () => {
       return formatDate(dateString);
     }
     return 'Never';
+  };
+
+  // Return a color based on how long ago a date was.
+  // Green < 3 days, Yellow < 7 days, Red > 7 days.
+  const dateAgeColor = (date: string) => {
+    // Convert dates into milliseconds since 1/1/1970
+    var dateGiven = Date.parse(DateTime.fromFormat(date, dateFormat).toString());
+    var today = Date.parse(DateTime.now().toString());
+    // Subtract the dates, and convert milliseconds to days.
+    var dayDiff = (today - dateGiven) / (1000 * 3600 * 24);
+    if (dayDiff < 3) {
+      return 'var(--mui-palette-success-main)';
+    } else if (dayDiff < 7) {
+      return 'var(--mui-palette-warning-main)';
+    } else {
+      return 'var(--mui-palette-error-main)';
+    }
   };
 
   return (
@@ -296,7 +315,10 @@ const MissingItemList = () => {
                             <Typography variant="body2" color="textSecondary">
                               {formatDate(report.dateLost)}
                             </Typography>
-                            <Typography variant="body2" color="textSecondary">
+                            <Typography
+                              variant="body2"
+                              color={dateAgeColor(displayLastCheckedDate(report))}
+                            >
                               Last Checked: {displayLastCheckedDate(report)}
                             </Typography>
                           </Grid>
@@ -344,7 +366,9 @@ const MissingItemList = () => {
                           <div className={styles.dataCell}>{report.description}</div>
                         </Grid>
                         <Grid item xs={1}>
-                          {displayLastCheckedDate(report)}
+                          <Typography color={dateAgeColor(displayLastCheckedDate(report))}>
+                            {displayLastCheckedDate(report)}
+                          </Typography>
                         </Grid>
                         <Grid item xs={1} style={{ display: 'flex', justifyContent: 'flex-end' }}>
                           {report.stolen && (
