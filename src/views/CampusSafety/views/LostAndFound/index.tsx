@@ -123,67 +123,65 @@ const LostAndFound = () => {
           />
           <CardContent>
             <Grid container alignItems="center">
-              <Grid item xs={12} sm={11}>
-                <div className={styles.disclaimer}>
-                  <InfoOutlined />
-                  <Grid container item rowGap={1}>
-                    <Grid item xs={12}>
-                      <Typography variant="body1">
-                        Gordon Police manages campus Lost & Found
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Typography variant="body2">
-                        Police staff will view reports, and you will be notified if your item is
-                        found.
-                      </Typography>
-                    </Grid>
+              <div className={styles.disclaimer}>
+                <InfoOutlined />
+                <Grid container item rowGap={1}>
+                  <Grid item xs={12}>
+                    <Typography variant="body1">
+                      Gordon Police manages campus Lost & Found
+                    </Typography>
                   </Grid>
-                </div>
-                {/* Button to Report a Missing Item */}
-                <Grid
-                  container
-                  justifyContent="center"
-                  marginTop={0.5}
-                  columnSpacing={5}
-                  rowSpacing={3}
-                >
-                  <Grid item>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => {
-                        navigate('/lostandfound/missingitemform');
-                      }}
-                    >
-                      <NotListedLocation />
-                      <Typography>
-                        Report a{' '}
-                        <b>
-                          <u>Lost</u>
-                        </b>{' '}
-                        Item
-                      </Typography>
-                    </Button>
+                  <Grid item xs={12}>
+                    <Typography variant="body2">
+                      Police staff will view reports, and you will be notified if your item is
+                      found.
+                    </Typography>
                   </Grid>
-                  <Grid item>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => {
-                        navigate('/lostandfound/reportfound');
-                      }}
-                    >
-                      <WhereToVote />
-                      <Typography>
-                        Report a{' '}
-                        <b>
-                          <u>Found</u>
-                        </b>{' '}
-                        Item
-                      </Typography>
-                    </Button>
-                  </Grid>
+                </Grid>
+              </div>
+              {/* Button to Report a Missing Item */}
+              <Grid
+                container
+                justifyContent="center"
+                marginTop={0.5}
+                columnSpacing={5}
+                rowSpacing={3}
+              >
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => {
+                      navigate('/lostandfound/missingitemform');
+                    }}
+                  >
+                    <NotListedLocation />
+                    <Typography>
+                      Report a{' '}
+                      <b>
+                        <u>Lost</u>
+                      </b>{' '}
+                      Item
+                    </Typography>
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => {
+                      navigate('/lostandfound/reportfound');
+                    }}
+                  >
+                    <WhereToVote />
+                    <Typography>
+                      Report a{' '}
+                      <b>
+                        <u>Found</u>
+                      </b>{' '}
+                      Item
+                    </Typography>
+                  </Button>
                 </Grid>
               </Grid>
             </Grid>
