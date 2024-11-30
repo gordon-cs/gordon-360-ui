@@ -1,7 +1,7 @@
 // Root container styles for the dialog
 .title {
-  background-color: var(--mui-palette-primary-main); // GordonBlue
-  color: var(--mui-palette-primary-contrastText); // White
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
   text-align: center;
   font-size: 1.25rem;
   font-weight: bold;
@@ -12,7 +12,7 @@
   text-align: center;
   font-weight: 500;
   font-size: 1rem;
-  color: var(--mui-palette-secondary-main); // SnowDay
+  color: var(--mui-palette-secondary-main);
   @media (max-width: 600px) {
     font-size: 0.9rem; // Adjust for smaller screens
   }
@@ -21,7 +21,7 @@
 .subtext {
   text-align: center;
   margin-top: 0.5rem;
-  color: var(--mui-palette-neutral-700); // Light Gray
+  color: var(--mui-palette-neutral-700);
   font-size: 0.9rem;
 
   @media (max-width: 600px) {
@@ -36,21 +36,21 @@
 }
 
 .cancelButton {
-  background-color: var(--mui-palette-error-light); // NauticalRed
-  color: var(--mui-palette-primary-contrastText); // White
+  background-color: var(--mui-palette-error-light);
+  color: var(--mui-palette-primary-contrastText);
   font-weight: bold;
 
   &:hover {
-    background-color: var(--mui-palette-error-main); // ChristmasRed
+    background-color: var(--mui-palette-error-main);
   }
 }
 
 .submitButton {
-  background-color: var(--mui-palette-secondary-main); // ScottieCyan
-  color: var(--mui-palette-primary-contrastText); // White
+  background-color: var(--mui-palette-secondary-main);
+  color: var(--mui-palette-primary-contrastText);
   font-weight: bold;
 
   &:hover {
-    background-color: var(--mui-palette-secondary-dark); // ScottieCyan_opacity75
+    background-color: var(--mui-palette-secondary-dark);
   }
 }
