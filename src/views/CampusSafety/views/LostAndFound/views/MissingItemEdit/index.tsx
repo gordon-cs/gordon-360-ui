@@ -46,6 +46,7 @@ const MissingItemFormEdit = () => {
     stolen: false,
     stolenDescription: '',
     dateLost: '',
+    dateCreated: '',
     status: 'active',
   });
 
@@ -79,6 +80,7 @@ const MissingItemFormEdit = () => {
           stolen: item.stolen,
           stolenDescription: item.stolenDescription || '',
           dateLost: item.dateLost,
+          dateCreated: item.dateCreated,
           status: item.status || 'active',
         });
       }
@@ -111,7 +113,6 @@ const MissingItemFormEdit = () => {
       ...user,
       submitterUsername: user.AD_Username,
       dateLost: new Date(formData.dateLost).toISOString() || DateTime.now().toISO(),
-      dateCreated: DateTime.now().toISO(),
       forGuest: false,
     };
     await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemid || ''));
