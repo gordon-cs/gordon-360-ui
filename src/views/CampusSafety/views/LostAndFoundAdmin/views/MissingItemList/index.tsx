@@ -121,7 +121,7 @@ const MissingItemList = () => {
   const formatDate = (date: string) => DateTime.fromISO(date).toFormat('MM/dd/yy');
 
   const displayLastCheckedDate = (report: MissingItemReport) => {
-    var dateString = report.adminActions?.find((action) => {
+    var dateString = report.adminActions?.findLast((action) => {
       return action.action === 'Checked';
     })?.actionDate;
     if (dateString !== '' && dateString !== undefined) {
