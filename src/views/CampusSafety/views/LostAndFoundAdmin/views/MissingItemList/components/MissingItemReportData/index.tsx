@@ -27,6 +27,7 @@ import Header from 'views/CampusSafety/components/Header';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
 import userService from 'services/user';
+import SimpleSnackbar from 'components/Snackbar';
 
 const MissingItemReportData = () => {
   const navigate = useNavigate();
@@ -36,6 +37,8 @@ const MissingItemReportData = () => {
   const { itemId } = useParams<{ itemId: string }>();
   const [reportUpdated, setReportUpdated] = useState<number>(0);
 
+  const [errorSnackbarOpen, setErrorSnackbarOpen] = useState<boolean>(false);
+
   // Page State
   const [loading, setLoading] = useState<boolean>(true);
   const isWidescreen = useMediaQuery('(min-width:1000px)');
@@ -44,7 +47,7 @@ const MissingItemReportData = () => {
   // New Action form state variables
   const [newActionFormData, setNewActionFormData] = useState({ action: '', actionNote: '' });
   const [newActionModalOpen, setNewActionModalOpen] = useState<boolean>(false);
-  const actionTypes = ['Checked', 'Custom'];
+  const actionTypes = ['Checked', 'NotifiedOfficer', 'OwnerContact', 'Custom'];
 
   type AdminActionChecked = {
     foundID?: string; // ID of the in-stock found item
@@ -52,11 +55,22 @@ const MissingItemReportData = () => {
     response?: string; //Possible values [“owner will pick up”, “owner does not want”, "None"]
   };
 
+  type AdminActionContact = {
+    officerNotifed: string; // Radio code of the officer who was informed
+    contactMethod: string; //Possible values [email, phone, radio]
+    response: string; //Possible values [“owner will pick up”, “owner does not want”]
+  };
+
   const [checkedItemNotFound, setcheckedItemNotFound] = useState<boolean>(false);
   const [checkedActionFormData, setCheckedActionFormData] = useState<AdminActionChecked>({
     foundID: undefined,
     contactMethod: undefined,
     response: undefined,
+  });
+  const [contactActionFormData, setContactActionFormData] = useState<AdminActionContact>({
+    officerNotifed: '',
+    contactMethod: '',
+    response: '',
   });
 
   // Used for details modal with dynamic content that must be set asynchronously before modal opens
@@ -172,14 +186,22 @@ const MissingItemReportData = () => {
   };
 
   useEffect(() => {
-    // Update the main action form whenever one of the custom action forms are updated.
+    // Update the main action form whenever one of the preset action forms are updated.
     if (newActionFormData.action === 'Checked') {
       setNewActionFormData((prevData) => ({
         ...prevData,
         actionNote: JSON.stringify(checkedActionFormData),
       }));
+    } else if (
+      newActionFormData.action === 'NotifiedOfficer' ||
+      newActionFormData.action === 'OwnerContact'
+    ) {
+      setNewActionFormData((prevData) => ({
+        ...prevData,
+        actionNote: JSON.stringify(contactActionFormData),
+      }));
     }
-  }, [checkedActionFormData, newActionFormData.action]);
+  }, [contactActionFormData, checkedActionFormData, newActionFormData.action]);
 
   const updateForm = async (name: string, newValue: string) => {
     // When changing the action type
@@ -191,10 +213,22 @@ const MissingItemReportData = () => {
         contactMethod: undefined,
         response: undefined,
       });
+      setContactActionFormData({
+        officerNotifed: '',
+        contactMethod: '',
+        response: '',
+      });
+
       setNewActionFormData((prevData) => ({
         ...prevData,
         action: newValue,
       }));
+
+      // Clear the note field if changing to a custom action
+      // Previously would display the empty JSON from the most recently selected preset form
+      if (newValue === 'Custom') {
+        newActionFormData.actionNote = '';
+      }
     }
 
     // Update form, method is based on the action type.
@@ -208,6 +242,14 @@ const MissingItemReportData = () => {
         ...prevData,
         [name]: newValue,
       }));
+    } else if (
+      newActionFormData.action === 'NotifiedOfficer' ||
+      newActionFormData.action === 'OwnerContact'
+    ) {
+      setContactActionFormData((prevData) => ({
+        ...prevData,
+        [name]: newValue,
+      }));
     }
   };
 
@@ -218,24 +260,60 @@ const MissingItemReportData = () => {
     updateForm(name, value);
   };
 
+  // Check if the form fields are valid.
+  const isValidForm = () => {
+    if (newActionFormData.action === 'Checked') {
+      // If any of the form fields are empty
+      if (
+        !checkedItemNotFound &&
+        (!checkedActionFormData.contactMethod ||
+          !checkedActionFormData.foundID ||
+          !checkedActionFormData.response)
+      ) {
+        return false;
+      }
+    } else if (
+      newActionFormData.action === 'NotifiedOfficer' ||
+      newActionFormData.action === 'OwnerContact'
+    ) {
+      // If any of the form fields are empty
+      if (
+        !contactActionFormData.contactMethod ||
+        !contactActionFormData.officerNotifed ||
+        !contactActionFormData.response
+      ) {
+        return false;
+      }
+    } else {
+      if (!newActionFormData.actionNote) {
+        return false;
+      }
+    }
+    return true;
+  };
+
   const handleNewActionSubmit = async () => {
     if (!checkedItemNotFound && newActionFormData.action === 'Checked') {
       await lostAndFoundService.updateReportStatus(parseInt(itemId ? itemId : ''), 'Found');
       setReportUpdated(reportUpdated + 1);
     }
 
-    // Combine form data into the data format for the backend request
-    let requestData = {
-      ...newActionFormData,
-      missingID: parseInt(itemId || ''),
-      actionDate: DateTime.now().toISO(),
-      username: username.AD_Username,
-    };
-    await lostAndFoundService.createAdminAction(parseInt(itemId ? itemId : ''), requestData);
-    // Since a new action was created, trigger an update, which will fetch the new actions list
-    // from the backend
-    setActionsUpdated(true);
-    closeModal();
+    if (isValidForm()) {
+      // Combine form data into the data format for the backend request
+      let requestData = {
+        ...newActionFormData,
+        missingID: parseInt(itemId || ''),
+        actionDate: DateTime.now().toISO(),
+        username: username.AD_Username,
+      };
+      await lostAndFoundService.createAdminAction(parseInt(itemId ? itemId : ''), requestData);
+      // Since a new action was created, trigger an update, which will fetch the new actions list
+      // from the backend
+      setActionsUpdated(true);
+      closeModal();
+    } else {
+      setErrorSnackbarOpen(true);
+    }
   };
 
   // Format date strings for display
@@ -433,19 +511,23 @@ const MissingItemReportData = () => {
             />
             {!checkedItemNotFound ? (
               <>
-                <Typography>
-                  If this item has been found, fill out this form, and contact the owner of the
-                  item.
-                </Typography>
+                <Typography>If this item has been found, fill out this form:</Typography>
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
                     variant="filled"
                     label={'ID of the in-stock Found Item'}
                     name="foundID"
-                    value={checkedActionFormData?.foundID}
+                    value={checkedActionFormData.foundID}
                     onChange={handleNewActionFormChange}
                   />
+                </Grid>
+                <Grid container item direction={'column'}>
+                  <Typography>
+                    And contact the owner {item.firstName} {item.lastName}.
+                  </Typography>
+                  <Typography variant="body1">Email: {item.email}</Typography>
+                  <Typography>Phone: {item.phone}</Typography>
                 </Grid>
                 <Grid item xs={12}>
                   <FormControl fullWidth>
@@ -455,7 +537,7 @@ const MissingItemReportData = () => {
                       variant="filled"
                       label="Contact Method"
                       name="contactMethod"
-                      value={checkedActionFormData?.contactMethod}
+                      value={checkedActionFormData.contactMethod}
                       onChange={handleNewActionFormChange}
                     >
                       <MenuItem value={'Email'}>Email</MenuItem>
@@ -471,7 +553,7 @@ const MissingItemReportData = () => {
                       variant="filled"
                       label="Response"
                       name="response"
-                      value={checkedActionFormData?.response}
+                      value={checkedActionFormData.response}
                       onChange={handleNewActionFormChange}
                     >
                       <MenuItem value={'Owner will pick up'}>Owner will pick up</MenuItem>
@@ -482,6 +564,104 @@ const MissingItemReportData = () => {
                 </Grid>
               </>
             ) : null}
+          </>
+        );
+      }
+      case 'NotifiedOfficer': {
+        return (
+          <>
+            <Typography>
+              If you've passed this report on to an officer, record the information below.
+            </Typography>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                variant="filled"
+                label={'Officer Notified'}
+                name="officerNotifed"
+                value={contactActionFormData.officerNotifed}
+                onChange={handleNewActionFormChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel>Contact Method</InputLabel>
+                <Select
+                  fullWidth
+                  variant="filled"
+                  label="Contact Method"
+                  name="contactMethod"
+                  value={contactActionFormData.contactMethod}
+                  onChange={handleNewActionFormChange}
+                >
+                  <MenuItem value={'Email'}>Email</MenuItem>
+                  <MenuItem value={'Phone'}>Phone</MenuItem>
+                  <MenuItem value={'Radio'}>Radio</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                variant="filled"
+                label={'Notes on their Response'}
+                name="response"
+                value={contactActionFormData.response}
+                onChange={handleNewActionFormChange}
+              />
+            </Grid>
+          </>
+        );
+      }
+      case 'OwnerContact': {
+        return (
+          <>
+            <Grid container item direction={'column'}>
+              <Typography>
+                Contact owner {item.firstName} {item.lastName}?
+              </Typography>
+              <Typography variant="body1">Email: {item.email}</Typography>
+              <Typography>Phone: {item.phone}</Typography>
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                variant="filled"
+                label={'Officer Notified of the Contact'}
+                name="officerNotifed"
+                value={contactActionFormData.officerNotifed}
+                onChange={handleNewActionFormChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel>Contact Method</InputLabel>
+                <Select
+                  fullWidth
+                  variant="filled"
+                  label="Contact Method"
+                  name="contactMethod"
+                  value={contactActionFormData.contactMethod}
+                  onChange={handleNewActionFormChange}
+                >
+                  <MenuItem value={'Email'}>Email</MenuItem>
+                  <MenuItem value={'Phone'}>Phone</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  variant="filled"
+                  label={'Reason for Contact/Notes on their Response'}
+                  name="response"
+                  value={contactActionFormData.response}
+                  onChange={handleNewActionFormChange}
+                />
+              </Grid>
+            </Grid>
           </>
         );
       }
@@ -510,11 +690,26 @@ const MissingItemReportData = () => {
                 value={newActionFormData.action}
                 onChange={handleNewActionFormChange}
               >
-                {actionTypes.map((actionType) => (
-                  <MenuItem value={actionType}>
-                    {actionType === 'Checked' ? 'Check if Found' : actionType}
-                  </MenuItem>
-                ))}
+                {actionTypes.map((actionType) =>
+                  !(
+                    item.status.toLowerCase() === 'found' && actionType.toLowerCase() === 'checked'
+                  ) ? (
+                    <MenuItem value={actionType}>
+                      {actionType === 'Checked'
+                        ? 'Check if Item was Found'
+                        : actionType === 'NotifiedOfficer'
+                          ? 'Contact Officer'
+                          : actionType === 'OwnerContact'
+                            ? 'Contact Owner'
+                            : actionType}
+                    </MenuItem>
+                  ) : (
+                    // If item is already found, disallow the check if found action type.
+                    <MenuItem disabled value={actionType}>
+                      Check if Item was Found
+                    </MenuItem>
+                  ),
+                )}
               </Select>
             </FormControl>
           </Grid>
@@ -705,6 +900,14 @@ const MissingItemReportData = () => {
           {newActionModal()}
         </Grid>
       )}
+      <SimpleSnackbar
+        open={errorSnackbarOpen}
+        onClose={() => {
+          setErrorSnackbarOpen(false);
+        }}
+        severity="error"
+        text="All fields must be filled out to create a new action!"
+      />
     </>
   );
 };
