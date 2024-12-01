@@ -28,6 +28,9 @@ const GordonBlue_opacity50 = '#01498382';
 
 // Secondary
 const ScottieCyan = '#00AEEF';
+// Slightly darker versions of Scottie Cyan
+const ScottieCyanAltDark = '#4EA2D7';
+const ScottieCyanAltLight = '#4EA2D7';
 const ScottieCyan_opacity75 = '#00AEEFBF';
 const ScottieCyan_opacity10 = '#00AEEF1A';
 
@@ -94,6 +97,7 @@ export const theme360 = extendTheme({
         secondary: {
           main: ScottieCyan,
           dark: ScottieCyan_opacity75,
+          light: ScottieCyanAltLight,
           contrastText: Black,
           50: ScottieCyan_opacity10,
           100: '#B0E2F9',
@@ -189,6 +193,7 @@ export const theme360 = extendTheme({
         },
         secondary: {
           main: ScottieCyan,
+          light: ScottieCyanAltDark,
           contrastText: Black,
           50: GordonBlue_opacity50,
           100: '#BBDDF0',
@@ -245,6 +250,15 @@ export const theme360 = extendTheme({
     },
   },
   components: {
+    MuiInputLabel: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          '&.Mui-focused': {
+            color: theme.vars.palette.secondary.light, // Focused label color, for better contrast in dark mode
+          },
+        }),
+      },
+    },
     MuiButton: {
       styleOverrides: {
         outlinedPrimary: ({ theme }) => ({
