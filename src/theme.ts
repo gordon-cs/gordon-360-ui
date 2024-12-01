@@ -1,4 +1,3 @@
-import { BorderColor } from '@mui/icons-material';
 import { experimental_extendTheme as extendTheme } from '@mui/material/styles';
 
 // Colors from http://www.gordon.edu/brandstandards
