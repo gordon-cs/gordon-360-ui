@@ -38,6 +38,7 @@ export type MissingAdminAction = {
   actionDate: string;
   actionNote?: string;
   username: string;
+  isPublic?: boolean;
 };
 
 /**

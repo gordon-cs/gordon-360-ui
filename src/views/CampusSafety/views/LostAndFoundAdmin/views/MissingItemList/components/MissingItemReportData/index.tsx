@@ -305,6 +305,7 @@ const MissingItemReportData = () => {
         missingID: parseInt(itemId || ''),
         actionDate: DateTime.now().toISO(),
         username: username.AD_Username,
+        isPublic: newActionFormData.action === 'Checked' && !checkedItemNotFound ? true : false,
       };
       await lostAndFoundService.createAdminAction(parseInt(itemId ? itemId : ''), requestData);
       // Since a new action was created, trigger an update, which will fetch the new actions list
