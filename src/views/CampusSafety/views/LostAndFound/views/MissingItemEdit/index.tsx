@@ -124,7 +124,7 @@ const MissingItemFormEdit = () => {
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <DatePicker
         label="Date Lost"
-        value={formData.dateLost}
+        value={formData.dateLost === '' ? null : formData.dateLost}
         onChange={(value) => setFormData({ ...formData, dateLost: value?.toString() || '' })}
         disableFuture
         orientation="portrait"
@@ -136,7 +136,7 @@ const MissingItemFormEdit = () => {
           borderRadius: '5px;',
           width: '100%;',
           '& .Mui-focused .MuiOutlinedInput-notchedOutline': { border: 'none' },
-          '& .MuiFormLabel-root': {
+          '& .MuiInputLabel-shrink': {
             transform: 'translate(14px, 4px) scale(0.75);',
           },
           '& .MuiFormLabel-root.Mui-focused': {
