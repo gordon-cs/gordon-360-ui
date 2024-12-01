@@ -198,7 +198,7 @@ export const theme360 = extendTheme({
           100: '#BBDDF0',
           200: '#92C8E6',
           300: '#6BB2DC',
-          400: ScottieCyanAlt,
+          400: '#4EA2D7',
           500: '#3394D1',
           600: '#2886C5',
           700: '#1C75B3',
