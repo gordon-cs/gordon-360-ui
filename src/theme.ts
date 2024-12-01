@@ -1,3 +1,4 @@
+import { BorderColor } from '@mui/icons-material';
 import { experimental_extendTheme as extendTheme } from '@mui/material/styles';
 
 // Colors from http://www.gordon.edu/brandstandards
@@ -28,8 +29,8 @@ const GordonBlue_opacity50 = '#01498382';
 
 // Secondary
 const ScottieCyan = '#00AEEF';
-// Slightly lighter version of Scottie Cyan
-const ScottieCyanAlt = '#4EA2D7';
+// Slightly darker version of Scottie Cyan, for more subtle applications
+const ScottieCyanAlt = '#3394D1';
 const ScottieCyan_opacity75 = '#00AEEFBF';
 const ScottieCyan_opacity10 = '#00AEEF1A';
 
@@ -249,6 +250,24 @@ export const theme360 = extendTheme({
     },
   },
   components: {
+    MuiFilledInput: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          '&::after': {
+            borderColor: theme.palette.secondary.light, // Focused bottom border color
+          },
+        }),
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: theme.palette.secondary.light, // Focused border color
+          },
+        }),
+      },
+    },
     MuiInputLabel: {
       styleOverrides: {
         root: ({ theme }) => ({
