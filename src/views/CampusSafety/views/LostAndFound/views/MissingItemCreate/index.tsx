@@ -350,6 +350,11 @@ const MissingItemFormCreate = () => {
                   onChange={handleChange}
                   error={!!validationErrors.brand}
                   helperText={validationErrors.brand}
+                  sx={{
+                    '& .MuiFormLabel-root.Mui-focused': {
+                      color: 'var(--mui-palette-secondary-400);',
+                    },
+                  }}
                 />
               </Grid>
               <Grid item margin={2}>
@@ -364,6 +369,11 @@ const MissingItemFormCreate = () => {
                   onChange={handleChange}
                   error={!!validationErrors.description}
                   helperText={validationErrors.description}
+                  sx={{
+                    '& .MuiFormLabel-root.Mui-focused': {
+                      color: 'var(--mui-palette-secondary-400);',
+                    },
+                  }}
                 />
               </Grid>
 
@@ -380,6 +390,11 @@ const MissingItemFormCreate = () => {
                   onChange={handleChange}
                   error={!!validationErrors.locationLost}
                   helperText={validationErrors.locationLost}
+                  sx={{
+                    '& .MuiFormLabel-root.Mui-focused': {
+                      color: 'var(--mui-palette-secondary-400);',
+                    },
+                  }}
                 />
               </Grid>
               <Grid item margin={2}>
