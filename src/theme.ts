@@ -28,9 +28,8 @@ const GordonBlue_opacity50 = '#01498382';
 
 // Secondary
 const ScottieCyan = '#00AEEF';
-// Slightly darker versions of Scottie Cyan
-const ScottieCyanAltDark = '#4EA2D7';
-const ScottieCyanAltLight = '#4EA2D7';
+// Slightly lighter version of Scottie Cyan
+const ScottieCyanAlt = '#4EA2D7';
 const ScottieCyan_opacity75 = '#00AEEFBF';
 const ScottieCyan_opacity10 = '#00AEEF1A';
 
@@ -97,7 +96,7 @@ export const theme360 = extendTheme({
         secondary: {
           main: ScottieCyan,
           dark: ScottieCyan_opacity75,
-          light: ScottieCyanAltLight,
+          light: ScottieCyanAlt,
           contrastText: Black,
           50: ScottieCyan_opacity10,
           100: '#B0E2F9',
@@ -193,13 +192,13 @@ export const theme360 = extendTheme({
         },
         secondary: {
           main: ScottieCyan,
-          light: ScottieCyanAltDark,
+          light: ScottieCyanAlt,
           contrastText: Black,
           50: GordonBlue_opacity50,
           100: '#BBDDF0',
           200: '#92C8E6',
           300: '#6BB2DC',
-          400: '#4EA2D7',
+          400: ScottieCyanAlt,
           500: '#3394D1',
           600: '#2886C5',
           700: '#1C75B3',
