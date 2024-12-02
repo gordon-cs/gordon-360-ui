@@ -57,7 +57,7 @@ const MissingItemFormCreate = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
   const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
-  const [newActionFormData, setNewActionFormData] = useState({ action: '', actionNote: '' });
+  const [newActionFormData] = useState({ action: '', actionNote: '' });
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -184,11 +184,8 @@ const MissingItemFormCreate = () => {
         actionDate: DateTime.now().toISO(),
         username: user.AD_Username,
         isPublic: true,
+        action: 'Created',
       };
-      setNewActionFormData((prevData) => ({
-        ...prevData,
-        actionNote: 'User created a report',
-      }));
       await lostAndFoundService.createAdminAction(newReportId, actionRequestData);
       navigate('/lostandfound');
     } catch (error) {
