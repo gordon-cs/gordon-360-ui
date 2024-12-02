@@ -36,9 +36,10 @@
 
 .title {
   text-align: center;
-  & b {
-    color: var(--mui-palette-warning-main);
-  }
+}
+
+.yellowText {
+  color: var(--mui-palette-warning-main);
 }
 
 .stolenButton {

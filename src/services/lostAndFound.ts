@@ -24,7 +24,7 @@ export type MissingItemReport = {
   submitterUsername: string;
   submitterID?: null;
   forGuest: boolean;
-  lastChecked?: string;
+  adminActions?: MissingAdminAction[];
 };
 
 /**
@@ -38,6 +38,7 @@ export type MissingAdminAction = {
   actionDate: string;
   actionNote?: string;
   username: string;
+  isPublic?: boolean;
 };
 
 /**
