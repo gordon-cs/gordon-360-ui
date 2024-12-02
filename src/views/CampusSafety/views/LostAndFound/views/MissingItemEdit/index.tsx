@@ -27,6 +27,7 @@ const MissingItemFormEdit = () => {
   const navigate = useNavigate();
   const { itemid } = useParams<{ itemid: string }>();
   const [loading, setLoading] = useState<boolean>(true);
+  const [newActionFormData] = useState({ action: '', actionNote: '' });
 
   const [user, setUser] = useState({
     firstName: '',
@@ -128,6 +129,15 @@ const MissingItemFormEdit = () => {
       forGuest: false,
     };
     await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemid || ''));
+    const actionRequestData = {
+      ...newActionFormData,
+      missingID: itemid,
+      actionDate: DateTime.now().toISO(),
+      username: user.AD_Username,
+      isPublic: true,
+      action: 'AdminActionEdit',
+    };
+    await lostAndFoundService.createAdminAction(Number(itemid), actionRequestData);
     navigate('/lostandfound');
   };
 
