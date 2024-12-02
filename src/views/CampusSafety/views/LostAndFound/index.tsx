@@ -209,241 +209,250 @@ const LostAndFound = () => {
       </Grid>
 
       {/* Active Missing Item Reports */}
-      <Grid container justifyContent="center" spacing={3} marginTop={3}>
-        <Grid item xs={12} sm={10}>
-          <Card className={styles.card}>
-            <CardContent>
-              <Typography variant="h5" align="center">
-                My Active <span className={styles.missingText}>Missing</span> Item Reports
-              </Typography>
-              {/* Render header row only on large screens */}
-              {width >= 900 && (
-                <Grid container spacing={2} className={styles.headerRow}>
-                  <Grid item xs={2.5}>
-                    <Typography align="center">Date Lost</Typography>
-                  </Grid>
-                  <Grid item xs={2.5}>
-                    <Typography align="center">Location</Typography>
-                  </Grid>
-                  <Grid item xs={2.5}>
-                    <Typography align="center">Category</Typography>
-                  </Grid>
-                  <Grid item xs={2.5}>
-                    <Typography align="center">Description</Typography>
-                  </Grid>
-                  <Grid item xs={2}>
-                    <Typography align="center">Actions</Typography>
-                  </Grid>
-                </Grid>
-              )}
-              {/* Active Reports */}
-              {activeReports.map((report) => (
-                <Card
-                  className={`${styles.dataRow} ${width < 900 ? styles.mobileDataRow : ''}`}
-                  key={report.recordID}
-                >
-                  <CardContent>
-                    <Grid container spacing={2} alignItems="center">
-                      {width < 900 ? (
-                        <>
-                          {/* Display two items per row on mobile */}
-                          <Grid item xs={6}>
-                            <Typography align="center">{formatDate(report.dateLost)}</Typography>
-                          </Grid>
-                          <Grid item xs={6}>
-                            <Typography align="center">
-                              {report.locationLost.length > 15
-                                ? report.locationLost.slice(0, 15) + '...'
-                                : report.locationLost}
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={6}>
-                            <Typography align="center">{report.category}</Typography>
-                          </Grid>
-                          <Grid item xs={6} className={styles.actionsRow}>
-                            <IconButton
-                              onClick={() => handleEdit(report.recordID?.toString() || '')}
-                              size="small"
-                            >
-                              <Edit fontSize="small" />
-                            </IconButton>
-                            <IconButton
-                              onClick={() => handleDeleteClick(report.recordID?.toString() || '')}
-                              size="small"
-                            >
-                              <Delete fontSize="small" />
-                            </IconButton>
-                            <IconButton
-                              onClick={() => toggleExpand(report.recordID?.toString() || '')}
-                              size="small"
-                            >
-                              {expanded[report.recordID?.toString() || ''] ? (
-                                <ExpandLess />
-                              ) : (
-                                <ExpandMore />
-                              )}
-                            </IconButton>
-                          </Grid>
-                        </>
-                      ) : (
-                        // Desktop layout
-                        <>
-                          {renderReportContent(report)}
-                          <Grid item xs={0.5}>
-                            <IconButton
-                              onClick={() => handleEdit(report.recordID?.toString() || '')}
-                              size="small"
-                            >
-                              <Edit fontSize="small" />
-                            </IconButton>
-                          </Grid>
-                          <Grid item xs={0.5}>
-                            <IconButton
-                              onClick={() => handleDeleteClick(report.recordID?.toString() || '')}
-                              size="small"
-                            >
-                              <Delete fontSize="small" />
-                            </IconButton>
-                          </Grid>
-                        </>
-                      )}
+      {activeReports.length > 0 && (
+        <Grid container justifyContent="center" spacing={3} marginTop={3}>
+          <Grid item xs={12} sm={10}>
+            <Card className={styles.card}>
+              <CardContent>
+                <Typography variant="h5" align="center">
+                  My Active <span className={styles.missingText}>Missing</span> Item Reports
+                </Typography>
+                {/* Render header row only on large screens */}
+                {width >= 900 && (
+                  <Grid container spacing={2} className={styles.headerRow}>
+                    <Grid item xs={2.5}>
+                      <Typography align="center">Date Lost</Typography>
                     </Grid>
-                    {width < 900 && expanded[report.recordID?.toString() || ''] && (
-                      <Collapse
-                        in={expanded[report.recordID?.toString() || '']}
-                        timeout="auto"
-                        unmountOnExit
-                      >
-                        <Grid container spacing={1} marginTop={1}>
-                          <Grid item xs={12}>
-                            <Typography variant="body2" align="center">
-                              <strong>Full Location:</strong> {report.locationLost}
-                            </Typography>
+                    <Grid item xs={2.5}>
+                      <Typography align="center">Location</Typography>
+                    </Grid>
+                    <Grid item xs={2.5}>
+                      <Typography align="center">Category</Typography>
+                    </Grid>
+                    <Grid item xs={2.5}>
+                      <Typography align="center">Description</Typography>
+                    </Grid>
+                    <Grid item xs={2}>
+                      <Typography align="center">Actions</Typography>
+                    </Grid>
+                  </Grid>
+                )}
+                {/* Active Reports */}
+                {activeReports.map((report) => (
+                  <Card
+                    className={`${styles.dataRow} ${width < 900 ? styles.mobileDataRow : ''}`}
+                    key={report.recordID}
+                  >
+                    <CardContent>
+                      <Grid container spacing={2} alignItems="center">
+                        {width < 900 ? (
+                          <>
+                            {/* Display two items per row on mobile */}
+                            <Grid item xs={6}>
+                              <Typography align="center">{formatDate(report.dateLost)}</Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Typography align="center">
+                                {report.locationLost.length > 15
+                                  ? report.locationLost.slice(0, 15) + '...'
+                                  : report.locationLost}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Typography align="center">{report.category}</Typography>
+                            </Grid>
+                            <Grid item xs={6} className={styles.actionsRow}>
+                              <IconButton
+                                onClick={() => handleEdit(report.recordID?.toString() || '')}
+                                size="small"
+                              >
+                                <Edit fontSize="small" />
+                              </IconButton>
+                              <IconButton
+                                onClick={() => handleDeleteClick(report.recordID?.toString() || '')}
+                                size="small"
+                              >
+                                <Delete fontSize="small" />
+                              </IconButton>
+                              <IconButton
+                                onClick={() => toggleExpand(report.recordID?.toString() || '')}
+                                size="small"
+                              >
+                                {expanded[report.recordID?.toString() || ''] ? (
+                                  <ExpandLess />
+                                ) : (
+                                  <ExpandMore />
+                                )}
+                              </IconButton>
+                            </Grid>
+                          </>
+                        ) : (
+                          // Desktop layout
+                          <>
+                            {renderReportContent(report)}
+                            <Grid item xs={0.5}>
+                              <IconButton
+                                onClick={() => handleEdit(report.recordID?.toString() || '')}
+                                size="small"
+                              >
+                                <Edit fontSize="small" />
+                              </IconButton>
+                            </Grid>
+                            <Grid item xs={0.5}>
+                              <IconButton
+                                onClick={() => handleDeleteClick(report.recordID?.toString() || '')}
+                                size="small"
+                              >
+                                <Delete fontSize="small" />
+                              </IconButton>
+                            </Grid>
+                          </>
+                        )}
+                      </Grid>
+                      {width < 900 && expanded[report.recordID?.toString() || ''] && (
+                        <Collapse
+                          in={expanded[report.recordID?.toString() || '']}
+                          timeout="auto"
+                          unmountOnExit
+                        >
+                          <Grid container spacing={1} marginTop={1}>
+                            <Grid item xs={12}>
+                              <Typography variant="body2" align="center">
+                                <strong>Full Location:</strong> {report.locationLost}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Typography variant="body2" align="center">
+                                <strong>Description:</strong> {report.description}
+                              </Typography>
+                            </Grid>
                           </Grid>
-                          <Grid item xs={12}>
-                            <Typography variant="body2" align="center">
-                              <strong>Description:</strong> {report.description}
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </Collapse>
-                    )}
-                  </CardContent>
-                </Card>
-              ))}
-            </CardContent>
-          </Card>
+                        </Collapse>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
+      )}
       <DeleteConfirmationModal
         open={isDeleteModalOpen}
         onClose={handleModalClose}
         onSubmit={handleModalSubmit}
       />
       {/* Past Missing Item Reports */}
-      <Grid container justifyContent="center" spacing={3} marginTop={3}>
-        <Grid item xs={12} sm={10}>
-          <Card className={styles.card}>
-            <CardContent>
-              <Typography variant="h5" align="center">
-                My <span className={styles.missingText}>Past</span> Reports
-              </Typography>
-              {/* Render header row only on large screens */}
-              {width >= 900 && (
-                <Grid container spacing={2} className={styles.headerRow}>
-                  <Grid item xs={2.5}>
-                    <Typography align="center">Date Lost</Typography>
-                  </Grid>
-                  <Grid item xs={2.5}>
-                    <Typography align="center">Location</Typography>
-                  </Grid>
-                  <Grid item xs={2.5}>
-                    <Typography align="center">Category</Typography>
-                  </Grid>
-                  <Grid item xs={2.5}>
-                    <Typography align="center">Description</Typography>
-                  </Grid>
-                  <Grid item xs={2}>
-                    <Typography align="center">Status</Typography>
-                  </Grid>
-                </Grid>
-              )}
-              {/* Past Reports */}
-              {pastReports.map((report) => (
-                <Card
-                  className={`${styles.pastDataRow} ${width < 900 ? styles.mobilePastDataRow : ''}`}
-                  key={report.recordID}
-                >
-                  <CardContent>
-                    <Grid container spacing={2} alignItems="center" justifyContent="space-between">
-                      {width < 900 ? (
-                        <>
-                          {/* Display two items per row on mobile */}
-                          <Grid item xs={6}>
-                            <Typography align="center">{formatDate(report.dateLost)}</Typography>
-                          </Grid>
-                          <Grid item xs={6}>
-                            <Typography align="center">
-                              {report.locationLost.length > 15
-                                ? report.locationLost.slice(0, 15) + '...'
-                                : report.locationLost}
-                            </Typography>
-                          </Grid>
-                          <Grid item xs={6}>
-                            <Typography align="center">{report.category}</Typography>
-                          </Grid>
-                          <Grid item xs={6}>
-                            <Typography align="center">{report.status}</Typography>
-                          </Grid>
-                          <Grid item xs={12} style={{ textAlign: 'center' }}>
-                            <IconButton
-                              onClick={() => toggleExpand(report.recordID?.toString() || '')}
-                              size="small"
-                            >
-                              {expanded[report.recordID?.toString() || ''] ? (
-                                <ExpandLess />
-                              ) : (
-                                <ExpandMore />
-                              )}
-                            </IconButton>
-                          </Grid>
-                        </>
-                      ) : (
-                        <>
-                          {renderReportContent(report)}
-                          <Grid item xs={2}>
-                            <Typography align="center">{report.status}</Typography>
-                          </Grid>
-                        </>
-                      )}
+      {pastReports.length > 0 && (
+        <Grid container justifyContent="center" spacing={3} marginTop={3}>
+          <Grid item xs={12} sm={10}>
+            <Card className={styles.card}>
+              <CardContent>
+                <Typography variant="h5" align="center">
+                  My <span className={styles.missingText}>Past</span> Reports
+                </Typography>
+                {/* Render header row only on large screens */}
+                {width >= 900 && (
+                  <Grid container spacing={2} className={styles.headerRow}>
+                    <Grid item xs={2.5}>
+                      <Typography align="center">Date Lost</Typography>
                     </Grid>
-                    {width < 900 && expanded[report.recordID?.toString() || ''] && (
-                      <Collapse
-                        in={expanded[report.recordID?.toString() || '']}
-                        timeout="auto"
-                        unmountOnExit
+                    <Grid item xs={2.5}>
+                      <Typography align="center">Location</Typography>
+                    </Grid>
+                    <Grid item xs={2.5}>
+                      <Typography align="center">Category</Typography>
+                    </Grid>
+                    <Grid item xs={2.5}>
+                      <Typography align="center">Description</Typography>
+                    </Grid>
+                    <Grid item xs={2}>
+                      <Typography align="center">Status</Typography>
+                    </Grid>
+                  </Grid>
+                )}
+                {/* Past Reports */}
+                {pastReports.map((report) => (
+                  <Card
+                    className={`${styles.pastDataRow} ${width < 900 ? styles.mobilePastDataRow : ''}`}
+                    key={report.recordID}
+                  >
+                    <CardContent>
+                      <Grid
+                        container
+                        spacing={2}
+                        alignItems="center"
+                        justifyContent="space-between"
                       >
-                        <Grid container spacing={1} marginTop={1}>
-                          <Grid item xs={12}>
-                            <Typography variant="body2" align="center">
-                              <strong>Full Location:</strong> {report.locationLost}
-                            </Typography>
+                        {width < 900 ? (
+                          <>
+                            {/* Display two items per row on mobile */}
+                            <Grid item xs={6}>
+                              <Typography align="center">{formatDate(report.dateLost)}</Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Typography align="center">
+                                {report.locationLost.length > 15
+                                  ? report.locationLost.slice(0, 15) + '...'
+                                  : report.locationLost}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Typography align="center">{report.category}</Typography>
+                            </Grid>
+                            <Grid item xs={6}>
+                              <Typography align="center">{report.status}</Typography>
+                            </Grid>
+                            <Grid item xs={12} style={{ textAlign: 'center' }}>
+                              <IconButton
+                                onClick={() => toggleExpand(report.recordID?.toString() || '')}
+                                size="small"
+                              >
+                                {expanded[report.recordID?.toString() || ''] ? (
+                                  <ExpandLess />
+                                ) : (
+                                  <ExpandMore />
+                                )}
+                              </IconButton>
+                            </Grid>
+                          </>
+                        ) : (
+                          <>
+                            {renderReportContent(report)}
+                            <Grid item xs={2}>
+                              <Typography align="center">{report.status}</Typography>
+                            </Grid>
+                          </>
+                        )}
+                      </Grid>
+                      {width < 900 && expanded[report.recordID?.toString() || ''] && (
+                        <Collapse
+                          in={expanded[report.recordID?.toString() || '']}
+                          timeout="auto"
+                          unmountOnExit
+                        >
+                          <Grid container spacing={1} marginTop={1}>
+                            <Grid item xs={12}>
+                              <Typography variant="body2" align="center">
+                                <strong>Full Location:</strong> {report.locationLost}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Typography variant="body2" align="center">
+                                <strong>Description:</strong> {report.description}
+                              </Typography>
+                            </Grid>
                           </Grid>
-                          <Grid item xs={12}>
-                            <Typography variant="body2" align="center">
-                              <strong>Description:</strong> {report.description}
-                            </Typography>
-                          </Grid>
-                        </Grid>
-                      </Collapse>
-                    )}
-                  </CardContent>
-                </Card>
-              ))}
-            </CardContent>
-          </Card>
+                        </Collapse>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
+      )}
     </>
   );
 };
