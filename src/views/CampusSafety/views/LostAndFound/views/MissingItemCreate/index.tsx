@@ -20,6 +20,8 @@ import ReportStolenModal from './components/reportStolen';
 import ConfirmReport from './components/confirmReport';
 import GordonSnackbar from 'components/Snackbar';
 import { useNavigate } from 'react-router';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 
 const MissingItemFormCreate = () => {
   const navigate = useNavigate();
@@ -154,7 +156,7 @@ const MissingItemFormCreate = () => {
       const requestData = {
         ...formData,
         ...user,
-        dateLost: formData.dateLost || DateTime.now().toISO(),
+        dateLost: new Date(formData.dateLost).toISOString() || DateTime.now().toISO(),
         dateCreated: DateTime.now().toISO(),
         colors: formData.colors || [],
         submitterUsername: user.AD_Username,
@@ -167,6 +169,67 @@ const MissingItemFormCreate = () => {
       createSnackbar(`Failed to create the missing item report.`, `error`);
     }
   };
+
+  // Using DatePicker component from MUI/x, with custom styling to fix dark mode contrast issues
+  const customDatePicker = (
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <DatePicker
+        label="Date Lost"
+        value={formData.dateLost === '' ? null : formData.dateLost}
+        onChange={(value) => setFormData({ ...formData, dateLost: value?.toString() || '' })}
+        disableFuture
+        orientation="portrait"
+        name="Date Lost"
+        // Custom styling for the input field, to make it look like filled variant
+        sx={{
+          backgroundColor: 'var(--mui-palette-FilledInput-bg);',
+          paddingTop: '7px;',
+          borderRadius: '5px;',
+          width: '100%;',
+          '& .Mui-focused .MuiOutlinedInput-notchedOutline': { border: 'none' },
+          '& .MuiInputLabel-shrink': {
+            transform: 'translate(14px, 4px) scale(0.75);',
+          },
+          '& .MuiFormLabel-root.Mui-focused': {
+            color: 'var(--mui-palette-secondary-main);',
+          },
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderWidth: '0;',
+            borderBottom:
+              '1px solid rgba(var(--mui-palette-common-onBackgroundChannel) / var(--mui-opacity-inputUnderline));',
+            borderRadius: '0;',
+          },
+        }}
+        // Custom styling for popup box, better dark mode contrast
+        // Thanks to help for understanding from
+        // https://blog.openreplay.com/styling-and-customizing-material-ui-date-pickers/
+        slotProps={{
+          layout: {
+            sx: {
+              '& .MuiPickersLayout-contentWrapper .Mui-selected': {
+                backgroundColor: 'var(--mui-palette-secondary-400);',
+              },
+              '.MuiPickersLayout-contentWrapper .MuiPickersDay-root:focus.Mui-selected': {
+                backgroundColor: 'var(--mui-palette-secondary-400);',
+              },
+              '.MuiPickersLayout-contentWrapper .MuiPickersDay-root.Mui-selected': {
+                backgroundColor: 'var(--mui-palette-secondary-400);',
+              },
+            },
+          },
+          actionBar: {
+            sx: {
+              ...{
+                '& .MuiButtonBase-root': {
+                  color: 'var(--mui-palette-secondary-400);',
+                },
+              },
+            },
+          },
+        }}
+      />
+    </LocalizationProvider>
+  );
 
   return (
     <>
@@ -296,6 +359,11 @@ const MissingItemFormCreate = () => {
                   onChange={handleChange}
                   error={!!validationErrors.brand}
                   helperText={validationErrors.brand}
+                  sx={{
+                    '& .MuiFormLabel-root.Mui-focused': {
+                      color: 'var(--mui-palette-secondary-400);',
+                    },
+                  }}
                 />
               </Grid>
               <Grid item margin={2}>
@@ -310,6 +378,11 @@ const MissingItemFormCreate = () => {
                   onChange={handleChange}
                   error={!!validationErrors.description}
                   helperText={validationErrors.description}
+                  sx={{
+                    '& .MuiFormLabel-root.Mui-focused': {
+                      color: 'var(--mui-palette-secondary-400);',
+                    },
+                  }}
                 />
               </Grid>
 
@@ -326,22 +399,15 @@ const MissingItemFormCreate = () => {
                   onChange={handleChange}
                   error={!!validationErrors.locationLost}
                   helperText={validationErrors.locationLost}
+                  sx={{
+                    '& .MuiFormLabel-root.Mui-focused': {
+                      color: 'var(--mui-palette-secondary-400);',
+                    },
+                  }}
                 />
               </Grid>
               <Grid item margin={2}>
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  label={'Date Lost'}
-                  InputLabelProps={{ shrink: true }}
-                  name="dateLost"
-                  type="date"
-                  value={formData.dateLost}
-                  onChange={handleChange}
-                  inputProps={{
-                    max: DateTime.now().toISODate(), // Restrict to today or past dates
-                  }}
-                />
+                {customDatePicker}
               </Grid>
             </Grid>
           </Grid>
