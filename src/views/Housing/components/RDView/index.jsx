@@ -1,6 +1,18 @@
-import { Card, CardContent, Box, CardHeader, Grid, useMediaQuery } from '@mui/material';
+import {
+  Card,
+  CardContent,
+  Box,
+  CardHeader,
+  Grid,
+  useMediaQuery,
+  ListItemText,
+  List,
+  ListItem,
+  Link,
+  Typography,
+} from '@mui/material';
 import CustomizedTable from './components/OnDutyTable';
-import EditDocs from './components/EditDocs';
+import { Link as RouterLink } from 'react-router-dom';
 import BasicSelect from './components/MobileView';
 
 const RDView = () => {
@@ -63,7 +75,50 @@ const RDView = () => {
             className="gc360_header"
           />
           <CardContent>
-            <EditDocs />
+            <Typography>
+              <List>
+                {/*<ListItem>*/}
+                {/*  <Grid>*/}
+                {/*    <ListItemText primary="RA/AC Task List" />*/}
+                {/*  </Grid>*/}
+                {/*  <Grid item>*/}
+                {/*    <UpdateTasks />*/}
+                {/*  </Grid>*/}
+                {/*</ListItem>*/}
+
+                <ListItem>
+                  <Link
+                    component={RouterLink}
+                    to="/RoomRanges"
+                    underline="hover"
+                    className="gc360_text_link"
+                  >
+                    <ListItemText primary="Room Ranges" />
+                  </Link>
+                </ListItem>
+
+                <ListItem>
+                  <Link
+                    href="https://groups.gordon.edu"
+                    underline="hover"
+                    className="gc360_text_link"
+                    target="_blank"
+                  >
+                    <ListItemText primary="RA/AC Access" />
+                  </Link>
+                </ListItem>
+                <ListItem>
+                  <Link
+                    href="https://www.microsoft.com/en-us/microsoft-365/sharepoint/collaboration"
+                    underline="hover"
+                    className="gc360_text_link"
+                    target="_blank"
+                  >
+                    <ListItemText primary="Sharepoint" />
+                  </Link>
+                </ListItem>
+              </List>
+            </Typography>
           </CardContent>
         </Card>
       </Grid>

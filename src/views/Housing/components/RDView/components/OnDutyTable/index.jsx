@@ -54,10 +54,17 @@ const formatPhoneNumber = (phoneNumber) => {
   if (!phoneNumber || phoneNumber.length !== 10) return phoneNumber;
   return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6)}`;
 };
+
 // format the photo, RA name, and RA profile link into an item for the table
 const makeRAPhoto = (item) => (
   <Box textAlign="center">
-    <StyledLink href={item.RA_Profile_Link} target="_blank" rel="noopener noreferrer">
+    <StyledLink
+      href={item.RA_Profile_Link}
+      underline="hover"
+      className="gc360_text_link"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
       <Avatar
         src={item.RA_Photo || 'https://placehold.jp/150x150.png'}
         alt={`${item.RA_Name}'s profile`}
@@ -104,7 +111,13 @@ const OnDutyTable = () => {
           hall: item.Hall_Name,
           onDutyPhoto: makeRAPhoto(item),
           preferredContact: item.PreferredContact.includes('http') ? (
-            <StyledLink href={item.PreferredContact} target="_blank" rel="noopener noreferrer">
+            <StyledLink
+              href={item.PreferredContact}
+              underline="hover"
+              className="gc360_text_link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Teams
             </StyledLink>
           ) : (
@@ -115,7 +128,13 @@ const OnDutyTable = () => {
             minute: '2-digit',
           }),
           hallRD: (
-            <StyledLink href={item.RD_Profile_Link} target="_blank" rel="noopener noreferrer">
+            <StyledLink
+              href={item.RD_Profile_Link}
+              underline="hover"
+              className="gc360_text_link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {item.RD_Name}
             </StyledLink>
           ),
