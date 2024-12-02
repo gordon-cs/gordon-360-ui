@@ -1,6 +1,32 @@
-import { Avatar, Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Avatar, Card, CardContent, CardHeader, Grid, Link, Typography } from '@mui/material';
+import { useUser } from 'hooks';
+import { fetchOnDutyRA } from 'services/residentLife/RA_OnCall';
+
+// Default image
+const COLOR_80808026_1X1 =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNsUAMAASwAqHb28sMAAAAASUVORK5CYII=';
 
 const OnDuty = () => {
+  const [onDutyRaInfo, setOnDutyRaInfo] = useState({});
+  const { profile } = useUser();
+
+  useEffect(() => {
+    if (profile) {
+      const hallID = profile.OnCampusBuilding;
+
+      fetchOnDutyRA(hallID).then((response) => {
+        setOnDutyRaInfo(response);
+        console.log('On Duty RA Info:', response);
+      });
+    }
+  }, [profile]);
+
+  // Show loading state if profile is not yet loaded
+  if (!profile) {
+    return <Typography>Loading...</Typography>;
+  }
+
   return (
     <Card>
       <CardHeader
@@ -20,20 +46,29 @@ const OnDuty = () => {
           {/* Text Section */}
           <Grid item xs={8}>
             <Typography variant="body1">
-              <strong>Name:</strong>
+              <Link
+                href={onDutyRaInfo.RA_Profile_Link}
+                className="gc360_text_link"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                <strong>Name:</strong> {onDutyRaInfo.RA_Name}
+              </Link>
+            </Typography>
+
+            <Typography variant="body1">
+              <strong>Room #:</strong> {onDutyRaInfo.RoomNumber}
             </Typography>
             <Typography variant="body1">
-              <strong>Room #:</strong>
-            </Typography>
-            <Typography variant="body1">
-              <strong>Phone:</strong>
+              <strong>Contact:</strong> {onDutyRaInfo.PreferredContact}
             </Typography>
           </Grid>
 
           {/* Avatar Section */}
           <Grid item xs={4}>
             <Avatar
-              src={'defaultProfilePicture.png'}
+              src={onDutyRaInfo.RA_Photo || COLOR_80808026_1X1}
               alt="Profile"
               sx={{
                 width: { xs: 80, sm: 110, md: 80, lg: 120 },
