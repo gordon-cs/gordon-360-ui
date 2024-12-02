@@ -10,6 +10,7 @@ import {
   Checkbox,
   Button,
   FormLabel,
+  Typography,
 } from '@mui/material';
 import { DateTime } from 'luxon';
 import Header from 'views/CampusSafety/components/Header';
@@ -20,6 +21,7 @@ import ReportStolenModal from './components/reportStolen';
 import ConfirmReport from './components/confirmReport';
 import GordonSnackbar from 'components/Snackbar';
 import { useNavigate } from 'react-router';
+import { InfoOutlined } from '@mui/icons-material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 
@@ -73,6 +75,18 @@ const MissingItemFormCreate = () => {
     };
 
     fetchUserData();
+  }, []);
+
+  // Catch browser reloads, and show warning message about unsaved changes.
+  useEffect(() => {
+    function handleBeforeUnload(event: BeforeUnloadEvent) {
+      event.preventDefault();
+      return (event.returnValue = '');
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload, { capture: true });
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload, { capture: true });
+    };
   }, []);
 
   const requiredFields = ['category', 'description', 'locationLost'];
@@ -251,10 +265,27 @@ const MissingItemFormCreate = () => {
       ) : (
         <Card className={styles.form_card}>
           <CardHeader
-            title={<b>Report a Missing Item</b>}
+            title={
+              <b>
+                Report a <u>Lost</u> Item
+              </b>
+            }
             titleTypographyProps={{ align: 'center' }}
             className="gc360_header"
           />
+          <div className={styles.disclaimer}>
+            <InfoOutlined />
+            <Grid container item rowGap={1}>
+              <Grid item xs={12}>
+                <Typography variant="body1">Gordon Police manages campus Lost & Found</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="body2">
+                  Police staff will view reports, and you will be notified if your item is found.
+                </Typography>
+              </Grid>
+            </Grid>
+          </div>
           <Grid container justifyContent="center">
             <Grid item sm={5} xs={12}>
               {/* Item Category */}

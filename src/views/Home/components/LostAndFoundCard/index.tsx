@@ -1,40 +1,47 @@
 import {
-  Box,
   Button,
   Card,
   CardContent,
   CardHeader,
-  Collapse,
   Grid,
-  IconButton,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import lostAndFoundService from 'services/lostAndFound';
 import styles from '../../../../views/CampusSafety/views/LostAndFound/LostAndFound.module.css'; // Import the external CSS
+import customStyles from './LostAndFoundCard.module.scss';
 import { MissingItemReport } from 'services/lostAndFound'; // Import the type from the service
 import { DateTime } from 'luxon';
-import { useWindowSize } from 'hooks';
+import { Launch, NotListedLocation, WhereToVote } from '@mui/icons-material';
+import GordonLoader from 'components/Loader';
 
 const formatDate = (date: string) => {
-  return DateTime.fromISO(date).toFormat('MM-dd-yyyy'); // Adjust format as needed
+  return DateTime.fromISO(date).toFormat('MM/dd/yy'); // Adjust format as needed
 };
 
 const noReports = (
   <Grid item alignItems="center">
     <br />
-    <Typography variant="h5" align="center">
-      No Missing Items Reported Yet
+    <Typography variant="body1" align="center">
+      No active lost item reports.{' '}
+      <Link to="/lostandfound/missingitemreport" className="gc360_text_link">
+        Report a lost item <Launch />
+      </Link>
     </Typography>
     <br />
   </Grid>
 );
 
 const LostAndFoundCard = () => {
-  const [activeReports, setActiveReports] = useState<MissingItemReport[]>([]);
+  const [activeReports, setActiveReports] = useState<MissingItemReport[] | null>(null);
+  const [countNotIncluded, setCountNotIncluded] = useState<number>(0);
   const [loading, setLoading] = useState(true);
-  const [width] = useWindowSize();
+  const navigate = useNavigate();
+  const isMobile = useMediaQuery('(max-width:375px)');
+
+  const numReportsToDisplay = 4;
 
   useEffect(() => {
     const fetchMissingItems = async () => {
@@ -43,7 +50,7 @@ const LostAndFoundCard = () => {
         const reports: MissingItemReport[] = await lostAndFoundService.getMissingItemReportUser();
 
         // Map the reports into active and past reports
-        const active = reports
+        var active = reports
           .filter((report) => report.status === 'active') // Filter for non-found items
           .sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime())
           .map((report) => ({
@@ -51,35 +58,80 @@ const LostAndFoundCard = () => {
             colors: report.colors || [], // Ensure colors is an array
           }));
 
+        // Trim reports down to 3 reports
+        if (active.length > numReportsToDisplay) {
+          setCountNotIncluded(active.length - numReportsToDisplay);
+          active = active.slice(0, numReportsToDisplay);
+        }
+
         setActiveReports(active);
       } catch (error) {
         console.error('Error fetching missing items:', error);
+        setActiveReports([]);
       } finally {
         setLoading(false);
       }
     };
     fetchMissingItems();
-  });
+  }, []);
 
-  const renderReportContent = (report: MissingItemReport) => (
-    <>
-      <Grid item xs={width >= 900 ? 4 : 12}>
-        <Typography align="center">{formatDate(report.dateLost)}</Typography>
-      </Grid>
-      <Grid item xs={width >= 900 ? 4 : 12}>
-        <Typography
-          align="center"
-          style={{ cursor: report.locationLost.length > 15 ? 'pointer' : 'default' }}
-        >
-          {report.locationLost.length <= 15
-            ? report.locationLost
-            : `${report.locationLost.slice(0, 15)}...`}
-        </Typography>
-      </Grid>
-      <Grid item xs={width >= 900 ? 4 : 12}>
-        <Typography align="center">{report.category}</Typography>
-      </Grid>
-    </>
+  // The row labelling the column names for the report grid
+  const reportHeader = () => (
+    <Card>
+      <CardHeader
+        className={`gc360_header ${styles.headerPadding}`}
+        title={
+          <Grid container className={styles.headerText}>
+            <Grid item xs={5} sm={4}>
+              <Typography>Date Lost</Typography>
+            </Grid>
+            {!isMobile ? (
+              <Grid item xs={4}>
+                <Typography>Location</Typography>
+              </Grid>
+            ) : null}
+            <Grid item xs={3} sm={4}>
+              <Typography>Category</Typography>
+            </Grid>
+          </Grid>
+        }
+      />
+    </Card>
+  );
+
+  // Component defining each row of the report grid
+  const reportRow = (report: MissingItemReport) => (
+    <Card
+      className={`${styles.dataRow} ${
+        report.status.toLowerCase() === 'active' ? styles.clickableRow : ''
+      }`}
+    >
+      <CardContent
+        className={styles.dataContent}
+        sx={{
+          '&:last-child': {
+            paddingBottom: '0px', // Remove the bottom padding on the row card
+          },
+        }}
+        onClick={() => {
+          navigate('/lostandfound');
+        }}
+      >
+        <Grid container>
+          <Grid item xs={5} sm={4} className={styles.alignData}>
+            <div className={styles.dataCell}>{formatDate(report.dateLost)}</div>
+          </Grid>
+          {!isMobile ? (
+            <Grid item xs={4} className={styles.alignData}>
+              <div className={styles.dataCell}>{report.locationLost}</div>
+            </Grid>
+          ) : null}
+          <Grid item xs={3} sm={4} className={styles.alignData}>
+            <div>{report.category}</div>
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
   );
 
   return (
@@ -90,14 +142,15 @@ const LostAndFoundCard = () => {
             <Grid item xs={7}>
               Lost and Found
             </Grid>
-            <Grid item xs={5}>
-              <Button variant="contained" color="secondary" component={Link} to="/LostAndFound">
-                Lost and Found Page
-              </Button>
+            <Grid container direction="row" justifyContent={'flex-end'} item xs={5}>
+              <Launch color="secondary" />
             </Grid>
           </Grid>
         }
-        className="gc360_header"
+        onClick={() => {
+          navigate('/lostandfound');
+        }}
+        className={`gc360_header ${customStyles.linkHeader}`}
       />
       <CardContent>
         <Grid container direction="row" justifyContent="space-between">
@@ -108,119 +161,51 @@ const LostAndFoundCard = () => {
               component={Link}
               to="/lostandfound/missingitemform"
             >
+              {' '}
+              <NotListedLocation />
               Report Lost
             </Button>
           </Grid>
-          <Grid item xs={6}>
+          <Grid container item xs={6} direction="row" justifyContent={'flex-end'}>
             <Button
               variant="contained"
               color="secondary"
               component={Link}
               to="/lostandfound/reportfound"
             >
+              <WhereToVote />
               Report Found
             </Button>
           </Grid>
         </Grid>
-        {activeReports?.length < 1
-          ? noReports
-          : width >= 900 && (
-              <Grid container spacing={2} className={styles.headerRow}>
-                <Grid item xs={4}>
-                  <Typography align="center">Date Lost</Typography>
-                </Grid>
-                <Grid item xs={4}>
-                  <Typography align="center">Location Lost</Typography>
-                </Grid>
-                <Grid item xs={4}>
-                  <Typography align="center">Description</Typography>
-                </Grid>
-              </Grid>
-            )}
-        {activeReports?.length > 3 ? (
-          <>
-            {activeReports.slice(0, 3).map((report) => (
-              <>
-                <Link to="/lostandfound">
-                  <Card
-                    className={`${styles.dataRow} ${width < 900 ? styles.mobileDataRow : ''}`}
-                    key={report.recordID}
-                  >
-                    <CardContent>
-                      <Grid container spacing={2} alignItems="center">
-                        {width < 900 ? (
-                          <>
-                            {/* Display two items per row on mobile */}
-                            <Grid item xs={3}>
-                              <Typography align="center">{formatDate(report.dateLost)}</Typography>
-                            </Grid>
-                            <Grid item xs={3}>
-                              <Typography align="center">
-                                {report.locationLost.length > 15
-                                  ? report.locationLost.slice(0, 15) + '...'
-                                  : report.locationLost}
-                              </Typography>
-                            </Grid>
-                            <Grid item xs={3}>
-                              <Typography align="center">{report.category}</Typography>
-                            </Grid>
-                          </>
-                        ) : (
-                          // Desktop layout
-                          <>{renderReportContent(report)}</>
-                        )}
-                      </Grid>
-                    </CardContent>
-                  </Card>
-                </Link>
-              </>
-            ))}
-            <Grid item alignItems="center">
-              <br />
-              <Typography variant="h5" align="center">
-                {activeReports.length - 3} more item(s) not shown.
-              </Typography>
-              <br />
-            </Grid>
-          </>
+        <Card>
+          <CardHeader title="My Reports" />
+        </Card>
+        {loading || activeReports === null ? (
+          <GordonLoader />
         ) : (
-          activeReports.map((report) => (
-            <Link to="/lostandfound">
-              <Card
-                className={`${styles.dataRow} ${width < 900 ? styles.mobileDataRow : ''}`}
-                key={report.recordID}
-              >
-                <CardContent>
-                  <Grid container spacing={2} alignItems="center">
-                    {width < 900 ? (
-                      <>
-                        {/* Display two items per row on mobile */}
-                        <Grid item xs={3}>
-                          <Typography align="center">{formatDate(report.dateLost)}</Typography>
-                        </Grid>
-                        <Grid item xs={3}>
-                          <Typography align="center">
-                            {report.locationLost.length > 15
-                              ? report.locationLost.slice(0, 15) + '...'
-                              : report.locationLost}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={3}>
-                          <Typography align="center">{report.category}</Typography>
-                        </Grid>
-                      </>
-                    ) : (
-                      // Desktop layout
-                      <>{renderReportContent(report)}</>
-                    )}
-                  </Grid>
-                </CardContent>
-              </Card>
-            </Link>
-          ))
+          <>
+            {activeReports?.length < 1 ? noReports : reportHeader()}
+            {activeReports.map((report) => reportRow(report))}
+            {countNotIncluded > 0 ? (
+              <>
+                <Card>
+                  <CardContent>
+                    <Typography>
+                      {countNotIncluded} more report{countNotIncluded > 1 ? 's' : null} not shown{' '}
+                      <Link to="/lostandfound" className="gc360_text_link">
+                        View All <Launch />
+                      </Link>
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </>
+            ) : null}
+          </>
         )}
       </CardContent>
     </Card>
   );
 };
+
 export default LostAndFoundCard;

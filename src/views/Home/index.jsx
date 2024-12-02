@@ -28,11 +28,13 @@ const Home = () => {
         <Grid item xs={12} md={5}>
           <DiningBalance />
         </Grid>
-        <Grid item xs={12} md={5}>
-          <LostAndFoundCard />
-        </Grid>
-        <Grid item xs={12} md={5}>
-          <NewsCard />
+        <Grid container item xs={12} md={5}>
+          <Grid item xs={12}>
+            <LostAndFoundCard />
+          </Grid>
+          <Grid item xs={12}>
+            <NewsCard />
+          </Grid>
         </Grid>
       </Grid>
     );
