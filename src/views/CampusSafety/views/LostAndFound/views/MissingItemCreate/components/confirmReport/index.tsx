@@ -48,7 +48,7 @@ const ConfirmReport: React.FC<ConfirmReportProps> = ({ formData, onEdit, onSubmi
               <strong>Item Brand/Make:</strong> {formData.brand || 'N/A'}
             </Typography>
             <Typography>
-              <strong>Date Lost:</strong> {formData.dateLost}
+              <strong>Date Lost:</strong> {new Date(formData.dateLost).toDateString()}
             </Typography>
           </Grid>
           <Grid item xs={6}>

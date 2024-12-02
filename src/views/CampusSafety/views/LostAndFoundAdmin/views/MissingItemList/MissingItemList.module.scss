@@ -72,7 +72,9 @@
 .clickableRow {
   cursor: pointer;
   transition: background-color 0.2s;
-
+  &:nth-child(even) {
+    background-color: var(--mui-palette-neutral-100); // Slightly darker neutral for zebra striping
+  }
   &:hover {
     background-color: var(--mui-palette-primary-light); // Light hover effect
   }

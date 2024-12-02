@@ -9,53 +9,57 @@ const ReportFound = () => {
   return (
     <>
       <Header />
-      <Card>
-        <CardHeader
-          title={
-            <b>
-              Report a <u>Found</u> Item
-            </b>
-          }
-          titleTypographyProps={{ align: 'center' }}
-          className="gc360_header"
-        />
-        <CardContent>
-          <Typography>If you've found an item somewhere on campus:</Typography>
-          <ul>
-            <li>Please bring it to either:</li>
-            <ul>
-              <li>
-                <Typography>
-                  <LocalPolice /> Gordon Police
-                </Typography>
-              </li>
-              <li>
-                <Typography>
-                  <LocalLibrary /> Jenks Library, circulation desk
-                </Typography>
-              </li>
-            </ul>
-          </ul>
-          <Typography>So they can attempt to contact the owner</Typography>
-          <br />
+      <Grid container justifyContent="center">
+        <Grid item xs={12} sm={10}>
+          <Card>
+            <CardHeader
+              title={
+                <b>
+                  Report a <u>Found</u> Item
+                </b>
+              }
+              titleTypographyProps={{ align: 'center' }}
+              className="gc360_header"
+            />
+            <CardContent>
+              <Typography>If you've found an item somewhere on campus:</Typography>
+              <ul>
+                <li>Please bring it to either:</li>
+                <ul>
+                  <li>
+                    <Typography>
+                      <LocalPolice /> Gordon Police
+                    </Typography>
+                  </li>
+                  <li>
+                    <Typography>
+                      <LocalLibrary /> Jenks Library, circulation desk
+                    </Typography>
+                  </li>
+                </ul>
+              </ul>
+              <Typography>So they can attempt to contact the owner</Typography>
+              <br />
 
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => {
-              navigate('/lostandfound');
-            }}
-          >
-            Back to Lost and Found
-          </Button>
-          <br />
-          <br />
-          <Typography>Questions?</Typography>
-          <li>
-            Contact Gordon Polce: <u>978-867-4444</u>
-          </li>
-        </CardContent>
-      </Card>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => {
+                  navigate('/lostandfound');
+                }}
+              >
+                Back to Lost and Found
+              </Button>
+              <br />
+              <br />
+              <Typography>Questions?</Typography>
+              <li>
+                Contact Gordon Polce: <u>978-867-4444</u>
+              </li>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
     </>
   );
 };
