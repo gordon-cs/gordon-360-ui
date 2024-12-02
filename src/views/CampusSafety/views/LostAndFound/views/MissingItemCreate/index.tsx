@@ -232,8 +232,17 @@ const MissingItemFormCreate = () => {
                     ))}
                   </FormGroup>
                 </Grid>
+                {/* Error Message */}
+                <Grid item>
+                  <TextField
+                    variant="standard"
+                    error={!!validationErrors.category}
+                    helperText={validationErrors.category || ' '} // Show error message or keep space consistent
+                    fullWidth
+                    InputProps={{ style: { display: 'none' } }} // Hide the actual TextField input
+                  />
+                </Grid>
               </Grid>
-
               {/* Item Colors */}
               <Grid item margin={2} className={styles.box_background}>
                 <FormGroup>
