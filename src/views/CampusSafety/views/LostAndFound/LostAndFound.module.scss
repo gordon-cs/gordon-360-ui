@@ -1,132 +1,72 @@
-.card {
-  margin: 0.7rem;
-  border-radius: 8px;
-}
-
-/* Title styling */
-.title {
-  text-align: center;
-  padding: 1rem;
-  background-color: var(--mui-palette-primary-main);
-  color: var(--mui-palette-primary-contrastText);
+.disclaimer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 1.5rem;
 }
 
 /* Styling for colored text */
-.gordonText {
-  color: var(--mui-palette-warning-main); /* Applying specific color for "Gordon" */
-}
-
-.missingText {
+.yellowText {
   color: var(--mui-palette-warning-main); /* Applying specific color for "Missing" */
-}
-
-/* Styling for the header row (Date Lost, Location, etc.) */
-.headerRow {
-  margin-top: 10px;
-  background-color: var(--mui-palette-primary-main);
-  color: var(--mui-palette-primary-contrastText);
-  padding: 10px 0;
 }
 
 /* Data row background color */
 .dataRow {
-  background-color: var(--mui-palette-neutral-light);
-  margin-bottom: 10px;
-  padding: 0.5rem;
-  border-radius: 5px;
+  padding: 0;
+  transition: background-color 0.5s;
+  &:nth-child(odd) {
+    background-color: var(--mui-palette-neutral-100); // Slightly darker neutral for zebra striping
+  }
 }
 
-/* Past Reports Data Row */
-.pastDataRow {
-  background-color: var(--mui-palette-neutral-light);
-  margin-bottom: 10px;
-  padding: 0.5rem;
-  border-radius: 5px;
+.clickableRow {
+  cursor: pointer;
+  &:hover {
+    background-color: var(--mui-palette-primary-light); // Light hover effect
+  }
 }
 
-/* Button styles for hover and padding */
-.reportButton {
-  background-color: var(--mui-palette-info-main);
-  color: var(--mui-palette-primary-contrastText);
-  padding: 10px 30px;
-  font-size: 1rem;
-  text-transform: uppercase;
+.headerPadding {
+  padding-top: 6px;
+  padding-bottom: 6px;
 }
 
-.reportButton:hover {
-  background-color: var(--mui-palette-info-dark);
+.headerText {
+  color: var(--mui-palette-neutral-400);
 }
 
-/* Button alignment */
-.buttonLeft {
+.rowPadding {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.dataContent {
+  padding-top: 0px;
+}
+
+.alignData {
+  min-height: 2rem;
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5px 0;
 }
 
-.buttonRight {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
+.dataCell {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-right: 0.5rem;
 }
 
-/* Mobile-specific styling for Active Reports */
-.mobileDataRow {
-  padding: 0.3rem 0.5rem;
-  margin-bottom: 8px;
-  .MuiTypography-root {
-    font-size: 0.8rem;
-    line-height: 1.1;
-  }
-  .MuiIconButton-root {
-    padding: 2px;
-  }
-  .actionsRow {
-    display: flex;
-    justify-content: space-between;
-  }
-}
-
-/* Mobile-specific styling for Past Reports */
-.mobilePastDataRow {
-  padding: 0.3rem 0.5rem;
-  margin-bottom: 8px;
-  .MuiTypography-root {
-    font-size: 0.8rem;
-    line-height: 1.1;
-  }
-  .MuiIconButton-root {
-    padding: 2px;
-  }
-  .actionsRow {
-    display: flex;
-    justify-content: space-between;
-  }
+.wrapText {
+  overflow-wrap: break-word;
 }
 
 /* Responsive Styling */
-@media (max-width: 600px) {
-  .dataRow,
-  .pastDataRow {
-    padding: 0.3rem 0.5rem;
-    margin-bottom: 8px;
-  }
-
-  .dataRow .MuiTypography-root,
-  .pastDataRow .MuiTypography-root {
-    font-size: 0.85rem;
-    line-height: 1.1;
-  }
-
-  .title h4 {
-    font-size: 1.5rem;
-  }
-  .reportButton {
-    font-size: 0.9rem;
-    padding: 8px 20px;
-  }
-  .headerRow {
-    flex-direction: column;
-    text-align: left;
+@media (max-width: 900px) {
+  .dataRow {
+    border-radius: 0;
+    border-bottom: 0.5px solid var(--mui-palette-neutral-contrastText);
   }
 }

@@ -12,7 +12,15 @@ const ReportFound = () => {
       <Grid container justifyContent="center">
         <Grid item xs={12} sm={10}>
           <Card>
-            <CardHeader title={'Report a Found Item'} className="gc360_header" />
+            <CardHeader
+              title={
+                <b>
+                  Report a <u>Found</u> Item
+                </b>
+              }
+              titleTypographyProps={{ align: 'center' }}
+              className="gc360_header"
+            />
             <CardContent>
               <Typography>If you've found an item somewhere on campus:</Typography>
               <ul>
