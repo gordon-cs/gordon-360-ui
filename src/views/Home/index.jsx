@@ -7,6 +7,7 @@ import Carousel from './components/Carousel';
 import DiningBalance from './components/DiningBalance';
 import GuestWelcome from './components/GuestWelcome';
 import NewsCard from './components/NewsCard';
+import LostAndFoundCard from './components/LostAndFoundCard';
 import DaysLeft from './components/DaysLeft';
 const Home = () => {
   const { profile, loading } = useUser();
@@ -27,8 +28,13 @@ const Home = () => {
         <Grid item xs={12} md={5}>
           <DiningBalance />
         </Grid>
-        <Grid item xs={12} md={5}>
-          <NewsCard />
+        <Grid container item xs={12} md={5}>
+          <Grid item xs={12}>
+            <LostAndFoundCard />
+          </Grid>
+          <Grid item xs={12}>
+            <NewsCard />
+          </Grid>
         </Grid>
       </Grid>
     );

@@ -1,0 +1,72 @@
+.disclaimer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 1.5rem;
+}
+
+/* Styling for colored text */
+.yellowText {
+  color: var(--mui-palette-warning-main); /* Applying specific color for "Missing" */
+}
+
+/* Data row background color */
+.dataRow {
+  padding: 0;
+  transition: background-color 0.5s;
+  &:nth-child(odd) {
+    background-color: var(--mui-palette-neutral-100); // Slightly darker neutral for zebra striping
+  }
+}
+
+.clickableRow {
+  cursor: pointer;
+  &:hover {
+    background-color: var(--mui-palette-primary-light); // Light hover effect
+  }
+}
+
+.headerPadding {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.headerText {
+  color: var(--mui-palette-neutral-400);
+}
+
+.rowPadding {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.dataContent {
+  padding-top: 0px;
+}
+
+.alignData {
+  min-height: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5px 0;
+}
+
+.dataCell {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-right: 0.5rem;
+}
+
+.wrapText {
+  overflow-wrap: break-word;
+}
+
+/* Responsive Styling */
+@media (max-width: 900px) {
+  .dataRow {
+    border-radius: 0;
+    border-bottom: 0.5px solid var(--mui-palette-neutral-contrastText);
+  }
+}

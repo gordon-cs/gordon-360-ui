@@ -1,0 +1,94 @@
+.filterTitle {
+  color: var(--mui-palette-primary-contrastText); // Warning color for emphasis
+  background-color: var(--mui-palette-primary-main); // Primary color for header
+}
+
+.filterTitleText {
+  font-size: medium;
+  b {
+    font-size: x-large;
+  }
+}
+
+.filterContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  color: var(--mui-palette-primary-contrastText); // Contrast text color for readability
+  padding: 1rem;
+  border-radius: 5px;
+}
+
+.textField {
+  flex-grow: 1;
+}
+
+.formControl {
+  min-width: 120px;
+}
+
+.cardHeader {
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
+  padding: 1rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.listContainer {
+  padding: 0rem;
+}
+
+.tableHeader {
+  // display: flex;
+  // justify-content: space-between;
+  padding: 1rem;
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
+  font-weight: bold;
+}
+
+.reportRow {
+  display: flex;
+  align-items: center;
+  height: 6rem;
+  min-height: fit-content;
+  padding: 1rem;
+  // background-color: var(--mui-palette-neutral-200); // Light neutral background
+  border-bottom: 1px solid var(--mui-palette-neutral-400);
+  color: var(--mui-palette-neutral-contrastText);
+
+  &:nth-child(even) {
+    background-color: var(--mui-palette-neutral-100); // Slightly darker neutral for zebra striping
+  }
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.clickableRow {
+  cursor: pointer;
+  transition: background-color 0.2s;
+  &:nth-child(even) {
+    background-color: var(--mui-palette-neutral-100); // Slightly darker neutral for zebra striping
+  }
+  &:hover {
+    background-color: var(--mui-palette-primary-light); // Light hover effect
+  }
+}
+
+.dataCell {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-right: 0.5rem;
+}
+
+.stolenBadge {
+  margin-top: 0.3rem;
+  background-color: var(--mui-palette-error-main); // Error color for stolen badge
+  color: var(--mui-palette-primary-contrastText);
+}

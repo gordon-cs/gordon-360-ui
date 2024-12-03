@@ -1,0 +1,92 @@
+@import '../../../../../../../../vars';
+
+.newActionModal {
+  padding-top: 10px;
+  width: 70vw;
+  max-width: 100%;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.backButton {
+  align-self: start;
+  background-color: var(--mui-palette-error-light); // Uses NauticalRed for "back" button
+  color: var(--mui-palette-primary-contrastText); // White text
+  &:hover {
+    background-color: var(--mui-palette-error-main); // Uses ChristmasRed on hover
+  }
+  margin-bottom: 1rem;
+}
+
+.card {
+  width: 100%;
+  background-color: var(
+    --mui-palette-background-paper
+  ); // DarkGray for dark mode, light background for light mode
+  color: var(--mui-palette-text-primary); // Adjusts text color based on theme
+}
+
+.actionsCard {
+  padding: 0;
+}
+
+.title {
+  text-align: center;
+}
+
+.yellowText {
+  color: var(--mui-palette-warning-main);
+}
+
+.stolenButton {
+  padding: 0.7rem;
+  border-radius: 10px;
+  background-color: var(--mui-palette-error-main); // ChristmasRed for stolen indicator
+  color: var(--mui-palette-error-contrastText); // White text
+  font-weight: bold;
+}
+
+.tableHeader {
+  height: 30px;
+}
+
+.tableRow {
+  height: 30px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  &:nth-child(odd) {
+    background-color: var(--mui-palette-neutral-100); // Slightly darker neutral for zebra striping
+  }
+  &:hover {
+    background-color: var(--mui-palette-primary-light); // Light hover effect
+  }
+}
+
+.tableColumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.actionsHeader {
+  text-align: center;
+}
+
+.dataCell {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-right: 0.5rem;
+  height: fit-content;
+}
+
+@media (max-width: 768px) {
+  .categoryGroup,
+  .checkboxGroup {
+    grid-template-columns: 1fr;
+  }
+}
