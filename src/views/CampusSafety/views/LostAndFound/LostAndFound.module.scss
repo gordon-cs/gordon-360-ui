@@ -19,6 +19,13 @@
   }
 }
 
+.dataFoundRow {
+  padding: 0;
+  transition: background-color 0.5s;
+  background-color: var(--mui-palette-success-main);
+  color: var(--mui-palette-success-contrastText);
+}
+
 .clickableRow {
   cursor: pointer;
   &:hover {

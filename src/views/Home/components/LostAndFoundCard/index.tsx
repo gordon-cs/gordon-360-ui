@@ -44,6 +44,7 @@ const LostAndFoundCard = () => {
   const isMobile = useMediaQuery('(max-width:375px)');
 
   const numReportsToDisplay = 4;
+  const numFoundReportsToDisplay = 1;
 
   useEffect(() => {
     const fetchMissingItems = async () => {
@@ -76,8 +77,13 @@ const LostAndFoundCard = () => {
           setCountNotIncluded(0);
           setActiveReports(active);
         }
-
-        setFoundReports(found);
+        if (found.length > numFoundReportsToDisplay) {
+          //setCountNotIncluded(found.length - numFoundReportsToDisplay);
+          setFoundReports(found.slice(0, numFoundReportsToDisplay));
+        } else {
+          //setCountNotIncluded(0);
+          setFoundReports(found);
+        }
       } catch (error) {
         console.error('Error fetching missing items:', error);
         setActiveReports([]);
@@ -116,9 +122,9 @@ const LostAndFoundCard = () => {
   // Component defining each row of the report grid
   const reportRow = (report: MissingItemReport, isFoundSection: boolean = false) => (
     <Card
-      className={`${styles.dataRow} ${
-        isFoundSection && report.status.toLowerCase() === 'found' ? customStyles.foundRow : ''
-      } ${styles.clickableRow}`}
+      className={`${isFoundSection && report.status.toLowerCase() === 'found' ? styles.dataFoundRow : styles.dataRow} ${
+        styles.clickableRow
+      }`}
     >
       <CardContent
         className={styles.dataContent}

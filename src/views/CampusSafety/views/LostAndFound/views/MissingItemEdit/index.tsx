@@ -366,7 +366,7 @@ const MissingItemFormEdit = () => {
                     {customDatePicker}
                     {formData.status.toLowerCase() === 'found' && (
                       <Box className={styles.notificationBox}>
-                        <Typography variant="body2" color="primary">
+                        <Typography variant="inherit" color="var(--mui-palette-secondary-400);">
                           Check your email for an update about your item.
                         </Typography>
                       </Box>
