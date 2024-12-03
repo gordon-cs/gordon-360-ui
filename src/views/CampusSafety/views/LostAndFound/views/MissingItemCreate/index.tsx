@@ -345,7 +345,7 @@ const MissingItemFormCreate = () => {
                   </FormLabel>
                 </FormGroup>
                 <Grid item className={styles.checkbox_group}>
-                  <FormGroup>
+                  <FormGroup className={styles.color_group}>
                     {[
                       'Black',
                       'Blue',
