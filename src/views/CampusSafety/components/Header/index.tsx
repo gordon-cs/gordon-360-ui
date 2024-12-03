@@ -50,7 +50,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
     let indexToGet;
     let formattedName;
     if (isNaN(parseInt(substring))) {
-      let searchString;
+      let searchString: string;
       searchString = substring;
       // Find the route ending with the substring
       indexToGet = routes.findIndex((value) => {
