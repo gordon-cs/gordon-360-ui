@@ -1,5 +1,4 @@
 import { NavigationClient, NavigationOptions } from '@azure/msal-browser';
-import { ReactJSXElement } from '@emotion/react/types/jsx-namespace';
 import { NavigateFunction } from 'react-router-dom';
 
 /**
