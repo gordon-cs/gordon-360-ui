@@ -25,7 +25,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 
 const MissingItemFormEdit = () => {
   const navigate = useNavigate();
-  const { itemid } = useParams<{ itemid: string }>();
+  const { itemId } = useParams<{ itemId: string }>();
   const [loading, setLoading] = useState<boolean>(true);
 
   const [user, setUser] = useState({
@@ -80,8 +80,8 @@ const MissingItemFormEdit = () => {
 
   useEffect(() => {
     const fetchItemData = async () => {
-      if (itemid) {
-        const item = await lostAndFoundService.getMissingItemReport(parseInt(itemid));
+      if (itemId) {
+        const item = await lostAndFoundService.getMissingItemReport(parseInt(itemId));
         setFormData({
           reportID: item?.recordID || 0,
           category: item.category,
@@ -98,7 +98,7 @@ const MissingItemFormEdit = () => {
       }
     };
     fetchItemData();
-  }, [itemid]);
+  }, [itemId]);
 
   useEffect(() => {
     if (formData.reportID > 0) {
@@ -127,7 +127,7 @@ const MissingItemFormEdit = () => {
       dateLost: new Date(formData.dateLost).toISOString() || DateTime.now().toISO(),
       forGuest: false,
     };
-    await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemid || ''));
+    await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemId || ''));
     navigate('/lostandfound');
   };
 

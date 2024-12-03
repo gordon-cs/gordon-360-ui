@@ -8,6 +8,7 @@ import {
 import styles from './Header.module.css';
 import { useAuthGroups } from 'hooks';
 import { AuthGroup } from 'services/auth';
+import { CampusSafetyRoutes } from 'views/CampusSafety';
 
 // Define the props for CampusSafetyBreadcrumb
 type CampusSafetyBreadcrumbProps = {
@@ -35,10 +36,41 @@ type HeaderProps = {
 const Header: React.FC<HeaderProps> = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const pathname = location.pathname;
   const pathnames = location.pathname.split('/').filter((x) => x);
   const isAdmin = useAuthGroups(AuthGroup.LostAndFoundDevelopers);
   // const isAdmin = true; //FOR TESTING ONLY
   const isKiosk = useAuthGroups(AuthGroup.LostAndFoundKiosk);
+
+  const formatPathnameSubstring = (substring: string) => {
+    // Find the path in the routes corresponding to the current peice of the path.
+    const origRoutes = Object.keys(CampusSafetyRoutes);
+    const routes = Object.keys(CampusSafetyRoutes);
+
+    let indexToGet;
+    let formattedName;
+    if (isNaN(parseInt(substring))) {
+      let searchString;
+      searchString = substring;
+      // Find the route ending with the substring
+      indexToGet = routes.findIndex((value) => {
+        return value.split('/').slice(-1)[0] === searchString;
+      });
+      // Get the formatted name from the routes.
+      formattedName = CampusSafetyRoutes[origRoutes[indexToGet]]?.formattedName;
+    } else if (pathname.includes('admin')) {
+      formattedName =
+        CampusSafetyRoutes['/lostandfoundadmin/missingitemdatabase/:itemId'].formattedName;
+    } else {
+      formattedName = CampusSafetyRoutes['/:itemId'].formattedName;
+    }
+
+    if (formattedName) {
+      formattedName = formattedName.replace('~', substring);
+      return formattedName;
+    }
+    return substring;
+  };
 
   return (
     <>
@@ -92,7 +124,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
 
               return (
                 <LostAndFoundBreadcrumb key={to} link={!isLast ? to : null}>
-                  {value.replace(/-/g, ' ')}
+                  {formatPathnameSubstring(value)}
                 </LostAndFoundBreadcrumb>
               );
             })}
