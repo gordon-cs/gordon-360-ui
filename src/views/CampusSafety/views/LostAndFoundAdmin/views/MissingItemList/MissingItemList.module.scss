@@ -87,8 +87,7 @@
   padding-right: 0.5rem;
 }
 
-.stolenBadge {
+.chip {
   margin-top: 0.3rem;
-  background-color: var(--mui-palette-error-main); // Error color for stolen badge
-  color: var(--mui-palette-primary-contrastText);
+  margin-right: 5px;
 }

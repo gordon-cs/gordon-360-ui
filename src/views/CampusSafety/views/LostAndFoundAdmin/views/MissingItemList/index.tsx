@@ -149,6 +149,23 @@ const MissingItemList = () => {
     }
   };
 
+  const statusChip = (report: MissingItemReport) => {
+    return (
+      <Chip
+        label={report.status[0].toUpperCase() + report.status.slice(1)}
+        //@ts-ignore
+        color={
+          report.status.toLowerCase() === 'active'
+            ? 'secondary'
+            : report.status.toLowerCase() === 'found'
+              ? 'success'
+              : 'primary'
+        }
+        className={styles.chip}
+      />
+    );
+  };
+
   return (
     <>
       <Header />
@@ -331,9 +348,12 @@ const MissingItemList = () => {
                           <Typography variant="body2" color="textSecondary">
                             Category: {report.category}
                           </Typography>
-                          {report.stolen && (
-                            <Chip label="Stolen" color="error" className={styles.stolenBadge} />
-                          )}
+                          <Grid item xs={12}>
+                            {statusChip(report)}
+                            {report.stolen && (
+                              <Chip label="Stolen" color="error" className={styles.chip} />
+                            )}
+                          </Grid>
                         </CardContent>
                       </Card>
                     ) : (
@@ -370,9 +390,10 @@ const MissingItemList = () => {
                             {displayLastCheckedDate(report)}
                           </Typography>
                         </Grid>
-                        <Grid item xs={1} style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <Grid item xs={12}>
+                          {statusChip(report)}
                           {report.stolen && (
-                            <Chip label="Stolen" color="error" className={styles.stolenBadge} />
+                            <Chip label="Stolen" color="error" className={styles.chip} />
                           )}
                         </Grid>
                       </Grid>
