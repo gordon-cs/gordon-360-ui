@@ -35,18 +35,10 @@ const App = () => {
     setDrawerOpen((o) => !o);
   };
 
-  const Wrapper = ({ children }) => {
-    const location = useLocation();
-
-    useLayoutEffect(() => {
-      // Scroll to the top of the page when the route changes
-      if (mainRef.current) {
-        mainRef.current.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-      }
-    }, [location.pathname]);
-
-    return children;
-  };
+  useLayoutEffect(() => {
+    // Scroll to the top of the page whenever the route changes
+    mainRef.current?.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [location.pathname]);
 
   return (
     <ErrorBoundary>
@@ -55,13 +47,11 @@ const App = () => {
       <main className={styles.app_main} ref={mainRef}>
         <BirthdayMessage />
         <AppRedirect />
-        <Wrapper>
-          <Routes>
-            {routes.map((route) => (
-              <Route key={route.path} path={route.path} element={route.element} />
-            ))}
-          </Routes>
-        </Wrapper>
+        <Routes>
+          {routes.map((route) => (
+            <Route key={route.path} path={route.path} element={route.element} />
+          ))}
+        </Routes>
       </main>
     </ErrorBoundary>
   );
