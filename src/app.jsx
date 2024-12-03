@@ -26,8 +26,8 @@ const App = () => {
   // Setup custom navigation so that MSAL uses react-router for navigation
   const { instance } = useMsal();
   const navigate = useNavigate();
-  const navigaitonClient = new CustomNavigationClient(navigate);
-  instance.setNavigationClient(navigaitonClient);
+  const navigationClient = new CustomNavigationClient(navigate);
+  instance.setNavigationClient(navigationClient);
 
   const [drawerOpen, setDrawerOpen] = useState();
 
@@ -35,9 +35,9 @@ const App = () => {
     setDrawerOpen((o) => !o);
   };
 
+  // Scroll to the top of the page whenever the route changes
   useLayoutEffect(() => {
-    // Scroll to the top of the page whenever the route changes
-    mainRef.current?.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    mainRef.current?.scrollTo({ top: 0, behavior: 'instant' });
   }, [location.pathname]);
 
   return (
