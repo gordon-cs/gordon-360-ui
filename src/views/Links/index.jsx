@@ -24,9 +24,11 @@ import CallIcon from '@mui/icons-material/Call';
 import ReportIcon from '@mui/icons-material/Report';
 import styles from '/src/views/Links/Links.module.scss';
 import { useNavigate } from 'react-router';
+import { useUser } from 'hooks';
 
 const Links = () => {
   const navigate = useNavigate();
+  const { profile } = useUser();
 
   // Academics Resources UI
   const academicsCard = (
@@ -283,6 +285,7 @@ const Links = () => {
                   <Button
                     color="secondary"
                     variant="contained"
+                    disabled={!profile}
                     onClick={() => {
                       navigate('/lostandfound');
                     }}
