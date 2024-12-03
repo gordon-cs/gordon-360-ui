@@ -11,6 +11,7 @@ import {
   FormControl,
   InputLabel,
   CardHeader,
+  AppBar,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import lostAndFoundService, { MissingItemReport } from 'services/lostAndFound';
@@ -171,8 +172,8 @@ const MissingItemList = () => {
       <Header />
       {/* Filter Bar */}
       <Grid container justifyContent="center" spacing={2} marginBottom={2}>
-        <Grid item xs={11}>
-          <Card>
+        <Grid item xs={12} md={11}>
+          <Card className={styles.filterCardPosition}>
             <CardHeader
               title={
                 <span className={styles.filterTitleText}>
@@ -280,38 +281,48 @@ const MissingItemList = () => {
       </Grid>
 
       {/* Reports Table */}
+      {!isMobile && (
+        // Header row for larger screens, sticky to the top of the screen on scroll
+        <AppBar className={styles.stickyHeader}>
+          <Grid container className={styles.tableHeader} justifyContent={'center'}>
+            <Grid container item xs={11.85}>
+              <Grid item xs={2}>
+                Date Lost
+              </Grid>
+              <Grid item xs={2}>
+                Owner's Name
+              </Grid>
+              <Grid item xs={2}>
+                Location
+              </Grid>
+              <Grid item xs={1.5}>
+                Category
+              </Grid>
+              <Grid item xs={3}>
+                Description
+              </Grid>
+              <Grid item xs={1} className={styles.noWrap}>
+                Last Checked
+              </Grid>
+              <Grid item xs={1}></Grid>
+            </Grid>
+          </Grid>
+        </AppBar>
+      )}
       <Grid container justifyContent="center" spacing={2}>
-        <Grid item xs={11}>
-          <Card>
+        <Grid item xs={12}>
+          <Card className={styles.listCard}>
             <CardContent className={styles.listContainer}>
+              {!isMobile && (
+                // Size Placeholder for sticky header for Larger Screens
+                <Grid container className={styles.headerPlaceholder}>
+                  <Grid item xs={2} className={styles.verticalSpacer}></Grid>
+                </Grid>
+              )}
               {loading ? (
                 <GordonLoader />
               ) : (
                 <>
-                  {!isMobile && (
-                    // Header Row for Larger Screens
-                    <Grid container className={styles.tableHeader}>
-                      <Grid item xs={2}>
-                        Date Lost
-                      </Grid>
-                      <Grid item xs={2}>
-                        Owner's Name
-                      </Grid>
-                      <Grid item xs={2}>
-                        Location
-                      </Grid>
-                      <Grid item xs={1.5}>
-                        Category
-                      </Grid>
-                      <Grid item xs={3}>
-                        Description
-                      </Grid>
-                      <Grid item xs={1}>
-                        Last Checked
-                      </Grid>
-                      <Grid item xs={1}></Grid>
-                    </Grid>
-                  )}
                   {filteredReports.map((report, index) =>
                     isMobile ? (
                       // Mobile Layout
