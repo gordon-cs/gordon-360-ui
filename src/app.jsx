@@ -2,7 +2,7 @@ import { useMsal } from '@azure/msal-react';
 import AppRedirect from 'components/AppRedirect';
 import BirthdayMessage from 'components/BirthdayMessage';
 import { useWatchSystemColorScheme } from 'hooks';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { CustomNavigationClient } from 'services/NavigationClient';
@@ -26,13 +26,26 @@ const App = () => {
   // Setup custom navigation so that MSAL uses react-router for navigation
   const { instance } = useMsal();
   const navigate = useNavigate();
-  const navigaitonClient = new CustomNavigationClient(navigate, mainRef);
+  const navigaitonClient = new CustomNavigationClient(navigate);
   instance.setNavigationClient(navigaitonClient);
 
   const [drawerOpen, setDrawerOpen] = useState();
 
   const onDrawerToggle = () => {
     setDrawerOpen((o) => !o);
+  };
+
+  const Wrapper = ({ children }) => {
+    const location = useLocation();
+
+    useLayoutEffect(() => {
+      // Scroll to the top of the page when the route changes
+      if (mainRef.current) {
+        mainRef.current.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      }
+    }, [location.pathname]);
+
+    return children;
   };
 
   return (
@@ -42,11 +55,13 @@ const App = () => {
       <main className={styles.app_main} ref={mainRef}>
         <BirthdayMessage />
         <AppRedirect />
-        <Routes>
-          {routes.map((route) => (
-            <Route key={route.path} path={route.path} element={route.element} />
-          ))}
-        </Routes>
+        <Wrapper>
+          <Routes>
+            {routes.map((route) => (
+              <Route key={route.path} path={route.path} element={route.element} />
+            ))}
+          </Routes>
+        </Wrapper>
       </main>
     </ErrorBoundary>
   );
