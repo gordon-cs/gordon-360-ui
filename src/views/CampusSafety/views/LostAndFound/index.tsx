@@ -25,6 +25,7 @@ import { MissingItemReport } from 'services/lostAndFound'; // Import the type fr
 import DeleteConfirmationModal from './components/DeleteConfirmation';
 import { DateTime } from 'luxon';
 import { useWindowSize } from 'hooks';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 const formatDate = (date: string) => {
   return DateTime.fromISO(date).toFormat('MM-dd-yyyy'); // Adjust format as needed
@@ -48,7 +49,7 @@ const LostAndFound = () => {
 
         // Map the reports into active and past reports
         const active = reports
-          .filter((report) => report.status === 'active') // Filter for non-found items
+          .filter((report) => report.status === 'active' || report.status.toLowerCase() === 'found') // Filter for non-found items
           .sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime())
           .map((report) => ({
             ...report,
@@ -56,7 +57,7 @@ const LostAndFound = () => {
           }));
 
         const past = reports
-          .filter((report) => report.status !== 'active') // Filter for found items
+          .filter((report) => report.status !== 'active' && report.status.toLowerCase() !== 'found') // Filter for found items
           .sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime())
           .map((report) => ({
             ...report,
@@ -231,7 +232,9 @@ const LostAndFound = () => {
   const reportRow = (report: MissingItemReport) => (
     <Card
       className={`${styles.dataRow} ${
-        report.status.toLowerCase() === 'active' ? styles.clickableRow : ''
+        report.status.toLowerCase() === 'active' || report.status.toLowerCase() === 'found'
+          ? styles.clickableRow
+          : ''
       }`}
     >
       <Tooltip title="Click to view and edit">
@@ -253,7 +256,8 @@ const LostAndFound = () => {
                   xs={11.5}
                   columnGap={1}
                   onClick={
-                    report.status.toLowerCase() === 'active'
+                    report.status.toLowerCase() === 'active' ||
+                    report.status.toLowerCase() === 'found'
                       ? () => handleEdit(report.recordID?.toString() || '')
                       : () => {}
                   }
@@ -275,6 +279,14 @@ const LostAndFound = () => {
                     <div className={styles.dataCell}>{report.description}</div>
                   </Grid>
                 </Grid>
+                {/* Show notification for "found" status */}
+                {report.status.toLowerCase() === 'found' && (
+                  <Grid item xs={0.2}>
+                    <Typography>
+                      <NotificationsIcon color="warning" />
+                    </Typography>
+                  </Grid>
+                )}
                 {report.status.toLowerCase() === 'active' ? (
                   <>
                     <Grid container item xs={0.5} justifyContent="flex-end">
@@ -296,11 +308,11 @@ const LostAndFound = () => {
                       </Grid>
                     </Grid>
                   </>
-                ) : null}{' '}
+                ) : null}
               </Grid>
             </>
           ) : (
-            /*Desktop View*/
+            /* Desktop View */
             <Grid container>
               <Grid
                 container
@@ -308,7 +320,8 @@ const LostAndFound = () => {
                 xs={11.5}
                 className={styles.rowPadding}
                 onClick={
-                  report.status.toLowerCase() === 'active'
+                  report.status.toLowerCase() === 'active' ||
+                  report.status.toLowerCase() === 'found'
                     ? () => handleEdit(report.recordID?.toString() || '')
                     : () => {}
                 }
@@ -326,6 +339,15 @@ const LostAndFound = () => {
                   <div className={styles.dataCell}>{report.description}</div>
                 </Grid>
               </Grid>
+              {/* Show notification for "found" status */}
+              {report.status.toLowerCase() === 'found' && (
+                <Grid item xs={0.2}>
+                  <Typography>
+                    <i>Found</i>
+                    <NotificationsIcon color="warning" />
+                  </Typography>
+                </Grid>
+              )}
               {report.status.toLowerCase() === 'active' ? (
                 <>
                   <Grid container item xs={0.5} justifyContent="flex-end" columnGap={1}>

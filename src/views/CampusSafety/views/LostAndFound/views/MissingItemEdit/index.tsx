@@ -11,6 +11,7 @@ import {
   Button,
   FormLabel,
   Typography,
+  Box,
 } from '@mui/material';
 import { DateTime } from 'luxon';
 import Header from 'views/CampusSafety/components/Header';
@@ -117,6 +118,22 @@ const MissingItemFormEdit = () => {
 
   const handleFormSubmit = () => {
     setShowConfirm(true);
+  };
+
+  const handlePickup = async () => {
+    const requestData = {
+      ...formData,
+      submitterUsername: user.AD_Username,
+      forGuest: false,
+      status: 'PickedUp', // Change status to 'pickup'
+    };
+
+    try {
+      await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemid || ''));
+      navigate('/lostandfound');
+    } catch (error) {
+      console.error('Error updating report status:', error);
+    }
   };
 
   const handleReportSubmit = async () => {
@@ -347,6 +364,13 @@ const MissingItemFormEdit = () => {
                   </Grid>
                   <Grid item margin={2}>
                     {customDatePicker}
+                    {formData.status.toLowerCase() === 'found' && (
+                      <Box className={styles.notificationBox}>
+                        <Typography variant="body2" color="primary">
+                          Check your email for an update about your item.
+                        </Typography>
+                      </Box>
+                    )}
                   </Grid>
                   {formData.stolen ? (
                     <>
@@ -377,8 +401,25 @@ const MissingItemFormEdit = () => {
                 </Grid>
               </Grid>
 
-              <Grid container justifyContent="flex-end" className={styles.submit_container}>
-                <Grid item xs={2}>
+              <Grid
+                container
+                spacing={2}
+                justifyContent="center"
+                className={styles.submit_container}
+              >
+                {formData.status.toLowerCase() === 'found' && (
+                  <Grid item xs={12} sm={5} md={2}>
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      className={styles.pickup_button}
+                      onClick={handlePickup}
+                    >
+                      Pickup Item
+                    </Button>
+                  </Grid>
+                )}
+                <Grid item xs={12} sm={5} md={2}>
                   <Button
                     variant="contained"
                     fullWidth

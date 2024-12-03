@@ -197,6 +197,7 @@ const MissingItemList = () => {
                           <MenuItem value="expired">Expired</MenuItem>
                           <MenuItem value="found">Found</MenuItem>
                           <MenuItem value="deleted">Deleted</MenuItem>
+                          <MenuItem value="PickedUp">PickedUp</MenuItem>
                         </Select>
                       </FormControl>
                     </Grid>

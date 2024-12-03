@@ -35,14 +35,16 @@
 
 .submit_container {
   margin: 1rem 0;
-  padding-right: 5rem;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  gap: 1rem;
 }
 
+.pickup_button,
 .submit_button {
-  font-size: 1.2rem;
-  padding: 0.7rem;
+  font-size: 1rem;
+  padding: 0.8rem;
+  text-transform: uppercase;
 }
 
 .icon {
@@ -75,9 +77,9 @@
     padding-right: 0rem;
   }
 
+  .pickup_button,
   .submit_button {
-    font-size: 1rem;
-    padding: 1rem;
-    min-width: fit-content;
+    font-size: 0.9rem;
+    padding: 0.7rem;
   }
 }
