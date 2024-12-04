@@ -363,26 +363,28 @@ const LostAndFound = () => {
       {titleCard()}
 
       {/* Active Missing Item Reports */}
-      <Grid container justifyContent="center" spacing={3} marginTop={3}>
-        <Grid item xs={12} md={10}>
-          <Card>
-            <CardHeader
-              className="gc360_header"
-              title={
-                <Typography variant="h5" align="center">
-                  My Active <span className={styles.yellowText}>Lost</span> Item Reports
-                </Typography>
-              }
-            />
-          </Card>
+      {activeReports.length > 0 && (
+        <Grid container justifyContent="center" spacing={3} marginTop={3}>
+          <Grid item xs={12} md={10}>
+            <Card>
+              <CardHeader
+                className="gc360_header"
+                title={
+                  <Typography variant="h5" align="center">
+                    My Active <span className={styles.yellowText}>Lost</span> Item Reports
+                  </Typography>
+                }
+              />
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={10}>
+            {/* Render header row only on large screens */}
+            {reportHeader()}
+            {/* Active Reports */}
+            {activeReports.map((report) => reportRow(report))}
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={10}>
-          {/* Render header row only on large screens */}
-          {reportHeader()}
-          {/* Active Reports */}
-          {activeReports.map((report) => reportRow(report))}
-        </Grid>
-      </Grid>
+      )}
       <DeleteConfirmationModal
         open={isDeleteModalOpen}
         onClose={handleModalClose}
@@ -390,26 +392,28 @@ const LostAndFound = () => {
       />
 
       {/* Past Missing Item Reports */}
-      <Grid container justifyContent="center" spacing={3} marginTop={3}>
-        <Grid item xs={12} md={10}>
-          <Card>
-            <CardHeader
-              className="gc360_header"
-              title={
-                <Typography variant="h6" align="left">
-                  My Past Reports
-                </Typography>
-              }
-            />
-          </Card>
+      {pastReports.length > 0 && (
+        <Grid container justifyContent="center" spacing={3} marginTop={3}>
+          <Grid item xs={12} md={10}>
+            <Card>
+              <CardHeader
+                className="gc360_header"
+                title={
+                  <Typography variant="h6" align="left">
+                    My Past Reports
+                  </Typography>
+                }
+              />
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={10}>
+            {/* Render header row only on large screens */}
+            {reportHeader(false)}
+            {/* Past Reports */}
+            {pastReports.map((report) => reportRow(report))}
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={10}>
-          {/* Render header row only on large screens */}
-          {reportHeader(false)}
-          {/* Past Reports */}
-          {pastReports.map((report) => reportRow(report))}
-        </Grid>
-      </Grid>
+      )}
       <br />
       <br />
     </>
