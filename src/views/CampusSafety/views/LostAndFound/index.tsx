@@ -116,9 +116,9 @@ const LostAndFound = () => {
         isPublic: true,
         action: 'Deleted',
       };
-      // @ts-ignore
       await lostAndFoundService.createAdminAction(
         parseInt(reportToDelete || ''),
+        // @ts-ignore
         actionRequestData,
       );
       setPageUpdates(pageUpdates + 1);
