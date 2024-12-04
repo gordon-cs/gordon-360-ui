@@ -160,8 +160,8 @@ const MissingItemFormEdit = () => {
     const newFields = Object.keys(formDataCopy);
     const editedFields = [];
     for (let i = 0; i < originalFields.length; i++) {
-      // @ts-ignore
       if (
+        // @ts-ignore
         JSON.stringify(formDataCopy[originalFields[i]]) != JSON.stringify(formData[newFields[i]])
       ) {
         // @ts-ignore
