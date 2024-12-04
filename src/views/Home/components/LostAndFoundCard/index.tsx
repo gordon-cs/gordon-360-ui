@@ -236,6 +236,12 @@ const LostAndFoundCard = () => {
             </Card>
             {reportHeader('Found')}
             {foundReports.map((report) => reportRow(report, true))}
+            {/* Conditional message under the "Found" items */}
+            <Grid item xs={12} style={{ marginTop: '0.3rem' }}>
+              <Typography variant="inherit" align="center" color="var(--mui-palette-success-main)">
+                Check your email for an update on your item.
+              </Typography>
+            </Grid>
           </>
         )}
       </CardContent>

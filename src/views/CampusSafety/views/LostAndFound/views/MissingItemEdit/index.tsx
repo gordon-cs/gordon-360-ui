@@ -364,13 +364,6 @@ const MissingItemFormEdit = () => {
                   </Grid>
                   <Grid item margin={2}>
                     {customDatePicker}
-                    {formData.status.toLowerCase() === 'found' && (
-                      <Box className={styles.notificationBox}>
-                        <Typography variant="inherit" color="var(--mui-palette-secondary-400);">
-                          Check your email for an update about your item.
-                        </Typography>
-                      </Box>
-                    )}
                   </Grid>
                   {formData.stolen ? (
                     <>
