@@ -125,6 +125,12 @@ const LostAndFoundCard = () => {
       className={`${isFoundSection && report.status.toLowerCase() === 'found' ? styles.dataFoundRow : styles.dataRow} ${
         styles.clickableRow
       }`}
+      onClick={() => {
+        // Navigate to the edit page for found items
+        if (isFoundSection && report.status.toLowerCase() === 'found') {
+          navigate(`/lostandfound/${report.recordID}`);
+        }
+      }}
     >
       <CardContent
         className={styles.dataContent}
