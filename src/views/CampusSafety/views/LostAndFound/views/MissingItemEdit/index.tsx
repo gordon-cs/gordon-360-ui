@@ -11,6 +11,7 @@ import {
   Button,
   FormLabel,
   Typography,
+  useMediaQuery,
   Box,
 } from '@mui/material';
 import { DateTime } from 'luxon';
@@ -23,11 +24,14 @@ import { useNavigate, useParams } from 'react-router';
 import GordonLoader from 'components/Loader';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 const MissingItemFormEdit = () => {
   const navigate = useNavigate();
   const { itemid } = useParams<{ itemid: string }>();
   const [loading, setLoading] = useState<boolean>(true);
+  const [isPickedUp, setIsPickedUp] = useState(false); //Added this to manage the button disable
 
   const [user, setUser] = useState({
     firstName: '',
@@ -130,7 +134,8 @@ const MissingItemFormEdit = () => {
 
     try {
       await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemid || ''));
-      navigate('/lostandfound');
+      setIsPickedUp(true);
+      //navigate('/lostandfound');
     } catch (error) {
       console.error('Error updating report status:', error);
     }
@@ -225,6 +230,41 @@ const MissingItemFormEdit = () => {
             <GordonLoader />
           ) : (
             <>
+              {/* Display the "Found" notice only if the status is "found" */}
+              {formData.status.toLowerCase() === 'found' && (
+                <Box className={styles['found-container']}>
+                  {/* Status Message */}
+                  <Box className={styles['status-message']}>
+                    <Typography className={styles['status-text']}>
+                      Gordon Police marked this item as{' '}
+                      <Typography component="span" className={styles['found-text']}>
+                        Found
+                      </Typography>
+                    </Typography>
+                  </Box>
+
+                  {/* Info Message */}
+                  <Box className={styles['info-message']}>
+                    <InfoOutlinedIcon className={styles['info-icon']} />
+                    <Typography className={styles['info-text']}>
+                      Check your email for pickup instructions.
+                    </Typography>
+                  </Box>
+
+                  {/* Action Button */}
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<CheckCircleOutlineIcon />}
+                    onClick={handlePickup}
+                    className={styles['pickup-button']}
+                    disabled={isPickedUp} // Disable the button if the item is picked up
+                  >
+                    {isPickedUp ? 'Item Picked Up' : 'Mark as Picked Up'}{' '}
+                    {/* Update text based on state */}
+                  </Button>
+                </Box>
+              )}
               <Grid container justifyContent="center">
                 <Grid item sm={5} xs={12}>
                   {/* Item Category */}
@@ -400,18 +440,6 @@ const MissingItemFormEdit = () => {
                 justifyContent="center"
                 className={styles.submit_container}
               >
-                {formData.status.toLowerCase() === 'found' && (
-                  <Grid item xs={12} sm={5} md={2}>
-                    <Button
-                      variant="contained"
-                      fullWidth
-                      className={styles.pickup_button}
-                      onClick={handlePickup}
-                    >
-                      Pickup Item
-                    </Button>
-                  </Grid>
-                )}
                 <Grid item xs={12} sm={5} md={2}>
                   <Button
                     variant="contained"

@@ -17,6 +17,7 @@ import { DateTime } from 'luxon';
 import { Launch, NotListedLocation, WhereToVote } from '@mui/icons-material';
 import GordonLoader from 'components/Loader';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import Badge from '@mui/material/Badge';
 
 const formatDate = (date: string) => {
   return DateTime.fromISO(date).toFormat('MM/dd/yy'); // Adjust format as needed
@@ -44,7 +45,6 @@ const LostAndFoundCard = () => {
   const isMobile = useMediaQuery('(max-width:375px)');
 
   const numReportsToDisplay = 4;
-  const numFoundReportsToDisplay = 1;
 
   useEffect(() => {
     const fetchMissingItems = async () => {
@@ -77,13 +77,7 @@ const LostAndFoundCard = () => {
           setCountNotIncluded(0);
           setActiveReports(active);
         }
-        if (found.length > numFoundReportsToDisplay) {
-          //setCountNotIncluded(found.length - numFoundReportsToDisplay);
-          setFoundReports(found.slice(0, numFoundReportsToDisplay));
-        } else {
-          //setCountNotIncluded(0);
-          setFoundReports(found);
-        }
+        setFoundReports(found);
       } catch (error) {
         console.error('Error fetching missing items:', error);
         setActiveReports([]);
@@ -204,6 +198,41 @@ const LostAndFoundCard = () => {
             </Button>
           </Grid>
         </Grid>
+        {foundReports && foundReports.length > 0 && (
+          <>
+            <Card>
+              <CardHeader
+                title={
+                  <Grid container alignItems="center" position="relative">
+                    {/* Badge positioned on the top-left corner */}
+                    <Badge
+                      badgeContent={foundReports.length}
+                      color="error"
+                      overlap="circular"
+                      showZero={false}
+                      sx={{
+                        position: 'absolute',
+                        top: '15px',
+                        left: '160px',
+                      }}
+                    />
+                    <Grid item xs={12}>
+                      <Typography variant="h6">Recently Found</Typography>
+                    </Grid>
+                  </Grid>
+                }
+              />
+            </Card>
+            {reportHeader('Recently Found')}
+            {foundReports.map((report) => reportRow(report, true))}
+            {/* Conditional message under the "Found" items */}
+            <Grid item xs={12} style={{ marginTop: '0.3rem' }}>
+              <Typography variant="inherit" align="center" color="var(--mui-palette-success-main)">
+                Check your email for an update on your item.
+              </Typography>
+            </Grid>
+          </>
+        )}
         <Card>
           <CardHeader title="My Reports" />
         </Card>
@@ -227,21 +256,6 @@ const LostAndFoundCard = () => {
                 </Card>
               </>
             ) : null}
-          </>
-        )}
-        {foundReports && foundReports.length > 0 && (
-          <>
-            <Card>
-              <CardHeader title="Found" />
-            </Card>
-            {reportHeader('Found')}
-            {foundReports.map((report) => reportRow(report, true))}
-            {/* Conditional message under the "Found" items */}
-            <Grid item xs={12} style={{ marginTop: '0.3rem' }}>
-              <Typography variant="inherit" align="center" color="var(--mui-palette-success-main)">
-                Check your email for an update on your item.
-              </Typography>
-            </Grid>
           </>
         )}
       </CardContent>
