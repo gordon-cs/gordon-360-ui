@@ -135,7 +135,7 @@ const MissingItemFormEdit = () => {
       actionDate: DateTime.now().toISO(),
       username: user.AD_Username,
       isPublic: true,
-      action: 'AdminActionEdit',
+      action: 'Edited',
     };
     // @ts-ignore
     await lostAndFoundService.createAdminAction(parseInt(itemid || ''), actionRequestData);
