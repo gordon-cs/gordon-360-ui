@@ -22,12 +22,26 @@ import { useNavigate, useParams } from 'react-router';
 import GordonLoader from 'components/Loader';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { forEach } from 'lodash';
 
 const MissingItemFormEdit = () => {
   const navigate = useNavigate();
   const { itemid } = useParams<{ itemid: string }>();
   const [loading, setLoading] = useState<boolean>(true);
-  const [newActionFormData] = useState({ action: '', actionNote: '' });
+
+  const [formDataCopy, setOriginalData] = useState({
+    reportID: 0,
+    category: '',
+    colors: [] as string[],
+    brand: '',
+    description: '',
+    locationLost: '',
+    stolen: false,
+    stolenDescription: '',
+    dateLost: '',
+    dateCreated: '',
+    status: 'active',
+  });
 
   const [user, setUser] = useState({
     firstName: '',
@@ -96,6 +110,20 @@ const MissingItemFormEdit = () => {
           dateCreated: item.dateCreated,
           status: item.status || 'active',
         });
+        const originalReport = await lostAndFoundService.getMissingItemReport(parseInt(itemid));
+        setOriginalData({
+          reportID: originalReport?.recordID || 0,
+          category: originalReport.category,
+          colors: originalReport.colors || [],
+          brand: originalReport.brand || '',
+          description: originalReport.description,
+          locationLost: originalReport.locationLost,
+          stolen: originalReport.stolen,
+          stolenDescription: originalReport.stolenDescription || '',
+          dateLost: originalReport.dateLost,
+          dateCreated: originalReport.dateCreated,
+          status: originalReport.status || 'active',
+        });
       }
     };
     fetchItemData();
@@ -128,14 +156,26 @@ const MissingItemFormEdit = () => {
       dateLost: new Date(formData.dateLost).toISOString() || DateTime.now().toISO(),
       forGuest: false,
     };
+    const originalFields = Object.keys(formData);
+    const newFields = Object.keys(formDataCopy);
+    const editedFields = [];
+    for (let i = 0; i < originalFields.length; i++) {
+      // @ts-ignore
+      if (
+        JSON.stringify(formDataCopy[originalFields[i]]) != JSON.stringify(formData[newFields[i]])
+      ) {
+        // @ts-ignore
+        editedFields.push(formData[newFields[i]]);
+      }
+    }
     await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemid || ''));
     const actionRequestData = {
-      ...newActionFormData,
       missingID: itemid,
       actionDate: DateTime.now().toISO(),
       username: user.AD_Username,
       isPublic: true,
       action: 'Edited',
+      actionNote: editedFields.toString(),
     };
     // @ts-ignore
     await lostAndFoundService.createAdminAction(parseInt(itemid || ''), actionRequestData);
