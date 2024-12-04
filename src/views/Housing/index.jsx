@@ -7,22 +7,23 @@ import ResidentView from './components/ResidentView';
 import StaffView from './components/StaffView';
 
 const Housing = () => {
-  const isFaculty = useAuthGroups(AuthGroup.Faculty);
   const isStudent = useAuthGroups(AuthGroup.Student);
   const isRA = useAuthGroups(AuthGroup.ResidentAdvisor);
-  const isRD = useAuthGroups(AuthGroup.HousingAdmin);
+  const isResLifeStaff = useAuthGroups(AuthGroup.HousingAdmin);
+  const GetsRDView = isResLifeStaff || isRD;
+  const isRD = useAuthGroups(AuthGroup.ResidentDirector);
   // need to call hooks separately then join into one variable
   const isPolice = useAuthGroups(AuthGroup.Police);
-  const isPlantStaff = useAuthGroups(AuthGroup.PLTStaff);
-  const hasStandardAccess = isPolice || isPlantStaff;
+  const isHallInfoViewer = useAuthGroups(AuthGroup.HallInfoViewer);
+  const hasStandardAccess = isPolice || isHallInfoViewer;
 
-  if (isFaculty) {
+  if (GetsRDView) {
     return <RDView />;
-  } else if (isStudent) {
-    // return <RDView />;
-    return <ResidentView />;
   } else if (isRA) {
+    //need RA check first as RA's will also show as students
     return <RAView />;
+  } else if (isStudent) {
+    return <ResidentView />;
   } else if (hasStandardAccess) {
     return <StaffView />;
   } else {
