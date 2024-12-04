@@ -25,6 +25,7 @@ import { MissingItemReport } from 'services/lostAndFound'; // Import the type fr
 import DeleteConfirmationModal from './components/DeleteConfirmation';
 import { DateTime } from 'luxon';
 import { useWindowSize } from 'hooks';
+import userService from 'services/user';
 
 const formatDate = (date: string) => {
   return DateTime.fromISO(date).toFormat('MM-dd-yyyy'); // Adjust format as needed
@@ -39,6 +40,18 @@ const LostAndFound = () => {
   const [pageUpdates, setPageUpdates] = useState(0);
   const navigate = useNavigate();
   const isMobile = useMediaQuery('(max-width:900px)');
+  const [newActionFormData] = useState({ action: '', actionNote: '' });
+  const [user, setUser] = useState({ AD_Username: '' });
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const userInfo = await userService.getProfileInfo();
+      setUser({
+        AD_Username: userInfo?.AD_Username || '',
+      });
+    };
+    fetchUserData();
+  }, []);
 
   useEffect(() => {
     const fetchMissingItems = async () => {
@@ -95,6 +108,19 @@ const LostAndFound = () => {
   const handleModalSubmit = async () => {
     try {
       await lostAndFoundService.updateReportStatus(parseInt(reportToDelete || ''), 'deleted');
+      let actionRequestData = {
+        ...newActionFormData,
+        missingID: reportToDelete,
+        actionDate: DateTime.now().toISO(),
+        username: user.AD_Username,
+        isPublic: true,
+        action: 'Deleted',
+      };
+      // @ts-ignore
+      await lostAndFoundService.createAdminAction(
+        parseInt(reportToDelete || ''),
+        actionRequestData,
+      );
       setPageUpdates(pageUpdates + 1);
       setDeleteModalOpen(false);
       setReportToDelete(null);

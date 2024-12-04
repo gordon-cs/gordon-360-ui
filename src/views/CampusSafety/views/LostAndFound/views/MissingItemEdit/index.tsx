@@ -137,7 +137,8 @@ const MissingItemFormEdit = () => {
       isPublic: true,
       action: 'AdminActionEdit',
     };
-    await lostAndFoundService.createAdminAction(Number(itemid), actionRequestData);
+    // @ts-ignore
+    await lostAndFoundService.createAdminAction(parseInt(itemid || ''), actionRequestData);
     navigate('/lostandfound');
   };
 
