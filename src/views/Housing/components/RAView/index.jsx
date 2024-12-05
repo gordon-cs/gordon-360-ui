@@ -1,11 +1,9 @@
 import {
   Button,
-  Box,
   Card,
   CardContent,
   CardHeader,
   Checkbox,
-  Container,
   FormGroup,
   FormControl,
   FormControlLabel,
@@ -17,6 +15,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  useMediaQuery,
 } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
@@ -25,7 +24,6 @@ import Schedule from './components/Schedule';
 import Links from './components/Links';
 import MyHall from '../ResidentView/components/MyHall/index';
 import { React, useEffect, useState } from 'react';
-import { ListItemIcon, ListItemText, ListSubheader, List, ListItem, Link } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { checkIfCheckedIn, submitCheckIn } from 'services/residentLife/RA_Checkin';
 import { preferredContact } from 'services/residentLife/ResidentStaff';
@@ -39,6 +37,8 @@ const RAView = () => {
   const { profile } = useUser();
   const [selectedContact, setSelectedContact] = useState('');
   const [hallName, setHallName] = useState('');
+
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   // Fetch check-in status and initialize hall data
   useEffect(() => {
@@ -143,7 +143,7 @@ const RAView = () => {
 
   const { BRO, CHA, EVN, FER, FUL, NYL, TAV, WIL, village } = hallState;
 
-  const handleHallChecked = (event) => {
+  const HandleHallChecked = (event) => {
     const { name, checked } = event.target;
 
     setHallState((prevState) => {
@@ -187,59 +187,14 @@ const RAView = () => {
     }
   };
 
-  return (
-    <Grid container spacing={2}>
+  const checkInButton = () => (
+    <Grid container item justifyContent="center" alignItems="center">
       <Grid item xs={12} md={4}>
-        <Links />
-      </Grid>
-
-      <Grid item xs={12} md={4}>
-        <Card>
-          <CardHeader title={'Preferred Contact Method'} className="gc360_header" />
-          <CardContent>
-            <Accordion>
-              <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
-                <Typography>Select Contact Method</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <FormControl component="fieldset">
-                  <RadioGroup
-                    aria-label="preferred-contact"
-                    name="preferred-contact"
-                    value={selectedContact}
-                    onChange={handleContactChange}
-                  >
-                    <FormControlLabel value="teams" control={<Radio />} label="Teams" />
-                    <FormControlLabel value="phone" control={<Radio />} label="Phone" />
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={handleContactSubmit}
-                      disabled={!selectedContact}
-                      sx={{ mt: 2 }}
-                    >
-                      Submit
-                    </Button>
-                  </RadioGroup>
-                </FormControl>
-              </AccordionDetails>
-            </Accordion>
-            <Typography sx={{ mt: 2, color: 'text.secondary', fontStyle: 'italic' }}>
-              *This is your preferred method to be contacted by your hall's residents.
-            </Typography>
-          </CardContent>
-        </Card>
-      </Grid>
-
-      <Grid item xs={12} md={4}>
-        <MyHall />
-      </Grid>
-      <Grid item xs={12} md={12} alignContent={'center'}>
         <Button
           variant="contained"
+          fullWidth={true}
           onClick={() => setOpen(true)}
           disabled={isCheckedIn}
-          fullWidth={true}
         >
           {isCheckedIn ? 'You Are Checked In To Your Shift' : 'Check In To Your Shift'}
         </Button>
@@ -345,6 +300,77 @@ const RAView = () => {
           </GordonDialogBox>
         </Grid>
       </Grid>
+    </Grid>
+  );
+
+  const contactMethod = () => (
+    <Grid item xs={12} md={4}>
+      <Card>
+        <CardHeader title={'Preferred Contact Method'} className="gc360_header" />
+        <CardContent>
+          <Accordion>
+            <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
+              <Typography>Select Contact Method</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <FormControl component="fieldset">
+                <RadioGroup
+                  aria-label="preferred-contact"
+                  name="preferred-contact"
+                  value={selectedContact}
+                  onChange={handleContactChange}
+                >
+                  <FormControlLabel value="teams" control={<Radio />} label="Teams" />
+                  <FormControlLabel value="phone" control={<Radio />} label="Phone" />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleContactSubmit}
+                    disabled={!selectedContact}
+                    sx={{ mt: 2 }}
+                  >
+                    Submit
+                  </Button>
+                </RadioGroup>
+              </FormControl>
+            </AccordionDetails>
+          </Accordion>
+          <Typography sx={{ mt: 2, color: 'text.secondary', fontStyle: 'italic' }}>
+            *This is your preferred method to be contacted by your hall's residents.
+          </Typography>
+        </CardContent>
+      </Card>
+    </Grid>
+  );
+
+  return (
+    <Grid container item spacing={2}>
+      {!isMobile && (
+        <>
+          <Grid item xs={12} md={4}>
+            <Links />
+          </Grid>
+          {contactMethod()}
+          <Grid item xs={12} md={4}>
+            <MyHall />
+          </Grid>
+          {checkInButton()}
+        </>
+      )}
+      {isMobile && (
+        <>
+          <Grid item rowSpacing={0} xs={12}>
+            {checkInButton()}
+          </Grid>
+          <Grid item xs={12}>
+            <MyHall />
+          </Grid>
+          {contactMethod()}
+          <Grid item xs={12}>
+            <Links />
+          </Grid>
+        </>
+      )}
     </Grid>
   );
 };
