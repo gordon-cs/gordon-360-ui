@@ -96,7 +96,7 @@ const createMissingItemReport = async (
     dateCreated: DateTime.now().toISO(),
     colors: data.colors || [], // Ensures colors is an array, even if not defined
   };
-  const response = await http.post<number>('/LostAndFound/missingitem', formattedData);
+  const response = await http.post<number>('lostandfound/missingitem', formattedData);
   return response;
 };
 
