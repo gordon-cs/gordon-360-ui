@@ -143,7 +143,7 @@ const RAView = () => {
 
   const { BRO, CHA, EVN, FER, FUL, NYL, TAV, WIL, village } = hallState;
 
-  const HandleHallChecked = (event) => {
+  const handleHallChecked = (event) => {
     const { name, checked } = event.target;
 
     setHallState((prevState) => {
