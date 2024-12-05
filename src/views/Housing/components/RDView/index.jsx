@@ -77,15 +77,6 @@ const RDView = () => {
           <CardContent>
             <Typography>
               <List>
-                {/*<ListItem>*/}
-                {/*  <Grid>*/}
-                {/*    <ListItemText primary="RA/AC Task List" />*/}
-                {/*  </Grid>*/}
-                {/*  <Grid item>*/}
-                {/*    <UpdateTasks />*/}
-                {/*  </Grid>*/}
-                {/*</ListItem>*/}
-
                 <ListItem>
                   <Link
                     component={RouterLink}
