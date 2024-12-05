@@ -60,8 +60,12 @@ const OnDuty = () => {
             <Typography variant="body1">
               <strong>Room #:</strong> {onDutyRaInfo.RoomNumber}
             </Typography>
+
             <Typography variant="body1">
-              <strong>Contact:</strong> {onDutyRaInfo.PreferredContact}
+              <strong>Contact:</strong>{' '}
+              <a href={onDutyRaInfo.PreferredContact} target="_blank" rel="noopener noreferrer">
+                {onDutyRaInfo.PreferredContact}
+              </a>
             </Typography>
           </Grid>
 
