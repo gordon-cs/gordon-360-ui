@@ -53,6 +53,8 @@ const MissingItemFormEdit = () => {
     stolenDescription: '',
     dateLost: '',
     dateCreated: '',
+    submitterUsername: '',
+    forGuest: false,
     status: 'active',
   });
 
@@ -99,6 +101,8 @@ const MissingItemFormEdit = () => {
           stolenDescription: item.stolenDescription || '',
           dateLost: item.dateLost,
           dateCreated: item.dateCreated,
+          submitterUsername: item.submitterUsername,
+          forGuest: item.forGuest,
           status: item.status || 'active',
         });
       }
@@ -128,8 +132,6 @@ const MissingItemFormEdit = () => {
   const handlePickup = async () => {
     const requestData = {
       ...formData,
-      submitterUsername: user.AD_Username,
-      forGuest: false,
       status: 'PickedUp', // Change status to 'pickup'
     };
 
@@ -145,10 +147,7 @@ const MissingItemFormEdit = () => {
   const handleReportSubmit = async () => {
     const requestData = {
       ...formData,
-      ...user,
-      submitterUsername: user.AD_Username,
       dateLost: new Date(formData.dateLost).toISOString() || DateTime.now().toISO(),
-      forGuest: false,
     };
     await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemid || ''));
     navigate('/lostandfound');
