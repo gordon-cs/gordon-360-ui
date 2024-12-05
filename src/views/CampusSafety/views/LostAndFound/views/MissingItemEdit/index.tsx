@@ -13,6 +13,7 @@ import {
   Typography,
   useMediaQuery,
   Box,
+  Chip,
 } from '@mui/material';
 import { DateTime } from 'luxon';
 import Header from 'views/CampusSafety/components/Header';
@@ -232,38 +233,55 @@ const MissingItemFormEdit = () => {
             <>
               {/* Display the "Found" notice only if the status is "found" */}
               {formData.status.toLowerCase() === 'found' && (
-                <Box className={styles['found-container']}>
-                  {/* Status Message */}
-                  <Box className={styles['status-message']}>
-                    <Typography className={styles['status-text']}>
-                      Gordon Police marked this item as{' '}
-                      <Typography component="span" className={styles['found-text']}>
-                        Found
-                      </Typography>
-                    </Typography>
-                  </Box>
-
-                  {/* Info Message */}
-                  <Box className={styles['info-message']}>
-                    <InfoOutlinedIcon className={styles['info-icon']} />
-                    <Typography className={styles['info-text']}>
-                      Check your email for pickup instructions.
-                    </Typography>
-                  </Box>
-
-                  {/* Action Button */}
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<CheckCircleOutlineIcon />}
-                    onClick={handlePickup}
-                    className={styles['pickup-button']}
-                    disabled={isPickedUp} // Disable the button if the item is picked up
-                  >
-                    {isPickedUp ? 'Item Picked Up' : 'Mark as Picked Up'}{' '}
-                    {/* Update text based on state */}
-                  </Button>
-                </Box>
+                <Grid container xs={9.7} className={styles.foundContainer} rowGap={2}>
+                  <Grid container item xs={12} md={6} rowGap={2}>
+                    <Grid item xs={12}>
+                      <Chip
+                        className={styles.largeChip}
+                        // Wrap chip text if needed
+                        sx={{
+                          height: 'auto',
+                          '& .MuiChip-label': {
+                            display: 'block',
+                            whiteSpace: 'normal',
+                          },
+                        }}
+                        label={
+                          <>
+                            <Typography>
+                              Gordon Police marked this item as{' '}
+                              <Typography component="span" className={styles.foundText}>
+                                Found
+                              </Typography>
+                            </Typography>
+                          </>
+                        }
+                        color="success"
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Grid container columnGap={1} height="100%" alignItems="center">
+                        <Typography>
+                          <InfoOutlinedIcon color="inherit" /> Check your email for pickup
+                          instructions.{' '}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid container item xs={12} md={6} className={styles.buttonContainer}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      startIcon={<CheckCircleOutlineIcon />}
+                      onClick={handlePickup}
+                      className={styles.pickupButton}
+                      disabled={isPickedUp} // Disable the button if the item is picked up
+                    >
+                      {/* Update text based on if the item is picked up */}
+                      {isPickedUp ? 'Item Picked Up' : 'Mark as Picked Up'}{' '}
+                    </Button>
+                  </Grid>
+                </Grid>
               )}
               <Grid container justifyContent="center">
                 <Grid item sm={5} xs={12}>
