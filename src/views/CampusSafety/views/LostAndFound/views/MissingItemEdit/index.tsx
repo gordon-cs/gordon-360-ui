@@ -158,14 +158,20 @@ const MissingItemFormEdit = () => {
     };
     const originalFields = Object.keys(formData);
     const newFields = Object.keys(formDataCopy);
-    const editedFields = [];
+    let newActionNote = '';
     for (let i = 0; i < originalFields.length; i++) {
       if (
         // @ts-ignore
         JSON.stringify(formDataCopy[originalFields[i]]) != JSON.stringify(formData[newFields[i]])
       ) {
         // @ts-ignore
-        editedFields.push(formData[newFields[i]]);
+        newActionNote +=
+          originalFields[i] +
+          ': OLD: ' +
+          formDataCopy[originalFields[i]] +
+          ', NEW: ' +
+          formData[newFields[i]] +
+          ' ';
       }
     }
     await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemid || ''));
@@ -175,7 +181,7 @@ const MissingItemFormEdit = () => {
       username: user.AD_Username,
       isPublic: true,
       action: 'Edited',
-      actionNote: editedFields.toString(),
+      actionNote: newActionNote,
     };
     // @ts-ignore
     await lostAndFoundService.createAdminAction(parseInt(itemid || ''), actionRequestData);
