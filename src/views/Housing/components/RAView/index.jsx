@@ -22,6 +22,8 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 import TaskList from './components/TaskList';
 import Schedule from './components/Schedule';
+import Links from './components/Links';
+import MyHall from '../ResidentView/components/MyHall/index';
 import { React, useEffect, useState } from 'react';
 import { ListItemIcon, ListItemText, ListSubheader, List, ListItem, Link } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
@@ -186,25 +188,9 @@ const RAView = () => {
   };
 
   return (
-    <Grid container>
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={4}>
-          <TaskList />
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Card>
-            <CardHeader title={'Helpful Links'} className="gc360_header" />
-            <CardContent>
-              <Typography>
-                <List>
-                  <ListItem>Work Requests (needs link)</ListItem>
-                  <ListItem>Forms (needs link)</ListItem>
-                  <ListItem>Resident List (needs link)</ListItem>
-                </List>
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
+    <Grid container spacing={2}>
+      <Grid item xs={12} md={4}>
+        <Links />
       </Grid>
 
       <Grid item xs={12} md={4}>
@@ -245,8 +231,16 @@ const RAView = () => {
         </Card>
       </Grid>
 
-      <Grid item xs={12} md={4} padding={1}>
-        <Button variant="contained" onClick={() => setOpen(true)} disabled={isCheckedIn}>
+      <Grid item xs={12} md={4}>
+        <MyHall />
+      </Grid>
+      <Grid item xs={12} md={12} alignContent={'center'}>
+        <Button
+          variant="contained"
+          onClick={() => setOpen(true)}
+          disabled={isCheckedIn}
+          fullWidth={true}
+        >
           {isCheckedIn ? 'You Are Checked In To Your Shift' : 'Check In To Your Shift'}
         </Button>
         <Grid item xs={12} md={4} padding={1}>
@@ -351,9 +345,6 @@ const RAView = () => {
           </GordonDialogBox>
         </Grid>
       </Grid>
-      {/* <Grid item xs={12}>
-      <Schedule />
-    </Grid> */}
     </Grid>
   );
 };
