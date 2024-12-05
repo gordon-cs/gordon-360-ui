@@ -240,13 +240,19 @@ const LostAndFound = () => {
   );
 
   // Component defining each row of the report grid
-  const reportRow = (report: MissingItemReport, isFoundSection: boolean = false) => (
+  const reportRow = (
+    report: MissingItemReport,
+    isFoundSection: boolean = false,
+    isPastReport: boolean = false,
+  ) => (
     <Card
-      className={`${isFoundSection && report.status.toLowerCase() === 'found' ? styles.dataFoundRow : styles.dataRow} ${
-        styles.clickableRow
-      }`}
+      className={`${
+        isFoundSection && report.status.toLowerCase() === 'found'
+          ? styles.dataFoundRow
+          : styles.dataRow
+      } ${!isPastReport ? styles.clickableRow : ''}`}
     >
-      <Tooltip title="Click to view and edit">
+      <Tooltip title={!isPastReport ? 'Click to view and edit' : ''}>
         <CardContent
           className={styles.dataContent}
           sx={{
@@ -265,7 +271,7 @@ const LostAndFound = () => {
                   xs={11.5}
                   columnGap={1}
                   onClick={
-                    report.status.toLowerCase() === 'active' ||
+                    (!isPastReport && report.status.toLowerCase() === 'active') ||
                     report.status.toLowerCase() === 'found'
                       ? () => handleEdit(report.recordID?.toString() || '')
                       : () => {}
@@ -329,7 +335,7 @@ const LostAndFound = () => {
                 xs={11.5}
                 className={styles.rowPadding}
                 onClick={
-                  report.status.toLowerCase() === 'active' ||
+                  (!isPastReport && report.status.toLowerCase() === 'active') ||
                   report.status.toLowerCase() === 'found'
                     ? () => handleEdit(report.recordID?.toString() || '')
                     : () => {}
@@ -405,11 +411,7 @@ const LostAndFound = () => {
                     <Badge
                       badgeContent={foundReports.length}
                       color="error"
-                      sx={{
-                        position: 'absolute',
-                        top: 15,
-                        left: 15,
-                      }}
+                      className={styles['badge-position']}
                     />
                     <Grid item xs={9}>
                       <Typography variant="h5" align="center">
@@ -479,7 +481,7 @@ const LostAndFound = () => {
             {/* Render header row only on large screens */}
             {reportHeader(false)}
             {/* Past Reports */}
-            {pastReports.map((report) => reportRow(report))}
+            {pastReports.map((report) => reportRow(report, false, true))}
           </Grid>
         </Grid>
       )}

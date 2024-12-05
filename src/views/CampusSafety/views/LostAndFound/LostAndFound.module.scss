@@ -71,6 +71,12 @@
   overflow-wrap: break-word;
 }
 
+.badge-position {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+}
+
 /* Responsive Styling */
 @media (max-width: 900px) {
   .dataRow {
