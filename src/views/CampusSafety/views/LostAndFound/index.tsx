@@ -292,7 +292,7 @@ const LostAndFound = () => {
                 {report.status.toLowerCase() === 'found' && (
                   <Grid item xs={0.2}>
                     <Typography>
-                      <NotificationsIcon color="error" />
+                      <NotificationsIcon color="info" />
                     </Typography>
                   </Grid>
                 )}
@@ -344,17 +344,16 @@ const LostAndFound = () => {
                 <Grid item xs={2.6} className={styles.alignData}>
                   <div className={styles.dataCell}>{report.category}</div>
                 </Grid>
-                <Grid item xs={4.5} className={styles.alignData}>
+                <Grid item xs={4.2} className={styles.alignData}>
                   <div className={styles.dataCell}>{report.description}</div>
                 </Grid>
               </Grid>
               {/* Show notification for "found" status */}
               {report.status.toLowerCase() === 'found' && (
-                <Grid item xs={0.2} justifyContent="center">
-                  <Typography>
-                    <i>Found</i>
-                    <NotificationsIcon color="error" />
-                  </Typography>
+                <Grid container item xs={0.5} justifyContent="flex-end" columnGap={1}>
+                  <Grid item xs={4} className={styles.alignData}>
+                    <NotificationsIcon color="info" />
+                  </Grid>
                 </Grid>
               )}
               {report.status.toLowerCase() === 'active' ? (
@@ -410,12 +409,13 @@ const LostAndFound = () => {
                         position: 'absolute',
                         top: 15,
                         left: 15,
-                        transform: 'translate(-50%, -50%)',
                       }}
                     />
-                    <Typography variant="h5" align="center">
-                      My Recently <span className={styles.yellowText}>Found</span> Items
-                    </Typography>
+                    <Grid item xs={9}>
+                      <Typography variant="h5" align="center">
+                        My Recently <span className={styles.yellowText}>Found</span> Items
+                      </Typography>
+                    </Grid>
                   </Grid>
                 }
               />
@@ -423,7 +423,7 @@ const LostAndFound = () => {
           </Grid>
           <Grid item xs={12} md={10}>
             {/* Render header row */}
-            {reportHeader()}
+            {reportHeader(false)}
             {/* Filter and display found items */}
             {foundReports
               .filter((report) => report.status.toLowerCase() === 'found')
