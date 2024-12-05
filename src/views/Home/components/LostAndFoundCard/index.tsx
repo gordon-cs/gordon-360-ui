@@ -90,7 +90,7 @@ const LostAndFoundCard = () => {
   }, []);
 
   // The row labelling the column names for the report grid
-  const reportHeader = (title: string) => (
+  const reportHeader = () => (
     <Card>
       <CardHeader
         className={`gc360_header ${styles.headerPadding}`}
@@ -223,7 +223,7 @@ const LostAndFoundCard = () => {
                 }
               />
             </Card>
-            {reportHeader('Recently Found')}
+            {reportHeader()}
             {foundReports.map((report) => reportRow(report, true))}
             {/* Conditional message under the "Found" items */}
             <Grid item xs={12} style={{ marginTop: '0.3rem' }}>
@@ -240,7 +240,7 @@ const LostAndFoundCard = () => {
           <GordonLoader />
         ) : (
           <>
-            {activeReports?.length < 1 ? noReports : reportHeader('My Reports')}
+            {activeReports?.length < 1 ? noReports : reportHeader()}
             {activeReports.map((report) => reportRow(report))}
             {countNotIncluded > 0 ? (
               <>
