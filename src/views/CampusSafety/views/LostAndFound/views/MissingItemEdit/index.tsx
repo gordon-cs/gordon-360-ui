@@ -168,8 +168,10 @@ const MissingItemFormEdit = () => {
         newActionNote +=
           originalFields[i] +
           ': OLD: ' +
+          // @ts-ignore
           formDataCopy[originalFields[i]] +
           ', NEW: ' +
+          // @ts-ignore
           formData[newFields[i]] +
           ' ';
       }
