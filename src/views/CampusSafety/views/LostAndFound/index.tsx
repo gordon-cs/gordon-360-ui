@@ -411,7 +411,7 @@ const LostAndFound = () => {
                     <Badge
                       badgeContent={foundReports.length}
                       color="error"
-                      className={styles['badge-position']}
+                      className={styles.badgeposition}
                     />
                     <Grid item xs={9}>
                       <Typography variant="h5" align="center">
