@@ -1,4 +1,3 @@
-import { DateTime } from 'luxon';
 import http from './http';
 
 /**
@@ -90,12 +89,14 @@ const getAdminActions = async (id: number): Promise<MissingAdminAction[]> => {
 const createMissingItemReport = async (
   data: Omit<MissingItemReport, 'recordID'>,
 ): Promise<number> => {
+  const now = new Date();
   const formattedData = {
     ...data,
-    dateLost: data.dateLost || DateTime.now().toISO(), // Ensures dateLost is set
-    dateCreated: DateTime.now().toISO(),
+    dateLost: data.dateLost || now.toISOString(), // Ensures dateLost is set
+    dateCreated: now.toISOString(),
     colors: data.colors || [], // Ensures colors is an array, even if not defined
   };
+  console.log(formattedData.dateCreated.toString());
   const response = await http.post<number>('lostandfound/missingitem', formattedData);
   return response;
 };
