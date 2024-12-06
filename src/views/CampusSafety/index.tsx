@@ -10,13 +10,43 @@ import ReportItemPage from './views/LostAndFoundAdmin/views/MissingItemList/comp
 import ReportFound from './views/LostAndFound/views/ReportFound';
 import GordonLoader from 'components/Loader';
 import GordonUnauthenticated from 'components/GordonUnauthenticated';
-import { useUser } from 'hooks';
+import { useUser, useAuthGroups } from 'hooks';
+import { AuthGroup } from 'services/auth';
+import lostAndFoundService from 'services/lostAndFound';
+import { useState, useEffect } from 'react';
 
 // Routing between Campus Safety App pages
 const CampusSafetyApp = () => {
   const { profile, loading: loadingProfile } = useUser();
+  const isAdmin = useAuthGroups(AuthGroup.LostAndFoundAdmin);
+  const [loading, setLoading] = useState(false);
 
-  if (loadingProfile) {
+  useEffect(() => {
+    if (isAdmin) {
+      const updateExpiredReports = async () => {
+        setLoading(true);
+        const sixMonthsAgo = new Date();
+        sixMonthsAgo.setMonth(sixMonthsAgo.getDate() - 14);
+
+        const expiringReports = (await lostAndFoundService.getMissingItemReports()).filter(
+          (report) => new Date(report.dateCreated) < sixMonthsAgo,
+        );
+
+        for (const report of expiringReports) {
+          await lostAndFoundService.updateReportStatus(
+            parseInt((report.recordID ?? '').toString()),
+            'expired',
+          );
+          console.log('expired report updated');
+        }
+        setLoading(false);
+      };
+
+      updateExpiredReports();
+    }
+  }, [isAdmin]);
+
+  if (loadingProfile || loading) {
     return <GordonLoader />;
   }
 
