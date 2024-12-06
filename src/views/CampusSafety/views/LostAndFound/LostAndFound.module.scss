@@ -19,6 +19,14 @@
   }
 }
 
+.dataFoundRow {
+  padding: 0;
+  transition: background-color 0.5s;
+  background-color: var(--mui-palette-success-main);
+  color: var(--mui-palette-success-contrastText);
+  margin-bottom: 3px;
+}
+
 .clickableRow {
   cursor: pointer;
   &:hover {
@@ -61,6 +69,12 @@
 
 .wrapText {
   overflow-wrap: break-word;
+}
+
+.badgeposition {
+  position: absolute;
+  top: 15px;
+  left: 15px;
 }
 
 /* Responsive Styling */

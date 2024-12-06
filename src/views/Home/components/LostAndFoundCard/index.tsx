@@ -16,6 +16,8 @@ import { MissingItemReport } from 'services/lostAndFound'; // Import the type fr
 import { DateTime } from 'luxon';
 import { Launch, NotListedLocation, WhereToVote } from '@mui/icons-material';
 import GordonLoader from 'components/Loader';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import Badge from '@mui/material/Badge';
 
 const formatDate = (date: string) => {
   return DateTime.fromISO(date).toFormat('MM/dd/yy'); // Adjust format as needed
@@ -36,6 +38,7 @@ const noReports = (
 
 const LostAndFoundCard = () => {
   const [activeReports, setActiveReports] = useState<MissingItemReport[] | null>(null);
+  const [foundReports, setFoundReports] = useState<MissingItemReport[] | null>(null); // Separate state for found items
   const [countNotIncluded, setCountNotIncluded] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -50,24 +53,35 @@ const LostAndFoundCard = () => {
         const reports: MissingItemReport[] = await lostAndFoundService.getMissingItemReportUser();
 
         // Map the reports into active and past reports
-        var active = reports
-          .filter((report) => report.status === 'active') // Filter for non-found items
+        const active = reports
+          .filter((report) => report.status === 'active') // Active
           .sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime())
           .map((report) => ({
             ...report,
             colors: report.colors || [], // Ensure colors is an array
           }));
+        // For Found reports
+        const found = reports
+          .filter((report) => report.status.toLowerCase() === 'found') // Found
+          .sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime())
+          .map((report) => ({
+            ...report,
+            colors: report.colors || [],
+          }));
 
         // Trim reports down to 3 reports
         if (active.length > numReportsToDisplay) {
           setCountNotIncluded(active.length - numReportsToDisplay);
-          active = active.slice(0, numReportsToDisplay);
+          setActiveReports(active.slice(0, numReportsToDisplay));
+        } else {
+          setCountNotIncluded(0);
+          setActiveReports(active);
         }
-
-        setActiveReports(active);
+        setFoundReports(found);
       } catch (error) {
         console.error('Error fetching missing items:', error);
         setActiveReports([]);
+        setFoundReports([]);
       } finally {
         setLoading(false);
       }
@@ -100,11 +114,17 @@ const LostAndFoundCard = () => {
   );
 
   // Component defining each row of the report grid
-  const reportRow = (report: MissingItemReport) => (
+  const reportRow = (report: MissingItemReport, isFoundSection: boolean = false) => (
     <Card
-      className={`${styles.dataRow} ${
-        report.status.toLowerCase() === 'active' ? styles.clickableRow : ''
+      className={`${isFoundSection && report.status.toLowerCase() === 'found' ? styles.dataFoundRow : styles.dataRow} ${
+        styles.clickableRow
       }`}
+      onClick={() => {
+        // Navigate to the edit page for found items
+        if (isFoundSection && report.status.toLowerCase() === 'found') {
+          navigate(`/lostandfound/${report.recordID}`);
+        }
+      }}
     >
       <CardContent
         className={styles.dataContent}
@@ -178,6 +198,41 @@ const LostAndFoundCard = () => {
             </Button>
           </Grid>
         </Grid>
+        {foundReports && foundReports.length > 0 && (
+          <>
+            <Card>
+              <CardHeader
+                title={
+                  <Grid container alignItems="center" position="relative">
+                    {/* Badge positioned on the top-left corner */}
+                    <Badge
+                      badgeContent={foundReports.length}
+                      color="error"
+                      overlap="circular"
+                      showZero={false}
+                      sx={{
+                        position: 'absolute',
+                        top: '15px',
+                        left: '160px',
+                      }}
+                    />
+                    <Grid item xs={12}>
+                      <Typography variant="h6">Recently Found</Typography>
+                    </Grid>
+                  </Grid>
+                }
+              />
+            </Card>
+            {reportHeader()}
+            {foundReports.map((report) => reportRow(report, true))}
+            {/* Conditional message under the "Found" items */}
+            <Grid item xs={12} style={{ marginTop: '0.3rem' }}>
+              <Typography variant="inherit" align="center" color="var(--mui-palette-success-main)">
+                Check your email for an update on your item(s).
+              </Typography>
+            </Grid>
+          </>
+        )}
         <Card>
           <CardHeader title="My Reports" />
         </Card>

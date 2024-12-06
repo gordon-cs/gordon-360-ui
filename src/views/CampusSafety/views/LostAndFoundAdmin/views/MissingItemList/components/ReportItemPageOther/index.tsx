@@ -29,6 +29,8 @@ import quickSearchService, { SearchResult } from 'services/quickSearch';
 import ConfirmReport from 'views/CampusSafety/views/LostAndFound/views/MissingItemCreate/components/confirmReport';
 import GordonSnackbar from 'components/Snackbar';
 import ReportStolenModal from 'views/CampusSafety/views/LostAndFound/views/MissingItemCreate/components/reportStolen';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 
 const MIN_QUERY_LENGTH = 2;
 
@@ -248,7 +250,7 @@ const ReportItemPage = () => {
         stolen: formData.stolen,
         stolenDescription: formData.stolenDescription,
         submitterUsername: '',
-        dateLost: formData.dateLost || DateTime.now().toISO(),
+        dateLost: new Date(formData.dateLost).toISOString() || DateTime.now().toISO(),
         dateCreated: DateTime.now().toISO(),
         status: 'active',
         phone: formData.phoneNumber, // Include phone number
@@ -346,6 +348,67 @@ const ReportItemPage = () => {
         </FormGroup>
       </Grid>
     </Grid>
+  );
+
+  // Using DatePicker component from MUI/x, with custom styling to fix dark mode contrast issues
+  const customDatePicker = (
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <DatePicker
+        label="Date Lost"
+        value={formData.dateLost === '' ? null : formData.dateLost}
+        onChange={(value) => setFormData({ ...formData, dateLost: value?.toString() || '' })}
+        disableFuture
+        orientation="portrait"
+        name="Date Lost"
+        // Custom styling for the input field, to make it look like filled variant
+        sx={{
+          backgroundColor: 'var(--mui-palette-FilledInput-bg);',
+          paddingTop: '7px;',
+          borderRadius: '5px;',
+          width: '100%;',
+          '& .Mui-focused .MuiOutlinedInput-notchedOutline': { border: 'none' },
+          '& .MuiInputLabel-shrink': {
+            transform: 'translate(14px, 4px) scale(0.75);',
+          },
+          '& .MuiFormLabel-root.Mui-focused': {
+            color: 'var(--mui-palette-secondary-main);',
+          },
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderWidth: '0;',
+            borderBottom:
+              '1px solid rgba(var(--mui-palette-common-onBackgroundChannel) / var(--mui-opacity-inputUnderline));',
+            borderRadius: '0;',
+          },
+        }}
+        // Custom styling for popup box, better dark mode contrast
+        // Thanks to help for understanding from
+        // https://blog.openreplay.com/styling-and-customizing-material-ui-date-pickers/
+        slotProps={{
+          layout: {
+            sx: {
+              '& .MuiPickersLayout-contentWrapper .Mui-selected': {
+                backgroundColor: 'var(--mui-palette-secondary-400);',
+              },
+              '.MuiPickersLayout-contentWrapper .MuiPickersDay-root:focus.Mui-selected': {
+                backgroundColor: 'var(--mui-palette-secondary-400);',
+              },
+              '.MuiPickersLayout-contentWrapper .MuiPickersDay-root.Mui-selected': {
+                backgroundColor: 'var(--mui-palette-secondary-400);',
+              },
+            },
+          },
+          actionBar: {
+            sx: {
+              ...{
+                '& .MuiButtonBase-root': {
+                  color: 'var(--mui-palette-secondary-400);',
+                },
+              },
+            },
+          },
+        }}
+      />
+    </LocalizationProvider>
   );
 
   return (
@@ -575,21 +638,7 @@ const ReportItemPage = () => {
                 />
               </Grid>
               <Grid item margin={2}>
-                <TextField
-                  fullWidth
-                  variant="filled"
-                  label={'Date Lost'}
-                  InputLabelProps={{ shrink: true }}
-                  name="dateLost"
-                  type="date"
-                  value={formData.dateLost}
-                  onChange={handleChange}
-                  error={!!validationErrors.dateLost}
-                  helperText={validationErrors.dateLost}
-                  inputProps={{
-                    max: DateTime.now().toISODate(),
-                  }}
-                />
+                {customDatePicker}
               </Grid>
             </Grid>
           </Grid>

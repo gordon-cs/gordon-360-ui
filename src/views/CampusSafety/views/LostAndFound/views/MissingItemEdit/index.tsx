@@ -11,6 +11,9 @@ import {
   Button,
   FormLabel,
   Typography,
+  useMediaQuery,
+  Box,
+  Chip,
 } from '@mui/material';
 import { DateTime } from 'luxon';
 import Header from 'views/CampusSafety/components/Header';
@@ -22,11 +25,14 @@ import { useNavigate, useParams } from 'react-router';
 import GordonLoader from 'components/Loader';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 const MissingItemFormEdit = () => {
   const navigate = useNavigate();
   const { itemid } = useParams<{ itemid: string }>();
   const [loading, setLoading] = useState<boolean>(true);
+  const [isPickedUp, setIsPickedUp] = useState(false); //Added this to manage the button disable
 
   const [user, setUser] = useState({
     firstName: '',
@@ -47,6 +53,8 @@ const MissingItemFormEdit = () => {
     stolenDescription: '',
     dateLost: '',
     dateCreated: '',
+    submitterUsername: '',
+    forGuest: false,
     status: 'active',
   });
 
@@ -93,6 +101,8 @@ const MissingItemFormEdit = () => {
           stolenDescription: item.stolenDescription || '',
           dateLost: item.dateLost,
           dateCreated: item.dateCreated,
+          submitterUsername: item.submitterUsername,
+          forGuest: item.forGuest,
           status: item.status || 'active',
         });
       }
@@ -119,13 +129,25 @@ const MissingItemFormEdit = () => {
     setShowConfirm(true);
   };
 
+  const handlePickup = async () => {
+    const requestData = {
+      ...formData,
+      status: 'PickedUp', // Change status to 'pickup'
+    };
+
+    try {
+      await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemid || ''));
+      setIsPickedUp(true);
+      //navigate('/lostandfound');
+    } catch (error) {
+      console.error('Error updating report status:', error);
+    }
+  };
+
   const handleReportSubmit = async () => {
     const requestData = {
       ...formData,
-      ...user,
-      submitterUsername: user.AD_Username,
       dateLost: new Date(formData.dateLost).toISOString() || DateTime.now().toISO(),
-      forGuest: false,
     };
     await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemid || ''));
     navigate('/lostandfound');
@@ -208,6 +230,58 @@ const MissingItemFormEdit = () => {
             <GordonLoader />
           ) : (
             <>
+              {/* Display the "Found" notice only if the status is "found" */}
+              {formData.status.toLowerCase() === 'found' && (
+                <Grid container xs={9.7} className={styles.foundContainer} rowGap={2}>
+                  <Grid container item xs={12} md={6} rowGap={2}>
+                    <Grid item xs={12}>
+                      <Chip
+                        className={styles.largeChip}
+                        // Wrap chip text if needed
+                        sx={{
+                          height: 'auto',
+                          '& .MuiChip-label': {
+                            display: 'block',
+                            whiteSpace: 'normal',
+                          },
+                        }}
+                        label={
+                          <>
+                            <Typography>
+                              Gordon Police marked this item as{' '}
+                              <Typography component="span" className={styles.foundText}>
+                                Found
+                              </Typography>
+                            </Typography>
+                          </>
+                        }
+                        color="success"
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Grid container columnGap={1} height="100%" alignItems="center">
+                        <Typography>
+                          <InfoOutlinedIcon color="inherit" /> Check your email for pickup
+                          instructions.{' '}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid container item xs={12} md={6} className={styles.buttonContainer}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      startIcon={<CheckCircleOutlineIcon />}
+                      onClick={handlePickup}
+                      className={styles.pickupButton}
+                      disabled={isPickedUp} // Disable the button if the item is picked up
+                    >
+                      {/* Update text based on if the item is picked up */}
+                      {isPickedUp ? 'Item Picked Up' : 'Mark as Picked Up'}{' '}
+                    </Button>
+                  </Grid>
+                </Grid>
+              )}
               <Grid container justifyContent="center">
                 <Grid item sm={5} xs={12}>
                   {/* Item Category */}
@@ -377,8 +451,13 @@ const MissingItemFormEdit = () => {
                 </Grid>
               </Grid>
 
-              <Grid container justifyContent="flex-end" className={styles.submit_container}>
-                <Grid item xs={2}>
+              <Grid
+                container
+                spacing={2}
+                justifyContent="center"
+                className={styles.submit_container}
+              >
+                <Grid item xs={12} sm={5} md={2}>
                   <Button
                     variant="contained"
                     fullWidth
