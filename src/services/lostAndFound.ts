@@ -84,7 +84,6 @@ const createMissingItemReport = (data: Omit<MissingItemReport, 'recordID'>): Pro
     dateCreated: now.toISOString(),
     colors: data.colors || [], // Ensures colors is an array, even if not defined
   };
-  console.log(formattedData.dateCreated.toString());
   return http.post<number>('lostandfound/missingitem', formattedData);
 };
 
