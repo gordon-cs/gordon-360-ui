@@ -64,8 +64,7 @@
 }
 
 .tableHeader {
-  padding: 1rem;
-  padding-bottom: -1rem;
+  padding: 1rem; // Ensure this style applies in production build
   background-color: var(--mui-palette-primary-main);
   color: var(--mui-palette-primary-contrastText);
 }
@@ -75,8 +74,7 @@
 }
 
 .headerPlaceholder {
-  padding: 1rem;
-  padding-bottom: -1rem;
+  padding: 1rem; // Ensure this style applies in production build
 }
 
 .verticalSpacer {
