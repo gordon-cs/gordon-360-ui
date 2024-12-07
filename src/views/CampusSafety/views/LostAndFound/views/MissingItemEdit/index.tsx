@@ -30,7 +30,7 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 const MissingItemFormEdit = () => {
   const navigate = useNavigate();
-  const { itemid } = useParams<{ itemid: string }>();
+  const { itemId } = useParams<{ itemId: string }>();
   const [loading, setLoading] = useState<boolean>(true);
   const [isPickedUp, setIsPickedUp] = useState(false); //Added this to manage the button disable
 
@@ -88,8 +88,8 @@ const MissingItemFormEdit = () => {
 
   useEffect(() => {
     const fetchItemData = async () => {
-      if (itemid) {
-        const item = await lostAndFoundService.getMissingItemReport(parseInt(itemid));
+      if (itemId) {
+        const item = await lostAndFoundService.getMissingItemReport(parseInt(itemId));
         setFormData({
           reportID: item?.recordID || 0,
           category: item.category,
@@ -108,7 +108,7 @@ const MissingItemFormEdit = () => {
       }
     };
     fetchItemData();
-  }, [itemid]);
+  }, [itemId]);
 
   useEffect(() => {
     if (formData.reportID > 0) {
@@ -149,7 +149,7 @@ const MissingItemFormEdit = () => {
       ...formData,
       dateLost: new Date(formData.dateLost).toISOString() || DateTime.now().toISO(),
     };
-    await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemid || ''));
+    await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemId || ''));
     navigate('/lostandfound');
   };
 
