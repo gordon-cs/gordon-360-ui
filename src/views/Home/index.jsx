@@ -9,6 +9,8 @@ import GuestWelcome from './components/GuestWelcome';
 import NewsCard from './components/NewsCard';
 import LostAndFoundCard from './components/LostAndFoundCard';
 import DaysLeft from './components/DaysLeft';
+import Stack from '@mui/material/Stack';
+
 const Home = () => {
   const { profile, loading } = useUser();
 
@@ -28,14 +30,10 @@ const Home = () => {
         <Grid item xs={12} md={5}>
           <DiningBalance />
         </Grid>
-        <Grid container item xs={12} md={5}>
-          <Grid item xs={12}>
-            <LostAndFoundCard />
-          </Grid>
-          <Grid item xs={12}>
-            <NewsCard />
-          </Grid>
-        </Grid>
+        <Stack spacing={2} padding={2}>
+          <LostAndFoundCard />
+          <NewsCard />
+        </Stack>
       </Grid>
     );
   }
