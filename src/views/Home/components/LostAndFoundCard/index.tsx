@@ -165,18 +165,17 @@ const LostAndFoundCard = () => {
       <Card>
         <CardHeader
           title={
-            <Grid container direction="row">
-              <Grid item xs={7}>
-                Lost and Found
+            <Link to="/lostandfound">
+              <Grid container direction="row">
+                <Grid item xs={7}>
+                  Lost and Found
+                </Grid>
+                <Grid container direction="row" justifyContent={'flex-end'} item xs={5}>
+                  <Launch color="secondary" />
+                </Grid>
               </Grid>
-              <Grid container direction="row" justifyContent={'flex-end'} item xs={5}>
-                <Launch color="secondary" />
-              </Grid>
-            </Grid>
+            </Link>
           }
-          onClick={() => {
-            navigate('/lostandfound');
-          }}
           className={`gc360_header ${customStyles.linkHeader}`}
         />
         <CardContent>
