@@ -13,14 +13,13 @@ import lostAndFoundService from 'services/lostAndFound';
 import styles from '../../../../views/CampusSafety/views/LostAndFound/LostAndFound.module.css'; // Import the external CSS
 import customStyles from './LostAndFoundCard.module.scss';
 import { MissingItemReport } from 'services/lostAndFound'; // Import the type from the service
-import { DateTime } from 'luxon';
+import { format } from 'date-fns';
 import { Launch, NotListedLocation, WhereToVote } from '@mui/icons-material';
 import GordonLoader from 'components/Loader';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import Badge from '@mui/material/Badge';
 
 const formatDate = (date: string) => {
-  return DateTime.fromISO(date).toFormat('MM/dd/yy'); // Adjust format as needed
+  return format(Date.parse(date), 'MM/dd/yy');
 };
 
 const noReports = (
