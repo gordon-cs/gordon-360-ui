@@ -30,10 +30,12 @@ const Home = () => {
         <Grid item xs={12} md={5}>
           <DiningBalance />
         </Grid>
-        <Stack spacing={2} padding={2}>
-          <LostAndFoundCard />
-          <NewsCard />
-        </Stack>
+        <Grid item xs={12} md={5}>
+          <Stack spacing={2}>
+            <LostAndFoundCard />
+            <NewsCard />
+          </Stack>
+        </Grid>
       </Grid>
     );
   }
