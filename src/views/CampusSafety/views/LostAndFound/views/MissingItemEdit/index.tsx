@@ -45,6 +45,8 @@ const MissingItemFormEdit = () => {
     stolenDescription: '',
     dateLost: '',
     dateCreated: '',
+    submitterUsername: '',
+    forGuest: false,
     status: 'active',
   });
 
@@ -131,6 +133,8 @@ const MissingItemFormEdit = () => {
           stolenDescription: originalReport.stolenDescription || '',
           dateLost: originalReport.dateLost,
           dateCreated: originalReport.dateCreated,
+          submitterUsername: originalReport.submitterUsername,
+          forGuest: originalReport.forGuest,
           status: originalReport.status || 'active',
         });
       }
