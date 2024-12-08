@@ -28,6 +28,12 @@ const ALL_HALLS = [
 // building codes associated with the village
 const VILLAGE_IDS = ['GRA', 'RID', 'MCI', 'CON'];
 
+// takes phone number from api return and makes readable version
+const formatPhoneNumber = (phoneNumber) => {
+  if (!phoneNumber || phoneNumber.length !== 10) return phoneNumber;
+  return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6)}`;
+};
+
 const BasicSelect = () => {
   const [value, setValue] = useState('');
   const [loading, setLoading] = useState(false);
@@ -138,8 +144,15 @@ const BasicSelect = () => {
                       >
                         Teams
                       </a>
+                    ) : hallDetails.PreferredContact ? (
+                      <a
+                        href={`tel:${hallDetails.PreferredContact}`}
+                        style={{ textDecoration: 'none', color: 'inherit' }}
+                      >
+                        {formatPhoneNumber(hallDetails.PreferredContact)}
+                      </a>
                     ) : (
-                      hallDetails.PreferredContact || 'No Contact Info'
+                      'No Contact Info'
                     )}
                   </Typography>
                   <Typography>

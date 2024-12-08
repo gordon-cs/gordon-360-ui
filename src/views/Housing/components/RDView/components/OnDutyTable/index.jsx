@@ -121,8 +121,15 @@ const OnDutyTable = () => {
               Teams
             </StyledLink>
           ) : (
-            formatPhoneNumber(item.PreferredContact)
+            <StyledLink
+              href={`tel:${item.PreferredContact}`}
+              underline="hover"
+              className="gc360_text_link"
+            >
+              {formatPhoneNumber(item.PreferredContact)}
+            </StyledLink>
           ),
+
           checkInTime: new Date(item.Check_in_time).toLocaleTimeString([], {
             hour: '2-digit',
             minute: '2-digit',

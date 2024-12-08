@@ -26,7 +26,7 @@ import { React, useEffect, useState } from 'react';
 import { ListItemIcon, ListItemText, ListSubheader, List, ListItem, Link } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { checkIfCheckedIn, submitCheckIn } from 'services/residentLife/RA_Checkin';
-import { preferredContact } from 'services/residentLife/ResidentStaff';
+import { preferredContact, PrefContactMethod } from 'services/residentLife/ResidentStaff';
 import { useUser } from 'hooks';
 
 const RAView = () => {
@@ -60,6 +60,22 @@ const RAView = () => {
     };
 
     fetchData();
+  }, [profile?.ID]);
+
+  //Auto set radio button in pref contact card to current pref method
+  useEffect(() => {
+    const fetchPreferredContact = async () => {
+      if (profile?.ID) {
+        try {
+          const contactPreference = await PrefContactMethod(profile.ID);
+          setSelectedContact(contactPreference?.PreferredContact || '');
+        } catch (error) {
+          console.error('Error fetching preferred contact method:', error);
+        }
+      }
+    };
+
+    fetchPreferredContact();
   }, [profile?.ID]);
 
   const hallCodeToNameMap = {
