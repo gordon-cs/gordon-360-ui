@@ -34,6 +34,20 @@ const MissingItemFormEdit = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [isPickedUp, setIsPickedUp] = useState(false); //Added this to manage the button disable
 
+  const [originalFormData, setOriginalFormData] = useState({
+    reportID: 0,
+    category: '',
+    colors: [] as string[],
+    brand: '',
+    description: '',
+    locationLost: '',
+    stolen: false,
+    stolenDescription: '',
+    dateLost: '',
+    dateCreated: '',
+    status: 'active',
+  });
+
   const [user, setUser] = useState({
     firstName: '',
     lastName: '',
@@ -105,6 +119,20 @@ const MissingItemFormEdit = () => {
           forGuest: item.forGuest,
           status: item.status || 'active',
         });
+        const originalReport = await lostAndFoundService.getMissingItemReport(parseInt(itemid));
+        setOriginalFormData({
+          reportID: originalReport?.recordID || 0,
+          category: originalReport.category,
+          colors: originalReport.colors || [],
+          brand: originalReport.brand || '',
+          description: originalReport.description,
+          locationLost: originalReport.locationLost,
+          stolen: originalReport.stolen,
+          stolenDescription: originalReport.stolenDescription || '',
+          dateLost: originalReport.dateLost,
+          dateCreated: originalReport.dateCreated,
+          status: originalReport.status || 'active',
+        });
       }
     };
     fetchItemData();
@@ -149,7 +177,32 @@ const MissingItemFormEdit = () => {
       ...formData,
       dateLost: new Date(formData.dateLost).toISOString() || DateTime.now().toISO(),
     };
+    const formFields = Object.keys(formData);
+    let newActionNote = '';
+    for (let i = 0; i < formFields.length; i++) {
+      if (
+        JSON.stringify(originalFormData[formFields[i] as keyof typeof originalFormData]) !==
+        JSON.stringify(formData[formFields[i] as keyof typeof formData])
+      ) {
+        newActionNote +=
+          formFields[i] +
+          ': OLD: ' +
+          originalFormData[formFields[i] as keyof typeof originalFormData] +
+          ', NEW: ' +
+          formData[formFields[i] as keyof typeof formData] +
+          ' ';
+      }
+    }
     await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemid || ''));
+    const actionRequestData = {
+      missingID: parseInt(itemid || ''),
+      actionDate: DateTime.now().toISO(),
+      username: user.AD_Username,
+      isPublic: true,
+      action: 'Edited',
+      actionNote: newActionNote,
+    };
+    await lostAndFoundService.createAdminAction(parseInt(itemid || ''), actionRequestData);
     navigate('/lostandfound');
   };
 
