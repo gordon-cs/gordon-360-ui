@@ -26,6 +26,7 @@ import DeleteConfirmationModal from './components/DeleteConfirmation';
 import { DateTime } from 'luxon';
 import { useWindowSize } from 'hooks';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import GordonLoader from 'components/Loader';
 import Badge from '@mui/material/Badge';
 
 const formatDate = (date: string) => {
@@ -398,95 +399,106 @@ const LostAndFound = () => {
 
       {titleCard()}
 
-      {/* Recently Found Reports */}
-      {foundReports.length > 0 && (
-        <Grid container justifyContent="center" spacing={3} marginTop={3}>
-          <Grid item xs={12} md={10}>
-            <Card>
-              <CardHeader
-                className="gc360_header"
-                title={
-                  <Grid container alignItems="center" position="relative" justifyContent="center">
-                    {/* Badge positioned on the top-left corner */}
-                    <Badge
-                      badgeContent={foundReports.length}
-                      color="error"
-                      className={styles.badgeposition}
-                    />
-                    <Grid item xs={9}>
+      {loading || activeReports === null ? (
+        <GordonLoader />
+      ) : (
+        <>
+          {/* Recently Found Reports */}
+          {foundReports.length > 0 && (
+            <Grid container justifyContent="center" spacing={3} marginTop={3}>
+              <Grid item xs={12} md={10}>
+                <Card>
+                  <CardHeader
+                    className="gc360_header"
+                    title={
+                      <Grid
+                        container
+                        alignItems="center"
+                        position="relative"
+                        justifyContent="center"
+                      >
+                        {/* Badge positioned on the top-left corner */}
+                        <Badge
+                          badgeContent={foundReports.length}
+                          color="error"
+                          className={styles.badgeposition}
+                        />
+                        <Grid item xs={9}>
+                          <Typography variant="h5" align="center">
+                            My Recently <span className={styles.yellowText}>Found</span> Items
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    }
+                  />
+                </Card>
+              </Grid>
+              <Grid item xs={12} md={10}>
+                {/* Render header row */}
+                {reportHeader(false)}
+                {/* Filter and display found items */}
+                {foundReports
+                  .filter((report) => report.status.toLowerCase() === 'found')
+                  .map((report) => reportRow(report, true))}
+              </Grid>
+            </Grid>
+          )}
+          {/* Active Missing Item Reports */}
+          {activeReports.length > 0 && (
+            <Grid container justifyContent="center" spacing={3} marginTop={3}>
+              <Grid item xs={12} md={10}>
+                <Card>
+                  <CardHeader
+                    className="gc360_header"
+                    title={
                       <Typography variant="h5" align="center">
-                        My Recently <span className={styles.yellowText}>Found</span> Items
+                        My Active <span className={styles.yellowText}>Lost</span> Item Reports
                       </Typography>
-                    </Grid>
-                  </Grid>
-                }
-              />
-            </Card>
-          </Grid>
-          <Grid item xs={12} md={10}>
-            {/* Render header row */}
-            {reportHeader(false)}
-            {/* Filter and display found items */}
-            {foundReports
-              .filter((report) => report.status.toLowerCase() === 'found')
-              .map((report) => reportRow(report, true))}
-          </Grid>
-        </Grid>
-      )}
-      {/* Active Missing Item Reports */}
-      {activeReports.length > 0 && (
-        <Grid container justifyContent="center" spacing={3} marginTop={3}>
-          <Grid item xs={12} md={10}>
-            <Card>
-              <CardHeader
-                className="gc360_header"
-                title={
-                  <Typography variant="h5" align="center">
-                    My Active <span className={styles.yellowText}>Lost</span> Item Reports
-                  </Typography>
-                }
-              />
-            </Card>
-          </Grid>
-          <Grid item xs={12} md={10}>
-            {/* Render header row only on large screens */}
-            {reportHeader()}
-            {/* Active Reports */}
-            {activeReports.map((report) => reportRow(report))}
-          </Grid>
-        </Grid>
-      )}
-      <DeleteConfirmationModal
-        open={isDeleteModalOpen}
-        onClose={handleModalClose}
-        onSubmit={handleModalSubmit}
-      />
+                    }
+                  />
+                </Card>
+              </Grid>
+              <Grid item xs={12} md={10}>
+                {/* Render header row only on large screens */}
+                {reportHeader()}
+                {/* Active Reports */}
+                {activeReports.map((report) => reportRow(report))}
+              </Grid>
+            </Grid>
+          )}
+          <DeleteConfirmationModal
+            open={isDeleteModalOpen}
+            onClose={handleModalClose}
+            onSubmit={handleModalSubmit}
+          />
 
-      {/* Past Missing Item Reports */}
-      {pastReports.length > 0 && (
-        <Grid container justifyContent="center" spacing={3} marginTop={3}>
-          <Grid item xs={12} md={10}>
-            <Card>
-              <CardHeader
-                className="gc360_header"
-                title={
-                  <Typography variant="h6" align="left">
-                    My Past Reports
-                  </Typography>
-                }
-              />
-            </Card>
-          </Grid>
-          <Grid item xs={12} md={10}>
-            {/* Render header row only on large screens */}
-            {reportHeader(false)}
-            {/* Past Reports */}
-            {pastReports.map((report) => reportRow(report, false, true))}
-          </Grid>
-        </Grid>
+          {/* Past Missing Item Reports */}
+          {pastReports.length > 0 && (
+            <Grid container justifyContent="center" spacing={3} marginTop={3}>
+              <Grid item xs={12} md={10}>
+                <Card>
+                  <CardHeader
+                    className="gc360_header"
+                    title={
+                      <Typography variant="h6" align="left">
+                        My Past Reports
+                      </Typography>
+                    }
+                  />
+                </Card>
+              </Grid>
+              <Grid item xs={12} md={10}>
+                {/* Render header row only on large screens */}
+                {reportHeader(false)}
+                {/* Past Reports */}
+                {pastReports.map((report) => reportRow(report, false, true))}
+              </Grid>
+            </Grid>
+          )}
+          <br />
+          <br />
+        </>
       )}
-      <br />
-      <br />
     </>
   );
 };
