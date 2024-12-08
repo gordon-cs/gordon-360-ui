@@ -7,20 +7,20 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import lostAndFoundService from 'services/lostAndFound';
 import styles from '../../../../views/CampusSafety/views/LostAndFound/LostAndFound.module.css'; // Import the external CSS
 import customStyles from './LostAndFoundCard.module.scss';
 import { MissingItemReport } from 'services/lostAndFound'; // Import the type from the service
-import { DateTime } from 'luxon';
+import { format } from 'date-fns';
 import { Launch, NotListedLocation, WhereToVote } from '@mui/icons-material';
 import GordonLoader from 'components/Loader';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import Badge from '@mui/material/Badge';
+import GordonSnackbar from 'components/Snackbar';
 
 const formatDate = (date: string) => {
-  return DateTime.fromISO(date).toFormat('MM/dd/yy'); // Adjust format as needed
+  return format(Date.parse(date), 'MM/dd/yy');
 };
 
 const noReports = (
@@ -41,10 +41,15 @@ const LostAndFoundCard = () => {
   const [foundReports, setFoundReports] = useState<MissingItemReport[] | null>(null); // Separate state for found items
   const [countNotIncluded, setCountNotIncluded] = useState<number>(0);
   const [loading, setLoading] = useState(true);
+  const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
   const navigate = useNavigate();
   const isMobile = useMediaQuery('(max-width:375px)');
 
   const numReportsToDisplay = 4;
+
+  const createSnackbar = useCallback((message, severity) => {
+    setSnackbar({ message, severity, open: true });
+  }, []);
 
   useEffect(() => {
     const fetchMissingItems = async () => {
@@ -80,6 +85,7 @@ const LostAndFoundCard = () => {
         setFoundReports(found);
       } catch (error) {
         console.error('Error fetching missing items:', error);
+        createSnackbar(`Error fetching missing items.`, `error`);
         setActiveReports([]);
         setFoundReports([]);
       } finally {
@@ -155,111 +161,122 @@ const LostAndFoundCard = () => {
   );
 
   return (
-    <Card>
-      <CardHeader
-        title={
-          <Grid container direction="row">
-            <Grid item xs={7}>
-              Lost and Found
+    <>
+      <Card>
+        <CardHeader
+          title={
+            <Link to="/lostandfound">
+              <Grid container direction="row">
+                <Grid item xs={7}>
+                  Lost and Found
+                </Grid>
+                <Grid container direction="row" justifyContent={'flex-end'} item xs={5}>
+                  <Launch color="secondary" />
+                </Grid>
+              </Grid>
+            </Link>
+          }
+          className={`gc360_header ${customStyles.linkHeader}`}
+        />
+        <CardContent>
+          <Grid container direction="row" justifyContent="space-between">
+            <Grid item xs={6}>
+              <Button
+                variant="contained"
+                color="secondary"
+                component={Link}
+                to="/lostandfound/missingitemform"
+              >
+                {' '}
+                <NotListedLocation />
+                Report Lost
+              </Button>
             </Grid>
-            <Grid container direction="row" justifyContent={'flex-end'} item xs={5}>
-              <Launch color="secondary" />
+            <Grid container item xs={6} direction="row" justifyContent={'flex-end'}>
+              <Button
+                variant="contained"
+                color="secondary"
+                component={Link}
+                to="/lostandfound/reportfound"
+              >
+                <WhereToVote />
+                Report Found
+              </Button>
             </Grid>
           </Grid>
-        }
-        onClick={() => {
-          navigate('/lostandfound');
-        }}
-        className={`gc360_header ${customStyles.linkHeader}`}
-      />
-      <CardContent>
-        <Grid container direction="row" justifyContent="space-between">
-          <Grid item xs={6}>
-            <Button
-              variant="contained"
-              color="secondary"
-              component={Link}
-              to="/lostandfound/missingitemform"
-            >
-              {' '}
-              <NotListedLocation />
-              Report Lost
-            </Button>
-          </Grid>
-          <Grid container item xs={6} direction="row" justifyContent={'flex-end'}>
-            <Button
-              variant="contained"
-              color="secondary"
-              component={Link}
-              to="/lostandfound/reportfound"
-            >
-              <WhereToVote />
-              Report Found
-            </Button>
-          </Grid>
-        </Grid>
-        {foundReports && foundReports.length > 0 && (
-          <>
-            <Card>
-              <CardHeader
-                title={
-                  <Grid container alignItems="center" position="relative">
-                    {/* Badge positioned on the top-left corner */}
-                    <Badge
-                      badgeContent={foundReports.length}
-                      color="error"
-                      overlap="circular"
-                      showZero={false}
-                      sx={{
-                        position: 'absolute',
-                        top: '15px',
-                        left: '160px',
-                      }}
-                    />
-                    <Grid item xs={12}>
-                      <Typography variant="h6">Recently Found</Typography>
+          {foundReports && foundReports.length > 0 && (
+            <>
+              <Card>
+                <CardHeader
+                  title={
+                    <Grid container alignItems="center" position="relative">
+                      {/* Badge positioned on the top-left corner */}
+                      <Badge
+                        badgeContent={foundReports.length}
+                        color="error"
+                        overlap="circular"
+                        showZero={false}
+                        sx={{
+                          position: 'absolute',
+                          top: '15px',
+                          left: '160px',
+                        }}
+                      />
+                      <Grid item xs={12}>
+                        <Typography variant="h6">Recently Found</Typography>
+                      </Grid>
                     </Grid>
-                  </Grid>
-                }
-              />
-            </Card>
-            {reportHeader()}
-            {foundReports.map((report) => reportRow(report, true))}
-            {/* Conditional message under the "Found" items */}
-            <Grid item xs={12} style={{ marginTop: '0.3rem' }}>
-              <Typography variant="inherit" align="center" color="var(--mui-palette-success-main)">
-                Check your email for an update on your item(s).
-              </Typography>
-            </Grid>
-          </>
-        )}
-        <Card>
-          <CardHeader title="My Reports" />
-        </Card>
-        {loading || activeReports === null ? (
-          <GordonLoader />
-        ) : (
-          <>
-            {activeReports?.length < 1 ? noReports : reportHeader()}
-            {activeReports.map((report) => reportRow(report))}
-            {countNotIncluded > 0 ? (
-              <>
-                <Card>
-                  <CardContent>
-                    <Typography>
-                      {countNotIncluded} more report{countNotIncluded > 1 ? 's' : null} not shown{' '}
-                      <Link to="/lostandfound" className="gc360_text_link">
-                        View All <Launch />
-                      </Link>
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </>
-            ) : null}
-          </>
-        )}
-      </CardContent>
-    </Card>
+                  }
+                />
+              </Card>
+              {reportHeader()}
+              {foundReports.map((report) => reportRow(report, true))}
+              {/* Conditional message under the "Found" items */}
+              <Grid item xs={12} style={{ marginTop: '0.3rem' }}>
+                <Typography
+                  variant="inherit"
+                  align="center"
+                  color="var(--mui-palette-success-main)"
+                >
+                  Check your email for an update on your item(s).
+                </Typography>
+              </Grid>
+            </>
+          )}
+          <Card>
+            <CardHeader title="My Reports" />
+          </Card>
+          {loading || activeReports === null ? (
+            <GordonLoader />
+          ) : (
+            <>
+              {activeReports?.length < 1 ? noReports : reportHeader()}
+              {activeReports.map((report) => reportRow(report))}
+              {countNotIncluded > 0 ? (
+                <>
+                  <Card>
+                    <CardContent>
+                      <Typography>
+                        {countNotIncluded} more report{countNotIncluded > 1 ? 's' : null} not shown{' '}
+                        <Link to="/lostandfound" className="gc360_text_link">
+                          View All <Launch />
+                        </Link>
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </>
+              ) : null}
+            </>
+          )}
+        </CardContent>
+      </Card>
+      <GordonSnackbar
+        open={snackbar.open}
+        text={snackbar.message}
+        severity={snackbar.severity}
+        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+      />
+    </>
   );
 };
 
