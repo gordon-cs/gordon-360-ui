@@ -25,6 +25,8 @@ import { MissingItemReport, MissingAdminAction } from 'services/lostAndFound'; /
 import DeleteConfirmationModal from './components/DeleteConfirmation';
 import { DateTime } from 'luxon';
 import { useWindowSize } from 'hooks';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import Badge from '@mui/material/Badge';
 import userService from 'services/user';
 
 const formatDate = (date: string) => {
@@ -33,6 +35,7 @@ const formatDate = (date: string) => {
 
 const LostAndFound = () => {
   const [activeReports, setActiveReports] = useState<MissingItemReport[]>([]);
+  const [foundReports, setFoundReports] = useState<MissingItemReport[]>([]);
   const [pastReports, setPastReports] = useState<MissingItemReport[]>([]);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [reportToDelete, setReportToDelete] = useState<string | null>(null);
@@ -67,8 +70,16 @@ const LostAndFound = () => {
             colors: report.colors || [], // Ensure colors is an array
           }));
 
+        const found = reports
+          .filter((report) => report.status.toLowerCase() === 'found') // Only found items
+          .sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime())
+          .map((report) => ({
+            ...report,
+            colors: report.colors || [], // Ensure colors is an array
+          }));
+
         const past = reports
-          .filter((report) => report.status !== 'active') // Filter for found items
+          .filter((report) => report.status !== 'active' && report.status.toLowerCase() !== 'found') // Filter for found items
           .sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime())
           .map((report) => ({
             ...report,
@@ -76,6 +87,7 @@ const LostAndFound = () => {
           }));
 
         setActiveReports(active);
+        setFoundReports(found);
         setPastReports(past);
       } catch (error) {
         console.error('Error fetching missing items:', error);
@@ -253,13 +265,19 @@ const LostAndFound = () => {
   );
 
   // Component defining each row of the report grid
-  const reportRow = (report: MissingItemReport) => (
+  const reportRow = (
+    report: MissingItemReport,
+    isFoundSection: boolean = false,
+    isPastReport: boolean = false,
+  ) => (
     <Card
-      className={`${styles.dataRow} ${
-        report.status.toLowerCase() === 'active' ? styles.clickableRow : ''
-      }`}
+      className={`${
+        isFoundSection && report.status.toLowerCase() === 'found'
+          ? styles.dataFoundRow
+          : styles.dataRow
+      } ${!isPastReport ? styles.clickableRow : ''}`}
     >
-      <Tooltip title="Click to view and edit">
+      <Tooltip title={!isPastReport ? 'Click to view and edit' : ''}>
         <CardContent
           className={styles.dataContent}
           sx={{
@@ -278,7 +296,8 @@ const LostAndFound = () => {
                   xs={11.5}
                   columnGap={1}
                   onClick={
-                    report.status.toLowerCase() === 'active'
+                    (!isPastReport && report.status.toLowerCase() === 'active') ||
+                    report.status.toLowerCase() === 'found'
                       ? () => handleEdit(report.recordID?.toString() || '')
                       : () => {}
                   }
@@ -300,6 +319,14 @@ const LostAndFound = () => {
                     <div className={styles.dataCell}>{report.description}</div>
                   </Grid>
                 </Grid>
+                {/* Show notification for "found" status */}
+                {report.status.toLowerCase() === 'found' && (
+                  <Grid item xs={0.2}>
+                    <Typography>
+                      <NotificationsIcon color="info" />
+                    </Typography>
+                  </Grid>
+                )}
                 {report.status.toLowerCase() === 'active' ? (
                   <>
                     <Grid container item xs={0.5} justifyContent="flex-end">
@@ -321,11 +348,11 @@ const LostAndFound = () => {
                       </Grid>
                     </Grid>
                   </>
-                ) : null}{' '}
+                ) : null}
               </Grid>
             </>
           ) : (
-            /*Desktop View*/
+            /* Desktop View */
             <Grid container>
               <Grid
                 container
@@ -333,7 +360,8 @@ const LostAndFound = () => {
                 xs={11.5}
                 className={styles.rowPadding}
                 onClick={
-                  report.status.toLowerCase() === 'active'
+                  (!isPastReport && report.status.toLowerCase() === 'active') ||
+                  report.status.toLowerCase() === 'found'
                     ? () => handleEdit(report.recordID?.toString() || '')
                     : () => {}
                 }
@@ -347,10 +375,18 @@ const LostAndFound = () => {
                 <Grid item xs={2.6} className={styles.alignData}>
                   <div className={styles.dataCell}>{report.category}</div>
                 </Grid>
-                <Grid item xs={4.5} className={styles.alignData}>
+                <Grid item xs={4.2} className={styles.alignData}>
                   <div className={styles.dataCell}>{report.description}</div>
                 </Grid>
               </Grid>
+              {/* Show notification for "found" status */}
+              {report.status.toLowerCase() === 'found' && (
+                <Grid container item xs={0.5} justifyContent="flex-end" columnGap={1}>
+                  <Grid item xs={4} className={styles.alignData}>
+                    <NotificationsIcon color="info" />
+                  </Grid>
+                </Grid>
+              )}
               {report.status.toLowerCase() === 'active' ? (
                 <>
                   <Grid container item xs={0.5} justifyContent="flex-end" columnGap={1}>
@@ -387,27 +423,64 @@ const LostAndFound = () => {
 
       {titleCard()}
 
+      {/* Recently Found Reports */}
+      {foundReports.length > 0 && (
+        <Grid container justifyContent="center" spacing={3} marginTop={3}>
+          <Grid item xs={12} md={10}>
+            <Card>
+              <CardHeader
+                className="gc360_header"
+                title={
+                  <Grid container alignItems="center" position="relative" justifyContent="center">
+                    {/* Badge positioned on the top-left corner */}
+                    <Badge
+                      badgeContent={foundReports.length}
+                      color="error"
+                      className={styles.badgeposition}
+                    />
+                    <Grid item xs={9}>
+                      <Typography variant="h5" align="center">
+                        My Recently <span className={styles.yellowText}>Found</span> Items
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                }
+              />
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={10}>
+            {/* Render header row */}
+            {reportHeader(false)}
+            {/* Filter and display found items */}
+            {foundReports
+              .filter((report) => report.status.toLowerCase() === 'found')
+              .map((report) => reportRow(report, true))}
+          </Grid>
+        </Grid>
+      )}
       {/* Active Missing Item Reports */}
-      <Grid container justifyContent="center" spacing={3} marginTop={3}>
-        <Grid item xs={12} md={10}>
-          <Card>
-            <CardHeader
-              className="gc360_header"
-              title={
-                <Typography variant="h5" align="center">
-                  My Active <span className={styles.yellowText}>Lost</span> Item Reports
-                </Typography>
-              }
-            />
-          </Card>
+      {activeReports.length > 0 && (
+        <Grid container justifyContent="center" spacing={3} marginTop={3}>
+          <Grid item xs={12} md={10}>
+            <Card>
+              <CardHeader
+                className="gc360_header"
+                title={
+                  <Typography variant="h5" align="center">
+                    My Active <span className={styles.yellowText}>Lost</span> Item Reports
+                  </Typography>
+                }
+              />
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={10}>
+            {/* Render header row only on large screens */}
+            {reportHeader()}
+            {/* Active Reports */}
+            {activeReports.map((report) => reportRow(report))}
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={10}>
-          {/* Render header row only on large screens */}
-          {reportHeader()}
-          {/* Active Reports */}
-          {activeReports.map((report) => reportRow(report))}
-        </Grid>
-      </Grid>
+      )}
       <DeleteConfirmationModal
         open={isDeleteModalOpen}
         onClose={handleModalClose}
@@ -415,26 +488,28 @@ const LostAndFound = () => {
       />
 
       {/* Past Missing Item Reports */}
-      <Grid container justifyContent="center" spacing={3} marginTop={3}>
-        <Grid item xs={12} md={10}>
-          <Card>
-            <CardHeader
-              className="gc360_header"
-              title={
-                <Typography variant="h6" align="left">
-                  My Past Reports
-                </Typography>
-              }
-            />
-          </Card>
+      {pastReports.length > 0 && (
+        <Grid container justifyContent="center" spacing={3} marginTop={3}>
+          <Grid item xs={12} md={10}>
+            <Card>
+              <CardHeader
+                className="gc360_header"
+                title={
+                  <Typography variant="h6" align="left">
+                    My Past Reports
+                  </Typography>
+                }
+              />
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={10}>
+            {/* Render header row only on large screens */}
+            {reportHeader(false)}
+            {/* Past Reports */}
+            {pastReports.map((report) => reportRow(report, false, true))}
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={10}>
-          {/* Render header row only on large screens */}
-          {reportHeader(false)}
-          {/* Past Reports */}
-          {pastReports.map((report) => reportRow(report))}
-        </Grid>
-      </Grid>
+      )}
       <br />
       <br />
     </>

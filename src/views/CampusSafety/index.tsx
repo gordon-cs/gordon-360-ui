@@ -8,9 +8,22 @@ import MissingItemList from './views/LostAndFoundAdmin/views/MissingItemList';
 import MissingItemReportData from './views/LostAndFoundAdmin/views/MissingItemList/components/MissingItemReportData';
 import ReportItemPage from './views/LostAndFoundAdmin/views/MissingItemList/components/ReportItemPageOther';
 import ReportFound from './views/LostAndFound/views/ReportFound';
+import GordonLoader from 'components/Loader';
+import GordonUnauthenticated from 'components/GordonUnauthenticated';
+import { useUser } from 'hooks';
 
 // Routing between Campus Safety App pages
 const CampusSafetyApp = () => {
+  const { profile, loading: loadingProfile } = useUser();
+
+  if (loadingProfile) {
+    return <GordonLoader />;
+  }
+
+  if (!profile) {
+    return <GordonUnauthenticated feature="Lost and Found" />;
+  }
+
   return (
     <Routes>
       <Route path="/:itemid" element={<MissingItemFormEdit />} />
