@@ -22,9 +22,11 @@ msalInstance.initialize().then(() => {
 
   // Listen for sign-in event and set active account
   msalInstance.addEventCallback((event) => {
+    console.log('MSAL Event');
     if (event.eventType === EventType.LOGIN_SUCCESS && event.payload) {
       const payload = event.payload as AuthenticationResult;
       const account = payload.account;
+      console.log(`Login Success event, setting active account to ${account.username}`);
       msalInstance.setActiveAccount(account);
     }
   });

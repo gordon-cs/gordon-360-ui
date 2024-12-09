@@ -37,7 +37,7 @@
     "react-router-hash-link": "^2.4.3",
     "react-to-print": "^2.15.1",
     "react-visibility-sensor": "^5.1.1",
-    "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.3/xlsx-0.19.3.tgz"
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.202",
