@@ -5,7 +5,7 @@ import RDView from './components/RDView';
 import RAView from './components/RAView';
 import ResidentView from './components/ResidentView';
 import StaffView from './components/StaffView';
-import ScottieDog from '/src/views/Page404';
+import Page404 from '/src/views/Page404';
 
 const Housing = () => {
   const isStudent = useAuthGroups(AuthGroup.Student);
@@ -28,7 +28,7 @@ const Housing = () => {
   } else if (hasStandardAccess) {
     return <StaffView />;
   } else {
-    return <ScottieDog />; //user has no access to page
+    return <Page404 />; //user has no access to page
   }
 };
 
