@@ -1,22 +1,13 @@
-import {
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Grid,
-  Typography,
-  useMediaQuery,
-} from '@mui/material';
+import { Card, CardContent, CardHeader, Grid, Typography, useMediaQuery } from '@mui/material';
 import { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import lostAndFoundService from 'services/lostAndFound';
-import { MissingItemReport } from 'services/lostAndFound'; // Import the type from the service
+import { MissingItemReport } from 'services/lostAndFound';
 import { format } from 'date-fns';
-import { Launch, NotListedLocation, WhereToVote } from '@mui/icons-material';
+import { Launch } from '@mui/icons-material';
 import GordonLoader from 'components/Loader';
-import Badge from '@mui/material/Badge';
+import styles from '../../../../views/CampusSafety/views/LostAndFound/LostAndFound.module.css';
 import GordonSnackbar from 'components/Snackbar';
-import styles from '../../../../views/CampusSafety/views/LostAndFound/LostAndFound.module.css'; // Import the external CSS
 
 const formatDate = (date: string) => {
   return format(Date.parse(date), 'MM/dd/yy');
@@ -35,12 +26,52 @@ const noReports = (
   </Grid>
 );
 
-const LostItems = () => {
+const ActiveReports = () => {
   const [loading, setLoading] = useState(true);
   const [activeReports, setActiveReports] = useState<MissingItemReport[] | null>(null);
   const [countNotIncluded, setCountNotIncluded] = useState<number>(0);
   const isMobile = useMediaQuery('(max-width:375px)');
+  const numReportsToDisplay = 4;
+  const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
   const navigate = useNavigate();
+
+  const createSnackbar = useCallback((message, severity) => {
+    setSnackbar({ message, severity, open: true });
+  }, []);
+
+  useEffect(() => {
+    const fetchMissingItems = async () => {
+      try {
+        setLoading(true);
+        const reports: MissingItemReport[] = await lostAndFoundService.getMissingItemReportUser();
+
+        // Map the reports into active and past reports
+        const active = reports
+          .filter((report) => report.status === 'active') // Active
+          .sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime())
+          .map((report) => ({
+            ...report,
+            colors: report.colors || [], // Ensure colors is an array
+          }));
+
+        // Trim reports down to 3 reports
+        if (active.length > numReportsToDisplay) {
+          setCountNotIncluded(active.length - numReportsToDisplay);
+          setActiveReports(active.slice(0, numReportsToDisplay));
+        } else {
+          setCountNotIncluded(0);
+          setActiveReports(active);
+        }
+      } catch (error) {
+        console.error('Error fetching missing items:', error);
+        createSnackbar(`Error fetching missing items.`, `error`);
+        setActiveReports([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMissingItems();
+  }, []);
 
   // The row labelling the column names for the report grid
   const reportHeader = () => (
@@ -107,28 +138,38 @@ const LostItems = () => {
     </Card>
   );
 
-  {
-    loading || activeReports === null ? (
-      <GordonLoader />
-    ) : (
-      <>
-        {activeReports?.length < 1 ? noReports : reportHeader()}
-        {activeReports.map((report) => reportRow(report))}
-        {countNotIncluded > 0 ? (
-          <>
-            <Card>
-              <CardContent>
-                <Typography>
-                  {countNotIncluded} more report{countNotIncluded > 1 ? 's' : null} not shown{' '}
-                  <Link to="/lostandfound" className="gc360_text_link">
-                    View All <Launch />
-                  </Link>
-                </Typography>
-              </CardContent>
-            </Card>
-          </>
-        ) : null}
-      </>
-    );
-  }
+  return (
+    <>
+      {loading || activeReports === null ? (
+        <GordonLoader />
+      ) : (
+        <>
+          {activeReports?.length < 1 ? noReports : reportHeader()}
+          {activeReports.map((report) => reportRow(report))}
+          {countNotIncluded > 0 ? (
+            <>
+              <Card>
+                <CardContent>
+                  <Typography>
+                    {countNotIncluded} more report{countNotIncluded > 1 ? 's' : null} not shown{' '}
+                    <Link to="/lostandfound" className="gc360_text_link">
+                      View All <Launch />
+                    </Link>
+                  </Typography>
+                </CardContent>
+              </Card>
+            </>
+          ) : null}
+        </>
+      )}
+      <GordonSnackbar
+        open={snackbar.open}
+        text={snackbar.message}
+        severity={snackbar.severity}
+        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+      />
+    </>
+  );
 };
+
+export default ActiveReports;
