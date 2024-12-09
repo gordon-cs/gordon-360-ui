@@ -88,7 +88,7 @@ const RoomRanges = () => {
         setPeople(response ? buildingCodes : []);
         console.log('RA List:', response);
       })
-      .catch((error) => console.error('Error fetching RAs:', error));
+      .catch((error) => console.error('Error fetching RA/ACs:', error));
   };
 
   const onClickAddRoomRange = () => {
@@ -171,7 +171,7 @@ const RoomRanges = () => {
         }}
       >
         <Typography variant="h4" gutterBottom>
-          Room Assignment
+          Room Assignments
         </Typography>
       </Card>
 
@@ -179,9 +179,9 @@ const RoomRanges = () => {
       <Card variant="outlined" sx={{ mb: 3 }}>
         <CardContent>
           <Typography variant="h6">Building Selection</Typography>
-          <Typography variant="body1" gutterBottom>
-            Select a building to update the list of available RAs and room ranges for that building.
-            This will also adjust the assignments you can view or modify.
+          <Typography variant="body1" gutterBottom color="secondary">
+            Select a building to update the list of available RA/ACs and room ranges for that
+            building. This will also adjust the assignments you can view or modify.
           </Typography>
           <FormControl fullWidth>
             <InputLabel id="Building">Building</InputLabel>
@@ -216,7 +216,7 @@ const RoomRanges = () => {
       <Card variant="outlined" sx={{ mb: 3 }}>
         <CardContent>
           <Typography variant="h6">Add Room Range</Typography>
-          <Typography variant="body1" gutterBottom>
+          <Typography variant="body1" gutterBottom color="secondary">
             Select a building and specify a start and end room number. Click "Save Range" to add it
             to the list of room ranges.
           </Typography>
@@ -256,7 +256,16 @@ const RoomRanges = () => {
                     sx={{
                       cursor: 'pointer',
                       backgroundColor:
-                        selectedRoomRange === range.RangeID ? 'rgba(0, 0, 0, 0.1)' : 'transparent',
+                        selectedRoomRange === range.RangeID ? 'primary.main' : 'transparent',
+                      '&:hover': {
+                        textDecoration: 'none',
+                        backgroundColor: 'primary.main',
+                        color: 'white',
+                        '@media (hover: none)': {
+                          backgroundColor: 'transparent',
+                          color: 'inherit',
+                        },
+                      },
                     }}
                   >
                     <Box>
@@ -277,7 +286,7 @@ const RoomRanges = () => {
                   </ListItem>
                 ))
               ) : (
-                <ListItem>No room ranges for selected building</ListItem>
+                <ListItem>Please select a building to see the list of Room Ranges.</ListItem>
               )
             ) : (
               <ListItem>Loading room ranges...</ListItem>
@@ -291,28 +300,41 @@ const RoomRanges = () => {
         <CardContent>
           <Typography variant="h6">Assign Person</Typography>
           <List>
-            {filteredPeople.map((person) => (
-              <ListItem
-                key={person.ID}
-                onClick={() => setSelectedPerson(person.ID)}
-                sx={{
-                  cursor: 'pointer',
-                  backgroundColor: selectedPerson === person.ID ? 'primary.main' : 'transparent',
-                  color: selectedPerson === person.ID ? 'white' : 'inherit',
-                  '&:hover': {
-                    textDecoration: 'none',
-                    backgroundColor: 'primary.main',
-                    color: 'white',
-                    '@media (hover: none)': {
-                      backgroundColor: 'transparent',
-                      color: 'inherit',
-                    },
-                  },
-                }}
-              >
-                {person.FirstName} {person.LastName}
+            {filteredPeople.length > 0 ? (
+              <>
+                <Typography variant="body1" gutterBottom color="secondary">
+                  Select a room range and a person, then click "Assign Person" to add them to the
+                  room assignments list below.
+                </Typography>
+                {filteredPeople.map((person) => (
+                  <ListItem
+                    key={person.ID}
+                    onClick={() => setSelectedPerson(person.ID)}
+                    sx={{
+                      cursor: 'pointer',
+                      backgroundColor:
+                        selectedPerson === person.ID ? 'primary.main' : 'transparent',
+                      color: selectedPerson === person.ID ? 'white' : 'inherit',
+                      '&:hover': {
+                        textDecoration: 'none',
+                        backgroundColor: 'primary.main',
+                        color: 'white',
+                        '@media (hover: none)': {
+                          backgroundColor: 'transparent',
+                          color: 'inherit',
+                        },
+                      },
+                    }}
+                  >
+                    {person.FirstName} {person.LastName}
+                  </ListItem>
+                ))}
+              </>
+            ) : (
+              <ListItem>
+                Please select a building to see the list of RA/ACs for that building.
               </ListItem>
-            ))}
+            )}
           </List>
         </CardContent>
 
@@ -348,7 +370,7 @@ const RoomRanges = () => {
                 </ListItem>
               ))
             ) : (
-              <ListItem>No Assignments for selected building</ListItem>
+              <ListItem>Please select a building to see the list of assignments.</ListItem>
             )}
           </List>
         </CardContent>
