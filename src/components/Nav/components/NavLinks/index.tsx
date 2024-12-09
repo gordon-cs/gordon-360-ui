@@ -11,10 +11,11 @@ import TranscriptIcon from '@mui/icons-material/Receipt';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonNavButton from 'components/NavButton';
 import PaletteSwitcherDialog from 'components/PaletteSwitcherDialog';
-import { useAuthGroups, useNetworkStatus } from 'hooks';
-import { useState } from 'react';
+import { useAuthGroups, useNetworkStatus, useUser } from 'hooks';
+import { useEffect, useState } from 'react';
 import { AuthGroup, signOut } from 'services/auth';
 import styles from './NavLinks.module.css';
+import { fetchHousingAccessInfo } from 'services/residentLife/HousingAccess';
 
 type Props = {
   onLinkClick: () => void;
@@ -26,6 +27,28 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
   const isOnline = useNetworkStatus();
   const isAuthenticated = useIsAuthenticated();
   const isSiteAdmin = useAuthGroups(AuthGroup.SiteAdmin);
+  const [canAccessHousing, setCanAccessHousing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const { profile } = useUser();
+
+  useEffect(() => {
+    const fetchHousingAccess = async () => {
+      if (isAuthenticated) {
+        try {
+          const { canAccessHousing } = await fetchHousingAccessInfo(profile);
+          setCanAccessHousing(canAccessHousing);
+        } catch (error) {
+          console.error('Error fetching housing access info:', error);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setLoading(false);
+      }
+    };
+
+    fetchHousingAccess();
+  }, [isAuthenticated]);
 
   const handleSignOut = () => {
     onLinkClick();
@@ -137,7 +160,7 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
     />
   );
 
-  const housingButton = (
+  const housingButton = !loading && canAccessHousing && (
     <GordonNavButton
       unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
       openUnavailableDialog={setDialog}
