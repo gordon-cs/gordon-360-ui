@@ -1,15 +1,5 @@
 import { useState, useEffect } from 'react';
-import {
-  Avatar,
-  Card,
-  CardContent,
-  CardHeader,
-  Grid,
-  Link,
-  setRef,
-  Typography,
-} from '@mui/material';
-
+import { Avatar, Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -17,13 +7,33 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 import { fetchRaInfo } from 'services/residentLife/ResidentStaff';
 import { useUser } from 'hooks';
 
 // Default image
 const COLOR_80808026_1X1 =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNsUAMAASwAqHb28sMAAAAASUVORK5CYII=';
+
+// Takes phone number from api return and makes readable version
+const formatPhoneNumber = (phoneNumber) => {
+  if (!phoneNumber || phoneNumber.length !== 10) return phoneNumber;
+  return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6)}`;
+};
+
+// Determine if the user is on a mobile device
+const isMobile = () => {
+  const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+  return regex.test(navigator.userAgent);
+};
+
+// Styling for links using existing 360 colors
+const StyledLink = styled('a')(({ theme }) => ({
+  color: theme.palette.primary.main,
+  textDecoration: 'none',
+  '&:hover': {
+    color: theme.palette.warning.main,
+  },
+}));
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -48,17 +58,17 @@ const MyRA = () => {
   const [raInfo, setRaInfo] = useState({});
   const [raProfileLink, setRaProfileLink] = useState('');
   const { profile } = useUser();
+  const mobileDevice = isMobile();
 
   useEffect(() => {
     if (profile) {
+      console.log(mobileDevice ? 'Mobile device detected' : 'Desktop device detected');
+
       const hallID = profile.OnCampusBuilding;
       const roomNumber = profile.OnCampusRoom;
-      console.log('hallID', hallID);
-      console.log('roomNumber', roomNumber);
 
       fetchRaInfo(hallID, roomNumber).then((response) => {
         setRaInfo(response);
-        console.log('RA Info:', response);
       });
     }
   }, [profile]);
@@ -68,8 +78,6 @@ const MyRA = () => {
       const email = raInfo.Email;
       if (email) {
         const [firstName, lastName] = email.split('@')[0].split('.');
-        console.log('Split firstName:', firstName);
-        console.log('Split lastName:', lastName);
         setRaProfileLink(`https://360.gordon.edu/profile/${firstName}.${lastName}`);
       }
     }
@@ -86,7 +94,7 @@ const MyRA = () => {
         title={
           <Grid container direction="row" alignItems="center">
             <Grid item xs={12} align="center">
-              Where's My RA/AC?
+              My RA/AC
             </Grid>
           </Grid>
         }
@@ -98,19 +106,40 @@ const MyRA = () => {
           {/* Text Section */}
           <Grid item xs={8}>
             <Typography variant="body1">
-              <Link
+              <strong>RA: </strong>
+              <StyledLink
                 href={raProfileLink}
                 className="gc360_text_link"
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ textDecoration: 'none', color: 'inherit' }}
               >
-                <strong>RA:</strong> {raInfo.FirstName} {raInfo.LastName}
-              </Link>
+                {raInfo.FirstName} {raInfo.LastName}
+              </StyledLink>
             </Typography>
 
             <Typography variant="body1">
               <strong>Room #:</strong> {raInfo.RoomNumber}
+            </Typography>
+
+            <Typography variant="body1">
+              <strong>Contact:</strong>{' '}
+              {raInfo.PreferredContact && raInfo.PreferredContact.includes('http') ? (
+                <StyledLink
+                  href={raInfo.PreferredContact}
+                  underline="hover"
+                  className="gc360_text_link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Teams
+                </StyledLink>
+              ) : isMobile && raInfo.PreferredContact ? (
+                <StyledLink href={`tel:${raInfo.PreferredContact}`} className="gc360_text_link">
+                  {formatPhoneNumber(raInfo.PreferredContact)}
+                </StyledLink>
+              ) : (
+                raInfo.PreferredContact && formatPhoneNumber(raInfo.PreferredContact)
+              )}
             </Typography>
 
             <Typography variant="body1">
@@ -124,15 +153,22 @@ const MyRA = () => {
 
           {/* Avatar Section */}
           <Grid item xs={4}>
-            <Avatar
-              src={raInfo.PhotoURL || COLOR_80808026_1X1}
-              alt="Profile"
-              sx={{
-                width: { xs: 80, sm: 110, md: 80, lg: 120 },
-                height: { xs: 80, sm: 110, md: 80, lg: 120 },
-                borderRadius: '50%',
-              }}
-            />
+            <StyledLink
+              href={raProfileLink}
+              className="gc360_text_link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Avatar
+                src={raInfo.PhotoURL || COLOR_80808026_1X1}
+                alt="Profile"
+                sx={{
+                  width: { xs: 80, sm: 110, md: 80, lg: 120 },
+                  height: { xs: 80, sm: 110, md: 80, lg: 120 },
+                  borderRadius: '50%',
+                }}
+              />
+            </StyledLink>
           </Grid>
         </Grid>
       </CardContent>
