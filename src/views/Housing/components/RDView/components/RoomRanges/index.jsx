@@ -162,8 +162,9 @@ const RoomRanges = () => {
 
   const housingadmin = useAuthGroups(AuthGroup.HousingAdmin);
   const RD = useAuthGroups(AuthGroup.ResidentDirector);
+  const developer = useAuthGroups(AuthGroup.HousingDeveloper);
 
-  if (housingadmin || RD) {
+  if (housingadmin || RD || developer) {
     return (
       <Box p={3}>
         <Card

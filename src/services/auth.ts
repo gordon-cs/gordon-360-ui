@@ -94,6 +94,7 @@ export enum AuthGroup {
   ResidentAdvisor = '360-ResLifeStudentWorker-SG',
   HallInfoViewer = '360-HallInfoViewer-SG',
   ResidentDirector = '360-ResidentDirector',
+  HousingDeveloper = '360-HousingDevelopers-SG', //remove before merge to develop
 }
 
 export {
