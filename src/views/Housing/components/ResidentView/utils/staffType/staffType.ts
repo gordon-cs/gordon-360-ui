@@ -1,4 +1,7 @@
-// Determine if RA or AC based on building
+/**
+ * Utility function to determine the staff type based on the building code.
+ * @returns {string} - Returns 'RA' for Residence Assistant or 'AC' for Apartment Coordinator based on the building code.
+ */
 export const staffType = {
   BRO: 'AC',
   CHA: 'RA',
