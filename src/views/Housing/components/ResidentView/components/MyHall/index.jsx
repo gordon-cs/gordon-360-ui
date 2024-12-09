@@ -4,6 +4,10 @@ import { styled } from '@mui/material/styles';
 import { useUser } from 'hooks';
 import { fetchRdInfo } from 'services/residentLife/ResidentStaff';
 
+const DEFAULT_PROFILE_URL = 'https://360.gordon.edu/profile/';
+const COLOR_80808026_1X1 =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNsUAMAASwAqHb28sMAAAAASUVORK5CYII=';
+
 // Styling for links using existing 360 colors
 const StyledLink = styled('a')(({ theme }) => ({
   color: theme.palette.primary.main,
@@ -24,59 +28,52 @@ const MyHall = () => {
     if (profile) {
       const hallID = profile.OnCampusBuilding;
 
-      // Create map to store hall images
-      const hallImages = {
-        BRO: 'src/views/Housing/Bromley.png',
-        CHA: 'src/views/Housing/Chase.png',
-        EVN: 'src/views/Housing/Evans.png',
-        FER: 'src/views/Housing/Ferrin.png',
-        FUL: 'src/views/Housing/Fulton.png',
-        NYL: 'src/views/Housing/Nyland.png',
-        TAV: 'src/views/Housing/Tavilla.png',
-        WIL: 'src/views/Housing/Wilson.png',
-        CON: 'src/views/Housing/Village.png', // Starting point of The Village
-        GRA: 'src/views/Housing/Village.png',
-        MCI: 'src/views/Housing/Village.png',
-        RID: 'src/views/Housing/Village.png',
+      const defaultHallData = {
+        image: COLOR_80808026_1X1,
+        alt: 'Default Hall',
       };
-      setHallPhoto(hallImages[hallID]);
 
-      // Create map to store hall image alts
-      const hallImageAlts = {
-        BRO: 'Bromley Bulls',
-        CHA: 'Chase Wolves',
-        EVN: 'Evans Foxes',
-        FER: 'Ferrin Falcons',
-        FUL: 'Fulton Moose',
-        NYL: 'Nyland Eagles',
-        TAV: 'Tavilla Bears',
-        WIL: 'Wilson Horses',
-        CON: 'Village Deers', // Starting point of The Village
-        GRA: 'Village Deers',
-        MCI: 'Village Deers',
-        RID: 'Village Deers',
+      // Create map to store hall images and hall image alts
+      const hallData = {
+        BRO: { image: 'src/views/Housing/Bromley.png', alt: 'Bromley Bulls' },
+        CHA: { image: 'src/views/Housing/Chase.png', alt: 'Chase Wolves' },
+        EVN: { image: 'src/views/Housing/Evans.png', alt: 'Evans Foxes' },
+        FER: { image: 'src/views/Housing/Ferrin.png', alt: 'Ferrin Falcons' },
+        FUL: { image: 'src/views/Housing/Fulton.png', alt: 'Fulton Moose' },
+        NYL: { image: 'src/views/Housing/Nyland.png', alt: 'Nyland Eagles' },
+        TAV: { image: 'src/views/Housing/Tavilla.png', alt: 'Tavilla Bears' },
+        WIL: { image: 'src/views/Housing/Wilson.png', alt: 'Wilson Horses' },
+        CON: { image: 'src/views/Housing/Village.png', alt: 'Village Deers' },
+        GRA: { image: 'src/views/Housing/Village.png', alt: 'Village Deers' },
+        MCI: { image: 'src/views/Housing/Village.png', alt: 'Village Deers' },
+        RID: { image: 'src/views/Housing/Village.png', alt: 'Village Deers' },
       };
-      setHallPhotoAlt(hallImageAlts[hallID]);
 
-      fetchRdInfo(hallID).then((response) => {
-        setRdInfo(response);
-      });
+      // Edge case in the event that the hall data does not load
+      const currentHall = hallData[hallID] || defaultHallData;
+      setHallPhoto(currentHall.image);
+      setHallPhotoAlt(currentHall.alt);
+
+      fetchRdInfo(hallID)
+        .then((response) => setRdInfo(response))
+        .catch((error) => console.error('Failed to fetch RD info:', error));
     }
   }, [profile]);
 
   useEffect(() => {
-    if (rdInfo) {
-      const email = rdInfo.RD_Email;
-      if (email) {
-        const [firstName, lastName] = email.split('@')[0].split('.');
-        setRdProfileLink(`https://360.gordon.edu/profile/${firstName}.${lastName}`);
-      }
+    if (rdInfo?.RD_Email) {
+      const [firstName, lastName] = rdInfo.RD_Email.split('@')[0].split('.');
+      setRdProfileLink(DEFAULT_PROFILE_URL + `${firstName}.${lastName}`);
     }
   }, [rdInfo]);
 
   // Show loading state if profile is not yet loaded
   if (!profile) {
-    return <Typography>Loading...</Typography>;
+    return (
+      <Typography align="center" color="textSecondary">
+        Loading your hall details...
+      </Typography>
+    );
   }
 
   return (
@@ -118,10 +115,10 @@ const MyHall = () => {
 
           {/* Avatar Section */}
           <Grid item xs={4}>
-            <Tooltip title={hallPhotoAlt}>
+            <Tooltip title={hallPhotoAlt || 'Hall Mascot'}>
               <Avatar
-                src={hallPhoto || 'defaultProfilePicture.png'}
-                alt="Hall Mascot"
+                src={hallPhoto || COLOR_80808026_1X1}
+                alt={hallPhotoAlt || 'Hall Mascot'}
                 sx={{
                   width: { xs: 80, sm: 110, md: 80, lg: 120 },
                   height: { xs: 80, sm: 110, md: 80, lg: 120 },

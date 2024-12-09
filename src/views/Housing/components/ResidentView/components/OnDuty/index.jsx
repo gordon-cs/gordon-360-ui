@@ -3,22 +3,12 @@ import { Avatar, Card, CardContent, CardHeader, Grid, Typography } from '@mui/ma
 import { styled } from '@mui/material/styles';
 import { useUser } from 'hooks';
 import { fetchOnDutyRA } from 'services/residentLife/RA_OnCall';
+import { formatPhoneNumber } from '../../../../utils/formatPhoneNumber/formatPhoneNumber';
+import { staffType } from '../../../../utils/staffType/staffType';
+import { isMobile } from '../../../../utils/isMobile/isMobile';
 
-// Default image
 const COLOR_80808026_1X1 =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNsUAMAASwAqHb28sMAAAAASUVORK5CYII=';
-
-// Takes phone number from api return and makes readable version
-const formatPhoneNumber = (phoneNumber) => {
-  if (!phoneNumber || phoneNumber.length !== 10) return phoneNumber;
-  return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6)}`;
-};
-
-// Determine if the user is on a mobile device
-const isMobile = () => {
-  const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
-  return regex.test(navigator.userAgent);
-};
 
 // Styling for links using existing 360 colors
 const StyledLink = styled('a')(({ theme }) => ({
@@ -31,6 +21,7 @@ const StyledLink = styled('a')(({ theme }) => ({
 
 const OnDuty = () => {
   const [onDutyRaInfo, setOnDutyRaInfo] = useState({});
+  const [staffTypeLabel, setStaffTypeLabel] = useState('');
   const { profile } = useUser();
   const mobileDevice = isMobile();
 
@@ -40,15 +31,22 @@ const OnDuty = () => {
     if (profile) {
       const hallID = profile.OnCampusBuilding;
 
-      fetchOnDutyRA(hallID).then((response) => {
-        setOnDutyRaInfo(response);
-      });
+      // Display either 'RA' or 'AC' depending on the resident's building
+      setStaffTypeLabel(staffType[hallID] || 'N/A');
+
+      fetchOnDutyRA(hallID)
+        .then((response) => setOnDutyRaInfo(response))
+        .catch((error) => console.error(`Failed to fetch On Duty ${staffTypeLabel} info:`, error));
     }
   }, [profile]);
 
   // Show loading state if profile is not yet loaded
   if (!profile) {
-    return <Typography>Loading...</Typography>;
+    return (
+      <Typography align="center" color="textSecondary">
+        Loading your hall details...
+      </Typography>
+    );
   }
 
   return (
@@ -57,7 +55,7 @@ const OnDuty = () => {
         title={
           <Grid container justifyContent="center" alignItems="center">
             <Grid item xs={12} align="center">
-              On Duty RA/AC
+              On Duty {staffTypeLabel}
             </Grid>
           </Grid>
         }
@@ -118,7 +116,7 @@ const OnDuty = () => {
             >
               <Avatar
                 src={onDutyRaInfo.RA_Photo || COLOR_80808026_1X1}
-                alt="Profile"
+                alt={`Profile of ${onDutyRaInfo.RA_Name}`}
                 sx={{
                   width: { xs: 80, sm: 110, md: 80, lg: 120 },
                   height: { xs: 80, sm: 110, md: 80, lg: 120 },
