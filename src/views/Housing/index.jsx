@@ -17,18 +17,33 @@ const Housing = () => {
   const isPolice = useAuthGroups(AuthGroup.Police);
   const isHallInfoViewer = useAuthGroups(AuthGroup.HallInfoViewer);
   const hasStandardAccess = isPolice || isHallInfoViewer;
+  const HousingDeveloper = useAuthGroups(AuthGroup.HousingDeveloper);
 
-  if (GetsRDView) {
+  if (HousingDeveloper) {
+    const selectPage = prompt('Enter the view you want to access (RD, RA, Resident, Staff):');
+    switch (selectPage?.toLowerCase()) {
+      case 'rd':
+        return <RDView />;
+      case 'ra':
+        return <RAView />;
+      case 'resident':
+        return <ResidentView />;
+      case 'staff':
+        return <StaffView />;
+      default:
+        return <Page404 />;
+    }
+  } else if (GetsRDView) {
     return <RDView />;
   } else if (isRA) {
-    //need RA check first as RA's will also show as students
+    // RA check first as RA's will also show as students
     return <RAView />;
   } else if (isStudent) {
     return <ResidentView />;
   } else if (hasStandardAccess) {
     return <StaffView />;
   } else {
-    return <Page404 />; //user has no access to page
+    return <Page404 />; // user has no access to page
   }
 };
 
