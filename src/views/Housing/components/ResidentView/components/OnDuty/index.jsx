@@ -3,9 +3,9 @@ import { Avatar, Card, CardContent, CardHeader, Grid, Typography } from '@mui/ma
 import { styled } from '@mui/material/styles';
 import { useUser } from 'hooks';
 import { fetchOnDutyRA } from 'services/residentLife/RA_OnCall';
-import { formatPhoneNumber } from '../../utils/formatPhoneNumber/formatPhoneNumber';
-import { staffType } from '../../utils/staffType/staffType';
-import { isMobile } from '../../utils/isMobile/isMobile';
+import { formatPhoneNumber } from '../../../../utils/formatPhoneNumber/formatPhoneNumber';
+import { staffType } from '../../../../utils/staffType/staffType';
+import { isMobile } from '../../../../utils/isMobile/isMobile';
 
 const COLOR_80808026_1X1 =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNsUAMAASwAqHb28sMAAAAASUVORK5CYII=';

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Box, Card, Grid, Typography, CardContent } from '@mui/material';
 import { useUser } from 'hooks';
-import { staffType } from './utils/staffType/staffType';
+import { staffType } from '../../utils/staffType/staffType';
 
 // Components for Resident View
 import MyHall from './components/MyHall';
