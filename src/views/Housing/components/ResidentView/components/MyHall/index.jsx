@@ -35,18 +35,18 @@ const MyHall = () => {
 
       // Create map to store hall images and hall image alts
       const hallData = {
-        BRO: { image: 'src/views/Housing/Bromley.png', alt: 'Bromley Bulls' },
-        CHA: { image: 'src/views/Housing/Chase.png', alt: 'Chase Wolves' },
-        EVN: { image: 'src/views/Housing/Evans.png', alt: 'Evans Foxes' },
-        FER: { image: 'src/views/Housing/Ferrin.png', alt: 'Ferrin Falcons' },
-        FUL: { image: 'src/views/Housing/Fulton.png', alt: 'Fulton Moose' },
-        NYL: { image: 'src/views/Housing/Nyland.png', alt: 'Nyland Eagles' },
-        TAV: { image: 'src/views/Housing/Tavilla.png', alt: 'Tavilla Bears' },
-        WIL: { image: 'src/views/Housing/Wilson.png', alt: 'Wilson Horses' },
-        CON: { image: 'src/views/Housing/Village.png', alt: 'Village Deers' },
-        GRA: { image: 'src/views/Housing/Village.png', alt: 'Village Deers' },
-        MCI: { image: 'src/views/Housing/Village.png', alt: 'Village Deers' },
-        RID: { image: 'src/views/Housing/Village.png', alt: 'Village Deers' },
+        BRO: { image: '/src/views/Housing/Bromley.png', alt: 'Bromley Bulls' },
+        CHA: { image: '/src/views/Housing/Chase.png', alt: 'Chase Wolves' },
+        EVN: { image: '/src/views/Housing/Evans.png', alt: 'Evans Foxes' },
+        FER: { image: '/src/views/Housing/Ferrin.png', alt: 'Ferrin Falcons' },
+        FUL: { image: '/src/views/Housing/Fulton.png', alt: 'Fulton Moose' },
+        NYL: { image: '/src/views/Housing/Nyland.png', alt: 'Nyland Eagles' },
+        TAV: { image: '/src/views/Housing/Tavilla.png', alt: 'Tavilla Bears' },
+        WIL: { image: '/src/views/Housing/Wilson.png', alt: 'Wilson Horses' },
+        CON: { image: '/src/views/Housing/Village.png', alt: 'Village Deers' },
+        GRA: { image: '/src/views/Housing/Village.png', alt: 'Village Deers' },
+        MCI: { image: '/src/views/Housing/Village.png', alt: 'Village Deers' },
+        RID: { image: '/src/views/Housing/Village.png', alt: 'Village Deers' },
       };
 
       // Edge case in the event that the hall data does not load
