@@ -7,6 +7,7 @@ const ALLOWED_GROUPS = [
   '360-ResidentDirector',
   '360-HousingAdmin-SG',
   '360-HallInfoViewer-SG',
+  //'360-Staff-SG',
 ];
 
 const checkIfResidentialStudent = async (idNum: string): Promise<boolean> => {
