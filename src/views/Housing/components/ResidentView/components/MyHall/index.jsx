@@ -3,6 +3,15 @@ import { Card, CardContent, CardHeader, Grid, Tooltip, Typography, Avatar } from
 import { styled } from '@mui/material/styles';
 import { useUser } from 'hooks';
 import { fetchRdInfo } from 'services/residentLife/ResidentStaff';
+import bromleyHallMascot from 'views/Housing/Bromley.png';
+import chaseHallMascot from 'views/Housing/Chase.png';
+import evansHallMascot from 'views/Housing/Evans.png';
+import ferrinHallMascot from 'views/Housing/Ferrin.png';
+import fultonHallMascot from 'views/Housing/Fulton.png';
+import nylandHallMascot from 'views/Housing/Nyland.png';
+import tavillaHallMascot from 'views/Housing/Tavilla.png';
+import villageHallMascot from 'views/Housing/Village.png';
+import wilsonHallMascot from 'views/Housing/Wilson.png';
 
 const DEFAULT_PROFILE_URL = 'https://360.gordon.edu/profile/';
 const COLOR_80808026_1X1 =
@@ -33,20 +42,22 @@ const MyHall = () => {
         alt: 'Default Hall',
       };
 
+      console.log(ferrinHallMascot);
+
       // Create map to store hall images and hall image alts
       const hallData = {
-        BRO: { image: 'src/views/Housing/Bromley.png', alt: 'Bromley Bulls' },
-        CHA: { image: 'src/views/Housing/Chase.png', alt: 'Chase Wolves' },
-        EVN: { image: 'src/views/Housing/Evans.png', alt: 'Evans Foxes' },
-        FER: { image: 'src/views/Housing/Ferrin.png', alt: 'Ferrin Falcons' },
-        FUL: { image: 'src/views/Housing/Fulton.png', alt: 'Fulton Moose' },
-        NYL: { image: 'src/views/Housing/Nyland.png', alt: 'Nyland Eagles' },
-        TAV: { image: 'src/views/Housing/Tavilla.png', alt: 'Tavilla Bears' },
-        WIL: { image: 'src/views/Housing/Wilson.png', alt: 'Wilson Horses' },
-        CON: { image: 'src/views/Housing/Village.png', alt: 'Village Deers' },
-        GRA: { image: 'src/views/Housing/Village.png', alt: 'Village Deers' },
-        MCI: { image: 'src/views/Housing/Village.png', alt: 'Village Deers' },
-        RID: { image: 'src/views/Housing/Village.png', alt: 'Village Deers' },
+        BRO: { image: bromleyHallMascot, alt: 'Bromley Bulls' },
+        CHA: { image: chaseHallMascot, alt: 'Chase Wolves' },
+        EVN: { image: evansHallMascot, alt: 'Evans Foxes' },
+        FER: { image: ferrinHallMascot, alt: 'Ferrin Falcons' },
+        FUL: { image: fultonHallMascot, alt: 'Fulton Moose' },
+        NYL: { image: nylandHallMascot, alt: 'Nyland Eagles' },
+        TAV: { image: tavillaHallMascot, alt: 'Tavilla Bears' },
+        WIL: { image: wilsonHallMascot, alt: 'Wilson Horses' },
+        CON: { image: villageHallMascot, alt: 'Village Deers' },
+        GRA: { image: villageHallMascot, alt: 'Village Deers' },
+        MCI: { image: villageHallMascot, alt: 'Village Deers' },
+        RID: { image: villageHallMascot, alt: 'Village Deers' },
       };
 
       // Edge case in the event that the hall data does not load
