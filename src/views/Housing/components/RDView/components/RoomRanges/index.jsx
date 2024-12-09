@@ -22,7 +22,6 @@ import {
   removeAssignment,
   assignPersonToRange,
 } from 'services/residentLife/roomRanges';
-import { FaUnderline } from 'react-icons/fa';
 import Page404 from 'views/Page404';
 import { useAuthGroups } from 'hooks';
 import { AuthGroup } from 'services/auth';

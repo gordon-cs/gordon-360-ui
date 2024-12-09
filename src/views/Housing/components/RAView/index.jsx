@@ -18,9 +18,6 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-
-import TaskList from './components/TaskList';
-import Schedule from './components/Schedule';
 import Links from './components/Links';
 import MyHall from '../ResidentView/components/MyHall/index';
 import { React, useEffect, useState } from 'react';
