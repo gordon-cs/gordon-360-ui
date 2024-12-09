@@ -276,9 +276,9 @@ const LostAndFound = () => {
         isFoundSection && report.status.toLowerCase() === 'found'
           ? styles.dataFoundRow
           : styles.dataRow
-      } ${!isPastReport ? styles.clickableRow : ''}`}
+      } ${styles.clickableRow}`}
     >
-      <Tooltip title={!isPastReport ? 'Click to view and edit' : ''}>
+      <Tooltip title={!isPastReport ? 'Click to view and edit' : 'Click to view'}>
         <CardContent
           className={styles.dataContent}
           sx={{
@@ -286,6 +286,7 @@ const LostAndFound = () => {
               paddingBottom: '0px', // Remove the bottom padding on the row card
             },
           }}
+          onClick={() => handleEdit(report.recordID?.toString() || '')}
         >
           {isMobile ? (
             <>
