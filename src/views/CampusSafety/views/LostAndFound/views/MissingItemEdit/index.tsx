@@ -75,6 +75,7 @@ const MissingItemFormEdit = () => {
   });
 
   const [showConfirm, setShowConfirm] = useState(false);
+  const isEditable = formData.status === 'active';
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -149,6 +150,7 @@ const MissingItemFormEdit = () => {
   }, [formData.reportID]);
 
   const handleColorChange = (color: string) => {
+    if (!isEditable) return;
     setFormData((prevData) => {
       const colors = prevData.colors.includes(color)
         ? prevData.colors.filter((c) => c !== color)
@@ -218,6 +220,7 @@ const MissingItemFormEdit = () => {
         value={formData.dateLost === '' ? null : formData.dateLost}
         onChange={(value) => setFormData({ ...formData, dateLost: value?.toString() || '' })}
         disableFuture
+        disabled={!isEditable}
         orientation="portrait"
         name="Date Lost"
         // Custom styling for the input field, to make it look like filled variant
@@ -339,6 +342,38 @@ const MissingItemFormEdit = () => {
                   </Grid>
                 </Grid>
               )}
+              {/* Display a chip for items with statuses other than "active" */}
+              {formData.status.toLowerCase() !== 'active' &&
+                formData.status.toLowerCase() !== 'found' && (
+                  <Grid container xs={9.7} className={styles.foundContainer} rowGap={2}>
+                    <Grid container item xs={12} md={6} rowGap={2}>
+                      <Grid item xs={12}>
+                        <Chip
+                          className={styles.largeChip}
+                          sx={{
+                            height: 'auto',
+                            '& .MuiChip-label': {
+                              display: 'block',
+                              whiteSpace: 'normal',
+                            },
+                          }}
+                          label={
+                            <>
+                              <Typography>
+                                This item was marked as{' '}
+                                <Typography component="span" className={styles.foundText}>
+                                  {formData.status.charAt(0).toUpperCase() +
+                                    formData.status.slice(1)}
+                                </Typography>
+                              </Typography>
+                            </>
+                          }
+                          color="default"
+                        />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                )}
               <Grid container justifyContent="center">
                 <Grid item sm={5} xs={12}>
                   {/* Item Category */}
@@ -364,7 +399,7 @@ const MissingItemFormEdit = () => {
                         ].map((label) => (
                           <FormControlLabel
                             key={label}
-                            control={<Radio />}
+                            control={<Radio disabled={!isEditable} />}
                             label={label}
                             value={label.toLowerCase().replace(/ /g, '/')}
                             onChange={(e) =>
@@ -413,6 +448,7 @@ const MissingItemFormEdit = () => {
                               <Checkbox
                                 checked={formData.colors.includes(color)}
                                 onChange={() => handleColorChange(color)}
+                                disabled={!isEditable}
                               />
                             }
                             label={color}
@@ -432,6 +468,7 @@ const MissingItemFormEdit = () => {
                       name="brand"
                       value={formData.brand}
                       onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
+                      disabled={!isEditable}
                       // Custom styling on focus, better dark mode contrast
                       sx={{
                         '& .MuiFormLabel-root.Mui-focused': {
@@ -450,6 +487,7 @@ const MissingItemFormEdit = () => {
                       name="description"
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      disabled={!isEditable}
                       // Custom styling on focus, better dark mode contrast
                       sx={{
                         '& .MuiFormLabel-root.Mui-focused': {
@@ -468,6 +506,7 @@ const MissingItemFormEdit = () => {
                       name="locationLost"
                       value={formData.locationLost}
                       onChange={(e) => setFormData({ ...formData, locationLost: e.target.value })}
+                      disabled={!isEditable}
                       // Custom styling on focus, better dark mode contrast
                       sx={{
                         '& .MuiFormLabel-root.Mui-focused': {
@@ -494,6 +533,7 @@ const MissingItemFormEdit = () => {
                           onChange={(e) =>
                             setFormData({ ...formData, stolenDescription: e.target.value })
                           }
+                          disabled={!isEditable}
                           inputProps={{ max: DateTime.now().toISODate() }}
                           // Custom styling on focus, better dark mode contrast
                           sx={{
@@ -508,23 +548,25 @@ const MissingItemFormEdit = () => {
                 </Grid>
               </Grid>
 
-              <Grid
-                container
-                spacing={2}
-                justifyContent="center"
-                className={styles.submit_container}
-              >
-                <Grid item xs={12} sm={5} md={2}>
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    className={styles.submit_button}
-                    onClick={handleFormSubmit}
-                  >
-                    Update Report
-                  </Button>
+              {isEditable && (
+                <Grid
+                  container
+                  spacing={2}
+                  justifyContent="center"
+                  className={styles.submit_container}
+                >
+                  <Grid item xs={12} sm={5} md={2}>
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      className={styles.submit_button}
+                      onClick={handleFormSubmit}
+                    >
+                      Update Report
+                    </Button>
+                  </Grid>
                 </Grid>
-              </Grid>
+              )}
             </>
           )}
         </Card>
