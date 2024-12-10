@@ -36,9 +36,9 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const pathnames = location.pathname.split('/').filter((x) => x);
-  const isAdmin = useAuthGroups(AuthGroup.LostAndFoundDevelopers);
-  // const isAdmin = true; //FOR TESTING ONLY
+  const isAdmin = useAuthGroups(AuthGroup.LostAndFoundAdmin);
   const isKiosk = useAuthGroups(AuthGroup.LostAndFoundKiosk);
+  const isDev = useAuthGroups(AuthGroup.LostAndFoundDevelopers);
 
   return (
     <>
@@ -53,7 +53,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
             </Typography>
           </Grid>
         </Grid>
-        {(isAdmin || isKiosk) &&
+        {(isAdmin || isKiosk || isDev) &&
           !pathnames.find((x) => x.toLowerCase() === 'lostandfoundadmin') && (
             <Grid item xs={5} className={styles.buttonContainer}>
               <Button
