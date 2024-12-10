@@ -7,9 +7,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Avatar from '@mui/material/Avatar';
-import Box from '@mui/material/Box';
+import { Box, Typography, Avatar } from '@mui/material';
 import { fetchOnDutyData } from 'services/residentLife/RA_OnCall';
+import ScottieMascot from 'views/Housing/ScottieMascot.png';
+import { isMobile } from 'react-device-detect';
 
 // Styling for table links (RA/RD profile and Teams link) using existing colors
 const StyledLink = styled('a')(({ theme }) => ({
@@ -120,7 +121,7 @@ const OnDutyTable = () => {
             >
               Teams
             </StyledLink>
-          ) : (
+          ) : isMobile ? (
             <StyledLink
               href={`tel:${item.PreferredContact}`}
               underline="hover"
@@ -128,6 +129,10 @@ const OnDutyTable = () => {
             >
               {formatPhoneNumber(item.PreferredContact)}
             </StyledLink>
+          ) : (
+            <Typography variant="body2" color="textPrimary">
+              {formatPhoneNumber(item.PreferredContact)}
+            </Typography>
           ),
 
           checkInTime: new Date(item.Check_in_time).toLocaleTimeString([], {
@@ -164,7 +169,30 @@ const OnDutyTable = () => {
   }
 
   if (rows === null) {
-    return <p>No one is on duty at the moment.</p>;
+    return (
+      <Box
+        sx={{
+          textAlign: 'center',
+          padding: 3,
+          backgroundColor: 'background.paper',
+          border: '2px dashed',
+          borderColor: 'warning.main',
+          borderRadius: 2,
+        }}
+      >
+        <Avatar
+          src={ScottieMascot}
+          alt="Scottie"
+          sx={{ width: 100, height: 100, margin: '0 auto', marginBottom: 2 }}
+        />
+        <Typography variant="h5" color="warning.main">
+          No one is on call right now!
+        </Typography>
+        <Typography variant="body1" color="text.secondary">
+          Scottie’s keeping an eye on things. 🐾
+        </Typography>
+      </Box>
+    );
   }
 
   return (
