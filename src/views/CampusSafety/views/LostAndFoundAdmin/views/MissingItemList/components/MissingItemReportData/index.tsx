@@ -48,6 +48,7 @@ const MissingItemReportData = () => {
   const [newActionFormData, setNewActionFormData] = useState({ action: '', actionNote: '' });
   const [newActionModalOpen, setNewActionModalOpen] = useState<boolean>(false);
   const actionTypes = ['Checked', 'NotifiedOfficer', 'OwnerContact', 'Custom'];
+  const responseTypes = ['OwnerPickUp', 'OwnerNotWant', 'CustomResponse', 'NoneResponse'];
 
   type AdminActionChecked = {
     foundID?: string; // ID of the in-stock found item
@@ -557,9 +558,23 @@ const MissingItemReportData = () => {
                       value={checkedActionFormData.response}
                       onChange={handleNewActionFormChange}
                     >
-                      <MenuItem value={'Owner will pick up'}>Owner will pick up</MenuItem>
-                      <MenuItem value={'Owner does not want'}>Owner does not want</MenuItem>
-                      <MenuItem value={'None'}>None</MenuItem>
+                      {responseTypes.map((responseType) => (
+                        <MenuItem value={responseType}>
+                          {responseType === 'OwnerPickUp'
+                            ? 'Owner will pick up'
+                            : responseType === 'OwnerNotWant'
+                              ? 'Owner does not want'
+                              : responseType === 'CustomResponse'
+                                ? 'Custom'
+                                : responseType === 'NoneResponse'
+                                  ? 'None'
+                                  : responseType}
+                        </MenuItem>
+                      ))}
+                      {/* // <MenuItem value={'Owner will pick up'}>Owner will pick up</MenuItem>
+                            // <MenuItem value={'Owner does not want'}>Owner does not want</MenuItem>
+                            // <MenuItem value={'Custom'}>Custom</MenuItem>
+                            // <MenuItem value={'None'}>None</MenuItem> */}
                     </Select>
                   </FormControl>
                 </Grid>
