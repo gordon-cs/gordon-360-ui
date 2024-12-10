@@ -72,7 +72,7 @@ const MissingItemList = () => {
       try {
         const fetchedReports = await lostAndFoundService.getMissingItemReports();
         const sortedReports = fetchedReports.sort(
-          (a, b) => new Date(b.dateLost).getTime() - new Date(a.dateLost).getTime(),
+          (a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime(),
         );
         setReports(sortedReports);
         setStatus('active'); // Set initial filter
