@@ -12,7 +12,6 @@ import {
   FormLabel,
   Typography,
 } from '@mui/material';
-import { DateTime } from 'luxon';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './MissingItemCreate.module.scss';
 import lostAndFoundService from 'services/lostAndFound';
@@ -168,11 +167,12 @@ const MissingItemFormCreate = () => {
 
   const handleReportSubmit = async () => {
     try {
+      const now = new Date();
       const requestData = {
         ...formData,
         ...user,
-        dateLost: new Date(formData.dateLost).toISOString() || DateTime.now().toISO(),
-        dateCreated: DateTime.now().toISO(),
+        dateLost: new Date(formData.dateLost).toISOString() || now.toISOString(),
+        dateCreated: now.toISOString(),
         colors: formData.colors || [],
         submitterUsername: user.AD_Username,
         forGuest: false,
@@ -181,7 +181,7 @@ const MissingItemFormCreate = () => {
       let actionRequestData = {
         ...newActionFormData,
         missingID: newReportId,
-        actionDate: DateTime.now().toISO(),
+        actionDate: now.toISOString(),
         username: user.AD_Username,
         isPublic: true,
         action: 'Created',
