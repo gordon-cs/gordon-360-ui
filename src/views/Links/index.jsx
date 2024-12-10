@@ -3,6 +3,7 @@ import LinkIcon from '@mui/icons-material/InsertLink';
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import { ListItemIcon, ListItemText, List, ListItem, Link } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 import CanvasIcon from '/src/views/Links/images/Canvas.ico';
 import GordonIcon from '/src/views/Links/images/favicon.ico';
 import GOIcon from '/src/views/Links/images/GoGordonFavicon.ico';
@@ -23,11 +24,9 @@ import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import CallIcon from '@mui/icons-material/Call';
 import ReportIcon from '@mui/icons-material/Report';
 import styles from '/src/views/Links/Links.module.scss';
-import { useNavigate } from 'react-router';
 import { useUser } from 'hooks';
 
 const Links = () => {
-  const navigate = useNavigate();
   const { profile } = useUser();
 
   // Academics Resources UI
@@ -286,9 +285,8 @@ const Links = () => {
                     color="secondary"
                     variant="contained"
                     disabled={!profile}
-                    onClick={() => {
-                      navigate('/lostandfound');
-                    }}
+                    component={RouterLink}
+                    to="/lostandfound"
                   >
                     <ListItemText primary="Lost and Found" />
                   </Button>

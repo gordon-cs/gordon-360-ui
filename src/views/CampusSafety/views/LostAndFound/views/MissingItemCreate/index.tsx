@@ -57,6 +57,7 @@ const MissingItemFormCreate = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
   const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
+  const [newActionFormData] = useState({ action: '', actionNote: '' });
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -176,8 +177,16 @@ const MissingItemFormCreate = () => {
         submitterUsername: user.AD_Username,
         forGuest: false,
       };
-
       const newReportId = await lostAndFoundService.createMissingItemReport(requestData);
+      let actionRequestData = {
+        ...newActionFormData,
+        missingID: newReportId,
+        actionDate: DateTime.now().toISO(),
+        username: user.AD_Username,
+        isPublic: true,
+        action: 'Created',
+      };
+      await lostAndFoundService.createAdminAction(newReportId, actionRequestData);
       navigate('/lostandfound');
     } catch (error) {
       createSnackbar(`Failed to create the missing item report.`, `error`);
