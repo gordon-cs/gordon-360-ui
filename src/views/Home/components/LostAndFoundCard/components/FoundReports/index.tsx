@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, Grid, Typography, useMediaQuery } from '
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import lostAndFoundService from 'services/lostAndFound';
-import styles from '../../../../views/CampusSafety/views/LostAndFound/LostAndFound.module.css';
+import styles from '../../../../../../views/CampusSafety/views/LostAndFound/LostAndFound.module.css';
 import { MissingItemReport } from 'services/lostAndFound';
 import { format } from 'date-fns';
 import Badge from '@mui/material/Badge';

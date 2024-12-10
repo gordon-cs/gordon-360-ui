@@ -2,8 +2,8 @@ import { Button, Card, CardContent, CardHeader, Grid } from '@mui/material';
 import { Link } from 'react-router-dom';
 import customStyles from './LostAndFoundCard.module.scss';
 import { Launch, NotListedLocation, WhereToVote } from '@mui/icons-material';
-import ActiveReports from '../ActiveReports';
-import FoundReports from '../FoundReports';
+import ActiveReports from './components/ActiveReports';
+import FoundReports from './components/FoundReports';
 
 const LostAndFoundCard = () => {
   return (

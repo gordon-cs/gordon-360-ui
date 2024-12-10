@@ -6,7 +6,7 @@ import { MissingItemReport } from 'services/lostAndFound';
 import { format } from 'date-fns';
 import { Launch } from '@mui/icons-material';
 import GordonLoader from 'components/Loader';
-import styles from '../../../../views/CampusSafety/views/LostAndFound/LostAndFound.module.css';
+import styles from '../../../../../../views/CampusSafety/views/LostAndFound/LostAndFound.module.css';
 import GordonSnackbar from 'components/Snackbar';
 
 const formatDate = (date: string) => {

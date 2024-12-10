@@ -2,9 +2,8 @@ import { Card, CardContent, CardHeader, Grid, Typography, Box, Button } from '@m
 import LinkIcon from '@mui/icons-material/InsertLink';
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
-import { ListItemIcon, ListItemText, List, ListItem } from '@mui/material';
+import { ListItemIcon, ListItemText, List, ListItem, Link } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import { Link as MuiLink } from '@mui/material';
 import CanvasIcon from '/src/views/Links/images/Canvas.ico';
 import GordonIcon from '/src/views/Links/images/favicon.ico';
 import GOIcon from '/src/views/Links/images/GoGordonFavicon.ico';
@@ -41,66 +40,66 @@ const Links = () => {
               <ListItemIcon>
                 <img src={GordonIcon} alt={'Gordon College'} className={styles.icon_style} />
               </ListItemIcon>
-              <MuiLink
+              <Link
                 href="https://www.gordon.edu"
                 underline="hover"
                 className={`gc360_text_link`}
                 target="_blank"
               >
                 <ListItemText primary="Gordon College" />
-              </MuiLink>
+              </Link>
             </ListItem>
             <ListItem>
               <ListItemIcon>
                 <img src={MyGordonIcon} alt={'My Gordon Logo'} />
               </ListItemIcon>
-              <MuiLink
+              <Link
                 href="https://my.gordon.edu"
                 underline="hover"
                 className={`gc360_text_link`}
                 target="_blank"
               >
                 <ListItemText primary="My Gordon" />
-              </MuiLink>
+              </Link>
             </ListItem>
             <ListItem>
               <ListItemIcon>
                 <img src={CanvasIcon} alt={'Canvas Logo'} className={styles.icon_style} />
               </ListItemIcon>
-              <MuiLink
+              <Link
                 href="https://canvas.gordon.edu"
                 underline="hover"
                 className={`gc360_text_link`}
                 target="_blank"
               >
                 <ListItemText primary="Canvas" />
-              </MuiLink>
+              </Link>
             </ListItem>
             <ListItem>
               <ListItemIcon>
                 <img src={OutlookIcon} alt={'OutlookLogo'} className={styles.icon_style} />
               </ListItemIcon>
-              <MuiLink
+              <Link
                 href="https://outlook.office.com/mail/"
                 underline="hover"
                 className={`gc360_text_link`}
                 target="_blank"
               >
                 <ListItemText primary="Gordon Email" />
-              </MuiLink>
+              </Link>
             </ListItem>
             <ListItem>
               <ListItemIcon>
                 <img src={GOIcon} alt={'Go Gordon Logo'} className={styles.icon_style} />
               </ListItemIcon>
-              <MuiLink
+              <Link
                 href="https://go.gordon.edu"
                 underline="hover"
                 className={`gc360_text_link`}
                 target="_blank"
               >
                 <ListItemText primary="Go Gordon" />
-              </MuiLink>
+              </Link>
             </ListItem>
           </List>
         </Typography>
@@ -119,53 +118,53 @@ const Links = () => {
               <ListItemIcon>
                 <img src={CriterionIcon} alt={'Criterion Logo'} className={styles.icon_style} />
               </ListItemIcon>
-              <MuiLink
+              <Link
                 href="https://gordon.criterionhcm.com/"
                 underline="hover"
                 className={`gc360_text_link`}
                 target="_blank"
               >
                 <ListItemText primary="Criterion (Timesheets)" />
-              </MuiLink>
+              </Link>
             </ListItem>
             <ListItem>
               <ListItemIcon>
                 <img src={HandshakeIcon} alt={'Handshake Logo'} className={styles.icon_style} />
               </ListItemIcon>
-              <MuiLink
+              <Link
                 href="https://gordon.joinhandshake.com/"
                 underline="hover"
                 className={`gc360_text_link`}
                 target="_blank"
               >
                 <ListItemText primary="Handshake" />
-              </MuiLink>
+              </Link>
             </ListItem>
             <ListItem>
               <ListItemIcon>
                 <img src={SchedulerIcon} alt={'25Live Logo'} className={styles.icon_style} />
               </ListItemIcon>
-              <MuiLink
+              <Link
                 href="https://25live.collegenet.com/pro/gordon"
                 underline="hover"
                 className={`gc360_text_link`}
                 target="_blank"
               >
                 <ListItemText primary="25Live (Scheduling)" />
-              </MuiLink>
+              </Link>
             </ListItem>
             <ListItem>
               <ListItemIcon>
                 <img src={ChapelIcon} alt={'iAttended Logo'} className={styles.icon_style} />
               </ListItemIcon>
-              <MuiLink
+              <Link
                 href="https://iattendedapp.com/"
                 underline="hover"
                 className={`gc360_text_link`}
                 target="_blank"
               >
                 <ListItemText primary="iAttended" />
-              </MuiLink>
+              </Link>
             </ListItem>
           </List>
         </Typography>
@@ -188,53 +187,53 @@ const Links = () => {
                   className={styles.icon_style}
                 />
               </ListItemIcon>
-              <MuiLink
+              <Link
                 href="https://athletics.gordon.edu/"
                 underline="hover"
                 className={`gc360_text_link`}
                 target="_blank"
               >
                 <ListItemText primary="Fighting Scots" />
-              </MuiLink>
+              </Link>
             </ListItem>
             <ListItem>
               <ListItemIcon>
                 <NotificationsNoneOutlinedIcon className={styles.icon_style} />
               </ListItemIcon>
-              <MuiLink
+              <Link
                 href="https://stories.gordon.edu/"
                 underline="hover"
                 className={`gc360_text_link`}
                 target="_blank"
               >
                 <ListItemText primary="The Bell" />
-              </MuiLink>
+              </Link>
             </ListItem>
             <ListItem>
               <ListItemIcon>
                 <LinkIcon className={styles.icon_style} />
               </ListItemIcon>
-              <MuiLink
+              <Link
                 href="https://www.gordon.edu/titleix"
                 underline="hover"
                 className={`gc360_text_link`}
                 target="_blank"
               >
                 <ListItemText primary="Sexual Discrimination and Harassment" />
-              </MuiLink>
+              </Link>
             </ListItem>
             <ListItem>
               <ListItemIcon>
                 <MapOutlinedIcon className={styles.icon_style} />
               </ListItemIcon>
-              <MuiLink
+              <Link
                 href="https://www.gordon.edu/map"
                 underline="hover"
                 className={`gc360_text_link`}
                 target="_blank"
               >
                 <ListItemText primary="Gordon College Maps" />
-              </MuiLink>
+              </Link>
             </ListItem>
           </List>
         </Typography>
@@ -270,14 +269,14 @@ const Links = () => {
               <ListItemIcon>
                 <LocalPoliceIcon className={styles.icon_style} />
               </ListItemIcon>
-              <MuiLink
+              <Link
                 href="https://www.gordon.edu/police"
                 underline="hover"
                 className={`gc360_text_link`}
                 target="_blank"
               >
                 <ListItemText primary="Gordon Police Resources" />
-              </MuiLink>
+              </Link>
             </ListItem>
             <ListItem>
               <Grid container justifyContent={'center'}>
@@ -311,27 +310,27 @@ const Links = () => {
               <ListItemIcon>
                 <SafetyDividerIcon className={styles.icon_style} />
               </ListItemIcon>
-              <MuiLink
+              <Link
                 href="https://www.gordon.edu/titleix"
                 underline="hover"
                 className={`gc360_text_link`}
                 target="_blank"
               >
                 <ListItemText primary="Gordon Title IX Page" />
-              </MuiLink>
+              </Link>
             </ListItem>
             <ListItem>
               <ListItemIcon>
                 <FeedbackIcon className={styles.icon_style} />
               </ListItemIcon>
-              <MuiLink
+              <Link
                 href="https://www.gordon.edu/sexualmisconduct/report"
                 underline="hover"
                 className={`gc360_text_link`}
                 target="_blank"
               >
                 <ListItemText primary="File a Report" />
-              </MuiLink>
+              </Link>
             </ListItem>
           </List>
         </Typography>
@@ -350,14 +349,14 @@ const Links = () => {
               <ListItemIcon>
                 <LocalHospitalIcon className={styles.icon_style} />
               </ListItemIcon>
-              <MuiLink
+              <Link
                 href="https://www.gordon.edu/healthcenter"
                 underline="hover"
                 className={`gc360_text_link`}
                 target="_blank"
               >
                 <ListItemText primary="Health Center Resources" />
-              </MuiLink>
+              </Link>
             </ListItem>
           </List>
         </Typography>
@@ -376,27 +375,27 @@ const Links = () => {
               <ListItemIcon>
                 <SpaIcon className={styles.icon_style} />
               </ListItemIcon>
-              <MuiLink
+              <Link
                 href="https://www.gordon.edu/counselingwellness"
                 underline="hover"
                 className={`gc360_text_link`}
                 target="_blank"
               >
                 <ListItemText primary="Counseling Center Resources" />
-              </MuiLink>
+              </Link>
             </ListItem>
             <ListItem>
               <ListItemIcon>
                 <PsychologyIcon className={styles.icon_style} />
               </ListItemIcon>
-              <MuiLink
+              <Link
                 href="https://counseling.gordon.edu/TitaniumWeb/WCMenu.aspx"
                 underline="hover"
                 className={`gc360_text_link`}
                 target="_blank"
               >
                 <ListItemText primary="Request Services" />
-              </MuiLink>
+              </Link>
             </ListItem>
           </List>
         </Typography>
@@ -414,14 +413,14 @@ const Links = () => {
             <ListItemIcon>
               <ChurchIcon className={styles.icon_style} />
             </ListItemIcon>
-            <MuiLink
+            <Link
               href="https://www.gordon.edu/chapel"
               underline="hover"
               className={`gc360_text_link`}
               target="_blank"
             >
               <ListItemText primary="Chapel Information" />
-            </MuiLink>
+            </Link>
           </ListItem>
         </Typography>
       </CardContent>
