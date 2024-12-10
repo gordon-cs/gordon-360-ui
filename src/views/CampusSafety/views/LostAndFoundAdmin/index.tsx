@@ -9,12 +9,12 @@ import { useEffect } from 'react';
 import { Construction, Person, Storage } from '@mui/icons-material';
 
 const LostAndFoundAdmin = () => {
-  const isAdmin = useAuthGroups(AuthGroup.LostAndFoundDevelopers);
-  // const isAdmin = true; //FOR TESTING PURPOSES
+  const isAdmin = useAuthGroups(AuthGroup.LostAndFoundAdmin);
+  const isDev = useAuthGroups(AuthGroup.LostAndFoundDevelopers);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isAdmin) {
+    if (!isAdmin && !isDev) {
       navigate('/lostandfound'); // Leave the page if user is not an admin
     }
   });
