@@ -474,7 +474,7 @@ const MissingItemFormCreate = () => {
                 className={styles.submit_button}
                 onClick={handleFormSubmit}
               >
-                SUBMIT
+                NEXT
               </Button>
             </Grid>
           </Grid>
