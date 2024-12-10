@@ -55,11 +55,9 @@ const getMissingItemReports = (): Promise<MissingItemReport[]> =>
  */
 const getMissingItemReportUser = (): Promise<MissingItemReport[]> => {
   const profile = userService.getProfileInfo();
-  return profile.then((profileValue) => {
-    return http.get<MissingItemReport[]>(
-      `lostandfound/missingitems?user=${profileValue?.AD_Username}`,
-    );
-  });
+  return profile.then((profileValue) =>
+    http.get<MissingItemReport[]>(`lostandfound/missingitems?user=${profileValue?.AD_Username}`),
+  );
 };
 
 /**
