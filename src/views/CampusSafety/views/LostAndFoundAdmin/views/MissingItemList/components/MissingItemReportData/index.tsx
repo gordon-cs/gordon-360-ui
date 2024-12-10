@@ -46,6 +46,8 @@ const MissingItemReportData = () => {
 
   // New Action form state variables
   const [newActionFormData, setNewActionFormData] = useState({ action: '', actionNote: '' });
+  const [customFormVisible, setCustomFormVisible] = useState<boolean>(false);
+  const [customFormValue, setCustomFormValue] = useState({ customValue: '' });
   const [newActionModalOpen, setNewActionModalOpen] = useState<boolean>(false);
   const actionTypes = ['Checked', 'NotifiedOfficer', 'OwnerContact', 'Custom'];
   const responseTypes = ['OwnerPickUp', 'OwnerNotWant', 'CustomResponse', 'NoneResponse'];
@@ -136,6 +138,14 @@ const MissingItemReportData = () => {
     // Reset actions updated
     setActionsUpdated(false);
   }, [actionsUpdated, itemId]);
+
+  useEffect(() => {
+    if (checkedActionFormData.response == 'Custom') {
+      setCustomFormVisible(true);
+    } else {
+      setCustomFormVisible(false);
+    }
+  }, [checkedActionFormData]);
 
   /*
    *
@@ -571,10 +581,10 @@ const MissingItemReportData = () => {
                                   : responseType}
                         </MenuItem>
                       ))}
-                      {/* // <MenuItem value={'Owner will pick up'}>Owner will pick up</MenuItem>
-                            // <MenuItem value={'Owner does not want'}>Owner does not want</MenuItem>
-                            // <MenuItem value={'Custom'}>Custom</MenuItem>
-                            // <MenuItem value={'None'}>None</MenuItem> */}
+                      {/* <MenuItem value={'Owner will pick up'}>Owner will pick up</MenuItem>
+                      <MenuItem value={'Owner does not want'}>Owner does not want</MenuItem>
+                      <MenuItem value={'Custom'}>Custom</MenuItem>
+                      <MenuItem value={'None'}>None</MenuItem> */}
                     </Select>
                   </FormControl>
                 </Grid>
