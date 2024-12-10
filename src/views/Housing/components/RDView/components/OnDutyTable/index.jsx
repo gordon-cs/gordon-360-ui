@@ -147,11 +147,12 @@ const OnDutyTable = () => {
           ),
         }));
 
-        setRows(fetchedRows);
+        setRows(fetchedRows.length > 0 ? fetchedRows : null);
         setLoading(false);
       } catch (err) {
         console.error('Error loading on-duty data:', err);
         setLoading(false);
+        setRows(null);
       }
     };
 
@@ -160,6 +161,10 @@ const OnDutyTable = () => {
 
   if (loading) {
     return <p>Loading on-duty data...</p>;
+  }
+
+  if (rows === null) {
+    return <p>No one is on duty at the moment.</p>;
   }
 
   return (

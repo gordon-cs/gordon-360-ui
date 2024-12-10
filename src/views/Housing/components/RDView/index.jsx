@@ -14,6 +14,7 @@ import {
 import CustomizedTable from './components/OnDutyTable';
 import { Link as RouterLink } from 'react-router-dom';
 import BasicSelect from './components/MobileView';
+import EditDocs from './components/EditDocs';
 
 const RDView = () => {
   const isMobile = useMediaQuery('(max-width:600px)');
@@ -75,41 +76,7 @@ const RDView = () => {
             className="gc360_header"
           />
           <CardContent>
-            <Typography>
-              <List>
-                <ListItem>
-                  <Link
-                    component={RouterLink}
-                    to="/RoomRanges"
-                    underline="hover"
-                    className="gc360_text_link"
-                  >
-                    <ListItemText primary="Room Ranges" />
-                  </Link>
-                </ListItem>
-
-                <ListItem>
-                  <Link
-                    href="https://groups.gordon.edu"
-                    underline="hover"
-                    className="gc360_text_link"
-                    target="_blank"
-                  >
-                    <ListItemText primary="RA/AC Access" />
-                  </Link>
-                </ListItem>
-                <ListItem>
-                  <Link
-                    href="https://www.microsoft.com/en-us/microsoft-365/sharepoint/collaboration"
-                    underline="hover"
-                    className="gc360_text_link"
-                    target="_blank"
-                  >
-                    <ListItemText primary="Sharepoint" />
-                  </Link>
-                </ListItem>
-              </List>
-            </Typography>
+            <EditDocs />
           </CardContent>
         </Card>
       </Grid>

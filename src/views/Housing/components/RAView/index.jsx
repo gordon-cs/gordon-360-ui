@@ -25,6 +25,7 @@ import GordonDialogBox from 'components/GordonDialogBox';
 import { checkIfCheckedIn, submitCheckIn } from 'services/residentLife/RA_Checkin';
 import { preferredContact, PrefContactMethod } from 'services/residentLife/ResidentStaff';
 import { useUser } from 'hooks';
+import HousingBanner from '../ResidentView/components/HousingWelcome/Banner';
 
 const RAView = () => {
   const [isCheckedIn, setCheckedIn] = useState(false);
@@ -360,6 +361,7 @@ const RAView = () => {
     <Grid container item spacing={2}>
       {!isMobile && (
         <>
+          <HousingBanner />
           <Grid item xs={12} md={4}>
             <Links />
           </Grid>
@@ -372,6 +374,7 @@ const RAView = () => {
       )}
       {isMobile && (
         <>
+          <HousingBanner />
           <Grid item rowSpacing={0} xs={12}>
             {checkInButton()}
           </Grid>
