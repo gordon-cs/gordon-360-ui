@@ -286,7 +286,7 @@ const LostAndFound = () => {
               paddingBottom: '0px', // Remove the bottom padding on the row card
             },
           }}
-          onClick={() => handleEdit(report.recordID?.toString() || '')}
+          onClick={isPastReport ? () => handleEdit(report.recordID?.toString() || '') : undefined}
         >
           {isMobile ? (
             <>

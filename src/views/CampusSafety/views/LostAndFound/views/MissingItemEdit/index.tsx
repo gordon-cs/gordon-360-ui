@@ -351,7 +351,6 @@ const MissingItemFormEdit = () => {
                         <Chip
                           className={styles.largeChip}
                           sx={{
-                            height: 'auto',
                             '& .MuiChip-label': {
                               display: 'block',
                               whiteSpace: 'normal',
