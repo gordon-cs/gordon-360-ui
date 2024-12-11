@@ -25,14 +25,11 @@ const ConfirmReport: React.FC<ConfirmReportProps> = ({ formData, onEdit, onSubmi
   return (
     <Card className={styles.confirmCard}>
       <CardHeader
-        title="Missing Item Report"
+        title="Confirm the Details of your Report"
         className={styles.header}
         titleTypographyProps={{ align: 'center' }}
       />
       <CardContent>
-        <Typography variant="h6" align="center" gutterBottom>
-          Confirm the details of your report
-        </Typography>
         <Grid container spacing={2} className={styles.reportDetails}>
           <Grid item xs={6}>
             <Typography>
