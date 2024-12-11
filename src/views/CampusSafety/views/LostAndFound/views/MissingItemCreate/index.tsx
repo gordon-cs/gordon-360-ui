@@ -161,6 +161,13 @@ const MissingItemFormCreate = () => {
           stolenDescription: '',
         }));
       }
+      if (!formData.dateLost) {
+        const now = new Date();
+        setFormData((prevData) => ({
+          ...prevData,
+          dateLost: now.toISOString(),
+        }));
+      }
       setShowConfirm(true);
     }
   };
@@ -227,6 +234,9 @@ const MissingItemFormCreate = () => {
         // Thanks to help for understanding from
         // https://blog.openreplay.com/styling-and-customizing-material-ui-date-pickers/
         slotProps={{
+          textField: {
+            helperText: 'Default: today',
+          },
           layout: {
             sx: {
               '& .MuiPickersLayout-contentWrapper .Mui-selected': {
