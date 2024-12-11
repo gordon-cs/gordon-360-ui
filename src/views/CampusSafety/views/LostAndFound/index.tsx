@@ -121,7 +121,6 @@ const LostAndFound = () => {
     try {
       await lostAndFoundService.updateReportStatus(parseInt(reportToDelete || ''), 'deleted');
       const now = new Date();
-      console.log(now.toISOString());
       let actionRequestData: MissingAdminAction = {
         missingID: parseInt(reportToDelete || ''),
         actionDate: now.toISOString(),
