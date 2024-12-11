@@ -6,9 +6,7 @@ const checkIfCheckedIn = async (raId: string): Promise<boolean> => {
 };
 
 const submitCheckIn = async (raId: string, hallIds: string[]): Promise<void> => {
-  await http.post(`Housing/ras/${raId}/checkin`, {
-    Hall_ID: hallIds,
-  });
+  await http.post(`Housing/ras/${raId}/checkin`, hallIds);
 };
 
 export { checkIfCheckedIn, submitCheckIn };

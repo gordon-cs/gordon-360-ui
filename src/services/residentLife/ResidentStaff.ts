@@ -30,7 +30,7 @@ type method = {
 
 // Fetches the information of an RA from the API endpoint "Housing/ras"
 const fetchRaInfo = (hallId: string, roomNumber: number): Promise<RA[]> =>
-  http.get(`Housing/ras?hallId=${hallId}&roomNumber=${roomNumber}`);
+  http.get(`Housing/resident/ra${http.toQueryString({ hallId, roomNumber })}`);
 
 // Fetches the information of an RD from the API endpoint "Housing/rds"
 const fetchRdInfo = (hallId: string): Promise<RD[]> => http.get(`Housing/rds?hallId=${hallId}`);
