@@ -23,7 +23,7 @@ import styles from './LostAndFound.module.css'; // Import the external CSS
 import lostAndFoundService from 'services/lostAndFound';
 import { MissingItemReport, MissingAdminAction } from 'services/lostAndFound'; // Import the type from the service
 import DeleteConfirmationModal from './components/DeleteConfirmation';
-import { DateTime } from 'luxon';
+import { format } from 'date-fns';
 import { useWindowSize } from 'hooks';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import GordonLoader from 'components/Loader';
@@ -31,7 +31,7 @@ import Badge from '@mui/material/Badge';
 import userService from 'services/user';
 
 const formatDate = (date: string) => {
-  return DateTime.fromISO(date).toFormat('MM-dd-yyyy'); // Adjust format as needed
+  return format(Date.parse(date), 'MM/dd/yy'); // Adjust format as needed
 };
 
 const LostAndFound = () => {
@@ -120,9 +120,10 @@ const LostAndFound = () => {
   const handleModalSubmit = async () => {
     try {
       await lostAndFoundService.updateReportStatus(parseInt(reportToDelete || ''), 'deleted');
+      const now = new Date();
       let actionRequestData: MissingAdminAction = {
         missingID: parseInt(reportToDelete || ''),
-        actionDate: DateTime.now().toISO(),
+        actionDate: now.toISOString(),
         username: user.AD_Username,
         isPublic: true,
         action: 'Deleted',
