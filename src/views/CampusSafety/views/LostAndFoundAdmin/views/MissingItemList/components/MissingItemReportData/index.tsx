@@ -46,8 +46,17 @@ const MissingItemReportData = () => {
 
   // New Action form state variables
   const [newActionFormData, setNewActionFormData] = useState({ action: '', actionNote: '' });
+  const [checkedActionCustomResponseVisible, setCheckedActionCustomResponseVisible] =
+    useState<boolean>(false);
+  const [customCheckedActionResponseValue, setCustomCheckedActionResponseValue] = useState('');
   const [newActionModalOpen, setNewActionModalOpen] = useState<boolean>(false);
   const actionTypes = ['Checked', 'NotifiedOfficer', 'OwnerContact', 'Custom'];
+  const checkedActionResponseTypes = [
+    'Owner will pick up',
+    'Owner does not want',
+    'CheckedActionCustomResponse',
+    'No response from owner',
+  ];
 
   type AdminActionChecked = {
     foundID?: string; // ID of the in-stock found item
@@ -138,7 +147,7 @@ const MissingItemReportData = () => {
 
   /*
    *
-   * Modal lifecycle methods
+   * Lifecycle methods for all modals
    */
 
   // Close any open modals
@@ -188,10 +197,20 @@ const MissingItemReportData = () => {
   useEffect(() => {
     // Update the main action form whenever one of the preset action forms are updated.
     if (newActionFormData.action === 'Checked') {
-      setNewActionFormData((prevData) => ({
-        ...prevData,
-        actionNote: JSON.stringify(checkedActionFormData),
-      }));
+      if (checkedActionFormData.response === 'CheckedActionCustomResponse') {
+        setNewActionFormData((prevData) => ({
+          ...prevData,
+          actionNote: JSON.stringify({
+            ...checkedActionFormData,
+            response: customCheckedActionResponseValue,
+          }),
+        }));
+      } else {
+        setNewActionFormData((prevData) => ({
+          ...prevData,
+          actionNote: JSON.stringify(checkedActionFormData),
+        }));
+      }
     } else if (
       newActionFormData.action === 'NotifiedOfficer' ||
       newActionFormData.action === 'OwnerContact'
@@ -201,7 +220,12 @@ const MissingItemReportData = () => {
         actionNote: JSON.stringify(contactActionFormData),
       }));
     }
-  }, [contactActionFormData, checkedActionFormData, newActionFormData.action]);
+  }, [
+    contactActionFormData,
+    checkedActionFormData,
+    newActionFormData.action,
+    customCheckedActionResponseValue,
+  ]);
 
   const updateForm = async (name: string, newValue: string) => {
     // When changing the action type
@@ -316,6 +340,12 @@ const MissingItemReportData = () => {
       setErrorSnackbarOpen(true);
     }
   };
+  // Set checked action custom "owner response" field to visible, if the user selects
+  useEffect(() => {
+    setCheckedActionCustomResponseVisible(
+      checkedActionFormData.response === 'CheckedActionCustomResponse',
+    );
+  }, [checkedActionFormData]);
 
   // Format date strings for display
   const formatDate = (date: string) => DateTime.fromISO(date).toFormat('M/d/yy');
@@ -557,12 +587,34 @@ const MissingItemReportData = () => {
                       value={checkedActionFormData.response}
                       onChange={handleNewActionFormChange}
                     >
-                      <MenuItem value={'Owner will pick up'}>Owner will pick up</MenuItem>
-                      <MenuItem value={'Owner does not want'}>Owner does not want</MenuItem>
-                      <MenuItem value={'None'}>None</MenuItem>
+                      {checkedActionResponseTypes.map((responseType) => (
+                        <MenuItem value={responseType}>
+                          {responseType === 'Owner will pick up'
+                            ? 'Owner will pick up'
+                            : responseType === 'Owner does not want'
+                              ? 'Owner does not want'
+                              : responseType === 'CheckedActionCustomResponse'
+                                ? 'Enter response manually'
+                                : responseType === 'No response from owner'
+                                  ? 'No response'
+                                  : responseType}
+                        </MenuItem>
+                      ))}
                     </Select>
                   </FormControl>
                 </Grid>
+                {checkedActionCustomResponseVisible ? (
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      variant="filled"
+                      label={"Owner's Response"}
+                      name="customOwnerResponse"
+                      value={customCheckedActionResponseValue}
+                      onChange={(ev) => setCustomCheckedActionResponseValue(ev.target.value)}
+                    />
+                  </Grid>
+                ) : undefined}
               </>
             ) : null}
           </>
