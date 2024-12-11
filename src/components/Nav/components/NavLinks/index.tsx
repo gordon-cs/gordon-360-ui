@@ -5,6 +5,7 @@ import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import LinkIcon from '@mui/icons-material/InsertLink';
 import PeopleIcon from '@mui/icons-material/People';
 import WorkIcon from '@mui/icons-material/Work';
+import { HolidayVillage } from '@mui/icons-material';
 import { Divider, List } from '@mui/material';
 import RecIMIcon from '@mui/icons-material/SportsFootball';
 import TranscriptIcon from '@mui/icons-material/Receipt';
@@ -48,7 +49,7 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
     };
 
     fetchHousingAccess();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, profile]);
 
   const handleSignOut = () => {
     onLinkClick();
@@ -160,17 +161,18 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
     />
   );
 
-  const housingButton = !loading && canAccessHousing && (
-    <GordonNavButton
-      unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
-      openUnavailableDialog={setDialog}
-      onLinkClick={onLinkClick}
-      linkName={'Housing'}
-      linkPath={'/housing'}
-      LinkIcon={HomeIcon}
-      divider={false}
-    />
-  );
+  const housingButton =
+    !loading && canAccessHousing ? (
+      <GordonNavButton
+        unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
+        openUnavailableDialog={setDialog}
+        onLinkClick={onLinkClick}
+        linkName={'Housing'}
+        linkPath={'/housing'}
+        LinkIcon={HolidayVillage}
+        divider={false}
+      />
+    ) : null;
 
   const paletteOptionsButton = (
     <GordonNavButton

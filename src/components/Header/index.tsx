@@ -7,6 +7,7 @@ import {
   Work as WorkIcon,
   Link as LinkIcon,
   Home as HomeIcon,
+  HolidayVillage,
 } from '@mui/icons-material';
 import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Link } from '@mui/material';
 import RecIMIcon from '@mui/icons-material/SportsFootball';
@@ -230,7 +231,7 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
             HousingAccess && ( //check if the user should have housing access
               <Tab
                 className={styles.tab}
-                icon={<HomeIcon />}
+                icon={<HolidayVillage />}
                 label="Housing"
                 component={NavLink}
                 to="/housing"
