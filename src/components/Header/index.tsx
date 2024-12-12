@@ -4,9 +4,7 @@ import {
   LocalActivity as LocalActivityIcon,
   Menu as MenuIcon,
   People as PeopleIcon,
-  Work as WorkIcon,
   Link as LinkIcon,
-  Home as HomeIcon,
   HolidayVillage,
 } from '@mui/icons-material';
 import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Link } from '@mui/material';

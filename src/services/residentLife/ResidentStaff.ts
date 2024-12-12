@@ -25,7 +25,9 @@ type RD = {
 };
 
 type method = {
-  PreferredContact: string;
+  Ra_ID: string;
+  PreferredContactMethod: string;
+  Contact: string;
 };
 
 // Fetches the information of an RA from the API endpoint "Housing/ras"
@@ -39,7 +41,7 @@ const fetchRdInfo = (hallId: string): Promise<RD[]> => http.get(`Housing/rds?hal
 const preferredContact = (raId: string, preferredContactMethod: string): Promise<Contact> =>
   http.post(`Housing/ras/${raId}/contact?preferredContactMethod=${preferredContactMethod}`);
 
-const PrefContactMethod = (raId: string): Promise<method> =>
-  http.get(`Housing/ra/contact/preference/${raId}`);
+// gets the contact prefernce for the RA
+const PrefContactMethod = (raId: string): Promise<method> => http.get(`Housing/ra/${raId}/contact`);
 
 export { fetchRaInfo, fetchRdInfo, preferredContact, PrefContactMethod };

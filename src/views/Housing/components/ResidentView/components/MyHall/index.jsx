@@ -13,7 +13,7 @@ import tavillaHallMascot from 'views/Housing/Tavilla.png';
 import villageHallMascot from 'views/Housing/Village.png';
 import wilsonHallMascot from 'views/Housing/Wilson.png';
 
-const DEFAULT_PROFILE_URL = 'https://360.gordon.edu/profile/';
+const DEFAULT_PROFILE_URL = 'https://360sp.gordon.edu/profile/';
 const COLOR_80808026_1X1 =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNsUAMAASwAqHb28sMAAAAASUVORK5CYII=';
 

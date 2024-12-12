@@ -9,6 +9,7 @@ import { isMobile } from '../../../../utils/isMobile/isMobile';
 
 const COLOR_80808026_1X1 =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNsUAMAASwAqHb28sMAAAAASUVORK5CYII=';
+const DEFAULT_PROFILE_URL = 'https://360sp.gordon.edu/profile/';
 
 // Styling for links using existing 360 colors
 const StyledLink = styled('a')(({ theme }) => ({
@@ -68,7 +69,7 @@ const OnDuty = () => {
             <Typography variant="body1">
               <strong>Name: </strong>
               <StyledLink
-                href={onDutyRaInfo.RA_Profile_Link}
+                href={DEFAULT_PROFILE_URL + onDutyRaInfo.RA_UserName}
                 className="gc360_text_link"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -109,7 +110,7 @@ const OnDuty = () => {
           {/* Avatar Section */}
           <Grid item xs={4}>
             <StyledLink
-              href={onDutyRaInfo.RA_Profile_Link}
+              href={DEFAULT_PROFILE_URL + onDutyRaInfo.RA_UserName}
               className="gc360_text_link"
               target="_blank"
               rel="noopener noreferrer"

@@ -68,7 +68,7 @@ const RAView = () => {
       if (profile?.ID) {
         try {
           const contactPreference = await PrefContactMethod(profile.ID);
-          setSelectedContact(contactPreference?.PreferredContact || '');
+          setSelectedContact(contactPreference?.PreferredContactMethod || '');
         } catch (error) {
           console.error('Error fetching preferred contact method:', error);
         }

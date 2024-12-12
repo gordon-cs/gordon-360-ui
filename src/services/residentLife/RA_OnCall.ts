@@ -9,8 +9,8 @@ type RA = {
   Check_in_time: Date;
   RD_Email: string;
   RD_Name: string;
-  RA_Profile_Link: string;
-  RD_Profile_Link: string;
+  RA_UserName: string;
+  RD_UserName: string;
   RA_Photo: string;
 };
 
