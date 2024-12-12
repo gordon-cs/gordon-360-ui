@@ -284,7 +284,7 @@ const ReportItemPage = () => {
         };
       }
 
-      const newReportId = await lostAndFoundService.createMissingItemReport(requestData);
+      await lostAndFoundService.createMissingItemReport(requestData);
       // Redirect to the missing item database after successful submission
       navigate('/lostandfound/lostandfoundadmin/missingitemdatabase');
     } catch (error) {

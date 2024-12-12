@@ -171,7 +171,7 @@ const MissingItemReportData = () => {
 
   useEffect(() => {
     // If the actions array, or the selected action ID are modified, update the selected action object
-    // for use in the modal
+    // to store which action to display in the details modal
     var index = adminActionsArray?.findIndex((x) => x.ID === selectedActionID);
     !index ? (index = 0) : (index = index);
     selectedAction.current = adminActionsArray?.at(index);
