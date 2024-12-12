@@ -11,7 +11,7 @@ import {
   Paper,
 } from '@mui/material';
 import { fetchOnDutyData } from 'services/residentLife/RA_OnCall';
-import ScottieMascot from 'views/Housing/ScottieMascot.png';
+import ScottieMascot from 'views/ResLife/ScottieMascot.png';
 
 // Hardcoded list of all halls
 const ALL_HALLS = [

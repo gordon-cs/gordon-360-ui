@@ -6,7 +6,7 @@ import { fetchOnDutyRA } from 'services/residentLife/RA_OnCall';
 import { formatPhoneNumber } from '../../../../utils/formatPhoneNumber/formatPhoneNumber';
 import { staffType } from '../../../../utils/staffType/staffType';
 import { isMobile } from '../../../../utils/isMobile/isMobile';
-import ScottieMascot from 'views/Housing/ScottieMascot.png';
+import ScottieMascot from 'views/ResLife/ScottieMascot.png';
 
 const COLOR_80808026_1X1 =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNsUAMAASwAqHb28sMAAAAASUVORK5CYII=';
