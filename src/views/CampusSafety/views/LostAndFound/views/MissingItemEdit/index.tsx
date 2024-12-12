@@ -11,14 +11,12 @@ import {
   Button,
   FormLabel,
   Typography,
-  useMediaQuery,
-  Box,
   Chip,
 } from '@mui/material';
 import { DateTime } from 'luxon';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './MissingItemEdit.module.scss';
-import lostAndFoundService from 'services/lostAndFound';
+import lostAndFoundService, { MissingItemReport } from 'services/lostAndFound';
 import userService from 'services/user';
 import ConfirmReport from './components/confirmReport';
 import { useNavigate, useParams } from 'react-router';
@@ -35,7 +33,7 @@ const MissingItemFormEdit = () => {
   const [isPickedUp, setIsPickedUp] = useState(false); //Added this to manage the button disable
 
   const [originalFormData, setOriginalFormData] = useState({
-    reportID: 0,
+    recordID: 0,
     category: '',
     colors: [] as string[],
     brand: '',
@@ -59,7 +57,7 @@ const MissingItemFormEdit = () => {
   });
 
   const [formData, setFormData] = useState({
-    reportID: 0,
+    recordID: 0,
     category: '',
     colors: [] as string[],
     brand: '',
@@ -108,7 +106,7 @@ const MissingItemFormEdit = () => {
       if (itemid) {
         const item = await lostAndFoundService.getMissingItemReport(parseInt(itemid));
         setFormData({
-          reportID: item?.recordID || 0,
+          recordID: item?.recordID || 0,
           category: item.category,
           colors: item.colors || [],
           brand: item.brand || '',
@@ -124,7 +122,7 @@ const MissingItemFormEdit = () => {
         });
         const originalReport = await lostAndFoundService.getMissingItemReport(parseInt(itemid));
         setOriginalFormData({
-          reportID: originalReport?.recordID || 0,
+          recordID: originalReport?.recordID || 0,
           category: originalReport.category,
           colors: originalReport.colors || [],
           brand: originalReport.brand || '',
@@ -144,10 +142,10 @@ const MissingItemFormEdit = () => {
   }, [itemid]);
 
   useEffect(() => {
-    if (formData.reportID > 0) {
+    if (formData.recordID > 0) {
       setLoading(false);
     }
-  }, [formData.reportID]);
+  }, [formData.recordID]);
 
   const handleColorChange = (color: string) => {
     if (!isEditable) return;
@@ -179,7 +177,7 @@ const MissingItemFormEdit = () => {
   };
 
   const handleReportSubmit = async () => {
-    const requestData = {
+    const requestData: MissingItemReport = {
       ...formData,
       dateLost: new Date(formData.dateLost).toISOString() || DateTime.now().toISO(),
     };

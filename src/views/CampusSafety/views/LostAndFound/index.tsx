@@ -20,8 +20,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import Header from '../../components/Header';
 import styles from './LostAndFound.module.css'; // Import the external CSS
-import lostAndFoundService from 'services/lostAndFound';
-import { MissingItemReport, MissingAdminAction } from 'services/lostAndFound'; // Import the type from the service
+import lostAndFoundService, { InitAdminAction } from 'services/lostAndFound';
+import { MissingItemReport } from 'services/lostAndFound'; // Import the type from the service
 import DeleteConfirmationModal from './components/DeleteConfirmation';
 import { format } from 'date-fns';
 import { useUser } from 'hooks';
@@ -88,7 +88,7 @@ const LostAndFound = () => {
       }
     };
     fetchMissingItems();
-  }, [pageUpdates]);
+  }, [pageUpdates, user.profile?.AD_Username]);
 
   // Move to the edit page
   const handleEdit = (reportId: string) => {
@@ -112,7 +112,7 @@ const LostAndFound = () => {
     try {
       await lostAndFoundService.updateReportStatus(parseInt(reportToDelete || ''), 'deleted');
       const now = new Date();
-      let actionRequestData: MissingAdminAction = {
+      let actionRequestData: InitAdminAction = {
         missingID: parseInt(reportToDelete || ''),
         actionDate: now.toISOString(),
         username: user.profile?.AD_Username || '',
