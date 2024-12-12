@@ -8,7 +8,7 @@ import { Launch } from '@mui/icons-material';
 import GordonLoader from 'components/Loader';
 import styles from '../../../../../../views/CampusSafety/views/LostAndFound/LostAndFound.module.css';
 import GordonSnackbar from 'components/Snackbar';
-import userService from 'services/user';
+import { useUser } from 'hooks';
 
 const formatDate = (date: string) => {
   return format(Date.parse(date), 'MM/dd/yy');
@@ -34,7 +34,7 @@ const ActiveReports = () => {
   const isMobile = useMediaQuery('(max-width:375px)');
   const numReportsToDisplay = 4;
   const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
-  const [user, setUser] = useState({ AD_Username: '' });
+  const user = useUser();
   const navigate = useNavigate();
 
   const createSnackbar = useCallback((message, severity) => {
@@ -42,21 +42,11 @@ const ActiveReports = () => {
   }, []);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      const userInfo = await userService.getProfileInfo();
-      setUser({
-        AD_Username: userInfo?.AD_Username || '',
-      });
-    };
-    fetchUserData();
-  }, []);
-
-  useEffect(() => {
     const fetchMissingItems = async () => {
       try {
         setLoading(true);
         const reports: MissingItemReport[] = await lostAndFoundService.getMissingItemReportUser(
-          user.AD_Username,
+          user.profile?.AD_Username || '',
         );
 
         // Map the reports into active and past reports

@@ -7,7 +7,7 @@ import { MissingItemReport } from 'services/lostAndFound';
 import { format } from 'date-fns';
 import Badge from '@mui/material/Badge';
 import GordonSnackbar from 'components/Snackbar';
-import userService from 'services/user';
+import { useUser } from 'hooks';
 
 const formatDate = (date: string) => {
   return format(Date.parse(date), 'MM/dd/yy');
@@ -16,7 +16,7 @@ const formatDate = (date: string) => {
 const FoundReports = () => {
   const [foundReports, setFoundReports] = useState<MissingItemReport[] | null>(null);
   const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
-  const [user, setUser] = useState({ AD_Username: '' });
+  const user = useUser();
   const navigate = useNavigate();
   const isMobile = useMediaQuery('(max-width:375px)');
 
@@ -25,20 +25,10 @@ const FoundReports = () => {
   }, []);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      const userInfo = await userService.getProfileInfo();
-      setUser({
-        AD_Username: userInfo?.AD_Username || '',
-      });
-    };
-    fetchUserData();
-  }, []);
-
-  useEffect(() => {
     const fetchMissingItems = async () => {
       try {
         const reports: MissingItemReport[] = await lostAndFoundService.getMissingItemReportUser(
-          user.AD_Username,
+          user.profile?.AD_Username || '',
         );
 
         // For Found reports
