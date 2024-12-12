@@ -24,11 +24,10 @@ import lostAndFoundService from 'services/lostAndFound';
 import { MissingItemReport, MissingAdminAction } from 'services/lostAndFound'; // Import the type from the service
 import DeleteConfirmationModal from './components/DeleteConfirmation';
 import { format } from 'date-fns';
-import { useWindowSize } from 'hooks';
+import { useUser } from 'hooks';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import GordonLoader from 'components/Loader';
 import Badge from '@mui/material/Badge';
-import userService from 'services/user';
 
 const formatDate = (date: string) => {
   return format(Date.parse(date), 'MM/dd/yy'); // Adjust format as needed
@@ -44,24 +43,14 @@ const LostAndFound = () => {
   const [pageUpdates, setPageUpdates] = useState(0);
   const navigate = useNavigate();
   const isMobile = useMediaQuery('(max-width:900px)');
-  const [user, setUser] = useState({ AD_Username: '' });
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const userInfo = await userService.getProfileInfo();
-      setUser({
-        AD_Username: userInfo?.AD_Username || '',
-      });
-    };
-    fetchUserData();
-  }, []);
+  const user = useUser();
 
   useEffect(() => {
     const fetchMissingItems = async () => {
       try {
         setLoading(true);
         const reports: MissingItemReport[] = await lostAndFoundService.getMissingItemReportUser(
-          user.AD_Username,
+          user.profile?.AD_Username || '',
         );
 
         // Map the reports into active and past reports
@@ -126,7 +115,7 @@ const LostAndFound = () => {
       let actionRequestData: MissingAdminAction = {
         missingID: parseInt(reportToDelete || ''),
         actionDate: now.toISOString(),
-        username: user.AD_Username,
+        username: user.profile?.AD_Username || '',
         isPublic: true,
         action: 'Deleted',
         actionNote: '',
