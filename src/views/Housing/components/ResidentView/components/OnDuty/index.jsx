@@ -33,7 +33,7 @@ const OnDuty = () => {
       const hallID = profile.OnCampusBuilding;
 
       // Display either 'RA' or 'AC' depending on the resident's building
-      setStaffTypeLabel(staffType[hallID] || 'N/A');
+      setStaffTypeLabel(staffType[hallID] || 'RA/AC');
 
       fetchOnDutyRA(hallID)
         .then((response) => setOnDutyRaInfo(response))

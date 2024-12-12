@@ -35,7 +35,7 @@ const MyRA = () => {
       const roomNumber = profile.OnCampusRoom;
 
       // Display either 'RA' or 'AC' depending on the resident's building
-      setStaffTypeLabel(staffType[hallID] || 'N/A');
+      setStaffTypeLabel(staffType[hallID] || 'RA/AC');
 
       fetchRaInfo(hallID, roomNumber)
         .then((response) => setRaInfo(response))
