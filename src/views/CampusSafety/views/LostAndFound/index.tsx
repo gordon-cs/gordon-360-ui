@@ -20,15 +20,14 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import Header from '../../components/Header';
 import styles from './LostAndFound.module.css'; // Import the external CSS
-import lostAndFoundService from 'services/lostAndFound';
-import { MissingItemReport, MissingAdminAction } from 'services/lostAndFound'; // Import the type from the service
+import lostAndFoundService, { InitAdminAction } from 'services/lostAndFound';
+import { MissingItemReport } from 'services/lostAndFound'; // Import the type from the service
 import DeleteConfirmationModal from './components/DeleteConfirmation';
 import { format } from 'date-fns';
-import { useWindowSize } from 'hooks';
+import { useUser } from 'hooks';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import GordonLoader from 'components/Loader';
 import Badge from '@mui/material/Badge';
-import userService from 'services/user';
 
 const formatDate = (date: string) => {
   return format(Date.parse(date), 'MM/dd/yy'); // Adjust format as needed
@@ -44,23 +43,15 @@ const LostAndFound = () => {
   const [pageUpdates, setPageUpdates] = useState(0);
   const navigate = useNavigate();
   const isMobile = useMediaQuery('(max-width:900px)');
-  const [user, setUser] = useState({ AD_Username: '' });
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const userInfo = await userService.getProfileInfo();
-      setUser({
-        AD_Username: userInfo?.AD_Username || '',
-      });
-    };
-    fetchUserData();
-  }, []);
+  const user = useUser();
 
   useEffect(() => {
     const fetchMissingItems = async () => {
       try {
         setLoading(true);
-        const reports: MissingItemReport[] = await lostAndFoundService.getMissingItemReportUser();
+        const reports: MissingItemReport[] = await lostAndFoundService.getMissingItemReportUser(
+          user.profile?.AD_Username || '',
+        );
 
         // Map the reports into active and past reports
         const active = reports
@@ -97,7 +88,7 @@ const LostAndFound = () => {
       }
     };
     fetchMissingItems();
-  }, [pageUpdates]);
+  }, [pageUpdates, user.profile?.AD_Username]);
 
   // Move to the edit page
   const handleEdit = (reportId: string) => {
@@ -121,10 +112,10 @@ const LostAndFound = () => {
     try {
       await lostAndFoundService.updateReportStatus(parseInt(reportToDelete || ''), 'deleted');
       const now = new Date();
-      let actionRequestData: MissingAdminAction = {
+      let actionRequestData: InitAdminAction = {
         missingID: parseInt(reportToDelete || ''),
         actionDate: now.toISOString(),
-        username: user.AD_Username,
+        username: user.profile?.AD_Username || '',
         isPublic: true,
         action: 'Deleted',
         actionNote: '',
