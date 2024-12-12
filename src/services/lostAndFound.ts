@@ -53,12 +53,10 @@ const getMissingItemReports = (): Promise<MissingItemReport[]> =>
  * @param username The username to get reports of
  * @returns MissingItemReport[] array of all missing item reports.
  */
-const getMissingItemReportUser = (username: string): Promise<MissingItemReport[]> => {
-  console.log('Getting reports for', username);
-  return http.get<MissingItemReport[]>(
+const getMissingItemReportUser = (username: string): Promise<MissingItemReport[]> =>
+  http.get<MissingItemReport[]>(
     `lostandfound/missingitems${http.toQueryString({ user: username })}`,
   );
-};
 
 /**
  * Fetch a single missing item report given an ID.
