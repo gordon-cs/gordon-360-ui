@@ -11,6 +11,7 @@ import {
   Paper,
 } from '@mui/material';
 import { fetchOnDutyData } from 'services/residentLife/RA_OnCall';
+import ScottieMascot from 'views/Housing/ScottieMascot.png';
 
 // Hardcoded list of all halls
 const ALL_HALLS = [
@@ -172,10 +173,28 @@ const BasicSelect = () => {
                   </Typography>
                 </>
               ) : (
-                // when no on call ra tell user when they select that hall
-                <Typography variant="h6" color="textSecondary">
-                  No on-call RA
-                </Typography>
+                // when there is no on call ra tell user when they select that hall
+                <Box
+                  sx={{
+                    textAlign: 'center',
+                    padding: 3,
+                    backgroundColor: 'background.paper',
+                    borderColor: 'warning.main',
+                    borderRadius: 2,
+                  }}
+                >
+                  <Avatar
+                    src={ScottieMascot}
+                    alt="Scottie"
+                    sx={{ width: 100, height: 100, margin: '0 auto', marginBottom: 2 }}
+                  />
+                  <Typography variant="h5" color="warning.main">
+                    No one is on call right now!
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    Scottie’s keeping an eye on things. 🐾
+                  </Typography>
+                </Box>
               )}
             </Box>
           </Paper>
