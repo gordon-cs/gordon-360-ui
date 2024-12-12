@@ -7,9 +7,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Avatar from '@mui/material/Avatar';
-import Box from '@mui/material/Box';
+import { Box, Typography, Avatar } from '@mui/material';
 import { fetchOnDutyData } from 'services/residentLife/RA_OnCall';
+import ScottieMascot from 'views/ResLife/ScottieMascot.png';
+import { isMobile } from 'react-device-detect';
 
 // Styling for table links (RA/RD profile and Teams link) using existing colors
 const StyledLink = styled('a')(({ theme }) => ({
@@ -19,6 +20,8 @@ const StyledLink = styled('a')(({ theme }) => ({
     color: theme.palette.warning.main,
   },
 }));
+
+const DEFAULT_PROFILE_URL = 'https://360sp.gordon.edu/profile/';
 
 // styling for table components
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -59,7 +62,7 @@ const formatPhoneNumber = (phoneNumber) => {
 const makeRAPhoto = (item) => (
   <Box textAlign="center">
     <StyledLink
-      href={item.RA_Profile_Link}
+      href={DEFAULT_PROFILE_URL + item.RA_UserName}
       underline="hover"
       className="gc360_text_link"
       target="_blank"
@@ -98,11 +101,11 @@ const OnDutyTable = () => {
             Hall_Name: 'The Village',
             RA_Photo: villageData[0].RA_Photo,
             RA_Name: villageData[0].RA_Name,
-            RA_Profile_Link: villageData[0].RA_Profile_Link,
+            RA_UserName: villageData[0].RA_UserName,
             PreferredContact: villageData[0].PreferredContact,
             Check_in_time: villageData[0].Check_in_time,
             RD_Name: villageData[0].RD_Name,
-            RD_Profile_Link: villageData[0].RD_Profile_Link,
+            RD_UserName: villageData[0].RD_UserName,
           };
           consolidatedData.push(consolidatedVillage);
         }
@@ -120,7 +123,7 @@ const OnDutyTable = () => {
             >
               Teams
             </StyledLink>
-          ) : (
+          ) : isMobile ? (
             <StyledLink
               href={`tel:${item.PreferredContact}`}
               underline="hover"
@@ -128,6 +131,10 @@ const OnDutyTable = () => {
             >
               {formatPhoneNumber(item.PreferredContact)}
             </StyledLink>
+          ) : (
+            <Typography variant="body2" color="textPrimary">
+              {formatPhoneNumber(item.PreferredContact)}
+            </Typography>
           ),
 
           checkInTime: new Date(item.Check_in_time).toLocaleTimeString([], {
@@ -136,7 +143,7 @@ const OnDutyTable = () => {
           }),
           hallRD: (
             <StyledLink
-              href={item.RD_Profile_Link}
+              href={DEFAULT_PROFILE_URL + item.RD_UserName}
               underline="hover"
               className="gc360_text_link"
               target="_blank"
@@ -147,11 +154,12 @@ const OnDutyTable = () => {
           ),
         }));
 
-        setRows(fetchedRows);
+        setRows(fetchedRows.length > 0 ? fetchedRows : null);
         setLoading(false);
       } catch (err) {
         console.error('Error loading on-duty data:', err);
         setLoading(false);
+        setRows(null);
       }
     };
 
@@ -160,6 +168,33 @@ const OnDutyTable = () => {
 
   if (loading) {
     return <p>Loading on-duty data...</p>;
+  }
+
+  if (rows === null) {
+    return (
+      <Box
+        sx={{
+          textAlign: 'center',
+          padding: 3,
+          backgroundColor: 'background.paper',
+          border: '2px dashed',
+          borderColor: 'warning.main',
+          borderRadius: 2,
+        }}
+      >
+        <Avatar
+          src={ScottieMascot}
+          alt="Scottie"
+          sx={{ width: 100, height: 100, margin: '0 auto', marginBottom: 2 }}
+        />
+        <Typography variant="h5" color="warning.main">
+          No one is on call right now!
+        </Typography>
+        <Typography variant="body1" color="text.secondary">
+          Scottie’s keeping an eye on things. 🐾
+        </Typography>
+      </Box>
+    );
   }
 
   return (

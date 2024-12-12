@@ -11,6 +11,7 @@ import {
   Paper,
 } from '@mui/material';
 import { fetchOnDutyData } from 'services/residentLife/RA_OnCall';
+import ScottieMascot from 'views/ResLife/ScottieMascot.png';
 
 // Hardcoded list of all halls
 const ALL_HALLS = [
@@ -27,6 +28,8 @@ const ALL_HALLS = [
 
 // building codes associated with the village
 const VILLAGE_IDS = ['GRA', 'RID', 'MCI', 'CON'];
+
+const DEFAULT_PROFILE_URL = 'https://360sp.gordon.edu/profile/';
 
 // takes phone number from api return and makes readable version
 const formatPhoneNumber = (phoneNumber) => {
@@ -55,11 +58,11 @@ const BasicSelect = () => {
             Hall_Name: 'The Village',
             RA_Photo: villageData[0].RA_Photo,
             RA_Name: villageData[0].RA_Name,
-            RA_Profile_Link: villageData[0].RA_Profile_Link,
+            RA_UserName: villageData[0].RA_UserName,
             PreferredContact: villageData[0].PreferredContact,
             Check_in_time: villageData[0].Check_in_time,
             RD_Name: villageData[0].RD_Name,
-            RD_Profile_Link: villageData[0].RD_Profile_Link,
+            RD_UserName: villageData[0].RD_UserName,
           };
           setRows([...otherHalls, consolidatedVillage]); // pull info from village and remaining halls
         } else {
@@ -118,7 +121,7 @@ const BasicSelect = () => {
               {hallDetails?.RA_Name ? (
                 <>
                   <a
-                    href={hallDetails.RA_Profile_Link || '#'}
+                    href={DEFAULT_PROFILE_URL + hallDetails.RA_UserName || '#'}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -166,16 +169,38 @@ const BasicSelect = () => {
                   </Typography>
                   <Typography>
                     <strong>Hall RD:</strong>{' '}
-                    <a href={hallDetails.RD_Profile_Link} target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={DEFAULT_PROFILE_URL + hallDetails.RD_UserName}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       {hallDetails.RD_Name || 'No RD Info'}
                     </a>
                   </Typography>
                 </>
               ) : (
-                // when no on call ra tell user when they select that hall
-                <Typography variant="h6" color="textSecondary">
-                  No on-call RA
-                </Typography>
+                // when there is no on call ra tell user when they select that hall
+                <Box
+                  sx={{
+                    textAlign: 'center',
+                    padding: 3,
+                    backgroundColor: 'background.paper',
+                    borderColor: 'warning.main',
+                    borderRadius: 2,
+                  }}
+                >
+                  <Avatar
+                    src={ScottieMascot}
+                    alt="Scottie"
+                    sx={{ width: 100, height: 100, margin: '0 auto', marginBottom: 2 }}
+                  />
+                  <Typography variant="h5" color="warning.main">
+                    No one is on call right now!
+                  </Typography>
+                  <Typography variant="body1" color="text.secondary">
+                    Scottie’s keeping an eye on things. 🐾
+                  </Typography>
+                </Box>
               )}
             </Box>
           </Paper>

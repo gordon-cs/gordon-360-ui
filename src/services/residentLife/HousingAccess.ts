@@ -14,7 +14,7 @@ const ALLOWED_GROUPS = [
 const checkIfResidentialStudent = async (idNum: string): Promise<boolean> => {
   try {
     const response = await http.get<{ IsResidential: boolean }>(
-      `Housing/student/is-residential/${idNum}`,
+      `Housing/students/${idNum}/is-residential/`,
     );
     return response.IsResidential; // Extract the IsResidential property
   } catch (error) {

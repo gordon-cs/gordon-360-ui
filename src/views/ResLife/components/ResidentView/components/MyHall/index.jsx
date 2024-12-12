@@ -3,17 +3,17 @@ import { Card, CardContent, CardHeader, Grid, Tooltip, Typography, Avatar } from
 import { styled } from '@mui/material/styles';
 import { useUser } from 'hooks';
 import { fetchRdInfo } from 'services/residentLife/ResidentStaff';
-import bromleyHallMascot from 'views/Housing/Bromley.png';
-import chaseHallMascot from 'views/Housing/Chase.png';
-import evansHallMascot from 'views/Housing/Evans.png';
-import ferrinHallMascot from 'views/Housing/Ferrin.png';
-import fultonHallMascot from 'views/Housing/Fulton.png';
-import nylandHallMascot from 'views/Housing/Nyland.png';
-import tavillaHallMascot from 'views/Housing/Tavilla.png';
-import villageHallMascot from 'views/Housing/Village.png';
-import wilsonHallMascot from 'views/Housing/Wilson.png';
+import bromleyHallMascot from 'views/ResLife/Bromley.png';
+import chaseHallMascot from 'views/ResLife/Chase.png';
+import evansHallMascot from 'views/ResLife/Evans.png';
+import ferrinHallMascot from 'views/ResLife/Ferrin.png';
+import fultonHallMascot from 'views/ResLife/Fulton.png';
+import nylandHallMascot from 'views/ResLife/Nyland.png';
+import tavillaHallMascot from 'views/ResLife/Tavilla.png';
+import villageHallMascot from 'views/ResLife/Village.png';
+import wilsonHallMascot from 'views/ResLife/Wilson.png';
 
-const DEFAULT_PROFILE_URL = 'https://360.gordon.edu/profile/';
+const DEFAULT_PROFILE_URL = 'https://360sp.gordon.edu/profile/';
 const COLOR_80808026_1X1 =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNsUAMAASwAqHb28sMAAAAASUVORK5CYII=';
 
