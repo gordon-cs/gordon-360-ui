@@ -4,9 +4,8 @@ import {
   LocalActivity as LocalActivityIcon,
   Menu as MenuIcon,
   People as PeopleIcon,
-  Work as WorkIcon,
   Link as LinkIcon,
-  Home as HomeIcon,
+  HolidayVillage,
 } from '@mui/icons-material';
 import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Link } from '@mui/material';
 import RecIMIcon from '@mui/icons-material/SportsFootball';
@@ -38,7 +37,7 @@ const TabUrlPatterns = [
   /^\/people$|^\/myprofile|^\/profile/,
   /^\/links$/,
   /^\/recim$/,
-  /^\/housing$/,
+  /^\/reslife$/,
 ];
 
 /**
@@ -230,10 +229,10 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
             HousingAccess && ( //check if the user should have housing access
               <Tab
                 className={styles.tab}
-                icon={<HomeIcon />}
-                label="Housing"
+                icon={<HolidayVillage />}
+                label="Res-Life"
                 component={NavLink}
-                to="/housing"
+                to="/reslife"
               />
             )}
         </Tabs>

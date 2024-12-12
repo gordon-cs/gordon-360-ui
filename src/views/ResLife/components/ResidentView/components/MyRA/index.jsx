@@ -7,7 +7,7 @@ import { formatPhoneNumber } from '../../../../utils/formatPhoneNumber/formatPho
 import { staffType } from '../../../../utils/staffType/staffType';
 import { isMobile } from '../../../../utils/isMobile/isMobile';
 
-const DEFAULT_PROFILE_URL = 'https://360.gordon.edu/profile/';
+const DEFAULT_PROFILE_URL = 'https://360sp.gordon.edu/profile/';
 const COLOR_80808026_1X1 =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNsUAMAASwAqHb28sMAAAAASUVORK5CYII=';
 
@@ -35,7 +35,7 @@ const MyRA = () => {
       const roomNumber = profile.OnCampusRoom;
 
       // Display either 'RA' or 'AC' depending on the resident's building
-      setStaffTypeLabel(staffType[hallID] || 'N/A');
+      setStaffTypeLabel(staffType[hallID] || 'RA/AC');
 
       fetchRaInfo(hallID, roomNumber)
         .then((response) => setRaInfo(response))

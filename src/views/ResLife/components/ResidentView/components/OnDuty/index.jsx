@@ -6,10 +6,11 @@ import { fetchOnDutyRA } from 'services/residentLife/RA_OnCall';
 import { formatPhoneNumber } from '../../../../utils/formatPhoneNumber/formatPhoneNumber';
 import { staffType } from '../../../../utils/staffType/staffType';
 import { isMobile } from '../../../../utils/isMobile/isMobile';
-import ScottieMascot from 'views/Housing/ScottieMascot.png';
+import ScottieMascot from 'views/ResLife/ScottieMascot.png';
 
 const COLOR_80808026_1X1 =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNsUAMAASwAqHb28sMAAAAASUVORK5CYII=';
+const DEFAULT_PROFILE_URL = 'https://360sp.gordon.edu/profile/';
 
 // Styling for links using existing 360 colors
 const StyledLink = styled('a')(({ theme }) => ({
@@ -34,7 +35,7 @@ const OnDuty = () => {
       const hallID = profile.OnCampusBuilding;
 
       // Display either 'RA' or 'AC' depending on the resident's building
-      setStaffTypeLabel(staffType[hallID] || 'N/A');
+      setStaffTypeLabel(staffType[hallID] || 'RA/AC');
 
       fetchOnDutyRA(hallID)
         .then((response) => setOnDutyRaInfo(response))
@@ -113,7 +114,7 @@ const OnDuty = () => {
             <Typography variant="body1">
               <strong>Name: </strong>
               <StyledLink
-                href={onDutyRaInfo.RA_Profile_Link}
+                href={DEFAULT_PROFILE_URL + onDutyRaInfo.RA_UserName}
                 className="gc360_text_link"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -154,7 +155,7 @@ const OnDuty = () => {
           {/* Avatar Section */}
           <Grid item xs={4}>
             <StyledLink
-              href={onDutyRaInfo.RA_Profile_Link}
+              href={DEFAULT_PROFILE_URL + onDutyRaInfo.RA_UserName}
               className="gc360_text_link"
               target="_blank"
               rel="noopener noreferrer"
