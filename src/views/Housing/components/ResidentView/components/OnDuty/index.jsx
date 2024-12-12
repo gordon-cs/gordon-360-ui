@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Avatar, Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
+import { Avatar, Card, CardContent, CardHeader, Grid, Typography, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useUser } from 'hooks';
 import { fetchOnDutyRA } from 'services/residentLife/RA_OnCall';
 import { formatPhoneNumber } from '../../../../utils/formatPhoneNumber/formatPhoneNumber';
 import { staffType } from '../../../../utils/staffType/staffType';
 import { isMobile } from '../../../../utils/isMobile/isMobile';
+import ScottieMascot from 'views/Housing/ScottieMascot.png';
 
 const COLOR_80808026_1X1 =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNsUAMAASwAqHb28sMAAAAASUVORK5CYII=';
@@ -27,6 +28,7 @@ const OnDuty = () => {
 
   useEffect(() => {
     console.log(mobileDevice ? 'Mobile device detected' : 'Desktop device detected');
+    console.log('On duty info', onDutyRaInfo);
 
     if (profile) {
       const hallID = profile.OnCampusBuilding;
@@ -46,6 +48,49 @@ const OnDuty = () => {
       <Typography align="center" color="textSecondary">
         Loading your hall details...
       </Typography>
+    );
+  }
+
+  if (!onDutyRaInfo.RA_Name) {
+    return (
+      <Card>
+        <CardHeader
+          title={
+            <Grid container justifyContent="center" alignItems="center">
+              <Grid item xs={12} align="center">
+                On Duty {staffTypeLabel}
+              </Grid>
+            </Grid>
+          }
+          className="gc360_header"
+        />
+        <CardContent>
+          <Grid container spacing={2} alignItems="center">
+            {/* Text Section */}
+            <Grid item xs={8}>
+              <Typography variant="h5" color="warning.main">
+                No one is on duty right now!
+              </Typography>
+              <Typography variant="body1" color="text.secondary">
+                Scottie’s keeping an eye on things. 🐾
+              </Typography>
+            </Grid>
+
+            {/* Avatar Section */}
+            <Grid item xs={4} container justifyContent="center">
+              <Avatar
+                src={ScottieMascot}
+                alt="Scottie"
+                sx={{
+                  width: { xs: 80, sm: 110, md: 80, lg: 120 },
+                  height: { xs: 80, sm: 110, md: 80, lg: 120 },
+                  borderRadius: '50%',
+                }}
+              />
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
     );
   }
 
