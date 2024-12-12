@@ -1,5 +1,4 @@
 import http from './http';
-import userService from './user';
 
 /**
  * Missing item report object, representing the model of a report for communication with the
@@ -53,12 +52,10 @@ const getMissingItemReports = (): Promise<MissingItemReport[]> =>
  * the currently logged in user.
  * @returns MissingItemReport[] array of all missing item reports.
  */
-const getMissingItemReportUser = (): Promise<MissingItemReport[]> => {
-  const profile = userService.getProfileInfo();
-  return profile.then((profileValue) =>
-    http.get<MissingItemReport[]>(`lostandfound/missingitems?user=${profileValue?.AD_Username}`),
+const getMissingItemReportUser = (username: string): Promise<MissingItemReport[]> =>
+  http.get<MissingItemReport[]>(
+    `lostandfound/missingitems?${http.toQueryString({ user: username })}`,
   );
-};
 
 /**
  * Fetch a single missing item report given an ID.
