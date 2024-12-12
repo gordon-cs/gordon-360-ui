@@ -166,8 +166,8 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
         unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
         openUnavailableDialog={setDialog}
         onLinkClick={onLinkClick}
-        linkName={'Housing'}
-        linkPath={'/housing'}
+        linkName={'Res-Life'}
+        linkPath={'/reslife'}
         LinkIcon={HolidayVillage}
         divider={false}
       />

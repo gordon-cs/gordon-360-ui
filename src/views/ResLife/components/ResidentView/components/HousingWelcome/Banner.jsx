@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { staffType } from 'views/Housing/utils/staffType/staffType';
+import { staffType } from 'views/ResLife/utils/staffType/staffType';
 import { useUser } from 'hooks';
 import { Box, Grid, Typography } from '@mui/material';
 import { useAuthGroups } from 'hooks';

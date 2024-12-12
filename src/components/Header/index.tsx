@@ -37,7 +37,7 @@ const TabUrlPatterns = [
   /^\/people$|^\/myprofile|^\/profile/,
   /^\/links$/,
   /^\/recim$/,
-  /^\/housing$/,
+  /^\/reslife$/,
 ];
 
 /**
@@ -230,9 +230,9 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
               <Tab
                 className={styles.tab}
                 icon={<HolidayVillage />}
-                label="Housing"
+                label="Res-Life"
                 component={NavLink}
-                to="/housing"
+                to="/reslife"
               />
             )}
         </Tabs>

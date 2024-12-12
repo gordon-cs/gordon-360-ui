@@ -9,7 +9,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Box, Typography, Avatar } from '@mui/material';
 import { fetchOnDutyData } from 'services/residentLife/RA_OnCall';
-import ScottieMascot from 'views/Housing/ScottieMascot.png';
+import ScottieMascot from 'views/ResLife/ScottieMascot.png';
 import { isMobile } from 'react-device-detect';
 
 // Styling for table links (RA/RD profile and Teams link) using existing colors
