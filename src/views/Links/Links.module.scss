@@ -1,0 +1,24 @@
+.campus_safety_alert {
+  width: 35rem;
+  border-width: 4px;
+  border-radius: 1.5rem;
+  border-style: solid;
+  border-color: var(--mui-palette-error-main);
+  padding: 1rem 2rem;
+  white-space: nowrap;
+}
+
+.icon_style {
+  width: 1.5rem;
+}
+
+.text_style {
+  color: var(--mui-palette-error-main);
+}
+
+.card_padding {
+  padding: 8px;
+  &:last-child {
+    padding-bottom: 8px;
+  }
+}

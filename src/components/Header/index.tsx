@@ -6,6 +6,7 @@ import {
   People as PeopleIcon,
   Work as WorkIcon,
   Link as LinkIcon,
+  HealthAndSafety as SafetyIcon,
 } from '@mui/icons-material';
 import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Link } from '@mui/material';
 import RecIMIcon from '@mui/icons-material/SportsFootball';
