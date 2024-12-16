@@ -5,7 +5,6 @@ import { useUser } from 'hooks';
 import { fetchRaInfo } from 'services/residentLife/ResidentStaff';
 import { formatPhoneNumber } from '../../../../utils/formatPhoneNumber/formatPhoneNumber';
 import { staffType } from '../../../../utils/staffType/staffType';
-import { isMobile } from '../../../../utils/isMobile/isMobile';
 
 const DEFAULT_PROFILE_URL = 'https://360sp.gordon.edu/profile/';
 const COLOR_80808026_1X1 =
@@ -25,11 +24,8 @@ const MyRA = () => {
   const [raProfileLink, setRaProfileLink] = useState('');
   const [staffTypeLabel, setStaffTypeLabel] = useState('');
   const { profile } = useUser();
-  const mobileDevice = isMobile();
 
   useEffect(() => {
-    console.log(mobileDevice ? 'Mobile device detected' : 'Desktop device detected');
-
     if (profile) {
       const hallID = profile.OnCampusBuilding;
       const roomNumber = profile.OnCampusRoom;
@@ -104,12 +100,12 @@ const MyRA = () => {
                 >
                   Teams
                 </StyledLink>
-              ) : isMobile && raInfo.PreferredContact ? (
+              ) : raInfo.PreferredContact ? (
                 <StyledLink href={`tel:${raInfo.PreferredContact}`} className="gc360_text_link">
                   {formatPhoneNumber(raInfo.PreferredContact)}
                 </StyledLink>
               ) : (
-                raInfo.PreferredContact && formatPhoneNumber(raInfo.PreferredContact)
+                'No contact available'
               )}
             </Typography>
           </Grid>

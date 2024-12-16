@@ -5,7 +5,6 @@ import { useUser } from 'hooks';
 import { fetchOnDutyRA } from 'services/residentLife/RA_OnCall';
 import { formatPhoneNumber } from '../../../../utils/formatPhoneNumber/formatPhoneNumber';
 import { staffType } from '../../../../utils/staffType/staffType';
-import { isMobile } from '../../../../utils/isMobile/isMobile';
 import ScottieMascot from 'views/ResLife/ScottieMascot.png';
 
 const COLOR_80808026_1X1 =
@@ -25,10 +24,9 @@ const OnDuty = () => {
   const [onDutyRaInfo, setOnDutyRaInfo] = useState({});
   const [staffTypeLabel, setStaffTypeLabel] = useState('');
   const { profile } = useUser();
-  const mobileDevice = isMobile();
 
   useEffect(() => {
-    console.log(mobileDevice ? 'Mobile device detected' : 'Desktop device detected');
+    // console.log(mobileDevice ? 'Mobile device detected' : 'Desktop device detected');
     console.log('On duty info', onDutyRaInfo);
 
     if (profile) {
@@ -139,7 +137,7 @@ const OnDuty = () => {
                 >
                   Teams
                 </StyledLink>
-              ) : isMobile && onDutyRaInfo.PreferredContact ? (
+              ) : onDutyRaInfo.PreferredContact ? (
                 <StyledLink
                   href={`tel:${onDutyRaInfo.PreferredContact}`}
                   className="gc360_text_link"
@@ -147,7 +145,7 @@ const OnDuty = () => {
                   {formatPhoneNumber(onDutyRaInfo.PreferredContact)}
                 </StyledLink>
               ) : (
-                onDutyRaInfo.PreferredContact && formatPhoneNumber(onDutyRaInfo.PreferredContact)
+                'No contact available'
               )}
             </Typography>
           </Grid>
