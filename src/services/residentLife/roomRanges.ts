@@ -15,12 +15,6 @@ type Assignment = {
   Range_ID: number;
 };
 
-type NewRoomRange = {
-  Hall_ID: string;
-  RoomStart: string;
-  RoomEnd: string;
-};
-
 type RA = {
   FirstName: string;
   LastName: string;
@@ -38,6 +32,8 @@ type RoomRange = {
   RoomStart: string;
   RoomEnd: string;
 };
+
+type NewRoomRange = Omit<RoomRange, 'Range_ID'>;
 
 // Post request to the API endpoint "Housing/roomrange" which adds the user inputed room range
 // to our "Hall_Assignment_Ranges" database which the FetchRoomRanges() function pulls from

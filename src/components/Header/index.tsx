@@ -90,13 +90,12 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
 
   useEffect(() => {
     const fetchUserInfo = async () => {
+      setLoading(true);
       if (isAuthenticated) {
         const { canAccessHousing } = await fetchHousingAccessInfo(profile);
         setCanAccessHousing(canAccessHousing);
-        setLoading(false);
-      } else {
-        setLoading(false); // Set loading to false if not authenticated
       }
+      setLoading(false);
     };
 
     fetchUserInfo();
