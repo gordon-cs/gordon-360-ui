@@ -12,6 +12,7 @@
     "@mui/material": "^5.15.10",
     "@mui/x-date-pickers": "^6.19.4",
     "add-to-calendar-button": "^2.5.10",
+    "caniuse-lite": "^1.0.30001589",
     "chart.js": "^4.4.3",
     "cropperjs": "^1.6.1",
     "date-fns": "^3.3.1",
