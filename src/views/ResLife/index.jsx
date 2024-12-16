@@ -8,18 +8,19 @@ import StaffView from './components/StaffView';
 import Page404 from '/src/views/Page404';
 
 const Housing = () => {
-  const isStudent = useAuthGroups(AuthGroup.Student);
-  const isRA = useAuthGroups(AuthGroup.ResidentAdvisor);
-  const isResLifeStaff = useAuthGroups(AuthGroup.HousingAdmin);
-  const isRD = useAuthGroups(AuthGroup.ResidentDirector);
+  const [isStudent, isRA, isResLifeStaff, isRD, isPolice, isHallInfoViewer, isHousingDeveloper] =
+    useAuthGroups(
+      AuthGroup.Student,
+      AuthGroup.ResidentAdvisor,
+      AuthGroup.HousingAdmin,
+      AuthGroup.ResidentDirector,
+      AuthGroup.Police,
+      AuthGroup.HallInfoViewer,
+      AuthGroup.HousingDeveloper,
+    );
   const GetsRDView = isResLifeStaff || isRD;
-  // need to call hooks separately then join into one variable
-  const isPolice = useAuthGroups(AuthGroup.Police);
-  const isHallInfoViewer = useAuthGroups(AuthGroup.HallInfoViewer);
   const hasStandardAccess = isPolice || isHallInfoViewer;
-  const HousingDeveloper = useAuthGroups(AuthGroup.HousingDeveloper);
-
-  if (HousingDeveloper) {
+  if (isHousingDeveloper) {
     const selectPage = prompt('Enter the view you want to access (RD, RA, Resident, Staff):');
     switch (selectPage?.toLowerCase()) {
       case 'rd':
