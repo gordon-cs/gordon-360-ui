@@ -74,14 +74,18 @@ const MyRA = () => {
           <Grid item xs={8}>
             <Typography variant="body1">
               <strong>RA: </strong>
-              <StyledLink
-                href={raProfileLink}
-                className="gc360_text_link"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {raInfo.FirstName} {raInfo.LastName}
-              </StyledLink>
+              {raInfo?.FirstName && raInfo?.LastName ? (
+                <StyledLink
+                  href={raProfileLink}
+                  className="gc360_text_link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {raInfo.FirstName} {raInfo.LastName}
+                </StyledLink>
+              ) : (
+                <Typography className="gc360_text_link">No RA Assigned</Typography>
+              )}
             </Typography>
 
             <Typography variant="body1">
