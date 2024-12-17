@@ -28,7 +28,7 @@ const MyRA = () => {
   useEffect(() => {
     if (profile) {
       const hallID = profile.OnCampusBuilding;
-      const roomNumber = profile.OnCampusRoom;
+      const roomNumber = profile.OnCampusRoom.replace(/\D/g, '');
 
       // Display either 'RA' or 'AC' depending on the resident's building
       setStaffTypeLabel(staffType[hallID] || 'RA/AC');
