@@ -113,14 +113,18 @@ const MyHall = () => {
 
             <Typography variant="body1">
               <strong>RD: </strong>
-              <StyledLink
-                href={rdProfileLink}
-                className="gc360_text_link"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {rdInfo.RD_Name}
-              </StyledLink>
+              {rdInfo?.RD_Name ? (
+                <StyledLink
+                  href={rdProfileLink}
+                  className="gc360_text_link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {rdInfo.RD_Name}
+                </StyledLink>
+              ) : (
+                <Typography className="gc360_text_link">No RD Assigned</Typography>
+              )}
             </Typography>
           </Grid>
 
