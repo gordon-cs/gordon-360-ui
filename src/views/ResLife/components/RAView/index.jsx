@@ -20,7 +20,8 @@ import {
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Links from './components/Links';
 import MyHall from '../ResidentView/components/MyHall/index';
-import { React, useEffect, useState } from 'react';
+import { React, useCallback, useEffect, useState } from 'react';
+import SimpleSnackbar from 'components/Snackbar';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { checkIfCheckedIn, submitCheckIn } from 'services/residentLife/RA_Checkin';
 import { preferredContact, PrefContactMethod } from 'services/residentLife/ResidentStaff';
@@ -35,8 +36,13 @@ const RAView = () => {
   const { profile } = useUser();
   const [selectedContact, setSelectedContact] = useState('');
   const [hallName, setHallName] = useState('');
+  const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
 
   const isMobile = useMediaQuery('(max-width:600px)');
+
+  const createSnackbar = useCallback((message, severity) => {
+    setSnackbar({ message, severity, open: true });
+  }, []);
 
   // Fetch check-in status and initialize hall data
   useEffect(() => {
@@ -116,7 +122,10 @@ const RAView = () => {
     ); //exclude village for checkin
 
     if (!profile?.ID || selectedHallCodes.length === 0) {
-      alert('Please select a hall and ensure profile information is loaded before checking in.');
+      createSnackbar(
+        'Please select a hall and ensure profile information is loaded before checking in.',
+        'warning',
+      );
       return;
     }
 
@@ -125,10 +134,10 @@ const RAView = () => {
       setCheckedIn(true);
       setConfirmOpen(false);
       setOpen(false);
-      alert(`Successfully checked into ${hallName}`);
+      createSnackbar(`Successfully checked into ${hallName}`, 'success');
     } catch (error) {
       console.error('Error checking in:', error);
-      alert('Failed to check in. Please try again.');
+      createSnackbar('Failed to check in. Please try again.', 'error');
     }
   };
 
@@ -312,6 +321,12 @@ const RAView = () => {
               </Typography>
             </Grid>
           </GordonDialogBox>
+          <SimpleSnackbar
+            open={snackbar.open}
+            text={snackbar.message}
+            severity={snackbar.severity}
+            onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+          />
         </Grid>
       </Grid>
     </Grid>

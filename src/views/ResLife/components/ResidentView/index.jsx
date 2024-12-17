@@ -10,10 +10,10 @@ import OnDuty from './components/OnDuty';
 import Resources from './components/Resources';
 
 const ResidentView = () => {
-  const { profile } = useUser();
+  const { loading } = useUser();
 
   // Show loading state if profile is not yet loaded
-  if (!profile) {
+  if (loading) {
     return (
       <Typography align="center" color="textSecondary">
         Loading your hall details...
