@@ -2,7 +2,7 @@
  * Utility function to determine the staff type based on the building code.
  * @returns {string} - Returns 'RA' for Residence Assistant or 'AC' for Apartment Coordinator based on the building code.
  */
-export const staffType = {
+export const staffType = Object.freeze({
   BRO: 'AC',
   CHA: 'RA',
   EVN: 'RA',
@@ -15,4 +15,4 @@ export const staffType = {
   GRA: 'AC',
   MCI: 'AC',
   RID: 'AC',
-};
+} as const);

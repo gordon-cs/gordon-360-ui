@@ -6,6 +6,7 @@ import {
   People as PeopleIcon,
   Link as LinkIcon,
   HolidayVillage,
+  HealthAndSafety as SafetyIcon,
 } from '@mui/icons-material';
 import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Link } from '@mui/material';
 import RecIMIcon from '@mui/icons-material/SportsFootball';
@@ -90,13 +91,12 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
 
   useEffect(() => {
     const fetchUserInfo = async () => {
+      setLoading(true);
       if (isAuthenticated) {
         const { canAccessHousing } = await fetchHousingAccessInfo(profile);
         setCanAccessHousing(canAccessHousing);
-        setLoading(false);
-      } else {
-        setLoading(false); // Set loading to false if not authenticated
       }
+      setLoading(false);
     };
 
     fetchUserInfo();

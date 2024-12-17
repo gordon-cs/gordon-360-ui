@@ -10,7 +10,6 @@ import Paper from '@mui/material/Paper';
 import { Box, Typography, Avatar } from '@mui/material';
 import { fetchOnDutyData } from 'services/residentLife/RA_OnCall';
 import ScottieMascot from 'views/ResLife/ScottieMascot.png';
-import { isMobile } from 'react-device-detect';
 
 // Styling for table links (RA/RD profile and Teams link) using existing colors
 const StyledLink = styled('a')(({ theme }) => ({
@@ -123,7 +122,7 @@ const OnDutyTable = () => {
             >
               Teams
             </StyledLink>
-          ) : isMobile ? (
+          ) : (
             <StyledLink
               href={`tel:${item.PreferredContact}`}
               underline="hover"
@@ -131,12 +130,7 @@ const OnDutyTable = () => {
             >
               {formatPhoneNumber(item.PreferredContact)}
             </StyledLink>
-          ) : (
-            <Typography variant="body2" color="textPrimary">
-              {formatPhoneNumber(item.PreferredContact)}
-            </Typography>
           ),
-
           checkInTime: new Date(item.Check_in_time).toLocaleTimeString([], {
             hour: '2-digit',
             minute: '2-digit',
@@ -162,7 +156,6 @@ const OnDutyTable = () => {
         setRows(null);
       }
     };
-
     loadOnDutyData();
   }, []);
 
