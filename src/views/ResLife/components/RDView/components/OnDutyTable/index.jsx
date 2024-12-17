@@ -20,7 +20,7 @@ const StyledLink = styled('a')(({ theme }) => ({
   },
 }));
 
-const DEFAULT_PROFILE_URL = 'https://360sp.gordon.edu/profile/';
+const DEFAULT_PROFILE_URL = '/profile/';
 
 // styling for table components
 const StyledTableCell = styled(TableCell)(({ theme }) => ({

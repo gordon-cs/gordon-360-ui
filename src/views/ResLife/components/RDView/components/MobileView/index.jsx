@@ -29,7 +29,7 @@ const ALL_HALLS = [
 // building codes associated with the village
 const VILLAGE_IDS = ['GRA', 'RID', 'MCI', 'CON'];
 
-const DEFAULT_PROFILE_URL = 'https://360sp.gordon.edu/profile/';
+const DEFAULT_PROFILE_URL = '/profile/';
 
 // takes phone number from api return and makes readable version
 const formatPhoneNumber = (phoneNumber) => {
