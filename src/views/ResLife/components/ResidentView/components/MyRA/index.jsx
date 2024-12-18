@@ -6,7 +6,7 @@ import { fetchRaInfo } from 'services/residentLife/ResidentStaff';
 import { formatPhoneNumber } from '../../../../utils/formatPhoneNumber/formatPhoneNumber';
 import { staffType } from '../../../../utils/staffType/staffType';
 
-const DEFAULT_PROFILE_URL = 'https://360sp.gordon.edu/profile/';
+const DEFAULT_PROFILE_URL = '/profile/';
 const COLOR_80808026_1X1 =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNsUAMAASwAqHb28sMAAAAASUVORK5CYII=';
 
@@ -28,7 +28,7 @@ const MyRA = () => {
   useEffect(() => {
     if (profile) {
       const hallID = profile.OnCampusBuilding;
-      const roomNumber = profile.OnCampusRoom;
+      const roomNumber = profile.OnCampusRoom.replace(/\D/g, '');
 
       // Display either 'RA' or 'AC' depending on the resident's building
       setStaffTypeLabel(staffType[hallID] || 'RA/AC');
@@ -74,14 +74,18 @@ const MyRA = () => {
           <Grid item xs={8}>
             <Typography variant="body1">
               <strong>RA: </strong>
-              <StyledLink
-                href={raProfileLink}
-                className="gc360_text_link"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {raInfo.FirstName} {raInfo.LastName}
-              </StyledLink>
+              {raInfo?.FirstName && raInfo?.LastName ? (
+                <StyledLink
+                  href={raProfileLink}
+                  className="gc360_text_link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {raInfo.FirstName} {raInfo.LastName}
+                </StyledLink>
+              ) : (
+                <Typography className="gc360_text_link">No RA Assigned</Typography>
+              )}
             </Typography>
 
             <Typography variant="body1">

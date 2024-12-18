@@ -9,7 +9,7 @@ import ScottieMascot from 'views/ResLife/ScottieMascot.png';
 
 const COLOR_80808026_1X1 =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNsUAMAASwAqHb28sMAAAAASUVORK5CYII=';
-const DEFAULT_PROFILE_URL = 'https://360sp.gordon.edu/profile/';
+const DEFAULT_PROFILE_URL = '/profile/';
 
 // Styling for links using existing 360 colors
 const StyledLink = styled('a')(({ theme }) => ({
