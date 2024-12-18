@@ -224,8 +224,9 @@ const RoomRanges = () => {
           <CardContent>
             <Typography variant="h6">Add Room Range</Typography>
             <Typography variant="body1" gutterBottom color="secondary">
-              Select a building and specify a start and end room number. Click "Save Range" to add
-              it to the list of room ranges.
+              When creating a room range, enter only the root number for rooms. For example, if a
+              room number is B20, B20A, or similar, enter it as 20. Select a building, specify a
+              start and end room number, and click "Save Range" to add it.
             </Typography>
             <TextField
               label="Room Start"

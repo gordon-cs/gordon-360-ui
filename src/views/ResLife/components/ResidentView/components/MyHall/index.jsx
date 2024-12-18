@@ -13,7 +13,7 @@ import tavillaHallMascot from 'views/ResLife/Tavilla.png';
 import villageHallMascot from 'views/ResLife/Village.png';
 import wilsonHallMascot from 'views/ResLife/Wilson.png';
 
-const DEFAULT_PROFILE_URL = 'https://360sp.gordon.edu/profile/';
+const DEFAULT_PROFILE_URL = '/profile/';
 const COLOR_80808026_1X1 =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNsUAMAASwAqHb28sMAAAAASUVORK5CYII=';
 
@@ -113,14 +113,18 @@ const MyHall = () => {
 
             <Typography variant="body1">
               <strong>RD: </strong>
-              <StyledLink
-                href={rdProfileLink}
-                className="gc360_text_link"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {rdInfo.RD_Name}
-              </StyledLink>
+              {rdInfo?.RD_Name ? (
+                <StyledLink
+                  href={rdProfileLink}
+                  className="gc360_text_link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {rdInfo.RD_Name}
+                </StyledLink>
+              ) : (
+                <Typography className="gc360_text_link">No RD Assigned</Typography>
+              )}
             </Typography>
           </Grid>
 
