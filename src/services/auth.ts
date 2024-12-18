@@ -107,6 +107,13 @@ export enum AuthGroup {
   Staff = '360-Staff-SG',
   Student = '360-Student-SG',
   AcademicInfoView = '360-AcademicInfoView-SG',
+  ResidentAdvisor = '360-ResLifeStudentWorker-SG',
+  HallInfoViewer = '360-HallInfoViewer-SG',
+  ResidentDirector = '360-ResidentDirector',
+  HousingDeveloper = '360-HousingDevelopers-SG', //remove before merge to develop
+  LostAndFoundAdmin = '360-LostAndFoundAdmins-SG',
+  LostAndFoundKiosk = '360-LostAndFoundAssist-SG',
+  LostAndFoundDevelopers = '360-LostAndFound-Developers-SG',
 }
 
 export {
