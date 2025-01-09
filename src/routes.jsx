@@ -9,6 +9,7 @@ import EventsAttended from './views/EventsAttended';
 import Feedback from './views/Feedback';
 import Help from './views/Help';
 import Home from './views/Home';
+import Housing from './views/ResLife';
 import IDUploader from './views/IDUploader';
 import InvolvementProfile from './views/InvolvementProfile';
 import InvolvementsAll from './views/InvolvementsAll';
@@ -21,6 +22,10 @@ import ProfileNotFound from './views/ProfileNotFound';
 import PublicProfile from './views/PublicProfile';
 import Timesheets from './views/Timesheets';
 import RecIM from './views/RecIM';
+import RoomRanges from 'views/ResLife/components/RDView/components/RoomRanges';
+import { element } from 'prop-types';
+import { Room } from '@mui/icons-material';
+import CampusSafety from './views/CampusSafety';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
 const routes = [
@@ -130,14 +135,29 @@ const routes = [
     element: <Links />,
   },
   {
+    name: 'Res-Life',
+    path: '/reslife',
+    element: <Housing />,
+  },
+  {
     name: 'Rec-IM',
     path: '/recim/*',
     element: <RecIM />,
   },
   {
+    name: 'LostAndFound',
+    path: '/lostandfound/*',
+    element: <CampusSafety />,
+  },
+  {
     name: 'Page Not Found',
     path: '*',
     element: <Page404 />,
+  },
+  {
+    name: 'RoomRanges',
+    path: '/RoomRanges',
+    element: <RoomRanges />,
   },
 ];
 

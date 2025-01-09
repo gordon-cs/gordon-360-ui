@@ -19,6 +19,7 @@ export type Participant = CustomParticipant & {
   Notification: ParticipantNotification[];
   IsAdmin: boolean;
   IsCustom: boolean;
+  Hall?: string;
 };
 
 type BasicInfo = {
