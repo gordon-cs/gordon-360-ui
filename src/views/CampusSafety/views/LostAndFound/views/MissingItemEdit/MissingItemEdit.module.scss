@@ -35,14 +35,15 @@
 
 .submit_container {
   margin: 1rem 0;
-  padding-right: 5rem;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  gap: 1rem;
 }
 
 .submit_button {
-  font-size: 1.2rem;
-  padding: 0.7rem;
+  font-size: 1rem;
+  padding: 0.8rem;
+  text-transform: uppercase;
 }
 
 .icon {
@@ -51,7 +52,34 @@
   width: 1.5em;
 }
 
-@media (max-width: 1000px) {
+.foundContainer {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.largeChip {
+  padding: 20px;
+  height: 'auto';
+}
+
+.foundText {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.pickupButton {
+  height: fit-content;
+  padding: 1.2rem 1.5rem;
+  border-radius: 30px;
+}
+
+.buttonContainer {
+  justify-content: flex-end;
+}
+
+@media (max-width: 900px) {
   .form_card {
     margin: 0.5rem;
   }
@@ -76,8 +104,11 @@
   }
 
   .submit_button {
-    font-size: 1rem;
-    padding: 1rem;
-    min-width: fit-content;
+    font-size: 0.9rem;
+    padding: 0.7rem;
+  }
+
+  .buttonContainer {
+    justify-content: flex-start;
   }
 }

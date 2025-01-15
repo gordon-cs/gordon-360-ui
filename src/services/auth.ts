@@ -37,7 +37,7 @@ const acquireAccessToken = async () => {
 
   const authResult = await msalInstance.acquireTokenSilent(request).catch((error) => {
     if (error instanceof InteractionRequiredAuthError) {
-      if (willRedirectForAccessToken) {
+      if (!willRedirectForAccessToken) {
         willRedirectForAccessToken = true;
         console.log('Interaction Required. Redirecting for access token.');
         return msalInstance.acquireTokenRedirect(apiRequest);
@@ -107,8 +107,8 @@ export enum AuthGroup {
   Staff = '360-Staff-SG',
   Student = '360-Student-SG',
   AcademicInfoView = '360-AcademicInfoView-SG',
-  LostAndFoundAdmin = '360-LostAndFoundAdmin-SG',
-  LostAndFoundKiosk = '360-LostAndFoundKiosk-SG',
+  LostAndFoundAdmin = '360-LostAndFoundAdmins-SG',
+  LostAndFoundKiosk = '360-LostAndFoundAssist-SG',
   LostAndFoundDevelopers = '360-LostAndFound-Developers-SG',
 }
 

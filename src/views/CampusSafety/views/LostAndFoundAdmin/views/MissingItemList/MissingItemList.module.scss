@@ -1,3 +1,7 @@
+.filterCardPosition {
+  transform: translateY(15px);
+}
+
 .filterTitle {
   color: var(--mui-palette-primary-contrastText); // Warning color for emphasis
   background-color: var(--mui-palette-primary-main); // Primary color for header
@@ -36,17 +40,45 @@
   text-align: center;
 }
 
+.listCard {
+  // Move the card to behind the sticky bar
+  margin-top: 0.3rem;
+}
+
 .listContainer {
   padding: 0rem;
 }
 
+.stickyHeader {
+  margin-left: -0.5rem;
+  background-color: var(--mui-palette-neutral-light);
+  position: sticky;
+  top: -1rem;
+  z-index: 9; // this component defaults to a higher z-index that overlays quick search
+  // Move so stuck position is below breadcrumbs bar
+  transform: translateY(55px);
+  // Move left
+  width: calc(100% + 1rem);
+  // clip-path removes box shadow below this nav bar
+  clip-path: inset(0px -10px 0px -10px);
+}
+
 .tableHeader {
-  // display: flex;
-  // justify-content: space-between;
-  padding: 1rem;
+  padding: 1rem; // Ensure this style applies in production build
   background-color: var(--mui-palette-primary-main);
   color: var(--mui-palette-primary-contrastText);
-  font-weight: bold;
+}
+
+.noWrap {
+  text-wrap: nowrap;
+}
+
+.headerPlaceholder {
+  padding: 1rem; // Ensure this style applies in production build
+}
+
+.verticalSpacer {
+  height: 1rem;
 }
 
 .reportRow {
@@ -87,8 +119,7 @@
   padding-right: 0.5rem;
 }
 
-.stolenBadge {
+.chip {
   margin-top: 0.3rem;
-  background-color: var(--mui-palette-error-main); // Error color for stolen badge
-  color: var(--mui-palette-primary-contrastText);
+  margin-right: 5px;
 }

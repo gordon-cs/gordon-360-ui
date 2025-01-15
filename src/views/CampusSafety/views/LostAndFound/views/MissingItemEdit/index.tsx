@@ -11,22 +11,42 @@ import {
   Button,
   FormLabel,
   Typography,
+  Chip,
 } from '@mui/material';
 import { DateTime } from 'luxon';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './MissingItemEdit.module.scss';
-import lostAndFoundService from 'services/lostAndFound';
+import lostAndFoundService, { MissingItemReport } from 'services/lostAndFound';
 import userService from 'services/user';
 import ConfirmReport from './components/confirmReport';
 import { useNavigate, useParams } from 'react-router';
 import GordonLoader from 'components/Loader';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 const MissingItemFormEdit = () => {
   const navigate = useNavigate();
-  const { itemId } = useParams<{ itemId: string }>();
+  const { itemid } = useParams<{ itemid: string }>();
   const [loading, setLoading] = useState<boolean>(true);
+  const [isPickedUp, setIsPickedUp] = useState(false); //Added this to manage the button disable
+
+  const [originalFormData, setOriginalFormData] = useState({
+    recordID: 0,
+    category: '',
+    colors: [] as string[],
+    brand: '',
+    description: '',
+    locationLost: '',
+    stolen: false,
+    stolenDescription: '',
+    dateLost: '',
+    dateCreated: '',
+    submitterUsername: '',
+    forGuest: false,
+    status: 'active',
+  });
 
   const [user, setUser] = useState({
     firstName: '',
@@ -37,7 +57,7 @@ const MissingItemFormEdit = () => {
   });
 
   const [formData, setFormData] = useState({
-    reportID: 0,
+    recordID: 0,
     category: '',
     colors: [] as string[],
     brand: '',
@@ -47,10 +67,13 @@ const MissingItemFormEdit = () => {
     stolenDescription: '',
     dateLost: '',
     dateCreated: '',
+    submitterUsername: '',
+    forGuest: false,
     status: 'active',
   });
 
   const [showConfirm, setShowConfirm] = useState(false);
+  const isEditable = formData.status === 'active';
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -80,10 +103,10 @@ const MissingItemFormEdit = () => {
 
   useEffect(() => {
     const fetchItemData = async () => {
-      if (itemId) {
-        const item = await lostAndFoundService.getMissingItemReport(parseInt(itemId));
+      if (itemid) {
+        const item = await lostAndFoundService.getMissingItemReport(parseInt(itemid));
         setFormData({
-          reportID: item?.recordID || 0,
+          recordID: item?.recordID || 0,
           category: item.category,
           colors: item.colors || [],
           brand: item.brand || '',
@@ -93,20 +116,39 @@ const MissingItemFormEdit = () => {
           stolenDescription: item.stolenDescription || '',
           dateLost: item.dateLost,
           dateCreated: item.dateCreated,
+          submitterUsername: item.submitterUsername,
+          forGuest: item.forGuest,
           status: item.status || 'active',
+        });
+        const originalReport = await lostAndFoundService.getMissingItemReport(parseInt(itemid));
+        setOriginalFormData({
+          recordID: originalReport?.recordID || 0,
+          category: originalReport.category,
+          colors: originalReport.colors || [],
+          brand: originalReport.brand || '',
+          description: originalReport.description,
+          locationLost: originalReport.locationLost,
+          stolen: originalReport.stolen,
+          stolenDescription: originalReport.stolenDescription || '',
+          dateLost: originalReport.dateLost,
+          dateCreated: originalReport.dateCreated,
+          submitterUsername: originalReport.submitterUsername,
+          forGuest: originalReport.forGuest,
+          status: originalReport.status || 'active',
         });
       }
     };
     fetchItemData();
-  }, [itemId]);
+  }, [itemid]);
 
   useEffect(() => {
-    if (formData.reportID > 0) {
+    if (formData.recordID > 0) {
       setLoading(false);
     }
-  }, [formData.reportID]);
+  }, [formData.recordID]);
 
   const handleColorChange = (color: string) => {
+    if (!isEditable) return;
     setFormData((prevData) => {
       const colors = prevData.colors.includes(color)
         ? prevData.colors.filter((c) => c !== color)
@@ -119,15 +161,52 @@ const MissingItemFormEdit = () => {
     setShowConfirm(true);
   };
 
-  const handleReportSubmit = async () => {
+  const handlePickup = async () => {
     const requestData = {
       ...formData,
-      ...user,
-      submitterUsername: user.AD_Username,
-      dateLost: new Date(formData.dateLost).toISOString() || DateTime.now().toISO(),
-      forGuest: false,
+      status: 'PickedUp', // Change status to 'pickup'
     };
-    await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemId || ''));
+
+    try {
+      await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemid || ''));
+      setIsPickedUp(true);
+      //navigate('/lostandfound');
+    } catch (error) {
+      console.error('Error updating report status:', error);
+    }
+  };
+
+  const handleReportSubmit = async () => {
+    const requestData: MissingItemReport = {
+      ...formData,
+      dateLost: new Date(formData.dateLost).toISOString() || DateTime.now().toISO(),
+    };
+    const formFields = Object.keys(formData);
+    let newActionNote = '';
+    for (let i = 0; i < formFields.length; i++) {
+      if (
+        JSON.stringify(originalFormData[formFields[i] as keyof typeof originalFormData]) !==
+        JSON.stringify(formData[formFields[i] as keyof typeof formData])
+      ) {
+        newActionNote +=
+          formFields[i] +
+          ': OLD: ' +
+          originalFormData[formFields[i] as keyof typeof originalFormData] +
+          ', NEW: ' +
+          formData[formFields[i] as keyof typeof formData] +
+          ' ';
+      }
+    }
+    await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemid || ''));
+    const actionRequestData = {
+      missingID: parseInt(itemid || ''),
+      actionDate: DateTime.now().toISO(),
+      username: user.AD_Username,
+      isPublic: true,
+      action: 'Edited',
+      actionNote: newActionNote,
+    };
+    await lostAndFoundService.createAdminAction(parseInt(itemid || ''), actionRequestData);
     navigate('/lostandfound');
   };
 
@@ -139,6 +218,7 @@ const MissingItemFormEdit = () => {
         value={formData.dateLost === '' ? null : formData.dateLost}
         onChange={(value) => setFormData({ ...formData, dateLost: value?.toString() || '' })}
         disableFuture
+        disabled={!isEditable}
         orientation="portrait"
         name="Date Lost"
         // Custom styling for the input field, to make it look like filled variant
@@ -208,6 +288,89 @@ const MissingItemFormEdit = () => {
             <GordonLoader />
           ) : (
             <>
+              {/* Display the "Found" notice only if the status is "found" */}
+              {formData.status.toLowerCase() === 'found' && (
+                <Grid container xs={9.7} className={styles.foundContainer} rowGap={2}>
+                  <Grid container item xs={12} md={6} rowGap={2}>
+                    <Grid item xs={12}>
+                      <Chip
+                        className={styles.largeChip}
+                        // Wrap chip text if needed
+                        sx={{
+                          height: 'auto',
+                          '& .MuiChip-label': {
+                            display: 'block',
+                            whiteSpace: 'normal',
+                          },
+                        }}
+                        label={
+                          <>
+                            <Typography>
+                              Gordon Police marked this item as{' '}
+                              <Typography component="span" className={styles.foundText}>
+                                Found
+                              </Typography>
+                            </Typography>
+                          </>
+                        }
+                        color="success"
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Grid container columnGap={1} height="100%" alignItems="center">
+                        <Typography>
+                          <InfoOutlinedIcon color="inherit" /> Check your email for pickup
+                          instructions.{' '}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                  <Grid container item xs={12} md={6} className={styles.buttonContainer}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      startIcon={<CheckCircleOutlineIcon />}
+                      onClick={handlePickup}
+                      className={styles.pickupButton}
+                      disabled={isPickedUp} // Disable the button if the item is picked up
+                    >
+                      {/* Update text based on if the item is picked up */}
+                      {isPickedUp ? 'Item Picked Up' : 'Mark as Picked Up'}{' '}
+                    </Button>
+                  </Grid>
+                </Grid>
+              )}
+              {/* Display a chip for items with statuses other than "active" */}
+              {formData.status.toLowerCase() !== 'active' &&
+                formData.status.toLowerCase() !== 'found' && (
+                  <Grid container xs={9.7} className={styles.foundContainer} rowGap={2}>
+                    <Grid container item xs={12} md={6} rowGap={2}>
+                      <Grid item xs={12}>
+                        <Chip
+                          className={styles.largeChip}
+                          sx={{
+                            '& .MuiChip-label': {
+                              display: 'block',
+                              whiteSpace: 'normal',
+                            },
+                          }}
+                          label={
+                            <>
+                              <Typography>
+                                This item was marked as{' '}
+                                <Typography component="span" className={styles.foundText}>
+                                  {formData.status.charAt(0).toUpperCase() +
+                                    formData.status.slice(1)}
+                                </Typography>
+                              </Typography>
+                            </>
+                          }
+                          color="default"
+                        />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                )}
               <Grid container justifyContent="center">
                 <Grid item sm={5} xs={12}>
                   {/* Item Category */}
@@ -233,7 +396,7 @@ const MissingItemFormEdit = () => {
                         ].map((label) => (
                           <FormControlLabel
                             key={label}
-                            control={<Radio />}
+                            control={<Radio disabled={!isEditable} />}
                             label={label}
                             value={label.toLowerCase().replace(/ /g, '/')}
                             onChange={(e) =>
@@ -282,6 +445,7 @@ const MissingItemFormEdit = () => {
                               <Checkbox
                                 checked={formData.colors.includes(color)}
                                 onChange={() => handleColorChange(color)}
+                                disabled={!isEditable}
                               />
                             }
                             label={color}
@@ -301,6 +465,7 @@ const MissingItemFormEdit = () => {
                       name="brand"
                       value={formData.brand}
                       onChange={(e) => setFormData({ ...formData, brand: e.target.value })}
+                      disabled={!isEditable}
                       // Custom styling on focus, better dark mode contrast
                       sx={{
                         '& .MuiFormLabel-root.Mui-focused': {
@@ -319,6 +484,7 @@ const MissingItemFormEdit = () => {
                       name="description"
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      disabled={!isEditable}
                       // Custom styling on focus, better dark mode contrast
                       sx={{
                         '& .MuiFormLabel-root.Mui-focused': {
@@ -337,6 +503,7 @@ const MissingItemFormEdit = () => {
                       name="locationLost"
                       value={formData.locationLost}
                       onChange={(e) => setFormData({ ...formData, locationLost: e.target.value })}
+                      disabled={!isEditable}
                       // Custom styling on focus, better dark mode contrast
                       sx={{
                         '& .MuiFormLabel-root.Mui-focused': {
@@ -363,6 +530,7 @@ const MissingItemFormEdit = () => {
                           onChange={(e) =>
                             setFormData({ ...formData, stolenDescription: e.target.value })
                           }
+                          disabled={!isEditable}
                           inputProps={{ max: DateTime.now().toISODate() }}
                           // Custom styling on focus, better dark mode contrast
                           sx={{
@@ -377,18 +545,25 @@ const MissingItemFormEdit = () => {
                 </Grid>
               </Grid>
 
-              <Grid container justifyContent="flex-end" className={styles.submit_container}>
-                <Grid item xs={2}>
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    className={styles.submit_button}
-                    onClick={handleFormSubmit}
-                  >
-                    Update Report
-                  </Button>
+              {isEditable && (
+                <Grid
+                  container
+                  spacing={2}
+                  justifyContent="center"
+                  className={styles.submit_container}
+                >
+                  <Grid item xs={12} sm={5} md={2}>
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      className={styles.submit_button}
+                      onClick={handleFormSubmit}
+                    >
+                      Update Report
+                    </Button>
+                  </Grid>
                 </Grid>
-              </Grid>
+              )}
             </>
           )}
         </Card>

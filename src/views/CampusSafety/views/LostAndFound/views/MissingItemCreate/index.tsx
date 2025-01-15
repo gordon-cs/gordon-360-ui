@@ -12,7 +12,6 @@ import {
   FormLabel,
   Typography,
 } from '@mui/material';
-import { DateTime } from 'luxon';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './MissingItemCreate.module.scss';
 import lostAndFoundService from 'services/lostAndFound';
@@ -57,6 +56,7 @@ const MissingItemFormCreate = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
   const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
+  const [newActionFormData] = useState({ action: '', actionNote: '' });
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -161,23 +161,39 @@ const MissingItemFormCreate = () => {
           stolenDescription: '',
         }));
       }
+      if (!formData.dateLost) {
+        const now = new Date();
+        setFormData((prevData) => ({
+          ...prevData,
+          dateLost: now.toISOString(),
+        }));
+      }
       setShowConfirm(true);
     }
   };
 
   const handleReportSubmit = async () => {
     try {
+      const now = new Date();
       const requestData = {
         ...formData,
         ...user,
-        dateLost: new Date(formData.dateLost).toISOString() || DateTime.now().toISO(),
-        dateCreated: DateTime.now().toISO(),
+        dateLost: new Date(formData.dateLost).toISOString() || now.toISOString(),
+        dateCreated: now.toISOString(),
         colors: formData.colors || [],
         submitterUsername: user.AD_Username,
         forGuest: false,
       };
-
       const newReportId = await lostAndFoundService.createMissingItemReport(requestData);
+      let actionRequestData = {
+        ...newActionFormData,
+        missingID: newReportId,
+        actionDate: now.toISOString(),
+        username: user.AD_Username,
+        isPublic: true,
+        action: 'Created',
+      };
+      await lostAndFoundService.createAdminAction(newReportId, actionRequestData);
       navigate('/lostandfound');
     } catch (error) {
       createSnackbar(`Failed to create the missing item report.`, `error`);
@@ -218,6 +234,9 @@ const MissingItemFormCreate = () => {
         // Thanks to help for understanding from
         // https://blog.openreplay.com/styling-and-customizing-material-ui-date-pickers/
         slotProps={{
+          textField: {
+            helperText: 'Default: today',
+          },
           layout: {
             sx: {
               '& .MuiPickersLayout-contentWrapper .Mui-selected': {
@@ -345,7 +364,7 @@ const MissingItemFormCreate = () => {
                   </FormLabel>
                 </FormGroup>
                 <Grid item className={styles.checkbox_group}>
-                  <FormGroup>
+                  <FormGroup className={styles.color_group}>
                     {[
                       'Black',
                       'Blue',
@@ -465,7 +484,7 @@ const MissingItemFormCreate = () => {
                 className={styles.submit_button}
                 onClick={handleFormSubmit}
               >
-                SUBMIT
+                NEXT
               </Button>
             </Grid>
           </Grid>
