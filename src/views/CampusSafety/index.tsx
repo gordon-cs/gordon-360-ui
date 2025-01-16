@@ -17,13 +17,13 @@ type CampusSafetyRoutesObject = {
 };
 
 export const CampusSafetyRoutes: CampusSafetyRoutesObject = {
-  '/:itemId': { element: <MissingItemFormEdit />, formattedName: 'Edit Report ~' },
+  '/:itemId': { element: <MissingItemFormEdit />, formattedName: 'Edit My Report' },
   '/missingitemform': { element: <MissingItemFormCreate />, formattedName: 'Report a Lost Item' },
   '/reportfound': { element: <ReportFound />, formattedName: 'Report a Found Item' },
   '/': { element: <LostAndFound />, formattedName: 'Lost and Found Home' },
   '/lostandfoundadmin/missingitemdatabase/:itemId': {
     element: <MissingItemReportData />,
-    formattedName: 'View Report ~',
+    formattedName: 'View Report #~',
   },
   '/lostandfoundadmin/missingitemdatabase': {
     element: <MissingItemList />,
