@@ -82,7 +82,7 @@ const ConfirmReport: React.FC<ConfirmReportProps> = ({ formData, onEdit, onSubmi
         )}
         <Grid container justifyContent="space-between" marginTop={2}>
           <Button variant="outlined" color="primary" onClick={onEdit}>
-            Edit My Report
+            Go Back and Edit
           </Button>
           <Button variant="contained" color="secondary" onClick={onSubmit}>
             File Report
