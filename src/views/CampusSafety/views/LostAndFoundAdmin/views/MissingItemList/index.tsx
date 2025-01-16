@@ -124,9 +124,15 @@ const MissingItemList = () => {
 
   // Find and format the last checked date based on the list of admin actions for a given report.
   const displayLastCheckedDate = (report: MissingItemReport) => {
-    var dateString = report.adminActions?.findLast((action) => {
-      return action.action === 'Checked';
-    })?.actionDate;
+    console.log(report.recordID, report.adminActions);
+    var dateString = report.adminActions
+      ?.sort(
+        (action1, action2) =>
+          new Date(action1.actionDate).getTime() - new Date(action2.actionDate).getTime(),
+      )
+      .findLast((action) => {
+        return action.action === 'Checked';
+      })?.actionDate;
     if (dateString !== '' && dateString !== undefined) {
       return formatDate(dateString);
     }
