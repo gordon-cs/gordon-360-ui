@@ -80,7 +80,7 @@ const ConfirmReport: React.FC<ConfirmReportProps> = ({ formData, onEdit, onSubmi
             Go Back and Edit
           </Button>
           <Button variant="contained" color="primary" onClick={onSubmit}>
-            Submit Changes
+            Save Changes
           </Button>
         </Grid>
         <Typography variant="body2" align="center" marginTop={2}>
