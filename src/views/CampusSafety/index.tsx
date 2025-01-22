@@ -11,6 +11,8 @@ import ReportFound from './views/LostAndFound/views/ReportFound';
 import GordonLoader from 'components/Loader';
 import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import { useUser } from 'hooks';
+import lostAndFoundService from 'services/lostAndFound';
+import { useEffect } from 'react';
 
 type CampusSafetyRoutesObject = {
   [key: string]: { element: JSX.Element; formattedName /* Used for the breadcrumbs */ : string };
@@ -40,6 +42,44 @@ export const CampusSafetyRoutes: CampusSafetyRoutesObject = {
 // Routing between Campus Safety App pages
 const CampusSafetyApp = () => {
   const { profile, loading: loadingProfile } = useUser();
+
+  useEffect(() => {
+    const updateAndFixReports = async () => {
+      try {
+        const sixMonthsAgo = new Date();
+        sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+        sixMonthsAgo.setHours(0, 0, 0, 0); // Normalize time
+        console.log(`Six months ago date: ${sixMonthsAgo.toISOString()}`);
+        // Fetch reports
+        const reports = await lostAndFoundService.getMissingItemReports();
+  
+        for (const report of reports) {
+          const reportDate = new Date(report.dateCreated);
+          reportDate.setHours(0, 0, 0, 0);
+          if (reportDate < sixMonthsAgo && report.status === 'active') {
+            await lostAndFoundService.updateReportStatus(
+              parseInt((report.recordID ?? '').toString()),
+              'expired'
+            );
+          }
+          if (reportDate >= sixMonthsAgo && report.status === 'expired') {
+            await lostAndFoundService.updateReportStatus(
+              parseInt((report.recordID ?? '').toString()),
+              'active'
+            );
+          }
+        }
+      } catch (err) {
+        console.error('Error in updateAndFixReports:', err);
+      }
+    };
+    updateAndFixReports();
+  }, []);
+  
+  
+  
+  
+  
 
   if (loadingProfile) {
     return <GordonLoader />;
