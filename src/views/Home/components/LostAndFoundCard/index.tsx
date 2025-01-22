@@ -26,24 +26,25 @@ const LostAndFoundCard = () => {
         />
         <CardContent>
           <Grid container direction="row" justifyContent="space-between">
-            <Grid item xs={6}>
+            <Grid item>
               <Button
                 variant="contained"
                 color="secondary"
                 component={Link}
                 to="/lostandfound/missingitemform"
+                className={customStyles.button}
               >
-                {' '}
                 <NotListedLocation />
                 Report Lost
               </Button>
             </Grid>
-            <Grid container item xs={6} direction="row" justifyContent={'flex-end'}>
+            <Grid item>
               <Button
                 variant="contained"
                 color="secondary"
                 component={Link}
                 to="/lostandfound/reportfound"
+                className={customStyles.button}
               >
                 <WhereToVote />
                 Report Found
