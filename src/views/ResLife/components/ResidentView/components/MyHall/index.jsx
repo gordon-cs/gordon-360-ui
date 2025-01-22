@@ -123,21 +123,28 @@ const MyHall = () => {
                   {rdInfo.RD_Name}
                 </StyledLink>
               ) : (
-                <Typography className="gc360_text_link">No RD Assigned</Typography>
+                <StyledLink className="gc360_text_link">No RD Assigned</StyledLink>
               )}
             </Typography>
           </Grid>
 
           {/* Avatar Section */}
-          <Grid item xs={4}>
+          <Grid
+            item
+            xs={4}
+            container
+            justifyContent="center"
+            sx={{ marginTop: { xs: 1, sm: 2, md: 2 } }}
+          >
             <Tooltip title={hallPhotoAlt || 'Hall Mascot'}>
               <Avatar
                 src={hallPhoto || COLOR_80808026_1X1}
                 alt={hallPhotoAlt || 'Hall Mascot'}
                 sx={{
-                  width: { xs: 80, sm: 110, md: 80, lg: 120 },
-                  height: { xs: 80, sm: 110, md: 80, lg: 120 },
+                  width: { xs: 80, sm: 90, md: 100, lg: 130 },
+                  height: { xs: 80, sm: 90, md: 100, lg: 130 },
                   borderRadius: '50%',
+                  transition: 'width 0.3s, height 0.3s',
                 }}
               />
             </Tooltip>
