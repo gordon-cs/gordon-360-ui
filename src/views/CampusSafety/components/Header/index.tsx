@@ -8,6 +8,7 @@ import {
 import styles from './Header.module.css';
 import { useAuthGroups } from 'hooks';
 import { AuthGroup } from 'services/auth';
+import { CampusSafetyRoutes } from 'views/CampusSafety';
 
 // Define the props for CampusSafetyBreadcrumb
 type CampusSafetyBreadcrumbProps = {
@@ -39,6 +40,37 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
   const isAdmin = useAuthGroups(AuthGroup.LostAndFoundAdmin);
   const isKiosk = useAuthGroups(AuthGroup.LostAndFoundKiosk);
   const isDev = useAuthGroups(AuthGroup.LostAndFoundDevelopers);
+
+  const PathSubstringToFormattedName = (substring: string) => {
+    // Get the formatted name for this breadcrumb from the routes object.
+    let formattedName = '';
+    if (substring) {
+      // Get index of current substring in the current route
+      const PathSubstringIndex = pathnames.findIndex((x) => x === substring);
+      let breadcrumbRoute;
+      if (!isNaN(parseInt(substring))) {
+        // If substring is a number, replace number with dynamic route param :itemId
+        breadcrumbRoute = '';
+        if (PathSubstringIndex !== 1) {
+          // Start route with / if substring isn't first element in the route
+          // Prevents doubling // when adding "/:itemId" to the route on the next line
+          breadcrumbRoute += '/';
+        }
+        breadcrumbRoute += pathnames.slice(1, PathSubstringIndex).join('/') + '/:itemId';
+      } else {
+        breadcrumbRoute = '/' + pathnames.slice(1, PathSubstringIndex + 1).join('/');
+      }
+
+      // Find the formatted name in the routes object
+      formattedName = CampusSafetyRoutes[breadcrumbRoute].formattedName;
+
+      if (formattedName) {
+        formattedName = formattedName.replace('~', substring);
+        return formattedName;
+      }
+      return substring;
+    }
+  };
 
   return (
     <>
@@ -86,13 +118,14 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
           {/* Only render additional breadcrumbs beyond "Lost And Found Home" */}
           {pathnames
             .slice(1) // Start from the second item to avoid redundancy
-            .map((value, index) => {
-              const isLast = index === pathnames.length - 2;
-              const to = `/${pathnames.slice(0, index + 2).join('/')}`;
-
+            .map((value, indexPos) => {
+              // Being the last breadcrumb means current page, so doesn't link anywhere
+              const isLast = indexPos === pathnames.length - 2;
+              // Build the url up to this location in the breadcrumb
+              const to = `/${pathnames.slice(0, indexPos + 2).join('/')}`;
               return (
                 <LostAndFoundBreadcrumb key={to} link={!isLast ? to : null}>
-                  {value.replace(/-/g, ' ')}
+                  {PathSubstringToFormattedName(value)}
                 </LostAndFoundBreadcrumb>
               );
             })}
