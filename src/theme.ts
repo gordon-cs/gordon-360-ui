@@ -276,6 +276,33 @@ export const theme360 = extendTheme({
         }),
       },
     },
+    MuiFormLabel: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          '[data-mui-color-scheme="dark"] &.Mui-focused': {
+            color: theme.vars.palette.secondary.light, // Focused label color, for better contrast in dark mode
+          },
+        }),
+      },
+    },
+    MuiRadio: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          '[data-mui-color-scheme="dark"] &.Mui-checked': {
+            color: theme.vars.palette.secondary.light, // Checked input color, for better contrast in dark mode
+          },
+        }),
+      },
+    },
+    MuiCheckbox: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          '[data-mui-color-scheme="dark"] &.Mui-checked': {
+            color: theme.vars.palette.secondary.light, // Checked input color, for better contrast in dark mode
+          },
+        }),
+      },
+    },
     MuiButton: {
       styleOverrides: {
         outlinedPrimary: ({ theme }) => ({
