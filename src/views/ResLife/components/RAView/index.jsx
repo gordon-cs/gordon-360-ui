@@ -19,6 +19,7 @@ import {
 } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Links from './components/Links';
+import TaskList from './components/TaskList';
 import MyHall from '../ResidentView/components/MyHall/index';
 import { React, useCallback, useEffect, useState } from 'react';
 import SimpleSnackbar from 'components/Snackbar';
@@ -399,6 +400,9 @@ const RAView = () => {
           {contactMethod()}
           <Grid item xs={12}>
             <Links />
+          </Grid>
+          <Grid item xs={12}>
+            <TaskList />
           </Grid>
         </>
       )}
