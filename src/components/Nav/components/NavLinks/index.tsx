@@ -4,16 +4,18 @@ import HomeIcon from '@mui/icons-material/Home';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import LinkIcon from '@mui/icons-material/InsertLink';
 import PeopleIcon from '@mui/icons-material/People';
+import { HolidayVillage } from '@mui/icons-material';
 import { Divider, List } from '@mui/material';
 import RecIMIcon from '@mui/icons-material/SportsFootball';
 import TranscriptIcon from '@mui/icons-material/Receipt';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonNavButton from 'components/NavButton';
 import PaletteSwitcherDialog from 'components/PaletteSwitcherDialog';
-import { useAuthGroups, useNetworkStatus } from 'hooks';
-import { useState } from 'react';
+import { useAuthGroups, useNetworkStatus, useUser } from 'hooks';
+import { useEffect, useState } from 'react';
 import { AuthGroup, signOut } from 'services/auth';
 import styles from './NavLinks.module.css';
+import { fetchHousingAccessInfo } from 'services/residentLife/HousingAccess';
 
 type Props = {
   onLinkClick: () => void;
@@ -25,6 +27,28 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
   const isOnline = useNetworkStatus();
   const isAuthenticated = useIsAuthenticated();
   const isSiteAdmin = useAuthGroups(AuthGroup.SiteAdmin);
+  const [canAccessHousing, setCanAccessHousing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const { profile } = useUser();
+
+  useEffect(() => {
+    const fetchHousingAccess = async () => {
+      if (isAuthenticated) {
+        try {
+          const { canAccessHousing } = await fetchHousingAccessInfo(profile);
+          setCanAccessHousing(canAccessHousing);
+        } catch (error) {
+          console.error('Error fetching housing access info:', error);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setLoading(false);
+      }
+    };
+
+    fetchHousingAccess();
+  }, [isAuthenticated, profile]);
 
   const handleSignOut = () => {
     onLinkClick();
@@ -136,6 +160,19 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
     />
   );
 
+  const housingButton =
+    !loading && canAccessHousing ? (
+      <GordonNavButton
+        unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
+        openUnavailableDialog={setDialog}
+        onLinkClick={onLinkClick}
+        linkName={'Res-Life'}
+        linkPath={'/reslife'}
+        LinkIcon={HolidayVillage}
+        divider={false}
+      />
+    ) : null;
+
   const paletteOptionsButton = (
     <GordonNavButton
       onLinkClick={() => {
@@ -203,6 +240,7 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
         {peopleButton}
         {LinksButton}
         {recimButton}
+        {housingButton}
       </List>
 
       <Divider />
