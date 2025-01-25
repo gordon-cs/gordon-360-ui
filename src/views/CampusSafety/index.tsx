@@ -70,6 +70,7 @@ const CampusSafetyApp = () => {
               'expired'
             );
           }
+          // Double checking to make sure items are marked correctly based on date
           if (reportDate >= twoMonthsAgo && report.status === 'expired') {
             await lostAndFoundService.updateReportStatus(
               parseInt((report.recordID ?? '').toString()),
