@@ -13,6 +13,8 @@ import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import { useUser } from 'hooks';
 import lostAndFoundService from 'services/lostAndFound';
 import { useEffect } from 'react';
+import { AuthGroup } from 'services/auth';
+import { useAuthGroups } from 'hooks';
 
 type CampusSafetyRoutesObject = {
   [key: string]: { element: JSX.Element; formattedName /* Used for the breadcrumbs */ : string };
@@ -42,27 +44,33 @@ export const CampusSafetyRoutes: CampusSafetyRoutesObject = {
 // Routing between Campus Safety App pages
 const CampusSafetyApp = () => {
   const { profile, loading: loadingProfile } = useUser();
+  const isAdmin = useAuthGroups(AuthGroup.LostAndFoundAdmin);
+  const isDev = useAuthGroups(AuthGroup.LostAndFoundDevelopers);
+  
 
   useEffect(() => {
     const updateAndFixReports = async () => {
+      if (!isAdmin && !isDev) {
+        return; // Only run if the user is an admin or dev
+      }
       try {
-        const sixMonthsAgo = new Date();
-        sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-        sixMonthsAgo.setHours(0, 0, 0, 0); // Normalize time
-        console.log(`Six months ago date: ${sixMonthsAgo.toISOString()}`);
+        const twoMonthsAgo = new Date();
+        twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
+        twoMonthsAgo.setHours(0, 0, 0, 0); // Normalize time
+       
         // Fetch reports
         const reports = await lostAndFoundService.getMissingItemReports();
   
         for (const report of reports) {
           const reportDate = new Date(report.dateCreated);
           reportDate.setHours(0, 0, 0, 0);
-          if (reportDate < sixMonthsAgo && report.status === 'active') {
+          if (reportDate < twoMonthsAgo && report.status === 'active') {
             await lostAndFoundService.updateReportStatus(
               parseInt((report.recordID ?? '').toString()),
               'expired'
             );
           }
-          if (reportDate >= sixMonthsAgo && report.status === 'expired') {
+          if (reportDate >= twoMonthsAgo && report.status === 'expired') {
             await lostAndFoundService.updateReportStatus(
               parseInt((report.recordID ?? '').toString()),
               'active'
@@ -74,13 +82,9 @@ const CampusSafetyApp = () => {
       }
     };
     updateAndFixReports();
-  }, []);
+  }, [isAdmin,isDev]);
   
   
-  
-  
-  
-
   if (loadingProfile) {
     return <GordonLoader />;
   }
