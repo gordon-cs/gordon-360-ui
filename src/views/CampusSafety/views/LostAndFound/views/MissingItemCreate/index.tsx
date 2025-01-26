@@ -200,6 +200,10 @@ const MissingItemFormCreate = () => {
     }
   };
 
+  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+  };
+
   // Using DatePicker component from MUI/x, with custom styling to fix dark mode contrast issues
   const customDatePicker = (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -210,32 +214,30 @@ const MissingItemFormCreate = () => {
         disableFuture
         orientation="portrait"
         name="Date Lost"
-        // Custom styling for the input field, to make it look like filled variant
-        sx={{
-          backgroundColor: 'var(--mui-palette-FilledInput-bg);',
-          paddingTop: '7px;',
-          borderRadius: '5px;',
-          width: '100%;',
-          '& .Mui-focused .MuiOutlinedInput-notchedOutline': { border: 'none' },
-          '& .MuiInputLabel-shrink': {
-            transform: 'translate(14px, 4px) scale(0.75);',
-          },
-          '& .MuiFormLabel-root.Mui-focused': {
-            color: 'var(--mui-palette-secondary-main);',
-          },
-          '& .MuiOutlinedInput-notchedOutline': {
-            borderWidth: '0;',
-            borderBottom:
-              '1px solid rgba(var(--mui-palette-common-onBackgroundChannel) / var(--mui-opacity-inputUnderline));',
-            borderRadius: '0;',
-          },
-        }}
-        // Custom styling for popup box, better dark mode contrast
-        // Thanks to help for understanding from
-        // https://blog.openreplay.com/styling-and-customizing-material-ui-date-pickers/
         slotProps={{
           textField: {
+            onKeyDown: onKeyDown,
             helperText: 'Default: today',
+            // Custom styling for the input field, to make it look like filled variant
+            sx: {
+              backgroundColor: 'var(--mui-palette-FilledInput-bg);',
+              paddingTop: '7px;',
+              borderRadius: '5px;',
+              width: '100%;',
+              '& .Mui-focused .MuiOutlinedInput-notchedOutline': { border: 'none' },
+              '& .MuiInputLabel-shrink': {
+                transform: 'translate(14px, 4px) scale(0.75);',
+              },
+              '& .MuiFormLabel-root.Mui-focused': {
+                color: 'var(--mui-palette-secondary-main);',
+              },
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderWidth: '0;',
+                borderBottom:
+                  '1px solid rgba(var(--mui-palette-common-onBackgroundChannel) / var(--mui-opacity-inputUnderline));',
+                borderRadius: '0;',
+              },
+            },
           },
           layout: {
             sx: {
