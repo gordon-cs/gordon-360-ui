@@ -21,7 +21,7 @@ import { ListItemIcon, ListItemText, ListSubheader, List, ListItem, Link } from 
 const TaskList = () => (
   <Grid item xs={12} md={12} padding={0}>
     <Card>
-      <CardHeader title={`On-Shift Tasks`} className="gc360_header" />
+      <CardHeader title={`On-Call Tasks`} className="gc360_header" />
       <CardContent>
         <Typography>
           <List>

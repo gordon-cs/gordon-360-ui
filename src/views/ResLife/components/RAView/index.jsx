@@ -386,6 +386,9 @@ const RAView = () => {
             <MyHall />
           </Grid>
           {checkInButton()}
+          <Grid item xs={12} md={4}>
+            <TaskList />
+          </Grid>
         </>
       )}
       {isMobile && (
