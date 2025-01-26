@@ -1,3 +1,14 @@
 .linkHeader a {
   color: white;
 }
+
+.buttonGrid {
+  flex-direction: row;
+  align-items: right;
+}
+
+.button {
+  width: 13em;
+  height: 3.2em;
+  font-size: 12px;
+}
