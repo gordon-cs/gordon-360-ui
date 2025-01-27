@@ -57,7 +57,7 @@ const ConfirmReport: React.FC<ConfirmReportProps> = ({ formData, onEdit, onSubmi
             <Typography>
               <strong>Phone Number:</strong> {formData.phoneNumber}
             </Typography>
-            <Typography>
+            <Typography className={styles.breakWord}>
               <strong>Email Address:</strong> {formData.emailAddr}
             </Typography>
           </Grid>
@@ -75,13 +75,27 @@ const ConfirmReport: React.FC<ConfirmReportProps> = ({ formData, onEdit, onSubmi
             </Grid>
           )}
         </Grid>
-        <Grid container justifyContent="space-between" marginTop={2}>
-          <Button variant="outlined" color="primary" onClick={onEdit}>
-            Go Back and Edit
-          </Button>
-          <Button variant="contained" color="primary" onClick={onSubmit}>
-            Save Changes
-          </Button>
+        <Grid container justifyContent={{ sm: 'space-between', xs: 'center' }}>
+          <Grid item>
+            <Button
+              className={styles.buttonMargin}
+              variant="outlined"
+              color="primary"
+              onClick={onEdit}
+            >
+              Go Back and Edit
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              className={styles.buttonMargin}
+              variant="contained"
+              color="primary"
+              onClick={onSubmit}
+            >
+              Save Changes
+            </Button>
+          </Grid>
         </Grid>
         <Typography variant="body2" align="center" marginTop={2}>
           This report will automatically expire 6 months after it was created
