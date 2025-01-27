@@ -97,7 +97,6 @@ const MissingItemList = () => {
           (a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime(),
         );
         setFilteredReports(sortedReports);
-        console.log(sortedReports);
       } catch (error) {
         console.error('Error fetching missing items', error);
       } finally {
