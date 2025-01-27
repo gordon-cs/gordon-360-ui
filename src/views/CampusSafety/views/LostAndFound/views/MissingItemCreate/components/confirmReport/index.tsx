@@ -17,11 +17,17 @@ interface ConfirmReportProps {
     stolen: boolean;
     forGuest: boolean;
   };
+  disableSubmit: boolean;
   onEdit: () => void;
   onSubmit: () => void;
 }
 
-const ConfirmReport: React.FC<ConfirmReportProps> = ({ formData, onEdit, onSubmit }) => {
+const ConfirmReport: React.FC<ConfirmReportProps> = ({
+  formData,
+  disableSubmit,
+  onEdit,
+  onSubmit,
+}) => {
   return (
     <Card className={styles.confirmCard}>
       <CardHeader
@@ -84,7 +90,7 @@ const ConfirmReport: React.FC<ConfirmReportProps> = ({ formData, onEdit, onSubmi
           <Button variant="outlined" color="primary" onClick={onEdit}>
             Go Back and Edit
           </Button>
-          <Button variant="contained" color="secondary" onClick={onSubmit}>
+          <Button variant="contained" color="secondary" onClick={onSubmit} disabled={disableSubmit}>
             File Report
           </Button>
         </Grid>
