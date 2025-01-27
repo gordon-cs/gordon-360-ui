@@ -53,7 +53,6 @@ const CampusSafetyApp = () => {
       if (!isAdmin && !isDev) {
         return; // Only run if the user is an admin or dev
       }
-      try {
         const twoMonthsAgo = new Date();
         twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
         twoMonthsAgo.setHours(0, 0, 0, 0); // Normalize time
@@ -78,9 +77,6 @@ const CampusSafetyApp = () => {
             );
           }
         }
-      } catch (err) {
-        console.error('Error in updateAndFixReports:', err);
-      }
     };
     updateAndFixReports();
   }, [isAdmin,isDev]);

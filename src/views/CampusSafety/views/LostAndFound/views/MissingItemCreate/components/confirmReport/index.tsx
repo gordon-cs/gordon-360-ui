@@ -89,7 +89,7 @@ const ConfirmReport: React.FC<ConfirmReportProps> = ({ formData, onEdit, onSubmi
           </Button>
         </Grid>
         <Typography variant="body2" align="center" marginTop={2}>
-          This report will automatically expire in 6 months if your item is not found
+          This report will automatically expire in 2 months if your item is not found
         </Typography>
       </CardContent>
     </Card>
