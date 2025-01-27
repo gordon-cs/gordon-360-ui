@@ -57,6 +57,7 @@ const MissingItemFormCreate = () => {
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
   const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
   const [newActionFormData] = useState({ action: '', actionNote: '' });
+  const [disableSubmit, setDisableSubmit] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -173,30 +174,34 @@ const MissingItemFormCreate = () => {
   };
 
   const handleReportSubmit = async () => {
-    try {
-      const now = new Date();
-      const requestData = {
-        ...formData,
-        ...user,
-        dateLost: new Date(formData.dateLost).toISOString() || now.toISOString(),
-        dateCreated: now.toISOString(),
-        colors: formData.colors || [],
-        submitterUsername: user.AD_Username,
-        forGuest: false,
-      };
-      const newReportId = await lostAndFoundService.createMissingItemReport(requestData);
-      let actionRequestData = {
-        ...newActionFormData,
-        missingID: newReportId,
-        actionDate: now.toISOString(),
-        username: user.AD_Username,
-        isPublic: true,
-        action: 'Created',
-      };
-      await lostAndFoundService.createAdminAction(newReportId, actionRequestData);
-      navigate('/lostandfound');
-    } catch (error) {
-      createSnackbar(`Failed to create the missing item report.`, `error`);
+    if (!disableSubmit) {
+      setDisableSubmit(true);
+      try {
+        const now = new Date();
+        const requestData = {
+          ...formData,
+          ...user,
+          dateLost: new Date(formData.dateLost).toISOString() || now.toISOString(),
+          dateCreated: now.toISOString(),
+          colors: formData.colors || [],
+          submitterUsername: user.AD_Username,
+          forGuest: false,
+        };
+        const newReportId = await lostAndFoundService.createMissingItemReport(requestData);
+        let actionRequestData = {
+          ...newActionFormData,
+          missingID: newReportId,
+          actionDate: now.toISOString(),
+          username: user.AD_Username,
+          isPublic: true,
+          action: 'Created',
+        };
+        await lostAndFoundService.createAdminAction(newReportId, actionRequestData);
+        navigate('/lostandfound');
+      } catch (error) {
+        createSnackbar(`Failed to create the missing item report.`, `error`);
+        setDisableSubmit(false);
+      }
     }
   };
 
@@ -275,6 +280,7 @@ const MissingItemFormCreate = () => {
             formData={{ ...formData, ...user }}
             onEdit={() => setShowConfirm(false)}
             onSubmit={handleReportSubmit}
+            disableSubmit={disableSubmit}
           />
           <GordonSnackbar
             open={snackbar.open}
