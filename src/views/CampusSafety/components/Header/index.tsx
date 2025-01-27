@@ -64,12 +64,18 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
       // Find the formatted name in the routes object
       formattedName = CampusSafetyRoutes[breadcrumbRoute].formattedName;
 
+      let queryString = '';
+      if (CampusSafetyRoutes[breadcrumbRoute].queryString) {
+        queryString += CampusSafetyRoutes[breadcrumbRoute].queryString;
+      }
+
       if (formattedName) {
         formattedName = formattedName.replace('~', substring);
-        return formattedName;
+        return [formattedName, queryString];
       }
-      return substring;
+      return [substring, ''];
     }
+    return ['', ''];
   };
 
   return (
@@ -123,9 +129,10 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
               const isLast = indexPos === pathnames.length - 2;
               // Build the url up to this location in the breadcrumb
               const to = `/${pathnames.slice(0, indexPos + 2).join('/')}`;
+              const [formattedName, queryString] = PathSubstringToFormattedName(value);
               return (
-                <LostAndFoundBreadcrumb key={to} link={!isLast ? to : null}>
-                  {PathSubstringToFormattedName(value)}
+                <LostAndFoundBreadcrumb key={to} link={!isLast ? to + queryString : null}>
+                  {formattedName}
                 </LostAndFoundBreadcrumb>
               );
             })}
