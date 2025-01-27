@@ -28,7 +28,7 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 const MissingItemFormEdit = () => {
   const navigate = useNavigate();
-  const { itemid } = useParams<{ itemid: string }>();
+  const { itemId } = useParams<{ itemId: string }>();
   const [loading, setLoading] = useState<boolean>(true);
   const [isPickedUp, setIsPickedUp] = useState(false); //Added this to manage the button disable
 
@@ -103,8 +103,9 @@ const MissingItemFormEdit = () => {
 
   useEffect(() => {
     const fetchItemData = async () => {
-      if (itemid) {
-        const item = await lostAndFoundService.getMissingItemReport(parseInt(itemid));
+      console.log('Fetching data, item id: ', itemId);
+      if (itemId) {
+        const item = await lostAndFoundService.getMissingItemReport(parseInt(itemId));
         setFormData({
           recordID: item?.recordID || 0,
           category: item.category,
@@ -120,7 +121,7 @@ const MissingItemFormEdit = () => {
           forGuest: item.forGuest,
           status: item.status || 'active',
         });
-        const originalReport = await lostAndFoundService.getMissingItemReport(parseInt(itemid));
+        const originalReport = await lostAndFoundService.getMissingItemReport(parseInt(itemId));
         setOriginalFormData({
           recordID: originalReport?.recordID || 0,
           category: originalReport.category,
@@ -139,7 +140,7 @@ const MissingItemFormEdit = () => {
       }
     };
     fetchItemData();
-  }, [itemid]);
+  }, [itemId]);
 
   useEffect(() => {
     if (formData.recordID > 0) {
@@ -168,7 +169,7 @@ const MissingItemFormEdit = () => {
     };
 
     try {
-      await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemid || ''));
+      await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemId || ''));
       setIsPickedUp(true);
       //navigate('/lostandfound');
     } catch (error) {
@@ -197,16 +198,16 @@ const MissingItemFormEdit = () => {
           ' ';
       }
     }
-    await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemid || ''));
+    await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemId || ''));
     const actionRequestData = {
-      missingID: parseInt(itemid || ''),
+      missingID: parseInt(itemId || ''),
       actionDate: DateTime.now().toISO(),
       username: user.AD_Username,
       isPublic: true,
       action: 'Edited',
       actionNote: newActionNote,
     };
-    await lostAndFoundService.createAdminAction(parseInt(itemid || ''), actionRequestData);
+    await lostAndFoundService.createAdminAction(parseInt(itemId || ''), actionRequestData);
     navigate('/lostandfound');
   };
 
@@ -559,7 +560,7 @@ const MissingItemFormEdit = () => {
                       className={styles.submit_button}
                       onClick={handleFormSubmit}
                     >
-                      Update Report
+                      Next
                     </Button>
                   </Grid>
                 </Grid>

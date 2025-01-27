@@ -25,6 +25,7 @@ import { useNavigate } from 'react-router';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './ReportItemPage.module.scss';
 import lostAndFoundService from 'services/lostAndFound';
+import userService from 'services/user';
 import quickSearchService, { SearchResult } from 'services/quickSearch';
 import ConfirmReport from 'views/CampusSafety/views/LostAndFound/views/MissingItemCreate/components/confirmReport';
 import GordonSnackbar from 'components/Snackbar';
@@ -93,6 +94,14 @@ const ReportItemPage = () => {
     setSnackbar({ message, severity, open: true });
   }, []);
 
+  const [user, setUser] = useState({
+    firstName: '',
+    lastName: '',
+    emailAddr: '',
+    phoneNumber: '',
+    AD_Username: '', // Add AD_Username to user state
+  });
+
   const [isGordonPerson, setIsGordonPerson] = useState('');
   const [formData, setFormData] = useState({
     firstName: '',
@@ -118,11 +127,31 @@ const ReportItemPage = () => {
   const [state, dispatch] = useReducer(reducer, defaultState);
   const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
   const [disableSubmit, setDisableSubmit] = useState(false);
+  const [newActionFormData, setNewActionFormData] = useState({ action: '', actionNote: '' });
 
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
 
   const specialCharactersRegex = /[^a-zA-Z0-9'\-.\s]/gm;
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userInfo = await userService.getProfileInfo();
+        setUser({
+          firstName: userInfo?.FirstName || '',
+          lastName: userInfo?.LastName || '',
+          emailAddr: userInfo?.Email || '',
+          phoneNumber: userInfo?.MobilePhone || '',
+          AD_Username: userInfo?.AD_Username || '', // Set AD_Username
+        });
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleInput = (_event: React.SyntheticEvent, value: string) => {
     const query = value.trim().replace(specialCharactersRegex, '');
@@ -288,6 +317,19 @@ const ReportItemPage = () => {
         }
 
         await lostAndFoundService.createMissingItemReport(requestData);
+        
+        const now = new Date();
+        const newReportId = await lostAndFoundService.createMissingItemReport(requestData);
+        let actionRequestData = {
+          ...newActionFormData,
+          missingID: newReportId,
+          actionDate: now.toISOString(),
+          username: user.AD_Username,
+          isPublic: true,
+          action: 'Created',
+        };
+        await lostAndFoundService.createAdminAction(newReportId, actionRequestData);
+        
         // Redirect to the missing item database after successful submission
         navigate('/lostandfound/lostandfoundadmin/missingitemdatabase');
       } catch (error) {

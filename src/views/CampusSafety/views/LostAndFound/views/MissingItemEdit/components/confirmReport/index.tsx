@@ -24,7 +24,7 @@ const ConfirmReport: React.FC<ConfirmReportProps> = ({ formData, onEdit, onSubmi
   return (
     <Card className={styles.confirmCard}>
       <CardHeader
-        title="Missing Item Report"
+        title="Edit Missing Item"
         className={styles.header}
         titleTypographyProps={{ align: 'center' }}
       />
@@ -77,14 +77,14 @@ const ConfirmReport: React.FC<ConfirmReportProps> = ({ formData, onEdit, onSubmi
         </Grid>
         <Grid container justifyContent="space-between" marginTop={2}>
           <Button variant="outlined" color="primary" onClick={onEdit}>
-            Edit My Report
+            Go Back and Edit
           </Button>
           <Button variant="contained" color="primary" onClick={onSubmit}>
-            File Report
+            Save Changes
           </Button>
         </Grid>
         <Typography variant="body2" align="center" marginTop={2}>
-          This report will automatically expire in 6 months if your item is not found
+          This report will automatically expire 6 months after it was created
         </Typography>
       </CardContent>
     </Card>
