@@ -21,6 +21,7 @@ import styles from './MissingItemList.module.scss';
 import { DateTime } from 'luxon';
 import { useNavigate } from 'react-router';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { sort } from 'services/utils';
 
 const categories = [
   'Clothing/Shoes',
@@ -70,7 +71,7 @@ const MissingItemList = () => {
     const fetchMissingItems = async () => {
       setLoading(true);
       try {
-        const fetchedReports = await lostAndFoundService.getMissingItemReports();
+        const fetchedReports = await lostAndFoundService.getMissingItemReports(status);
         const sortedReports = fetchedReports.sort(
           (a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime(),
         );
@@ -85,6 +86,27 @@ const MissingItemList = () => {
     };
     fetchMissingItems();
   }, []);
+
+  useEffect(() => {
+    const changeStatus = async () => {
+      setLoading(true);
+      try {
+        setStatus(status);
+        const fetchedReports = await lostAndFoundService.getMissingItemReports(status);
+        const sortedReports = fetchedReports.sort(
+          (a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime(),
+        );
+        setReports(sortedReports);
+        setFilteredReports(sortedReports);
+        console.log(sortedReports);
+      } catch (error) {
+        console.error('Error fetching missing items', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    changeStatus();
+  }, [status]);
 
   const handleFilter = () => {
     let filtered = reports;

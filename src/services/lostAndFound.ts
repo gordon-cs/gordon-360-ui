@@ -48,8 +48,10 @@ export type InitAdminAction = Omit<MissingAdminAction, 'ID'>;
  * Fetch an array containing the full list of all missing item reports.
  * @returns MissingItemReport[] array of all missing item reports.
  */
-const getMissingItemReports = (): Promise<MissingItemReport[]> =>
-  http.get<MissingItemReport[]>('lostandfound/missingitems');
+const getMissingItemReports = (reportStatus: string): Promise<MissingItemReport[]> =>
+  http.get<MissingItemReport[]>(
+    `lostandfound/missingitems${http.toQueryString({ status: reportStatus })}`,
+  );
 
 /**
  * Fetch an array containing the full list of all missing item reports for
