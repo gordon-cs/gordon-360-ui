@@ -84,7 +84,7 @@ const ConfirmReport: React.FC<ConfirmReportProps> = ({ formData, onEdit, onSubmi
           </Button>
         </Grid>
         <Typography variant="body2" align="center" marginTop={2}>
-          This report will automatically expire 6 months after it was created
+          This report will automatically expire 2 months after it was created
         </Typography>
       </CardContent>
     </Card>
