@@ -317,7 +317,7 @@ const ReportItemPage = () => {
         }
 
         await lostAndFoundService.createMissingItemReport(requestData);
-        
+
         const now = new Date();
         const newReportId = await lostAndFoundService.createMissingItemReport(requestData);
         let actionRequestData = {
@@ -329,7 +329,7 @@ const ReportItemPage = () => {
           action: 'Created',
         };
         await lostAndFoundService.createAdminAction(newReportId, actionRequestData);
-        
+
         // Redirect to the missing item database after successful submission
         navigate('/lostandfound/lostandfoundadmin/missingitemdatabase');
       } catch (error) {
