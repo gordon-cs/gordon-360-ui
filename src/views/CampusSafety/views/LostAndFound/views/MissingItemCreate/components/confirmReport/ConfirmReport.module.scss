@@ -17,11 +17,13 @@
   color: var(--mui-palette-text-primary); // Text color from theme
 }
 
-button {
-  color: var(--mui-palette-primary-contrastText); // Button text color in primary contrast
-  &:hover {
-    background-color: var(--mui-palette-primary-dark); // Darker shade on hover
-  }
+.button {
+  margin: 0.5em;
+  margin-top: 1em;
+}
+
+.breakWord {
+  word-wrap: break-word;
 }
 
 .description {

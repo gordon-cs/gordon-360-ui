@@ -19,9 +19,9 @@ import GordonLoader from 'components/Loader';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './MissingItemList.module.scss';
 import { DateTime } from 'luxon';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { sort } from 'services/utils';
+import { useSearchParams } from 'react-router-dom';
 
 const categories = [
   'Clothing/Shoes',
@@ -57,6 +57,7 @@ const colors = [
 ];
 
 const MissingItemList = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [reports, setReports] = useState<MissingItemReport[]>([]);
   const [filteredReports, setFilteredReports] = useState<MissingItemReport[]>([]);
@@ -65,6 +66,7 @@ const MissingItemList = () => {
   const [color, setColor] = useState('');
   const [keywords, setKeywords] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
   const isMobile = useMediaQuery('(max-width:900px)');
 
   useEffect(() => {
@@ -76,7 +78,6 @@ const MissingItemList = () => {
           (a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime(),
         );
         setReports(sortedReports);
-        setStatus('active'); // Set initial filter
         setFilteredReports(sortedReports);
       } catch (error) {
         console.error('Error fetching missing items:', error);
@@ -109,6 +110,13 @@ const MissingItemList = () => {
   const handleFilter = () => {
     let filtered = reports;
 
+    // Set the filter values based on the url query params
+    setStatus(getUrlParam('status'));
+    setColor(getUrlParam('color'));
+    setCategory(getUrlParam('category'));
+    setKeywords(getUrlParam('keywords'));
+
+    // Filter reports based on current active filters
     if (status) {
       filtered = filtered.filter((report) => report.status.toLowerCase() === status.toLowerCase());
     }
@@ -131,13 +139,49 @@ const MissingItemList = () => {
           report.locationLost.toLowerCase().includes(keywordLower),
       );
     }
-
     setFilteredReports(filtered);
   };
 
   useEffect(() => {
+    // Any time changes occur in the filters, or if the back button is used, or after data is first
+    // loaded, run the code to set the filtered list.
     handleFilter();
-  }, [status, category, color, keywords]);
+  }, [status, category, color, keywords, searchParams, location, loading]);
+
+  // Set the search url params, used for filtering
+  const setUrlParam = (paramName: string, paramValue: string) => {
+    if (paramValue === '') {
+      // Delete the parameter if it's value is empty
+      setSearchParams((params) => {
+        params.delete(paramName);
+        return params;
+      });
+    } else {
+      setSearchParams((params) => {
+        params.set(paramName, paramValue);
+        return params;
+      });
+    }
+  };
+
+  // Get the value of the url param
+  const getUrlParam = (paramName: string) => {
+    if (location.search.includes(paramName)) {
+      return searchParams.get(paramName) || '';
+    }
+    return '';
+  };
+
+  // Delete the four filtering url params
+  const clearUrlParams = () => {
+    setSearchParams((params) => {
+      params.delete('status');
+      params.delete('category');
+      params.delete('keywords');
+      params.delete('color');
+      return params;
+    });
+  };
 
   const dateFormat = 'MM/dd/yy';
   const formatDate = (date: string) => DateTime.fromISO(date).toFormat(dateFormat);
@@ -219,7 +263,7 @@ const MissingItemList = () => {
                         variant="outlined"
                         size="small"
                         value={keywords}
-                        onChange={(e) => setKeywords(e.target.value)}
+                        onChange={(e) => setUrlParam('keywords', e.target.value)}
                         className={styles.textField}
                         fullWidth
                       />
@@ -229,7 +273,10 @@ const MissingItemList = () => {
                     <Grid item xs={isMobile}>
                       <FormControl size="small" className={styles.formControl} fullWidth>
                         <InputLabel>Status</InputLabel>
-                        <Select value={status} onChange={(e) => setStatus(e.target.value)}>
+                        <Select
+                          value={status}
+                          onChange={(e) => setUrlParam('status', e.target.value)}
+                        >
                           <MenuItem value="">All</MenuItem>
                           <MenuItem value="active">Active</MenuItem>
                           <MenuItem value="expired">Expired</MenuItem>
@@ -242,7 +289,10 @@ const MissingItemList = () => {
                     <Grid item xs={isMobile}>
                       <FormControl size="small" className={styles.formControl} fullWidth>
                         <InputLabel>Color</InputLabel>
-                        <Select value={color} onChange={(e) => setColor(e.target.value)}>
+                        <Select
+                          value={color}
+                          onChange={(e) => setUrlParam('color', e.target.value)}
+                        >
                           <MenuItem value="">All</MenuItem>
                           {colors.map((colorOption) => (
                             <MenuItem key={colorOption} value={colorOption}>
@@ -255,7 +305,10 @@ const MissingItemList = () => {
                     <Grid item xs={isMobile}>
                       <FormControl size="small" className={styles.formControl} fullWidth>
                         <InputLabel>Category</InputLabel>
-                        <Select value={category} onChange={(e) => setCategory(e.target.value)}>
+                        <Select
+                          value={category}
+                          onChange={(e) => setUrlParam('category', e.target.value)}
+                        >
                           <MenuItem value="">All</MenuItem>
                           {categories.map((categoryOption) => (
                             <MenuItem key={categoryOption} value={categoryOption}>
@@ -268,11 +321,7 @@ const MissingItemList = () => {
                     <Grid item xs={isMobile}>
                       <Button
                         onClick={() => {
-                          setStatus('');
-                          setCategory('');
-                          setColor('');
-                          setKeywords('');
-                          handleFilter();
+                          clearUrlParams();
                         }}
                         variant="contained"
                         color="error"

@@ -1,6 +1,6 @@
 import { Button, Card, CardContent, CardHeader, Grid } from '@mui/material';
 import { Link } from 'react-router-dom';
-import customStyles from './LostAndFoundCard.module.scss';
+import styles from './LostAndFoundCard.module.scss';
 import { Launch, NotListedLocation, WhereToVote } from '@mui/icons-material';
 import ActiveReports from './components/ActiveReports';
 import FoundReports from './components/FoundReports';
@@ -22,28 +22,29 @@ const LostAndFoundCard = () => {
               </Grid>
             </Link>
           }
-          className={`gc360_header ${customStyles.linkHeader}`}
+          className={`gc360_header ${styles.linkHeader}`}
         />
         <CardContent>
           <Grid container direction="row" justifyContent="space-between">
-            <Grid item xs={6}>
+            <Grid item>
               <Button
                 variant="contained"
                 color="secondary"
                 component={Link}
                 to="/lostandfound/missingitemform"
+                className={styles.button}
               >
-                {' '}
                 <NotListedLocation />
                 Report Lost
               </Button>
             </Grid>
-            <Grid container item xs={6} direction="row" justifyContent={'flex-end'}>
+            <Grid item>
               <Button
                 variant="contained"
                 color="secondary"
                 component={Link}
                 to="/lostandfound/reportfound"
+                className={styles.button}
               >
                 <WhereToVote />
                 Report Found

@@ -23,7 +23,7 @@ const steps = [
   'Completed Check In',
 ];
 
-const EnrollmentCheckIn = (props) => {
+const EnrollmentCheckIn = () => {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
   const { profile, loading: loadingProfile } = useUser();
@@ -80,6 +80,7 @@ const EnrollmentCheckIn = (props) => {
     PersonalPhone: '',
     MakePrivate: false,
     NoPhone: false,
+    SMSOptedIn: undefined,
   });
 
   const [privacyAgreements, setPrivacyAgreements] = useState({
@@ -145,6 +146,7 @@ const EnrollmentCheckIn = (props) => {
               PersonalPhone: profile.MobilePhone,
               MakePrivate: Boolean(profile.IsMobilePhonePrivate),
               NoPhone: false,
+              SMSOptedIn: undefined,
             });
           }
         } else {
@@ -152,10 +154,10 @@ const EnrollmentCheckIn = (props) => {
         }
       }
       // We only want to stop loading now if the profile has already been loaded.
-      setLoading(loadingProfile);
+      setLoading(false);
     };
     loadData();
-  }, [profile, loadingProfile]);
+  }, [profile]);
 
   useEffect(() => {
     navigate('/enrollmentcheckin', { replace: true, state: { step: activeStep } });
@@ -252,7 +254,9 @@ const EnrollmentCheckIn = (props) => {
     checkInService.submitContact(emergencyContact1);
     checkInService.submitContact(emergencyContact2);
     checkInService.submitContact(emergencyContact3);
-    checkInService.submitPhone(phoneInfo);
+    if (!phoneInfo.NoPhone) {
+      checkInService.submitPhone(phoneInfo);
+    }
     // checkInService.submitDemographic(formatDemographic(demographic));
     checkInService.markCompleted(profile.ID);
     setActiveStep(5);
@@ -349,8 +353,9 @@ const EnrollmentCheckIn = (props) => {
                           (emergencyContact1.HomePhone === '' &&
                             emergencyContact1.MobilePhone === ''))) ||
                       (activeStep === 2 &&
-                        phoneInfo.PersonalPhone === '' &&
-                        phoneInfo.NoPhone === false) ||
+                        ((phoneInfo.PersonalPhone === '' && phoneInfo.NoPhone === false) ||
+                          phoneInfo.SMSOptedIn === undefined ||
+                          phoneInfo.SMSOptedIn === null)) ||
                       (activeStep === 3 &&
                         (privacyAgreements.FERPA === false ||
                           privacyAgreements.dataUsage === false ||

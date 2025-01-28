@@ -25,6 +25,7 @@ import { useNavigate } from 'react-router';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './ReportItemPage.module.scss';
 import lostAndFoundService from 'services/lostAndFound';
+import userService from 'services/user';
 import quickSearchService, { SearchResult } from 'services/quickSearch';
 import ConfirmReport from 'views/CampusSafety/views/LostAndFound/views/MissingItemCreate/components/confirmReport';
 import GordonSnackbar from 'components/Snackbar';
@@ -93,6 +94,14 @@ const ReportItemPage = () => {
     setSnackbar({ message, severity, open: true });
   }, []);
 
+  const [user, setUser] = useState({
+    firstName: '',
+    lastName: '',
+    emailAddr: '',
+    phoneNumber: '',
+    AD_Username: '', // Add AD_Username to user state
+  });
+
   const [isGordonPerson, setIsGordonPerson] = useState('');
   const [formData, setFormData] = useState({
     firstName: '',
@@ -117,11 +126,32 @@ const ReportItemPage = () => {
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
   const [state, dispatch] = useReducer(reducer, defaultState);
   const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
+  const [disableSubmit, setDisableSubmit] = useState(false);
+  const [newActionFormData, setNewActionFormData] = useState({ action: '', actionNote: '' });
 
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
 
   const specialCharactersRegex = /[^a-zA-Z0-9'\-.\s]/gm;
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userInfo = await userService.getProfileInfo();
+        setUser({
+          firstName: userInfo?.FirstName || '',
+          lastName: userInfo?.LastName || '',
+          emailAddr: userInfo?.Email || '',
+          phoneNumber: userInfo?.MobilePhone || '',
+          AD_Username: userInfo?.AD_Username || '', // Set AD_Username
+        });
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleInput = (_event: React.SyntheticEvent, value: string) => {
     const query = value.trim().replace(specialCharactersRegex, '');
@@ -240,55 +270,72 @@ const ReportItemPage = () => {
   };
 
   const handleReportSubmit = async () => {
-    try {
-      const baseData = {
-        category: formData.category,
-        colors: formData.colors,
-        brand: formData.brand,
-        description: formData.description,
-        locationLost: formData.locationLost,
-        stolen: formData.stolen,
-        stolenDescription: formData.stolenDescription,
-        submitterUsername: '',
-        dateLost: new Date(formData.dateLost).toISOString() || DateTime.now().toISO(),
-        dateCreated: DateTime.now().toISO(),
-        status: 'active',
-        phone: formData.phoneNumber, // Include phone number
-      };
-
-      // Include stolenDescription only if stolen is true
-      if (formData.stolen) {
-        baseData.stolenDescription = formData.stolenDescription;
-      } else {
-        baseData.stolenDescription = ''; // Clear stolenDescription
-      }
-
-      let requestData;
-
-      if (formData.forGuest) {
-        // For guest user
-        baseData.phone = formData.phoneNumber;
-        requestData = {
-          ...baseData,
-          forGuest: true,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.emailAddr,
+    if (!disableSubmit) {
+      setDisableSubmit(true);
+      try {
+        const baseData = {
+          category: formData.category,
+          colors: formData.colors,
+          brand: formData.brand,
+          description: formData.description,
+          locationLost: formData.locationLost,
+          stolen: formData.stolen,
+          stolenDescription: formData.stolenDescription,
+          submitterUsername: '',
+          dateLost: new Date(formData.dateLost).toISOString() || DateTime.now().toISO(),
+          dateCreated: DateTime.now().toISO(),
+          status: 'active',
+          phone: formData.phoneNumber, // Include phone number
         };
-      } else {
-        // For Gordon person
-        requestData = {
-          ...baseData,
-          forGuest: false,
-          submitterUsername: formData.submitterUsername,
-        };
-      }
 
-      await lostAndFoundService.createMissingItemReport(requestData);
-      // Redirect to the missing item database after successful submission
-      navigate('/lostandfound/lostandfoundadmin/missingitemdatabase');
-    } catch (error) {
-      createSnackbar(`Failed to create the missing item report.`, `error`);
+        // Include stolenDescription only if stolen is true
+        if (formData.stolen) {
+          baseData.stolenDescription = formData.stolenDescription;
+        } else {
+          baseData.stolenDescription = ''; // Clear stolenDescription
+        }
+
+        let requestData;
+
+        if (formData.forGuest) {
+          // For guest user
+          baseData.phone = formData.phoneNumber;
+          requestData = {
+            ...baseData,
+            forGuest: true,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.emailAddr,
+          };
+        } else {
+          // For Gordon person
+          requestData = {
+            ...baseData,
+            forGuest: false,
+            submitterUsername: formData.submitterUsername,
+          };
+        }
+
+        await lostAndFoundService.createMissingItemReport(requestData);
+
+        const now = new Date();
+        const newReportId = await lostAndFoundService.createMissingItemReport(requestData);
+        let actionRequestData = {
+          ...newActionFormData,
+          missingID: newReportId,
+          actionDate: now.toISOString(),
+          username: user.AD_Username,
+          isPublic: true,
+          action: 'Created',
+        };
+        await lostAndFoundService.createAdminAction(newReportId, actionRequestData);
+
+        // Redirect to the missing item database after successful submission
+        navigate('/lostandfound/lostandfoundadmin/missingitemdatabase');
+      } catch (error) {
+        createSnackbar(`Failed to create the missing item report.`, `error`);
+        setDisableSubmit(false);
+      }
     }
   };
 
@@ -420,6 +467,7 @@ const ReportItemPage = () => {
             formData={formData}
             onEdit={() => setShowConfirm(false)}
             onSubmit={handleReportSubmit}
+            disableSubmit={disableSubmit}
           />
           <GordonSnackbar
             open={snackbar.open}
