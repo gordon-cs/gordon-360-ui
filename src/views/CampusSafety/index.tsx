@@ -62,7 +62,7 @@ const CampusSafetyApp = () => {
       twoMonthsAgo.setHours(0, 0, 0, 0); // Normalize time
 
       // Fetch reports
-      const reports = await lostAndFoundService.getMissingItemReports();
+      const reports = await lostAndFoundService.getMissingItemReports('');
 
       for (const report of reports) {
         const reportDate = new Date(report.dateCreated);
