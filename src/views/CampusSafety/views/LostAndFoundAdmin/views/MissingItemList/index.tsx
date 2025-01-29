@@ -59,6 +59,7 @@ const colors = [
 const MissingItemList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
+  const [pageLoaded, setPageLoaded] = useState(false);
   const [reports, setReports] = useState<MissingItemReport[]>([]);
   const [filteredReports, setFilteredReports] = useState<MissingItemReport[]>([]);
   const [status, setStatus] = useState(''); // Default value active
@@ -70,56 +71,34 @@ const MissingItemList = () => {
   const isMobile = useMediaQuery('(max-width:900px)');
 
   useEffect(() => {
-    const fetchMissingItems = async () => {
-      setLoading(true);
-      try {
-        const fetchedReports = await lostAndFoundService.getMissingItemReports(status);
-        const sortedReports = fetchedReports.sort(
-          (a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime(),
-        );
-        setReports(sortedReports);
-        setFilteredReports(sortedReports);
-      } catch (error) {
-        console.error('Error fetching missing items:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchMissingItems();
+    setPageLoaded(true);
   }, []);
 
   useEffect(() => {
     const changeStatus = async () => {
-      setLoading(true);
-      try {
-        setStatus(status);
-        const fetchedReports = await lostAndFoundService.getMissingItemReports(status);
-        const sortedReports = fetchedReports.sort(
-          (a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime(),
-        );
-        setFilteredReports(sortedReports);
-      } catch (error) {
-        console.error('Error fetching missing items', error);
-      } finally {
-        setLoading(false);
+      if (status === getUrlParam('status')) {
+        setLoading(true);
+        try {
+          setStatus(status);
+          const fetchedReports = await lostAndFoundService.getMissingItemReports(status);
+          const sortedReports = fetchedReports.sort(
+            (a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime(),
+          );
+          setReports(sortedReports);
+          setFilteredReports(sortedReports);
+        } catch (error) {
+          console.error('Error fetching missing items', error);
+        } finally {
+          setLoading(false);
+        }
       }
     };
     changeStatus();
-  }, [status]);
+  }, [status, pageLoaded]);
 
   const handleFilter = () => {
     let filtered = reports;
 
-    // Set the filter values based on the url query params
-    setStatus(getUrlParam('status'));
-    setColor(getUrlParam('color'));
-    setCategory(getUrlParam('category'));
-    setKeywords(getUrlParam('keywords'));
-
-    // Filter reports based on current active filters
-    if (status) {
-      filtered = filtered.filter((report) => report.status.toLowerCase() === status.toLowerCase());
-    }
     if (category) {
       filtered = filtered.filter(
         (report) => report.category.toLowerCase() === category.toLowerCase(),
@@ -143,10 +122,33 @@ const MissingItemList = () => {
   };
 
   useEffect(() => {
-    // Any time changes occur in the filters, or if the back button is used, or after data is first
-    // loaded, run the code to set the filtered list.
+    // Any time changes occur in the filters, or if updated data comes from the API changes, run
+    // the code to set the filtered list.
     handleFilter();
-  }, [status, category, color, keywords, searchParams, location, loading]);
+  }, [category, color, keywords, reports]);
+
+  useEffect(() => {
+    const updateFilters = () => {
+      // Set the filter values based on the url query params
+      let queryValue = getUrlParam('status');
+      if (status !== queryValue) {
+        setStatus(queryValue);
+      }
+      queryValue = getUrlParam('color');
+      if (color !== queryValue) {
+        setColor(queryValue);
+      }
+      queryValue = getUrlParam('category');
+      if (category !== queryValue) {
+        setCategory(queryValue);
+      }
+      queryValue = getUrlParam('keywords');
+      if (keywords !== queryValue) {
+        setKeywords(queryValue);
+      }
+    };
+    updateFilters();
+  }, [category, color, keywords, searchParams, status]);
 
   // Set the search url params, used for filtering
   const setUrlParam = (paramName: string, paramValue: string) => {
