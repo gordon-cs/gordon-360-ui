@@ -82,27 +82,25 @@ const MissingItemList = () => {
 
   useEffect(() => {
     const changeStatus = async () => {
-      if (status === getUrlParam('status')) {
-        setLoading(true);
-        try {
-          setStatus(status);
-          const fetchedReports = await lostAndFoundService.getMissingItemReports(
-            status,
-            category,
-            color,
-            keywords,
-          );
-          const sortedReports = fetchedReports.sort(
-            (a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime(),
-          );
-          setReports(sortedReports);
-          setFilteredReports(sortedReports);
-        } catch (error) {
-          console.error('Error fetching missing items', error);
-          createSnackbar(`Failed to load missing item reports`, error);
-        } finally {
-          setLoading(false);
-        }
+      setLoading(true);
+      try {
+        setStatus(status);
+        const fetchedReports = await lostAndFoundService.getMissingItemReports(
+          status,
+          category,
+          color,
+          keywords,
+        );
+        const sortedReports = fetchedReports.sort(
+          (a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime(),
+        );
+        setReports(sortedReports);
+        setFilteredReports(sortedReports);
+      } catch (error) {
+        console.error('Error fetching missing items', error);
+        createSnackbar(`Failed to load missing item reports`, error);
+      } finally {
+        setLoading(false);
       }
     };
     changeStatus();
