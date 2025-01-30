@@ -82,7 +82,9 @@ const getMissingItemReports = (
  * @returns MissingItemReport[] array of all missing item reports.
  */
 const getMissingItemReportUser = (username: string): Promise<MissingItemReport[]> =>
-  http.get<MissingItemReport[]>(`lostandfound/missingitems${http.toquery({ user: username })}`);
+  http.get<MissingItemReport[]>(
+    `lostandfound/missingitems${http.toQueryString({ user: username })}`,
+  );
 
 /**
  * Fetch a single missing item report given an ID.
