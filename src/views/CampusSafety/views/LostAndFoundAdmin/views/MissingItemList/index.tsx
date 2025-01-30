@@ -81,21 +81,26 @@ const MissingItemList = () => {
   }, []);
 
   useEffect(() => {
-    const changeStatus = async () => {
-      setLoading(true);
+    const updateFilters = async () => {
       try {
-        setStatus(status);
-        const fetchedReports = await lostAndFoundService.getMissingItemReports(
-          status,
-          category,
-          color,
-          keywords,
-        );
-        const sortedReports = fetchedReports.sort(
-          (a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime(),
-        );
-        setReports(sortedReports);
-        setFilteredReports(sortedReports);
+        if (
+          status === getUrlParam('status') &&
+          category === getUrlParam('category') &&
+          color === getUrlParam('color') &&
+          keywords === getUrlParam('keywords')
+        ) {
+          const fetchedReports = await lostAndFoundService.getMissingItemReports(
+            status,
+            category,
+            color,
+            keywords,
+          );
+          const sortedReports = fetchedReports.sort(
+            (a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime(),
+          );
+          setReports(sortedReports);
+          setFilteredReports(sortedReports);
+        }
       } catch (error) {
         console.error('Error fetching missing items', error);
         createSnackbar(`Failed to load missing item reports`, error);
@@ -103,39 +108,19 @@ const MissingItemList = () => {
         setLoading(false);
       }
     };
-    changeStatus();
+    // Check if the keywords have changed, and make the API request only if they have been stable
+    // to avoid making excessive API requests when users are typing keywords
+    const checkForChanges = () => {
+      if (currKeywords === keywords) {
+        updateFilters();
+      }
+    };
+    let currKeywords = keywords;
+    setLoading(true);
+    setTimeout(() => {
+      checkForChanges();
+    }, 700);
   }, [status, category, color, keywords, pageLoaded]);
-
-  // const handleFilter = () => {
-  //   let filtered = reports;
-
-  //   if (category) {
-  //     filtered = filtered.filter(
-  //       (report) => report.category.toLowerCase() === category.toLowerCase(),
-  //     );
-  //   }
-  //   if (color) {
-  //     filtered = filtered.filter((report) =>
-  //       report.colors?.some((col) => col.toLowerCase() === color.toLowerCase()),
-  //     );
-  //   }
-  //   if (keywords) {
-  //     const keywordLower = keywords.toLowerCase();
-  //     filtered = filtered.filter(
-  //       (report) =>
-  //         `${report.firstName} ${report.lastName}`.toLowerCase().includes(keywordLower) ||
-  //         report.description.toLowerCase().includes(keywordLower) ||
-  //         report.locationLost.toLowerCase().includes(keywordLower),
-  //     );
-  //   }
-  //   setFilteredReports(filtered);
-  // };
-
-  // useEffect(() => {
-  //   // Any time changes occur in the filters, or if updated data comes from the API changes, run
-  //   // the code to set the filtered list.
-  //   handleFilter();
-  // }, [category, color, keywords, reports]);
 
   useEffect(() => {
     const updateFilters = () => {

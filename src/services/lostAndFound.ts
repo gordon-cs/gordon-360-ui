@@ -53,25 +53,26 @@ export type InitAdminAction = Omit<MissingAdminAction, 'ID'>;
  * @returns MissingItemReport[] array of all missing item reports.
  */
 const getMissingItemReports = (
-  reportStatus?: string | null,
-  category?: string | null,
-  color?: string | null,
-  keywords?: string | null,
+  reportStatus?: string,
+  category?: string,
+  color?: string,
+  keywords?: string,
 ): Promise<MissingItemReport[]> => {
-  let query = {};
+  let query: { status?: string; category?: string; color?: string; keywords?: string } = {};
   if (reportStatus) {
-    Object.defineProperty(query, 'status', { value: reportStatus });
+    query['status'] = reportStatus;
   }
   if (category) {
-    Object.defineProperty(query, 'category', { value: category });
+    query['category'] = category;
   }
   if (color) {
-    Object.defineProperty(query, 'color', { value: color });
+    query['color'] = color;
   }
   if (keywords) {
-    Object.defineProperty(query, 'keywords', { value: keywords });
+    query['keywords'] = keywords;
   }
 
+  console.log('API REQUEST SENT');
   return http.get<MissingItemReport[]>(`lostandfound/missingitems${http.toQueryString(query)}`);
 };
 
