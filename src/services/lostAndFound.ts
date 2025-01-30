@@ -46,11 +46,25 @@ export type InitAdminAction = Omit<MissingAdminAction, 'ID'>;
 
 /**
  * Fetch an array containing the full list of all missing item reports.
+ * @param reportStatus the status of the report for filtering
+ * @param category the category to filter by
+ * @param color the color to filter by
+ * @param keywords keywords to filter by
  * @returns MissingItemReport[] array of all missing item reports.
  */
-const getMissingItemReports = (reportStatus: string): Promise<MissingItemReport[]> =>
+const getMissingItemReports = (
+  reportStatus: string,
+  category: string,
+  color: string,
+  keywords: string,
+): Promise<MissingItemReport[]> =>
   http.get<MissingItemReport[]>(
-    `lostandfound/missingitems${http.toQueryString({ status: reportStatus })}`,
+    `lostandfound/missingitems${http.toQueryString({
+      status: reportStatus,
+      category: category,
+      color: color,
+      keywords: keywords,
+    })}`,
   );
 
 /**

@@ -13,7 +13,7 @@ import {
   CardHeader,
   AppBar,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import lostAndFoundService, { MissingItemReport } from 'services/lostAndFound';
 import GordonLoader from 'components/Loader';
 import Header from 'views/CampusSafety/components/Header';
@@ -22,6 +22,7 @@ import { DateTime } from 'luxon';
 import { useLocation, useNavigate } from 'react-router';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSearchParams } from 'react-router-dom';
+import GordonSnackbar from 'components/Snackbar';
 
 const categories = [
   'Clothing/Shoes',
@@ -66,9 +67,14 @@ const MissingItemList = () => {
   const [category, setCategory] = useState('');
   const [color, setColor] = useState('');
   const [keywords, setKeywords] = useState('');
+  const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
   const navigate = useNavigate();
   const location = useLocation();
   const isMobile = useMediaQuery('(max-width:900px)');
+
+  const createSnackbar = useCallback((message, severity) => {
+    setSnackbar({ message, severity, open: true });
+  }, []);
 
   useEffect(() => {
     setPageLoaded(true);
@@ -80,7 +86,12 @@ const MissingItemList = () => {
         setLoading(true);
         try {
           setStatus(status);
-          const fetchedReports = await lostAndFoundService.getMissingItemReports(status);
+          const fetchedReports = await lostAndFoundService.getMissingItemReports(
+            status,
+            category,
+            color,
+            keywords,
+          );
           const sortedReports = fetchedReports.sort(
             (a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime(),
           );
@@ -88,44 +99,45 @@ const MissingItemList = () => {
           setFilteredReports(sortedReports);
         } catch (error) {
           console.error('Error fetching missing items', error);
+          createSnackbar(`Failed to load missing item reports`, error);
         } finally {
           setLoading(false);
         }
       }
     };
     changeStatus();
-  }, [status, pageLoaded]);
+  }, [status, category, color, keywords, pageLoaded]);
 
-  const handleFilter = () => {
-    let filtered = reports;
+  // const handleFilter = () => {
+  //   let filtered = reports;
 
-    if (category) {
-      filtered = filtered.filter(
-        (report) => report.category.toLowerCase() === category.toLowerCase(),
-      );
-    }
-    if (color) {
-      filtered = filtered.filter((report) =>
-        report.colors?.some((col) => col.toLowerCase() === color.toLowerCase()),
-      );
-    }
-    if (keywords) {
-      const keywordLower = keywords.toLowerCase();
-      filtered = filtered.filter(
-        (report) =>
-          `${report.firstName} ${report.lastName}`.toLowerCase().includes(keywordLower) ||
-          report.description.toLowerCase().includes(keywordLower) ||
-          report.locationLost.toLowerCase().includes(keywordLower),
-      );
-    }
-    setFilteredReports(filtered);
-  };
+  //   if (category) {
+  //     filtered = filtered.filter(
+  //       (report) => report.category.toLowerCase() === category.toLowerCase(),
+  //     );
+  //   }
+  //   if (color) {
+  //     filtered = filtered.filter((report) =>
+  //       report.colors?.some((col) => col.toLowerCase() === color.toLowerCase()),
+  //     );
+  //   }
+  //   if (keywords) {
+  //     const keywordLower = keywords.toLowerCase();
+  //     filtered = filtered.filter(
+  //       (report) =>
+  //         `${report.firstName} ${report.lastName}`.toLowerCase().includes(keywordLower) ||
+  //         report.description.toLowerCase().includes(keywordLower) ||
+  //         report.locationLost.toLowerCase().includes(keywordLower),
+  //     );
+  //   }
+  //   setFilteredReports(filtered);
+  // };
 
-  useEffect(() => {
-    // Any time changes occur in the filters, or if updated data comes from the API changes, run
-    // the code to set the filtered list.
-    handleFilter();
-  }, [category, color, keywords, reports]);
+  // useEffect(() => {
+  //   // Any time changes occur in the filters, or if updated data comes from the API changes, run
+  //   // the code to set the filtered list.
+  //   handleFilter();
+  // }, [category, color, keywords, reports]);
 
   useEffect(() => {
     const updateFilters = () => {
@@ -488,6 +500,12 @@ const MissingItemList = () => {
           </Card>
         </Grid>
       </Grid>
+      <GordonSnackbar
+        open={snackbar.open}
+        text={snackbar.message}
+        severity={snackbar.severity}
+        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+      />
     </>
   );
 };
