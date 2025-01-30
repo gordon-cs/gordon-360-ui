@@ -53,19 +53,27 @@ export type InitAdminAction = Omit<MissingAdminAction, 'ID'>;
  * @returns MissingItemReport[] array of all missing item reports.
  */
 const getMissingItemReports = (
-  reportStatus: string,
-  category: string,
-  color: string,
-  keywords: string,
-): Promise<MissingItemReport[]> =>
-  http.get<MissingItemReport[]>(
-    `lostandfound/missingitems${http.toQueryString({
-      status: reportStatus,
-      category: category,
-      color: color,
-      keywords: keywords,
-    })}`,
-  );
+  reportStatus?: string | null,
+  category?: string | null,
+  color?: string | null,
+  keywords?: string | null,
+): Promise<MissingItemReport[]> => {
+  let query = {};
+  if (reportStatus) {
+    Object.defineProperty(query, 'status', { value: reportStatus });
+  }
+  if (category) {
+    Object.defineProperty(query, 'category', { value: category });
+  }
+  if (color) {
+    Object.defineProperty(query, 'color', { value: color });
+  }
+  if (keywords) {
+    Object.defineProperty(query, 'keywords', { value: keywords });
+  }
+
+  return http.get<MissingItemReport[]>(`lostandfound/missingitems${http.toQueryString(query)}`);
+};
 
 /**
  * Fetch an array containing the full list of all missing item reports for
@@ -74,9 +82,7 @@ const getMissingItemReports = (
  * @returns MissingItemReport[] array of all missing item reports.
  */
 const getMissingItemReportUser = (username: string): Promise<MissingItemReport[]> =>
-  http.get<MissingItemReport[]>(
-    `lostandfound/missingitems${http.toQueryString({ user: username })}`,
-  );
+  http.get<MissingItemReport[]>(`lostandfound/missingitems${http.toquery({ user: username })}`);
 
 /**
  * Fetch a single missing item report given an ID.
