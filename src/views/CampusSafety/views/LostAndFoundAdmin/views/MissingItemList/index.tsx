@@ -200,9 +200,9 @@ const MissingItemList = () => {
     var today = Date.parse(DateTime.now().toString());
     // Subtract the dates, and convert milliseconds to days.
     var dayDiff = (today - dateGiven) / (1000 * 3600 * 24);
-    if (dayDiff < 3) {
+    if (dayDiff < 7) {
       return 'var(--mui-palette-success-main)';
-    } else if (dayDiff < 7) {
+    } else if (dayDiff < 14) {
       return 'var(--mui-palette-warning-main)';
     } else {
       return 'var(--mui-palette-error-main)';

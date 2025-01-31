@@ -69,7 +69,11 @@ const ReportStolenModal: React.FC<ReportStolenModalProps> = ({
         <Button onClick={onClose} className={styles.cancelButton}>
           Cancel
         </Button>
-        <Button onClick={handleSubmit} className={styles.submitButton}>
+        <Button
+          onClick={handleSubmit}
+          disabled={description.length < 1}
+          className={styles.submitButton}
+        >
           Report Stolen
         </Button>
       </DialogActions>
