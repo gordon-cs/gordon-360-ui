@@ -72,7 +72,6 @@ const getMissingItemReports = (
     query['keywords'] = keywords;
   }
 
-  console.log('API REQUEST SENT');
   return http.get<MissingItemReport[]>(`lostandfound/missingitems${http.toQueryString(query)}`);
 };
 
