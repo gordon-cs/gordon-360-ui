@@ -62,7 +62,6 @@ const MissingItemList = () => {
   const [loading, setLoading] = useState(true);
   const [pageLoaded, setPageLoaded] = useState(false);
   const [reports, setReports] = useState<MissingItemReport[]>([]);
-  const [filteredReports, setFilteredReports] = useState<MissingItemReport[]>([]);
   const [status, setStatus] = useState(''); // Default value active
   const [category, setCategory] = useState('');
   const [color, setColor] = useState('');
@@ -99,7 +98,6 @@ const MissingItemList = () => {
             (a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime(),
           );
           setReports(sortedReports);
-          setFilteredReports(sortedReports);
         }
       } catch (error) {
         console.error('Error fetching missing items', error);
@@ -239,7 +237,7 @@ const MissingItemList = () => {
               title={
                 <span className={styles.filterTitleText}>
                   <b>Filters: </b>
-                  {filteredReports.length} / {reports.length} reports
+                  Showing {reports.length} reports
                 </span>
               }
               className={styles.filterTitle}
@@ -390,7 +388,7 @@ const MissingItemList = () => {
                 <GordonLoader />
               ) : (
                 <>
-                  {filteredReports.map((report, index) =>
+                  {reports.map((report, index) =>
                     isMobile ? (
                       // Mobile Layout
                       <Card
