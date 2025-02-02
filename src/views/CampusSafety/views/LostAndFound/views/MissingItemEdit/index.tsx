@@ -406,7 +406,10 @@ const MissingItemFormEdit = () => {
                                 category: (e.target as HTMLInputElement).value,
                               }))
                             }
-                            checked={formData.category === label.toLowerCase().replace(/ /g, '/')}
+                            checked={
+                              formData.category.toLowerCase().replace(/ /g, '/') ===
+                              label.toLowerCase().replace(/ /g, '/')
+                            }
                             className={styles.category_item}
                           />
                         ))}
