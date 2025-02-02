@@ -334,43 +334,41 @@ const RAView = () => {
   );
 
   const contactMethod = () => (
-    <Grid item xs={12} md={4}>
-      <Card>
-        <CardHeader title={'Preferred Contact Method'} className="gc360_header" />
-        <CardContent>
-          <Accordion>
-            <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
-              <Typography>Select Contact Method</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <FormControl component="fieldset">
-                <RadioGroup
-                  aria-label="preferred-contact"
-                  name="preferred-contact"
-                  value={selectedContact}
-                  onChange={handleContactChange}
+    <Card>
+      <CardHeader title={'Preferred Contact Method'} className="gc360_header" />
+      <CardContent>
+        <Accordion>
+          <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
+            <Typography>Select Contact Method</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <FormControl component="fieldset">
+              <RadioGroup
+                aria-label="preferred-contact"
+                name="preferred-contact"
+                value={selectedContact}
+                onChange={handleContactChange}
+              >
+                <FormControlLabel value="teams" control={<Radio />} label="Teams" />
+                <FormControlLabel value="phone" control={<Radio />} label="Phone" />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleContactSubmit}
+                  disabled={!selectedContact}
+                  sx={{ mt: 2 }}
                 >
-                  <FormControlLabel value="teams" control={<Radio />} label="Teams" />
-                  <FormControlLabel value="phone" control={<Radio />} label="Phone" />
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleContactSubmit}
-                    disabled={!selectedContact}
-                    sx={{ mt: 2 }}
-                  >
-                    Submit
-                  </Button>
-                </RadioGroup>
-              </FormControl>
-            </AccordionDetails>
-          </Accordion>
-          <Typography sx={{ mt: 2, color: 'text.secondary', fontStyle: 'italic' }}>
-            *This is your preferred method to be contacted by your hall's residents.
-          </Typography>
-        </CardContent>
-      </Card>
-    </Grid>
+                  Submit
+                </Button>
+              </RadioGroup>
+            </FormControl>
+          </AccordionDetails>
+        </Accordion>
+        <Typography sx={{ mt: 2, color: 'text.secondary', fontStyle: 'italic' }}>
+          *This is your preferred method to be contacted by your hall's residents.
+        </Typography>
+      </CardContent>
+    </Card>
   );
 
   return (
@@ -378,10 +376,14 @@ const RAView = () => {
       {!isMobile && (
         <>
           <HousingBanner />
-          <Grid item xs={12} md={4}>
-            {isCheckedIn ? <TaskList /> : null}
+          {isCheckedIn ? (
+            <Grid item xs={12} md={4}>
+              <TaskList />
+            </Grid>
+          ) : null}
+          <Grid item xs={12} md={isCheckedIn ? 4 : 6}>
+            {contactMethod()}
           </Grid>
-          {contactMethod()}
           <Grid item xs={12} md={isCheckedIn ? 4 : 6}>
             <MyHall />
           </Grid>
@@ -400,7 +402,9 @@ const RAView = () => {
           <Grid item xs={12}>
             <MyHall />
           </Grid>
-          {contactMethod()}
+          <Grid item xs={12}>
+            {contactMethod()}
+          </Grid>
           <Grid item xs={12}>
             {isCheckedIn ? <TaskList /> : null}
           </Grid>
