@@ -894,6 +894,7 @@ const MissingItemReportData = () => {
                           variant="filled"
                           disabled
                           fullWidth
+                          multiline
                           value={item.locationLost}
                           InputProps={{ readOnly: true }}
                         />
