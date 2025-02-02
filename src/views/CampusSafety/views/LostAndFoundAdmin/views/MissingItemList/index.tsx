@@ -429,6 +429,9 @@ const MissingItemList = () => {
                             {report.stolen && (
                               <Chip label="Stolen" color="error" className={styles.chip} />
                             )}
+                            {Math.abs(Date.now() - new Date(report.dateCreated).getTime()) /
+                              (1000 * 60 * 60 * 24) <
+                              6 && <Chip label="NEW" color="success" className={styles.chip} />}
                           </Grid>
                         </CardContent>
                       </Card>
@@ -471,6 +474,9 @@ const MissingItemList = () => {
                           {report.stolen && (
                             <Chip label="Stolen" color="error" className={styles.chip} />
                           )}
+                          {Math.abs(Date.now() - new Date(report.dateCreated).getTime()) /
+                            (1000 * 60 * 60 * 24) <
+                            6 && <Chip label="NEW" color="success" className={styles.chip} />}
                         </Grid>
                       </Grid>
                     ),
