@@ -13,14 +13,16 @@ import {
   CardHeader,
   AppBar,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import lostAndFoundService, { MissingItemReport } from 'services/lostAndFound';
 import GordonLoader from 'components/Loader';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './MissingItemList.module.scss';
 import { DateTime } from 'luxon';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useSearchParams } from 'react-router-dom';
+import GordonSnackbar from 'components/Snackbar';
 
 const categories = [
   'Clothing/Shoes',
@@ -56,68 +58,125 @@ const colors = [
 ];
 
 const MissingItemList = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
+  const [pageLoaded, setPageLoaded] = useState(false);
   const [reports, setReports] = useState<MissingItemReport[]>([]);
-  const [filteredReports, setFilteredReports] = useState<MissingItemReport[]>([]);
   const [status, setStatus] = useState(''); // Default value active
   const [category, setCategory] = useState('');
   const [color, setColor] = useState('');
   const [keywords, setKeywords] = useState('');
+  const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
   const navigate = useNavigate();
+  const location = useLocation();
   const isMobile = useMediaQuery('(max-width:900px)');
 
+  const createSnackbar = useCallback((message, severity) => {
+    setSnackbar({ message, severity, open: true });
+  }, []);
+
   useEffect(() => {
-    const fetchMissingItems = async () => {
-      setLoading(true);
+    setPageLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    const updateFilters = async () => {
       try {
-        const fetchedReports = await lostAndFoundService.getMissingItemReports();
-        const sortedReports = fetchedReports.sort(
-          (a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime(),
-        );
-        setReports(sortedReports);
-        setStatus('active'); // Set initial filter
-        setFilteredReports(sortedReports);
+        if (
+          status === getUrlParam('status') &&
+          category === getUrlParam('category') &&
+          color === getUrlParam('color') &&
+          keywords === getUrlParam('keywords')
+        ) {
+          const fetchedReports = await lostAndFoundService.getMissingItemReports(
+            status,
+            category,
+            color,
+            keywords,
+          );
+          const sortedReports = fetchedReports.sort(
+            (a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime(),
+          );
+          setReports(sortedReports);
+        }
       } catch (error) {
-        console.error('Error fetching missing items:', error);
+        console.error('Error fetching missing items', error);
+        createSnackbar(`Failed to load missing item reports`, error);
       } finally {
         setLoading(false);
       }
     };
-    fetchMissingItems();
-  }, []);
-
-  const handleFilter = () => {
-    let filtered = reports;
-
-    if (status) {
-      filtered = filtered.filter((report) => report.status.toLowerCase() === status.toLowerCase());
-    }
-    if (category) {
-      filtered = filtered.filter(
-        (report) => report.category.toLowerCase() === category.toLowerCase(),
-      );
-    }
-    if (color) {
-      filtered = filtered.filter((report) =>
-        report.colors?.some((col) => col.toLowerCase() === color.toLowerCase()),
-      );
-    }
-    if (keywords) {
-      const keywordLower = keywords.toLowerCase();
-      filtered = filtered.filter(
-        (report) =>
-          `${report.firstName} ${report.lastName}`.toLowerCase().includes(keywordLower) ||
-          report.description.toLowerCase().includes(keywordLower) ||
-          report.locationLost.toLowerCase().includes(keywordLower),
-      );
-    }
-
-    setFilteredReports(filtered);
-  };
+    // Check if the keywords have changed, and make the API request only if they have been stable
+    // to avoid making excessive API requests when users are typing keywords
+    const checkForChanges = () => {
+      if (currKeywords === keywords) {
+        updateFilters();
+      }
+    };
+    let currKeywords = keywords;
+    setLoading(true);
+    setTimeout(() => {
+      checkForChanges();
+    }, 700);
+  }, [status, category, color, keywords, pageLoaded]);
 
   useEffect(() => {
-    handleFilter();
-  }, [status, category, color, keywords]);
+    const updateFilters = () => {
+      // Set the filter values based on the url query params
+      let queryValue = getUrlParam('status');
+      if (status !== queryValue) {
+        setStatus(queryValue);
+      }
+      queryValue = getUrlParam('color');
+      if (color !== queryValue) {
+        setColor(queryValue);
+      }
+      queryValue = getUrlParam('category');
+      if (category !== queryValue) {
+        setCategory(queryValue);
+      }
+      queryValue = getUrlParam('keywords');
+      if (keywords !== queryValue) {
+        setKeywords(queryValue);
+      }
+    };
+    updateFilters();
+  }, [category, color, keywords, searchParams, status]);
+
+  // Set the search url params, used for filtering
+  const setUrlParam = (paramName: string, paramValue: string) => {
+    if (paramValue === '') {
+      // Delete the parameter if it's value is empty
+      setSearchParams((params) => {
+        params.delete(paramName);
+        return params;
+      });
+    } else {
+      setSearchParams((params) => {
+        params.set(paramName, paramValue);
+        return params;
+      });
+    }
+  };
+
+  // Get the value of the url param
+  const getUrlParam = (paramName: string) => {
+    if (location.search.includes(paramName)) {
+      return searchParams.get(paramName) || '';
+    }
+    return '';
+  };
+
+  // Delete the four filtering url params
+  const clearUrlParams = () => {
+    setSearchParams((params) => {
+      params.delete('status');
+      params.delete('category');
+      params.delete('keywords');
+      params.delete('color');
+      return params;
+    });
+  };
 
   const dateFormat = 'MM/dd/yy';
   const formatDate = (date: string) => DateTime.fromISO(date).toFormat(dateFormat);
@@ -141,9 +200,9 @@ const MissingItemList = () => {
     var today = Date.parse(DateTime.now().toString());
     // Subtract the dates, and convert milliseconds to days.
     var dayDiff = (today - dateGiven) / (1000 * 3600 * 24);
-    if (dayDiff < 3) {
+    if (dayDiff < 7) {
       return 'var(--mui-palette-success-main)';
-    } else if (dayDiff < 7) {
+    } else if (dayDiff < 14) {
       return 'var(--mui-palette-warning-main)';
     } else {
       return 'var(--mui-palette-error-main)';
@@ -178,7 +237,7 @@ const MissingItemList = () => {
               title={
                 <span className={styles.filterTitleText}>
                   <b>Filters: </b>
-                  {filteredReports.length} / {reports.length} reports
+                  Showing {reports.length} reports
                 </span>
               }
               className={styles.filterTitle}
@@ -199,7 +258,7 @@ const MissingItemList = () => {
                         variant="outlined"
                         size="small"
                         value={keywords}
-                        onChange={(e) => setKeywords(e.target.value)}
+                        onChange={(e) => setUrlParam('keywords', e.target.value)}
                         className={styles.textField}
                         fullWidth
                       />
@@ -209,7 +268,10 @@ const MissingItemList = () => {
                     <Grid item xs={isMobile}>
                       <FormControl size="small" className={styles.formControl} fullWidth>
                         <InputLabel>Status</InputLabel>
-                        <Select value={status} onChange={(e) => setStatus(e.target.value)}>
+                        <Select
+                          value={status}
+                          onChange={(e) => setUrlParam('status', e.target.value)}
+                        >
                           <MenuItem value="">All</MenuItem>
                           <MenuItem value="active">Active</MenuItem>
                           <MenuItem value="expired">Expired</MenuItem>
@@ -222,7 +284,10 @@ const MissingItemList = () => {
                     <Grid item xs={isMobile}>
                       <FormControl size="small" className={styles.formControl} fullWidth>
                         <InputLabel>Color</InputLabel>
-                        <Select value={color} onChange={(e) => setColor(e.target.value)}>
+                        <Select
+                          value={color}
+                          onChange={(e) => setUrlParam('color', e.target.value)}
+                        >
                           <MenuItem value="">All</MenuItem>
                           {colors.map((colorOption) => (
                             <MenuItem key={colorOption} value={colorOption}>
@@ -235,7 +300,10 @@ const MissingItemList = () => {
                     <Grid item xs={isMobile}>
                       <FormControl size="small" className={styles.formControl} fullWidth>
                         <InputLabel>Category</InputLabel>
-                        <Select value={category} onChange={(e) => setCategory(e.target.value)}>
+                        <Select
+                          value={category}
+                          onChange={(e) => setUrlParam('category', e.target.value)}
+                        >
                           <MenuItem value="">All</MenuItem>
                           {categories.map((categoryOption) => (
                             <MenuItem key={categoryOption} value={categoryOption}>
@@ -248,11 +316,7 @@ const MissingItemList = () => {
                     <Grid item xs={isMobile}>
                       <Button
                         onClick={() => {
-                          setStatus('');
-                          setCategory('');
-                          setColor('');
-                          setKeywords('');
-                          handleFilter();
+                          clearUrlParams();
                         }}
                         variant="contained"
                         color="error"
@@ -324,7 +388,7 @@ const MissingItemList = () => {
                 <GordonLoader />
               ) : (
                 <>
-                  {filteredReports.map((report, index) =>
+                  {reports.map((report, index) =>
                     isMobile ? (
                       // Mobile Layout
                       <Card
@@ -365,6 +429,9 @@ const MissingItemList = () => {
                             {report.stolen && (
                               <Chip label="Stolen" color="error" className={styles.chip} />
                             )}
+                            {Math.abs(Date.now() - new Date(report.dateCreated).getTime()) /
+                              (1000 * 60 * 60 * 24) <
+                              6 && <Chip label="NEW" color="success" className={styles.chip} />}
                           </Grid>
                         </CardContent>
                       </Card>
@@ -407,6 +474,9 @@ const MissingItemList = () => {
                           {report.stolen && (
                             <Chip label="Stolen" color="error" className={styles.chip} />
                           )}
+                          {Math.abs(Date.now() - new Date(report.dateCreated).getTime()) /
+                            (1000 * 60 * 60 * 24) <
+                            6 && <Chip label="NEW" color="success" className={styles.chip} />}
                         </Grid>
                       </Grid>
                     ),
@@ -417,6 +487,12 @@ const MissingItemList = () => {
           </Card>
         </Grid>
       </Grid>
+      <GordonSnackbar
+        open={snackbar.open}
+        text={snackbar.message}
+        severity={snackbar.severity}
+        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+      />
     </>
   );
 };
