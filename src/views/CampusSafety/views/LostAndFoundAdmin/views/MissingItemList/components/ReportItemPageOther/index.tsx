@@ -618,14 +618,14 @@ const ReportItemPage = () => {
                         key={label}
                         control={<Radio />}
                         label={label}
-                        value={label}
+                        value={label.toLowerCase().replace(/ /g, '/')}
                         onChange={(e) =>
                           setFormData((prevData) => ({
                             ...prevData,
                             category: (e.target as HTMLInputElement).value,
                           }))
                         }
-                        checked={formData.category === label}
+                        checked={formData.category === label.toLowerCase().replace(/ /g, '/')}
                         className={styles.category_item}
                       />
                     ))}
