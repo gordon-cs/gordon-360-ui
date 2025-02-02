@@ -86,6 +86,20 @@ const LostAndFoundAdmin = () => {
     </Button>
   );
 
+  const EnterFoundItem = (
+    <Button
+      color="secondary"
+      variant="contained"
+      onClick={() => {
+        navigate('founditemform');
+      }}
+    >
+      <Person />
+      <span className={styles.spacing}></span>
+      <b>Enter Found Item</b>
+    </Button>
+  );
+
   const FoundItemsCard = (
     <>
       <Card>
@@ -94,6 +108,9 @@ const LostAndFoundAdmin = () => {
           <Grid container rowGap={2}>
             <Grid container item xs={12}>
               {FoundItemDatabase}
+            </Grid>
+            <Grid container item xs={12}>
+              {EnterFoundItem}
             </Grid>
             <Construction color="error" />
             <Typography>

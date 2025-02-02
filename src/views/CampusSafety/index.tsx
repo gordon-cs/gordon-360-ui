@@ -8,6 +8,7 @@ import MissingItemList from './views/LostAndFoundAdmin/views/MissingItemList';
 import MissingItemReportData from './views/LostAndFoundAdmin/views/MissingItemList/components/MissingItemReportData';
 import ReportItemPage from './views/LostAndFoundAdmin/views/MissingItemList/components/ReportItemPageOther';
 import ReportFound from './views/LostAndFound/views/ReportFound';
+import FoundItemFormCreate from './views/LostAndFoundAdmin/FoundItems';
 import GordonLoader from 'components/Loader';
 import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import { useUser } from 'hooks';
@@ -23,7 +24,8 @@ type CampusSafetyRoutesObject = {
 export const CampusSafetyRoutes: CampusSafetyRoutesObject = {
   '/:itemId': { element: <MissingItemFormEdit />, formattedName: 'Edit My Report' },
   '/missingitemform': { element: <MissingItemFormCreate />, formattedName: 'Report a Lost Item' },
-  '/reportfound': { element: <ReportFound />, formattedName: 'Report a Found Item' },
+  '/founditemform': { element: <FoundItemFormCreate />, formattedName: 'Enter Found Item' },
+  '/reportfound': { element: <ReportFound />, formattedName: 'Report Found Item' },
   '/': { element: <LostAndFound />, formattedName: 'Lost and Found Home' },
   '/lostandfoundadmin/missingitemdatabase/:itemId': {
     element: <MissingItemReportData />,
