@@ -13,7 +13,7 @@ import {
   CardHeader,
   AppBar,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import lostAndFoundService, { MissingItemReport } from 'services/lostAndFound';
 import GordonLoader from 'components/Loader';
 import Header from 'views/CampusSafety/components/Header';
@@ -22,6 +22,7 @@ import { DateTime } from 'luxon';
 import { useLocation, useNavigate } from 'react-router';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSearchParams } from 'react-router-dom';
+import GordonSnackbar from 'components/Snackbar';
 
 const categories = [
   'Clothing/Shoes',
@@ -59,75 +60,88 @@ const colors = [
 const MissingItemList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
+  const [pageLoaded, setPageLoaded] = useState(false);
   const [reports, setReports] = useState<MissingItemReport[]>([]);
-  const [filteredReports, setFilteredReports] = useState<MissingItemReport[]>([]);
   const [status, setStatus] = useState(''); // Default value active
   const [category, setCategory] = useState('');
   const [color, setColor] = useState('');
   const [keywords, setKeywords] = useState('');
+  const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
   const navigate = useNavigate();
   const location = useLocation();
   const isMobile = useMediaQuery('(max-width:900px)');
 
+  const createSnackbar = useCallback((message, severity) => {
+    setSnackbar({ message, severity, open: true });
+  }, []);
+
   useEffect(() => {
-    const fetchMissingItems = async () => {
-      setLoading(true);
+    setPageLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    const updateFilters = async () => {
       try {
-        const fetchedReports = await lostAndFoundService.getMissingItemReports();
-        const sortedReports = fetchedReports.sort(
-          (a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime(),
-        );
-        setReports(sortedReports);
-        setFilteredReports(sortedReports);
+        if (
+          status === getUrlParam('status') &&
+          category === getUrlParam('category') &&
+          color === getUrlParam('color') &&
+          keywords === getUrlParam('keywords')
+        ) {
+          const fetchedReports = await lostAndFoundService.getMissingItemReports(
+            status,
+            category,
+            color,
+            keywords,
+          );
+          const sortedReports = fetchedReports.sort(
+            (a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime(),
+          );
+          setReports(sortedReports);
+        }
       } catch (error) {
-        console.error('Error fetching missing items:', error);
+        console.error('Error fetching missing items', error);
+        createSnackbar(`Failed to load missing item reports`, error);
       } finally {
         setLoading(false);
       }
     };
-    fetchMissingItems();
-  }, []);
-
-  const handleFilter = () => {
-    let filtered = reports;
-
-    // Set the filter values based on the url query params
-    setStatus(getUrlParam('status'));
-    setColor(getUrlParam('color'));
-    setCategory(getUrlParam('category'));
-    setKeywords(getUrlParam('keywords'));
-
-    // Filter reports based on current active filters
-    if (status) {
-      filtered = filtered.filter((report) => report.status.toLowerCase() === status.toLowerCase());
-    }
-    if (category) {
-      filtered = filtered.filter(
-        (report) => report.category.toLowerCase() === category.toLowerCase(),
-      );
-    }
-    if (color) {
-      filtered = filtered.filter((report) =>
-        report.colors?.some((col) => col.toLowerCase() === color.toLowerCase()),
-      );
-    }
-    if (keywords) {
-      const keywordLower = keywords.toLowerCase();
-      filtered = filtered.filter(
-        (report) =>
-          `${report.firstName} ${report.lastName}`.toLowerCase().includes(keywordLower) ||
-          report.description.toLowerCase().includes(keywordLower) ||
-          report.locationLost.toLowerCase().includes(keywordLower),
-      );
-    }
-    setFilteredReports(filtered);
-  };
+    // Check if the keywords have changed, and make the API request only if they have been stable
+    // to avoid making excessive API requests when users are typing keywords
+    const checkForChanges = () => {
+      if (currKeywords === keywords) {
+        updateFilters();
+      }
+    };
+    let currKeywords = keywords;
+    setLoading(true);
+    setTimeout(() => {
+      checkForChanges();
+    }, 700);
+  }, [status, category, color, keywords, pageLoaded]);
 
   useEffect(() => {
-    // Any time changes occur in the filters, or if the back button is used, or after data is first
-    // loaded, run the code to set the filtered list.
-    handleFilter();
-  }, [status, category, color, keywords, searchParams, location, loading]);
+    const updateFilters = () => {
+      // Set the filter values based on the url query params
+      let queryValue = getUrlParam('status');
+      if (status !== queryValue) {
+        setStatus(queryValue);
+      }
+      queryValue = getUrlParam('color');
+      if (color !== queryValue) {
+        setColor(queryValue);
+      }
+      queryValue = getUrlParam('category');
+      if (category !== queryValue) {
+        setCategory(queryValue);
+      }
+      queryValue = getUrlParam('keywords');
+      if (keywords !== queryValue) {
+        setKeywords(queryValue);
+      }
+    };
+    updateFilters();
+  }, [category, color, keywords, searchParams, status]);
 
   // Set the search url params, used for filtering
   const setUrlParam = (paramName: string, paramValue: string) => {
@@ -223,7 +237,7 @@ const MissingItemList = () => {
               title={
                 <span className={styles.filterTitleText}>
                   <b>Filters: </b>
-                  {filteredReports.length} / {reports.length} reports
+                  Showing {reports.length} reports
                 </span>
               }
               className={styles.filterTitle}
@@ -374,7 +388,7 @@ const MissingItemList = () => {
                 <GordonLoader />
               ) : (
                 <>
-                  {filteredReports.map((report, index) =>
+                  {reports.map((report, index) =>
                     isMobile ? (
                       // Mobile Layout
                       <Card
@@ -467,6 +481,12 @@ const MissingItemList = () => {
           </Card>
         </Grid>
       </Grid>
+      <GordonSnackbar
+        open={snackbar.open}
+        text={snackbar.message}
+        severity={snackbar.severity}
+        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+      />
     </>
   );
 };
