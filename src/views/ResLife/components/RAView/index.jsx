@@ -379,15 +379,15 @@ const RAView = () => {
         <>
           <HousingBanner />
           <Grid item xs={12} md={4}>
-            <Links />
+            {isCheckedIn ? <TaskList /> : null}
           </Grid>
           {contactMethod()}
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={isCheckedIn ? 4 : 6}>
             <MyHall />
           </Grid>
           {checkInButton()}
-          <Grid item xs={12} md={4}>
-            <TaskList />
+          <Grid item xs={12} md={12}>
+            <Links />
           </Grid>
         </>
       )}
@@ -402,10 +402,10 @@ const RAView = () => {
           </Grid>
           {contactMethod()}
           <Grid item xs={12}>
-            <Links />
+            {isCheckedIn ? <TaskList /> : null}
           </Grid>
           <Grid item xs={12}>
-            <TaskList />
+            <Links />
           </Grid>
         </>
       )}
