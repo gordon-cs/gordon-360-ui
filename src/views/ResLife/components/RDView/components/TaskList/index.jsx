@@ -17,7 +17,7 @@ import {
 
 const TaskList = () => {
   const [tasks, setTasks] = useState([]);
-  const [selectedArea, setSelectedArea] = useState('');
+  const [selectedArea, setSelectedArea] = useState('work');
   const [currentTask, setCurrentTask] = useState({
     id: null,
     name: '',
@@ -25,7 +25,9 @@ const TaskList = () => {
     startDate: '',
     endDate: '',
     isRecurring: false,
-    area: '',
+    frequency: 'daily',
+    interval: 1,
+    area: 'work',
   });
   const [editing, setEditing] = useState(false);
 
@@ -59,6 +61,8 @@ const TaskList = () => {
       startDate: '',
       endDate: '',
       isRecurring: false,
+      frequency: 'daily',
+      interval: 1,
       area: selectedArea,
     });
   };
@@ -77,35 +81,29 @@ const TaskList = () => {
   return (
     <Grid container spacing={3} justifyContent="center">
       <Grid item xs={12}>
-        <Typography variant="h4" align="center" gutterBottom>
-          Task Manager
-        </Typography>
+        <h1 style={{ textAlign: 'center' }}>Task Manager</h1>
       </Grid>
-      {/* Area Selection */}
-      <Grid item xs={12}>
-        <Card elevation={3}>
-          <CardContent>
-            <FormControl fullWidth>
-              <Typography variant="h5" fontWeight="bold" gutterBottom>
-                Choose A Building
-              </Typography>
-              <Select value={selectedArea} onChange={(e) => setSelectedArea(e.target.value)}>
-                <MenuItem value="BRO">Bromley</MenuItem>
-                <MenuItem value="FER">Ferrin</MenuItem>
-                <MenuItem value="EVN">Evans</MenuItem>
-                <MenuItem value="WIL">Wilson</MenuItem>
-                <MenuItem value="CHA">Chase</MenuItem>
-                <MenuItem value="TAV">Tavilla</MenuItem>
-                <MenuItem value="FUL">Fulton</MenuItem>
-                <MenuItem value="NYL">Nyland</MenuItem>
-                <MenuItem value="GRA">Grace</MenuItem>
-                <MenuItem value="MCI">MacInnis</MenuItem>
-                <MenuItem value="CON">Conrad</MenuItem>
-                <MenuItem value="RID">Rider</MenuItem>
-              </Select>
-            </FormControl>
-          </CardContent>
-        </Card>
+
+      {/* Hall Selection */}
+      <Grid item xs={10}>
+        <h2>Choose a Building</h2>
+
+        <FormControl fullWidth>
+          <Select value={selectedArea} onChange={(e) => setSelectedArea(e.target.value)}>
+            <MenuItem value="BRO">Bromley</MenuItem>
+            <MenuItem value="FER">Ferrin</MenuItem>
+            <MenuItem value="EVN">Evans</MenuItem>
+            <MenuItem value="WIL">Wilson</MenuItem>
+            <MenuItem value="CHA">Chase</MenuItem>
+            <MenuItem value="TAV">Tavilla</MenuItem>
+            <MenuItem value="FUL">Fulton</MenuItem>
+            <MenuItem value="NYL">Nyland</MenuItem>
+            <MenuItem value="GRA">Grace</MenuItem>
+            <MenuItem value="MCI">MacInnis</MenuItem>
+            <MenuItem value="CON">Conrad</MenuItem>
+            <MenuItem value="RID">Rider</MenuItem>
+          </Select>
+        </FormControl>
       </Grid>
 
       {/* Create/Edit Task Card */}
@@ -124,17 +122,17 @@ const TaskList = () => {
                 value={currentTask.name}
                 onChange={handleInputChange}
                 required
-                sx={{ mb: 3 }}
+                sx={{ mb: 2 }}
               />
               <TextField
                 fullWidth
-                label="Description (optional)"
+                label="Description (Optional)"
                 name="description"
                 multiline
                 rows={3}
                 value={currentTask.description}
                 onChange={handleInputChange}
-                sx={{ mb: 3 }}
+                sx={{ mb: 2 }}
               />
               <div className="grid grid-cols-2 gap-4">
                 <TextField
@@ -146,7 +144,7 @@ const TaskList = () => {
                   value={currentTask.startDate}
                   onChange={handleInputChange}
                   required
-                  sx={{ mb: 3 }}
+                  sx={{ mb: 2 }}
                 />
                 <TextField
                   fullWidth
@@ -157,12 +155,49 @@ const TaskList = () => {
                   value={currentTask.endDate}
                   onChange={handleInputChange}
                   required
-                  sx={{ mb: 3 }}
+                  sx={{ mb: 2 }}
                 />
               </div>
-              <div className="flex items-center">
-                <FormControlLabel control={<Checkbox defaultChecked />} label="Recurring Task" />
-              </div>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="isRecurring"
+                    checked={currentTask.isRecurring}
+                    onChange={handleInputChange}
+                  />
+                }
+                label="Recurring Task"
+              />
+
+              {currentTask.isRecurring && (
+                <>
+                  <FormControl fullWidth sx={{ mb: 2 }}>
+                    <InputLabel>Frequency</InputLabel>
+                    <Select
+                      value={currentTask.frequency || ''}
+                      onChange={handleInputChange}
+                      required
+                      label="Frequency"
+                    >
+                      <MenuItem value="daily">Daily</MenuItem>
+                      <MenuItem value="weekly">Weekly</MenuItem>
+                      <MenuItem value="monthly">Monthly</MenuItem>
+                    </Select>
+                  </FormControl>
+
+                  <TextField
+                    fullWidth
+                    label="Interval"
+                    type="number"
+                    name="interval"
+                    value={currentTask.interval || ''}
+                    onChange={handleInputChange}
+                    inputProps={{ min: 1 }}
+                    required
+                    sx={{ mb: 2 }}
+                  />
+                </>
+              )}
 
               <Button variant="contained" color="primary" type="submit" fullWidth>
                 {editing ? 'Update Task' : 'Create Task'}
@@ -180,7 +215,7 @@ const TaskList = () => {
               Task List ({selectedArea})
             </Typography>
             {filteredTasks.length === 0 ? (
-              <Typography color="textSecondary">No tasks in this area.</Typography>
+              <Typography color="textSecondary">No tasks for this building</Typography>
             ) : (
               <ul className="space-y-4">
                 {filteredTasks.map((task) => (
@@ -190,19 +225,28 @@ const TaskList = () => {
                   >
                     <div>
                       <Typography variant="subtitle1" fontWeight="bold">
-                        {task.name}
+                        <strong>{task.name}</strong>
                       </Typography>
                       <Typography variant="body2" color="textSecondary">
-                        {task.startDate} - {task.endDate}
+                        <strong>Start Date: </strong> {task.startDate}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        <strong>End Date: </strong> {task.endDate}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        <strong>Frequency: </strong> {task.frequency}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary">
+                        <strong>Interval: </strong> {task.interval}
                       </Typography>
                     </div>
                     <div className="flex gap-2">
                       <Button
                         variant="contained"
-                        sx={{ mr: 3 }}
-                        color="primary"
+                        color="secondary"
                         size="small"
                         onClick={() => editTask(task)}
+                        sx={{ mr: 3 }}
                       >
                         Edit
                       </Button>
@@ -222,6 +266,7 @@ const TaskList = () => {
           </CardContent>
         </Card>
       </Grid>
+      <Box mt={6} />
     </Grid>
   );
 };
