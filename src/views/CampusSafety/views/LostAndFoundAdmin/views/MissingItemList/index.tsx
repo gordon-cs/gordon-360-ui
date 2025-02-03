@@ -13,7 +13,7 @@ import {
   CardHeader,
   AppBar,
 } from '@mui/material';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import lostAndFoundService, { MissingItemReport } from 'services/lostAndFound';
 import GordonLoader from 'components/Loader';
 import Header from 'views/CampusSafety/components/Header';
@@ -71,6 +71,11 @@ const MissingItemList = () => {
   const location = useLocation();
   const isMobile = useMediaQuery('(max-width:900px)');
 
+  // Lazy loading state and ref 
+  const [lazyLoading, setLazyLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+
   const createSnackbar = useCallback((message, severity) => {
     setSnackbar({ message, severity, open: true });
   }, []);
@@ -79,6 +84,12 @@ const MissingItemList = () => {
     setPageLoaded(true);
   }, []);
 
+  // Reset lazy-loading when filters change 
+  useEffect(() => {
+    setHasMore(true);
+  }, [status, category, color, keywords]);
+
+  // Fetch initial reports when filters change 
   useEffect(() => {
     const updateFilters = async () => {
       try {
@@ -94,10 +105,10 @@ const MissingItemList = () => {
             color,
             keywords,
           );
-          const sortedReports = fetchedReports.sort(
-            (a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime(),
-          );
-          setReports(sortedReports);
+          // const sortedReports = fetchedReports.sort(
+          //   (a, b) => new Date(b.dateLost).getTime() - new Date(a.dateLost).getTime(),
+          // );
+          setReports(fetchedReports);
         }
       } catch (error) {
         console.error('Error fetching missing items', error);
@@ -118,7 +129,7 @@ const MissingItemList = () => {
     setTimeout(() => {
       checkForChanges();
     }, 700);
-  }, [status, category, color, keywords, pageLoaded]);
+  }, [status, category, color, keywords, pageLoaded, createSnackbar]);
 
   useEffect(() => {
     const updateFilters = () => {
@@ -225,6 +236,49 @@ const MissingItemList = () => {
       />
     );
   };
+
+  // Lazy loading helper: load more reports 
+  const loadMoreReports = async () => {
+    if (lazyLoading || !hasMore) return;
+    setLazyLoading(true);
+    // Use the last report's recordID as the lastId; if none, it remains undefined.
+    const lastId = reports.length > 0 ? reports[reports.length - 1].recordID : undefined;
+    try {
+      const moreReports = await lostAndFoundService.getMissingItemReports(
+        status,
+        category,
+        color,
+        keywords,
+        lastId
+      );
+      if (moreReports.length === 0) {
+        setHasMore(false);
+      } else {
+        setReports(prev => [...prev, ...moreReports]);
+      }
+    } catch (error) {
+      console.error('Error loading more reports', error);
+    } finally {
+      setLazyLoading(false);
+    }
+  };
+
+  // Intersection Observer to trigger lazy loading 
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        loadMoreReports();
+      }
+    });
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+    return () => {
+      if (loadMoreRef.current) {
+        observer.unobserve(loadMoreRef.current);
+      }
+    };
+  }, [loadMoreRef, lazyLoading, hasMore, status, category, color, keywords, reports]);
 
   return (
     <>
@@ -388,7 +442,7 @@ const MissingItemList = () => {
                 <GordonLoader />
               ) : (
                 <>
-                  {reports.map((report, index) =>
+                  {reports.map((report) =>
                     isMobile ? (
                       // Mobile Layout
                       <Card
@@ -448,9 +502,9 @@ const MissingItemList = () => {
                           {formatDate(report.dateLost)}
                         </Grid>
                         <Grid item xs={2}>
-                          <div
-                            className={styles.dataCell}
-                          >{`${report.firstName} ${report.lastName}`}</div>
+                          <div className={styles.dataCell}>
+                            {`${report.firstName} ${report.lastName}`}
+                          </div>
                         </Grid>
                         <Grid item xs={2}>
                           <div className={styles.dataCell}>{report.locationLost}</div>
@@ -475,6 +529,11 @@ const MissingItemList = () => {
                       </Grid>
                     ),
                   )}
+                  {/* Sentinel element for lazy loading */}
+                  <div ref={loadMoreRef} />
+
+                  {/*Show a loader when lazy loading */}
+                  {lazyLoading && <GordonLoader />}
                 </>
               )}
             </CardContent>
