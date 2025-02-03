@@ -74,7 +74,7 @@ const MyRA = () => {
         title={
           <Grid container direction="row" alignItems="center">
             <Grid item xs={12} align="center">
-              My {staffTypeLabel}
+              {`My ${staffTypeLabel || 'RA/AC'}`}
             </Grid>
           </Grid>
         }
@@ -86,7 +86,7 @@ const MyRA = () => {
           {/* Text Section */}
           <Grid item xs={8}>
             <Typography variant="body1">
-              <strong>RA: </strong>
+              <strong>{staffTypeLabel ? staffTypeLabel : 'Loading'}: </strong>
               {raInfo?.FirstName && raInfo?.LastName ? (
                 <StyledLink
                   href={raProfileLink}
@@ -97,7 +97,9 @@ const MyRA = () => {
                   {raInfo.FirstName} {raInfo.LastName}
                 </StyledLink>
               ) : (
-                <StyledLink className="gc360_text_link">No RA Assigned</StyledLink>
+                <StyledLink className="gc360_text_link">
+                  {`No ${staffTypeLabel || 'Staff'} Assigned`}
+                </StyledLink>
               )}
             </Typography>
 
