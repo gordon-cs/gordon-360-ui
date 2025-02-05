@@ -294,7 +294,6 @@ const MissingItemList = () => {
               title={
                 <span className={styles.filterTitleText}>
                   <b>Filters: </b>
-                  Showing {reports.length} reports
                 </span>
               }
               className={styles.filterTitle}
