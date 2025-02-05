@@ -371,6 +371,7 @@ const RAView = () => {
     </Card>
   );
 
+  // NOTE: return a task list for each hall
   return (
     <Grid container item spacing={2}>
       {!isMobile && (

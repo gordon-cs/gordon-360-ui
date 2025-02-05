@@ -1,6 +1,6 @@
 import http from '../http';
 
-type Task = {
+export type Task = {
   Name: string;
   Description: string;
   HallID: string;
@@ -10,6 +10,16 @@ type Task = {
   StartDate: Date;
   EndDate?: Date;
   CreatedDate: Date;
+  CompletedDate?: Date;
+  CompletedBy?: string;
+  OccurDate?: Date;
+};
+
+export type DailyTask = {
+  TaskID: number;
+  Name: string;
+  Description: string;
+  HallID: string;
   CompletedDate?: Date;
   CompletedBy?: string;
   OccurDate?: Date;
