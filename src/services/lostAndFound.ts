@@ -45,20 +45,31 @@ export type MissingAdminAction = {
 export type InitAdminAction = Omit<MissingAdminAction, 'ID'>;
 
 /**
- * Fetch an array containing the full list of all missing item reports.
+ * Fetch a page of missing item reports.
  * @param reportStatus the status of the report for filtering
  * @param category the category to filter by
  * @param color the color to filter by
  * @param keywords keywords to filter by
- * @returns MissingItemReport[] array of all missing item reports.
+ * @param lastId the ID of the last fetched report (for pagination)
+ * @param pageSize number of items to fetch (defaults to 25)
+ * @returns MissingItemReport[] array of missing item reports.
  */
 const getMissingItemReports = (
   reportStatus?: string,
   category?: string,
   color?: string,
   keywords?: string,
+  lastId?: number,
+  pageSize?: number,
 ): Promise<MissingItemReport[]> => {
-  let query: { status?: string; category?: string; color?: string; keywords?: string } = {};
+  let query: {
+    status?: string;
+    category?: string;
+    color?: string;
+    keywords?: string;
+    lastId?: number;
+    pageSize?: number;
+  } = {};
   if (reportStatus) {
     query['status'] = reportStatus;
   }
@@ -71,6 +82,10 @@ const getMissingItemReports = (
   if (keywords) {
     query['keywords'] = keywords;
   }
+  if (lastId !== undefined && lastId !== null) {
+    query['lastId'] = lastId;
+  }
+  query['pageSize'] = pageSize;
 
   return http.get<MissingItemReport[]>(`lostandfound/missingitems${http.toQueryString(query)}`);
 };
