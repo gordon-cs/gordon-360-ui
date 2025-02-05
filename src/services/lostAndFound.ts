@@ -60,7 +60,7 @@ const getMissingItemReports = (
   color?: string,
   keywords?: string,
   lastId?: number,
-  pageSize: number = 25,
+  pageSize?: number,
 ): Promise<MissingItemReport[]> => {
   let query: {
     status?: string;
