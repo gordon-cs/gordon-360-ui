@@ -108,12 +108,11 @@ const MissingItemList = () => {
             25,
           );
           setReports(fetchedReports);
+          setLoading(false);
         }
       } catch (error) {
         console.error('Error fetching missing items', error);
         createSnackbar(`Failed to load missing item reports`, error);
-      } finally {
-        setLoading(false);
       }
     };
     // Check if the keywords have changed, and make the API request only if they have been stable
@@ -123,11 +122,14 @@ const MissingItemList = () => {
         updateFilters();
       }
     };
+
     let currKeywords = keywords;
-    setLoading(true);
-    setTimeout(() => {
-      checkForChanges();
-    }, 700);
+    if (pageLoaded) {
+      setLoading(true);
+      setTimeout(() => {
+        checkForChanges();
+      }, 700);
+    }
   }, [status, category, color, keywords, pageLoaded]);
 
   useEffect(() => {
