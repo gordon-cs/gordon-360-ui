@@ -26,34 +26,37 @@ import { useUser } from 'hooks';
 import GordonDialogBox from 'components/GordonDialogBox';
 import SimpleSnackbar from 'components/Snackbar';
 
+const taskList = [
+  {
+    TaskID: 0,
+    Name: 'Clean',
+    Description: 'please clean',
+    HallID: 'brom',
+  },
+  {
+    TaskID: 1,
+    Name: 'more Clean',
+    Description: 'please more clean',
+    HallID: 'ferr',
+  },
+  {
+    TaskID: 2,
+    Name: 'take out trash',
+    Description: 'trashcan full',
+    HallID: 'fult',
+  },
+  {
+    TaskID: 3,
+    Name: 'posters put up',
+    Description: 'please please posters',
+    HallID: 'evan',
+  },
+];
+
 const TaskList = () => {
   //const [taskTEMPList, setTaskList] = useState([]);
-  const taskList = [
-    {
-      TaskID: 0,
-      Name: 'Clean',
-      Description: 'please clean',
-      HallID: 'brom',
-    },
-    {
-      TaskID: 1,
-      Name: 'more Clean',
-      Description: 'please more clean',
-      HallID: 'ferr',
-    },
-    {
-      TaskID: 2,
-      Name: 'take out trash',
-      Description: 'trashcan full',
-      HallID: 'fult',
-    },
-    {
-      TaskID: 3,
-      Name: 'posters put up',
-      Description: 'please please posters',
-      HallID: 'evan',
-    },
-  ];
+
+  // console.log(taskList.length);
   //const { profile } = useUser();
   const [descriptionOpen, setDescriptionOpen] = useState(false);
   const [taskCheckedOpen, setTaskCheckedOpen] = useState(false);
@@ -61,9 +64,9 @@ const TaskList = () => {
   const [disabledList, setDisabledList] = useState([]);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
 
-  const createSnackbar = useCallback((message, severity) => {
-    setSnackbar({ message, severity, open: true });
-  }, []);
+  // const createSnackbar = useCallback((message, severity) => {
+  //   setSnackbar({ message, severity, open: true });
+  // }, []);
 
   // useEffect(() => {
   //   const fetchTaskList = async () => {
@@ -76,32 +79,32 @@ const TaskList = () => {
   //   fetchTaskList();
   // });
 
-  const testTaskList = [
-    {
-      TaskID: 0,
-      Name: 'Clean',
-      Description: 'please clean',
-      HallID: 'brom',
-    },
-    {
-      TaskID: 1,
-      Name: 'more Clean',
-      Description: 'please more clean',
-      HallID: 'ferr',
-    },
-    {
-      TaskID: 2,
-      Name: 'take out trash',
-      Description: 'trashcan full',
-      HallID: 'fult',
-    },
-    {
-      TaskID: 3,
-      Name: 'posters put up',
-      Description: 'please please posters',
-      HallID: 'evan',
-    },
-  ];
+  // const testTaskList = [
+  //   {
+  //     TaskID: 0,
+  //     Name: 'Clean',
+  //     Description: 'please clean',
+  //     HallID: 'brom',
+  //   },
+  //   {
+  //     TaskID: 1,
+  //     Name: 'more Clean',
+  //     Description: 'please more clean',
+  //     HallID: 'ferr',
+  //   },
+  //   {
+  //     TaskID: 2,
+  //     Name: 'take out trash',
+  //     Description: 'trashcan full',
+  //     HallID: 'fult',
+  //   },
+  //   {
+  //     TaskID: 3,
+  //     Name: 'posters put up',
+  //     Description: 'please please posters',
+  //     HallID: 'evan',
+  //   },
+  // ];
 
   const handleConfirm = async (index, taskID) => {
     try {
@@ -109,10 +112,10 @@ const TaskList = () => {
       setTaskCheckedOpen(false);
       setCheckedList[index] = true;
       setDisabledList[index] = true;
-      createSnackbar(`Completed task: ${setCheckedList[index].Name}`, 'success');
+      //createSnackbar(`Completed task: ${setCheckedList[index].Name}`, 'success');
     } catch (error) {
       console.error('Error completing task', error);
-      createSnackbar('Failed to complete task. Please try again.', 'error');
+      //createSnackbar('Failed to complete task. Please try again.', 'error');
     }
   };
 
