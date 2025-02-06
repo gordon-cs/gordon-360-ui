@@ -16,6 +16,7 @@ const Housing = () => {
   const [loading, setLoading] = useState(true);
   const { profile } = useUser();
   const isAuthenticated = useIsAuthenticated();
+  const [selectedView, setSelectedView] = useState(null);
   const [isStudent, isRA, isResLifeStaff, isRD, isPolice, isHallInfoViewer, isHousingDeveloper] =
     useAuthGroups(
       AuthGroup.Student,
@@ -42,14 +43,24 @@ const Housing = () => {
     fetchUserInfo();
   }, [isAuthenticated, profile]);
 
+  useEffect(() => {
+    if (isHousingDeveloper && !selectedView) {
+      const selectPage = prompt('Enter the view you want to access (RD, RA, Res, Staff):');
+      setSelectedView(selectPage?.toLowerCase() || '');
+    }
+  }, [isHousingDeveloper, selectedView]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   if (isHousingDeveloper) {
-    const selectPage = prompt('Enter the view you want to access (RD, RA, Resident, Staff):');
-    switch (selectPage?.toLowerCase()) {
+    switch (selectedView) {
       case 'rd':
         return <RDView />;
       case 'ra':
         return <RAView />;
-      case 'resident':
+      case 'res':
         return <ResidentView />;
       case 'staff':
         return <StaffView />;
