@@ -257,7 +257,7 @@ const MissingItemList = () => {
         lastId,
         pageSize,
       );
-      if (moreReports.length < 25) {
+      if (moreReports.length < pageSize) {
         setHasMore(false);
       } else {
         setReports((prev) => [...prev, ...moreReports]);
