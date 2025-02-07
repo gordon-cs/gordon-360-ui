@@ -167,7 +167,7 @@ const MissingItemFormEdit = () => {
       }
     });
     if (dateError !== null) {
-      errors['dateLost'] = "You can't select a date in the future!";
+      errors['dateLost'] = dateError;
     }
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;

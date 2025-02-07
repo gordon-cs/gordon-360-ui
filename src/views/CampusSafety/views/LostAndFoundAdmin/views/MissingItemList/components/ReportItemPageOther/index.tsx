@@ -239,7 +239,7 @@ const ReportItemPage = () => {
     }
 
     if (dateError !== null) {
-      errors['dateLost'] = "You can't select a date in the future!";
+      errors['dateLost'] = dateError;
     }
 
     requiredFields.forEach((field) => {
