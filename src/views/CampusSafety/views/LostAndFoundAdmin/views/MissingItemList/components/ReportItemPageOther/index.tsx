@@ -19,14 +19,7 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import React, {
-  useReducer,
-  useEffect,
-  useState,
-  HTMLAttributes,
-  useCallback,
-  useMemo,
-} from 'react';
+import { useReducer, useEffect, useState, HTMLAttributes, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './ReportItemPage.module.scss';
