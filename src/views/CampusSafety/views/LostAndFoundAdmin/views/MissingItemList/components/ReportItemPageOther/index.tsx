@@ -20,18 +20,18 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { DateTime } from 'luxon';
-import { useReducer, useEffect, useState, HTMLAttributes, useCallback } from 'react';
+import React, { useReducer, useEffect, useState, HTMLAttributes, useCallback } from 'react';
 import { useNavigate } from 'react-router';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './ReportItemPage.module.scss';
 import lostAndFoundService from 'services/lostAndFound';
-import userService from 'services/user';
 import quickSearchService, { SearchResult } from 'services/quickSearch';
 import ConfirmReport from 'views/CampusSafety/views/LostAndFound/views/MissingItemCreate/components/confirmReport';
 import GordonSnackbar from 'components/Snackbar';
 import ReportStolenModal from 'views/CampusSafety/views/LostAndFound/views/MissingItemCreate/components/reportStolen';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { useUser } from 'hooks';
 
 const MIN_QUERY_LENGTH = 2;
 
@@ -115,7 +115,7 @@ const ReportItemPage = () => {
     locationLost: '',
     stolen: false,
     stolenDescription: '',
-    dateLost: '',
+    dateLost: new Date().toISOString(),
     phoneNumber: '',
     forGuest: true,
     status: 'active',
@@ -128,6 +128,7 @@ const ReportItemPage = () => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
   const [disableSubmit, setDisableSubmit] = useState(false);
   const [newActionFormData, setNewActionFormData] = useState({ action: '', actionNote: '' });
+  const { profile } = useUser();
 
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
@@ -135,23 +136,17 @@ const ReportItemPage = () => {
   const specialCharactersRegex = /[^a-zA-Z0-9'\-.\s]/gm;
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const userInfo = await userService.getProfileInfo();
-        setUser({
-          firstName: userInfo?.FirstName || '',
-          lastName: userInfo?.LastName || '',
-          emailAddr: userInfo?.Email || '',
-          phoneNumber: userInfo?.MobilePhone || '',
-          AD_Username: userInfo?.AD_Username || '', // Set AD_Username
-        });
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
+    const setUserData = async () => {
+      setUser({
+        firstName: profile?.FirstName || '',
+        lastName: profile?.LastName || '',
+        emailAddr: profile?.Email || '',
+        phoneNumber: profile?.MobilePhone || '',
+        AD_Username: profile?.AD_Username || '', // Set AD_Username
+      });
     };
-
-    fetchUserData();
-  }, []);
+    setUserData();
+  }, [profile]);
 
   const handleInput = (_event: React.SyntheticEvent, value: string) => {
     const query = value.trim().replace(specialCharactersRegex, '');
@@ -235,6 +230,10 @@ const ReportItemPage = () => {
     } else {
       // If 'isGordonPerson' is not selected
       errors['isGordonPerson'] = 'Please select if this report is for a Gordon person or not';
+    }
+
+    if (dateError !== null) {
+      errors['dateLost'] = "You can't select a date in the future!";
     }
 
     requiredFields.forEach((field) => {
@@ -397,9 +396,21 @@ const ReportItemPage = () => {
     </Grid>
   );
 
-  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
-  };
+  const [dateError, setDateError] = React.useState<DateValidationError | null>(null);
+
+  const errorMessage = React.useMemo(() => {
+    switch (dateError) {
+      case 'invalidDate': {
+        return 'Invalid Date';
+      }
+      case 'disableFuture': {
+        return 'Cannot lose an item in the future';
+      }
+      default: {
+        return null;
+      }
+    }
+  }, [dateError]);
 
   // Using DatePicker component from MUI/x, with custom styling to fix dark mode contrast issues
   const customDatePicker = (
@@ -408,6 +419,7 @@ const ReportItemPage = () => {
         label="Date Lost"
         value={formData.dateLost === '' ? null : formData.dateLost}
         onChange={(value) => setFormData({ ...formData, dateLost: value?.toString() || '' })}
+        onError={(newError) => setDateError(newError)}
         disableFuture
         orientation="portrait"
         name="Date Lost"
@@ -416,8 +428,7 @@ const ReportItemPage = () => {
         // https://blog.openreplay.com/styling-and-customizing-material-ui-date-pickers/
         slotProps={{
           textField: {
-            onKeyDown: onKeyDown,
-            helperText: 'Default: today',
+            helperText: errorMessage ? errorMessage : 'Change if lost before today',
             // Custom styling for the input field, to make it look like filled variant
             sx: {
               backgroundColor: 'var(--mui-palette-FilledInput-bg);',

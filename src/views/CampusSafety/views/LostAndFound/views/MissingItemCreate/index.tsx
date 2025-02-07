@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Card,
   CardHeader,
@@ -21,7 +21,7 @@ import ConfirmReport from './components/confirmReport';
 import GordonSnackbar from 'components/Snackbar';
 import { useNavigate } from 'react-router';
 import { InfoOutlined } from '@mui/icons-material';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 
 const MissingItemFormCreate = () => {
@@ -99,6 +99,9 @@ const MissingItemFormCreate = () => {
         errors[field] = 'This field is required';
       }
     });
+    if (dateError !== null) {
+      errors['dateLost'] = "You can't select a date in the future!";
+    }
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -205,9 +208,21 @@ const MissingItemFormCreate = () => {
     }
   };
 
-  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
-  };
+  const [dateError, setDateError] = React.useState<DateValidationError | null>(null);
+
+  const errorMessage = React.useMemo(() => {
+    switch (dateError) {
+      case 'invalidDate': {
+        return 'Invalid Date';
+      }
+      case 'disableFuture': {
+        return 'Cannot lose an item in the future';
+      }
+      default: {
+        return null;
+      }
+    }
+  }, [dateError]);
 
   // Using DatePicker component from MUI/x, with custom styling to fix dark mode contrast issues
   const customDatePicker = (
@@ -216,13 +231,16 @@ const MissingItemFormCreate = () => {
         label="Date Lost"
         value={formData.dateLost === '' ? null : formData.dateLost}
         onChange={(value) => setFormData({ ...formData, dateLost: value?.toString() || '' })}
+        onError={(newError) => setDateError(newError)}
         disableFuture
         orientation="portrait"
         name="Date Lost"
+        // Custom styling for popup box, better dark mode contrast
+        // Thanks to help for understanding from
+        // https://blog.openreplay.com/styling-and-customizing-material-ui-date-pickers/
         slotProps={{
           textField: {
-            onKeyDown: onKeyDown,
-            helperText: 'Default: today',
+            helperText: errorMessage ? errorMessage : 'Change if lost before today',
             // Custom styling for the input field, to make it look like filled variant
             sx: {
               backgroundColor: 'var(--mui-palette-FilledInput-bg);',

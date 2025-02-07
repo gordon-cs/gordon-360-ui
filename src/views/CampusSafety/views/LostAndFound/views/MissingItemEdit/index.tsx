@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Card,
   CardHeader,
@@ -21,7 +21,7 @@ import userService from 'services/user';
 import ConfirmReport from './components/confirmReport';
 import { useNavigate, useParams } from 'react-router';
 import GordonLoader from 'components/Loader';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
@@ -31,6 +31,7 @@ const MissingItemFormEdit = () => {
   const { itemId } = useParams<{ itemId: string }>();
   const [loading, setLoading] = useState<boolean>(true);
   const [isPickedUp, setIsPickedUp] = useState(false); //Added this to manage the button disable
+  const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
 
   const [originalFormData, setOriginalFormData] = useState({
     recordID: 0,
@@ -103,7 +104,6 @@ const MissingItemFormEdit = () => {
 
   useEffect(() => {
     const fetchItemData = async () => {
-      console.log('Fetching data, item id: ', itemId);
       if (itemId) {
         const item = await lostAndFoundService.getMissingItemReport(parseInt(itemId));
         setFormData({
@@ -158,8 +158,26 @@ const MissingItemFormEdit = () => {
     });
   };
 
+  const requiredFields = ['category', 'description', 'locationLost'];
+
+  const validateForm = () => {
+    const errors: { [key: string]: string } = {};
+    requiredFields.forEach((field) => {
+      if (!formData[field as keyof typeof formData]) {
+        errors[field] = 'This field is required';
+      }
+    });
+    if (dateError !== null) {
+      errors['dateLost'] = "You can't select a date in the future!";
+    }
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleFormSubmit = () => {
-    setShowConfirm(true);
+    if (validateForm()) {
+      setShowConfirm(true);
+    }
   };
 
   const handlePickup = async () => {
@@ -211,6 +229,22 @@ const MissingItemFormEdit = () => {
     navigate('/lostandfound');
   };
 
+  const [dateError, setDateError] = React.useState<DateValidationError | null>(null);
+
+  const errorMessage = React.useMemo(() => {
+    switch (dateError) {
+      case 'invalidDate': {
+        return 'Invalid Date';
+      }
+      case 'disableFuture': {
+        return 'Cannot lose an item in the future';
+      }
+      default: {
+        return null;
+      }
+    }
+  }, [dateError]);
+
   // Using DatePicker component from MUI/x, with custom styling to fix dark mode contrast issues
   const customDatePicker = (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -218,34 +252,37 @@ const MissingItemFormEdit = () => {
         label="Date Lost"
         value={formData.dateLost === '' ? null : formData.dateLost}
         onChange={(value) => setFormData({ ...formData, dateLost: value?.toString() || '' })}
+        onError={(newError) => setDateError(newError)}
         disableFuture
-        disabled={!isEditable}
         orientation="portrait"
         name="Date Lost"
-        // Custom styling for the input field, to make it look like filled variant
-        sx={{
-          backgroundColor: 'var(--mui-palette-FilledInput-bg);',
-          paddingTop: '7px;',
-          borderRadius: '5px;',
-          width: '100%;',
-          '& .Mui-focused .MuiOutlinedInput-notchedOutline': { border: 'none' },
-          '& .MuiInputLabel-shrink': {
-            transform: 'translate(14px, 4px) scale(0.75);',
-          },
-          '& .MuiFormLabel-root.Mui-focused': {
-            color: 'var(--mui-palette-secondary-main);',
-          },
-          '& .MuiOutlinedInput-notchedOutline': {
-            borderWidth: '0;',
-            borderBottom:
-              '1px solid rgba(var(--mui-palette-common-onBackgroundChannel) / var(--mui-opacity-inputUnderline));',
-            borderRadius: '0;',
-          },
-        }}
         // Custom styling for popup box, better dark mode contrast
         // Thanks to help for understanding from
         // https://blog.openreplay.com/styling-and-customizing-material-ui-date-pickers/
         slotProps={{
+          textField: {
+            helperText: errorMessage ? errorMessage : 'Change if lost before today',
+            // Custom styling for the input field, to make it look like filled variant
+            sx: {
+              backgroundColor: 'var(--mui-palette-FilledInput-bg);',
+              paddingTop: '7px;',
+              borderRadius: '5px;',
+              width: '100%;',
+              '& .Mui-focused .MuiOutlinedInput-notchedOutline': { border: 'none' },
+              '& .MuiInputLabel-shrink': {
+                transform: 'translate(14px, 4px) scale(0.75);',
+              },
+              '& .MuiFormLabel-root.Mui-focused': {
+                color: 'var(--mui-palette-secondary-main);',
+              },
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderWidth: '0;',
+                borderBottom:
+                  '1px solid rgba(var(--mui-palette-common-onBackgroundChannel) / var(--mui-opacity-inputUnderline));',
+                borderRadius: '0;',
+              },
+            },
+          },
           layout: {
             sx: {
               '& .MuiPickersLayout-contentWrapper .Mui-selected': {
@@ -488,6 +525,8 @@ const MissingItemFormEdit = () => {
                       name="description"
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      error={!!validationErrors.description}
+                      helperText={validationErrors.description}
                       disabled={!isEditable}
                       // Custom styling on focus, better dark mode contrast
                       sx={{
@@ -506,6 +545,8 @@ const MissingItemFormEdit = () => {
                       label="Location Lost"
                       name="locationLost"
                       value={formData.locationLost}
+                      error={!!validationErrors.locationLost}
+                      helperText={validationErrors.locationLost}
                       onChange={(e) => setFormData({ ...formData, locationLost: e.target.value })}
                       disabled={!isEditable}
                       // Custom styling on focus, better dark mode contrast

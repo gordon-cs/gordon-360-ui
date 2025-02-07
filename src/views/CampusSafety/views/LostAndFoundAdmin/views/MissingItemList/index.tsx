@@ -18,11 +18,11 @@ import lostAndFoundService, { MissingItemReport } from 'services/lostAndFound';
 import GordonLoader from 'components/Loader';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './MissingItemList.module.scss';
-import { DateTime } from 'luxon';
 import { useLocation, useNavigate } from 'react-router';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSearchParams } from 'react-router-dom';
 import GordonSnackbar from 'components/Snackbar';
+import { differenceInCalendarDays, format } from 'date-fns';
 
 const categories = [
   'Clothing/Shoes',
@@ -57,6 +57,56 @@ const colors = [
   'Yellow',
 ];
 
+const dateFormat = 'MM/dd/yy';
+
+const yellowDateThreshold = 7;
+const redDateThreshold = 14;
+
+// Return a color based on how long ago a date was.
+const dateAgeColor = (date: string) => {
+  let dateGiven = Date.parse(date);
+  let today = new Date();
+  let dayDiff = differenceInCalendarDays(today, dateGiven);
+  // Return the color corresponding to the age of the date
+  if (dayDiff < yellowDateThreshold) {
+    return 'var(--mui-palette-success-main)';
+  } else if (dayDiff < redDateThreshold) {
+    return 'var(--mui-palette-warning-main)';
+  } else {
+    return 'var(--mui-palette-error-main)';
+  }
+};
+
+const formatDate = (date: string) => format(Date.parse(date), dateFormat);
+
+// Find and format the last checked date based on the list of admin actions for a given report.
+const displayLastCheckedDate = (report: MissingItemReport) => {
+  let dateString = report.adminActions?.findLast((action) => {
+    return action.action === 'Checked';
+  })?.actionDate;
+  if (dateString !== '' && dateString !== undefined) {
+    return formatDate(dateString);
+  }
+  return 'Never';
+};
+
+const statusChip = (report: MissingItemReport) => {
+  return (
+    <Chip
+      label={report.status[0].toUpperCase() + report.status.slice(1)}
+      //@ts-ignore
+      color={
+        report.status.toLowerCase() === 'active'
+          ? 'secondary'
+          : report.status.toLowerCase() === 'found'
+            ? 'success'
+            : 'primary'
+      }
+      className={styles.chip}
+    />
+  );
+};
+
 const MissingItemList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
@@ -70,6 +120,8 @@ const MissingItemList = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isMobile = useMediaQuery('(max-width:900px)');
+
+  const pageSize = 25;
 
   // Lazy loading state and ref
   const [lazyLoading, setLazyLoading] = useState(false);
@@ -105,7 +157,7 @@ const MissingItemList = () => {
             color,
             keywords,
             undefined,
-            25,
+            pageSize,
           );
           setReports(fetchedReports);
           setLoading(false);
@@ -190,54 +242,6 @@ const MissingItemList = () => {
     });
   };
 
-  const dateFormat = 'MM/dd/yy';
-  const formatDate = (date: string) => DateTime.fromISO(date).toFormat(dateFormat);
-
-  // Find and format the last checked date based on the list of admin actions for a given report.
-  const displayLastCheckedDate = (report: MissingItemReport) => {
-    var dateString = report.adminActions?.findLast((action) => {
-      return action.action === 'Checked';
-    })?.actionDate;
-    if (dateString !== '' && dateString !== undefined) {
-      return formatDate(dateString);
-    }
-    return 'Never';
-  };
-
-  // Return a color based on how long ago a date was.
-  // Green < 3 days, Yellow < 7 days, Red > 7 days.
-  const dateAgeColor = (date: string) => {
-    // Convert dates into milliseconds since 1/1/1970
-    var dateGiven = Date.parse(DateTime.fromFormat(date, dateFormat).toString());
-    var today = Date.parse(DateTime.now().toString());
-    // Subtract the dates, and convert milliseconds to days.
-    var dayDiff = (today - dateGiven) / (1000 * 3600 * 24);
-    if (dayDiff < 7) {
-      return 'var(--mui-palette-success-main)';
-    } else if (dayDiff < 14) {
-      return 'var(--mui-palette-warning-main)';
-    } else {
-      return 'var(--mui-palette-error-main)';
-    }
-  };
-
-  const statusChip = (report: MissingItemReport) => {
-    return (
-      <Chip
-        label={report.status[0].toUpperCase() + report.status.slice(1)}
-        //@ts-ignore
-        color={
-          report.status.toLowerCase() === 'active'
-            ? 'secondary'
-            : report.status.toLowerCase() === 'found'
-              ? 'success'
-              : 'primary'
-        }
-        className={styles.chip}
-      />
-    );
-  };
-
   // Lazy loading helper: load more reports
   const loadMoreReports = async () => {
     if (lazyLoading || !hasMore) return;
@@ -251,9 +255,9 @@ const MissingItemList = () => {
         color,
         keywords,
         lastId,
-        25,
+        pageSize,
       );
-      if (moreReports.length === 0) {
+      if (moreReports.length < 25) {
         setHasMore(false);
       } else {
         setReports((prev) => [...prev, ...moreReports]);
