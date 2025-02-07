@@ -62,7 +62,7 @@ const getMissingItemReports = (
   lastId?: number,
   pageSize?: number,
 ): Promise<MissingItemReport[]> => {
-  let query = {
+  const query = {
     status: reportStatus,
     category,
     color,
@@ -71,14 +71,7 @@ const getMissingItemReports = (
     pageSize,
   };
 
-  // Filter out null values and assert the type
-  const filteredQuery = Object.fromEntries(
-    Object.entries(query).filter(([_, value]) => value != null),
-  ) as Record<string, string | number | boolean>;
-
-  return http.get<MissingItemReport[]>(
-    `lostandfound/missingitems${http.toQueryString(filteredQuery)}`,
-  );
+  return http.get<MissingItemReport[]>(`lostandfound/missingitems${http.toQueryString(query)}`);
 };
 
 /**
