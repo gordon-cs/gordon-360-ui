@@ -13,7 +13,6 @@ import {
   Typography,
   Chip,
 } from '@mui/material';
-import { DateTime } from 'luxon';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './MissingItemEdit.module.scss';
 import lostAndFoundService, { MissingItemReport } from 'services/lostAndFound';
@@ -198,7 +197,7 @@ const MissingItemFormEdit = () => {
   const handleReportSubmit = async () => {
     const requestData: MissingItemReport = {
       ...formData,
-      dateLost: new Date(formData.dateLost).toISOString() || DateTime.now().toISO(),
+      dateLost: new Date(formData.dateLost).toDateString(),
     };
     const formFields = Object.keys(formData);
     let newActionNote = '';
@@ -219,7 +218,7 @@ const MissingItemFormEdit = () => {
     await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemId || ''));
     const actionRequestData = {
       missingID: parseInt(itemId || ''),
-      actionDate: DateTime.now().toISO(),
+      actionDate: new Date().toDateString(),
       username: user.AD_Username,
       isPublic: true,
       action: 'Edited',
@@ -576,7 +575,6 @@ const MissingItemFormEdit = () => {
                             setFormData({ ...formData, stolenDescription: e.target.value })
                           }
                           disabled={!isEditable}
-                          inputProps={{ max: DateTime.now().toISODate() }}
                           // Custom styling on focus, better dark mode contrast
                           sx={{
                             '& .MuiFormLabel-root.Mui-focused': {

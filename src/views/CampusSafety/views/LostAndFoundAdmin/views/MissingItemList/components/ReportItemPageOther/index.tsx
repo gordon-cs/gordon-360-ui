@@ -19,8 +19,14 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import { DateTime } from 'luxon';
-import React, { useReducer, useEffect, useState, HTMLAttributes, useCallback } from 'react';
+import React, {
+  useReducer,
+  useEffect,
+  useState,
+  HTMLAttributes,
+  useCallback,
+  useMemo,
+} from 'react';
 import { useNavigate } from 'react-router';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './ReportItemPage.module.scss';
@@ -281,8 +287,8 @@ const ReportItemPage = () => {
           stolen: formData.stolen,
           stolenDescription: formData.stolenDescription,
           submitterUsername: '',
-          dateLost: new Date(formData.dateLost).toISOString() || DateTime.now().toISO(),
-          dateCreated: DateTime.now().toISO(),
+          dateLost: formData.dateLost,
+          dateCreated: new Date().toDateString(),
           status: 'active',
           phone: formData.phoneNumber, // Include phone number
         };
@@ -330,7 +336,7 @@ const ReportItemPage = () => {
         await lostAndFoundService.createAdminAction(newReportId, actionRequestData);
 
         // Redirect to the missing item database after successful submission
-        navigate('/lostandfound/lostandfoundadmin/missingitemdatabase');
+        navigate('/lostandfound/lostandfoundadmin/missingitemdatabase?status=active');
       } catch (error) {
         createSnackbar(`Failed to create the missing item report.`, `error`);
         setDisableSubmit(false);
@@ -396,9 +402,9 @@ const ReportItemPage = () => {
     </Grid>
   );
 
-  const [dateError, setDateError] = React.useState<DateValidationError | null>(null);
+  const [dateError, setDateError] = useState<DateValidationError | null>(null);
 
-  const errorMessage = React.useMemo(() => {
+  const errorMessage = useMemo(() => {
     switch (dateError) {
       case 'invalidDate': {
         return 'Invalid Date';
