@@ -375,7 +375,7 @@ const MissingItemFormCreate = () => {
                 <Grid item>
                   <TextField
                     variant="standard"
-                    error={!!validationErrors.category}
+                    error={Boolean(validationErrors.category)}
                     helperText={validationErrors.category || ' '} // Show error message or keep space consistent
                     fullWidth
                     InputProps={{ style: { display: 'none' } }} // Hide the actual TextField input
@@ -433,7 +433,7 @@ const MissingItemFormCreate = () => {
                   name="brand"
                   value={formData.brand}
                   onChange={handleChange}
-                  error={!!validationErrors.brand}
+                  error={Boolean(validationErrors.brand)}
                   helperText={validationErrors.brand}
                   sx={{
                     '& .MuiFormLabel-root.Mui-focused': {
@@ -452,7 +452,7 @@ const MissingItemFormCreate = () => {
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
-                  error={!!validationErrors.description}
+                  error={Boolean(validationErrors.description)}
                   helperText={validationErrors.description}
                   sx={{
                     '& .MuiFormLabel-root.Mui-focused': {
@@ -473,7 +473,7 @@ const MissingItemFormCreate = () => {
                   name="locationLost"
                   value={formData.locationLost}
                   onChange={handleChange}
-                  error={!!validationErrors.locationLost}
+                  error={Boolean(validationErrors.locationLost)}
                   helperText={validationErrors.locationLost}
                   sx={{
                     '& .MuiFormLabel-root.Mui-focused': {

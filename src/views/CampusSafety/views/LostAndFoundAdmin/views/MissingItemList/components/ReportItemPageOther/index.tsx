@@ -565,7 +565,7 @@ const ReportItemPage = () => {
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleChange}
-                      error={!!validationErrors.firstName}
+                      error={Boolean(validationErrors.firstName)}
                       helperText={validationErrors.firstName}
                     />
                   </Grid>
@@ -578,7 +578,7 @@ const ReportItemPage = () => {
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleChange}
-                      error={!!validationErrors.lastName}
+                      error={Boolean(validationErrors.lastName)}
                       helperText={validationErrors.lastName}
                     />
                   </Grid>
@@ -591,7 +591,7 @@ const ReportItemPage = () => {
                       name="phoneNumber"
                       value={formData.phoneNumber}
                       onChange={handleChange}
-                      error={!!validationErrors.phoneNumber}
+                      error={Boolean(validationErrors.phoneNumber)}
                       helperText={validationErrors.phoneNumber}
                     />
                   </Grid>
@@ -604,7 +604,7 @@ const ReportItemPage = () => {
                       name="emailAddr"
                       value={formData.emailAddr}
                       onChange={handleChange}
-                      error={!!validationErrors.emailAddr}
+                      error={Boolean(validationErrors.emailAddr)}
                       helperText={validationErrors.emailAddr}
                     />
                   </Grid>
@@ -669,7 +669,7 @@ const ReportItemPage = () => {
                   name="brand"
                   value={formData.brand}
                   onChange={handleChange}
-                  error={!!validationErrors.brand}
+                  error={Boolean(validationErrors.brand)}
                   helperText={validationErrors.brand}
                 />
               </Grid>
@@ -683,7 +683,7 @@ const ReportItemPage = () => {
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
-                  error={!!validationErrors.description}
+                  error={Boolean(validationErrors.description)}
                   helperText={validationErrors.description}
                 />
               </Grid>
@@ -699,7 +699,7 @@ const ReportItemPage = () => {
                   name="locationLost"
                   value={formData.locationLost}
                   onChange={handleChange}
-                  error={!!validationErrors.locationLost}
+                  error={Boolean(validationErrors.locationLost)}
                   helperText={validationErrors.locationLost}
                 />
               </Grid>

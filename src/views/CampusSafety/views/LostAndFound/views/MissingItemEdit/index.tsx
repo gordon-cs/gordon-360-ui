@@ -524,7 +524,7 @@ const MissingItemFormEdit = () => {
                       name="description"
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                      error={!!validationErrors.description}
+                      error={Boolean(validationErrors.description)}
                       helperText={validationErrors.description}
                       disabled={!isEditable}
                       // Custom styling on focus, better dark mode contrast
@@ -544,7 +544,7 @@ const MissingItemFormEdit = () => {
                       label="Location Lost"
                       name="locationLost"
                       value={formData.locationLost}
-                      error={!!validationErrors.locationLost}
+                      error={Boolean(validationErrors.locationLost)}
                       helperText={validationErrors.locationLost}
                       onChange={(e) => setFormData({ ...formData, locationLost: e.target.value })}
                       disabled={!isEditable}
