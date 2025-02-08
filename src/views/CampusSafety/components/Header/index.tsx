@@ -33,6 +33,43 @@ type HeaderProps = {
   children?: React.ReactNode;
 };
 
+const pathSubstringToFormattedName = (substring: string, pathnames: string[]) => {
+  // Get the formatted name for this breadcrumb from the routes object.
+  let formattedName = '';
+  if (substring) {
+    // Get index of current substring in the current route
+    const PathSubstringIndex = pathnames.findIndex((x) => x === substring);
+    let breadcrumbRoute;
+    if (!isNaN(parseInt(substring))) {
+      // If substring is a number, replace number with dynamic route param :itemId
+      breadcrumbRoute = '';
+      if (PathSubstringIndex !== 1) {
+        // Start route with / if substring isn't first element in the route
+        // Prevents doubling // when adding "/:itemId" to the route on the next line
+        breadcrumbRoute += '/';
+      }
+      breadcrumbRoute += pathnames.slice(1, PathSubstringIndex).join('/') + '/:itemId';
+    } else {
+      breadcrumbRoute = '/' + pathnames.slice(1, PathSubstringIndex + 1).join('/');
+    }
+
+    // Find the formatted name in the routes object
+    formattedName = CampusSafetyRoutes[breadcrumbRoute].formattedName;
+
+    let queryString = '';
+    if (CampusSafetyRoutes[breadcrumbRoute].queryString) {
+      queryString += CampusSafetyRoutes[breadcrumbRoute].queryString;
+    }
+
+    if (formattedName) {
+      formattedName = formattedName.replace('~', substring);
+      return [formattedName, queryString];
+    }
+    return [substring, ''];
+  }
+  return ['', ''];
+};
+
 const Header: React.FC<HeaderProps> = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -40,43 +77,6 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
   const isAdmin = useAuthGroups(AuthGroup.LostAndFoundAdmin);
   const isKiosk = useAuthGroups(AuthGroup.LostAndFoundKiosk);
   const isDev = useAuthGroups(AuthGroup.LostAndFoundDevelopers);
-
-  const PathSubstringToFormattedName = (substring: string) => {
-    // Get the formatted name for this breadcrumb from the routes object.
-    let formattedName = '';
-    if (substring) {
-      // Get index of current substring in the current route
-      const PathSubstringIndex = pathnames.findIndex((x) => x === substring);
-      let breadcrumbRoute;
-      if (!isNaN(parseInt(substring))) {
-        // If substring is a number, replace number with dynamic route param :itemId
-        breadcrumbRoute = '';
-        if (PathSubstringIndex !== 1) {
-          // Start route with / if substring isn't first element in the route
-          // Prevents doubling // when adding "/:itemId" to the route on the next line
-          breadcrumbRoute += '/';
-        }
-        breadcrumbRoute += pathnames.slice(1, PathSubstringIndex).join('/') + '/:itemId';
-      } else {
-        breadcrumbRoute = '/' + pathnames.slice(1, PathSubstringIndex + 1).join('/');
-      }
-
-      // Find the formatted name in the routes object
-      formattedName = CampusSafetyRoutes[breadcrumbRoute].formattedName;
-
-      let queryString = '';
-      if (CampusSafetyRoutes[breadcrumbRoute].queryString) {
-        queryString += CampusSafetyRoutes[breadcrumbRoute].queryString;
-      }
-
-      if (formattedName) {
-        formattedName = formattedName.replace('~', substring);
-        return [formattedName, queryString];
-      }
-      return [substring, ''];
-    }
-    return ['', ''];
-  };
 
   return (
     <>
@@ -129,7 +129,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
               const isLast = indexPos === pathnames.length - 2;
               // Build the url up to this location in the breadcrumb
               const to = `/${pathnames.slice(0, indexPos + 2).join('/')}`;
-              const [formattedName, queryString] = PathSubstringToFormattedName(value);
+              const [formattedName, queryString] = pathSubstringToFormattedName(value, pathnames);
               return (
                 <LostAndFoundBreadcrumb key={to} link={!isLast ? to + queryString : null}>
                   {formattedName}
