@@ -68,17 +68,11 @@ const CampusSafetyApp = () => {
         const reportDate = new Date(report.dateCreated);
         reportDate.setHours(0, 0, 0, 0);
         if (reportDate < twoMonthsAgo && report.status === 'active') {
-          await lostAndFoundService.updateReportStatus(
-            parseInt((report.recordID ?? '').toString()),
-            'expired',
-          );
+          await lostAndFoundService.updateReportStatus(report.recordID, 'expired');
         }
         // Double checking to make sure items are marked correctly based on date
         if (reportDate >= twoMonthsAgo && report.status === 'expired') {
-          await lostAndFoundService.updateReportStatus(
-            parseInt((report.recordID ?? '').toString()),
-            'active',
-          );
+          await lostAndFoundService.updateReportStatus(report.recordID, 'active');
         }
       }
     };

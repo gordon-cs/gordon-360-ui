@@ -62,30 +62,14 @@ const getMissingItemReports = (
   lastId?: number,
   pageSize?: number,
 ): Promise<MissingItemReport[]> => {
-  let query: {
-    status?: string;
-    category?: string;
-    color?: string;
-    keywords?: string;
-    lastId?: number;
-    pageSize?: number;
-  } = {};
-  if (reportStatus) {
-    query['status'] = reportStatus;
-  }
-  if (category) {
-    query['category'] = category;
-  }
-  if (color) {
-    query['color'] = color;
-  }
-  if (keywords) {
-    query['keywords'] = keywords;
-  }
-  if (lastId !== undefined && lastId !== null) {
-    query['lastId'] = lastId;
-  }
-  query['pageSize'] = pageSize;
+  const query = {
+    status: reportStatus,
+    category,
+    color,
+    keywords,
+    lastId,
+    pageSize,
+  };
 
   return http.get<MissingItemReport[]>(`lostandfound/missingitems${http.toQueryString(query)}`);
 };

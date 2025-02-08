@@ -19,19 +19,18 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import { DateTime } from 'luxon';
-import { useReducer, useEffect, useState, HTMLAttributes, useCallback } from 'react';
+import { useReducer, useEffect, useState, HTMLAttributes, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './ReportItemPage.module.scss';
 import lostAndFoundService from 'services/lostAndFound';
-import userService from 'services/user';
 import quickSearchService, { SearchResult } from 'services/quickSearch';
 import ConfirmReport from 'views/CampusSafety/views/LostAndFound/views/MissingItemCreate/components/confirmReport';
 import GordonSnackbar from 'components/Snackbar';
 import ReportStolenModal from 'views/CampusSafety/views/LostAndFound/views/MissingItemCreate/components/reportStolen';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { useUser } from 'hooks';
 
 const MIN_QUERY_LENGTH = 2;
 
@@ -115,7 +114,7 @@ const ReportItemPage = () => {
     locationLost: '',
     stolen: false,
     stolenDescription: '',
-    dateLost: '',
+    dateLost: new Date().toISOString(),
     phoneNumber: '',
     forGuest: true,
     status: 'active',
@@ -128,6 +127,7 @@ const ReportItemPage = () => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
   const [disableSubmit, setDisableSubmit] = useState(false);
   const [newActionFormData, setNewActionFormData] = useState({ action: '', actionNote: '' });
+  const { profile } = useUser();
 
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
@@ -135,23 +135,17 @@ const ReportItemPage = () => {
   const specialCharactersRegex = /[^a-zA-Z0-9'\-.\s]/gm;
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const userInfo = await userService.getProfileInfo();
-        setUser({
-          firstName: userInfo?.FirstName || '',
-          lastName: userInfo?.LastName || '',
-          emailAddr: userInfo?.Email || '',
-          phoneNumber: userInfo?.MobilePhone || '',
-          AD_Username: userInfo?.AD_Username || '', // Set AD_Username
-        });
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
+    const setUserData = async () => {
+      setUser({
+        firstName: profile?.FirstName || '',
+        lastName: profile?.LastName || '',
+        emailAddr: profile?.Email || '',
+        phoneNumber: profile?.MobilePhone || '',
+        AD_Username: profile?.AD_Username || '', // Set AD_Username
+      });
     };
-
-    fetchUserData();
-  }, []);
+    setUserData();
+  }, [profile]);
 
   const handleInput = (_event: React.SyntheticEvent, value: string) => {
     const query = value.trim().replace(specialCharactersRegex, '');
@@ -237,6 +231,10 @@ const ReportItemPage = () => {
       errors['isGordonPerson'] = 'Please select if this report is for a Gordon person or not';
     }
 
+    if (dateError !== null) {
+      errors['dateLost'] = dateError;
+    }
+
     requiredFields.forEach((field) => {
       if (!formData[field as keyof typeof formData]) {
         errors[field] = 'This field is required';
@@ -282,8 +280,8 @@ const ReportItemPage = () => {
           stolen: formData.stolen,
           stolenDescription: formData.stolenDescription,
           submitterUsername: '',
-          dateLost: new Date(formData.dateLost).toISOString() || DateTime.now().toISO(),
-          dateCreated: DateTime.now().toISO(),
+          dateLost: formData.dateLost,
+          dateCreated: new Date().toDateString(),
           status: 'active',
           phone: formData.phoneNumber, // Include phone number
         };
@@ -331,7 +329,7 @@ const ReportItemPage = () => {
         await lostAndFoundService.createAdminAction(newReportId, actionRequestData);
 
         // Redirect to the missing item database after successful submission
-        navigate('/lostandfound/lostandfoundadmin/missingitemdatabase');
+        navigate('/lostandfound/lostandfoundadmin/missingitemdatabase?status=active');
       } catch (error) {
         createSnackbar(`Failed to create the missing item report.`, `error`);
         setDisableSubmit(false);
@@ -397,9 +395,21 @@ const ReportItemPage = () => {
     </Grid>
   );
 
-  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
-  };
+  const [dateError, setDateError] = useState<DateValidationError | null>(null);
+
+  const errorMessage = useMemo(() => {
+    switch (dateError) {
+      case 'invalidDate': {
+        return 'Invalid Date';
+      }
+      case 'disableFuture': {
+        return 'Cannot lose an item in the future';
+      }
+      default: {
+        return null;
+      }
+    }
+  }, [dateError]);
 
   // Using DatePicker component from MUI/x, with custom styling to fix dark mode contrast issues
   const customDatePicker = (
@@ -408,6 +418,7 @@ const ReportItemPage = () => {
         label="Date Lost"
         value={formData.dateLost === '' ? null : formData.dateLost}
         onChange={(value) => setFormData({ ...formData, dateLost: value?.toString() || '' })}
+        onError={(newError) => setDateError(newError)}
         disableFuture
         orientation="portrait"
         name="Date Lost"
@@ -416,8 +427,7 @@ const ReportItemPage = () => {
         // https://blog.openreplay.com/styling-and-customizing-material-ui-date-pickers/
         slotProps={{
           textField: {
-            onKeyDown: onKeyDown,
-            helperText: 'Default: today',
+            helperText: errorMessage ? errorMessage : 'Change if lost before today',
             // Custom styling for the input field, to make it look like filled variant
             sx: {
               backgroundColor: 'var(--mui-palette-FilledInput-bg);',
@@ -555,7 +565,7 @@ const ReportItemPage = () => {
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleChange}
-                      error={!!validationErrors.firstName}
+                      error={Boolean(validationErrors.firstName)}
                       helperText={validationErrors.firstName}
                     />
                   </Grid>
@@ -568,7 +578,7 @@ const ReportItemPage = () => {
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleChange}
-                      error={!!validationErrors.lastName}
+                      error={Boolean(validationErrors.lastName)}
                       helperText={validationErrors.lastName}
                     />
                   </Grid>
@@ -581,7 +591,7 @@ const ReportItemPage = () => {
                       name="phoneNumber"
                       value={formData.phoneNumber}
                       onChange={handleChange}
-                      error={!!validationErrors.phoneNumber}
+                      error={Boolean(validationErrors.phoneNumber)}
                       helperText={validationErrors.phoneNumber}
                     />
                   </Grid>
@@ -594,7 +604,7 @@ const ReportItemPage = () => {
                       name="emailAddr"
                       value={formData.emailAddr}
                       onChange={handleChange}
-                      error={!!validationErrors.emailAddr}
+                      error={Boolean(validationErrors.emailAddr)}
                       helperText={validationErrors.emailAddr}
                     />
                   </Grid>
@@ -659,7 +669,7 @@ const ReportItemPage = () => {
                   name="brand"
                   value={formData.brand}
                   onChange={handleChange}
-                  error={!!validationErrors.brand}
+                  error={Boolean(validationErrors.brand)}
                   helperText={validationErrors.brand}
                 />
               </Grid>
@@ -673,7 +683,7 @@ const ReportItemPage = () => {
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
-                  error={!!validationErrors.description}
+                  error={Boolean(validationErrors.description)}
                   helperText={validationErrors.description}
                 />
               </Grid>
@@ -689,7 +699,7 @@ const ReportItemPage = () => {
                   name="locationLost"
                   value={formData.locationLost}
                   onChange={handleChange}
-                  error={!!validationErrors.locationLost}
+                  error={Boolean(validationErrors.locationLost)}
                   helperText={validationErrors.locationLost}
                 />
               </Grid>

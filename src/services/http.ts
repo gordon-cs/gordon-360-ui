@@ -145,7 +145,7 @@ const dataURItoBlob = (dataURI: string) => {
 };
 
 type QueryStringPrimitive = string | number | boolean;
-type QueryStringSerializable = QueryStringPrimitive | Array<QueryStringPrimitive>;
+type QueryStringSerializable = QueryStringPrimitive | Array<QueryStringPrimitive> | undefined;
 
 /**
  * Convert an object into a URL query string.
@@ -165,6 +165,11 @@ const toQueryString = (
 
   // Add each property of `queryParams` object to the `urlSearchParams`
   Object.entries(queryParams).forEach(([key, value]) => {
+    // Do not serialize `undefined` values
+    if (value === undefined) {
+      return;
+    }
+
     if (Array.isArray(value)) {
       // If `value` is an array, append each element of the array to the searchParams
       // This is *most* standard way of encoding arrays in a query string, and the only way
