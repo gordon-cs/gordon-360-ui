@@ -197,7 +197,7 @@ const MissingItemFormEdit = () => {
   const handleReportSubmit = async () => {
     const requestData: MissingItemReport = {
       ...formData,
-      dateLost: new Date(formData.dateLost).toDateString(),
+      dateLost: new Date(formData.dateLost).toISOString(),
     };
     const formFields = Object.keys(formData);
     let newActionNote = '';
@@ -218,7 +218,7 @@ const MissingItemFormEdit = () => {
     await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemId || ''));
     const actionRequestData = {
       missingID: parseInt(itemId || ''),
-      actionDate: new Date().toDateString(),
+      actionDate: new Date().toISOString(),
       username: user.AD_Username,
       isPublic: true,
       action: 'Edited',
