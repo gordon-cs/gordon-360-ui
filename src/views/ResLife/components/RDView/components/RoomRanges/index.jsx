@@ -21,6 +21,7 @@ import {
   removeRoomRange,
   removeAssignment,
   assignPersonToRange,
+  fetchMissingRooms,
 } from 'services/residentLife/roomRanges';
 import Page404 from 'views/Page404';
 import { useAuthGroups } from 'hooks';
@@ -39,6 +40,8 @@ const RoomRanges = () => {
   const [filteredRoomRanges, setFilteredRoomRanges] = useState([]);
   const [filteredAssignments, setFilteredAssignments] = useState([]);
   const [filteredPeople, setFilteredPeople] = useState([]);
+  const [unassignedRooms, setUnassignedRooms] = useState([]);
+  const [filteredUnassigned, setFilteredUnassigned] = useState([]);
 
   // Fetch data when the page loads
   useEffect(() => {
@@ -57,6 +60,10 @@ const RoomRanges = () => {
         setAssignments(response);
       })
       .catch((error) => console.error('Error fetching assignments:', error));
+
+    fetchMissingRooms()
+      .then((response) => setUnassignedRooms(response))
+      .catch((error) => console.error('Error fetching missing rooms:', error));
   }, []);
 
   // Update filtered data when building changes
@@ -67,6 +74,11 @@ const RoomRanges = () => {
 
       const filteredRAs = people.filter((person) => person.BLDG_Code === building);
       setFilteredPeople(filteredRAs);
+
+      const filteredUnassigendrooms = unassignedRooms.filter(
+        (room) => room.Building_Code === building,
+      );
+      setFilteredUnassigned(filteredUnassigendrooms);
 
       const filteredAssign = assignments.filter((assignment) => assignment.Hall_ID === building);
       setFilteredAssignments(filteredAssign);
@@ -354,7 +366,7 @@ const RoomRanges = () => {
         </Card>
 
         {/* Assignments Section */}
-        <Card variant="outlined">
+        <Card variant="outlined" sx={{ mb: 3 }}>
           <CardContent>
             <Typography variant="h6">Assignments</Typography>
             <List>
@@ -379,6 +391,27 @@ const RoomRanges = () => {
                 ))
               ) : (
                 <ListItem>Please select a building to see the list of assignments.</ListItem>
+              )}
+            </List>
+          </CardContent>
+        </Card>
+
+        {/* Unassigned Rooms Section */}
+        <Card variant="outlined">
+          <CardContent>
+            <Typography variant="h6">Unassigned Rooms</Typography>
+            <Typography variant="body1" gutterBottom color="secondary">
+              The rooms below do not fall under any of the current room ranges.
+            </Typography>
+            <List>
+              {filteredUnassigned.length > 0 ? (
+                filteredUnassigned.map((room) => (
+                  <ListItem key={room.Room_Number}>
+                    <Box>{room.Room_Name}</Box>
+                  </ListItem>
+                ))
+              ) : (
+                <ListItem>No unassigned rooms available for the selected hall.</ListItem>
               )}
             </List>
           </CardContent>

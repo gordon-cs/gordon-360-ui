@@ -27,6 +27,7 @@ import { checkIfCheckedIn, submitCheckIn } from 'services/residentLife/RA_Checki
 import { preferredContact, PrefContactMethod } from 'services/residentLife/ResidentStaff';
 import { useUser } from 'hooks';
 import HousingBanner from '../ResidentView/components/HousingWelcome/Banner';
+import BasicSelect from '../RDView//components/MobileView';
 
 const RAView = () => {
   const [isCheckedIn, setCheckedIn] = useState(false);
@@ -372,6 +373,30 @@ const RAView = () => {
     </Grid>
   );
 
+  const OnCallTable = ({ isCheckedIn }) => {
+    if (!isCheckedIn) return null;
+
+    return (
+      <Grid item xs={12} md={20} padding={1}>
+        <Card sx={{ width: '100%' }}>
+          <CardHeader
+            title={
+              <Grid container direction="row" alignItems="center">
+                <Grid item xs={12} align="center">
+                  RA/AC on Duty by Hall
+                </Grid>
+              </Grid>
+            }
+            className="gc360_header"
+          />
+          <CardContent>
+            <BasicSelect />
+          </CardContent>
+        </Card>
+      </Grid>
+    );
+  };
+
   return (
     <Grid container item spacing={2}>
       {!isMobile && (
@@ -385,6 +410,7 @@ const RAView = () => {
             <MyHall />
           </Grid>
           {checkInButton()}
+          <OnCallTable isCheckedIn={isCheckedIn} />
         </>
       )}
       {isMobile && (
@@ -400,6 +426,7 @@ const RAView = () => {
           <Grid item xs={12}>
             <Links />
           </Grid>
+          <OnCallTable isCheckedIn={isCheckedIn} />
         </>
       )}
     </Grid>

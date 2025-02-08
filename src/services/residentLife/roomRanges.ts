@@ -33,6 +33,12 @@ type RoomRange = {
   RoomEnd: string;
 };
 
+type MissingRoom = {
+  Room_Name: string;
+  Building_Code: string;
+  Room_Number: string;
+};
+
 type NewRoomRange = Omit<RoomRange, 'Range_ID'>;
 
 // Post request to the API endpoint "Housing/roomrange" which adds the user inputed room range
@@ -50,6 +56,9 @@ const fetchAssignmentList = (): Promise<Assignment[]> => http.get('Housing/roomr
 
 // Fetches the list of room ranges from the API endpoint "Housing/roomranges"
 const fetchRoomRanges = (): Promise<RoomRange[]> => http.get('Housing/roomranges');
+
+// Fetches the list of rooms missing an assigned range using the API endpoint "Housing/roomranges/missedrooms"
+const fetchMissingRooms = (): Promise<MissingRoom[]> => http.get('Housing/roomranges/missedrooms');
 
 // Fetches the list of all the RAs from the API endpoint "Housing/ras"
 const raList = (): Promise<RA[]> => http.get('Housing/ras');
@@ -70,4 +79,5 @@ export {
   raList,
   removeAssignment,
   removeRoomRange,
+  fetchMissingRooms,
 };
