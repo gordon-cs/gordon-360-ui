@@ -198,16 +198,16 @@ const RAView = () => {
 
   const handleContactSubmit = async () => {
     if (!selectedContact) {
-      alert('Please select a contact method before submitting.');
+      createSnackbar('Please select a contact method before submitting.', 'warning');
       return;
     }
 
     try {
       await preferredContact(profile.ID, selectedContact);
-      alert('Preferred contact method successfully updated.');
+      createSnackbar('Preferred contact method successfully updated.', 'success');
     } catch (error) {
       console.error('Error updating preferred contact method:', error);
-      alert('Failed to update contact method. Please try again.');
+      createSnackbar('Failed to update contact method. Please try again.', 'error');
     }
   };
 
