@@ -18,7 +18,11 @@ import { AuthGroup } from 'services/auth';
 import { useAuthGroups } from 'hooks';
 
 type CampusSafetyRoutesObject = {
-  [key: string]: { element: JSX.Element; formattedName /* Used for the breadcrumbs */ : string };
+  [key: string]: {
+    element: JSX.Element;
+    formattedName /* Used for the breadcrumbs */ : string;
+    queryString?: string;
+  };
 };
 
 export const CampusSafetyRoutes: CampusSafetyRoutesObject = {
@@ -34,6 +38,7 @@ export const CampusSafetyRoutes: CampusSafetyRoutesObject = {
   '/lostandfoundadmin/missingitemdatabase': {
     element: <MissingItemList />,
     formattedName: 'Lost Item Database',
+    queryString: '?status=active',
   },
   '/lostandfoundadmin/reportitemforothers': {
     element: <ReportItemPage />,
@@ -48,42 +53,34 @@ const CampusSafetyApp = () => {
   const { profile, loading: loadingProfile } = useUser();
   const isAdmin = useAuthGroups(AuthGroup.LostAndFoundAdmin);
   const isDev = useAuthGroups(AuthGroup.LostAndFoundDevelopers);
-  
 
   useEffect(() => {
     const updateAndFixReports = async () => {
       if (!isAdmin && !isDev) {
         return; // Only run if the user is an admin or dev
       }
-        const twoMonthsAgo = new Date();
-        twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
-        twoMonthsAgo.setHours(0, 0, 0, 0); // Normalize time
-       
-        // Fetch reports
-        const reports = await lostAndFoundService.getMissingItemReports();
-  
-        for (const report of reports) {
-          const reportDate = new Date(report.dateCreated);
-          reportDate.setHours(0, 0, 0, 0);
-          if (reportDate < twoMonthsAgo && report.status === 'active') {
-            await lostAndFoundService.updateReportStatus(
-              parseInt((report.recordID ?? '').toString()),
-              'expired'
-            );
-          }
-          // Double checking to make sure items are marked correctly based on date
-          if (reportDate >= twoMonthsAgo && report.status === 'expired') {
-            await lostAndFoundService.updateReportStatus(
-              parseInt((report.recordID ?? '').toString()),
-              'active'
-            );
-          }
+      const twoMonthsAgo = new Date();
+      twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
+      twoMonthsAgo.setHours(0, 0, 0, 0); // Normalize time
+
+      // Fetch reports
+      const reports = await lostAndFoundService.getMissingItemReports();
+
+      for (const report of reports) {
+        const reportDate = new Date(report.dateCreated);
+        reportDate.setHours(0, 0, 0, 0);
+        if (reportDate < twoMonthsAgo && report.status === 'active') {
+          await lostAndFoundService.updateReportStatus(report.recordID, 'expired');
         }
+        // Double checking to make sure items are marked correctly based on date
+        if (reportDate >= twoMonthsAgo && report.status === 'expired') {
+          await lostAndFoundService.updateReportStatus(report.recordID, 'active');
+        }
+      }
     };
     updateAndFixReports();
-  }, [isAdmin,isDev]);
-  
-  
+  }, [isAdmin, isDev]);
+
   if (loadingProfile) {
     return <GordonLoader />;
   }

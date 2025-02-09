@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   Card,
   CardHeader,
@@ -21,7 +21,7 @@ import ConfirmReport from './components/confirmReport';
 import GordonSnackbar from 'components/Snackbar';
 import { useNavigate } from 'react-router';
 import { InfoOutlined } from '@mui/icons-material';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 
 const MissingItemFormCreate = () => {
@@ -57,6 +57,7 @@ const MissingItemFormCreate = () => {
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
   const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
   const [newActionFormData] = useState({ action: '', actionNote: '' });
+  const [disableSubmit, setDisableSubmit] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -98,6 +99,9 @@ const MissingItemFormCreate = () => {
         errors[field] = 'This field is required';
       }
     });
+    if (dateError !== null) {
+      errors['dateLost'] = dateError;
+    }
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -173,36 +177,52 @@ const MissingItemFormCreate = () => {
   };
 
   const handleReportSubmit = async () => {
-    try {
-      const now = new Date();
-      const requestData = {
-        ...formData,
-        ...user,
-        dateLost: new Date(formData.dateLost).toISOString() || now.toISOString(),
-        dateCreated: now.toISOString(),
-        colors: formData.colors || [],
-        submitterUsername: user.AD_Username,
-        forGuest: false,
-      };
-      const newReportId = await lostAndFoundService.createMissingItemReport(requestData);
-      let actionRequestData = {
-        ...newActionFormData,
-        missingID: newReportId,
-        actionDate: now.toISOString(),
-        username: user.AD_Username,
-        isPublic: true,
-        action: 'Created',
-      };
-      await lostAndFoundService.createAdminAction(newReportId, actionRequestData);
-      navigate('/lostandfound');
-    } catch (error) {
-      createSnackbar(`Failed to create the missing item report.`, `error`);
+    if (!disableSubmit) {
+      setDisableSubmit(true);
+      try {
+        const now = new Date();
+        const requestData = {
+          ...formData,
+          ...user,
+          dateLost: new Date(formData.dateLost).toISOString() || now.toISOString(),
+          dateCreated: now.toISOString(),
+          colors: formData.colors || [],
+          submitterUsername: user.AD_Username,
+          forGuest: false,
+        };
+        const newReportId = await lostAndFoundService.createMissingItemReport(requestData);
+        let actionRequestData = {
+          ...newActionFormData,
+          missingID: newReportId,
+          actionDate: now.toISOString(),
+          username: user.AD_Username,
+          isPublic: true,
+          action: 'Created',
+        };
+        await lostAndFoundService.createAdminAction(newReportId, actionRequestData);
+        navigate('/lostandfound');
+      } catch (error) {
+        createSnackbar(`Failed to create the missing item report.`, `error`);
+        setDisableSubmit(false);
+      }
     }
   };
 
-  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
-  };
+  const [dateError, setDateError] = useState<DateValidationError | null>(null);
+
+  const errorMessage = useMemo(() => {
+    switch (dateError) {
+      case 'invalidDate': {
+        return 'Invalid Date';
+      }
+      case 'disableFuture': {
+        return 'Cannot lose an item in the future';
+      }
+      default: {
+        return null;
+      }
+    }
+  }, [dateError]);
 
   // Using DatePicker component from MUI/x, with custom styling to fix dark mode contrast issues
   const customDatePicker = (
@@ -211,13 +231,16 @@ const MissingItemFormCreate = () => {
         label="Date Lost"
         value={formData.dateLost === '' ? null : formData.dateLost}
         onChange={(value) => setFormData({ ...formData, dateLost: value?.toString() || '' })}
+        onError={(newError) => setDateError(newError)}
         disableFuture
         orientation="portrait"
         name="Date Lost"
+        // Custom styling for popup box, better dark mode contrast
+        // Thanks to help for understanding from
+        // https://blog.openreplay.com/styling-and-customizing-material-ui-date-pickers/
         slotProps={{
           textField: {
-            onKeyDown: onKeyDown,
-            helperText: 'Default: today',
+            helperText: errorMessage ? errorMessage : 'Change if lost before today',
             // Custom styling for the input field, to make it look like filled variant
             sx: {
               backgroundColor: 'var(--mui-palette-FilledInput-bg);',
@@ -275,6 +298,7 @@ const MissingItemFormCreate = () => {
             formData={{ ...formData, ...user }}
             onEdit={() => setShowConfirm(false)}
             onSubmit={handleReportSubmit}
+            disableSubmit={disableSubmit}
           />
           <GordonSnackbar
             open={snackbar.open}
@@ -351,7 +375,7 @@ const MissingItemFormCreate = () => {
                 <Grid item>
                   <TextField
                     variant="standard"
-                    error={!!validationErrors.category}
+                    error={Boolean(validationErrors.category)}
                     helperText={validationErrors.category || ' '} // Show error message or keep space consistent
                     fullWidth
                     InputProps={{ style: { display: 'none' } }} // Hide the actual TextField input
@@ -409,7 +433,7 @@ const MissingItemFormCreate = () => {
                   name="brand"
                   value={formData.brand}
                   onChange={handleChange}
-                  error={!!validationErrors.brand}
+                  error={Boolean(validationErrors.brand)}
                   helperText={validationErrors.brand}
                   sx={{
                     '& .MuiFormLabel-root.Mui-focused': {
@@ -428,7 +452,7 @@ const MissingItemFormCreate = () => {
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
-                  error={!!validationErrors.description}
+                  error={Boolean(validationErrors.description)}
                   helperText={validationErrors.description}
                   sx={{
                     '& .MuiFormLabel-root.Mui-focused': {
@@ -449,7 +473,7 @@ const MissingItemFormCreate = () => {
                   name="locationLost"
                   value={formData.locationLost}
                   onChange={handleChange}
-                  error={!!validationErrors.locationLost}
+                  error={Boolean(validationErrors.locationLost)}
                   helperText={validationErrors.locationLost}
                   sx={{
                     '& .MuiFormLabel-root.Mui-focused': {
