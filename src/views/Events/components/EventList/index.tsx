@@ -1,13 +1,14 @@
-import EventItem, { GordonEvent } from './components/EventItem';
 import { windowBreakWidths } from 'theme';
+import EventItem from './components/EventItem';
 
 import useWindowSize from 'hooks/useWindowSize';
 
-import { List, Grid, Typography, Card, CardHeader } from '@mui/material';
+import { Card, CardHeader, Grid, List, Typography } from '@mui/material';
+import { Event } from 'services/event';
 import styles from './EventList.module.css';
 
 type Props = {
-  events: GordonEvent[];
+  events: Event[];
 };
 
 const smallHeader = (

@@ -404,7 +404,10 @@ const Events = () => {
                       <Button
                         color="secondary"
                         variant="contained"
-                        onClick={() => navigate('/attended')}
+                        component={Link}
+                        href="https://iattendedapp.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
                       >
                         ATTENDED CL&amp;W
                       </Button>

@@ -1,8 +1,7 @@
 import http from './http';
-import session from './session';
-import { compareByProperty, filter } from './utils';
+import { compareByProperty } from './utils';
 
-type BaseEvent = {
+type UnformattedEvent = {
   Event_Name: string;
   Event_Title: string;
   Description: string;
@@ -10,36 +9,23 @@ type BaseEvent = {
   EndDate: string;
   Location: string;
   Organization: string;
-};
-
-type UnformattedEvent = BaseEvent & {
   Event_ID: string;
   Event_Type_Name: string;
   HasCLAWCredit: boolean;
   IsPublic: boolean;
 };
 
-type UnformattedAttendedEvent = BaseEvent & {
-  LiveID: string;
-  CHDate?: Date;
-  CHTermCD: string;
-  Required?: number;
-};
-
-type EventDisplayProperties = {
+export type Event = UnformattedEvent & {
   timeRange: string;
   date: string;
   title: string;
   location: string;
 };
 
-type Event = UnformattedEvent & EventDisplayProperties;
-type AttendedEvent = UnformattedAttendedEvent & EventDisplayProperties;
-
 const shortTimeFormatter = new Intl.DateTimeFormat('en-US', { timeStyle: 'short' });
 const shortDateFormatter = new Intl.DateTimeFormat('en-US', { dateStyle: 'short' });
 
-function formatEvent<T extends BaseEvent>(event: T): T & EventDisplayProperties {
+function formatEvent(event: UnformattedEvent): Event {
   const startDate = new Date(event.StartDate);
   const endDate = new Date(event.EndDate);
   return {
@@ -54,28 +40,14 @@ function formatEvent<T extends BaseEvent>(event: T): T & EventDisplayProperties 
   };
 }
 
-const formatAndSort = <T extends BaseEvent>(events: T[]): (T & EventDisplayProperties)[] =>
+const formatAndSort = (events: UnformattedEvent[]): Event[] =>
   events.map(formatEvent).sort(compareByProperty('StartDate'));
 
 const getAllEvents = (): Promise<Event[]> =>
   http.get<UnformattedEvent[]>('events').then(formatAndSort);
 
-// TODO: Unused. Consider removing
-const getCLWEvents = (): Promise<Event[]> => {
-  const now = Date.now();
-  return http
-    .get<UnformattedEvent[]>('events/claw')
-    .then(filter((e) => new Date(e.StartDate).getTime() > now))
-    .then(formatAndSort);
-};
-
 const getAllGuestEvents = (): Promise<Event[]> =>
   http.get<UnformattedEvent[]>('events/public').then(formatAndSort);
-
-const getAttendedChapelEvents = (): Promise<AttendedEvent[]> =>
-  http
-    .get<UnformattedAttendedEvent[]>(`events/attended/${session.getTermCode()}`)
-    .then(formatAndSort);
 
 const getFutureEvents = (allEvents: Event[]): Event[] => {
   const now = Date.now();
@@ -135,13 +107,13 @@ const getFilteredEvents = (
 const makeMatchesTimeFilter =
   (timeFilter: string) =>
   (event: Event): boolean => {
-    if (timeFilter == '1 Week') {
+    if (timeFilter === '1 Week') {
       return new Date(event.StartDate) <= new Date(new Date().setDate(new Date().getDate() + 7));
-    } else if (timeFilter == '2 Weeks') {
+    } else if (timeFilter === '2 Weeks') {
       return new Date(event.StartDate) <= new Date(new Date().setDate(new Date().getDate() + 14));
-    } else if (timeFilter == '1 Month') {
+    } else if (timeFilter === '1 Month') {
       return new Date(event.StartDate) <= new Date(new Date().setMonth(new Date().getMonth() + 1));
-    } else if (timeFilter == '4 Months') {
+    } else if (timeFilter === '4 Months') {
       return new Date(event.StartDate) <= new Date(new Date().setMonth(new Date().getMonth() + 4));
     } else {
       return false;
@@ -234,10 +206,8 @@ const makeMatchesFilters =
 const eventService = {
   getAllEvents,
   getFutureEvents,
-  getCLWEvents,
   getFilteredEvents,
   getAllGuestEvents,
-  getAttendedChapelEvents,
 };
 
 export default eventService;

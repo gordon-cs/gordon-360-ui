@@ -4,17 +4,7 @@ import styles from './EventItem.module.css';
 import 'add-to-calendar-button';
 import { format } from 'date-fns';
 import { STORAGE_COLOR_PREFERENCE_KEY } from 'theme';
-
-export interface GordonEvent {
-  title: string;
-  Description?: string;
-  location?: string;
-  date?: JSX.Element | string | number;
-  StartDate: string | Date | number;
-  EndDate: string | Date | number;
-  timeRange?: string;
-  Event_ID?: string;
-}
+import { Event } from 'services/event';
 
 const checkLightMode = (mode: string | null) => {
   if (mode === 'system') {
@@ -31,7 +21,7 @@ const checkLightMode = (mode: string | null) => {
 };
 
 type Props = {
-  event: GordonEvent;
+  event: Event;
 };
 
 const EventItem = ({ event }: Props) => {

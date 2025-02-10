@@ -5,7 +5,6 @@ import BannerSubmission from './views/BannerSubmission';
 import CoCurricularTranscript from './views/CoCurricularTranscript';
 import EnrollmentCheckIn from './views/EnrollmentCheckIn';
 import Events from './views/Events';
-import EventsAttended from './views/EventsAttended';
 import Feedback from './views/Feedback';
 import Help from './views/Help';
 import Home from './views/Home';
@@ -23,8 +22,6 @@ import PublicProfile from './views/PublicProfile';
 import Timesheets from './views/Timesheets';
 import RecIM from './views/RecIM';
 import RoomRanges from 'views/ResLife/components/RDView/components/RoomRanges';
-import { element } from 'prop-types';
-import { Room } from '@mui/icons-material';
 import CampusSafety from './views/CampusSafety';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
@@ -68,11 +65,6 @@ const routes = [
     name: 'Events',
     path: '/events',
     element: <Events />,
-  },
-  {
-    name: 'Attended',
-    path: '/attended',
-    element: <EventsAttended />,
   },
   {
     name: 'Feedback',
