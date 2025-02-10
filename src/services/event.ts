@@ -1,4 +1,3 @@
-import { DateTime } from 'luxon';
 import http from './http';
 import session from './session';
 import { compareByProperty, filter } from './utils';
@@ -37,13 +36,16 @@ type EventDisplayProperties = {
 type Event = UnformattedEvent & EventDisplayProperties;
 type AttendedEvent = UnformattedAttendedEvent & EventDisplayProperties;
 
+const shortTimeFormatter = new Intl.DateTimeFormat('en-US', { timeStyle: 'short' });
+const shortDateFormatter = new Intl.DateTimeFormat('en-US', { dateStyle: 'short' });
+
 function formatEvent<T extends BaseEvent>(event: T): T & EventDisplayProperties {
+  const startDate = new Date(event.StartDate);
+  const endDate = new Date(event.EndDate);
   return {
     ...event,
-    timeRange: `${DateTime.fromISO(event.StartDate).toFormat('t')} - ${DateTime.fromISO(
-      event.EndDate,
-    ).toFormat('t')}`,
-    date: DateTime.fromISO(event.StartDate).toFormat('LLL d, yyyy'),
+    timeRange: shortTimeFormatter.formatRange(startDate, endDate),
+    date: shortDateFormatter.format(startDate),
     title: event.Event_Title || event.Event_Name,
     location: event.Location || 'No Location Listed',
     Description:
