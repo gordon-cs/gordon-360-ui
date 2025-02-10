@@ -32,18 +32,30 @@
 
 /* Box background for the category and color sections */
 .box_background {
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-  background-color: var(--mui-palette-background-default);
+  background-color: var(--mui-palette-neutral-100);
   border-radius: 5px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+// .box_background {
+//   padding: 1rem;
+//   margin-bottom: 1.5rem;
+//   background-color: var(--mui-palette-background-default);
+//   border-radius: 5px;
+// }
+
+.radio_group {
+  display: contents;
+}
+.color_group {
+  display: contents;
 }
 
 /* Category label + radios: 2 columns */
 .category_group {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.5rem;
-  margin-top: 0.5rem;
+  grid-template-columns: repeat(2, 1fr);
 }
 
 /* For each radio in the category group */
@@ -54,9 +66,8 @@
 /* Color label + checkboxes: 3 columns */
 .checkbox_group {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.5rem;
-  margin-top: 0.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  background-color: var(--mui-palette-neutral-100);
 }
 
 /* Admin actions container */
@@ -125,10 +136,35 @@
 }
 
 /* If you want to collapse to 1 column on small screens, you can add a media query: */
-@media (max-width: 768px) {
-  .category_group,
+@media (max-width: 1000px) {
+  .form_card {
+    margin: 0.5rem;
+  }
+
+  .category_group {
+    grid-template-columns: 1fr;
+    padding: 0.8rem;
+  }
+
   .checkbox_group {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stolen_container {
+    padding: 1rem;
+    text-align: left;
+  }
+
+  .submit_container {
+    justify-content: center;
+    padding-right: 0rem;
+  }
+
+  .submit_button {
+    font-size: 1rem;
+    padding: 1rem;
+    min-width: fit-content;
   }
 }
+
 
