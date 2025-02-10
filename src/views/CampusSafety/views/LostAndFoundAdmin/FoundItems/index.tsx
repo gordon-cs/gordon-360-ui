@@ -1,5 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useReducer, HTMLAttributes } from 'react';
+
 import {
+  Autocomplete,
   Card,
   CardHeader,
   Grid,
@@ -10,11 +12,20 @@ import {
   Checkbox,
   Button,
   FormLabel,
+  RadioGroup,
+  MenuItem,
   Typography,
+  InputAdornment,
   InputLabel,
   Select,
-  MenuItem,
+  useTheme,
+  useMediaQuery,
+
 } from '@mui/material';
+import { debounce } from 'lodash';
+import SearchIcon from '@mui/icons-material/Search';
+import quickSearchService, { SearchResult } from 'services/quickSearch';
+
 import { SelectChangeEvent } from '@mui/material/Select'; // <-- Import for typed Select onChange
 import Header from 'views/CampusSafety/components/Header'; // Adjust if needed
 import styles from './FoundItemFormCreate.module.scss';
@@ -25,6 +36,51 @@ import { useNavigate } from 'react-router';
 import { InfoOutlined } from '@mui/icons-material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+
+const MIN_QUERY_LENGTH = 2;
+
+// Search Reducer
+type State = {
+  loading: boolean;
+  searchTime: number;
+  searchResults: SearchResult[];
+};
+
+type Action =
+  | { type: 'INPUT' }
+  | { type: 'LOAD'; payload: Omit<State, 'loading'> }
+  | { type: 'RESET' };
+
+const defaultState: State = {
+  loading: false,
+  searchTime: 0,
+  searchResults: [],
+};
+
+const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case 'INPUT':
+      return { ...state, searchResults: [], loading: true };
+    case 'LOAD':
+      return action.payload.searchTime > state.searchTime
+        ? { ...state, ...action.payload, loading: false }
+        : state;
+    case 'RESET':
+      return defaultState;
+    default:
+      throw new Error(`Unhandled action type: ${action}`);
+  }
+};
+
+const performSearch = debounce(async (query: string, dispatch: React.Dispatch<Action>) => {
+  try {
+    const [searchTime, searchResults] = await quickSearchService.search(query);
+    dispatch({ type: 'LOAD', payload: { searchTime, searchResults } });
+  } catch (error) {
+    console.error('Error fetching search results:', error);
+    dispatch({ type: 'RESET' });
+  }
+}, 400);
 
 interface IUser {
   firstName: string;
@@ -59,6 +115,8 @@ interface ISnackbarState {
 
 const FoundItemFormCreate = () => {
   const navigate = useNavigate();
+  const [state, dispatch] = useReducer(reducer, defaultState);
+
 
   const createSnackbar = useCallback((message: string, severity: ISnackbarState['severity']) => {
     setSnackbar({ message, severity, open: true });
@@ -72,22 +130,44 @@ const FoundItemFormCreate = () => {
     AD_Username: '',
   });
 
-  const [formData, setFormData] = useState<IFoundItemFormData>({
+  const [formData, setFormData] = useState<{
+    isGordonFinder: string;
+    foundBy: string;
+    finderUsername: string;
+    finderPhoneNumber: string;
+    finderEmail: string;
+    forGuest: boolean;
+    category: string;
+    colors: string[]; 
+    brand: string;
+    description: string;
+    locationFound: string;
+    dateFound: string;
+    finderWantsItem: boolean;
+    ownersName: string;
+    initialAction: string;
+    storageLocation: string;
+    status: string;
+  }>({
+    isGordonFinder: '',
+    foundBy: '',
+    finderUsername: '',
+    finderPhoneNumber: '',
+    finderEmail: '',
+    forGuest: false,
     category: '',
     colors: [],
     brand: '',
     description: '',
     locationFound: '',
     dateFound: '',
-    foundBy: '',
     finderWantsItem: false,
-    finderPhoneNumber: '',
     ownersName: '',
     initialAction: '',
     storageLocation: '',
     status: 'found',
-    forGuest: false,
   });
+  
 
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
   const [snackbar, setSnackbar] = useState<ISnackbarState>({
@@ -152,26 +232,56 @@ const FoundItemFormCreate = () => {
     }));
   };
 
-  const handleColorChange = (color: string) => {
-    setFormData((prevData) => {
-      const newColors = prevData.colors.includes(color)
-        ? prevData.colors.filter((c) => c !== color)
-        : [...prevData.colors, color];
-      return { ...prevData, colors: newColors };
-    });
-  };
-
- 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
-    if (type === 'checkbox') {
-      setFormData((prevData) => ({ ...prevData, [name]: checked }));
+  const handleInput = (_event: React.SyntheticEvent, value: string) => {
+    const query = value.trim();
+    if (query.length >= MIN_QUERY_LENGTH) {
+      dispatch({ type: 'INPUT' });
+      performSearch(query, dispatch);
     } else {
-      setFormData((prevData) => ({ ...prevData, [name]: value }));
+      dispatch({ type: 'RESET' });
     }
   };
 
+  const handleColorChange = (color: string) => {
+    setFormData((prevData) => {
+      const newColors: string[] = prevData.colors.includes(color)
+        ? prevData.colors.filter((c) => c !== color)
+        : [...prevData.colors, color];
+  
+      return { ...prevData, colors: newColors };
+    });
+  };
+  
 
+ 
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value, type, checked } = e.target;
+  //   if (type === 'checkbox') {
+  //     setFormData((prevData) => ({ ...prevData, [name]: checked }));
+  //   } else {
+  //     setFormData((prevData) => ({ ...prevData, [name]: value }));
+  //   }
+  // };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
+  const handleSelect = (_event: any, selectedPerson: SearchResult | null) => {
+    if (selectedPerson) {
+      setFormData((prevData) => ({
+        ...prevData,
+        foundBy: `${selectedPerson.FirstName} ${selectedPerson.LastName}`,
+        finderUsername: selectedPerson.UserName,
+        finderPhoneNumber: '',
+        finderEmail: '',
+        forGuest: false,
+      }));
+    }
+  };
   const handleSelectChange = (e: SelectChangeEvent<string>) => {
     const { name, value } = e.target;
     if (name) {
@@ -247,30 +357,48 @@ const FoundItemFormCreate = () => {
 
   const handleFormSubmit = async () => {
     if (!validateForm()) {
+      createSnackbar("Please fill in all required fields", "error");
       return;
     }
-    if (!formData.dateFound) {
-      formData.dateFound = new Date().toISOString();
-    }
-
+  
     try {
-      const now = new Date();
+      const now = new Date().toISOString();
+  
       const requestData = {
-        ...formData,
-        ...user,
-        dateFound: new Date(formData.dateFound).toISOString() || now.toISOString(),
-        dateCreated: now.toISOString(),
         submitterUsername: user.AD_Username,
+        category: formData.category,
+        colors: formData.colors.length > 0 ? formData.colors : [], 
+        brand: formData.brand || "",
+        description: formData.description,
+        locationFound: formData.locationFound,
+        dateFound: formData.dateFound ? new Date(formData.dateFound).toISOString() : now,
+        dateCreated: now,
+        finderWants: formData.finderWantsItem,
+        status: formData.status,
+        storageLocation: formData.storageLocation || "",
+  
+        // Finder Information
+        finderUsername: formData.isGordonFinder === 'yes' ? formData.finderUsername : undefined,
+        finderFirstName: formData.isGordonFinder === 'no' ? formData.foundBy.split(" ")[0] : undefined,
+        finderLastName: formData.isGordonFinder === 'no' ? formData.foundBy.split(" ")[1] || "" : undefined,
+        finderPhone: formData.isGordonFinder === 'no' ? formData.finderPhoneNumber : undefined,
+        finderEmail: formData.isGordonFinder === 'no' ? formData.finderEmail : undefined,
       };
-      await lostAndFoundService.createFoundItemReport(requestData);
-
-      createSnackbar('Found item has been recorded successfully!', 'success');
-      navigate('/lostandfound');
+  
+      console.log("Submitting request data:", requestData); // Debugging log
+  
+      const response = await lostAndFoundService.createFoundItemReport(requestData);
+      console.log("API Response:", response);
+  
+      createSnackbar("Found item report successfully created!", "success");
+      navigate("/lostandfound");
     } catch (error) {
-      console.error(error);
-      createSnackbar('Failed to record the found item.', 'error');
+      console.error("Failed to create found item report:", error);
+      createSnackbar("Error submitting the form. Please try again.", "error");
     }
   };
+  
+  
 
   const handleCancel = () => {
     navigate('/lostandfound');
@@ -448,15 +576,49 @@ const FoundItemFormCreate = () => {
             <div style={{ marginBottom: '1rem' }}>{customDatePicker}</div>
 
             {/* Found By */}
-            <TextField
-              fullWidth
-              variant="filled"
-              label="Found By (optional)"
-              name="foundBy"
-              value={formData.foundBy}
-              onChange={handleChange}
-              sx={{ marginBottom: '1rem' }}
+            <Grid item margin={2}>
+          <FormLabel component="legend" required>
+            Was the Finder a Gordon Person?
+          </FormLabel>
+          <RadioGroup
+            row
+            name="isGordonFinder"
+            value={formData.isGordonFinder}
+            onChange={(e) => setFormData({ ...formData, isGordonFinder: e.target.value })}
+          >
+            <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+            <FormControlLabel value="no" control={<Radio />} label="No" />
+          </RadioGroup>
+        </Grid>
+
+        {formData.isGordonFinder === 'yes' && (
+          <Grid item margin={2}>
+            <Autocomplete
+              loading={state.loading}
+              options={state.searchResults}
+              isOptionEqualToValue={(option, value) => option.UserName === value.UserName}
+              onInputChange={handleInput}
+              onChange={handleSelect}
+              renderOption={(props, person) => (
+                <MenuItem {...props} key={person.UserName} divider>
+                  <Typography variant="body2">{`${person.FirstName} ${person.LastName}`}</Typography>
+                </MenuItem>
+              )}
+              getOptionLabel={(option) => `${option.FirstName} ${option.LastName}`}
+              renderInput={(params) => (
+                <TextField {...params} label="Search Gordon Person" fullWidth />
+              )}
             />
+          </Grid>
+        )}
+
+        {formData.isGordonFinder === 'no' && (
+          <>
+            <TextField label="Finder Name" fullWidth />
+            <TextField label="Finder Phone" fullWidth />
+            <TextField label="Finder Email" fullWidth />
+          </>
+        )}
 
             {/* Finder wants item */}
             <FormControlLabel

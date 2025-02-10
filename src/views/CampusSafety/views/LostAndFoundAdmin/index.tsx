@@ -75,7 +75,6 @@ const LostAndFoundAdmin = () => {
     <Button
       color="secondary"
       variant="contained"
-      disabled
       onClick={() => {
         navigate('founditemdatabase');
       }}
