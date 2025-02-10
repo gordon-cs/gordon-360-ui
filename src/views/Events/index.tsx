@@ -22,23 +22,23 @@ import EventIcon from '@mui/icons-material/Event';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import ClockIcon from '@mui/icons-material/AccessTime';
 import Autocomplete from '@mui/material/Autocomplete';
-import EventList from 'components/EventList';
+import EventList from './components/EventList';
 import GordonLoader from 'components/Loader';
 import { useWindowSize } from 'hooks';
 import { useEffect, useMemo, useState } from 'react';
-import gordonEvent, { EVENT_FILTERS } from 'services/event';
+import gordonEvent, { Event, EVENT_FILTERS } from 'services/event';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './Events.module.css';
 
 const Events = () => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
-  const [allEvents, setAllEvents] = useState([]);
-  const [events, setEvents] = useState([]);
-  const [filteredEvents, setFilteredEvents] = useState([]);
+  const [allEvents, setAllEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
+  const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   const [includePast, setIncludePast] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState([]);
+  const [filters, setFilters] = useState<string[]>([]);
   const [timeFilter, setTimeFilter] = useState('2 Weeks');
   const [hasInitializedEvents, setHasInitializedEvents] = useState(false);
   const futureEvents = useMemo(() => gordonEvent.getFutureEvents(allEvents), [allEvents]);
@@ -95,7 +95,7 @@ const Events = () => {
     setFilteredEvents(gordonEvent.getFilteredEvents(events, filters, search, timeFilter));
   }, [events, filters, search, timeFilter]);
 
-  const handleChangeFilters = async (value) => {
+  const handleChangeFilters = async (value: string[]) => {
     setFilters(value);
     setURLParams(includePast, value);
   };
@@ -118,7 +118,7 @@ const Events = () => {
     setURLParams(!includePast, filters);
   };
 
-  const setURLParams = (includePast, filters) => {
+  const setURLParams = (includePast: boolean, filters: string[]) => {
     if (includePast || filters.length > 0) {
       let url = '?';
       if (includePast) url += '&Past';
@@ -126,7 +126,7 @@ const Events = () => {
       navigate(url);
     } else if (location.search) {
       // If no params but current url has params, then push url with no params
-      navigate();
+      navigate('');
     }
   };
 
@@ -135,11 +135,11 @@ const Events = () => {
   if (loading || !hasInitializedEvents) {
     content = <GordonLoader />;
   } else {
-    content = <EventList events={filteredEvents} loading={loading} />;
+    content = <EventList events={filteredEvents} />;
   }
 
   const searchPageTitle = (
-    <div align="center">
+    <div style={{ textAlign: 'center' }}>
       Search
       <b className={styles.events_gordon_text}> Gordon </b>
       Events
@@ -151,11 +151,11 @@ const Events = () => {
   if (timeFilter != '') {
     filterReminder = (
       <>
-        <div align="center">
+        <div style={{ textAlign: 'center' }}>
           Your search is limited to {timeFilter}. Check out the top of the page if you want to
           change your filters.
         </div>
-        <div align="center">
+        <div style={{ textAlign: 'center' }}>
           <Button
             variant="contained"
             color="secondary"
@@ -172,11 +172,11 @@ const Events = () => {
   } else {
     filterReminder = (
       <>
-        <div align="center">
+        <div style={{ textAlign: 'center' }}>
           You have reached the end of Gordon's events. Check out the top of the page if you want to
           add filters.
         </div>
-        <div align="center">
+        <div style={{ textAlign: 'center' }}>
           <Button
             variant="contained"
             color="secondary"
@@ -229,7 +229,7 @@ const Events = () => {
                         color={open ? (filters.length === 0 ? 'primary' : 'secondary') : 'link'}
                         variant={open ? 'contained' : 'outlined'}
                         onClick={handleExpandClick}
-                        className={open ? null : styles.events_filter_button}
+                        className={open ? undefined : styles.events_filter_button}
                       >
                         <AddIcon fontSize="inherit" />
                         Filters
@@ -307,7 +307,7 @@ const Events = () => {
                             value={timeFilter}
                             onChange={(event) => setTimeFilter(event.target.value)}
                           >
-                            <MenuItem label="All" value="">
+                            <MenuItem value="" key="all">
                               <em>All</em>
                             </MenuItem>
                             {timeFilters.map((timeFilter) => (
@@ -470,7 +470,7 @@ const Events = () => {
                           value={timeFilter}
                           onChange={(event) => setTimeFilter(event.target.value)}
                         >
-                          <MenuItem label="All" value="">
+                          <MenuItem value="" key="all">
                             <em>All</em>
                           </MenuItem>
                           {timeFilters.map((timeFilter) => (
