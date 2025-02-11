@@ -15,21 +15,16 @@ import {
   RadioGroup,
   MenuItem,
   Typography,
-  InputAdornment,
   InputLabel,
   Select,
-  useTheme,
-  useMediaQuery,
-
 } from '@mui/material';
 import { debounce } from 'lodash';
-import SearchIcon from '@mui/icons-material/Search';
 import quickSearchService, { SearchResult } from 'services/quickSearch';
 
-import { SelectChangeEvent } from '@mui/material/Select'; 
+import { SelectChangeEvent } from '@mui/material/Select';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './FoundItemFormCreate.module.scss';
-import lostAndFoundService from 'services/lostAndFound'; 
+import lostAndFoundService from 'services/lostAndFound';
 import userService from 'services/user';
 import GordonSnackbar from 'components/Snackbar';
 import { useNavigate } from 'react-router';
@@ -90,23 +85,6 @@ interface IUser {
   AD_Username: string;
 }
 
-interface IFoundItemFormData {
-  category: string;
-  colors: string[];
-  brand: string;
-  description: string;
-  locationFound: string;
-  dateFound: string; 
-  foundBy: string;
-  finderWantsItem: boolean;
-  finderPhoneNumber: string;
-  ownersName: string;
-  initialAction: string;
-  storageLocation: string;
-  status: string;
-  forGuest: boolean;
-}
-
 interface ISnackbarState {
   message: string;
   severity: 'error' | 'success' | 'info' | 'warning' | undefined;
@@ -116,7 +94,6 @@ interface ISnackbarState {
 const FoundItemFormCreate = () => {
   const navigate = useNavigate();
   const [state, dispatch] = useReducer(reducer, defaultState);
-
 
   const createSnackbar = useCallback((message: string, severity: ISnackbarState['severity']) => {
     setSnackbar({ message, severity, open: true });
@@ -138,7 +115,7 @@ const FoundItemFormCreate = () => {
     finderEmail: string;
     forGuest: boolean;
     category: string;
-    colors: string[]; 
+    colors: string[];
     brand: string;
     description: string;
     locationFound: string;
@@ -167,7 +144,6 @@ const FoundItemFormCreate = () => {
     storageLocation: '',
     status: 'found',
   });
-  
 
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
   const [snackbar, setSnackbar] = useState<ISnackbarState>({
@@ -224,7 +200,6 @@ const FoundItemFormCreate = () => {
     return Object.keys(errors).length === 0;
   };
 
- 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -247,11 +222,10 @@ const FoundItemFormCreate = () => {
       const newColors: string[] = prevData.colors.includes(color)
         ? prevData.colors.filter((c) => c !== color)
         : [...prevData.colors, color];
-  
+
       return { ...prevData, colors: newColors };
     });
   };
-  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -348,48 +322,48 @@ const FoundItemFormCreate = () => {
 
   const handleFormSubmit = async () => {
     if (!validateForm()) {
-      createSnackbar("Please fill in all required fields", "error");
+      createSnackbar('Please fill in all required fields', 'error');
       return;
     }
-  
+
     try {
       const now = new Date().toISOString();
-  
+
       const requestData = {
         submitterUsername: user.AD_Username,
         category: formData.category,
-        colors: formData.colors.length > 0 ? formData.colors : [], 
-        brand: formData.brand || "",
+        colors: formData.colors.length > 0 ? formData.colors : [],
+        brand: formData.brand || '',
         description: formData.description,
         locationFound: formData.locationFound,
         dateFound: formData.dateFound ? new Date(formData.dateFound).toISOString() : now,
         dateCreated: now,
         finderWants: formData.finderWantsItem,
         status: formData.status,
-        storageLocation: formData.storageLocation || "",
-  
+        storageLocation: formData.storageLocation || '',
+
         // Finder Information
         finderUsername: formData.isGordonFinder === 'yes' ? formData.finderUsername : undefined,
-        finderFirstName: formData.isGordonFinder === 'no' ? formData.foundBy.split(" ")[0] : undefined,
-        finderLastName: formData.isGordonFinder === 'no' ? formData.foundBy.split(" ")[1] || "" : undefined,
+        finderFirstName:
+          formData.isGordonFinder === 'no' ? formData.foundBy.split(' ')[0] : undefined,
+        finderLastName:
+          formData.isGordonFinder === 'no' ? formData.foundBy.split(' ')[1] || '' : undefined,
         finderPhone: formData.isGordonFinder === 'no' ? formData.finderPhoneNumber : undefined,
         finderEmail: formData.isGordonFinder === 'no' ? formData.finderEmail : undefined,
       };
-  
-      console.log("Submitting request data:", requestData); // Debugging log keep for now
-  
-      const response = await lostAndFoundService.createFoundItemReport(requestData);
-      console.log("API Response:", response);
-  
-      createSnackbar("Found item report successfully created!", "success");
-      navigate("/lostandfound");
+
+      console.log('Submitting request data:', requestData); // Debugging log keep for now
+
+      const response = await lostAndFoundService.createFoundItem(requestData);
+      console.log('API Response:', response);
+
+      createSnackbar('Found item report successfully created!', 'success');
+      navigate('/lostandfound');
     } catch (error) {
-      console.error("Failed to create found item report:", error);
-      createSnackbar("Error submitting the form. Please try again.", "error");
+      console.error('Failed to create found item report:', error);
+      createSnackbar('Error submitting the form. Please try again.', 'error');
     }
   };
-  
-  
 
   const handleCancel = () => {
     navigate('/lostandfound');
@@ -568,48 +542,48 @@ const FoundItemFormCreate = () => {
 
             {/* Found By */}
             <Grid item margin={2}>
-          <FormLabel component="legend" required>
-            Was the Finder a Gordon Person?
-          </FormLabel>
-          <RadioGroup
-            row
-            name="isGordonFinder"
-            value={formData.isGordonFinder}
-            onChange={(e) => setFormData({ ...formData, isGordonFinder: e.target.value })}
-          >
-            <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-            <FormControlLabel value="no" control={<Radio />} label="No" />
-          </RadioGroup>
-        </Grid>
+              <FormLabel component="legend" required>
+                Was the Finder a Gordon Person?
+              </FormLabel>
+              <RadioGroup
+                row
+                name="isGordonFinder"
+                value={formData.isGordonFinder}
+                onChange={(e) => setFormData({ ...formData, isGordonFinder: e.target.value })}
+              >
+                <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+                <FormControlLabel value="no" control={<Radio />} label="No" />
+              </RadioGroup>
+            </Grid>
 
-        {formData.isGordonFinder === 'yes' && (
-          <Grid item margin={2}>
-            <Autocomplete
-              loading={state.loading}
-              options={state.searchResults}
-              isOptionEqualToValue={(option, value) => option.UserName === value.UserName}
-              onInputChange={handleInput}
-              onChange={handleSelect}
-              renderOption={(props, person) => (
-                <MenuItem {...props} key={person.UserName} divider>
-                  <Typography variant="body2">{`${person.FirstName} ${person.LastName}`}</Typography>
-                </MenuItem>
-              )}
-              getOptionLabel={(option) => `${option.FirstName} ${option.LastName}`}
-              renderInput={(params) => (
-                <TextField {...params} label="Search Gordon Person" fullWidth />
-              )}
-            />
-          </Grid>
-        )}
+            {formData.isGordonFinder === 'yes' && (
+              <Grid item margin={2}>
+                <Autocomplete
+                  loading={state.loading}
+                  options={state.searchResults}
+                  isOptionEqualToValue={(option, value) => option.UserName === value.UserName}
+                  onInputChange={handleInput}
+                  onChange={handleSelect}
+                  renderOption={(props, person) => (
+                    <MenuItem {...props} key={person.UserName} divider>
+                      <Typography variant="body2">{`${person.FirstName} ${person.LastName}`}</Typography>
+                    </MenuItem>
+                  )}
+                  getOptionLabel={(option) => `${option.FirstName} ${option.LastName}`}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Search Gordon Person" fullWidth />
+                  )}
+                />
+              </Grid>
+            )}
 
-        {formData.isGordonFinder === 'no' && (
-          <>
-            <TextField label="Finder Name" fullWidth />
-            <TextField label="Finder Phone" fullWidth />
-            <TextField label="Finder Email" fullWidth />
-          </>
-        )}
+            {formData.isGordonFinder === 'no' && (
+              <>
+                <TextField label="Finder Name" fullWidth />
+                <TextField label="Finder Phone" fullWidth />
+                <TextField label="Finder Email" fullWidth />
+              </>
+            )}
 
             {/* Finder wants item */}
             <FormControlLabel
@@ -694,12 +668,7 @@ const FoundItemFormCreate = () => {
         {/* Buttons */}
         <Grid container justifyContent="flex-end" spacing={2} padding={2}>
           <Grid item xs={6} sm={3} md={2}>
-            <Button
-              variant="contained"
-              color="error"
-              onClick={handleCancel}
-              fullWidth
-            >
+            <Button variant="contained" color="error" onClick={handleCancel} fullWidth>
               Cancel Entry
             </Button>
           </Grid>

@@ -22,20 +22,16 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { useParams, useNavigate } from 'react-router-dom';
 import { InfoOutlined, Add, Key, Launch } from '@mui/icons-material';
-import { DateTime } from 'luxon';
 
-import Header from 'views/CampusSafety/components/Header'; 
-import lostAndFoundService, {
-  FoundItemReport,
-  FoundAdminAction,
-} from 'services/lostAndFound';      
-import userService from 'services/user';                                
+import Header from 'views/CampusSafety/components/Header';
+import lostAndFoundService, { FoundItem, FoundAdminAction } from 'services/lostAndFound';
 import GordonSnackbar from 'components/Snackbar';
 import GordonLoader from 'components/Loader';
-import GordonDialogBox from 'components/GordonDialogBox';              
-import SimpleSnackbar from 'components/Snackbar';                      
+import GordonDialogBox from 'components/GordonDialogBox';
 
 import styles from './FoundItemFormEdit.module.scss';
+import { useUser } from 'hooks';
+import { categories, colors } from 'services/lostAndFound';
 
 const actionTypes = ['CheckedIn', 'NotifiedOfficer', 'OwnerContact', 'Custom'];
 
@@ -45,48 +41,13 @@ interface ISnackbarState {
   open: boolean;
 }
 
-/** Color Array */
-const colorOptions = [
-  'Black',
-  'Blue',
-  'Brown',
-  'Gold',
-  'Gray',
-  'Green',
-  'Maroon',
-  'Orange',
-  'Pink',
-  'Purple',
-  'Red',
-  'Silver',
-  'Tan',
-  'White',
-  'Yellow',
-];
-
-/** Categories */
-const categoryOptions = [
-  'Clothing/Shoes',
-  'Electronics',
-  'Jewelry/Watches',
-  'Keys/Keychains',
-  'Glasses/Sunglasses',
-  'Bottles/Mugs',
-  'Books',
-  'Bags/Purses',
-  'Office/School Supplies',
-  'IDs/Wallets',
-  'Currency/Credit Cards',
-  'Other',
-];
-
 const FoundItemFormEdit = () => {
   const { itemId } = useParams<{ itemId: string }>();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
 
   /** The found item object we are editing. */
-  const [foundItem, setFoundItem] = useState<FoundItemReport | null>(null);
+  const [foundItem, setFoundItem] = useState<FoundItem | null>(null);
 
   const [snackbar, setSnackbar] = useState<ISnackbarState>({
     message: '',
@@ -118,6 +79,8 @@ const FoundItemFormEdit = () => {
     actionNote: '',
   });
 
+  const { profile } = useUser();
+
   // For checking screen size
   const isMobile = useMediaQuery('(max-width:600px)');
 
@@ -133,15 +96,15 @@ const FoundItemFormEdit = () => {
         return;
       }
       try {
-        const userInfo = await userService.getProfileInfo();
-        setUsername({ AD_Username: userInfo?.AD_Username || '' });
+        setUsername({ AD_Username: profile?.AD_Username || '' });
       } catch {
         // optional nothing here yet
       }
 
       try {
-        const itemResponse = await lostAndFoundService.getFoundItemReport(itemId);
+        const itemResponse = await lostAndFoundService.getFoundItem(itemId);
         setFoundItem(itemResponse);
+        setAdminActions(itemResponse.adminActions || []);
       } catch (err) {
         console.error(err);
         createSnackbar('Failed to load found item from server', 'error');
@@ -159,8 +122,8 @@ const FoundItemFormEdit = () => {
       if (!itemId) return;
       setActionsLoading(true);
       try {
-        const actionsResp = await lostAndFoundService.getFoundAdminActions(itemId);
-        setAdminActions(actionsResp);
+        const actionsResp = (await lostAndFoundService.getFoundItem(itemId)).adminActions;
+        setAdminActions(actionsResp || []);
       } catch (err) {
         console.error(err);
         // createSnackbar('Failed to load found item actions', 'error');
@@ -181,7 +144,7 @@ const FoundItemFormEdit = () => {
     const errors: Record<string, string> = {};
 
     for (const field of requiredFields) {
-      if (!foundItem[field as keyof FoundItemReport]) {
+      if (!foundItem[field as keyof FoundItem]) {
         errors[field] = 'This field is required';
       }
     }
@@ -190,6 +153,7 @@ const FoundItemFormEdit = () => {
   };
 
   /** 4) Handlers for editing the found item. */
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!foundItem) return;
     const { name, value, type, checked } = e.target;
@@ -231,9 +195,9 @@ const FoundItemFormEdit = () => {
     if (!validateForm()) return;
 
     try {
-      await lostAndFoundService.updateFoundItemReport(foundItem, foundItem.recordID);
+      await lostAndFoundService.updateFoundItem(foundItem, foundItem.recordID);
       createSnackbar('Saved changes to the found item!', 'success');
-      navigate('/lostandfound');
+      navigate('/lostandfound/lostandfoundadmin/founditemdatabase');
     } catch (err) {
       console.error(err);
       createSnackbar('Failed to save changes.', 'error');
@@ -266,6 +230,7 @@ const FoundItemFormEdit = () => {
   };
 
   /** 7) Admin Actions logic. */
+
   const handleActionClicked = (actionID: number) => {
     setSelectedActionID(actionID);
     setActionDetailsModalLoading(true);
@@ -295,7 +260,7 @@ const FoundItemFormEdit = () => {
     const requestData = {
       ...newActionFormData,
       foundID: foundItem.recordID,
-      actionDate: DateTime.now().toISO(),
+      actionDate: new Date().toISOString(),
       submitterUsername: username.AD_Username,
     };
     try {
@@ -308,7 +273,7 @@ const FoundItemFormEdit = () => {
     }
   };
 
-  /** 8) Rendering. */
+  /* Rendering. */
   if (loading) return <GordonLoader />;
   if (!foundItem) return <Typography>Could not find the requested Found Item</Typography>;
 
@@ -322,13 +287,13 @@ const FoundItemFormEdit = () => {
         foundItem.status.toLowerCase() === 'found'
           ? 'success'
           : foundItem.status.toLowerCase() === 'pickedup'
-          ? 'info'
-          : 'primary'
+            ? 'info'
+            : 'primary'
       }
     />
   );
 
-  /** Admin actions card on the right column */
+  /* Admin actions card on the right column */
   const adminActionsCard = (
     <Card>
       <CardHeader
@@ -386,7 +351,7 @@ const FoundItemFormEdit = () => {
                 </Grid>
                 <Grid item xs={3} sm={2}>
                   <div className={styles.dataCell}>
-                    {DateTime.fromISO(action.actionDate).toFormat('M/d/yy')}
+                    {new Date(action.actionDate).toLocaleDateString()}
                   </div>
                 </Grid>
                 <Grid item xs={4} sm={3}>
@@ -419,7 +384,7 @@ const FoundItemFormEdit = () => {
       {selectedAction.current ? (
         <Grid container rowGap={2}>
           <Grid item xs={12} sm={6}>
-            <b>Date:</b> {DateTime.fromISO(selectedAction.current.actionDate).toFormat('M/d/yy')}
+            <b>Date:</b> {new Date(selectedAction.current.actionDate).toLocaleDateString()}
           </Grid>
           <Grid item xs={12} sm={6}>
             <b>Action:</b> {selectedAction.current.action}
@@ -437,7 +402,7 @@ const FoundItemFormEdit = () => {
     </GordonDialogBox>
   );
 
-  /** The "new action" modal. */
+  /* The "new action" modal. */
   const newActionModal = (
     <GordonDialogBox
       open={newActionModalOpen}
@@ -520,66 +485,66 @@ const FoundItemFormEdit = () => {
           <Grid container spacing={2} paddingX={3}>
             {/* LEFT COLUMN: Category & Colors & brand & description */}
             <Grid item xs={12} md={6}>
-            <div className={styles.box_background}>
-           <FormGroup>
-                <FormLabel>Item Category:</FormLabel>
-              </FormGroup>
-              <div className={styles.category_group}>
-                <FormGroup className={styles.radio_group}>
-                  {categoryOptions.map((cat) => {
-                    const val = cat.toLowerCase().replace(/ /g, '/');
-                    return (
-                      <FormControlLabel
-                        key={cat}
-                        label={cat}
-                        className={styles.category_item}
-                        control={
-                          <Radio
-                            value={val}
-                            checked={foundItem.category === val}
-                            onChange={handleCategoryChange}
-                          />
-                        }
-                      />
-                    );
-                  })}
+              <div className={styles.box_background}>
+                <FormGroup>
+                  <FormLabel>Item Category:</FormLabel>
                 </FormGroup>
+                <div className={styles.category_group}>
+                  <FormGroup className={styles.radio_group}>
+                    {categories.map((cat) => {
+                      const val = cat.toLowerCase().replace(/ /g, '/');
+                      return (
+                        <FormControlLabel
+                          key={cat}
+                          label={cat}
+                          className={styles.category_item}
+                          control={
+                            <Radio
+                              value={val}
+                              checked={foundItem.category === val}
+                              onChange={handleCategoryChange}
+                            />
+                          }
+                        />
+                      );
+                    })}
+                  </FormGroup>
+                </div>
+                {validationErrors.category && (
+                  <TextField
+                    variant="standard"
+                    error
+                    helperText={validationErrors.category}
+                    fullWidth
+                    InputProps={{ style: { display: 'none' } }}
+                  />
+                )}
               </div>
-              {validationErrors.category && (
-                <TextField
-                  variant="standard"
-                  error
-                  helperText={validationErrors.category}
-                  fullWidth
-                  InputProps={{ style: { display: 'none' } }}
-                />
-              )}
-            </div>
 
               {/* Colors */}
               <div className={styles.box_background}>
-              <FormGroup>
-                <FormLabel>
-                  Item Color: Choose <u>ALL</u> that apply
-                </FormLabel>
-              </FormGroup>
-              <div className={styles.checkbox_group}>
-                <FormGroup className={styles.color_group}>
-                  {colorOptions.map((color) => (
-                    <FormControlLabel
-                      key={color}
-                      label={color}
-                      control={
-                        <Checkbox
-                          checked={foundItem.colors.includes(color)}
-                          onChange={() => handleColorChange(color)}
-                        />
-                      }
-                    />
-                  ))}
+                <FormGroup>
+                  <FormLabel>
+                    Item Color: Choose <u>ALL</u> that apply
+                  </FormLabel>
                 </FormGroup>
+                <div className={styles.checkbox_group}>
+                  <FormGroup className={styles.color_group}>
+                    {colors.map((color) => (
+                      <FormControlLabel
+                        key={color}
+                        label={color}
+                        control={
+                          <Checkbox
+                            checked={foundItem.colors.includes(color)}
+                            onChange={() => handleColorChange(color)}
+                          />
+                        }
+                      />
+                    ))}
+                  </FormGroup>
+                </div>
               </div>
-            </div>
 
               {/* Brand */}
               <TextField
@@ -698,9 +663,7 @@ const FoundItemFormEdit = () => {
               {/* Show the status chip, then the Admin actions card below */}
               <Grid container spacing={1} marginTop={2}>
                 <Grid item xs={12}>
-                  <Typography variant="h6">
-                    Status: {statusChip}
-                  </Typography>
+                  <Typography variant="h6">Status: {statusChip}</Typography>
                 </Grid>
                 <Grid item xs={12}>
                   {adminActionsCard}
