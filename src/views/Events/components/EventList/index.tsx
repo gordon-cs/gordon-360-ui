@@ -6,9 +6,11 @@ import useWindowSize from 'hooks/useWindowSize';
 import { Card, CardHeader, Grid, List, Typography } from '@mui/material';
 import { Event } from 'services/event';
 import styles from './EventList.module.css';
+import GordonLoader from 'components/Loader';
 
 type Props = {
   events: Event[];
+  loading: boolean;
 };
 
 const smallHeader = (
@@ -60,21 +62,24 @@ const noEvents = (
 
 const breakpointWidth = windowBreakWidths.breakSM;
 
-const EventList = ({ events }: Props) => {
+const EventList = ({ events, loading }: Props) => {
   const [width] = useWindowSize();
-
-  const header = width < breakpointWidth ? smallHeader : fullHeader;
 
   return (
     <Card>
-      <CardHeader title={header} className={styles.header} />
-      <Grid>
+      <CardHeader
+        title={width < breakpointWidth ? smallHeader : fullHeader}
+        className={styles.header}
+      />
+      {loading ? (
+        <GordonLoader disableShrink />
+      ) : (
         <List className="gc360_event_list" disablePadding>
           {events?.length < 1
             ? noEvents
             : events.map((event) => <EventItem event={event} key={event.Event_ID} />)}
         </List>
-      </Grid>
+      )}
     </Card>
   );
 };

@@ -1,3 +1,4 @@
+import { addMonths, addWeeks } from 'date-fns';
 import http from './http';
 import { compareByProperty } from './utils';
 
@@ -96,10 +97,12 @@ const getFilteredEvents = (
   }
 };
 
+export const TIME_FILTERS = Object.freeze(['1 Week', '2 Weeks', '1 Month', '4 Months']);
+
 /**
  * Make a closure over a time filter.
  *
- * The returned closure determines whether a given `event` falls before the time range
+ * The returned closure determines whether a given `event` falls within the time range
  *
  * @param timeFilter The time filter to use
  * @returns A function that matches a given event against `timeFilter`
@@ -107,14 +110,16 @@ const getFilteredEvents = (
 const makeMatchesTimeFilter =
   (timeFilter: string) =>
   (event: Event): boolean => {
+    const eventStart = new Date(event.StartDate);
+    const now = new Date();
     if (timeFilter === '1 Week') {
-      return new Date(event.StartDate) <= new Date(new Date().setDate(new Date().getDate() + 7));
+      return eventStart <= addWeeks(now, 1) && eventStart >= addWeeks(now, -1);
     } else if (timeFilter === '2 Weeks') {
-      return new Date(event.StartDate) <= new Date(new Date().setDate(new Date().getDate() + 14));
+      return eventStart <= addWeeks(now, 2) && eventStart >= addWeeks(now, -2);
     } else if (timeFilter === '1 Month') {
-      return new Date(event.StartDate) <= new Date(new Date().setMonth(new Date().getMonth() + 1));
+      return eventStart <= addMonths(now, 1) && eventStart >= addMonths(now, -1);
     } else if (timeFilter === '4 Months') {
-      return new Date(event.StartDate) <= new Date(new Date().setMonth(new Date().getMonth() + 4));
+      return eventStart <= addMonths(now, 4) && eventStart >= addMonths(now, -4);
     } else {
       return false;
     }
