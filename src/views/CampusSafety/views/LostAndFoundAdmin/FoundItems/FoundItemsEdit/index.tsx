@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import {
   Card,
   CardHeader,
@@ -18,7 +18,7 @@ import {
   useMediaQuery,
   Chip,
 } from '@mui/material';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { useParams, useNavigate } from 'react-router-dom';
 import { InfoOutlined, Add, Key, Launch } from '@mui/icons-material';
@@ -126,7 +126,7 @@ const FoundItemFormEdit = () => {
         setAdminActions(actionsResp || []);
       } catch (err) {
         console.error(err);
-        // createSnackbar('Failed to load found item actions', 'error');
+        createSnackbar('Failed to load found item actions', 'error');
       } finally {
         setActionsLoading(false);
         setActionsUpdated(false);
@@ -148,6 +148,9 @@ const FoundItemFormEdit = () => {
         errors[field] = 'This field is required';
       }
     }
+    if (dateError !== null) {
+      errors['dateLost'] = dateError;
+    }
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -163,11 +166,6 @@ const FoundItemFormEdit = () => {
     });
   };
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!foundItem) return;
-    setFoundItem((prev) => (prev ? { ...prev, category: e.target.value } : prev));
-  };
-
   // Colors
   const handleColorChange = (color: string) => {
     if (!foundItem) return;
@@ -178,9 +176,6 @@ const FoundItemFormEdit = () => {
   };
 
   // Date Found
-  const onKeyDownDate = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
-  };
   const handleDateChange = (dateVal: Date | null) => {
     if (!foundItem) return;
     setFoundItem((prev) => {
@@ -196,7 +191,6 @@ const FoundItemFormEdit = () => {
 
     try {
       await lostAndFoundService.updateFoundItem(foundItem, foundItem.recordID);
-      createSnackbar('Saved changes to the found item!', 'success');
       navigate('/lostandfound/lostandfoundadmin/founditemdatabase');
     } catch (err) {
       console.error(err);
@@ -209,7 +203,6 @@ const FoundItemFormEdit = () => {
     if (!foundItem) return;
     try {
       await lostAndFoundService.updateFoundReportStatus(foundItem.recordID, 'pickedup');
-      createSnackbar('Marked as picked up!', 'info');
       navigate('/lostandfound');
     } catch (err) {
       console.error(err);
@@ -221,7 +214,6 @@ const FoundItemFormEdit = () => {
     if (!foundItem) return;
     try {
       await lostAndFoundService.updateFoundReportStatus(foundItem.recordID, 'deleted');
-      createSnackbar('Marked as disposed!', 'info');
       navigate('/lostandfound');
     } catch (err) {
       console.error(err);
@@ -273,11 +265,25 @@ const FoundItemFormEdit = () => {
     }
   };
 
+  const [dateError, setDateError] = useState<DateValidationError | null>(null);
+
+  const errorMessage = useMemo(() => {
+    switch (dateError) {
+      case 'invalidDate': {
+        return 'Invalid Date';
+      }
+      case 'disableFuture': {
+        return 'Cannot lose an item in the future';
+      }
+      default: {
+        return null;
+      }
+    }
+  }, [dateError]);
+
   /* Rendering. */
   if (loading) return <GordonLoader />;
   if (!foundItem) return <Typography>Could not find the requested Found Item</Typography>;
-
-  const dateFoundValue = foundItem.dateFound ? new Date(foundItem.dateFound) : null;
 
   // Format item status chip
   const statusChip = (
@@ -291,6 +297,63 @@ const FoundItemFormEdit = () => {
             : 'primary'
       }
     />
+  );
+
+  const customDatePicker = (
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <DatePicker
+        label="Date Found"
+        value={foundItem.dateFound ? new Date(foundItem.dateFound) : null}
+        onChange={(val) => handleDateChange(val)}
+        onError={(newError) => setDateError(newError)}
+        disableFuture
+        orientation="portrait"
+        slotProps={{
+          textField: {
+            helperText: errorMessage ? errorMessage : 'Change if lost before today',
+            sx: {
+              backgroundColor: 'var(--mui-palette-FilledInput-bg)',
+              paddingTop: '7px',
+              borderRadius: '5px',
+              width: '100%',
+              '& .Mui-focused .MuiOutlinedInput-notchedOutline': { border: 'none' },
+              '& .MuiInputLabel-shrink': {
+                transform: 'translate(14px, 4px) scale(0.75)',
+              },
+              '& .MuiFormLabel-root.Mui-focused': {
+                color: 'var(--mui-palette-secondary-main)',
+              },
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderWidth: '0',
+                borderBottom:
+                  '1px solid rgba(var(--mui-palette-common-onBackgroundChannel) / var(--mui-opacity-inputUnderline))',
+                borderRadius: '0',
+              },
+            },
+          },
+          layout: {
+            sx: {
+              '& .MuiPickersLayout-contentWrapper .Mui-selected': {
+                backgroundColor: 'var(--mui-palette-secondary-400)',
+              },
+              '.MuiPickersLayout-contentWrapper .MuiPickersDay-root:focus.Mui-selected': {
+                backgroundColor: 'var(--mui-palette-secondary-400)',
+              },
+              '.MuiPickersLayout-contentWrapper .MuiPickersDay-root.Mui-selected': {
+                backgroundColor: 'var(--mui-palette-secondary-400)',
+              },
+            },
+          },
+          actionBar: {
+            sx: {
+              '& .MuiButtonBase-root': {
+                color: 'var(--mui-palette-secondary-400)',
+              },
+            },
+          },
+        }}
+      />
+    </LocalizationProvider>
   );
 
   /* Admin actions card on the right column */
@@ -497,12 +560,13 @@ const FoundItemFormEdit = () => {
                         <FormControlLabel
                           key={cat}
                           label={cat}
+                          name="category"
                           className={styles.category_item}
                           control={
                             <Radio
                               value={val}
                               checked={foundItem.category === val}
-                              onChange={handleCategoryChange}
+                              onChange={handleChange}
                             />
                           }
                         />
@@ -589,26 +653,7 @@ const FoundItemFormEdit = () => {
                 error={!!validationErrors['locationFound']}
                 helperText={validationErrors['locationFound'] || ''}
               />
-
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DatePicker
-                  label="Date Found"
-                  value={dateFoundValue}
-                  onChange={(val) => handleDateChange(val)}
-                  disableFuture
-                  orientation="portrait"
-                  slotProps={{
-                    textField: {
-                      onKeyDown: onKeyDownDate,
-                      helperText: 'If blank, default is today',
-                      sx: {
-                        marginBottom: '1rem',
-                      },
-                    },
-                  }}
-                />
-              </LocalizationProvider>
-
+              {customDatePicker}
               <FormControlLabel
                 control={
                   <Checkbox
@@ -678,7 +723,7 @@ const FoundItemFormEdit = () => {
               <Button
                 variant="contained"
                 color="error"
-                onClick={() => navigate('/lostandfound')}
+                onClick={() => navigate('/lostandfound/lostandfoundadmin/founditemdatabase')}
                 fullWidth
               >
                 Cancel

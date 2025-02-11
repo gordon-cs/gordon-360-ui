@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useReducer } from 'react';
+import { useState, useEffect, useCallback, useReducer, useMemo } from 'react';
 
 import {
   Autocomplete,
@@ -24,12 +24,12 @@ import { SelectChangeEvent } from '@mui/material/Select';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './FoundItemFormCreate.module.scss';
 import lostAndFoundService from 'services/lostAndFound';
-import userService from 'services/user';
 import GordonSnackbar from 'components/Snackbar';
 import { useNavigate } from 'react-router';
 import { InfoOutlined } from '@mui/icons-material';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { useUser } from 'hooks';
 
 const MIN_QUERY_LENGTH = 2;
 
@@ -93,6 +93,7 @@ interface ISnackbarState {
 const FoundItemFormCreate = () => {
   const navigate = useNavigate();
   const [state, dispatch] = useReducer(reducer, defaultState);
+  const { profile } = useUser();
 
   const createSnackbar = useCallback((message: string, severity: ISnackbarState['severity']) => {
     setSnackbar({ message, severity, open: true });
@@ -154,13 +155,12 @@ const FoundItemFormCreate = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const userInfo = await userService.getProfileInfo();
         setUser({
-          firstName: userInfo?.FirstName || '',
-          lastName: userInfo?.LastName || '',
-          emailAddr: userInfo?.Email || '',
-          phoneNumber: userInfo?.MobilePhone || '',
-          AD_Username: userInfo?.AD_Username || '',
+          firstName: profile?.FirstName || '',
+          lastName: profile?.LastName || '',
+          emailAddr: profile?.Email || '',
+          phoneNumber: profile?.MobilePhone || '',
+          AD_Username: profile?.AD_Username || '',
         });
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -253,9 +253,24 @@ const FoundItemFormCreate = () => {
     }
   };
 
-  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    e.preventDefault();
-  };
+  const [dateError, setDateError] = useState<DateValidationError | null>(null);
+
+  const errorMessage = useMemo(() => {
+    switch (dateError) {
+      case 'invalidDate': {
+        return 'Invalid Date';
+      }
+      case 'disableFuture': {
+        return 'Cannot lose an item in the future';
+      }
+      case 'minDate': {
+        return 'Date too long ago';
+      }
+      default: {
+        return dateError;
+      }
+    }
+  }, [dateError]);
 
   const customDatePicker = (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -268,12 +283,12 @@ const FoundItemFormCreate = () => {
             dateFound: value ? value.toString() : '',
           }));
         }}
+        onError={(newError) => setDateError(newError)}
         disableFuture
         orientation="portrait"
         slotProps={{
           textField: {
-            onKeyDown: onKeyDown,
-            helperText: 'Default: today (if blank)',
+            helperText: errorMessage ? errorMessage : 'Change if lost before today',
             sx: {
               backgroundColor: 'var(--mui-palette-FilledInput-bg)',
               paddingTop: '7px',
