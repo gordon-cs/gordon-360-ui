@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useReducer, HTMLAttributes } from 'react';
+import { useState, useEffect, useCallback, useReducer } from 'react';
 
 import {
   Autocomplete,
@@ -20,7 +20,6 @@ import {
 } from '@mui/material';
 import { debounce } from 'lodash';
 import quickSearchService, { SearchResult } from 'services/quickSearch';
-
 import { SelectChangeEvent } from '@mui/material/Select';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './FoundItemFormCreate.module.scss';

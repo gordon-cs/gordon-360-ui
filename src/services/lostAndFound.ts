@@ -23,7 +23,7 @@ export type MissingItemReport = {
   submitterUsername: string;
   submitterID?: null;
   forGuest: boolean;
-  adminActions: MissingAdminAction[];
+  adminActions?: MissingAdminAction[];
 };
 
 export type InitMissingItemReport = Omit<MissingItemReport, 'recordID'>;
