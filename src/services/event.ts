@@ -29,10 +29,28 @@ const shortDateFormatter = new Intl.DateTimeFormat('en-US', { dateStyle: 'short'
 function formatEvent(event: UnformattedEvent): Event {
   const startDate = new Date(event.StartDate);
   const endDate = new Date(event.EndDate);
+
+  let timeRange = 'No time listed';
+  let date = 'No date listed';
+
+  try {
+    timeRange = shortTimeFormatter.formatRange(startDate, endDate);
+  } catch {
+    // `Intl.DateTimeFormat#format` throws for invalid dates. We will just catch potential errors and
+    // Catch any potential error and fallback to the default specified above
+  }
+
+  try {
+    date = shortDateFormatter.format(startDate);
+  } catch {
+    // `Intl.DateTimeFormat#formatRange` throws if it finds an invalid date
+    // Catch any potential error and fallback to the default specified above
+  }
+
   return {
     ...event,
-    timeRange: shortTimeFormatter.formatRange(startDate, endDate),
-    date: shortDateFormatter.format(startDate),
+    timeRange,
+    date,
     title: event.Event_Title || event.Event_Name,
     location: event.Location || 'No Location Listed',
     Description:
