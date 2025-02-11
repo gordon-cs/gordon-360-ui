@@ -13,15 +13,9 @@ type Props = {
   loading: boolean;
 };
 
-const smallHeader = (
-  <Typography variant="h5" className={styles.header_text}>
-    Events
-  </Typography>
-);
-
 const headings = [
   {
-    name: 'Event',
+    name: 'Name',
     size: 4,
   },
   {
@@ -60,15 +54,14 @@ const noEvents = (
   </Grid>
 );
 
-const breakpointWidth = windowBreakWidths.breakSM;
-
 const EventList = ({ events, loading }: Props) => {
   const [width] = useWindowSize();
 
   return (
     <Card>
       <CardHeader
-        title={width < breakpointWidth ? smallHeader : fullHeader}
+        title="Events"
+        subheader={width < windowBreakWidths.breakSM ? undefined : fullHeader}
         className={styles.header}
       />
       {loading ? (

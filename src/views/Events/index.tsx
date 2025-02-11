@@ -1,7 +1,6 @@
 import { useIsAuthenticated } from '@azure/msal-react';
 import { Button, CardHeader, Grid } from '@mui/material';
 import EventList from './components/EventList';
-import GordonLoader from 'components/Loader';
 import { useEffect, useState } from 'react';
 import gordonEvent, { Event } from 'services/event';
 import EventFilters from './components/EventFilters';
