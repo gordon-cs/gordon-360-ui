@@ -24,20 +24,19 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { InfoOutlined, Add, Key, Launch } from '@mui/icons-material';
 import { DateTime } from 'luxon';
 
-import Header from 'views/CampusSafety/components/Header'; // adjust path if needed
+import Header from 'views/CampusSafety/components/Header'; 
 import lostAndFoundService, {
   FoundItemReport,
   FoundAdminAction,
-} from 'services/lostAndFound';       // adjust path if needed
-import userService from 'services/user';                                // if you need user data for new actions
+} from 'services/lostAndFound';      
+import userService from 'services/user';                                
 import GordonSnackbar from 'components/Snackbar';
 import GordonLoader from 'components/Loader';
-import GordonDialogBox from 'components/GordonDialogBox';              // used for the modal
-import SimpleSnackbar from 'components/Snackbar';                      // optional
+import GordonDialogBox from 'components/GordonDialogBox';              
+import SimpleSnackbar from 'components/Snackbar';                      
 
 import styles from './FoundItemFormEdit.module.scss';
 
-/** For the Admin Action Modal. Adjust or rename these to your own action categories. */
 const actionTypes = ['CheckedIn', 'NotifiedOfficer', 'OwnerContact', 'Custom'];
 
 interface ISnackbarState {
@@ -46,7 +45,7 @@ interface ISnackbarState {
   open: boolean;
 }
 
-/** Example color array */
+/** Color Array */
 const colorOptions = [
   'Black',
   'Blue',
@@ -65,7 +64,7 @@ const colorOptions = [
   'Yellow',
 ];
 
-/** Example categories */
+/** Categories */
 const categoryOptions = [
   'Clothing/Shoes',
   'Electronics',
@@ -89,7 +88,6 @@ const FoundItemFormEdit = () => {
   /** The found item object we are editing. */
   const [foundItem, setFoundItem] = useState<FoundItemReport | null>(null);
 
-  /** For user messages. */
   const [snackbar, setSnackbar] = useState<ISnackbarState>({
     message: '',
     severity: undefined,
@@ -138,7 +136,7 @@ const FoundItemFormEdit = () => {
         const userInfo = await userService.getProfileInfo();
         setUsername({ AD_Username: userInfo?.AD_Username || '' });
       } catch {
-        // optional
+        // optional nothing here yet
       }
 
       try {
@@ -175,7 +173,7 @@ const FoundItemFormEdit = () => {
     fetchActions();
   }, [itemId, actionsUpdated]);
 
-  /** 3) Validate required fields. Adjust field names if needed. */
+  /** 3) Validate required fields. */
   const requiredFields = ['category', 'description', 'locationFound'];
 
   const validateForm = (): boolean => {
@@ -258,7 +256,7 @@ const FoundItemFormEdit = () => {
   const handleMarkAsDisposed = async () => {
     if (!foundItem) return;
     try {
-      await lostAndFoundService.updateFoundReportStatus(foundItem.recordID, 'disposed');
+      await lostAndFoundService.updateFoundReportStatus(foundItem.recordID, 'deleted');
       createSnackbar('Marked as disposed!', 'info');
       navigate('/lostandfound');
     } catch (err) {

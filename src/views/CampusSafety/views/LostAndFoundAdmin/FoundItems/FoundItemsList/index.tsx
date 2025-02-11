@@ -21,14 +21,10 @@ import {
   import useMediaQuery from '@mui/material/useMediaQuery';
   import { useSearchParams } from 'react-router-dom';
   import GordonSnackbar from 'components/Snackbar';
-  
-  // Import your found item service & data types
-  import lostAndFoundService, { FoundItemReport } from 'services/lostAndFound'; // Adjust path if needed
-  
-  // date-fns or any date library for date formatting
+  import lostAndFoundService, { FoundItemReport } from 'services/lostAndFound'; 
   import { differenceInCalendarDays, format } from 'date-fns';
   
-  // Example categories & colors for Found Items (adjust if they differ from Missing items)
+
   const categories = [
     'Clothing/Shoes',
     'Electronics',
@@ -95,12 +91,8 @@ import {
     }
   }
   
-  /**
-   * Example: We can define a "statusChip" function if you have a "status" field on FoundItemReport.
-   * If your found item also has e.g. "pickedup", "disposed" statuses, adjust the logic below.
-   */
+  
   function statusChip(report: FoundItemReport) {
-    // Some examples:
     let normalized = report.status.toLowerCase();
     let chipColor: 'primary' | 'secondary' | 'success' | 'error' | 'info' = 'primary';
   
@@ -121,12 +113,7 @@ import {
     );
   }
   
-  /**
-   * Display the FoundItemList page, similar to MissingItemList but:
-   * - Uses "ID" for the Tag # filter
-   * - Replaces "Report Item for others" button with "Enter New Found Item"
-   * - Uses getFoundItemReports from your lostAndFoundService, with the query param "ID"
-   */
+  
   const FoundItemList = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [loading, setLoading] = useState(true);
@@ -212,10 +199,10 @@ import {
             keywords || '',
           );
           
-          // For now, we assume you might not have real pagination. 
+          // For now, since there is no real pagination. 
           // Just store results. If the array is huge, we do no lazy loading or do a local slice. 
           setReports(fetched);
-          setHasMore(false); // If your API doesn't do pagination, we can't "load more."
+          setHasMore(false); // Since the API doesn't do pagination, we can't "load more."
         } catch (err) {
           console.error('Error fetching found items', err);
           createSnackbar('Failed to load found item reports', 'error');
@@ -231,8 +218,7 @@ import {
       return () => clearTimeout(timer);
     }, [tagID, color, category, keywords, pageLoaded,status, createSnackbar]);
   
-    // If you do want to implement lazy loading, you'd define a function fetchMore() etc.
-    // For demonstration, we set hasMore = false. But if you do implement it:
+    // Currently, we set hasMore = false. But if we do implement pagination:
     // 1. Add lastId to the service
     // 2. In IntersectionObserver, call fetchMore with lastId
   
@@ -401,7 +387,6 @@ import {
                       variant="contained"
                       color="primary"
                       onClick={() => navigate('/lostandfound/lostandfoundadmin/founditemform')} 
-                      // or whatever your route is for new found item
                       fullWidth={isMobile}
                       className={styles.reportButton}
                     >
@@ -470,7 +455,6 @@ import {
                             <Typography variant="body2">Category: {report.category}</Typography>
                             <Grid item xs={12}>
                               {statusChip(report)}
-                              {/* Example: highlight new items */}
                               {differenceInCalendarDays(new Date(), Date.parse(report.dateCreated)) < 3 && (
                                 <Chip label="NEW" color="success" className={styles.chip} />
                               )}
@@ -490,7 +474,6 @@ import {
                           </Grid>
                           <Grid item xs={2}>
                             <div className={styles.dataCell}>
-                              {/* If you store Finder info in finderFirstName/finderLastName, adjust here */}
                               {report.finderFirstName} {report.finderLastName}
                             </div>
                           </Grid>
@@ -510,7 +493,6 @@ import {
                           </Grid>
                           <Grid item xs={12}>
                             {statusChip(report)}
-                            {/* Example: highlight new items */}
                             {differenceInCalendarDays(new Date(), Date.parse(report.dateCreated)) < 3 && (
                               <Chip label="NEW" color="success" className={styles.chip} />
                             )}
@@ -518,7 +500,7 @@ import {
                         </Grid>
                       ),
                     )}
-                    {/* IntersectionObserver sentinel if you do real lazy loading */}
+                    {/* IntersectionObserver sentinel when we do real lazy loading */}
                     <div ref={loadMoreRef} style={{ height: '1px' }} />
                     {lazyLoading && <GordonLoader />}
                     {!hasMore && !loading && (

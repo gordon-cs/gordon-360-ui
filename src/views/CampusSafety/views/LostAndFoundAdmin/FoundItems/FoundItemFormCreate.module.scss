@@ -41,7 +41,7 @@
     background-color: var(--mui-palette-neutral-100);
   }
   
-  /* Finder wants item container (similar to stolen_container in MissingItemCreate.module.scss) */
+  /* Finder wants item container */
   .stolen_container {
     padding: 0 1.5rem;
     background-color: var(--mui-palette-neutral-100);
@@ -63,7 +63,6 @@
     padding: 0.7rem;
   }
   
-  /* Example icon style if needed */
   .icon {
     color: var(--mui-palette-neutral-400);
     height: 1.5em;

@@ -26,12 +26,12 @@ import { debounce } from 'lodash';
 import SearchIcon from '@mui/icons-material/Search';
 import quickSearchService, { SearchResult } from 'services/quickSearch';
 
-import { SelectChangeEvent } from '@mui/material/Select'; // <-- Import for typed Select onChange
-import Header from 'views/CampusSafety/components/Header'; // Adjust if needed
+import { SelectChangeEvent } from '@mui/material/Select'; 
+import Header from 'views/CampusSafety/components/Header';
 import styles from './FoundItemFormCreate.module.scss';
-import lostAndFoundService from 'services/lostAndFound'; // Adjust if needed
-import userService from 'services/user'; // Adjust if needed
-import GordonSnackbar from 'components/Snackbar'; // Adjust if needed
+import lostAndFoundService from 'services/lostAndFound'; 
+import userService from 'services/user';
+import GordonSnackbar from 'components/Snackbar';
 import { useNavigate } from 'react-router';
 import { InfoOutlined } from '@mui/icons-material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
@@ -96,7 +96,7 @@ interface IFoundItemFormData {
   brand: string;
   description: string;
   locationFound: string;
-  dateFound: string; // storing as a string
+  dateFound: string; 
   foundBy: string;
   finderWantsItem: boolean;
   finderPhoneNumber: string;
@@ -253,15 +253,6 @@ const FoundItemFormCreate = () => {
   };
   
 
- 
-  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value, type, checked } = e.target;
-  //   if (type === 'checkbox') {
-  //     setFormData((prevData) => ({ ...prevData, [name]: checked }));
-  //   } else {
-  //     setFormData((prevData) => ({ ...prevData, [name]: value }));
-  //   }
-  // };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
@@ -385,7 +376,7 @@ const FoundItemFormCreate = () => {
         finderEmail: formData.isGordonFinder === 'no' ? formData.finderEmail : undefined,
       };
   
-      console.log("Submitting request data:", requestData); // Debugging log
+      console.log("Submitting request data:", requestData); // Debugging log keep for now
   
       const response = await lostAndFoundService.createFoundItemReport(requestData);
       console.log("API Response:", response);

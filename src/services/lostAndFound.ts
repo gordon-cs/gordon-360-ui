@@ -207,13 +207,7 @@ export type InitFoundAdminAction = Omit<FoundAdminAction, 'ID'>;
  * Fetch an array containing the full list of all found item reports.
  * @returns FoundItemReport[] array of all found item reports.
  */
-// const getFoundItemReports = (
-//   ID?: string,
-//   color?: string,
-//   category?: string,
-//   keywords?: string,
-// ): Promise<FoundItemReport[]> => {
-//   const query: Record<string, string> = {};
+
 function getFoundItemReports(
   ID?: string,
   status?:string,

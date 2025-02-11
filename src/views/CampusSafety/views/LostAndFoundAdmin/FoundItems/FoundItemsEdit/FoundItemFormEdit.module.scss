@@ -38,13 +38,6 @@
   margin-bottom: 1rem;
 }
 
-// .box_background {
-//   padding: 1rem;
-//   margin-bottom: 1.5rem;
-//   background-color: var(--mui-palette-background-default);
-//   border-radius: 5px;
-// }
-
 .radio_group {
   display: contents;
 }
@@ -105,7 +98,6 @@
   height: fit-content;
 }
 
-/* A disclaimer area at the top of the card */
 .disclaimer {
   display: flex;
   flex-direction: row;
@@ -114,13 +106,11 @@
   margin: 20px;
 }
 
-/* For the main title in the CardHeader */
 .title {
   text-align: center;
 }
 
 
-/* If the item is flagged as stolen, etc. */
 .stolenButton {
   padding: 0.7rem;
   border-radius: 10px;
@@ -135,7 +125,7 @@
   padding: 0.7rem;
 }
 
-/* If you want to collapse to 1 column on small screens, you can add a media query: */
+
 @media (max-width: 1000px) {
   .form_card {
     margin: 0.5rem;
