@@ -1,33 +1,16 @@
 .event_item {
   padding: 10px;
-}
 
-.event_column {
-  padding-inline: 10px;
-}
-
-.event_item:hover {
-  .event_column,
-  .descriptionText {
-    color: var(--mui-palette-primary-contrastText);
-  }
-}
-
-:global(.gc360_event_list) > section {
-  background-color: var(--mui-palette-neutral-light);
   transition: background-color 200ms ease;
+  cursor: pointer;
 
-  &:hover {
-    background-color: var(--mui-palette-secondary-main);
-    cursor: pointer;
+  background-color: var(--mui-palette-neutral-light);
+  &:nth-of-type(even) {
+    background-color: var(--mui-palette-neutral-200);
   }
-}
-
-// Make even-numbered rows gray
-:global(.gc360_event_list) > section:nth-child(even) {
-  background-color: var(--mui-palette-neutral-200);
 
   &:hover {
     background-color: var(--mui-palette-secondary-main);
+    color: var(--mui-palette-primary-contrastText);
   }
 }

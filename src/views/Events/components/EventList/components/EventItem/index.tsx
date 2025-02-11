@@ -1,4 +1,4 @@
-import { Button, CardContent, Collapse, Grid, Typography } from '@mui/material';
+import { Collapse, Grid, Typography } from '@mui/material';
 import { useState } from 'react';
 import styles from './EventItem.module.css';
 import 'add-to-calendar-button';
@@ -7,9 +7,7 @@ import { STORAGE_COLOR_PREFERENCE_KEY } from 'theme';
 import { Event } from 'services/event';
 
 const checkLightMode = (mode: string | null) => {
-  if (mode === 'system') {
-    return 'system';
-  } else if (mode === 'dark') {
+  if (mode === 'dark') {
     return 'dark';
   } else if (mode === 'light') {
     return 'light';
@@ -42,52 +40,38 @@ const EventItem = ({ event }: Props) => {
       }}
     >
       <Grid item xs={12} sm={4}>
-        <Typography variant="h6" className={styles.event_column}>
-          {event.title}
-        </Typography>
+        <Typography variant="h6">{event.title}</Typography>
       </Grid>
-      <Grid item xs={6} sm={2}>
-        <Typography className={styles.event_column}>
-          {event.date === 'Invalid DateTime' ? 'No Date Listed' : event.date}
-        </Typography>
+      <Grid item xs={4} sm={2}>
+        <Typography>{event.date}</Typography>
       </Grid>
-      <Grid item xs={6} sm={2}>
-        <Typography className={styles.event_column}>
-          {event.timeRange === 'Invalid DateTime - Invalid DateTime'
-            ? 'No Time Listed'
-            : event.timeRange}
-        </Typography>
+      <Grid item xs={8} sm={2}>
+        <Typography>{event.timeRange}</Typography>
       </Grid>
       <Grid item xs={12} sm={4}>
-        <Typography className={styles.event_column}>{event.location}</Typography>
+        <Typography>{event.location}</Typography>
       </Grid>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          <Typography sx={{ type: 'caption', className: styles.descriptionText, tabIndex: 0 }}>
-            {event.Description || 'No description available'}
-          </Typography>
-          {event.StartDate !== '' && event.EndDate !== '' && (
-            <Button onClick={() => setExpanded((e) => !e)}>
-              <add-to-calendar-button
-                name={event.title}
-                options="'Google','Microsoft365|Gordon Outlook','Apple','Outlook.com|Outlook','MicrosoftTeams'"
-                location={event.location}
-                startDate={format(new Date(event.StartDate), 'yyyy-MM-dd')}
-                endDate={format(new Date(event.EndDate), 'yyyy-MM-dd')}
-                startTime={format(new Date(event.StartDate), 'HH:mm')}
-                endTime={format(new Date(event.EndDate), 'HH:mm')}
-                //default timeZone setting is "currentBrowser", and saved setting "America/New_York" if needed in case
-                timeZone="currentBrowser"
-                label="Add to Calendar"
-                description={event.Description}
-                lightMode={
-                  checkLightMode(localStorage.getItem(STORAGE_COLOR_PREFERENCE_KEY)) ?? 'system'
-                }
-                //Get user theme mode preference
-              ></add-to-calendar-button>
-            </Button>
-          )}
-        </CardContent>
+        <Typography className={styles.descriptionText} tabIndex={0}>
+          {event.Description || 'No description available'}
+        </Typography>
+        {event.StartDate !== '' && event.EndDate !== '' && (
+          <add-to-calendar-button
+            name={event.title}
+            options="'Google','Microsoft365|Gordon Outlook','Apple','Outlook.com|Outlook','MicrosoftTeams'"
+            location={event.location}
+            startDate={format(new Date(event.StartDate), 'yyyy-MM-dd')}
+            endDate={format(new Date(event.EndDate), 'yyyy-MM-dd')}
+            startTime={format(new Date(event.StartDate), 'HH:mm')}
+            endTime={format(new Date(event.EndDate), 'HH:mm')}
+            //default timeZone setting is "currentBrowser", and saved setting "America/New_York" if needed in case
+            timeZone="currentBrowser"
+            label="Add to Calendar"
+            description={event.Description}
+            //Get user theme mode preference
+            lightMode={checkLightMode(localStorage.getItem(STORAGE_COLOR_PREFERENCE_KEY))}
+          ></add-to-calendar-button>
+        )}
       </Collapse>
     </Grid>
   );

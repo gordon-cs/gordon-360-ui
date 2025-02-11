@@ -43,15 +43,11 @@ const Events = () => {
           {content}
         </Grid>
         <CardHeader
-          item
           xs={12}
           className="gc360_header"
           title={
             <div style={{ textAlign: 'center' }}>
-              <div>
-                You have reached the end of Gordon's events. Check out the top of the page if you
-                want to add filters.
-              </div>
+              <p>To find other events, adjust your filters above.</p>
               <Button
                 variant="contained"
                 color="secondary"

@@ -13,34 +13,28 @@ type Props = {
   loading: boolean;
 };
 
-const headings = [
-  {
-    name: 'Name',
-    size: 4,
-  },
-  {
-    name: 'Date',
-    size: 2,
-  },
-  {
-    name: 'Time',
-    size: 2,
-  },
-  {
-    name: 'Location',
-    size: 4,
-  },
-];
-
-const fullHeader = (
+const tableHeader = (
   <Grid container direction="row">
-    {headings.map(({ name, size }) => (
-      <Grid item xs={size} key={name}>
-        <Typography variant="h5" className={styles.header_text}>
-          {name}
-        </Typography>
-      </Grid>
-    ))}
+    <Grid item xs={4} key="Name">
+      <Typography variant="h5" className={styles.header_text}>
+        Name
+      </Typography>
+    </Grid>
+    <Grid item xs={2} key="Date">
+      <Typography variant="h5" className={styles.header_text}>
+        Date
+      </Typography>
+    </Grid>
+    <Grid item xs={2} key="Time">
+      <Typography variant="h5" className={styles.header_text}>
+        Time
+      </Typography>
+    </Grid>
+    <Grid item xs={4} key="Location">
+      <Typography variant="h5" className={styles.header_text}>
+        Location
+      </Typography>
+    </Grid>
   </Grid>
 );
 
@@ -61,7 +55,7 @@ const EventList = ({ events, loading }: Props) => {
     <Card>
       <CardHeader
         title="Events"
-        subheader={width < windowBreakWidths.breakSM ? undefined : fullHeader}
+        subheader={width > windowBreakWidths.breakSM ? tableHeader : undefined}
         className={styles.header}
       />
       {loading ? (
