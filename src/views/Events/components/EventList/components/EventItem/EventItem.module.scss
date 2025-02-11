@@ -1,0 +1,16 @@
+.event_item {
+  padding: 10px;
+
+  transition: background-color 200ms ease;
+  cursor: pointer;
+
+  background-color: var(--mui-palette-neutral-light);
+  &:nth-of-type(even) {
+    background-color: var(--mui-palette-neutral-200);
+  }
+
+  &:hover {
+    background-color: var(--mui-palette-secondary-main);
+    color: var(--mui-palette-primary-contrastText);
+  }
+}
