@@ -25,6 +25,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { LFCategories, LFColors } from 'views/CampusSafety/components/Constants';
+import { useUser } from 'hooks';
 
 const MissingItemFormEdit = () => {
   const navigate = useNavigate();
@@ -74,17 +75,17 @@ const MissingItemFormEdit = () => {
   });
 
   const [showConfirm, setShowConfirm] = useState(false);
+  const { profile } = useUser();
   const isEditable = formData.status === 'active';
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const userInfo = await userService.getProfileInfo();
       setUser({
-        firstName: userInfo?.FirstName || '',
-        lastName: userInfo?.LastName || '',
-        emailAddr: userInfo?.Email || '',
-        phoneNumber: userInfo?.MobilePhone || '',
-        AD_Username: userInfo?.AD_Username || '',
+        firstName: profile?.FirstName || '',
+        lastName: profile?.LastName || '',
+        emailAddr: profile?.Email || '',
+        phoneNumber: profile?.MobilePhone || '',
+        AD_Username: profile?.AD_Username || '',
       });
     };
     fetchUserData();

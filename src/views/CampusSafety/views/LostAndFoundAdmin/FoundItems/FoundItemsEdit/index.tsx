@@ -84,9 +84,6 @@ const FoundItemFormEdit = () => {
   // For checking screen size
   const isMobile = useMediaQuery('(max-width:600px)');
 
-  // For user data if needed
-  const [username, setUsername] = useState({ AD_Username: '' });
-
   /** 1) On mount, fetch found item & user data. */
   useEffect(() => {
     const fetchData = async () => {
@@ -94,11 +91,6 @@ const FoundItemFormEdit = () => {
         createSnackbar('No Found Item ID provided in route', 'error');
         setLoading(false);
         return;
-      }
-      try {
-        setUsername({ AD_Username: profile?.AD_Username || '' });
-      } catch {
-        // optional nothing here yet
       }
 
       try {
@@ -253,7 +245,7 @@ const FoundItemFormEdit = () => {
       ...newActionFormData,
       foundID: foundItem.recordID,
       actionDate: new Date().toISOString(),
-      submitterUsername: username.AD_Username,
+      submitterUsername: profile?.AD_Username || '',
     };
     try {
       await lostAndFoundService.createFoundAdminAction(foundItem.recordID, requestData);

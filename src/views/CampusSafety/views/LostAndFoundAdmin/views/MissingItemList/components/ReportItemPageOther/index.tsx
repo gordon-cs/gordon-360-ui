@@ -94,14 +94,6 @@ const ReportItemPage = () => {
     setSnackbar({ message, severity, open: true });
   }, []);
 
-  const [user, setUser] = useState({
-    firstName: '',
-    lastName: '',
-    emailAddr: '',
-    phoneNumber: '',
-    AD_Username: '', // Add AD_Username to user state
-  });
-
   const [isGordonPerson, setIsGordonPerson] = useState('');
   const [formData, setFormData] = useState({
     firstName: '',
@@ -134,19 +126,6 @@ const ReportItemPage = () => {
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
 
   const specialCharactersRegex = /[^a-zA-Z0-9'\-.\s]/gm;
-
-  useEffect(() => {
-    const setUserData = async () => {
-      setUser({
-        firstName: profile?.FirstName || '',
-        lastName: profile?.LastName || '',
-        emailAddr: profile?.Email || '',
-        phoneNumber: profile?.MobilePhone || '',
-        AD_Username: profile?.AD_Username || '', // Set AD_Username
-      });
-    };
-    setUserData();
-  }, [profile]);
 
   const handleInput = (_event: React.SyntheticEvent, value: string) => {
     const query = value.trim().replace(specialCharactersRegex, '');
@@ -323,7 +302,7 @@ const ReportItemPage = () => {
           ...newActionFormData,
           missingID: newReportId,
           actionDate: now.toISOString(),
-          username: user.AD_Username,
+          username: profile?.AD_Username || '',
           isPublic: true,
           action: 'Created',
         };

@@ -15,7 +15,6 @@ import {
 import Header from 'views/CampusSafety/components/Header';
 import styles from './MissingItemCreate.module.scss';
 import lostAndFoundService from 'services/lostAndFound';
-import userService from 'services/user';
 import ReportStolenModal from './components/reportStolen';
 import ConfirmReport from './components/confirmReport';
 import GordonSnackbar from 'components/Snackbar';
@@ -24,6 +23,7 @@ import { InfoOutlined } from '@mui/icons-material';
 import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { LFCategories, LFColors } from 'views/CampusSafety/components/Constants';
+import { useUser } from 'hooks';
 
 const MissingItemFormCreate = () => {
   const navigate = useNavigate();
@@ -59,17 +59,17 @@ const MissingItemFormCreate = () => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
   const [newActionFormData] = useState({ action: '', actionNote: '' });
   const [disableSubmit, setDisableSubmit] = useState(false);
+  const { profile } = useUser();
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const userInfo = await userService.getProfileInfo();
         setUser({
-          firstName: userInfo?.FirstName || '',
-          lastName: userInfo?.LastName || '',
-          emailAddr: userInfo?.Email || '',
-          phoneNumber: userInfo?.MobilePhone || '',
-          AD_Username: userInfo?.AD_Username || '', // Set AD_Username
+          firstName: profile?.FirstName || '',
+          lastName: profile?.LastName || '',
+          emailAddr: profile?.Email || '',
+          phoneNumber: profile?.MobilePhone || '',
+          AD_Username: profile?.AD_Username || '', // Set AD_Username
         });
       } catch (error) {
         console.error('Error fetching user data:', error);
