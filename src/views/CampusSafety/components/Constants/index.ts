@@ -31,4 +31,6 @@ const colors = [
   'Yellow',
 ];
 
+const storageLocations = ['Lost and Found Cabinet', 'Rodger Safe'];
+
 export { categories, colors };
