@@ -1,4 +1,4 @@
-const categories = [
+const LFCategories = [
   'Clothing/Shoes',
   'Electronics',
   'Jewelry/Watches',
@@ -13,7 +13,7 @@ const categories = [
   'Other',
 ];
 
-const colors = [
+const LFColors = [
   'Black',
   'Blue',
   'Brown',
@@ -31,6 +31,6 @@ const colors = [
   'Yellow',
 ];
 
-const storageLocations = ['Lost and Found Cabinet', 'Rodger Safe'];
+const LFStorageLocations = ['Lost and Found Cabinet', 'Rodger Safe'];
 
-export { categories, colors, storageLocations };
+export { LFCategories, LFColors, LFStorageLocations };

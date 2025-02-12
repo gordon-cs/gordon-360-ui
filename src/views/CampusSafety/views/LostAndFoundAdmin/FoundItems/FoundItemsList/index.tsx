@@ -23,7 +23,7 @@ import { useSearchParams } from 'react-router-dom';
 import GordonSnackbar from 'components/Snackbar';
 import lostAndFoundService, { FoundItem } from 'services/lostAndFound';
 import { differenceInCalendarDays } from 'date-fns';
-import { categories, colors } from 'views/CampusSafety/components/Constants';
+import { LFCategories, LFColors } from 'views/CampusSafety/components/Constants';
 import { formatDateString } from 'views/CampusSafety/components/Helpers';
 
 function statusChip(report: FoundItem) {
@@ -278,7 +278,7 @@ const FoundItemList = () => {
                           onChange={(e) => setUrlParam('color', e.target.value)}
                         >
                           <MenuItem value="">All</MenuItem>
-                          {colors.map((color) => (
+                          {LFColors.map((color) => (
                             <MenuItem key={color} value={color}>
                               {color}
                             </MenuItem>
@@ -294,7 +294,7 @@ const FoundItemList = () => {
                           onChange={(e) => setUrlParam('category', e.target.value)}
                         >
                           <MenuItem value="">All</MenuItem>
-                          {categories.map((category) => (
+                          {LFCategories.map((category) => (
                             <MenuItem key={category} value={category}>
                               {category}
                             </MenuItem>

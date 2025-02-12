@@ -23,7 +23,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSearchParams } from 'react-router-dom';
 import GordonSnackbar from 'components/Snackbar';
 import { differenceInCalendarDays } from 'date-fns';
-import { categories, colors } from 'views/CampusSafety/components/Constants';
+import { LFCategories, LFColors } from 'views/CampusSafety/components/Constants';
 import { formatDateString } from 'views/CampusSafety/components/Helpers';
 
 const yellowDateThreshold = 7;
@@ -314,7 +314,7 @@ const MissingItemList = () => {
                           onChange={(e) => setUrlParam('color', e.target.value)}
                         >
                           <MenuItem value="">All</MenuItem>
-                          {colors.map((colorOption) => (
+                          {LFColors.map((colorOption) => (
                             <MenuItem key={colorOption} value={colorOption}>
                               {colorOption}
                             </MenuItem>
@@ -330,7 +330,7 @@ const MissingItemList = () => {
                           onChange={(e) => setUrlParam('category', e.target.value)}
                         >
                           <MenuItem value="">All</MenuItem>
-                          {categories.map((categoryOption) => (
+                          {LFCategories.map((categoryOption) => (
                             <MenuItem key={categoryOption} value={categoryOption}>
                               {categoryOption}
                             </MenuItem>

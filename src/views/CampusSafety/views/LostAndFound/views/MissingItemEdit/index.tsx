@@ -24,7 +24,7 @@ import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-da
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { categories, colors } from 'views/CampusSafety/components/Constants';
+import { LFCategories, LFColors } from 'views/CampusSafety/components/Constants';
 
 const MissingItemFormEdit = () => {
   const navigate = useNavigate();
@@ -418,7 +418,7 @@ const MissingItemFormEdit = () => {
                     </FormGroup>
                     <Grid item className={styles.category_group}>
                       <FormGroup className={styles.radio_group}>
-                        {categories.map((label) => (
+                        {LFCategories.map((label) => (
                           <FormControlLabel
                             key={label}
                             control={<Radio disabled={!isEditable} />}
@@ -450,7 +450,7 @@ const MissingItemFormEdit = () => {
                     </FormGroup>
                     <Grid item className={styles.checkbox_group}>
                       <FormGroup>
-                        {colors.map((color) => (
+                        {LFColors.map((color) => (
                           <FormControlLabel
                             key={color}
                             control={

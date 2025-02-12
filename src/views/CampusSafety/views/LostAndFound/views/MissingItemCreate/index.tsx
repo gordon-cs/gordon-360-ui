@@ -23,7 +23,7 @@ import { useNavigate } from 'react-router';
 import { InfoOutlined } from '@mui/icons-material';
 import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
-import { categories, colors } from 'views/CampusSafety/components/Constants';
+import { LFCategories, LFColors } from 'views/CampusSafety/components/Constants';
 
 const MissingItemFormCreate = () => {
   const navigate = useNavigate();
@@ -341,7 +341,7 @@ const MissingItemFormCreate = () => {
                 </FormGroup>
                 <Grid item className={styles.category_group}>
                   <FormGroup className={styles.radio_group}>
-                    {categories.map((label) => (
+                    {LFCategories.map((label) => (
                       <FormControlLabel
                         key={label}
                         control={<Radio />}
@@ -379,7 +379,7 @@ const MissingItemFormCreate = () => {
                 </FormGroup>
                 <Grid item className={styles.checkbox_group}>
                   <FormGroup className={styles.color_group}>
-                    {colors.map((color) => (
+                    {LFColors.map((color) => (
                       <FormControlLabel
                         key={color}
                         control={

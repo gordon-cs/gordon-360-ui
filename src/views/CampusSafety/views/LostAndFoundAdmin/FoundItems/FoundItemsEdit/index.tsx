@@ -31,7 +31,7 @@ import GordonDialogBox from 'components/GordonDialogBox';
 
 import styles from './FoundItemFormEdit.module.scss';
 import { useUser } from 'hooks';
-import { categories, colors } from 'views/CampusSafety/components/Constants';
+import { LFCategories, LFColors } from 'views/CampusSafety/components/Constants';
 
 const actionTypes = ['CheckedIn', 'NotifiedOfficer', 'OwnerContact', 'Custom'];
 
@@ -554,7 +554,7 @@ const FoundItemFormEdit = () => {
                 </FormGroup>
                 <div className={styles.category_group}>
                   <FormGroup className={styles.radio_group}>
-                    {categories.map((cat) => {
+                    {LFCategories.map((cat) => {
                       const val = cat.toLowerCase().replace(/ /g, '/');
                       return (
                         <FormControlLabel
@@ -594,7 +594,7 @@ const FoundItemFormEdit = () => {
                 </FormGroup>
                 <div className={styles.checkbox_group}>
                   <FormGroup className={styles.color_group}>
-                    {colors.map((color) => (
+                    {LFColors.map((color) => (
                       <FormControlLabel
                         key={color}
                         label={color}

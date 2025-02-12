@@ -31,7 +31,7 @@ import ReportStolenModal from 'views/CampusSafety/views/LostAndFound/views/Missi
 import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { useUser } from 'hooks';
-import { categories, colors } from 'views/CampusSafety/components/Constants';
+import { LFCategories, LFColors } from 'views/CampusSafety/components/Constants';
 
 const MIN_QUERY_LENGTH = 2;
 
@@ -363,7 +363,7 @@ const ReportItemPage = () => {
       </FormGroup>
       <Grid item className={styles.checkbox_group}>
         <FormGroup>
-          {colors.map((color) => (
+          {LFColors.map((color) => (
             <FormControlLabel
               key={color}
               control={
@@ -603,7 +603,7 @@ const ReportItemPage = () => {
                 </FormGroup>
                 <Grid item className={styles.category_group}>
                   <FormGroup className={styles.radio_group}>
-                    {categories.map((label) => (
+                    {LFCategories.map((label) => (
                       <FormControlLabel
                         key={label}
                         control={<Radio />}
