@@ -33,4 +33,4 @@ const colors = [
 
 const storageLocations = ['Lost and Found Cabinet', 'Rodger Safe'];
 
-export { categories, colors };
+export { categories, colors, storageLocations };
