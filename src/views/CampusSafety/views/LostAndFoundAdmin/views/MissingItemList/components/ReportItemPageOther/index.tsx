@@ -31,6 +31,7 @@ import ReportStolenModal from 'views/CampusSafety/views/LostAndFound/views/Missi
 import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { useUser } from 'hooks';
+import { categories, colors } from 'views/CampusSafety/components/Constants';
 
 const MIN_QUERY_LENGTH = 2;
 
@@ -362,23 +363,7 @@ const ReportItemPage = () => {
       </FormGroup>
       <Grid item className={styles.checkbox_group}>
         <FormGroup>
-          {[
-            'Black',
-            'Blue',
-            'Brown',
-            'Gold',
-            'Gray',
-            'Green',
-            'Maroon',
-            'Orange',
-            'Pink',
-            'Purple',
-            'Red',
-            'Silver',
-            'Tan',
-            'White',
-            'Yellow',
-          ].map((color) => (
+          {colors.map((color) => (
             <FormControlLabel
               key={color}
               control={
@@ -618,20 +603,7 @@ const ReportItemPage = () => {
                 </FormGroup>
                 <Grid item className={styles.category_group}>
                   <FormGroup className={styles.radio_group}>
-                    {[
-                      'Clothing/Shoes',
-                      'Electronics',
-                      'Jewelry/Watches',
-                      'Keys/Keychains',
-                      'Glasses',
-                      'Bottles/Mugs',
-                      'Books',
-                      'Bags/Purses',
-                      'Office Supplies',
-                      'IDs/Wallets',
-                      'Cash/Cards',
-                      'Other',
-                    ].map((label) => (
+                    {categories.map((label) => (
                       <FormControlLabel
                         key={label}
                         control={<Radio />}

@@ -30,6 +30,7 @@ import { InfoOutlined } from '@mui/icons-material';
 import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { useUser } from 'hooks';
+import { categories, colors } from 'views/CampusSafety/components/Constants';
 
 const MIN_QUERY_LENGTH = 2;
 
@@ -422,20 +423,7 @@ const FoundItemFormCreate = () => {
               </FormGroup>
               <div className={styles.category_group}>
                 <FormGroup className={styles.radio_group}>
-                  {[
-                    'Clothing/Shoes',
-                    'Electronics',
-                    'Jewelry/Watches',
-                    'Keys/Keychains',
-                    'Glasses/Sunglasses',
-                    'Bottles/Mugs',
-                    'Books',
-                    'Bags/Purses',
-                    'Office/School Supplies',
-                    'IDs/Wallets',
-                    'Currency/Credit Cards',
-                    'Other',
-                  ].map((label) => {
+                  {categories.map((label) => {
                     const value = label.toLowerCase().replace(/ /g, '/');
                     return (
                       <FormControlLabel
@@ -473,23 +461,7 @@ const FoundItemFormCreate = () => {
               </FormGroup>
               <div className={styles.checkbox_group}>
                 <FormGroup className={styles.color_group}>
-                  {[
-                    'Black',
-                    'Blue',
-                    'Brown',
-                    'Gold',
-                    'Gray',
-                    'Green',
-                    'Maroon',
-                    'Orange',
-                    'Pink',
-                    'Purple',
-                    'Red',
-                    'Silver',
-                    'Tan',
-                    'White',
-                    'Yellow',
-                  ].map((color) => (
+                  {colors.map((color) => (
                     <FormControlLabel
                       key={color}
                       control={

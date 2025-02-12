@@ -31,7 +31,7 @@ import GordonDialogBox from 'components/GordonDialogBox';
 
 import styles from './FoundItemFormEdit.module.scss';
 import { useUser } from 'hooks';
-import { categories, colors } from 'services/lostAndFound';
+import { categories, colors } from 'views/CampusSafety/components/Constants';
 
 const actionTypes = ['CheckedIn', 'NotifiedOfficer', 'OwnerContact', 'Custom'];
 

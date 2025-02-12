@@ -23,6 +23,7 @@ import { useNavigate } from 'react-router';
 import { InfoOutlined } from '@mui/icons-material';
 import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { categories, colors } from 'views/CampusSafety/components/Constants';
 
 const MissingItemFormCreate = () => {
   const navigate = useNavigate();
@@ -340,20 +341,7 @@ const MissingItemFormCreate = () => {
                 </FormGroup>
                 <Grid item className={styles.category_group}>
                   <FormGroup className={styles.radio_group}>
-                    {[
-                      'Clothing/Shoes',
-                      'Electronics',
-                      'Jewelry/Watches',
-                      'Keys/Keychains',
-                      'Glasses',
-                      'Bottles/Mugs',
-                      'Books',
-                      'Bags/Purses',
-                      'Office Supplies',
-                      'IDs/Wallets',
-                      'Cash/Cards',
-                      'Other',
-                    ].map((label) => (
+                    {categories.map((label) => (
                       <FormControlLabel
                         key={label}
                         control={<Radio />}
@@ -391,23 +379,7 @@ const MissingItemFormCreate = () => {
                 </FormGroup>
                 <Grid item className={styles.checkbox_group}>
                   <FormGroup className={styles.color_group}>
-                    {[
-                      'Black',
-                      'Blue',
-                      'Brown',
-                      'Gold',
-                      'Gray',
-                      'Green',
-                      'Maroon',
-                      'Orange',
-                      'Pink',
-                      'Purple',
-                      'Red',
-                      'Silver',
-                      'Tan',
-                      'White',
-                      'Yellow',
-                    ].map((color) => (
+                    {colors.map((color) => (
                       <FormControlLabel
                         key={color}
                         control={

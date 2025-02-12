@@ -23,7 +23,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSearchParams } from 'react-router-dom';
 import GordonSnackbar from 'components/Snackbar';
 import { differenceInCalendarDays } from 'date-fns';
-import { categories, colors } from 'services/lostAndFound';
+import { categories, colors } from 'views/CampusSafety/components/Constants';
 import { formatDateString } from 'views/CampusSafety/components/Helpers';
 
 const yellowDateThreshold = 7;
