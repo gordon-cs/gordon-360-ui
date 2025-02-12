@@ -22,42 +22,9 @@ import { useLocation, useNavigate } from 'react-router';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSearchParams } from 'react-router-dom';
 import GordonSnackbar from 'components/Snackbar';
-import { differenceInCalendarDays, format } from 'date-fns';
-
-const categories = [
-  'Clothing/Shoes',
-  'Electronics',
-  'Jewelry/Watches',
-  'Keys/Keychains',
-  'Glasses',
-  'Bottles/Mugs',
-  'Books',
-  'Bags/Purses',
-  'Office Supplies',
-  'IDs/Wallets',
-  'Cash/Cards',
-  'Other',
-];
-
-const colors = [
-  'Black',
-  'Blue',
-  'Brown',
-  'Gold',
-  'Gray',
-  'Green',
-  'Maroon',
-  'Orange',
-  'Pink',
-  'Purple',
-  'Red',
-  'Silver',
-  'Tan',
-  'White',
-  'Yellow',
-];
-
-const dateFormat = 'MM/dd/yy';
+import { differenceInCalendarDays } from 'date-fns';
+import { categories, colors } from 'services/lostAndFound';
+import { formatDateString } from 'views/CampusSafety/components/Helpers';
 
 const yellowDateThreshold = 7;
 const redDateThreshold = 14;
@@ -77,15 +44,13 @@ const dateAgeColor = (date: string) => {
   }
 };
 
-const formatDate = (date: string) => format(Date.parse(date), dateFormat);
-
 // Find and format the last checked date based on the list of admin actions for a given report.
 const displayLastCheckedDate = (report: MissingItemReport) => {
   let dateString = report.adminActions?.findLast((action) => {
     return action.action === 'Checked';
   })?.actionDate;
   if (dateString !== '' && dateString !== undefined) {
-    return formatDate(dateString);
+    return formatDateString(dateString);
   }
   return 'Never';
 };
@@ -466,7 +431,7 @@ const MissingItemList = () => {
                           </Typography>
                           <Grid container justifyContent="space-between" alignItems="center">
                             <Typography variant="body2" color="textSecondary">
-                              {formatDate(report.dateLost)}
+                              {formatDateString(report.dateLost)}
                             </Typography>
                             <Typography
                               variant="body2"
@@ -508,7 +473,7 @@ const MissingItemList = () => {
                         }
                       >
                         <Grid item xs={2}>
-                          {formatDate(report.dateLost)}
+                          {formatDateString(report.dateLost)}
                         </Grid>
                         <Grid item xs={2}>
                           <div className={styles.dataCell}>

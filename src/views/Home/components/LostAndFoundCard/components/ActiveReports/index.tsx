@@ -3,16 +3,12 @@ import { useEffect, useState, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import lostAndFoundService from 'services/lostAndFound';
 import { MissingItemReport } from 'services/lostAndFound';
-import { format } from 'date-fns';
 import { Launch } from '@mui/icons-material';
 import GordonLoader from 'components/Loader';
 import styles from '../../../../../../views/CampusSafety/views/LostAndFound/LostAndFound.module.css';
 import GordonSnackbar from 'components/Snackbar';
 import { useUser } from 'hooks';
-
-const formatDate = (date: string) => {
-  return format(Date.parse(date), 'MM/dd/yy');
-};
+import { formatDateString } from 'views/CampusSafety/components/Helpers';
 
 const noReports = (
   <Grid item alignItems="center">
@@ -127,7 +123,7 @@ const ActiveReports = () => {
       >
         <Grid container>
           <Grid item xs={5} sm={4} className={styles.alignData}>
-            <div className={styles.dataCell}>{formatDate(report.dateLost)}</div>
+            <div className={styles.dataCell}>{formatDateString(report.dateLost)}</div>
           </Grid>
           {!isMobile ? (
             <Grid item xs={4} className={styles.alignData}>

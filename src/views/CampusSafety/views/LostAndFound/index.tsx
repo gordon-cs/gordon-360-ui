@@ -23,15 +23,11 @@ import styles from './LostAndFound.module.css'; // Import the external CSS
 import lostAndFoundService, { InitAdminAction } from 'services/lostAndFound';
 import { MissingItemReport } from 'services/lostAndFound'; // Import the type from the service
 import DeleteConfirmationModal from './components/DeleteConfirmation';
-import { format } from 'date-fns';
 import { useUser } from 'hooks';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import GordonLoader from 'components/Loader';
 import Badge from '@mui/material/Badge';
-
-const formatDate = (date: string) => {
-  return format(Date.parse(date), 'MM/dd/yy'); // Adjust format as needed
-};
+import { formatDateString } from 'views/CampusSafety/components/Helpers';
 
 const LostAndFound = () => {
   const [activeReports, setActiveReports] = useState<MissingItemReport[]>([]);
@@ -297,7 +293,7 @@ const LostAndFound = () => {
                   }
                 >
                   <Grid item xs={5.5} sm={5.5} className={styles.alignData}>
-                    <b>Date Lost:</b> <div>{formatDate(report.dateLost)}</div>
+                    <b>Date Lost:</b> <div>{formatDateString(report.dateLost)}</div>
                   </Grid>
                   <Grid item xs={5.5} sm={5.5} className={styles.alignData}>
                     <b>Category:</b>
@@ -361,7 +357,7 @@ const LostAndFound = () => {
                 }
               >
                 <Grid item xs={2.1} className={styles.alignData}>
-                  <div className={styles.dataCell}>{formatDate(report.dateLost)}</div>
+                  <div className={styles.dataCell}>{formatDateString(report.dateLost)}</div>
                 </Grid>
                 <Grid item xs={2.6} className={styles.alignData}>
                   <div className={styles.dataCell}>{report.locationLost}</div>
