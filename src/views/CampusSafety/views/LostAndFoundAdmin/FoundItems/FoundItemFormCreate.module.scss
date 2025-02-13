@@ -41,15 +41,6 @@
   background-color: var(--mui-palette-neutral-100);
 }
 
-/* Finder wants item container */
-.stolen_container {
-  padding: 0 1.5rem;
-  background-color: var(--mui-palette-neutral-100);
-  border-radius: 5px;
-  width: 100%;
-  margin: 1rem 0;
-}
-
 /* Submit button container */
 .submit_container {
   margin: 1rem 0;
@@ -86,11 +77,6 @@
 
   .checkbox_group {
     grid-template-columns: repeat(2, 1fr);
-  }
-
-  .stolen_container {
-    padding: 1rem;
-    text-align: left;
   }
 
   .submit_container {
