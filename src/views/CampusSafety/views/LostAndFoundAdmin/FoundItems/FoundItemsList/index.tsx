@@ -22,15 +22,9 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSearchParams } from 'react-router-dom';
 import GordonSnackbar from 'components/Snackbar';
 import lostAndFoundService, { FoundItem } from 'services/lostAndFound';
-import { differenceInCalendarDays, format } from 'date-fns';
-import { categories, colors } from 'services/lostAndFound';
-
-// For date formatting
-const dateFormat = 'MM/dd/yy';
-
-function formatDate(date: string) {
-  return format(Date.parse(date), dateFormat);
-}
+import { differenceInCalendarDays } from 'date-fns';
+import { LFCategories, LFColors } from 'views/CampusSafety/components/Constants';
+import { formatDateString } from 'views/CampusSafety/components/Helpers';
 
 function statusChip(report: FoundItem) {
   let normalized = report.status.toLowerCase();
@@ -284,7 +278,7 @@ const FoundItemList = () => {
                           onChange={(e) => setUrlParam('color', e.target.value)}
                         >
                           <MenuItem value="">All</MenuItem>
-                          {colors.map((color) => (
+                          {LFColors.map((color) => (
                             <MenuItem key={color} value={color}>
                               {color}
                             </MenuItem>
@@ -300,7 +294,7 @@ const FoundItemList = () => {
                           onChange={(e) => setUrlParam('category', e.target.value)}
                         >
                           <MenuItem value="">All</MenuItem>
-                          {categories.map((category) => (
+                          {LFCategories.map((category) => (
                             <MenuItem key={category} value={category}>
                               {category}
                             </MenuItem>
@@ -391,10 +385,10 @@ const FoundItemList = () => {
                           </Typography>
                           <Grid container justifyContent="space-between" alignItems="center">
                             <Typography variant="body2">
-                              Found: {formatDate(report.dateFound)}
+                              Found: {formatDateString(report.dateFound)}
                             </Typography>
                             <Typography variant="body2">
-                              Created: {formatDate(report.dateCreated)}
+                              Created: {formatDateString(report.dateCreated)}
                             </Typography>
                           </Grid>
                           <Typography variant="body2">Location: {report.locationFound}</Typography>
@@ -422,7 +416,9 @@ const FoundItemList = () => {
                           {report.recordID}
                         </Grid>
                         <Grid item xs={2}>
-                          <div className={styles.dataCell}>{formatDate(report.dateFound)}</div>
+                          <div className={styles.dataCell}>
+                            {formatDateString(report.dateFound)}
+                          </div>
                         </Grid>
                         <Grid item xs={3}>
                           <div className={styles.dataCell}>{report.locationFound}</div>

@@ -31,7 +31,7 @@ import GordonDialogBox from 'components/GordonDialogBox';
 
 import styles from './FoundItemFormEdit.module.scss';
 import { useUser } from 'hooks';
-import { categories, colors } from 'services/lostAndFound';
+import { LFCategories, LFColors } from 'views/CampusSafety/components/Constants';
 
 const actionTypes = ['CheckedIn', 'NotifiedOfficer', 'OwnerContact', 'Custom'];
 
@@ -84,9 +84,6 @@ const FoundItemFormEdit = () => {
   // For checking screen size
   const isMobile = useMediaQuery('(max-width:600px)');
 
-  // For user data if needed
-  const [username, setUsername] = useState({ AD_Username: '' });
-
   /** 1) On mount, fetch found item & user data. */
   useEffect(() => {
     const fetchData = async () => {
@@ -94,11 +91,6 @@ const FoundItemFormEdit = () => {
         createSnackbar('No Found Item ID provided in route', 'error');
         setLoading(false);
         return;
-      }
-      try {
-        setUsername({ AD_Username: profile?.AD_Username || '' });
-      } catch {
-        // optional nothing here yet
       }
 
       try {
@@ -253,7 +245,7 @@ const FoundItemFormEdit = () => {
       ...newActionFormData,
       foundID: foundItem.recordID,
       actionDate: new Date().toISOString(),
-      submitterUsername: username.AD_Username,
+      submitterUsername: profile?.AD_Username || '',
     };
     try {
       await lostAndFoundService.createFoundAdminAction(foundItem.recordID, requestData);
@@ -554,7 +546,7 @@ const FoundItemFormEdit = () => {
                 </FormGroup>
                 <div className={styles.category_group}>
                   <FormGroup className={styles.radio_group}>
-                    {categories.map((cat) => {
+                    {LFCategories.map((cat) => {
                       const val = cat.toLowerCase().replace(/ /g, '/');
                       return (
                         <FormControlLabel
@@ -594,7 +586,7 @@ const FoundItemFormEdit = () => {
                 </FormGroup>
                 <div className={styles.checkbox_group}>
                   <FormGroup className={styles.color_group}>
-                    {colors.map((color) => (
+                    {LFColors.map((color) => (
                       <FormControlLabel
                         key={color}
                         label={color}

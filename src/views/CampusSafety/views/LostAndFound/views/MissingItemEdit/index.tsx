@@ -24,6 +24,8 @@ import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-da
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import { LFCategories, LFColors } from 'views/CampusSafety/components/Constants';
+import { useUser } from 'hooks';
 
 const MissingItemFormEdit = () => {
   const navigate = useNavigate();
@@ -73,17 +75,17 @@ const MissingItemFormEdit = () => {
   });
 
   const [showConfirm, setShowConfirm] = useState(false);
+  const { profile } = useUser();
   const isEditable = formData.status === 'active';
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const userInfo = await userService.getProfileInfo();
       setUser({
-        firstName: userInfo?.FirstName || '',
-        lastName: userInfo?.LastName || '',
-        emailAddr: userInfo?.Email || '',
-        phoneNumber: userInfo?.MobilePhone || '',
-        AD_Username: userInfo?.AD_Username || '',
+        firstName: profile?.FirstName || '',
+        lastName: profile?.LastName || '',
+        emailAddr: profile?.Email || '',
+        phoneNumber: profile?.MobilePhone || '',
+        AD_Username: profile?.AD_Username || '',
       });
     };
     fetchUserData();
@@ -417,20 +419,7 @@ const MissingItemFormEdit = () => {
                     </FormGroup>
                     <Grid item className={styles.category_group}>
                       <FormGroup className={styles.radio_group}>
-                        {[
-                          'Clothing/Shoes',
-                          'Electronics',
-                          'Jewelry/Watches',
-                          'Keys/Keychains',
-                          'Glasses',
-                          'Bottles/Mugs',
-                          'Books',
-                          'Bags/Purses',
-                          'Office Supplies',
-                          'IDs/Wallets',
-                          'Cash/Cards',
-                          'Other',
-                        ].map((label) => (
+                        {LFCategories.map((label) => (
                           <FormControlLabel
                             key={label}
                             control={<Radio disabled={!isEditable} />}
@@ -462,23 +451,7 @@ const MissingItemFormEdit = () => {
                     </FormGroup>
                     <Grid item className={styles.checkbox_group}>
                       <FormGroup>
-                        {[
-                          'Black',
-                          'Blue',
-                          'Brown',
-                          'Gold',
-                          'Gray',
-                          'Green',
-                          'Maroon',
-                          'Orange',
-                          'Pink',
-                          'Purple',
-                          'Red',
-                          'Silver',
-                          'Tan',
-                          'White',
-                          'Yellow',
-                        ].map((color) => (
+                        {LFColors.map((color) => (
                           <FormControlLabel
                             key={color}
                             control={

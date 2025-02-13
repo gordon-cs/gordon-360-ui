@@ -31,6 +31,7 @@ import ReportStolenModal from 'views/CampusSafety/views/LostAndFound/views/Missi
 import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { useUser } from 'hooks';
+import { LFCategories, LFColors } from 'views/CampusSafety/components/Constants';
 
 const MIN_QUERY_LENGTH = 2;
 
@@ -93,14 +94,6 @@ const ReportItemPage = () => {
     setSnackbar({ message, severity, open: true });
   }, []);
 
-  const [user, setUser] = useState({
-    firstName: '',
-    lastName: '',
-    emailAddr: '',
-    phoneNumber: '',
-    AD_Username: '', // Add AD_Username to user state
-  });
-
   const [isGordonPerson, setIsGordonPerson] = useState('');
   const [formData, setFormData] = useState({
     firstName: '',
@@ -133,19 +126,6 @@ const ReportItemPage = () => {
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
 
   const specialCharactersRegex = /[^a-zA-Z0-9'\-.\s]/gm;
-
-  useEffect(() => {
-    const setUserData = async () => {
-      setUser({
-        firstName: profile?.FirstName || '',
-        lastName: profile?.LastName || '',
-        emailAddr: profile?.Email || '',
-        phoneNumber: profile?.MobilePhone || '',
-        AD_Username: profile?.AD_Username || '', // Set AD_Username
-      });
-    };
-    setUserData();
-  }, [profile]);
 
   const handleInput = (_event: React.SyntheticEvent, value: string) => {
     const query = value.trim().replace(specialCharactersRegex, '');
@@ -322,7 +302,7 @@ const ReportItemPage = () => {
           ...newActionFormData,
           missingID: newReportId,
           actionDate: now.toISOString(),
-          username: user.AD_Username,
+          username: profile?.AD_Username || '',
           isPublic: true,
           action: 'Created',
         };
@@ -362,23 +342,7 @@ const ReportItemPage = () => {
       </FormGroup>
       <Grid item className={styles.checkbox_group}>
         <FormGroup>
-          {[
-            'Black',
-            'Blue',
-            'Brown',
-            'Gold',
-            'Gray',
-            'Green',
-            'Maroon',
-            'Orange',
-            'Pink',
-            'Purple',
-            'Red',
-            'Silver',
-            'Tan',
-            'White',
-            'Yellow',
-          ].map((color) => (
+          {LFColors.map((color) => (
             <FormControlLabel
               key={color}
               control={
@@ -618,20 +582,7 @@ const ReportItemPage = () => {
                 </FormGroup>
                 <Grid item className={styles.category_group}>
                   <FormGroup className={styles.radio_group}>
-                    {[
-                      'Clothing/Shoes',
-                      'Electronics',
-                      'Jewelry/Watches',
-                      'Keys/Keychains',
-                      'Glasses',
-                      'Bottles/Mugs',
-                      'Books',
-                      'Bags/Purses',
-                      'Office Supplies',
-                      'IDs/Wallets',
-                      'Cash/Cards',
-                      'Other',
-                    ].map((label) => (
+                    {LFCategories.map((label) => (
                       <FormControlLabel
                         key={label}
                         control={<Radio />}

@@ -28,6 +28,7 @@ import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
 import userService from 'services/user';
 import SimpleSnackbar from 'components/Snackbar';
+import { formatDateString } from 'views/CampusSafety/components/Helpers';
 
 const MissingItemReportData = () => {
   const navigate = useNavigate();
@@ -347,12 +348,7 @@ const MissingItemReportData = () => {
     );
   }, [checkedActionFormData]);
 
-  // Format date strings for display
-  const formatDate = (date: string) => DateTime.fromISO(date).toFormat('M/d/yy');
-
   if (!item) return null;
-
-  const formattedDateLost = DateTime.fromISO(item.dateLost).toFormat('MM-dd-yy');
 
   const statusChip = (
     <Chip
@@ -450,7 +446,9 @@ const MissingItemReportData = () => {
                         <Launch color="secondary" />
                       </Grid>
                       <Grid item xs={3} sm={2} className={styles.tableColumn}>
-                        <div className={styles.dataCell}>{formatDate(adminAction.actionDate)}</div>
+                        <div className={styles.dataCell}>
+                          {formatDateString(adminAction.actionDate)}
+                        </div>
                       </Grid>
                       <Grid item xs={4} sm={3} className={styles.tableColumn}>
                         <div className={styles.dataCell}>{adminAction.action}</div>
@@ -485,7 +483,7 @@ const MissingItemReportData = () => {
         <Grid container rowGap={1}>
           <Grid item xs={12} sm={5}>
             <b>Date</b>{' '}
-            {selectedAction.current ? formatDate(selectedAction.current.actionDate) : ''}
+            {selectedAction.current ? formatDateString(selectedAction.current.actionDate) : ''}
           </Grid>
           <Grid item xs={12} sm={7}>
             <b>Action</b> {selectedAction.current ? selectedAction.current.action : ''}
@@ -905,7 +903,7 @@ const MissingItemReportData = () => {
                           variant="filled"
                           disabled
                           fullWidth
-                          value={formattedDateLost}
+                          value={formatDateString(item.dateLost)}
                           InputProps={{ readOnly: true }}
                         />
                       </Grid>
