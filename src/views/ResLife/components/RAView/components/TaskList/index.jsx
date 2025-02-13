@@ -21,12 +21,13 @@ import {
   Link,
 } from '@mui/material';
 import CommentIcon from '@mui/icons-material/Comment';
-import { completeTask, getTasksForHall, getRACurrentHalls } from 'services/residentLife/Tasks';
+import { completeTask, getTasksForHall } from 'services/residentLife/Tasks';
+import { getRACurrentHalls } from 'services/residentLife/RA_Checkin';
 import { useUser } from 'hooks';
 import GordonDialogBox from 'components/GordonDialogBox';
 import SimpleSnackbar from 'components/Snackbar';
 
-const taskList = [
+const taskListTest = [
   {
     TaskID: 0,
     Name: 'Clean',
@@ -74,22 +75,32 @@ const TaskList = () => {
       try {
         const halls = await getRACurrentHalls(profile.AD_Username);
         setHallList(halls);
+        console.log(halls);
       } catch (error) {
         console.log('Error fetching halls', error);
       }
     };
     fetchCheckedInHalls();
+  }, []);
 
-    const fetchTaskList = async () => {
+  useEffect(() => {
+    const fetchTaskList = async (hallID) => {
       try {
-        const tasks = await getTasksForHall();
-        setTaskList(tasks);
+        const tasks = await getTasksForHall(hallID);
+        const updatedTasks = taskList;
+        updatedTasks.push({ hallID: tasks });
+        console.log('hey' + updatedTasks);
+        setTaskList(updatedTasks);
       } catch (error) {
         console.log('Error fetching tasks', error);
       }
     };
-    fetchTaskList();
-  }, []);
+    hallList.map((hall, index) => {
+      fetchTaskList(hall);
+    });
+  }, [hallList]);
+
+  //console.log(taskList);
 
   const handleConfirm = async (index, taskID) => {
     try {
@@ -101,7 +112,7 @@ const TaskList = () => {
     } catch (error) {
       console.error('Error completing task', error);
       createSnackbar('Failed to complete task. Please try again.', 'error');
-    }
+    }, []
   };
 
   const handleTaskChecked = (index, taskID) => {
@@ -133,58 +144,55 @@ const TaskList = () => {
       </GordonDialogBox>
     );
   };
+  //console.log('tasklist' + taskList.length);
 
   return (
     <Grid item xs={12} md={12} padding={0}>
-      {hallList.length === 0
-        ? null
-        : hallList.map((hall, hallIndex) => {
-            <Card>
-              <CardHeader title={`On-Call Tasks for ${hall}`} className="gc360_header" />
-              <CardContent>
-                <Typography>
-                  <List>
-                    {taskList.length === 0 ? (
-                      <ListItem>
-                        <ListItemText>No tasks to see</ListItemText>
-                      </ListItem>
-                    ) : (
-                      taskList.map((task, index) => {
-                        <ListItem
-                          key={index}
-                          secondaryAction={
-                            <IconButton
-                              edge="end"
-                              aria-label="description"
-                              onClick={handleClickDescription}
-                            >
-                              <CommentIcon />
-                            </IconButton>
-                          }
-                        >
-                          <ListItemButton
-                            role={undefined}
-                            onClick={handleTaskChecked(index, task.TaskID)}
-                            dense
-                          >
-                            <ListItemIcon>
-                              <Checkbox
-                                id={index}
-                                edge="start"
-                                checked={checkedList[index]}
-                                disabled={disabledList[index]}
-                              />
-                            </ListItemIcon>
-                          </ListItemButton>
-                          <ListItemText id={index} primary={task.Name} />
-                        </ListItem>;
-                      })
-                    )}
-                  </List>
-                </Typography>
-              </CardContent>
-            </Card>;
-          })}
+      <Card>
+        <CardHeader title={`On-Call Tasks`} className="gc360_header" />
+        <CardContent>
+          <Typography>
+            <List>
+              {taskList.length === 0 ? (
+                <ListItem>
+                  <ListItemText>No tasks to see</ListItemText>
+                </ListItem>
+              ) : (
+                taskList.map((task, index) => {
+                  <ListItem
+                    key={index}
+                    secondaryAction={
+                      <IconButton
+                        edge="end"
+                        aria-label="description"
+                        onClick={handleClickDescription}
+                      >
+                        <CommentIcon />
+                      </IconButton>
+                    }
+                  >
+                    <ListItemButton
+                      role={undefined}
+                      onClick={handleTaskChecked(index, task.TaskID)}
+                      dense
+                    >
+                      <ListItemIcon>
+                        <Checkbox
+                          id={index}
+                          edge="start"
+                          checked={checkedList[index]}
+                          disabled={disabledList[index]}
+                        />
+                      </ListItemIcon>
+                    </ListItemButton>
+                    <ListItemText id={index} primary={task.Name} />
+                  </ListItem>;
+                })
+              )}
+            </List>
+          </Typography>
+        </CardContent>
+      </Card>
     </Grid>
   );
 };

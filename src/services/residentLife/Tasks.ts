@@ -41,15 +41,4 @@ const getActiveTasksForHall = (hallID: string): Promise<Task[]> =>
 const getTasksForHall = (hallID: string): Promise<Task[]> =>
   http.get(`Housing/Halls/${hallID}/DailyTasks`);
 
-const getRACurrentHalls = (userName: string): Promise<String[]> =>
-  http.get(`Housing/halls/on-calls/${userName}/locations`);
-
-export {
-  createTask,
-  updateTask,
-  deleteTask,
-  completeTask,
-  getActiveTasksForHall,
-  getTasksForHall,
-  getRACurrentHalls,
-};
+export { createTask, updateTask, deleteTask, completeTask, getActiveTasksForHall, getTasksForHall };
