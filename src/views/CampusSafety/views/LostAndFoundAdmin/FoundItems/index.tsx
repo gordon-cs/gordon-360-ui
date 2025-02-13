@@ -110,7 +110,8 @@ const FoundItemFormCreate = () => {
 
   const [formData, setFormData] = useState<{
     isGordonFinder: string;
-    foundBy: string;
+    finderFirstName: string;
+    finderLastName: string;
     finderUsername: string;
     finderPhoneNumber: string;
     finderEmail: string;
@@ -128,7 +129,8 @@ const FoundItemFormCreate = () => {
     status: string;
   }>({
     isGordonFinder: '',
-    foundBy: '',
+    finderFirstName: '',
+    finderLastName: '',
     finderUsername: '',
     finderPhoneNumber: '',
     finderEmail: '',
@@ -180,6 +182,17 @@ const FoundItemFormCreate = () => {
       window.removeEventListener('beforeunload', handleBeforeUnload, { capture: true });
     };
   }, []);
+
+  useEffect(() => {
+    const clearTextFields = () => {
+      formData.finderFirstName = '';
+      formData.finderLastName = '';
+      formData.finderPhoneNumber = '';
+      formData.finderEmail = '';
+      formData.finderUsername = '';
+    };
+    clearTextFields();
+  }, [formData.isGordonFinder]);
 
   const requiredFields = ['category', 'description', 'locationFound'];
 
@@ -239,7 +252,8 @@ const FoundItemFormCreate = () => {
     if (selectedPerson) {
       setFormData((prevData) => ({
         ...prevData,
-        foundBy: `${selectedPerson.FirstName} ${selectedPerson.LastName}`,
+        finderFirstName: selectedPerson.FirstName,
+        finderLastName: selectedPerson.LastName,
         finderUsername: selectedPerson.UserName,
         finderPhoneNumber: '',
         finderEmail: '',
@@ -359,10 +373,9 @@ const FoundItemFormCreate = () => {
 
         // Finder Information
         finderUsername: formData.isGordonFinder === 'yes' ? formData.finderUsername : undefined,
-        finderFirstName:
-          formData.isGordonFinder === 'no' ? formData.foundBy.split(' ')[0] : undefined,
+        finderFirstName: formData.isGordonFinder === 'no' ? formData.finderFirstName : undefined,
         finderLastName:
-          formData.isGordonFinder === 'no' ? formData.foundBy.split(' ')[1] || '' : undefined,
+          formData.isGordonFinder === 'no' ? formData.finderLastName || '' : undefined,
         finderPhone: formData.isGordonFinder === 'no' ? formData.finderPhoneNumber : undefined,
         finderEmail: formData.isGordonFinder === 'no' ? formData.finderEmail : undefined,
       };
@@ -535,7 +548,9 @@ const FoundItemFormCreate = () => {
                 row
                 name="isGordonFinder"
                 value={formData.isGordonFinder}
-                onChange={(e) => setFormData({ ...formData, isGordonFinder: e.target.value })}
+                onChange={(e) => {
+                  setFormData({ ...formData, isGordonFinder: e.target.value });
+                }}
               >
                 <FormControlLabel value="yes" control={<Radio />} label="Yes" />
                 <FormControlLabel value="no" control={<Radio />} label="No" />
@@ -565,9 +580,44 @@ const FoundItemFormCreate = () => {
 
             {formData.isGordonFinder === 'no' && (
               <>
-                <TextField label="Finder Name" fullWidth />
-                <TextField label="Finder Phone" fullWidth />
-                <TextField label="Finder Email" fullWidth />
+                <Grid container direction="column" rowSpacing={1}>
+                  <Grid item>
+                    <div className={styles.name_field}>
+                      <TextField
+                        label="Finder First Name"
+                        sx={{ width: '49%' }}
+                        name="finderFirstName"
+                        value={formData.finderFirstName}
+                        onChange={handleChange}
+                      />
+                      <TextField
+                        label="Finder Last Name"
+                        sx={{ width: '49%' }}
+                        name="finderLastName"
+                        value={formData.finderLastName}
+                        onChange={handleChange}
+                      />
+                    </div>
+                  </Grid>
+                  <Grid item>
+                    <TextField
+                      label="Finder Phone"
+                      fullWidth
+                      name="finderPhoneNumber"
+                      value={formData.finderPhoneNumber}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <TextField
+                      label="Finder Email"
+                      fullWidth
+                      name="finderEmail"
+                      value={formData.finderEmail}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                </Grid>
               </>
             )}
 
