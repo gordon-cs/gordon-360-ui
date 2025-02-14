@@ -770,7 +770,7 @@ const FoundItemFormCreate = () => {
             )}
 
             {/* Initial Action - use typed SelectChangeEvent */}
-            <div style={{ marginBottom: '1rem' }}>
+            <div style={{ marginBottom: '1rem', marginTop: '1rem' }}>
               <InputLabel id="initial-action-label">Initial Action Taken</InputLabel>
               <Select
                 labelId="initial-action-label"
