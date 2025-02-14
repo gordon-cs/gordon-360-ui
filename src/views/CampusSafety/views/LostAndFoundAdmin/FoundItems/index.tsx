@@ -115,7 +115,14 @@ const FoundItemFormCreate = () => {
     finderUsername: string;
     finderPhoneNumber: string;
     finderEmail: string;
-    forGuest: boolean;
+    isGordonOwner: string;
+    ownerFirstName: string;
+    ownerLastName: string;
+    ownerUsername: string;
+    ownerPhoneNumber: string;
+    ownerEmail: string;
+    forFinderGuest: boolean;
+    forOwnerGuest: boolean;
     category: string;
     colors: string[];
     brand: string;
@@ -123,7 +130,6 @@ const FoundItemFormCreate = () => {
     locationFound: string;
     dateFound: string;
     finderWantsItem: boolean;
-    ownersName: string;
     initialAction: string;
     storageLocation: string;
     status: string;
@@ -134,7 +140,14 @@ const FoundItemFormCreate = () => {
     finderUsername: '',
     finderPhoneNumber: '',
     finderEmail: '',
-    forGuest: false,
+    isGordonOwner: '',
+    ownerFirstName: '',
+    ownerLastName: '',
+    ownerUsername: '',
+    ownerPhoneNumber: '',
+    ownerEmail: '',
+    forFinderGuest: false,
+    forOwnerGuest: false,
     category: '',
     colors: [],
     brand: '',
@@ -142,7 +155,6 @@ const FoundItemFormCreate = () => {
     locationFound: '',
     dateFound: '',
     finderWantsItem: false,
-    ownersName: '',
     initialAction: '',
     storageLocation: '',
     status: 'found',
@@ -184,15 +196,26 @@ const FoundItemFormCreate = () => {
   }, []);
 
   useEffect(() => {
-    const clearTextFields = () => {
+    const clearFinderTextFields = () => {
       formData.finderFirstName = '';
       formData.finderLastName = '';
       formData.finderPhoneNumber = '';
       formData.finderEmail = '';
       formData.finderUsername = '';
     };
-    clearTextFields();
+    clearFinderTextFields();
   }, [formData.isGordonFinder]);
+
+  useEffect(() => {
+    const clearOwnerTextFields = () => {
+      formData.ownerFirstName = '';
+      formData.ownerLastName = '';
+      formData.ownerPhoneNumber = '';
+      formData.ownerEmail = '';
+      formData.ownerUsername = '';
+    };
+    clearOwnerTextFields();
+  }, [formData.isGordonOwner]);
 
   const requiredFields = ['category', 'description', 'locationFound'];
 
@@ -248,7 +271,7 @@ const FoundItemFormCreate = () => {
     }));
   };
 
-  const handleSelect = (_event: any, selectedPerson: SearchResult | null) => {
+  const handleFinderSelect = (_event: any, selectedPerson: SearchResult | null) => {
     if (selectedPerson) {
       setFormData((prevData) => ({
         ...prevData,
@@ -257,10 +280,25 @@ const FoundItemFormCreate = () => {
         finderUsername: selectedPerson.UserName,
         finderPhoneNumber: '',
         finderEmail: '',
-        forGuest: false,
+        forFinderGuest: false,
       }));
     }
   };
+
+  const handleOwnerSelect = (_event: any, selectedPerson: SearchResult | null) => {
+    if (selectedPerson) {
+      setFormData((prevData) => ({
+        ...prevData,
+        ownerFirstName: selectedPerson.FirstName,
+        ownerLastName: selectedPerson.LastName,
+        ownerUsername: selectedPerson.UserName,
+        ownerPhoneNumber: '',
+        ownerEmail: '',
+        forOwnerGuest: false,
+      }));
+    }
+  };
+
   const handleSelectChange = (e: SelectChangeEvent<string>) => {
     const { name, value } = e.target;
     if (name) {
@@ -378,6 +416,13 @@ const FoundItemFormCreate = () => {
           formData.isGordonFinder === 'no' ? formData.finderLastName || '' : undefined,
         finderPhone: formData.isGordonFinder === 'no' ? formData.finderPhoneNumber : undefined,
         finderEmail: formData.isGordonFinder === 'no' ? formData.finderEmail : undefined,
+
+        // Owner Information
+        ownerUsername: formData.isGordonOwner === 'yes' ? formData.ownerUsername : undefined,
+        ownerFirstName: formData.isGordonOwner === 'no' ? formData.ownerFirstName : undefined,
+        ownerLastName: formData.isGordonOwner === 'no' ? formData.ownerLastName || '' : undefined,
+        ownerPhone: formData.isGordonOwner === 'no' ? formData.ownerPhoneNumber : undefined,
+        ownerEmail: formData.isGordonOwner === 'no' ? formData.ownerEmail : undefined,
       };
 
       const response = await lostAndFoundService.createFoundItem(requestData);
@@ -560,7 +605,7 @@ const FoundItemFormCreate = () => {
                   options={state.searchResults}
                   isOptionEqualToValue={(option, value) => option.UserName === value.UserName}
                   onInputChange={handleInput}
-                  onChange={handleSelect}
+                  onChange={handleFinderSelect}
                   renderOption={(props, person) => (
                     <MenuItem {...props} key={person.UserName} divider>
                       <Typography variant="body2">{`${person.FirstName} ${person.LastName}`}</Typography>
@@ -645,15 +690,84 @@ const FoundItemFormCreate = () => {
             )}
 
             {/* Owner's Name */}
-            <TextField
-              fullWidth
-              variant="filled"
-              label="Owner's Name (If Known)"
-              name="ownersName"
-              value={formData.ownersName}
-              onChange={handleChange}
-              sx={{ marginBottom: '1rem' }}
-            />
+            <Grid item margin={2}>
+              <FormLabel component="legend">Was the Owner a Gordon Person (if known)?</FormLabel>
+              <RadioGroup
+                row
+                name="isGordonOwner"
+                value={formData.isGordonOwner}
+                onChange={(e) => {
+                  setFormData({ ...formData, isGordonOwner: e.target.value });
+                }}
+              >
+                <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+                <FormControlLabel value="no" control={<Radio />} label="No" />
+              </RadioGroup>
+            </Grid>
+
+            {formData.isGordonOwner === 'yes' && (
+              <Grid item margin={2}>
+                <Autocomplete
+                  loading={state.loading}
+                  options={state.searchResults}
+                  isOptionEqualToValue={(option, value) => option.UserName === value.UserName}
+                  onInputChange={handleInput}
+                  onChange={handleOwnerSelect}
+                  renderOption={(props, person) => (
+                    <MenuItem {...props} key={person.UserName} divider>
+                      <Typography variant="body2">{`${person.FirstName} ${person.LastName}`}</Typography>
+                    </MenuItem>
+                  )}
+                  getOptionLabel={(option) => `${option.FirstName} ${option.LastName}`}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Search Gordon Person" fullWidth />
+                  )}
+                />
+              </Grid>
+            )}
+
+            {formData.isGordonOwner === 'no' && (
+              <>
+                <Grid container direction="column" rowSpacing={1}>
+                  <Grid item>
+                    <div className={styles.name_field}>
+                      <TextField
+                        label="Owner First Name"
+                        sx={{ width: '49%' }}
+                        name="ownerFirstName"
+                        value={formData.ownerFirstName}
+                        onChange={handleChange}
+                      />
+                      <TextField
+                        label="Owner Last Name"
+                        sx={{ width: '49%' }}
+                        name="ownerLastName"
+                        value={formData.ownerLastName}
+                        onChange={handleChange}
+                      />
+                    </div>
+                  </Grid>
+                  <Grid item>
+                    <TextField
+                      label="Owner Phone"
+                      fullWidth
+                      name="ownerPhoneNumber"
+                      value={formData.ownerPhoneNumber}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <TextField
+                      label="Owner Email"
+                      fullWidth
+                      name="ownerEmail"
+                      value={formData.ownerEmail}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                </Grid>
+              </>
+            )}
 
             {/* Initial Action - use typed SelectChangeEvent */}
             <div style={{ marginBottom: '1rem' }}>
