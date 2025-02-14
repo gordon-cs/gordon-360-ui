@@ -380,13 +380,9 @@ const FoundItemFormCreate = () => {
         finderEmail: formData.isGordonFinder === 'no' ? formData.finderEmail : undefined,
       };
 
-      console.log('Submitting request data:', requestData); // Debugging log keep for now
-
       const response = await lostAndFoundService.createFoundItem(requestData);
-      console.log('API Response:', response);
 
-      createSnackbar('Found item report successfully created!', 'success');
-      navigate('/lostandfound');
+      navigate('/lostandfound/lostandfoundadmin');
     } catch (error) {
       console.error('Failed to create found item report:', error);
       createSnackbar('Error submitting the form. Please try again.', 'error');
@@ -394,7 +390,7 @@ const FoundItemFormCreate = () => {
   };
 
   const handleCancel = () => {
-    navigate('/lostandfound');
+    navigate('/lostandfound/lostandfoundadmin');
   };
 
   return (
