@@ -1,4 +1,3 @@
-import { debounce } from 'lodash';
 import {
   Card,
   CardHeader,
@@ -11,20 +10,15 @@ import {
   Button,
   FormLabel,
   RadioGroup,
-  Autocomplete,
-  MenuItem,
-  Typography,
-  InputAdornment,
   useTheme,
   useMediaQuery,
 } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import { useReducer, useEffect, useState, HTMLAttributes, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './ReportItemPage.module.scss';
 import lostAndFoundService from 'services/lostAndFound';
-import quickSearchService, { SearchResult } from 'services/quickSearch';
+import { SearchResult } from 'services/quickSearch';
 import ConfirmReport from 'views/CampusSafety/views/LostAndFound/views/MissingItemCreate/components/confirmReport';
 import GordonSnackbar from 'components/Snackbar';
 import ReportStolenModal from 'views/CampusSafety/views/LostAndFound/views/MissingItemCreate/components/reportStolen';
@@ -32,60 +26,7 @@ import { DateValidationError } from '@mui/x-date-pickers';
 import { useUser } from 'hooks';
 import { LFCategories, LFColors } from 'views/CampusSafety/components/Constants';
 import { CustomDatePicker } from 'views/CampusSafety/components/CustomDatePicker';
-
-const MIN_QUERY_LENGTH = 2;
-
-type State = {
-  loading: boolean;
-  searchTime: number;
-  searchResults: SearchResult[];
-};
-
-type Action =
-  | { type: 'INPUT' }
-  | { type: 'LOAD'; payload: Omit<State, 'loading'> }
-  | { type: 'RESET' };
-
-const defaultState: State = {
-  loading: false,
-  searchTime: 0,
-  searchResults: [],
-};
-
-const reducer = (state: State, action: Action): State => {
-  switch (action.type) {
-    case 'INPUT':
-      return { ...state, searchResults: [], loading: true };
-    case 'LOAD': {
-      if (action.payload.searchTime > state.searchTime) {
-        return { ...state, ...action.payload, loading: false };
-      } else {
-        return state;
-      }
-    }
-    case 'RESET':
-      return defaultState;
-    default:
-      throw new Error(`Unhandled action type: ${action}`);
-  }
-};
-
-const performSearch = debounce(async (query: string, dispatch: React.Dispatch<Action>) => {
-  try {
-    const [searchTime, searchResults] = await quickSearchService.search(query);
-
-    dispatch({
-      type: 'LOAD',
-      payload: {
-        searchTime,
-        searchResults,
-      },
-    });
-  } catch (error) {
-    console.error('Error fetching search results:', error);
-    dispatch({ type: 'RESET' });
-  }
-}, 400);
+import { GordonPersonAutocomplete } from 'views/CampusSafety/components/GordonPersonAutocomplete';
 
 const ReportItemPage = () => {
   const navigate = useNavigate();
@@ -116,27 +57,14 @@ const ReportItemPage = () => {
   const [isStolenModalOpen, setStolenModalOpen] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
-  const [state, dispatch] = useReducer(reducer, defaultState);
   const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
   const [disableSubmit, setDisableSubmit] = useState(false);
-  const [newActionFormData, setNewActionFormData] = useState({ action: '', actionNote: '' });
+  const [newActionFormData] = useState({ action: '', actionNote: '' });
   const [dateError, setDateError] = useState<DateValidationError | null>(null);
   const { profile } = useUser();
 
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
-
-  const specialCharactersRegex = /[^a-zA-Z0-9'\-.\s]/gm;
-
-  const handleInput = (_event: React.SyntheticEvent, value: string) => {
-    const query = value.trim().replace(specialCharactersRegex, '');
-    if (query.length >= MIN_QUERY_LENGTH) {
-      dispatch({ type: 'INPUT' });
-      performSearch(query, dispatch);
-    } else {
-      dispatch({ type: 'RESET' });
-    }
-  };
 
   const handleSelect = (_event: any, selectedPerson: SearchResult | null) => {
     if (selectedPerson) {
@@ -318,21 +246,6 @@ const ReportItemPage = () => {
     }
   };
 
-  useEffect(() => {
-    return () => {
-      performSearch.cancel();
-    };
-  }, []);
-
-  const renderOption = (props: HTMLAttributes<HTMLLIElement>, person: SearchResult) => {
-    const fullName = `${person.FirstName} ${person.LastName}`;
-    return (
-      <MenuItem {...props} key={person.UserName} divider>
-        <Typography variant="body2">{fullName}</Typography>
-      </MenuItem>
-    );
-  };
-
   // Define the Item Colors section
   const itemColorsSection = (
     <Grid item margin={2} className={styles.box_background}>
@@ -409,31 +322,7 @@ const ReportItemPage = () => {
               {isGordonPerson === 'yes' && (
                 <>
                   <Grid item margin={2}>
-                    <Autocomplete
-                      loading={state.loading}
-                      options={state.searchResults}
-                      isOptionEqualToValue={(option, value) => option.UserName === value.UserName}
-                      onInputChange={handleInput}
-                      onChange={handleSelect}
-                      renderOption={renderOption}
-                      getOptionLabel={(option) => `${option.FirstName} ${option.LastName}`}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Search Gordon Person"
-                          variant="filled"
-                          fullWidth
-                          InputProps={{
-                            ...params.InputProps,
-                            startAdornment: (
-                              <InputAdornment position="start">
-                                <SearchIcon />
-                              </InputAdornment>
-                            ),
-                          }}
-                        />
-                      )}
-                    />
+                    <GordonPersonAutocomplete onChange={handleSelect} />
                   </Grid>
                 </>
               )}

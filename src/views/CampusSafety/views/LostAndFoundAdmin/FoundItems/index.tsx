@@ -1,7 +1,6 @@
-import { useState, useEffect, useCallback, useReducer } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import {
-  Autocomplete,
   Card,
   CardHeader,
   Grid,
@@ -18,8 +17,7 @@ import {
   InputLabel,
   Select,
 } from '@mui/material';
-import { debounce } from 'lodash';
-import quickSearchService, { SearchResult } from 'services/quickSearch';
+import { SearchResult } from 'services/quickSearch';
 import { SelectChangeEvent } from '@mui/material/Select';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './FoundItemFormCreate.module.scss';
@@ -31,51 +29,7 @@ import { useUser } from 'hooks';
 import { LFCategories, LFColors } from 'views/CampusSafety/components/Constants';
 import { CustomDatePicker } from 'views/CampusSafety/components/CustomDatePicker';
 import { DateValidationError } from '@mui/x-date-pickers';
-
-const MIN_QUERY_LENGTH = 2;
-
-// Search Reducer
-type State = {
-  loading: boolean;
-  searchTime: number;
-  searchResults: SearchResult[];
-};
-
-type Action =
-  | { type: 'INPUT' }
-  | { type: 'LOAD'; payload: Omit<State, 'loading'> }
-  | { type: 'RESET' };
-
-const defaultState: State = {
-  loading: false,
-  searchTime: 0,
-  searchResults: [],
-};
-
-const reducer = (state: State, action: Action): State => {
-  switch (action.type) {
-    case 'INPUT':
-      return { ...state, searchResults: [], loading: true };
-    case 'LOAD':
-      return action.payload.searchTime > state.searchTime
-        ? { ...state, ...action.payload, loading: false }
-        : state;
-    case 'RESET':
-      return defaultState;
-    default:
-      throw new Error(`Unhandled action type: ${action}`);
-  }
-};
-
-const performSearch = debounce(async (query: string, dispatch: React.Dispatch<Action>) => {
-  try {
-    const [searchTime, searchResults] = await quickSearchService.search(query);
-    dispatch({ type: 'LOAD', payload: { searchTime, searchResults } });
-  } catch (error) {
-    console.error('Error fetching search results:', error);
-    dispatch({ type: 'RESET' });
-  }
-}, 400);
+import { GordonPersonAutocomplete } from 'views/CampusSafety/components/GordonPersonAutocomplete';
 
 interface IUser {
   firstName: string;
@@ -93,7 +47,6 @@ interface ISnackbarState {
 
 const FoundItemFormCreate = () => {
   const navigate = useNavigate();
-  const [state, dispatch] = useReducer(reducer, defaultState);
   const [dateError, setDateError] = useState<DateValidationError | null>(null);
   const { profile } = useUser();
 
@@ -210,16 +163,6 @@ const FoundItemFormCreate = () => {
       ...prevData,
       category: e.target.value,
     }));
-  };
-
-  const handleInput = (_event: React.SyntheticEvent, value: string) => {
-    const query = value.trim();
-    if (query.length >= MIN_QUERY_LENGTH) {
-      dispatch({ type: 'INPUT' });
-      performSearch(query, dispatch);
-    } else {
-      dispatch({ type: 'RESET' });
-    }
   };
 
   const handleColorChange = (color: string) => {
@@ -473,22 +416,7 @@ const FoundItemFormCreate = () => {
 
             {formData.isGordonFinder === 'yes' && (
               <Grid item margin={2}>
-                <Autocomplete
-                  loading={state.loading}
-                  options={state.searchResults}
-                  isOptionEqualToValue={(option, value) => option.UserName === value.UserName}
-                  onInputChange={handleInput}
-                  onChange={handleSelect}
-                  renderOption={(props, person) => (
-                    <MenuItem {...props} key={person.UserName} divider>
-                      <Typography variant="body2">{`${person.FirstName} ${person.LastName}`}</Typography>
-                    </MenuItem>
-                  )}
-                  getOptionLabel={(option) => `${option.FirstName} ${option.LastName}`}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Search Gordon Person" fullWidth />
-                  )}
-                />
+                <GordonPersonAutocomplete onChange={handleSelect} />
               </Grid>
             )}
 
