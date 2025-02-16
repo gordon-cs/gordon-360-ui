@@ -19,7 +19,7 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import { useReducer, useEffect, useState, HTMLAttributes, useCallback, useMemo } from 'react';
+import { useReducer, useEffect, useState, HTMLAttributes, useCallback } from 'react';
 import { useNavigate } from 'react-router';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './ReportItemPage.module.scss';
@@ -28,10 +28,10 @@ import quickSearchService, { SearchResult } from 'services/quickSearch';
 import ConfirmReport from 'views/CampusSafety/views/LostAndFound/views/MissingItemCreate/components/confirmReport';
 import GordonSnackbar from 'components/Snackbar';
 import ReportStolenModal from 'views/CampusSafety/views/LostAndFound/views/MissingItemCreate/components/reportStolen';
-import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { DateValidationError } from '@mui/x-date-pickers';
 import { useUser } from 'hooks';
 import { LFCategories, LFColors } from 'views/CampusSafety/components/Constants';
+import { CustomDatePicker } from 'views/CampusSafety/components/CustomDatePicker';
 
 const MIN_QUERY_LENGTH = 2;
 
@@ -120,6 +120,7 @@ const ReportItemPage = () => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
   const [disableSubmit, setDisableSubmit] = useState(false);
   const [newActionFormData, setNewActionFormData] = useState({ action: '', actionNote: '' });
+  const [dateError, setDateError] = useState<DateValidationError | null>(null);
   const { profile } = useUser();
 
   const theme = useTheme();
@@ -359,87 +360,6 @@ const ReportItemPage = () => {
     </Grid>
   );
 
-  const [dateError, setDateError] = useState<DateValidationError | null>(null);
-
-  const errorMessage = useMemo(() => {
-    switch (dateError) {
-      case 'invalidDate': {
-        return 'Invalid Date';
-      }
-      case 'disableFuture': {
-        return 'Cannot lose an item in the future';
-      }
-      default: {
-        return null;
-      }
-    }
-  }, [dateError]);
-
-  // Using DatePicker component from MUI/x, with custom styling to fix dark mode contrast issues
-  const customDatePicker = (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <DatePicker
-        label="Date Lost"
-        value={formData.dateLost === '' ? null : formData.dateLost}
-        onChange={(value) => setFormData({ ...formData, dateLost: value?.toString() || '' })}
-        onError={(newError) => setDateError(newError)}
-        disableFuture
-        orientation="portrait"
-        name="Date Lost"
-        // Custom styling for popup box, better dark mode contrast
-        // Thanks to help for understanding from
-        // https://blog.openreplay.com/styling-and-customizing-material-ui-date-pickers/
-        slotProps={{
-          textField: {
-            helperText: errorMessage ? errorMessage : 'Change if lost before today',
-            // Custom styling for the input field, to make it look like filled variant
-            sx: {
-              backgroundColor: 'var(--mui-palette-FilledInput-bg);',
-              paddingTop: '7px;',
-              borderRadius: '5px;',
-              width: '100%;',
-              '& .Mui-focused .MuiOutlinedInput-notchedOutline': { border: 'none' },
-              '& .MuiInputLabel-shrink': {
-                transform: 'translate(14px, 4px) scale(0.75);',
-              },
-              '& .MuiFormLabel-root.Mui-focused': {
-                color: 'var(--mui-palette-secondary-main);',
-              },
-              '& .MuiOutlinedInput-notchedOutline': {
-                borderWidth: '0;',
-                borderBottom:
-                  '1px solid rgba(var(--mui-palette-common-onBackgroundChannel) / var(--mui-opacity-inputUnderline));',
-                borderRadius: '0;',
-              },
-            },
-          },
-          layout: {
-            sx: {
-              '& .MuiPickersLayout-contentWrapper .Mui-selected': {
-                backgroundColor: 'var(--mui-palette-secondary-400);',
-              },
-              '.MuiPickersLayout-contentWrapper .MuiPickersDay-root:focus.Mui-selected': {
-                backgroundColor: 'var(--mui-palette-secondary-400);',
-              },
-              '.MuiPickersLayout-contentWrapper .MuiPickersDay-root.Mui-selected': {
-                backgroundColor: 'var(--mui-palette-secondary-400);',
-              },
-            },
-          },
-          actionBar: {
-            sx: {
-              ...{
-                '& .MuiButtonBase-root': {
-                  color: 'var(--mui-palette-secondary-400);',
-                },
-              },
-            },
-          },
-        }}
-      />
-    </LocalizationProvider>
-  );
-
   return (
     <>
       <Header />
@@ -655,7 +575,13 @@ const ReportItemPage = () => {
                 />
               </Grid>
               <Grid item margin={2}>
-                {customDatePicker}
+                <CustomDatePicker
+                  value={formData.dateLost === '' ? null : formData.dateLost}
+                  onChange={(value) =>
+                    setFormData({ ...formData, dateLost: value?.toString() || '' })
+                  }
+                  onError={(newError) => setDateError(newError)}
+                />
               </Grid>
             </Grid>
           </Grid>

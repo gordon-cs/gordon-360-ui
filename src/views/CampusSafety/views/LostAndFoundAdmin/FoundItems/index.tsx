@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useReducer, useMemo } from 'react';
+import { useState, useEffect, useCallback, useReducer } from 'react';
 
 import {
   Autocomplete,
@@ -27,10 +27,10 @@ import lostAndFoundService from 'services/lostAndFound';
 import GordonSnackbar from 'components/Snackbar';
 import { useNavigate } from 'react-router';
 import { InfoOutlined } from '@mui/icons-material';
-import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { useUser } from 'hooks';
 import { LFCategories, LFColors } from 'views/CampusSafety/components/Constants';
+import { CustomDatePicker } from 'views/CampusSafety/components/CustomDatePicker';
+import { DateValidationError } from '@mui/x-date-pickers';
 
 const MIN_QUERY_LENGTH = 2;
 
@@ -94,6 +94,7 @@ interface ISnackbarState {
 const FoundItemFormCreate = () => {
   const navigate = useNavigate();
   const [state, dispatch] = useReducer(reducer, defaultState);
+  const [dateError, setDateError] = useState<DateValidationError | null>(null);
   const { profile } = useUser();
 
   const createSnackbar = useCallback((message: string, severity: ISnackbarState['severity']) => {
@@ -196,6 +197,10 @@ const FoundItemFormCreate = () => {
       errors.finderPhoneNumber = 'Required if you want to claim the item later';
     }
 
+    if (dateError !== null) {
+      errors['dateLost'] = dateError;
+    }
+
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -253,87 +258,6 @@ const FoundItemFormCreate = () => {
       setFormData((prevData) => ({ ...prevData, [name]: value }));
     }
   };
-
-  const [dateError, setDateError] = useState<DateValidationError | null>(null);
-
-  const errorMessage = useMemo(() => {
-    switch (dateError) {
-      case 'invalidDate': {
-        return 'Invalid Date';
-      }
-      case 'disableFuture': {
-        return 'Cannot lose an item in the future';
-      }
-      case 'minDate': {
-        return 'Date too long ago';
-      }
-      default: {
-        return dateError;
-      }
-    }
-  }, [dateError]);
-
-  const customDatePicker = (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <DatePicker
-        label="Date Found"
-        value={formData.dateFound ? new Date(formData.dateFound) : null}
-        onChange={(value) => {
-          setFormData((prevData) => ({
-            ...prevData,
-            dateFound: value ? value.toString() : '',
-          }));
-        }}
-        onError={(newError) => setDateError(newError)}
-        disableFuture
-        orientation="portrait"
-        slotProps={{
-          textField: {
-            helperText: errorMessage ? errorMessage : 'Change if lost before today',
-            sx: {
-              backgroundColor: 'var(--mui-palette-FilledInput-bg)',
-              paddingTop: '7px',
-              borderRadius: '5px',
-              width: '100%',
-              '& .Mui-focused .MuiOutlinedInput-notchedOutline': { border: 'none' },
-              '& .MuiInputLabel-shrink': {
-                transform: 'translate(14px, 4px) scale(0.75)',
-              },
-              '& .MuiFormLabel-root.Mui-focused': {
-                color: 'var(--mui-palette-secondary-main)',
-              },
-              '& .MuiOutlinedInput-notchedOutline': {
-                borderWidth: '0',
-                borderBottom:
-                  '1px solid rgba(var(--mui-palette-common-onBackgroundChannel) / var(--mui-opacity-inputUnderline))',
-                borderRadius: '0',
-              },
-            },
-          },
-          layout: {
-            sx: {
-              '& .MuiPickersLayout-contentWrapper .Mui-selected': {
-                backgroundColor: 'var(--mui-palette-secondary-400)',
-              },
-              '.MuiPickersLayout-contentWrapper .MuiPickersDay-root:focus.Mui-selected': {
-                backgroundColor: 'var(--mui-palette-secondary-400)',
-              },
-              '.MuiPickersLayout-contentWrapper .MuiPickersDay-root.Mui-selected': {
-                backgroundColor: 'var(--mui-palette-secondary-400)',
-              },
-            },
-          },
-          actionBar: {
-            sx: {
-              '& .MuiButtonBase-root': {
-                color: 'var(--mui-palette-secondary-400)',
-              },
-            },
-          },
-        }}
-      />
-    </LocalizationProvider>
-  );
 
   const handleFormSubmit = async () => {
     if (!validateForm()) {
@@ -524,7 +448,18 @@ const FoundItemFormCreate = () => {
             />
 
             {/* Date Found */}
-            <div style={{ marginBottom: '1rem' }}>{customDatePicker}</div>
+            <div style={{ marginBottom: '1rem' }}>
+              <CustomDatePicker
+                value={formData.dateFound ? formData.dateFound : null}
+                onChange={(value) => {
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    dateFound: value ? value.toString() : '',
+                  }));
+                }}
+                onError={(newError) => setDateError(newError)}
+              />
+            </div>
 
             {/* Found By */}
             <Grid item margin={2}>
