@@ -101,7 +101,6 @@ const TaskList = () => {
   };
 
   const editTask = (task) => {
-    //setCurrentTask(task);
     setCurrentTask({
       taskID: task.TaskID,
       name: task.Name,
@@ -233,7 +232,7 @@ const TaskList = () => {
                 control={
                   <Checkbox
                     name="isRecurring"
-                    checked={!!currentTask.isRecurring} // Ensures boolean value
+                    checked={!!currentTask.isRecurring}
                     onChange={(e) =>
                       handleInputChange({
                         target: { name: 'isRecurring', value: e.target.checked },
@@ -349,7 +348,7 @@ const TaskList = () => {
                         size="small"
                         onClick={async () => {
                           await deleteTask(task.TaskID);
-                          loadTasks(selectedHall); // Function to reload the task list
+                          loadTasks(selectedHall);
                         }}
                       >
                         Delete
