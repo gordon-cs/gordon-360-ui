@@ -28,4 +28,8 @@ const fetchTasks = (hallId: string): Promise<Task[]> =>
 // Delete request to remove a specific task by ID using endpoint "Housing/halls/task/${taskID}"
 const removeTask = (taskID: number) => http.del(`Housing/halls/task/${taskID}`);
 
-export { addTask, fetchTasks, removeTask };
+// Patch request to the API endpoint "Housing/halls/task/${taskID}" which edits an existing task
+const editTask = (taskID: number, updatedTask: Partial<Task>) =>
+  http.patch(`Housing/halls/task/${taskID}`, updatedTask);
+
+export { addTask, editTask, fetchTasks, removeTask };

@@ -14,13 +14,14 @@ import {
   Box,
   FormControlLabel,
 } from '@mui/material';
-import { addTask, fetchTasks, removeTask } from 'services/residentLife/RD_TaskList';
+import { addTask, editTask, fetchTasks, removeTask } from 'services/residentLife/RD_TaskList';
 
 const TaskList = () => {
   const [tasks, setTasks] = useState([]);
   const [selectedHall, setSelectedHall] = useState('');
   const [loading, setLoading] = useState(false);
   const [currentTask, setCurrentTask] = useState({
+    taskID: null,
     name: '',
     description: '',
     hallId: '',
@@ -43,6 +44,7 @@ const TaskList = () => {
 
     try {
       const response = await fetchTasks(hallId);
+      console.log('response', response);
       setTasks((prevTasks) => {
         if (
           prevTasks.length !== response.length ||
@@ -52,10 +54,11 @@ const TaskList = () => {
         }
         return prevTasks;
       });
+      console.log('tasks', tasks);
     } catch (error) {
       console.error('Error fetching RA/ACs:', error);
     } finally {
-      setLoading(false); // Always stop loading, even on error
+      setLoading(false);
     }
   };
 
@@ -80,8 +83,36 @@ const TaskList = () => {
     }
   };
 
+  const handleEdit = async (e) => {
+    e.preventDefault();
+    try {
+      if (!currentTask.taskID) {
+        console.error('Error: Task ID is missing');
+        return;
+      }
+
+      const updatedTask = { ...currentTask, hallId: selectedHall };
+      await editTask(currentTask.taskID, updatedTask);
+      loadTasks(selectedHall);
+      resetTaskForm();
+    } catch (error) {
+      console.error('Error editing task:', error);
+    }
+  };
+
   const editTask = (task) => {
-    setCurrentTask(task);
+    //setCurrentTask(task);
+    setCurrentTask({
+      taskID: task.TaskID,
+      name: task.Name,
+      description: task.Description,
+      hallId: task.HallID,
+      isRecurring: task.IsRecurring,
+      frequency: task.Frequency,
+      interval: task.Interval,
+      startDate: task.StartDate ? task.StartDate.split('T')[0] : '',
+      endDate: task.EndDate ? task.EndDate.split('T')[0] : '',
+    });
     setEditing(true);
   };
 
@@ -155,12 +186,13 @@ const TaskList = () => {
             <Typography variant="h5" fontWeight="bold" gutterBottom>
               {editing ? 'Edit Task' : 'Create Task'}
             </Typography>
-            <form onSubmit={handleSubmit}>
+
+            <form onSubmit={editing ? handleEdit : handleSubmit}>
               <TextField
                 fullWidth
                 label="Task Name"
                 name="name"
-                value={currentTask.name}
+                value={currentTask.name || ''}
                 onChange={handleInputChange}
                 required
                 sx={{ mb: 2 }}
@@ -171,7 +203,7 @@ const TaskList = () => {
                 name="description"
                 multiline
                 rows={3}
-                value={currentTask.description}
+                value={currentTask.description || ''}
                 onChange={handleInputChange}
                 sx={{ mb: 2 }}
               />
@@ -181,7 +213,7 @@ const TaskList = () => {
                 type="date"
                 name="startDate"
                 InputLabelProps={{ shrink: true }}
-                value={currentTask.startDate}
+                value={currentTask.startDate ? currentTask.startDate.split('T')[0] : ''}
                 onChange={handleInputChange}
                 required
                 sx={{ mb: 2 }}
@@ -192,7 +224,7 @@ const TaskList = () => {
                 type="date"
                 name="endDate"
                 InputLabelProps={{ shrink: true }}
-                value={currentTask.endDate}
+                value={currentTask.endDate ? currentTask.endDate.split('T')[0] : ''}
                 onChange={handleInputChange}
                 required
                 sx={{ mb: 2 }}
@@ -201,8 +233,12 @@ const TaskList = () => {
                 control={
                   <Checkbox
                     name="isRecurring"
-                    checked={currentTask.isRecurring}
-                    onChange={handleInputChange}
+                    checked={!!currentTask.isRecurring} // Ensures boolean value
+                    onChange={(e) =>
+                      handleInputChange({
+                        target: { name: 'isRecurring', value: e.target.checked },
+                      })
+                    }
                   />
                 }
                 label="Recurring Task"
@@ -240,7 +276,7 @@ const TaskList = () => {
               )}
 
               <Button variant="contained" color="primary" type="submit" fullWidth>
-                {editing ? 'Update Task' : 'Create Task'}
+                {editing ? 'Edit Task' : 'Create Task'}
               </Button>
             </form>
           </CardContent>
@@ -270,11 +306,22 @@ const TaskList = () => {
                         <strong>{task.Name}</strong>
                       </Typography>
                       <Typography variant="body2" color="textSecondary">
-                        <strong>Start Date: </strong> {task.StartDate}
+                        <strong>Start Date: </strong>{' '}
+                        {new Date(task.StartDate).toLocaleDateString('en-US', {
+                          month: 'long',
+                          day: 'numeric',
+                          year: 'numeric',
+                        })}
                       </Typography>
                       <Typography variant="body2" color="textSecondary">
-                        <strong>End Date: </strong> {task.EndDate}
+                        <strong>End Date: </strong>{' '}
+                        {new Date(task.EndDate).toLocaleDateString('en-US', {
+                          month: 'long',
+                          day: 'numeric',
+                          year: 'numeric',
+                        })}
                       </Typography>
+
                       {task.Frequency && (
                         <>
                           <Typography variant="body2" color="textSecondary">
