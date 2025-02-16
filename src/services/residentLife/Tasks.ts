@@ -16,7 +16,7 @@ export type Task = {
 };
 
 export type DailyTask = {
-  TaskID: number;
+  Task_ID: number;
   Name: string;
   Description: string;
   HallID: string;
