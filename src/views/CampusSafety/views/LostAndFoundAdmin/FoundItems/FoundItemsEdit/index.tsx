@@ -16,12 +16,12 @@ import {
   MenuItem,
   InputLabel,
   useMediaQuery,
-  Chip,
 } from '@mui/material';
 import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { useParams, useNavigate } from 'react-router-dom';
 import { InfoOutlined, Add, Key, Launch } from '@mui/icons-material';
+import { StatusChip } from 'views/CampusSafety/components/StatusChip';
 
 import Header from 'views/CampusSafety/components/Header';
 import lostAndFoundService, { FoundItem, FoundAdminAction } from 'services/lostAndFound';
@@ -276,20 +276,6 @@ const FoundItemFormEdit = () => {
   /* Rendering. */
   if (loading) return <GordonLoader />;
   if (!foundItem) return <Typography>Could not find the requested Found Item</Typography>;
-
-  // Format item status chip
-  const statusChip = (
-    <Chip
-      label={foundItem.status ? foundItem.status.toUpperCase() : 'N/A'}
-      color={
-        foundItem.status.toLowerCase() === 'found'
-          ? 'success'
-          : foundItem.status.toLowerCase() === 'pickedup'
-            ? 'info'
-            : 'primary'
-      }
-    />
-  );
 
   const customDatePicker = (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -700,7 +686,9 @@ const FoundItemFormEdit = () => {
               {/* Show the status chip, then the Admin actions card below */}
               <Grid container spacing={1} marginTop={2}>
                 <Grid item xs={12}>
-                  <Typography variant="h6">Status: {statusChip}</Typography>
+                  <Typography variant="h6">
+                    Status: <StatusChip status={foundItem.status} />
+                  </Typography>
                 </Grid>
                 <Grid item xs={12}>
                   {adminActionsCard}
