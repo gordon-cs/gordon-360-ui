@@ -8,7 +8,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { subYears } from 'date-fns';
 import { useMemo, useState } from 'react';
 
-export interface Props {
+interface Props {
   value: string | null;
   onChange: (
     value: string | null,
@@ -19,6 +19,8 @@ export interface Props {
 
 export const CustomDatePicker: React.FC<Props> = ({ value, onChange, onError }) => {
   const [dateError, setDateError] = useState<DateValidationError | null>(null);
+
+  const minDate = subYears(new Date(), 1).toISOString();
 
   const errorMessage = useMemo(() => {
     switch (dateError) {
@@ -49,7 +51,7 @@ export const CustomDatePicker: React.FC<Props> = ({ value, onChange, onError }) 
           onError(newError);
         }}
         disableFuture
-        minDate={subYears(new Date(), 1).toISOString()}
+        minDate={minDate}
         orientation="portrait"
         name="Date Lost"
         // Custom styling, better dark mode contrast and conformity with filled style form fields
