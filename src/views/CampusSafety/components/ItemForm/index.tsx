@@ -29,7 +29,31 @@ import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-da
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 
-const ItemForm = ({ formType }: { formType: any }) => {
+const pageHeader = (formType: string) => {
+  if (formType == 'create') {
+    return (
+      <>
+        <CardHeader
+          title={
+            <b>
+              Report a <u>Lost</u> Item
+            </b>
+          }
+          titleTypographyProps={{ align: 'center' }}
+          className="gc360_header"
+        />
+      </>
+    );
+  } else if (formType == 'edit') {
+    return (
+      <>
+        <CardHeader title="Edit Missing Item" className="gc360_header" />
+      </>
+    );
+  }
+};
+
+const ItemForm = ({ formType }: { formType: string }) => {
   const navigate = useNavigate();
   const { itemId } = useParams<{ itemId: string }>();
   const [loading, setLoading] = useState<boolean>(true);
@@ -420,6 +444,7 @@ const ItemForm = ({ formType }: { formType: any }) => {
         />
       ) : (
         <Card className={styles.form_card}>
+          {pageHeader(formType)}
           <Grid container justifyContent="center">
             <Grid item sm={5} xs={12}>
               {/* Item Category */}
