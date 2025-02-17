@@ -17,6 +17,8 @@ import {
   Typography,
   InputLabel,
   Select,
+  FormControl,
+  FormHelperText,
 } from '@mui/material';
 import { debounce } from 'lodash';
 import quickSearchService, { SearchResult } from 'services/quickSearch';
@@ -30,7 +32,11 @@ import { InfoOutlined } from '@mui/icons-material';
 import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { useUser } from 'hooks';
-import { LFCategories, LFColors } from 'views/CampusSafety/components/Constants';
+import {
+  LFCategories,
+  LFColors,
+  LFStorageLocations,
+} from 'views/CampusSafety/components/Constants';
 
 const MIN_QUERY_LENGTH = 2;
 
@@ -110,11 +116,19 @@ const FoundItemFormCreate = () => {
 
   const [formData, setFormData] = useState<{
     isGordonFinder: string;
-    foundBy: string;
+    finderFirstName: string;
+    finderLastName: string;
     finderUsername: string;
     finderPhoneNumber: string;
     finderEmail: string;
-    forGuest: boolean;
+    isGordonOwner: string;
+    ownerFirstName: string;
+    ownerLastName: string;
+    ownerUsername: string;
+    ownerPhoneNumber: string;
+    ownerEmail: string;
+    forFinderGuest: boolean;
+    forOwnerGuest: boolean;
     category: string;
     colors: string[];
     brand: string;
@@ -122,17 +136,24 @@ const FoundItemFormCreate = () => {
     locationFound: string;
     dateFound: string;
     finderWantsItem: boolean;
-    ownersName: string;
     initialAction: string;
     storageLocation: string;
     status: string;
   }>({
     isGordonFinder: '',
-    foundBy: '',
+    finderFirstName: '',
+    finderLastName: '',
     finderUsername: '',
     finderPhoneNumber: '',
     finderEmail: '',
-    forGuest: false,
+    isGordonOwner: '',
+    ownerFirstName: '',
+    ownerLastName: '',
+    ownerUsername: '',
+    ownerPhoneNumber: '',
+    ownerEmail: '',
+    forFinderGuest: false,
+    forOwnerGuest: false,
     category: '',
     colors: [],
     brand: '',
@@ -140,7 +161,6 @@ const FoundItemFormCreate = () => {
     locationFound: '',
     dateFound: '',
     finderWantsItem: false,
-    ownersName: '',
     initialAction: '',
     storageLocation: '',
     status: 'found',
@@ -180,6 +200,28 @@ const FoundItemFormCreate = () => {
       window.removeEventListener('beforeunload', handleBeforeUnload, { capture: true });
     };
   }, []);
+
+  useEffect(() => {
+    const clearFinderTextFields = () => {
+      formData.finderFirstName = '';
+      formData.finderLastName = '';
+      formData.finderPhoneNumber = '';
+      formData.finderEmail = '';
+      formData.finderUsername = '';
+    };
+    clearFinderTextFields();
+  }, [formData.isGordonFinder]);
+
+  useEffect(() => {
+    const clearOwnerTextFields = () => {
+      formData.ownerFirstName = '';
+      formData.ownerLastName = '';
+      formData.ownerPhoneNumber = '';
+      formData.ownerEmail = '';
+      formData.ownerUsername = '';
+    };
+    clearOwnerTextFields();
+  }, [formData.isGordonOwner]);
 
   const requiredFields = ['category', 'description', 'locationFound'];
 
@@ -235,18 +277,34 @@ const FoundItemFormCreate = () => {
     }));
   };
 
-  const handleSelect = (_event: any, selectedPerson: SearchResult | null) => {
+  const handleFinderSelect = (_event: any, selectedPerson: SearchResult | null) => {
     if (selectedPerson) {
       setFormData((prevData) => ({
         ...prevData,
-        foundBy: `${selectedPerson.FirstName} ${selectedPerson.LastName}`,
+        finderFirstName: selectedPerson.FirstName,
+        finderLastName: selectedPerson.LastName,
         finderUsername: selectedPerson.UserName,
         finderPhoneNumber: '',
         finderEmail: '',
-        forGuest: false,
+        forFinderGuest: false,
       }));
     }
   };
+
+  const handleOwnerSelect = (_event: any, selectedPerson: SearchResult | null) => {
+    if (selectedPerson) {
+      setFormData((prevData) => ({
+        ...prevData,
+        ownerFirstName: selectedPerson.FirstName,
+        ownerLastName: selectedPerson.LastName,
+        ownerUsername: selectedPerson.UserName,
+        ownerPhoneNumber: '',
+        ownerEmail: '',
+        forOwnerGuest: false,
+      }));
+    }
+  };
+
   const handleSelectChange = (e: SelectChangeEvent<string>) => {
     const { name, value } = e.target;
     if (name) {
@@ -359,21 +417,23 @@ const FoundItemFormCreate = () => {
 
         // Finder Information
         finderUsername: formData.isGordonFinder === 'yes' ? formData.finderUsername : undefined,
-        finderFirstName:
-          formData.isGordonFinder === 'no' ? formData.foundBy.split(' ')[0] : undefined,
+        finderFirstName: formData.isGordonFinder === 'no' ? formData.finderFirstName : undefined,
         finderLastName:
-          formData.isGordonFinder === 'no' ? formData.foundBy.split(' ')[1] || '' : undefined,
+          formData.isGordonFinder === 'no' ? formData.finderLastName || '' : undefined,
         finderPhone: formData.isGordonFinder === 'no' ? formData.finderPhoneNumber : undefined,
         finderEmail: formData.isGordonFinder === 'no' ? formData.finderEmail : undefined,
+
+        // Owner Information
+        ownerUsername: formData.isGordonOwner === 'yes' ? formData.ownerUsername : undefined,
+        ownerFirstName: formData.isGordonOwner === 'no' ? formData.ownerFirstName : undefined,
+        ownerLastName: formData.isGordonOwner === 'no' ? formData.ownerLastName || '' : undefined,
+        ownerPhone: formData.isGordonOwner === 'no' ? formData.ownerPhoneNumber : undefined,
+        ownerEmail: formData.isGordonOwner === 'no' ? formData.ownerEmail : undefined,
       };
 
-      console.log('Submitting request data:', requestData); // Debugging log keep for now
-
       const response = await lostAndFoundService.createFoundItem(requestData);
-      console.log('API Response:', response);
 
-      createSnackbar('Found item report successfully created!', 'success');
-      navigate('/lostandfound');
+      navigate('/lostandfound/lostandfoundadmin');
     } catch (error) {
       console.error('Failed to create found item report:', error);
       createSnackbar('Error submitting the form. Please try again.', 'error');
@@ -381,7 +441,7 @@ const FoundItemFormCreate = () => {
   };
 
   const handleCancel = () => {
-    navigate('/lostandfound');
+    navigate('/lostandfound/lostandfoundadmin');
   };
 
   return (
@@ -535,7 +595,9 @@ const FoundItemFormCreate = () => {
                 row
                 name="isGordonFinder"
                 value={formData.isGordonFinder}
-                onChange={(e) => setFormData({ ...formData, isGordonFinder: e.target.value })}
+                onChange={(e) => {
+                  setFormData({ ...formData, isGordonFinder: e.target.value });
+                }}
               >
                 <FormControlLabel value="yes" control={<Radio />} label="Yes" />
                 <FormControlLabel value="no" control={<Radio />} label="No" />
@@ -549,7 +611,7 @@ const FoundItemFormCreate = () => {
                   options={state.searchResults}
                   isOptionEqualToValue={(option, value) => option.UserName === value.UserName}
                   onInputChange={handleInput}
-                  onChange={handleSelect}
+                  onChange={handleFinderSelect}
                   renderOption={(props, person) => (
                     <MenuItem {...props} key={person.UserName} divider>
                       <Typography variant="body2">{`${person.FirstName} ${person.LastName}`}</Typography>
@@ -565,9 +627,44 @@ const FoundItemFormCreate = () => {
 
             {formData.isGordonFinder === 'no' && (
               <>
-                <TextField label="Finder Name" fullWidth />
-                <TextField label="Finder Phone" fullWidth />
-                <TextField label="Finder Email" fullWidth />
+                <Grid container direction="column" rowSpacing={1}>
+                  <Grid item>
+                    <div className={styles.name_field}>
+                      <TextField
+                        label="Finder First Name"
+                        sx={{ width: '49%' }}
+                        name="finderFirstName"
+                        value={formData.finderFirstName}
+                        onChange={handleChange}
+                      />
+                      <TextField
+                        label="Finder Last Name"
+                        sx={{ width: '49%' }}
+                        name="finderLastName"
+                        value={formData.finderLastName}
+                        onChange={handleChange}
+                      />
+                    </div>
+                  </Grid>
+                  <Grid item>
+                    <TextField
+                      label="Finder Phone"
+                      fullWidth
+                      name="finderPhoneNumber"
+                      value={formData.finderPhoneNumber}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <TextField
+                      label="Finder Email"
+                      fullWidth
+                      name="finderEmail"
+                      value={formData.finderEmail}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                </Grid>
               </>
             )}
 
@@ -599,54 +696,136 @@ const FoundItemFormCreate = () => {
             )}
 
             {/* Owner's Name */}
-            <TextField
-              fullWidth
-              variant="filled"
-              label="Owner's Name (If Known)"
-              name="ownersName"
-              value={formData.ownersName}
-              onChange={handleChange}
-              sx={{ marginBottom: '1rem' }}
-            />
+            <Grid item margin={2}>
+              <FormLabel component="legend">Was the Owner a Gordon Person (if known)?</FormLabel>
+              <RadioGroup
+                row
+                name="isGordonOwner"
+                value={formData.isGordonOwner}
+                onChange={(e) => {
+                  setFormData({ ...formData, isGordonOwner: e.target.value });
+                }}
+              >
+                <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+                <FormControlLabel value="no" control={<Radio />} label="No" />
+              </RadioGroup>
+            </Grid>
+
+            {formData.isGordonOwner === 'yes' && (
+              <Grid item margin={2}>
+                <Autocomplete
+                  loading={state.loading}
+                  options={state.searchResults}
+                  isOptionEqualToValue={(option, value) => option.UserName === value.UserName}
+                  onInputChange={handleInput}
+                  onChange={handleOwnerSelect}
+                  renderOption={(props, person) => (
+                    <MenuItem {...props} key={person.UserName} divider>
+                      <Typography variant="body2">{`${person.FirstName} ${person.LastName}`}</Typography>
+                    </MenuItem>
+                  )}
+                  getOptionLabel={(option) => `${option.FirstName} ${option.LastName}`}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Search Gordon Person" fullWidth />
+                  )}
+                />
+              </Grid>
+            )}
+
+            {formData.isGordonOwner === 'no' && (
+              <>
+                <Grid container direction="column" rowSpacing={1}>
+                  <Grid item>
+                    <div className={styles.name_field}>
+                      <TextField
+                        label="Owner First Name"
+                        sx={{ width: '49%' }}
+                        name="ownerFirstName"
+                        value={formData.ownerFirstName}
+                        onChange={handleChange}
+                      />
+                      <TextField
+                        label="Owner Last Name"
+                        sx={{ width: '49%' }}
+                        name="ownerLastName"
+                        value={formData.ownerLastName}
+                        onChange={handleChange}
+                      />
+                    </div>
+                  </Grid>
+                  <Grid item>
+                    <TextField
+                      label="Owner Phone"
+                      fullWidth
+                      name="ownerPhoneNumber"
+                      value={formData.ownerPhoneNumber}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <TextField
+                      label="Owner Email"
+                      fullWidth
+                      name="ownerEmail"
+                      value={formData.ownerEmail}
+                      onChange={handleChange}
+                    />
+                  </Grid>
+                </Grid>
+              </>
+            )}
 
             {/* Initial Action - use typed SelectChangeEvent */}
-            <div style={{ marginBottom: '1rem' }}>
-              <InputLabel id="initial-action-label">Initial Action Taken</InputLabel>
-              <Select
-                labelId="initial-action-label"
-                variant="filled"
-                name="initialAction"
-                value={formData.initialAction}
-                onChange={handleSelectChange} // Accepts SelectChangeEvent<string>
-                fullWidth
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value="Tagged">Tagged</MenuItem>
-                <MenuItem value="Secured">Secured</MenuItem>
-                <MenuItem value="Noted">Noted</MenuItem>
-              </Select>
+            <div style={{ marginBottom: '1rem', marginTop: '1rem' }}>
+              <FormControl variant="filled" sx={{ width: 1 }}>
+                <InputLabel id="initial-action-label">Initial Action Taken</InputLabel>
+                <Select
+                  labelId="initial-action-label"
+                  name="initialAction"
+                  value={formData.initialAction}
+                  onChange={handleSelectChange} // Accepts SelectChangeEvent<string>
+                  fullWidth
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value="Tagged">Tagged</MenuItem>
+                  <MenuItem value="Secured">Secured</MenuItem>
+                  <MenuItem value="Noted">Noted</MenuItem>
+                </Select>
+              </FormControl>
             </div>
 
             {/* Storage Location - also typed select */}
             <div style={{ marginBottom: '1rem' }}>
-              <InputLabel id="storage-location-label">Storage Location</InputLabel>
-              <Select
-                labelId="storage-location-label"
+              <FormControl
                 variant="filled"
-                name="storageLocation"
-                value={formData.storageLocation}
-                onChange={handleSelectChange} // Also a SelectChangeEvent
-                fullWidth
+                sx={{
+                  width: 1,
+                  backgroundColor: 'var(--mui-palette-FilledInput-bg)',
+                  borderRadius: 1,
+                }}
               >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value="On Table"> On Table</MenuItem>
-                <MenuItem value="Office Safe">Office Safe</MenuItem>
-                <MenuItem value="Closet A">Closet A</MenuItem>
-              </Select>
+                <InputLabel id="storage-location-label">Storage Location</InputLabel>
+                <Select
+                  labelId="storage-location-label"
+                  name="storageLocation"
+                  value={formData.storageLocation}
+                  onChange={handleSelectChange} // Also a SelectChangeEvent
+                  fullWidth
+                  sx={{ backgroundColor: 'transparent' }}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  {/* <MenuItem value="Office Safe">Office Safe</MenuItem>
+                  <MenuItem value="Closet A">Closet A</MenuItem> */}
+                  {LFStorageLocations.map((loc) => (
+                    <MenuItem value={loc}>{loc}</MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText>Valuable items should go in the safe</FormHelperText>
+              </FormControl>
             </div>
           </Grid>
         </Grid>
