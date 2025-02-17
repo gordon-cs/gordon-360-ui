@@ -13,7 +13,6 @@ import {
   Typography,
   Chip,
 } from '@mui/material';
-import Header from 'views/CampusSafety/components/Header';
 import styles from './ItemForm.module.css';
 import lostAndFoundService, { MissingItemReport } from 'services/lostAndFound';
 import userService from 'services/user';
@@ -42,6 +41,19 @@ const pageHeader = (formType: string) => {
           titleTypographyProps={{ align: 'center' }}
           className="gc360_header"
         />
+        <div className={styles.disclaimer}>
+          <InfoOutlined />
+          <Grid container item rowGap={1}>
+            <Grid item xs={12}>
+              <Typography variant="body1">Gordon Police manages campus Lost & Found</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="body2">
+                Police staff will view reports, and you will be notified if your item is found.
+              </Typography>
+            </Grid>
+          </Grid>
+        </div>
       </>
     );
   } else if (formType == 'edit') {
@@ -438,12 +450,30 @@ const ItemForm = ({ formType }: { formType: string }) => {
   return (
     <>
       {showConfirm ? (
-        <CreateConfirmReport
-          formData={{ ...formData, ...user }}
-          onEdit={() => setShowConfirm(false)}
-          onSubmit={handleReportSubmit}
-          disableSubmit={disableSubmit}
-        />
+        <>
+          {formType == 'create' ? (
+            <>
+              <CreateConfirmReport
+                formData={{ ...formData, ...user }}
+                onEdit={() => setShowConfirm(false)}
+                onSubmit={handleReportSubmit}
+                disableSubmit={disableSubmit}
+              />
+              <GordonSnackbar
+                open={snackbar.open}
+                text={snackbar.message}
+                severity={snackbar.severity}
+                onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+              />
+            </>
+          ) : (
+            <EditConfirmReport
+              formData={{ ...formData, ...user }}
+              onEdit={() => setShowConfirm(false)}
+              onSubmit={handleReportSubmit}
+            />
+          )}
+        </>
       ) : (
         <Card className={styles.form_card}>
           {pageHeader(formType)}
@@ -702,6 +732,7 @@ const ItemForm = ({ formType }: { formType: string }) => {
                         <Checkbox checked={formData.stolen} onChange={handleChange} name="stolen" />
                       }
                       label="Was this item stolen? (Police staff will follow up)"
+                      disabled={!isEditable}
                     />
                   </Grid>
                   {isEditable && (
