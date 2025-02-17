@@ -111,6 +111,7 @@ const ItemForm = ({ formType }: { formType: string }) => {
   const [newActionFormData] = useState({ action: '', actionNote: '' });
   const [disableSubmit, setDisableSubmit] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const isEditable = formData.status === 'active';
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -232,6 +233,7 @@ const ItemForm = ({ formType }: { formType: string }) => {
   );
 
   const handleColorChange = (color: string) => {
+    if (!isEditable) return;
     setFormData((prevData) => {
       const colors = prevData.colors.includes(color)
         ? prevData.colors.filter((c) => c !== color)
@@ -557,7 +559,7 @@ const ItemForm = ({ formType }: { formType: string }) => {
                         ].map((label) => (
                           <FormControlLabel
                             key={label}
-                            control={<Radio />}
+                            control={<Radio disabled={!isEditable} />}
                             label={label}
                             value={label.toLowerCase().replace(/ /g, '/')}
                             onChange={(e) =>
@@ -615,6 +617,7 @@ const ItemForm = ({ formType }: { formType: string }) => {
                               <Checkbox
                                 checked={formData.colors.includes(color)}
                                 onChange={() => handleColorChange(color)}
+                                disabled={!isEditable}
                               />
                             }
                             label={color}
@@ -634,6 +637,7 @@ const ItemForm = ({ formType }: { formType: string }) => {
                       name="brand"
                       value={formData.brand}
                       onChange={handleChange}
+                      disabled={!isEditable}
                       error={Boolean(validationErrors.brand)}
                       helperText={validationErrors.brand}
                       sx={{
@@ -655,6 +659,7 @@ const ItemForm = ({ formType }: { formType: string }) => {
                       onChange={handleChange}
                       error={Boolean(validationErrors.description)}
                       helperText={validationErrors.description}
+                      disabled={!isEditable}
                       sx={{
                         '& .MuiFormLabel-root.Mui-focused': {
                           color: 'var(--mui-palette-secondary-400);',
@@ -676,6 +681,7 @@ const ItemForm = ({ formType }: { formType: string }) => {
                       onChange={handleChange}
                       error={Boolean(validationErrors.locationLost)}
                       helperText={validationErrors.locationLost}
+                      disabled={!isEditable}
                       sx={{
                         '& .MuiFormLabel-root.Mui-focused': {
                           color: 'var(--mui-palette-secondary-400);',
@@ -698,19 +704,20 @@ const ItemForm = ({ formType }: { formType: string }) => {
                       label="Was this item stolen? (Police staff will follow up)"
                     />
                   </Grid>
-                  {/* Submit Button */}
-                  <Grid container justifyContent="flex-end" className={styles.submit_container}>
-                    <Grid item xs={2}>
-                      <Button
-                        variant="contained"
-                        fullWidth
-                        className={styles.submit_button}
-                        onClick={handleFormSubmit}
-                      >
-                        NEXT
-                      </Button>
+                  {isEditable && (
+                    <Grid container justifyContent="flex-end" className={styles.submit_container}>
+                      <Grid item xs={2}>
+                        <Button
+                          variant="contained"
+                          fullWidth
+                          className={styles.submit_button}
+                          onClick={handleFormSubmit}
+                        >
+                          NEXT
+                        </Button>
+                      </Grid>
                     </Grid>
-                  </Grid>
+                  )}
                 </Grid>
               </Grid>
             </>
