@@ -86,10 +86,10 @@ const TaskList = () => {
     const fetchTaskList = async (hallID) => {
       try {
         const tasks = await getTasksForHall(hallID);
-        console.log(tasks);
-        const updatedTasks = taskList;
-        updatedTasks.push({ [`${hallID}`]: tasks });
-        setTaskList(updatedTasks);
+        console.log(JSON.stringify(tasks));
+        taskList === []
+          ? setTaskList(tasks)
+          : setTaskList((prevTasks) => [...prevTasks, { [`${hallID}`]: tasks }]);
       } catch (error) {
         console.log('Error fetching tasks', error);
       }
@@ -134,14 +134,13 @@ const TaskList = () => {
         title={'Task Description'}
       >
         <Grid Item>
-          {taskList[taskIndex].Description.length == 0
+          {taskList[taskIndex].Description.length === 0
             ? 'No description provided'
             : taskList[taskIndex].Description}
         </Grid>
       </GordonDialogBox>
     );
   };
-  console.log(hallList[0]);
 
   return (
     <Grid item xs={12} md={12} padding={0}>
@@ -150,43 +149,52 @@ const TaskList = () => {
         <CardContent>
           <Typography>
             <List>
-              {taskList.length > 0 ? (
+              hey look
+              {taskList != undefined && taskList.length > 0 ? (
                 taskList.map((hallTasks, hallIndex) => {
-                  hallTasks[hallList[hallIndex]].length > 0 ? (
-                    hallTasks[hallList[hallIndex]].map((task, index) => {
-                      <ListItem
-                        key={index}
-                        secondaryAction={
-                          <IconButton
-                            edge="end"
-                            aria-label="description"
-                            onClick={() => handleClickDescription}
+                  const hallName = hallList[hallIndex];
+                  const taskArray = hallTasks[hallName];
+                  hallName in Object.keys(hallTasks) ? (
+                    Object.keys(taskArray).length > 0 ? (
+                      taskArray.map((task, index) => {
+                        return (
+                          <ListItem
+                            key={index}
+                            secondaryAction={
+                              <IconButton
+                                edge="end"
+                                aria-label="description"
+                                onClick={() => handleClickDescription}
+                              >
+                                <CommentIcon />
+                              </IconButton>
+                            }
                           >
-                            <CommentIcon />
-                          </IconButton>
-                        }
-                      >
-                        <ListItemButton
-                          //role={undefined}
-                          onClick={() => handleTaskChecked(index, task.TaskID)}
-                          dense
-                        >
-                          <ListItemIcon>
-                            <Checkbox
-                              id={index}
-                              edge="start"
-                              checked={checkedList[index]}
-                              disabled={disabledList[index]}
-                            />
-                          </ListItemIcon>
-                        </ListItemButton>
-                        <ListItemText id={index} primary={task.Name} />
-                      </ListItem>;
-                    })
+                            <ListItemButton
+                              //role={undefined}
+                              onClick={() => handleTaskChecked(index, task.TaskID)}
+                              dense
+                            >
+                              <ListItemIcon>
+                                <Checkbox
+                                  id={index}
+                                  edge="start"
+                                  checked={checkedList[index]}
+                                  disabled={disabledList[index]}
+                                />
+                              </ListItemIcon>
+                            </ListItemButton>
+                            <ListItemText id={index} primary={task.Name} />
+                          </ListItem>
+                        );
+                      })
+                    ) : (
+                      <ListItem>
+                        <ListItemText> No tasks to see for {hallList[hallIndex]}</ListItemText>
+                      </ListItem>
+                    )
                   ) : (
-                    <ListItem>
-                      <ListItemText> No tasks to see for {hallList[hallIndex]}</ListItemText>
-                    </ListItem>
+                    console.log('still waiting...')
                   );
                 })
               ) : (
