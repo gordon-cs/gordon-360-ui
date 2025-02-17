@@ -809,6 +809,7 @@ const FoundItemFormCreate = () => {
                   value={formData.storageLocation}
                   onChange={handleSelectChange} // Also a SelectChangeEvent
                   fullWidth
+                  sx={{ backgroundColor: 'transparent' }}
                 >
                   <MenuItem value="">
                     <em>None</em>
