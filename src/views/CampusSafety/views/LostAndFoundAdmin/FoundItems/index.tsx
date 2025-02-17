@@ -17,6 +17,8 @@ import {
   Typography,
   InputLabel,
   Select,
+  FormControl,
+  FormHelperText,
 } from '@mui/material';
 import { debounce } from 'lodash';
 import quickSearchService, { SearchResult } from 'services/quickSearch';
@@ -771,42 +773,52 @@ const FoundItemFormCreate = () => {
 
             {/* Initial Action - use typed SelectChangeEvent */}
             <div style={{ marginBottom: '1rem', marginTop: '1rem' }}>
-              <InputLabel id="initial-action-label">Initial Action Taken</InputLabel>
-              <Select
-                labelId="initial-action-label"
-                variant="filled"
-                name="initialAction"
-                value={formData.initialAction}
-                onChange={handleSelectChange} // Accepts SelectChangeEvent<string>
-                fullWidth
-              >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value="Tagged">Tagged</MenuItem>
-                <MenuItem value="Secured">Secured</MenuItem>
-                <MenuItem value="Noted">Noted</MenuItem>
-              </Select>
+              <FormControl variant="filled" sx={{ width: 1 }}>
+                <InputLabel id="initial-action-label">Initial Action Taken</InputLabel>
+                <Select
+                  labelId="initial-action-label"
+                  name="initialAction"
+                  value={formData.initialAction}
+                  onChange={handleSelectChange} // Accepts SelectChangeEvent<string>
+                  fullWidth
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value="Tagged">Tagged</MenuItem>
+                  <MenuItem value="Secured">Secured</MenuItem>
+                  <MenuItem value="Noted">Noted</MenuItem>
+                </Select>
+              </FormControl>
             </div>
 
             {/* Storage Location - also typed select */}
             <div style={{ marginBottom: '1rem' }}>
-              <InputLabel id="storage-location-label">Storage Location</InputLabel>
-              <Select
-                labelId="storage-location-label"
+              <FormControl
                 variant="filled"
-                name="storageLocation"
-                value={formData.storageLocation}
-                onChange={handleSelectChange} // Also a SelectChangeEvent
-                fullWidth
+                sx={{
+                  width: 1,
+                  backgroundColor: 'var(--mui-palette-FilledInput-bg)',
+                  borderRadius: 1,
+                }}
               >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value="On Table"> On Table</MenuItem>
-                <MenuItem value="Office Safe">Office Safe</MenuItem>
-                <MenuItem value="Closet A">Closet A</MenuItem>
-              </Select>
+                <InputLabel id="storage-location-label">Storage Location</InputLabel>
+                <Select
+                  labelId="storage-location-label"
+                  name="storageLocation"
+                  value={formData.storageLocation}
+                  onChange={handleSelectChange} // Also a SelectChangeEvent
+                  fullWidth
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value="On Table"> On Table</MenuItem>
+                  <MenuItem value="Office Safe">Office Safe</MenuItem>
+                  <MenuItem value="Closet A">Closet A</MenuItem>
+                </Select>
+                <FormHelperText>Valuable items should go in the safe</FormHelperText>
+              </FormControl>
             </div>
           </Grid>
         </Grid>
