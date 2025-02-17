@@ -64,6 +64,33 @@
   width: 1.5em;
 }
 
+.foundContainer {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.largeChip {
+  padding: 20px;
+  height: 'auto';
+}
+
+.foundText {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.pickupButton {
+  height: fit-content;
+  padding: 1.2rem 1.5rem;
+  border-radius: 30px;
+}
+
+.buttonContainer {
+  justify-content: flex-end;
+}
+
 @media (max-width: 1000px) {
   .form_card {
     margin: 0.5rem;

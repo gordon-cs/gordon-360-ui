@@ -448,187 +448,272 @@ const ItemForm = ({ formType }: { formType: string }) => {
           {loading ? (
             <GordonLoader />
           ) : (
-            <Grid container justifyContent="center">
-              <Grid item sm={5} xs={12}>
-                {/* Item Category */}
-                <Grid item margin={2} className={styles.box_background}>
-                  <FormGroup>
-                    <FormLabel>Item Category:</FormLabel>
-                  </FormGroup>
-                  <Grid item className={styles.category_group}>
-                    <FormGroup className={styles.radio_group}>
-                      {[
-                        'Clothing/Shoes',
-                        'Electronics',
-                        'Jewelry/Watches',
-                        'Keys/Keychains',
-                        'Glasses',
-                        'Bottles/Mugs',
-                        'Books',
-                        'Bags/Purses',
-                        'Office Supplies',
-                        'IDs/Wallets',
-                        'Cash/Cards',
-                        'Other',
-                      ].map((label) => (
-                        <FormControlLabel
-                          key={label}
-                          control={<Radio />}
-                          label={label}
-                          value={label.toLowerCase().replace(/ /g, '/')}
-                          onChange={(e) =>
-                            setFormData((prevData) => ({
-                              ...prevData,
-                              category: (e.target as HTMLInputElement).value,
-                            }))
-                          }
-                          checked={formData.category === label.toLowerCase().replace(/ /g, '/')}
-                          className={styles.category_item}
-                        />
-                      ))}
-                    </FormGroup>
+            <>
+              {/* Display the "Found" notice only if the status is "found" */}
+              {formData.status.toLowerCase() === 'found' && (
+                <Grid container xs={9.7} className={styles.foundContainer} rowGap={2}>
+                  <Grid container item xs={12} md={6} rowGap={2}>
+                    <Grid item xs={12}>
+                      <Chip
+                        className={styles.largeChip}
+                        // Wrap chip text if needed
+                        sx={{
+                          height: 'auto',
+                          '& .MuiChip-label': {
+                            display: 'block',
+                            whiteSpace: 'normal',
+                          },
+                        }}
+                        label={
+                          <>
+                            <Typography>
+                              Gordon Police marked this item as{' '}
+                              <Typography component="span" className={styles.foundText}>
+                                Found
+                              </Typography>
+                            </Typography>
+                          </>
+                        }
+                        color="success"
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Grid container columnGap={1} height="100%" alignItems="center">
+                        <Typography>
+                          <InfoOutlinedIcon color="inherit" /> Check your email for pickup
+                          instructions.{' '}
+                        </Typography>
+                      </Grid>
+                    </Grid>
                   </Grid>
-                  {/* Error Message */}
-                  <Grid item>
-                    <TextField
-                      variant="standard"
-                      error={Boolean(validationErrors.category)}
-                      helperText={validationErrors.category || ' '} // Show error message or keep space consistent
-                      fullWidth
-                      InputProps={{ style: { display: 'none' } }} // Hide the actual TextField input
-                    />
-                  </Grid>
-                </Grid>
-                {/* Item Colors */}
-                <Grid item margin={2} className={styles.box_background}>
-                  <FormGroup>
-                    <FormLabel>
-                      Item Color: Choose <u>ALL</u> that apply:
-                    </FormLabel>
-                  </FormGroup>
-                  <Grid item className={styles.checkbox_group}>
-                    <FormGroup className={styles.color_group}>
-                      {[
-                        'Black',
-                        'Blue',
-                        'Brown',
-                        'Gold',
-                        'Gray',
-                        'Green',
-                        'Maroon',
-                        'Orange',
-                        'Pink',
-                        'Purple',
-                        'Red',
-                        'Silver',
-                        'Tan',
-                        'White',
-                        'Yellow',
-                      ].map((color) => (
-                        <FormControlLabel
-                          key={color}
-                          control={
-                            <Checkbox
-                              checked={formData.colors.includes(color)}
-                              onChange={() => handleColorChange(color)}
-                            />
-                          }
-                          label={color}
-                        />
-                      ))}
-                    </FormGroup>
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item sm={5} xs={12}>
-                {/* Item Brand and Description */}
-                <Grid item margin={2}>
-                  <TextField
-                    fullWidth
-                    variant="filled"
-                    label={'Item Brand or Make'}
-                    name="brand"
-                    value={formData.brand}
-                    onChange={handleChange}
-                    error={Boolean(validationErrors.brand)}
-                    helperText={validationErrors.brand}
-                    sx={{
-                      '& .MuiFormLabel-root.Mui-focused': {
-                        color: 'var(--mui-palette-secondary-400);',
-                      },
-                    }}
-                  />
-                </Grid>
-                <Grid item margin={2}>
-                  <TextField
-                    fullWidth
-                    multiline
-                    minRows={5}
-                    variant="filled"
-                    label={'Item Description: Be as detailed as possible'}
-                    name="description"
-                    value={formData.description}
-                    onChange={handleChange}
-                    error={Boolean(validationErrors.description)}
-                    helperText={validationErrors.description}
-                    sx={{
-                      '& .MuiFormLabel-root.Mui-focused': {
-                        color: 'var(--mui-palette-secondary-400);',
-                      },
-                    }}
-                  />
-                </Grid>
-
-                {/* Location Lost and Date Lost */}
-                <Grid item margin={2}>
-                  <TextField
-                    fullWidth
-                    multiline
-                    minRows={4}
-                    variant="filled"
-                    label={'Location Lost: Be as detailed as possible'}
-                    name="locationLost"
-                    value={formData.locationLost}
-                    onChange={handleChange}
-                    error={Boolean(validationErrors.locationLost)}
-                    helperText={validationErrors.locationLost}
-                    sx={{
-                      '& .MuiFormLabel-root.Mui-focused': {
-                        color: 'var(--mui-palette-secondary-400);',
-                      },
-                    }}
-                  />
-                </Grid>
-                <Grid item margin={2}>
-                  {customDatePicker}
-                </Grid>
-              </Grid>
-              {/* Stolen Checkbox */}
-              <Grid container justifyContent="center" marginTop={3}>
-                <Grid item xs={9.5}>
-                  <FormControlLabel
-                    className={styles.stolen_container}
-                    control={
-                      <Checkbox checked={formData.stolen} onChange={handleChange} name="stolen" />
-                    }
-                    label="Was this item stolen? (Police staff will follow up)"
-                  />
-                </Grid>
-                {/* Submit Button */}
-                <Grid container justifyContent="flex-end" className={styles.submit_container}>
-                  <Grid item xs={2}>
+                  <Grid container item xs={12} md={6} className={styles.buttonContainer}>
                     <Button
                       variant="contained"
-                      fullWidth
-                      className={styles.submit_button}
-                      onClick={handleFormSubmit}
+                      color="primary"
+                      startIcon={<CheckCircleOutlineIcon />}
+                      onClick={handlePickup}
+                      className={styles.pickupButton}
+                      disabled={isPickedUp} // Disable the button if the item is picked up
                     >
-                      NEXT
+                      {/* Update text based on if the item is picked up */}
+                      {isPickedUp ? 'Item Picked Up' : 'Mark as Picked Up'}{' '}
                     </Button>
                   </Grid>
                 </Grid>
+              )}
+              {/* Display a chip for items with statuses other than "active" */}
+              {formData.status.toLowerCase() !== 'active' &&
+                formData.status.toLowerCase() !== 'found' && (
+                  <Grid container xs={9.7} className={styles.foundContainer} rowGap={2}>
+                    <Grid container item xs={12} md={6} rowGap={2}>
+                      <Grid item xs={12}>
+                        <Chip
+                          className={styles.largeChip}
+                          sx={{
+                            '& .MuiChip-label': {
+                              display: 'block',
+                              whiteSpace: 'normal',
+                            },
+                          }}
+                          label={
+                            <>
+                              <Typography>
+                                This item was marked as{' '}
+                                <Typography component="span" className={styles.foundText}>
+                                  {formData.status.charAt(0).toUpperCase() +
+                                    formData.status.slice(1)}
+                                </Typography>
+                              </Typography>
+                            </>
+                          }
+                          color="default"
+                        />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                )}
+              <Grid container justifyContent="center">
+                <Grid item sm={5} xs={12}>
+                  {/* Item Category */}
+                  <Grid item margin={2} className={styles.box_background}>
+                    <FormGroup>
+                      <FormLabel>Item Category:</FormLabel>
+                    </FormGroup>
+                    <Grid item className={styles.category_group}>
+                      <FormGroup className={styles.radio_group}>
+                        {[
+                          'Clothing/Shoes',
+                          'Electronics',
+                          'Jewelry/Watches',
+                          'Keys/Keychains',
+                          'Glasses',
+                          'Bottles/Mugs',
+                          'Books',
+                          'Bags/Purses',
+                          'Office Supplies',
+                          'IDs/Wallets',
+                          'Cash/Cards',
+                          'Other',
+                        ].map((label) => (
+                          <FormControlLabel
+                            key={label}
+                            control={<Radio />}
+                            label={label}
+                            value={label.toLowerCase().replace(/ /g, '/')}
+                            onChange={(e) =>
+                              setFormData((prevData) => ({
+                                ...prevData,
+                                category: (e.target as HTMLInputElement).value,
+                              }))
+                            }
+                            checked={formData.category === label.toLowerCase().replace(/ /g, '/')}
+                            className={styles.category_item}
+                          />
+                        ))}
+                      </FormGroup>
+                    </Grid>
+                    {/* Error Message */}
+                    <Grid item>
+                      <TextField
+                        variant="standard"
+                        error={Boolean(validationErrors.category)}
+                        helperText={validationErrors.category || ' '} // Show error message or keep space consistent
+                        fullWidth
+                        InputProps={{ style: { display: 'none' } }} // Hide the actual TextField input
+                      />
+                    </Grid>
+                  </Grid>
+                  {/* Item Colors */}
+                  <Grid item margin={2} className={styles.box_background}>
+                    <FormGroup>
+                      <FormLabel>
+                        Item Color: Choose <u>ALL</u> that apply:
+                      </FormLabel>
+                    </FormGroup>
+                    <Grid item className={styles.checkbox_group}>
+                      <FormGroup className={styles.color_group}>
+                        {[
+                          'Black',
+                          'Blue',
+                          'Brown',
+                          'Gold',
+                          'Gray',
+                          'Green',
+                          'Maroon',
+                          'Orange',
+                          'Pink',
+                          'Purple',
+                          'Red',
+                          'Silver',
+                          'Tan',
+                          'White',
+                          'Yellow',
+                        ].map((color) => (
+                          <FormControlLabel
+                            key={color}
+                            control={
+                              <Checkbox
+                                checked={formData.colors.includes(color)}
+                                onChange={() => handleColorChange(color)}
+                              />
+                            }
+                            label={color}
+                          />
+                        ))}
+                      </FormGroup>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item sm={5} xs={12}>
+                  {/* Item Brand and Description */}
+                  <Grid item margin={2}>
+                    <TextField
+                      fullWidth
+                      variant="filled"
+                      label={'Item Brand or Make'}
+                      name="brand"
+                      value={formData.brand}
+                      onChange={handleChange}
+                      error={Boolean(validationErrors.brand)}
+                      helperText={validationErrors.brand}
+                      sx={{
+                        '& .MuiFormLabel-root.Mui-focused': {
+                          color: 'var(--mui-palette-secondary-400);',
+                        },
+                      }}
+                    />
+                  </Grid>
+                  <Grid item margin={2}>
+                    <TextField
+                      fullWidth
+                      multiline
+                      minRows={5}
+                      variant="filled"
+                      label={'Item Description: Be as detailed as possible'}
+                      name="description"
+                      value={formData.description}
+                      onChange={handleChange}
+                      error={Boolean(validationErrors.description)}
+                      helperText={validationErrors.description}
+                      sx={{
+                        '& .MuiFormLabel-root.Mui-focused': {
+                          color: 'var(--mui-palette-secondary-400);',
+                        },
+                      }}
+                    />
+                  </Grid>
+
+                  {/* Location Lost and Date Lost */}
+                  <Grid item margin={2}>
+                    <TextField
+                      fullWidth
+                      multiline
+                      minRows={4}
+                      variant="filled"
+                      label={'Location Lost: Be as detailed as possible'}
+                      name="locationLost"
+                      value={formData.locationLost}
+                      onChange={handleChange}
+                      error={Boolean(validationErrors.locationLost)}
+                      helperText={validationErrors.locationLost}
+                      sx={{
+                        '& .MuiFormLabel-root.Mui-focused': {
+                          color: 'var(--mui-palette-secondary-400);',
+                        },
+                      }}
+                    />
+                  </Grid>
+                  <Grid item margin={2}>
+                    {customDatePicker}
+                  </Grid>
+                </Grid>
+                {/* Stolen Checkbox */}
+                <Grid container justifyContent="center" marginTop={3}>
+                  <Grid item xs={9.5}>
+                    <FormControlLabel
+                      className={styles.stolen_container}
+                      control={
+                        <Checkbox checked={formData.stolen} onChange={handleChange} name="stolen" />
+                      }
+                      label="Was this item stolen? (Police staff will follow up)"
+                    />
+                  </Grid>
+                  {/* Submit Button */}
+                  <Grid container justifyContent="flex-end" className={styles.submit_container}>
+                    <Grid item xs={2}>
+                      <Button
+                        variant="contained"
+                        fullWidth
+                        className={styles.submit_button}
+                        onClick={handleFormSubmit}
+                      >
+                        NEXT
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Grid>
               </Grid>
-            </Grid>
+            </>
           )}
 
           <ReportStolenModal
