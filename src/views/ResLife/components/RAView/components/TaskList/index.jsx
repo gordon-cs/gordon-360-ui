@@ -9,7 +9,7 @@ import {
   Grid,
   Typography,
 } from '@mui/material';
-import { React, useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   IconButton,
   ListItemIcon,
@@ -27,33 +27,6 @@ import { useUser } from 'hooks';
 import GordonDialogBox from 'components/GordonDialogBox';
 import SimpleSnackbar from 'components/Snackbar';
 
-const taskListTest = [
-  {
-    TaskID: 0,
-    Name: 'Clean',
-    Description: 'please clean',
-    HallID: 'brom',
-  },
-  {
-    TaskID: 1,
-    Name: 'more Clean',
-    Description: 'please more clean',
-    HallID: 'ferr',
-  },
-  {
-    TaskID: 2,
-    Name: 'take out trash',
-    Description: 'trashcan full',
-    HallID: 'fult',
-  },
-  {
-    TaskID: 3,
-    Name: 'posters put up',
-    Description: 'please please posters',
-    HallID: 'evan',
-  },
-];
-
 const TaskList = () => {
   const [taskList, setTaskList] = useState([]);
 
@@ -64,6 +37,8 @@ const TaskList = () => {
   const [disabledList, setDisabledList] = useState([]);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [hallList, setHallList] = useState([]);
+  const [confirmTask, setConfirmTask] = useState(null);
+  const [selectedDescription, setSelectedDescription] = useState(null);
 
   const createSnackbar = useCallback((message, severity) => {
     setSnackbar({ message, severity, open: true });
@@ -83,63 +58,82 @@ const TaskList = () => {
   }, []);
 
   useEffect(() => {
-    const fetchTaskList = async (hallID) => {
+    const fetchTaskList = async () => {
       try {
-        const tasks = await getTasksForHall(hallID);
-        console.log(JSON.stringify(tasks));
-        taskList === []
-          ? setTaskList(tasks)
-          : setTaskList((prevTasks) => [...prevTasks, { [`${hallID}`]: tasks }]);
+        const updatedTasks = [];
+        for (const hall of hallList) {
+          const tasks = await getTasksForHall(hall);
+          updatedTasks.push({ hallID: hall, tasks });
+        }
+        setTaskList(updatedTasks);
       } catch (error) {
         console.log('Error fetching tasks', error);
       }
     };
-    hallList.map((hall, index) => {
-      fetchTaskList(hall);
-    });
+
+    if (hallList.length > 0) {
+      fetchTaskList();
+    }
   }, [hallList]);
 
-  const handleConfirm = async (index, taskID) => {
+  const handleConfirm = async () => {
+    if (!confirmTask) {
+      console.error('No task selected for confirmation.');
+      return;
+    }
+
+    const { hallIndex, taskIndex, taskID } = confirmTask;
+
     try {
       await completeTask(taskID, profile.ID);
+
+      setCheckedList((prev) => {
+        const newCheckedList = prev.map((hall, hIndex) =>
+          hIndex === hallIndex
+            ? hall.map((checked, tIndex) => (tIndex === taskIndex ? true : checked))
+            : hall,
+        );
+        return newCheckedList;
+      });
+
+      setDisabledList((prev) => {
+        const newDisabledList = prev.map((hall, hIndex) =>
+          hIndex === hallIndex
+            ? hall.map((disabled, tIndex) => (tIndex === taskIndex ? true : disabled))
+            : hall,
+        );
+        return newDisabledList;
+      });
+
+      createSnackbar(`Completed task: ${taskList[hallIndex].tasks[taskIndex].Name}`, 'success');
+
       setTaskCheckedOpen(false);
-      setCheckedList[index] = true;
-      setDisabledList[index] = true;
-      createSnackbar(`Completed task: ${setCheckedList[index].Name}`, 'success');
+      setConfirmTask(null);
     } catch (error) {
       console.error('Error completing task', error);
       createSnackbar('Failed to complete task. Please try again.', 'error');
     }
   };
 
-  const handleTaskChecked = (index, taskID) => {
-    return (
-      <GordonDialogBox
-        open={taskCheckedOpen}
-        onClose={() => setTaskCheckedOpen(false)}
-        title={'Complete Task'}
-        buttonName="Confirm"
-        buttonClicked={() => handleConfirm(index, taskID)}
-        cancelButtonName="CANCEL"
-        cancelButtonClicked={() => setTaskCheckedOpen(false)}
-      ></GordonDialogBox>
-    );
+  useEffect(() => {
+    if (taskList.length > 0) {
+      const newCheckedList = taskList.map((hall) =>
+        hall.tasks.map((task) => task.CompletedDate !== null),
+      );
+      setCheckedList(newCheckedList);
+      setDisabledList(newCheckedList);
+    }
+  }, [taskList]);
+
+  const handleTaskChecked = (hallIndex, taskIndex, taskID) => {
+    setConfirmTask({ hallIndex, taskIndex, taskID });
+    setTaskCheckedOpen(true);
   };
 
-  const handleClickDescription = (taskIndex) => {
-    return (
-      <GordonDialogBox
-        open={descriptionOpen}
-        onClose={() => setDescriptionOpen(false)}
-        title={'Task Description'}
-      >
-        <Grid Item>
-          {taskList[taskIndex].Description.length === 0
-            ? 'No description provided'
-            : taskList[taskIndex].Description}
-        </Grid>
-      </GordonDialogBox>
-    );
+  const handleClickDescription = (hallIndex, taskIndex) => {
+    const selectedTask = taskList[hallIndex]?.tasks[taskIndex];
+    setSelectedDescription(selectedTask?.Description || 'No description provided');
+    setDescriptionOpen(true);
   };
 
   return (
@@ -149,54 +143,51 @@ const TaskList = () => {
         <CardContent>
           <Typography>
             <List>
-              hey look
-              {taskList != undefined && taskList.length > 0 ? (
-                taskList.map((hallTasks, hallIndex) => {
-                  const hallName = hallList[hallIndex];
-                  const taskArray = hallTasks[hallName];
-                  hallName in Object.keys(hallTasks) ? (
-                    Object.keys(taskArray).length > 0 ? (
-                      taskArray.map((task, index) => {
-                        return (
-                          <ListItem
-                            key={index}
-                            secondaryAction={
-                              <IconButton
-                                edge="end"
-                                aria-label="description"
-                                onClick={() => handleClickDescription}
-                              >
-                                <CommentIcon />
-                              </IconButton>
-                            }
-                          >
-                            <ListItemButton
-                              //role={undefined}
-                              onClick={() => handleTaskChecked(index, task.TaskID)}
-                              dense
+              {taskList.length > 0 ? (
+                taskList.map((hallData, hallIndex) => (
+                  <React.Fragment key={hallData.hallID}>
+                    <ListSubheader>{hallData.hallID}</ListSubheader>
+                    {hallData.tasks.length > 0 ? (
+                      hallData.tasks.map((task, index) => (
+                        <ListItem
+                          key={task.TaskID}
+                          secondaryAction={
+                            <IconButton
+                              edge="end"
+                              aria-label="description"
+                              onClick={() => handleClickDescription(hallIndex, index)}
                             >
-                              <ListItemIcon>
-                                <Checkbox
-                                  id={index}
-                                  edge="start"
-                                  checked={checkedList[index]}
-                                  disabled={disabledList[index]}
-                                />
-                              </ListItemIcon>
-                            </ListItemButton>
-                            <ListItemText id={index} primary={task.Name} />
-                          </ListItem>
-                        );
-                      })
+                              <CommentIcon />
+                            </IconButton>
+                          }
+                        >
+                          <ListItemButton
+                            onClick={() => handleTaskChecked(hallIndex, index, task.TaskID)}
+                            dense
+                          >
+                            <ListItemIcon>
+                              <Checkbox
+                                id={`task-checkbox-${task.TaskID}`}
+                                edge="start"
+                                checked={
+                                  checkedList[hallIndex]?.[index] ?? task.CompletedDate !== null
+                                }
+                                disabled={
+                                  disabledList[hallIndex]?.[index] ?? task.CompletedDate !== null
+                                }
+                              />
+                            </ListItemIcon>
+                          </ListItemButton>
+                          <ListItemText primary={task.Name} />
+                        </ListItem>
+                      ))
                     ) : (
-                      <ListItem>
-                        <ListItemText> No tasks to see for {hallList[hallIndex]}</ListItemText>
+                      <ListItem key={`no-tasks-${hallData.hallID}`}>
+                        <ListItemText>No tasks available for {hallData.hallID}</ListItemText>
                       </ListItem>
-                    )
-                  ) : (
-                    console.log('still waiting...')
-                  );
-                })
+                    )}
+                  </React.Fragment>
+                ))
               ) : (
                 <ListItem>
                   <ListItemText>No tasks to see</ListItemText>
@@ -204,6 +195,24 @@ const TaskList = () => {
               )}
             </List>
           </Typography>
+          <GordonDialogBox
+            open={taskCheckedOpen}
+            onClose={() => setTaskCheckedOpen(false)}
+            title={'Complete Task'}
+            buttonName="Confirm"
+            buttonClicked={handleConfirm}
+            cancelButtonName="CANCEL"
+            cancelButtonClicked={() => setTaskCheckedOpen(false)}
+          />
+          <GordonDialogBox
+            open={descriptionOpen}
+            onClose={() => setDescriptionOpen(false)}
+            title="Task Description"
+            buttonName="Close"
+            buttonClicked={() => setDescriptionOpen(false)}
+          >
+            <Grid item>{selectedDescription}</Grid>
+          </GordonDialogBox>
         </CardContent>
       </Card>
     </Grid>
