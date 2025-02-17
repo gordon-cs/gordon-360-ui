@@ -357,7 +357,7 @@ const ItemForm = ({ formType }: { formType: string }) => {
   };
 
   useEffect(() => {
-    if (formData.recordID > 0) {
+    if (formData.recordID > 0 || formType == 'create') {
       setLoading(false);
     }
   }, [formData.recordID]);
