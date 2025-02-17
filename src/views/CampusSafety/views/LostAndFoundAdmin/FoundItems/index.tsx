@@ -32,7 +32,11 @@ import { InfoOutlined } from '@mui/icons-material';
 import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { useUser } from 'hooks';
-import { LFCategories, LFColors } from 'views/CampusSafety/components/Constants';
+import {
+  LFCategories,
+  LFColors,
+  LFStorageLocations,
+} from 'views/CampusSafety/components/Constants';
 
 const MIN_QUERY_LENGTH = 2;
 
@@ -814,9 +818,11 @@ const FoundItemFormCreate = () => {
                   <MenuItem value="">
                     <em>None</em>
                   </MenuItem>
-                  <MenuItem value="On Table"> On Table</MenuItem>
-                  <MenuItem value="Office Safe">Office Safe</MenuItem>
-                  <MenuItem value="Closet A">Closet A</MenuItem>
+                  {/* <MenuItem value="Office Safe">Office Safe</MenuItem>
+                  <MenuItem value="Closet A">Closet A</MenuItem> */}
+                  {LFStorageLocations.map((loc) => (
+                    <MenuItem value={loc}>{loc}</MenuItem>
+                  ))}
                 </Select>
                 <FormHelperText>Valuable items should go in the safe</FormHelperText>
               </FormControl>
