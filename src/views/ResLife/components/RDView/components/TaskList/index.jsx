@@ -14,14 +14,17 @@ import {
   Box,
   FormControlLabel,
 } from '@mui/material';
-import { addTask, editTask, fetchTasks, removeTask } from 'services/residentLife/RD_TaskList';
+import { addTask, updateTask, fetchTasks, removeTask } from 'services/residentLife/RD_TaskList';
 
 const TaskList = () => {
   const [tasks, setTasks] = useState([]);
   const [selectedHall, setSelectedHall] = useState('');
   const [loading, setLoading] = useState(false);
+  const [editing, setEditing] = useState(false);
+
+  // All parameters of a task that will be filled later
   const [currentTask, setCurrentTask] = useState({
-    taskID: null,
+    // taskID: null,
     name: '',
     description: '',
     hallId: '',
@@ -31,20 +34,26 @@ const TaskList = () => {
     startDate: '',
     endDate: '',
   });
-  const [editing, setEditing] = useState(false);
 
+  // UseEffect - Immediately runs `loadTasks`
   useEffect(() => {
     if (selectedHall) {
       loadTasks(selectedHall);
     }
   }, [selectedHall]);
 
+  // Function to get all the tasks from the selected hall
   const loadTasks = async (hallId) => {
     setLoading(true);
 
     try {
+      // Wait until all tasks are fetched from API
       const response = await fetchTasks(hallId);
-      console.log('response', response);
+      console.log('fetchTasks response', response);
+
+      // prevTasks - represents current state of value before any changes
+      // if length changes or some task IDs do not match, return new task array
+      // else nothing has changed, so return prevTasks
       setTasks((prevTasks) => {
         if (
           prevTasks.length !== response.length ||
@@ -54,59 +63,97 @@ const TaskList = () => {
         }
         return prevTasks;
       });
-      console.log('tasks', tasks);
     } catch (error) {
-      console.error('Error fetching RA/ACs:', error);
+      console.error('Error fetching hall tasks:', error);
     } finally {
       setLoading(false);
     }
   };
 
+  const loadEditedTasks = async (hallId) => {
+    setLoading(true);
+
+    try {
+      // Wait until all tasks are fetched from API
+      const response = await fetchTasks(hallId);
+      console.log('fetchTasks response', response);
+
+      // prevTasks - represents current state of value before any changes
+      // if length changes or some task IDs do not match, return new task array
+      // else nothing has changed, so return prevTasks
+      setTasks(response);
+    } catch (error) {
+      console.error('Error fetching hall tasks:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Function to handle changes in the form
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
 
+    // Updates the changes in the form
     setCurrentTask((prevTask) => ({
       ...prevTask,
       [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
+  // Function to handle form submission when adding new tasks
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Stops the website from reloading
     try {
       const newTask = { ...currentTask, hallId: selectedHall };
+
+      console.log('About to run addTask');
       await addTask(newTask);
+      console.log('Ran addTask');
+
+      console.log('About to run loadTasks');
       loadTasks(selectedHall);
+      console.log('Ran loadTasks');
+
       resetTaskForm();
     } catch (error) {
       console.error('Error adding task:', error);
     }
   };
 
+  // // Function to handle form submission when adding updated tasks
   const handleEdit = async (e) => {
     e.preventDefault();
     try {
+      // Check if the task has a task ID
       if (!currentTask.taskID) {
         console.error('Error: Task ID is missing');
         return;
       }
 
       const updatedTask = { ...currentTask, hallId: selectedHall };
-      await editTask(currentTask.taskID, updatedTask);
-      loadTasks(selectedHall);
+
+      console.log('About to run updateTask');
+      await updateTask(currentTask.taskID, updatedTask);
+      console.log('Ran updateTasks');
+
+      console.log('About to run loadTasks');
+      loadEditedTasks(selectedHall);
+      console.log('Ran loadTasks');
+
       resetTaskForm();
     } catch (error) {
       console.error('Error editing task:', error);
     }
   };
 
+  // Function to fill in the form with data that user wants to edit
   const editTask = (task) => {
     setCurrentTask({
       taskID: task.TaskID,
       name: task.Name,
       description: task.Description,
       hallId: task.HallID,
-      isRecurring: task.IsRecurring,
+      isRecurring: task?.IsRecurring,
       frequency: task.Frequency,
       interval: task.Interval,
       startDate: task.StartDate ? task.StartDate.split('T')[0] : '',
@@ -115,6 +162,7 @@ const TaskList = () => {
     setEditing(true);
   };
 
+  // Function to delete a task
   const deleteTask = async (taskID) => {
     try {
       await removeTask(taskID);
@@ -124,6 +172,7 @@ const TaskList = () => {
     }
   };
 
+  // Function to reset the form inputs
   const resetTaskForm = () => {
     setCurrentTask({
       name: '',
@@ -191,7 +240,8 @@ const TaskList = () => {
                 fullWidth
                 label="Task Name"
                 name="name"
-                value={currentTask.name || ''}
+                // value={currentTask.name || ''
+                value={currentTask.name}
                 onChange={handleInputChange}
                 required
                 sx={{ mb: 2 }}
@@ -202,7 +252,8 @@ const TaskList = () => {
                 name="description"
                 multiline
                 rows={3}
-                value={currentTask.description || ''}
+                // value={currentTask.description || ''}
+                value={currentTask.description}
                 onChange={handleInputChange}
                 sx={{ mb: 2 }}
               />
@@ -232,12 +283,8 @@ const TaskList = () => {
                 control={
                   <Checkbox
                     name="isRecurring"
-                    checked={!!currentTask.isRecurring}
-                    onChange={(e) =>
-                      handleInputChange({
-                        target: { name: 'isRecurring', value: e.target.checked },
-                      })
-                    }
+                    checked={currentTask.isRecurring}
+                    onChange={handleInputChange}
                   />
                 }
                 label="Recurring Task"
