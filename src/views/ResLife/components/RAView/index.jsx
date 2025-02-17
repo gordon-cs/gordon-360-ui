@@ -24,10 +24,15 @@ import MyHall from '../ResidentView/components/MyHall/index';
 import { React, useCallback, useEffect, useState } from 'react';
 import SimpleSnackbar from 'components/Snackbar';
 import GordonDialogBox from 'components/GordonDialogBox';
-import { checkIfCheckedIn, submitCheckIn } from 'services/residentLife/RA_Checkin';
+import {
+  checkIfCheckedIn,
+  submitCheckIn,
+  getRACurrentHalls,
+} from 'services/residentLife/RA_Checkin';
 import { preferredContact, PrefContactMethod } from 'services/residentLife/ResidentStaff';
 import { useUser } from 'hooks';
 import HousingBanner from '../ResidentView/components/HousingWelcome/Banner';
+import BasicSelect from '../RDView//components/MobileView';
 
 const RAView = () => {
   const [isCheckedIn, setCheckedIn] = useState(false);
@@ -38,6 +43,7 @@ const RAView = () => {
   const [selectedContact, setSelectedContact] = useState('');
   const [hallName, setHallName] = useState('');
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
+  const [checkedInHalls, setCheckedInHalls] = useState([]);
 
   const isMobile = useMediaQuery('(max-width:600px)');
 
@@ -53,7 +59,16 @@ const RAView = () => {
           const isChecked = await checkIfCheckedIn(profile.ID);
           setCheckedIn(isChecked);
 
-          if (profile.hall) {
+          if (isChecked) {
+            const currentHalls = await getRACurrentHalls(profile.AD_Username);
+            setHallState((prevState) => {
+              const updatedState = { ...prevState };
+              currentHalls.forEach((hall) => {
+                updatedState[hall] = true;
+              });
+              return updatedState;
+            });
+          } else if (profile.hall) {
             setHallState((prevState) => ({
               ...prevState,
               [profile.hall]: true,
@@ -65,7 +80,20 @@ const RAView = () => {
         }
       }
     };
+    fetchData();
+  }, [profile?.ID]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      if (profile?.ID) {
+        try {
+          const halls = await getRACurrentHalls(profile.AD_Username);
+          setCheckedInHalls(halls);
+        } catch (error) {
+          console.error('Error fetching checked-in halls:', error);
+        }
+      }
+    };
     fetchData();
   }, [profile?.ID]);
 
@@ -107,7 +135,7 @@ const RAView = () => {
     let tempName = '';
 
     for (let hall in hallState) {
-      if (hallState[hall] && hall !== 'village') {
+      if (hallState[hall] && hall !== 'village' && !checkedInHalls.includes(hall)) {
         // Map hall codes to names using the mapping object
         const hallName = hallCodeToNameMap[hall];
         tempName = tempName ? `${tempName}, ${hallName}` : hallName;
@@ -119,7 +147,7 @@ const RAView = () => {
 
   const handleSubmit = async () => {
     const selectedHallCodes = Object.keys(hallState).filter(
-      (hall) => hallState[hall] && hall !== 'village',
+      (hall) => hallState[hall] && hall !== 'village' && !checkedInHalls.includes(hall),
     ); //exclude village for checkin
 
     if (!profile?.ID || selectedHallCodes.length === 0) {
@@ -214,20 +242,14 @@ const RAView = () => {
   const checkInButton = () => (
     <Grid container item justifyContent="center" alignItems="center">
       <Grid item xs={12} md={4}>
-        <Button
-          variant="contained"
-          fullWidth={true}
-          onClick={() => setOpen(true)}
-          disabled={isCheckedIn}
-        >
-          {isCheckedIn ? 'You Are Checked In To Your Shift' : 'Check In To Your Shift'}
+        <Button variant="contained" fullWidth={true} onClick={() => setOpen(true)}>
+          {isCheckedIn ? 'check in to additional Halls?' : 'Check In To Your Shift'}
         </Button>
         <Grid item xs={12} md={4} padding={1}>
           <GordonDialogBox
             open={open}
             onClose={() => setOpen(false)}
             title={'Choose Which Hall to Check Into'}
-            isButtonDisabled={!isChecked}
             buttonName="Check In"
             buttonClicked={handleConfirm}
             cancelButtonName="CANCEL"
@@ -238,63 +260,81 @@ const RAView = () => {
                 <FormLabel error>Select a Hall</FormLabel>
                 <FormGroup>
                   <FormControlLabel
+                    key="BRO"
                     checked={BRO}
+                    disabled={checkedInHalls?.includes('BRO')}
                     control={<Checkbox />}
                     onChange={handleHallChecked}
                     label="Bromley"
                     name="BRO"
                   />
                   <FormControlLabel
+                    key="CHA"
                     checked={CHA}
+                    disabled={checkedInHalls?.includes('CHA')}
                     control={<Checkbox />}
                     onChange={handleHallChecked}
                     label="Chase"
                     name="CHA"
                   />
                   <FormControlLabel
+                    key="EVN"
                     checked={EVN}
+                    disabled={checkedInHalls?.includes('EVN')}
                     control={<Checkbox />}
                     onChange={handleHallChecked}
                     label="Evans"
                     name="EVN"
                   />
                   <FormControlLabel
+                    key="FER"
                     checked={FER}
+                    disabled={checkedInHalls?.includes('FER')}
                     control={<Checkbox />}
                     onChange={handleHallChecked}
                     label="Ferrin"
                     name="FER"
                   />
                   <FormControlLabel
+                    key="FUL"
                     checked={FUL}
+                    disabled={checkedInHalls?.includes('FUL')}
                     control={<Checkbox />}
                     onChange={handleHallChecked}
                     label="Fulton"
                     name="FUL"
                   />
                   <FormControlLabel
+                    key="NYL"
                     checked={NYL}
+                    disabled={checkedInHalls?.includes('NYL')}
                     control={<Checkbox />}
                     onChange={handleHallChecked}
                     label="Nyland"
                     name="NYL"
                   />
                   <FormControlLabel
+                    key="TAV"
                     checked={TAV}
+                    disabled={checkedInHalls?.includes('TAV')}
                     control={<Checkbox />}
                     onChange={handleHallChecked}
                     label="Tavilla"
                     name="TAV"
                   />
                   <FormControlLabel
+                    key="WIL"
                     checked={WIL}
+                    disabled={checkedInHalls?.includes('WIL')}
                     control={<Checkbox />}
                     onChange={handleHallChecked}
                     label="Wilson"
                     name="WIL"
                   />
                   <FormControlLabel
+                    key="village"
                     checked={village}
+                    disabled={checkedInHalls?.includes('village')}
                     control={<Checkbox />}
                     onChange={handleHallChecked}
                     label="The Village"
@@ -371,6 +411,30 @@ const RAView = () => {
     </Card>
   );
 
+  const OnCallTable = ({ isCheckedIn }) => {
+    if (!isCheckedIn) return null;
+
+    return (
+      <Grid item xs={12} md={20} padding={1}>
+        <Card sx={{ width: '100%' }}>
+          <CardHeader
+            title={
+              <Grid container direction="row" alignItems="center">
+                <Grid item xs={12} align="center">
+                  RA/AC on Duty by Hall
+                </Grid>
+              </Grid>
+            }
+            className="gc360_header"
+          />
+          <CardContent>
+            <BasicSelect />
+          </CardContent>
+        </Card>
+      </Grid>
+    );
+  };
+
   return (
     <Grid container item spacing={2}>
       {!isMobile && (
@@ -388,9 +452,7 @@ const RAView = () => {
             <MyHall />
           </Grid>
           {checkInButton()}
-          <Grid item xs={12} md={12}>
-            <Links />
-          </Grid>
+          <OnCallTable isCheckedIn={isCheckedIn} />
         </>
       )}
       {isMobile && (
@@ -411,6 +473,7 @@ const RAView = () => {
           <Grid item xs={12}>
             <Links />
           </Grid>
+          <OnCallTable isCheckedIn={isCheckedIn} />
         </>
       )}
     </Grid>
