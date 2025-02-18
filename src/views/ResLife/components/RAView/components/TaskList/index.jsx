@@ -142,7 +142,7 @@ const TaskList = () => {
         <CardHeader title={`On-Call Tasks`} className="gc360_header" />
         <CardContent>
           <Typography>
-            <List>
+            <List disablePadding>
               {taskList.length > 0 ? (
                 taskList.map((hallData, hallIndex) => (
                   <React.Fragment key={hallData.hallID}>
@@ -166,19 +166,24 @@ const TaskList = () => {
                             dense
                           >
                             <ListItemIcon>
-                              <Checkbox
-                                id={`task-checkbox-${task.TaskID}`}
-                                edge="start"
-                                checked={
-                                  checkedList[hallIndex]?.[index] ?? task.CompletedDate !== null
-                                }
-                                disabled={
-                                  disabledList[hallIndex]?.[index] ?? task.CompletedDate !== null
+                              <FormControlLabel
+                                label={task.Name}
+                                control={
+                                  <Checkbox
+                                    id={`task-checkbox-${task.TaskID}`}
+                                    edge="start"
+                                    checked={
+                                      checkedList[hallIndex]?.[index] ?? task.CompletedDate !== null
+                                    }
+                                    disabled={
+                                      disabledList[hallIndex]?.[index] ??
+                                      task.CompletedDate !== null
+                                    }
+                                  />
                                 }
                               />
                             </ListItemIcon>
                           </ListItemButton>
-                          <ListItemText primary={task.Name} />
                         </ListItem>
                       ))
                     ) : (
@@ -203,7 +208,10 @@ const TaskList = () => {
             buttonClicked={handleConfirm}
             cancelButtonName="CANCEL"
             cancelButtonClicked={() => setTaskCheckedOpen(false)}
-          />
+          >
+            <br />
+            Are you sure you have completed this task?
+          </GordonDialogBox>
           <GordonDialogBox
             open={descriptionOpen}
             onClose={() => setDescriptionOpen(false)}
@@ -211,7 +219,8 @@ const TaskList = () => {
             buttonName="Close"
             buttonClicked={() => setDescriptionOpen(false)}
           >
-            <Grid item>{selectedDescription}</Grid>
+            <br />
+            {selectedDescription}
           </GordonDialogBox>
         </CardContent>
       </Card>

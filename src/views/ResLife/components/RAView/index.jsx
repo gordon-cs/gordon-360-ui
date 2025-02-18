@@ -415,23 +415,21 @@ const RAView = () => {
     if (!isCheckedIn) return null;
 
     return (
-      <Grid item xs={12} md={20} padding={1}>
-        <Card sx={{ width: '100%' }}>
-          <CardHeader
-            title={
-              <Grid container direction="row" alignItems="center">
-                <Grid item xs={12} align="center">
-                  RA/AC on Duty by Hall
-                </Grid>
+      <Card sx={{ width: '100%' }}>
+        <CardHeader
+          title={
+            <Grid container direction="row" alignItems="center">
+              <Grid item xs={12} align="center">
+                RA/AC on Duty by Hall
               </Grid>
-            }
-            className="gc360_header"
-          />
-          <CardContent>
-            <BasicSelect />
-          </CardContent>
-        </Card>
-      </Grid>
+            </Grid>
+          }
+          className="gc360_header"
+        />
+        <CardContent>
+          <BasicSelect />
+        </CardContent>
+      </Card>
     );
   };
 
@@ -440,19 +438,21 @@ const RAView = () => {
       {!isMobile && (
         <>
           <HousingBanner />
-          {isCheckedIn ? (
-            <Grid item xs={12} md={4}>
-              <TaskList />
-            </Grid>
-          ) : null}
           <Grid item xs={12} md={isCheckedIn ? 4 : 6}>
+            <OnCallTable isCheckedIn={isCheckedIn} />
+          </Grid>
+          <Grid item md={isCheckedIn ? 4 : 6}>
             {contactMethod()}
           </Grid>
           <Grid item xs={12} md={isCheckedIn ? 4 : 6}>
             <MyHall />
           </Grid>
           {checkInButton()}
-          <OnCallTable isCheckedIn={isCheckedIn} />
+          {isCheckedIn ? (
+            <Grid item xs={12} md={4}>
+              <TaskList />
+            </Grid>
+          ) : null}
         </>
       )}
       {isMobile && (
@@ -473,7 +473,9 @@ const RAView = () => {
           <Grid item xs={12}>
             <Links />
           </Grid>
-          <OnCallTable isCheckedIn={isCheckedIn} />
+          <Grid item xs={12}>
+            <OnCallTable isCheckedIn={isCheckedIn} />
+          </Grid>
         </>
       )}
     </Grid>
