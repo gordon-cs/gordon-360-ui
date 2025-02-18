@@ -17,11 +17,17 @@ interface ConfirmReportProps {
     stolen: boolean;
     forGuest: boolean;
   };
+  disableSubmit: boolean;
   onEdit: () => void;
   onSubmit: () => void;
 }
 
-const ConfirmReport: React.FC<ConfirmReportProps> = ({ formData, onEdit, onSubmit }) => {
+const ConfirmReport: React.FC<ConfirmReportProps> = ({
+  formData,
+  disableSubmit,
+  onEdit,
+  onSubmit,
+}) => {
   return (
     <Card className={styles.confirmCard}>
       <CardHeader
@@ -55,7 +61,7 @@ const ConfirmReport: React.FC<ConfirmReportProps> = ({ formData, onEdit, onSubmi
             <Typography>
               <strong>Phone Number:</strong> {formData.phoneNumber}
             </Typography>
-            <Typography>
+            <Typography className={styles.breakWord}>
               <strong>Email Address:</strong> {formData.emailAddr}
             </Typography>
           </Grid>
@@ -80,16 +86,26 @@ const ConfirmReport: React.FC<ConfirmReportProps> = ({ formData, onEdit, onSubmi
             Police will contact you soon to follow up.
           </Typography>
         )}
-        <Grid container justifyContent="space-between" marginTop={2}>
-          <Button variant="outlined" color="primary" onClick={onEdit}>
-            Edit My Report
-          </Button>
-          <Button variant="contained" color="secondary" onClick={onSubmit}>
-            File Report
-          </Button>
+        <Grid container justifyContent={{ sm: 'space-between', xs: 'center' }}>
+          <Grid item>
+            <Button className={styles.button} variant="outlined" color="primary" onClick={onEdit}>
+              Go Back and Edit
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              className={styles.button}
+              variant="contained"
+              color="secondary"
+              onClick={onSubmit}
+              disabled={disableSubmit}
+            >
+              File Report
+            </Button>
+          </Grid>
         </Grid>
         <Typography variant="body2" align="center" marginTop={2}>
-          This report will automatically expire in 6 months if your item is not found
+          This report will automatically expire in 2 months if your item is not found
         </Typography>
       </CardContent>
     </Card>
