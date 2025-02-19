@@ -5,10 +5,10 @@ import lostAndFoundService from 'services/lostAndFound';
 import { MissingItemReport } from 'services/lostAndFound';
 import { Launch } from '@mui/icons-material';
 import GordonLoader from 'components/Loader';
-import styles from '../../../../../../views/CampusSafety/views/LostAndFound/LostAndFound.module.css';
+import styles from '/src/views/LostAndFound/views/Home/LostAndFound.module.scss';
 import GordonSnackbar from 'components/Snackbar';
 import { useUser } from 'hooks';
-import { formatDateString } from 'views/CampusSafety/components/Helpers';
+import { formatDateString } from 'views/LostAndFound/components/Helpers';
 
 const noReports = (
   <Grid item alignItems="center">
