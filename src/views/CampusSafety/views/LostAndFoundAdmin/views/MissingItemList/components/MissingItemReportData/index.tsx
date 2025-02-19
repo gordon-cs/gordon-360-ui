@@ -22,7 +22,6 @@ import styles from './MissingItemReportData.module.scss';
 import { useEffect, useRef, useState } from 'react';
 import lostAndFoundService from 'services/lostAndFound';
 import type { MissingItemReport, MissingAdminAction } from 'services/lostAndFound';
-import { DateTime } from 'luxon';
 import Header from 'views/CampusSafety/components/Header';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
@@ -329,7 +328,7 @@ const MissingItemReportData = () => {
       let requestData = {
         ...newActionFormData,
         missingID: parseInt(itemId || ''),
-        actionDate: DateTime.now().toISO(),
+        actionDate: new Date().toISOString(),
         username: username.AD_Username,
         isPublic: newActionFormData.action === 'Checked' && !checkedItemNotFound ? true : false,
       };

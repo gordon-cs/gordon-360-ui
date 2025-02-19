@@ -5,12 +5,12 @@ type Props = CircularProgressProps & {
   inline?: boolean;
 };
 
-const GordonLoader = ({ size = 100, color = 'primary', inline = false }: Props) => {
+const GordonLoader = ({ size = 100, color = 'primary', inline = false, ...otherProps }: Props) => {
   if (inline) return <CircularProgress size={size} color={color} />;
   return (
     <Grid className={styles.gordon_loader} container justifyContent="center" alignItems="center">
       <Grid item>
-        <CircularProgress size={size} color={color} />
+        <CircularProgress size={size} color={color} {...otherProps} />
       </Grid>
     </Grid>
   );
