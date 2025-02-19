@@ -8,6 +8,9 @@ import MissingItemList from './views/LostAndFoundAdmin/views/MissingItemList';
 import MissingItemReportData from './views/LostAndFoundAdmin/views/MissingItemList/components/MissingItemReportData';
 import ReportItemPage from './views/LostAndFoundAdmin/views/MissingItemList/components/ReportItemPageOther';
 import ReportFound from './views/LostAndFound/views/ReportFound';
+import FoundItemFormCreate from './views/LostAndFoundAdmin/FoundItems';
+import FoundItemList from './views/LostAndFoundAdmin/FoundItems/FoundItemsList';
+import FoundItemFormEdit from './views/LostAndFoundAdmin/FoundItems/FoundItemsEdit';
 import GordonLoader from 'components/Loader';
 import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import { useUser } from 'hooks';
@@ -27,7 +30,8 @@ type CampusSafetyRoutesObject = {
 export const CampusSafetyRoutes: CampusSafetyRoutesObject = {
   '/:itemId': { element: <MissingItemFormEdit />, formattedName: 'Edit My Report' },
   '/missingitemform': { element: <MissingItemFormCreate />, formattedName: 'Report a Lost Item' },
-  '/reportfound': { element: <ReportFound />, formattedName: 'Report a Found Item' },
+  '/lostandfoundadmin/founditemform': { element: <FoundItemFormCreate />, formattedName: 'Enter Found Item' },
+  '/reportfound': { element: <ReportFound />, formattedName: 'Report Found Item' },
   '/': { element: <LostAndFound />, formattedName: 'Lost and Found Home' },
   '/lostandfoundadmin/missingitemdatabase/:itemId': {
     element: <MissingItemReportData />,
@@ -41,6 +45,14 @@ export const CampusSafetyRoutes: CampusSafetyRoutesObject = {
   '/lostandfoundadmin/reportitemforothers': {
     element: <ReportItemPage />,
     formattedName: 'Report a Lost Item for Others',
+  },
+  '/lostandfoundadmin/founditemdatabase': {
+    element: <FoundItemList />,
+    formattedName: 'Found Items Database',
+  },
+  '/lostandfoundadmin/founditemdatabase/:itemId': {
+    element: <FoundItemFormEdit />,
+    formattedName: 'View Found Item #~',
   },
   '/lostandfoundadmin': { element: <LostAndFoundAdmin />, formattedName: 'Lost and Found Admin' },
   '*': { element: <Page404 />, formattedName: 'Not Found' },

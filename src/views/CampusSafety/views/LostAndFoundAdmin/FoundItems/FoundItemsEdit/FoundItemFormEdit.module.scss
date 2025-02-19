@@ -1,0 +1,160 @@
+@import '../../../../../../vars';
+
+.newActionModal {
+  padding-top: 10px;
+  width: 70vw;
+  max-width: 100%;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* The "Back" button in the header, top-left */
+.backButton {
+  align-self: start;
+  background-color: var(--mui-palette-error-light);
+  color: var(--mui-palette-primary-contrastText);
+  &:hover {
+    background-color: var(--mui-palette-error-main);
+  }
+  margin-bottom: 1rem;
+}
+
+/* Main card for the form */
+.card {
+  width: 100%;
+  background-color: var(--mui-palette-background-paper);
+  color: var(--mui-palette-text-primary);
+}
+
+/* Box background for the category and color sections */
+.box_background {
+  background-color: var(--mui-palette-neutral-100);
+  border-radius: 5px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.radio_group {
+  display: contents;
+}
+.color_group {
+  display: contents;
+}
+
+/* Category label + radios: 2 columns */
+.category_group {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* For each radio in the category group */
+.category_item {
+  width: 100%;
+}
+
+/* Color label + checkboxes: 3 columns */
+.checkbox_group {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background-color: var(--mui-palette-neutral-100);
+}
+
+/* Admin actions container */
+.actionsCard {
+  padding: 0;
+}
+.actionsHeader {
+  text-align: center;
+}
+.tableHeader {
+  height: 30px;
+}
+.tableRow {
+  height: 30px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:nth-child(odd) {
+    background-color: var(--mui-palette-neutral-100);
+  }
+  &:hover {
+    background-color: var(--mui-palette-primary-light);
+  }
+}
+.tableColumn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.dataCell {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-right: 0.5rem;
+  height: fit-content;
+}
+
+.disclaimer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 1.5rem;
+  margin: 20px;
+}
+
+.title {
+  text-align: center;
+}
+
+
+.stolenButton {
+  padding: 0.7rem;
+  border-radius: 10px;
+  background-color: var(--mui-palette-error-main);
+  color: var(--mui-palette-error-contrastText);
+  font-weight: bold;
+}
+
+/* Submit button at the bottom */
+.submit_button {
+  font-size: 1.2rem;
+  padding: 0.7rem;
+}
+
+
+@media (max-width: 1000px) {
+  .form_card {
+    margin: 0.5rem;
+  }
+
+  .category_group {
+    grid-template-columns: 1fr;
+    padding: 0.8rem;
+  }
+
+  .checkbox_group {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stolen_container {
+    padding: 1rem;
+    text-align: left;
+  }
+
+  .submit_container {
+    justify-content: center;
+    padding-right: 0rem;
+  }
+
+  .submit_button {
+    font-size: 1rem;
+    padding: 1rem;
+    min-width: fit-content;
+  }
+}
+
+

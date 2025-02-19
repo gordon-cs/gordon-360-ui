@@ -1,4 +1,3 @@
-import { debounce } from 'lodash';
 import {
   Card,
   CardHeader,
@@ -11,80 +10,23 @@ import {
   Button,
   FormLabel,
   RadioGroup,
-  Autocomplete,
-  MenuItem,
-  Typography,
-  InputAdornment,
   useTheme,
   useMediaQuery,
 } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import { useReducer, useEffect, useState, HTMLAttributes, useCallback, useMemo } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './ReportItemPage.module.scss';
 import lostAndFoundService from 'services/lostAndFound';
-import quickSearchService, { SearchResult } from 'services/quickSearch';
+import { SearchResult } from 'services/quickSearch';
 import ConfirmReport from 'views/CampusSafety/views/LostAndFound/views/MissingItemCreate/components/confirmReport';
 import GordonSnackbar from 'components/Snackbar';
 import ReportStolenModal from 'views/CampusSafety/views/LostAndFound/views/MissingItemCreate/components/reportStolen';
-import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { DateValidationError } from '@mui/x-date-pickers';
 import { useUser } from 'hooks';
-
-const MIN_QUERY_LENGTH = 2;
-
-type State = {
-  loading: boolean;
-  searchTime: number;
-  searchResults: SearchResult[];
-};
-
-type Action =
-  | { type: 'INPUT' }
-  | { type: 'LOAD'; payload: Omit<State, 'loading'> }
-  | { type: 'RESET' };
-
-const defaultState: State = {
-  loading: false,
-  searchTime: 0,
-  searchResults: [],
-};
-
-const reducer = (state: State, action: Action): State => {
-  switch (action.type) {
-    case 'INPUT':
-      return { ...state, searchResults: [], loading: true };
-    case 'LOAD': {
-      if (action.payload.searchTime > state.searchTime) {
-        return { ...state, ...action.payload, loading: false };
-      } else {
-        return state;
-      }
-    }
-    case 'RESET':
-      return defaultState;
-    default:
-      throw new Error(`Unhandled action type: ${action}`);
-  }
-};
-
-const performSearch = debounce(async (query: string, dispatch: React.Dispatch<Action>) => {
-  try {
-    const [searchTime, searchResults] = await quickSearchService.search(query);
-
-    dispatch({
-      type: 'LOAD',
-      payload: {
-        searchTime,
-        searchResults,
-      },
-    });
-  } catch (error) {
-    console.error('Error fetching search results:', error);
-    dispatch({ type: 'RESET' });
-  }
-}, 400);
+import { LFCategories, LFColors } from 'views/CampusSafety/components/Constants';
+import { CustomDatePicker } from 'views/CampusSafety/components/CustomDatePicker';
+import { GordonPersonAutocomplete } from 'views/CampusSafety/components/GordonPersonAutocomplete';
 
 const ReportItemPage = () => {
   const navigate = useNavigate();
@@ -92,14 +34,6 @@ const ReportItemPage = () => {
   const createSnackbar = useCallback((message, severity) => {
     setSnackbar({ message, severity, open: true });
   }, []);
-
-  const [user, setUser] = useState({
-    firstName: '',
-    lastName: '',
-    emailAddr: '',
-    phoneNumber: '',
-    AD_Username: '', // Add AD_Username to user state
-  });
 
   const [isGordonPerson, setIsGordonPerson] = useState('');
   const [formData, setFormData] = useState({
@@ -123,39 +57,14 @@ const ReportItemPage = () => {
   const [isStolenModalOpen, setStolenModalOpen] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
-  const [state, dispatch] = useReducer(reducer, defaultState);
   const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
   const [disableSubmit, setDisableSubmit] = useState(false);
-  const [newActionFormData, setNewActionFormData] = useState({ action: '', actionNote: '' });
+  const [newActionFormData] = useState({ action: '', actionNote: '' });
+  const [dateError, setDateError] = useState<DateValidationError | null>(null);
   const { profile } = useUser();
 
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
-
-  const specialCharactersRegex = /[^a-zA-Z0-9'\-.\s]/gm;
-
-  useEffect(() => {
-    const setUserData = async () => {
-      setUser({
-        firstName: profile?.FirstName || '',
-        lastName: profile?.LastName || '',
-        emailAddr: profile?.Email || '',
-        phoneNumber: profile?.MobilePhone || '',
-        AD_Username: profile?.AD_Username || '', // Set AD_Username
-      });
-    };
-    setUserData();
-  }, [profile]);
-
-  const handleInput = (_event: React.SyntheticEvent, value: string) => {
-    const query = value.trim().replace(specialCharactersRegex, '');
-    if (query.length >= MIN_QUERY_LENGTH) {
-      dispatch({ type: 'INPUT' });
-      performSearch(query, dispatch);
-    } else {
-      dispatch({ type: 'RESET' });
-    }
-  };
 
   const handleSelect = (_event: any, selectedPerson: SearchResult | null) => {
     if (selectedPerson) {
@@ -322,7 +231,7 @@ const ReportItemPage = () => {
           ...newActionFormData,
           missingID: newReportId,
           actionDate: now.toISOString(),
-          username: user.AD_Username,
+          username: profile?.AD_Username || '',
           isPublic: true,
           action: 'Created',
         };
@@ -337,21 +246,6 @@ const ReportItemPage = () => {
     }
   };
 
-  useEffect(() => {
-    return () => {
-      performSearch.cancel();
-    };
-  }, []);
-
-  const renderOption = (props: HTMLAttributes<HTMLLIElement>, person: SearchResult) => {
-    const fullName = `${person.FirstName} ${person.LastName}`;
-    return (
-      <MenuItem {...props} key={person.UserName} divider>
-        <Typography variant="body2">{fullName}</Typography>
-      </MenuItem>
-    );
-  };
-
   // Define the Item Colors section
   const itemColorsSection = (
     <Grid item margin={2} className={styles.box_background}>
@@ -362,23 +256,7 @@ const ReportItemPage = () => {
       </FormGroup>
       <Grid item className={styles.checkbox_group}>
         <FormGroup>
-          {[
-            'Black',
-            'Blue',
-            'Brown',
-            'Gold',
-            'Gray',
-            'Green',
-            'Maroon',
-            'Orange',
-            'Pink',
-            'Purple',
-            'Red',
-            'Silver',
-            'Tan',
-            'White',
-            'Yellow',
-          ].map((color) => (
+          {LFColors.map((color) => (
             <FormControlLabel
               key={color}
               control={
@@ -393,87 +271,6 @@ const ReportItemPage = () => {
         </FormGroup>
       </Grid>
     </Grid>
-  );
-
-  const [dateError, setDateError] = useState<DateValidationError | null>(null);
-
-  const errorMessage = useMemo(() => {
-    switch (dateError) {
-      case 'invalidDate': {
-        return 'Invalid Date';
-      }
-      case 'disableFuture': {
-        return 'Cannot lose an item in the future';
-      }
-      default: {
-        return null;
-      }
-    }
-  }, [dateError]);
-
-  // Using DatePicker component from MUI/x, with custom styling to fix dark mode contrast issues
-  const customDatePicker = (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <DatePicker
-        label="Date Lost"
-        value={formData.dateLost === '' ? null : formData.dateLost}
-        onChange={(value) => setFormData({ ...formData, dateLost: value?.toString() || '' })}
-        onError={(newError) => setDateError(newError)}
-        disableFuture
-        orientation="portrait"
-        name="Date Lost"
-        // Custom styling for popup box, better dark mode contrast
-        // Thanks to help for understanding from
-        // https://blog.openreplay.com/styling-and-customizing-material-ui-date-pickers/
-        slotProps={{
-          textField: {
-            helperText: errorMessage ? errorMessage : 'Change if lost before today',
-            // Custom styling for the input field, to make it look like filled variant
-            sx: {
-              backgroundColor: 'var(--mui-palette-FilledInput-bg);',
-              paddingTop: '7px;',
-              borderRadius: '5px;',
-              width: '100%;',
-              '& .Mui-focused .MuiOutlinedInput-notchedOutline': { border: 'none' },
-              '& .MuiInputLabel-shrink': {
-                transform: 'translate(14px, 4px) scale(0.75);',
-              },
-              '& .MuiFormLabel-root.Mui-focused': {
-                color: 'var(--mui-palette-secondary-main);',
-              },
-              '& .MuiOutlinedInput-notchedOutline': {
-                borderWidth: '0;',
-                borderBottom:
-                  '1px solid rgba(var(--mui-palette-common-onBackgroundChannel) / var(--mui-opacity-inputUnderline));',
-                borderRadius: '0;',
-              },
-            },
-          },
-          layout: {
-            sx: {
-              '& .MuiPickersLayout-contentWrapper .Mui-selected': {
-                backgroundColor: 'var(--mui-palette-secondary-400);',
-              },
-              '.MuiPickersLayout-contentWrapper .MuiPickersDay-root:focus.Mui-selected': {
-                backgroundColor: 'var(--mui-palette-secondary-400);',
-              },
-              '.MuiPickersLayout-contentWrapper .MuiPickersDay-root.Mui-selected': {
-                backgroundColor: 'var(--mui-palette-secondary-400);',
-              },
-            },
-          },
-          actionBar: {
-            sx: {
-              ...{
-                '& .MuiButtonBase-root': {
-                  color: 'var(--mui-palette-secondary-400);',
-                },
-              },
-            },
-          },
-        }}
-      />
-    </LocalizationProvider>
   );
 
   return (
@@ -525,31 +322,7 @@ const ReportItemPage = () => {
               {isGordonPerson === 'yes' && (
                 <>
                   <Grid item margin={2}>
-                    <Autocomplete
-                      loading={state.loading}
-                      options={state.searchResults}
-                      isOptionEqualToValue={(option, value) => option.UserName === value.UserName}
-                      onInputChange={handleInput}
-                      onChange={handleSelect}
-                      renderOption={renderOption}
-                      getOptionLabel={(option) => `${option.FirstName} ${option.LastName}`}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Search Gordon Person"
-                          variant="filled"
-                          fullWidth
-                          InputProps={{
-                            ...params.InputProps,
-                            startAdornment: (
-                              <InputAdornment position="start">
-                                <SearchIcon />
-                              </InputAdornment>
-                            ),
-                          }}
-                        />
-                      )}
-                    />
+                    <GordonPersonAutocomplete onChange={handleSelect} />
                   </Grid>
                 </>
               )}
@@ -618,20 +391,7 @@ const ReportItemPage = () => {
                 </FormGroup>
                 <Grid item className={styles.category_group}>
                   <FormGroup className={styles.radio_group}>
-                    {[
-                      'Clothing/Shoes',
-                      'Electronics',
-                      'Jewelry/Watches',
-                      'Keys/Keychains',
-                      'Glasses',
-                      'Bottles/Mugs',
-                      'Books',
-                      'Bags/Purses',
-                      'Office Supplies',
-                      'IDs/Wallets',
-                      'Cash/Cards',
-                      'Other',
-                    ].map((label) => (
+                    {LFCategories.map((label) => (
                       <FormControlLabel
                         key={label}
                         control={<Radio />}
@@ -704,7 +464,13 @@ const ReportItemPage = () => {
                 />
               </Grid>
               <Grid item margin={2}>
-                {customDatePicker}
+                <CustomDatePicker
+                  value={formData.dateLost === '' ? null : formData.dateLost}
+                  onChange={(value) =>
+                    setFormData({ ...formData, dateLost: value?.toString() || '' })
+                  }
+                  onError={(newError) => setDateError(newError)}
+                />
               </Grid>
             </Grid>
           </Grid>

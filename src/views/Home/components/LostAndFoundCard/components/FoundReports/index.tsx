@@ -4,14 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import lostAndFoundService from 'services/lostAndFound';
 import styles from '../../../../../../views/CampusSafety/views/LostAndFound/LostAndFound.module.css';
 import { MissingItemReport } from 'services/lostAndFound';
-import { format } from 'date-fns';
 import Badge from '@mui/material/Badge';
 import GordonSnackbar from 'components/Snackbar';
 import { useUser } from 'hooks';
-
-const formatDate = (date: string) => {
-  return format(Date.parse(date), 'MM/dd/yy');
-};
+import { formatDateString } from 'views/CampusSafety/components/Helpers';
 
 const FoundReports = () => {
   const [foundReports, setFoundReports] = useState<MissingItemReport[] | null>(null);
@@ -100,7 +96,7 @@ const FoundReports = () => {
       >
         <Grid container>
           <Grid item xs={5} sm={4} className={styles.alignData}>
-            <div className={styles.dataCell}>{formatDate(report.dateLost)}</div>
+            <div className={styles.dataCell}>{formatDateString(report.dateLost)}</div>
           </Grid>
           {!isMobile ? (
             <Grid item xs={4} className={styles.alignData}>

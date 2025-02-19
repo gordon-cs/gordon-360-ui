@@ -28,6 +28,8 @@ import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
 import userService from 'services/user';
 import SimpleSnackbar from 'components/Snackbar';
+import { formatDateString } from 'views/CampusSafety/components/Helpers';
+import { StatusChip } from 'views/CampusSafety/components/StatusChip';
 
 const MissingItemReportData = () => {
   const navigate = useNavigate();
@@ -347,36 +349,7 @@ const MissingItemReportData = () => {
     );
   }, [checkedActionFormData]);
 
-  // Format date strings for display
-  const formatDate = (date: string) => DateTime.fromISO(date).toFormat('M/d/yy');
-
   if (!item) return null;
-
-  const formattedDateLost = DateTime.fromISO(item.dateLost).toFormat('MM-dd-yy');
-
-  const statusChip = (
-    <Chip
-      label={
-        <Typography variant="subtitle1">
-          <u>
-            <b>{item.status[0].toUpperCase() + item.status.slice(1)}</b>
-          </u>
-        </Typography>
-      }
-      //@ts-ignore
-      color={
-        item.status.toLowerCase() === 'active'
-          ? 'secondary'
-          : item.status.toLowerCase() === 'found'
-            ? 'success'
-            : item.status.toLowerCase() === 'expired'
-              ? 'neutral'
-              : item.status.toLowerCase() === 'deleted'
-                ? 'error'
-                : 'neutral'
-      }
-    />
-  );
 
   // Component for admin actions card, holding the admin actions UI elements
   const adminActions = () => {
@@ -450,7 +423,9 @@ const MissingItemReportData = () => {
                         <Launch color="secondary" />
                       </Grid>
                       <Grid item xs={3} sm={2} className={styles.tableColumn}>
-                        <div className={styles.dataCell}>{formatDate(adminAction.actionDate)}</div>
+                        <div className={styles.dataCell}>
+                          {formatDateString(adminAction.actionDate)}
+                        </div>
                       </Grid>
                       <Grid item xs={4} sm={3} className={styles.tableColumn}>
                         <div className={styles.dataCell}>{adminAction.action}</div>
@@ -485,7 +460,7 @@ const MissingItemReportData = () => {
         <Grid container rowGap={1}>
           <Grid item xs={12} sm={5}>
             <b>Date</b>{' '}
-            {selectedAction.current ? formatDate(selectedAction.current.actionDate) : ''}
+            {selectedAction.current ? formatDateString(selectedAction.current.actionDate) : ''}
           </Grid>
           <Grid item xs={12} sm={7}>
             <b>Action</b> {selectedAction.current ? selectedAction.current.action : ''}
@@ -803,7 +778,7 @@ const MissingItemReportData = () => {
                           <b className={styles.yellowText}>Lost</b> Item Report Details
                         </div>
                         <Typography>
-                          <em>Status:</em> {statusChip}
+                          <em>Status:</em> <StatusChip status={item.status} />
                         </Typography>
                       </Grid>
                     </Grid>
@@ -905,7 +880,7 @@ const MissingItemReportData = () => {
                           variant="filled"
                           disabled
                           fullWidth
-                          value={formattedDateLost}
+                          value={formatDateString(item.dateLost)}
                           InputProps={{ readOnly: true }}
                         />
                       </Grid>

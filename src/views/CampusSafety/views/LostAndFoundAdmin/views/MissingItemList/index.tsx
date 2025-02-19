@@ -22,42 +22,11 @@ import { useLocation, useNavigate } from 'react-router';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useSearchParams } from 'react-router-dom';
 import GordonSnackbar from 'components/Snackbar';
-import { differenceInCalendarDays, format } from 'date-fns';
-
-const categories = [
-  'Clothing/Shoes',
-  'Electronics',
-  'Jewelry/Watches',
-  'Keys/Keychains',
-  'Glasses',
-  'Bottles/Mugs',
-  'Books',
-  'Bags/Purses',
-  'Office Supplies',
-  'IDs/Wallets',
-  'Cash/Cards',
-  'Other',
-];
-
-const colors = [
-  'Black',
-  'Blue',
-  'Brown',
-  'Gold',
-  'Gray',
-  'Green',
-  'Maroon',
-  'Orange',
-  'Pink',
-  'Purple',
-  'Red',
-  'Silver',
-  'Tan',
-  'White',
-  'Yellow',
-];
-
-const dateFormat = 'MM/dd/yy';
+import { differenceInCalendarDays } from 'date-fns';
+import { LFCategories, LFColors } from 'views/CampusSafety/components/Constants';
+import { formatDateString } from 'views/CampusSafety/components/Helpers';
+import { getUrlParam, setUrlParam, clearUrlParams } from 'views/CampusSafety/components/Helpers';
+import { StatusChip } from 'views/CampusSafety/components/StatusChip';
 
 const yellowDateThreshold = 7;
 const redDateThreshold = 14;
@@ -77,34 +46,15 @@ const dateAgeColor = (date: string) => {
   }
 };
 
-const formatDate = (date: string) => format(Date.parse(date), dateFormat);
-
 // Find and format the last checked date based on the list of admin actions for a given report.
 const displayLastCheckedDate = (report: MissingItemReport) => {
   let dateString = report.adminActions?.findLast((action) => {
     return action.action === 'Checked';
   })?.actionDate;
   if (dateString !== '' && dateString !== undefined) {
-    return formatDate(dateString);
+    return formatDateString(dateString);
   }
   return 'Never';
-};
-
-const statusChip = (report: MissingItemReport) => {
-  return (
-    <Chip
-      label={report.status[0].toUpperCase() + report.status.slice(1)}
-      //@ts-ignore
-      color={
-        report.status.toLowerCase() === 'active'
-          ? 'secondary'
-          : report.status.toLowerCase() === 'found'
-            ? 'success'
-            : 'primary'
-      }
-      className={styles.chip}
-    />
-  );
 };
 
 const MissingItemList = () => {
@@ -146,10 +96,10 @@ const MissingItemList = () => {
     const updateFilters = async () => {
       try {
         if (
-          status === getUrlParam('status') &&
-          category === getUrlParam('category') &&
-          color === getUrlParam('color') &&
-          keywords === getUrlParam('keywords')
+          status === getUrlParam('status', location, searchParams) &&
+          category === getUrlParam('category', location, searchParams) &&
+          color === getUrlParam('color', location, searchParams) &&
+          keywords === getUrlParam('keywords', location, searchParams)
         ) {
           const fetchedReports = await lostAndFoundService.getMissingItemReports(
             status,
@@ -187,60 +137,25 @@ const MissingItemList = () => {
   useEffect(() => {
     const updateFilters = () => {
       // Set the filter values based on the url query params
-      let queryValue = getUrlParam('status');
+      let queryValue = getUrlParam('status', location, searchParams);
       if (status !== queryValue) {
         setStatus(queryValue);
       }
-      queryValue = getUrlParam('color');
+      queryValue = getUrlParam('color', location, searchParams);
       if (color !== queryValue) {
         setColor(queryValue);
       }
-      queryValue = getUrlParam('category');
+      queryValue = getUrlParam('category', location, searchParams);
       if (category !== queryValue) {
         setCategory(queryValue);
       }
-      queryValue = getUrlParam('keywords');
+      queryValue = getUrlParam('keywords', location, searchParams);
       if (keywords !== queryValue) {
         setKeywords(queryValue);
       }
     };
     updateFilters();
   }, [category, color, keywords, searchParams, status]);
-
-  // Set the search url params, used for filtering
-  const setUrlParam = (paramName: string, paramValue: string) => {
-    if (paramValue === '') {
-      // Delete the parameter if it's value is empty
-      setSearchParams((params) => {
-        params.delete(paramName);
-        return params;
-      });
-    } else {
-      setSearchParams((params) => {
-        params.set(paramName, paramValue);
-        return params;
-      });
-    }
-  };
-
-  // Get the value of the url param
-  const getUrlParam = (paramName: string) => {
-    if (location.search.includes(paramName)) {
-      return searchParams.get(paramName) || '';
-    }
-    return '';
-  };
-
-  // Delete the four filtering url params
-  const clearUrlParams = () => {
-    setSearchParams((params) => {
-      params.delete('status');
-      params.delete('category');
-      params.delete('keywords');
-      params.delete('color');
-      return params;
-    });
-  };
 
   // Lazy loading helper: load more reports
   const loadMoreReports = async () => {
@@ -318,7 +233,7 @@ const MissingItemList = () => {
                         variant="outlined"
                         size="small"
                         value={keywords}
-                        onChange={(e) => setUrlParam('keywords', e.target.value)}
+                        onChange={(e) => setUrlParam('keywords', e.target.value, setSearchParams)}
                         className={styles.textField}
                         fullWidth
                       />
@@ -330,7 +245,7 @@ const MissingItemList = () => {
                         <InputLabel>Status</InputLabel>
                         <Select
                           value={status}
-                          onChange={(e) => setUrlParam('status', e.target.value)}
+                          onChange={(e) => setUrlParam('status', e.target.value, setSearchParams)}
                         >
                           <MenuItem value="">All</MenuItem>
                           <MenuItem value="active">Active</MenuItem>
@@ -346,10 +261,10 @@ const MissingItemList = () => {
                         <InputLabel>Color</InputLabel>
                         <Select
                           value={color}
-                          onChange={(e) => setUrlParam('color', e.target.value)}
+                          onChange={(e) => setUrlParam('color', e.target.value, setSearchParams)}
                         >
                           <MenuItem value="">All</MenuItem>
-                          {colors.map((colorOption) => (
+                          {LFColors.map((colorOption) => (
                             <MenuItem key={colorOption} value={colorOption}>
                               {colorOption}
                             </MenuItem>
@@ -362,10 +277,10 @@ const MissingItemList = () => {
                         <InputLabel>Category</InputLabel>
                         <Select
                           value={category}
-                          onChange={(e) => setUrlParam('category', e.target.value)}
+                          onChange={(e) => setUrlParam('category', e.target.value, setSearchParams)}
                         >
                           <MenuItem value="">All</MenuItem>
-                          {categories.map((categoryOption) => (
+                          {LFCategories.map((categoryOption) => (
                             <MenuItem key={categoryOption} value={categoryOption}>
                               {categoryOption}
                             </MenuItem>
@@ -376,7 +291,7 @@ const MissingItemList = () => {
                     <Grid item xs={isMobile}>
                       <Button
                         onClick={() => {
-                          clearUrlParams();
+                          clearUrlParams(setSearchParams);
                         }}
                         variant="contained"
                         color="error"
@@ -466,7 +381,7 @@ const MissingItemList = () => {
                           </Typography>
                           <Grid container justifyContent="space-between" alignItems="center">
                             <Typography variant="body2" color="textSecondary">
-                              {formatDate(report.dateLost)}
+                              {formatDateString(report.dateLost)}
                             </Typography>
                             <Typography
                               variant="body2"
@@ -485,7 +400,7 @@ const MissingItemList = () => {
                             Category: {report.category}
                           </Typography>
                           <Grid item xs={12}>
-                            {statusChip(report)}
+                            {StatusChip(report)}
                             {report.stolen && (
                               <Chip label="Stolen" color="error" className={styles.chip} />
                             )}
@@ -508,7 +423,7 @@ const MissingItemList = () => {
                         }
                       >
                         <Grid item xs={2}>
-                          {formatDate(report.dateLost)}
+                          {formatDateString(report.dateLost)}
                         </Grid>
                         <Grid item xs={2}>
                           <div className={styles.dataCell}>
@@ -530,7 +445,7 @@ const MissingItemList = () => {
                           </Typography>
                         </Grid>
                         <Grid item xs={12}>
-                          {statusChip(report)}
+                          {StatusChip(report)}
                           {report.stolen && (
                             <Chip label="Stolen" color="error" className={styles.chip} />
                           )}
