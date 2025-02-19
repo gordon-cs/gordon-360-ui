@@ -1,8 +1,20 @@
+.disclaimer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 1.5rem;
+  margin: 20px;
+}
+
 .form_card {
   margin: 0.7rem;
 }
 
 .radio_group {
+  display: contents;
+}
+
+.color_group {
   display: contents;
 }
 
@@ -22,7 +34,8 @@
 }
 
 .checkbox_group {
-  column-count: 3;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   background-color: var(--mui-palette-neutral-100);
 }
 
@@ -35,15 +48,14 @@
 
 .submit_container {
   margin: 1rem 0;
+  padding-right: 5rem;
   display: flex;
-  justify-content: center;
-  gap: 1rem;
+  justify-content: flex-end;
 }
 
 .submit_button {
-  font-size: 1rem;
-  padding: 0.8rem;
-  text-transform: uppercase;
+  font-size: 1.2rem;
+  padding: 0.7rem;
 }
 
 .icon {
@@ -79,36 +91,30 @@
   justify-content: flex-end;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
   .form_card {
     margin: 0.5rem;
   }
-
   .category_group {
     grid-template-columns: 1fr;
     padding: 0.8rem;
   }
-
   .checkbox_group {
-    column-count: 2;
+    grid-template-columns: repeat(2, 1fr);
   }
-
   .stolen_container {
     padding: 1rem;
     text-align: left;
   }
-
   .submit_container {
     justify-content: center;
     padding-right: 0rem;
   }
-
   .submit_button {
-    font-size: 0.9rem;
-    padding: 0.7rem;
-  }
-
-  .buttonContainer {
-    justify-content: flex-start;
+    font-size: 1rem;
+    padding: 1rem;
+    min-width: fit-content;
   }
 }
+
+/*# sourceMappingURL=MissingItemCreate.module.css.map */
