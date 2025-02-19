@@ -29,6 +29,7 @@ import GordonDialogBox from 'components/GordonDialogBox';
 import userService from 'services/user';
 import SimpleSnackbar from 'components/Snackbar';
 import { formatDateString } from 'views/CampusSafety/components/Helpers';
+import { StatusChip } from 'views/CampusSafety/components/StatusChip';
 
 const MissingItemReportData = () => {
   const navigate = useNavigate();
@@ -349,30 +350,6 @@ const MissingItemReportData = () => {
   }, [checkedActionFormData]);
 
   if (!item) return null;
-
-  const statusChip = (
-    <Chip
-      label={
-        <Typography variant="subtitle1">
-          <u>
-            <b>{item.status[0].toUpperCase() + item.status.slice(1)}</b>
-          </u>
-        </Typography>
-      }
-      //@ts-ignore
-      color={
-        item.status.toLowerCase() === 'active'
-          ? 'secondary'
-          : item.status.toLowerCase() === 'found'
-            ? 'success'
-            : item.status.toLowerCase() === 'expired'
-              ? 'neutral'
-              : item.status.toLowerCase() === 'deleted'
-                ? 'error'
-                : 'neutral'
-      }
-    />
-  );
 
   // Component for admin actions card, holding the admin actions UI elements
   const adminActions = () => {
@@ -801,7 +778,7 @@ const MissingItemReportData = () => {
                           <b className={styles.yellowText}>Lost</b> Item Report Details
                         </div>
                         <Typography>
-                          <em>Status:</em> {statusChip}
+                          <em>Status:</em> <StatusChip status={item.status} />
                         </Typography>
                       </Grid>
                     </Grid>

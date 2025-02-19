@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import {
   Card,
   CardHeader,
@@ -16,12 +16,10 @@ import {
   MenuItem,
   InputLabel,
   useMediaQuery,
-  Chip,
 } from '@mui/material';
-import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { useParams, useNavigate } from 'react-router-dom';
 import { InfoOutlined, Add, Key, Launch } from '@mui/icons-material';
+import { StatusChip } from 'views/CampusSafety/components/StatusChip';
 
 import Header from 'views/CampusSafety/components/Header';
 import lostAndFoundService, { FoundItem, FoundAdminAction } from 'services/lostAndFound';
@@ -32,6 +30,8 @@ import GordonDialogBox from 'components/GordonDialogBox';
 import styles from './FoundItemFormEdit.module.scss';
 import { useUser } from 'hooks';
 import { LFCategories, LFColors } from 'views/CampusSafety/components/Constants';
+import { CustomDatePicker } from 'views/CampusSafety/components/CustomDatePicker';
+import { DateValidationError } from '@mui/x-date-pickers';
 
 const actionTypes = ['CheckedIn', 'NotifiedOfficer', 'OwnerContact', 'Custom'];
 
@@ -60,6 +60,7 @@ const FoundItemFormEdit = () => {
 
   /** Validation errors for required fields. */
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [dateError, setDateError] = useState<DateValidationError | null>(null);
 
   /** Admin actions array & logic. */
   const [actionsLoading, setActionsLoading] = useState(true);
@@ -257,96 +258,9 @@ const FoundItemFormEdit = () => {
     }
   };
 
-  const [dateError, setDateError] = useState<DateValidationError | null>(null);
-
-  const errorMessage = useMemo(() => {
-    switch (dateError) {
-      case 'invalidDate': {
-        return 'Invalid Date';
-      }
-      case 'disableFuture': {
-        return 'Cannot lose an item in the future';
-      }
-      default: {
-        return null;
-      }
-    }
-  }, [dateError]);
-
   /* Rendering. */
   if (loading) return <GordonLoader />;
   if (!foundItem) return <Typography>Could not find the requested Found Item</Typography>;
-
-  // Format item status chip
-  const statusChip = (
-    <Chip
-      label={foundItem.status ? foundItem.status.toUpperCase() : 'N/A'}
-      color={
-        foundItem.status.toLowerCase() === 'found'
-          ? 'success'
-          : foundItem.status.toLowerCase() === 'pickedup'
-            ? 'info'
-            : 'primary'
-      }
-    />
-  );
-
-  const customDatePicker = (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <DatePicker
-        label="Date Found"
-        value={foundItem.dateFound ? new Date(foundItem.dateFound) : null}
-        onChange={(val) => handleDateChange(val)}
-        onError={(newError) => setDateError(newError)}
-        disableFuture
-        orientation="portrait"
-        slotProps={{
-          textField: {
-            helperText: errorMessage ? errorMessage : 'Change if lost before today',
-            sx: {
-              backgroundColor: 'var(--mui-palette-FilledInput-bg)',
-              paddingTop: '7px',
-              borderRadius: '5px',
-              width: '100%',
-              '& .Mui-focused .MuiOutlinedInput-notchedOutline': { border: 'none' },
-              '& .MuiInputLabel-shrink': {
-                transform: 'translate(14px, 4px) scale(0.75)',
-              },
-              '& .MuiFormLabel-root.Mui-focused': {
-                color: 'var(--mui-palette-secondary-main)',
-              },
-              '& .MuiOutlinedInput-notchedOutline': {
-                borderWidth: '0',
-                borderBottom:
-                  '1px solid rgba(var(--mui-palette-common-onBackgroundChannel) / var(--mui-opacity-inputUnderline))',
-                borderRadius: '0',
-              },
-            },
-          },
-          layout: {
-            sx: {
-              '& .MuiPickersLayout-contentWrapper .Mui-selected': {
-                backgroundColor: 'var(--mui-palette-secondary-400)',
-              },
-              '.MuiPickersLayout-contentWrapper .MuiPickersDay-root:focus.Mui-selected': {
-                backgroundColor: 'var(--mui-palette-secondary-400)',
-              },
-              '.MuiPickersLayout-contentWrapper .MuiPickersDay-root.Mui-selected': {
-                backgroundColor: 'var(--mui-palette-secondary-400)',
-              },
-            },
-          },
-          actionBar: {
-            sx: {
-              '& .MuiButtonBase-root': {
-                color: 'var(--mui-palette-secondary-400)',
-              },
-            },
-          },
-        }}
-      />
-    </LocalizationProvider>
-  );
 
   /* Admin actions card on the right column */
   const adminActionsCard = (
@@ -645,7 +559,11 @@ const FoundItemFormEdit = () => {
                 error={!!validationErrors['locationFound']}
                 helperText={validationErrors['locationFound'] || ''}
               />
-              {customDatePicker}
+              <CustomDatePicker
+                value={foundItem.dateFound ? foundItem.dateFound : null}
+                onChange={(val) => handleDateChange(new Date(val || ''))}
+                onError={(newError) => setDateError(newError)}
+              />
               <FormControlLabel
                 control={
                   <Checkbox
@@ -700,7 +618,9 @@ const FoundItemFormEdit = () => {
               {/* Show the status chip, then the Admin actions card below */}
               <Grid container spacing={1} marginTop={2}>
                 <Grid item xs={12}>
-                  <Typography variant="h6">Status: {statusChip}</Typography>
+                  <Typography variant="h6">
+                    Status: <StatusChip status={foundItem.status} />
+                  </Typography>
                 </Grid>
                 <Grid item xs={12}>
                   {adminActionsCard}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Card,
   CardHeader,
@@ -16,16 +16,16 @@ import {
 import Header from 'views/CampusSafety/components/Header';
 import styles from './MissingItemEdit.module.scss';
 import lostAndFoundService, { MissingItemReport } from 'services/lostAndFound';
-import userService from 'services/user';
 import ConfirmReport from './components/confirmReport';
 import { useNavigate, useParams } from 'react-router';
 import GordonLoader from 'components/Loader';
-import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { LFCategories, LFColors } from 'views/CampusSafety/components/Constants';
 import { useUser } from 'hooks';
+import { capitalizeString } from 'views/CampusSafety/components/Helpers';
+import { CustomDatePicker } from 'views/CampusSafety/components/CustomDatePicker';
+import { DateValidationError } from '@mui/x-date-pickers';
 
 const MissingItemFormEdit = () => {
   const navigate = useNavigate();
@@ -33,6 +33,7 @@ const MissingItemFormEdit = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [isPickedUp, setIsPickedUp] = useState(false); //Added this to manage the button disable
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
+  const [dateError, setDateError] = useState<DateValidationError | null>(null);
 
   const [originalFormData, setOriginalFormData] = useState({
     recordID: 0,
@@ -230,87 +231,6 @@ const MissingItemFormEdit = () => {
     navigate('/lostandfound');
   };
 
-  const [dateError, setDateError] = useState<DateValidationError | null>(null);
-
-  const errorMessage = useMemo(() => {
-    switch (dateError) {
-      case 'invalidDate': {
-        return 'Invalid Date';
-      }
-      case 'disableFuture': {
-        return 'Cannot lose an item in the future';
-      }
-      default: {
-        return null;
-      }
-    }
-  }, [dateError]);
-
-  // Using DatePicker component from MUI/x, with custom styling to fix dark mode contrast issues
-  const customDatePicker = (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <DatePicker
-        label="Date Lost"
-        value={formData.dateLost === '' ? null : formData.dateLost}
-        onChange={(value) => setFormData({ ...formData, dateLost: value?.toString() || '' })}
-        onError={(newError) => setDateError(newError)}
-        disableFuture
-        orientation="portrait"
-        name="Date Lost"
-        // Custom styling for popup box, better dark mode contrast
-        // Thanks to help for understanding from
-        // https://blog.openreplay.com/styling-and-customizing-material-ui-date-pickers/
-        slotProps={{
-          textField: {
-            helperText: errorMessage ? errorMessage : 'Change if lost before today',
-            // Custom styling for the input field, to make it look like filled variant
-            sx: {
-              backgroundColor: 'var(--mui-palette-FilledInput-bg);',
-              paddingTop: '7px;',
-              borderRadius: '5px;',
-              width: '100%;',
-              '& .Mui-focused .MuiOutlinedInput-notchedOutline': { border: 'none' },
-              '& .MuiInputLabel-shrink': {
-                transform: 'translate(14px, 4px) scale(0.75);',
-              },
-              '& .MuiFormLabel-root.Mui-focused': {
-                color: 'var(--mui-palette-secondary-main);',
-              },
-              '& .MuiOutlinedInput-notchedOutline': {
-                borderWidth: '0;',
-                borderBottom:
-                  '1px solid rgba(var(--mui-palette-common-onBackgroundChannel) / var(--mui-opacity-inputUnderline));',
-                borderRadius: '0;',
-              },
-            },
-          },
-          layout: {
-            sx: {
-              '& .MuiPickersLayout-contentWrapper .Mui-selected': {
-                backgroundColor: 'var(--mui-palette-secondary-400);',
-              },
-              '.MuiPickersLayout-contentWrapper .MuiPickersDay-root:focus.Mui-selected': {
-                backgroundColor: 'var(--mui-palette-secondary-400);',
-              },
-              '.MuiPickersLayout-contentWrapper .MuiPickersDay-root.Mui-selected': {
-                backgroundColor: 'var(--mui-palette-secondary-400);',
-              },
-            },
-          },
-          actionBar: {
-            sx: {
-              ...{
-                '& .MuiButtonBase-root': {
-                  color: 'var(--mui-palette-secondary-400);',
-                },
-              },
-            },
-          },
-        }}
-      />
-    </LocalizationProvider>
-  );
-
   return (
     <>
       <Header />
@@ -398,8 +318,7 @@ const MissingItemFormEdit = () => {
                               <Typography>
                                 This item was marked as{' '}
                                 <Typography component="span" className={styles.foundText}>
-                                  {formData.status.charAt(0).toUpperCase() +
-                                    formData.status.slice(1)}
+                                  {capitalizeString(formData.status)}
                                 </Typography>
                               </Typography>
                             </>
@@ -530,7 +449,13 @@ const MissingItemFormEdit = () => {
                     />
                   </Grid>
                   <Grid item margin={2}>
-                    {customDatePicker}
+                    <CustomDatePicker
+                      value={formData.dateLost === '' ? null : formData.dateLost}
+                      onChange={(value) =>
+                        setFormData({ ...formData, dateLost: value?.toString() || '' })
+                      }
+                      onError={(newError) => setDateError(newError)}
+                    />
                   </Grid>
                   {formData.stolen ? (
                     <>

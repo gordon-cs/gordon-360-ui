@@ -1,7 +1,6 @@
-import { useState, useEffect, useCallback, useReducer, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import {
-  Autocomplete,
   Card,
   CardHeader,
   Grid,
@@ -20,8 +19,7 @@ import {
   FormControl,
   FormHelperText,
 } from '@mui/material';
-import { debounce } from 'lodash';
-import quickSearchService, { SearchResult } from 'services/quickSearch';
+import { SearchResult } from 'services/quickSearch';
 import { SelectChangeEvent } from '@mui/material/Select';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './FoundItemFormCreate.module.scss';
@@ -29,59 +27,15 @@ import lostAndFoundService from 'services/lostAndFound';
 import GordonSnackbar from 'components/Snackbar';
 import { useNavigate } from 'react-router';
 import { InfoOutlined } from '@mui/icons-material';
-import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { useUser } from 'hooks';
 import {
   LFCategories,
   LFColors,
   LFStorageLocations,
 } from 'views/CampusSafety/components/Constants';
-
-const MIN_QUERY_LENGTH = 2;
-
-// Search Reducer
-type State = {
-  loading: boolean;
-  searchTime: number;
-  searchResults: SearchResult[];
-};
-
-type Action =
-  | { type: 'INPUT' }
-  | { type: 'LOAD'; payload: Omit<State, 'loading'> }
-  | { type: 'RESET' };
-
-const defaultState: State = {
-  loading: false,
-  searchTime: 0,
-  searchResults: [],
-};
-
-const reducer = (state: State, action: Action): State => {
-  switch (action.type) {
-    case 'INPUT':
-      return { ...state, searchResults: [], loading: true };
-    case 'LOAD':
-      return action.payload.searchTime > state.searchTime
-        ? { ...state, ...action.payload, loading: false }
-        : state;
-    case 'RESET':
-      return defaultState;
-    default:
-      throw new Error(`Unhandled action type: ${action}`);
-  }
-};
-
-const performSearch = debounce(async (query: string, dispatch: React.Dispatch<Action>) => {
-  try {
-    const [searchTime, searchResults] = await quickSearchService.search(query);
-    dispatch({ type: 'LOAD', payload: { searchTime, searchResults } });
-  } catch (error) {
-    console.error('Error fetching search results:', error);
-    dispatch({ type: 'RESET' });
-  }
-}, 400);
+import { CustomDatePicker } from 'views/CampusSafety/components/CustomDatePicker';
+import { DateValidationError } from '@mui/x-date-pickers';
+import { GordonPersonAutocomplete } from 'views/CampusSafety/components/GordonPersonAutocomplete';
 
 interface IUser {
   firstName: string;
@@ -99,7 +53,7 @@ interface ISnackbarState {
 
 const FoundItemFormCreate = () => {
   const navigate = useNavigate();
-  const [state, dispatch] = useReducer(reducer, defaultState);
+  const [dateError, setDateError] = useState<DateValidationError | null>(null);
   const { profile } = useUser();
 
   const createSnackbar = useCallback((message: string, severity: ISnackbarState['severity']) => {
@@ -238,6 +192,10 @@ const FoundItemFormCreate = () => {
       errors.finderPhoneNumber = 'Required if you want to claim the item later';
     }
 
+    if (dateError !== null) {
+      errors['dateLost'] = dateError;
+    }
+
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -247,16 +205,6 @@ const FoundItemFormCreate = () => {
       ...prevData,
       category: e.target.value,
     }));
-  };
-
-  const handleInput = (_event: React.SyntheticEvent, value: string) => {
-    const query = value.trim();
-    if (query.length >= MIN_QUERY_LENGTH) {
-      dispatch({ type: 'INPUT' });
-      performSearch(query, dispatch);
-    } else {
-      dispatch({ type: 'RESET' });
-    }
   };
 
   const handleColorChange = (color: string) => {
@@ -311,87 +259,6 @@ const FoundItemFormCreate = () => {
       setFormData((prevData) => ({ ...prevData, [name]: value }));
     }
   };
-
-  const [dateError, setDateError] = useState<DateValidationError | null>(null);
-
-  const errorMessage = useMemo(() => {
-    switch (dateError) {
-      case 'invalidDate': {
-        return 'Invalid Date';
-      }
-      case 'disableFuture': {
-        return 'Cannot lose an item in the future';
-      }
-      case 'minDate': {
-        return 'Date too long ago';
-      }
-      default: {
-        return dateError;
-      }
-    }
-  }, [dateError]);
-
-  const customDatePicker = (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <DatePicker
-        label="Date Found"
-        value={formData.dateFound ? new Date(formData.dateFound) : null}
-        onChange={(value) => {
-          setFormData((prevData) => ({
-            ...prevData,
-            dateFound: value ? value.toString() : '',
-          }));
-        }}
-        onError={(newError) => setDateError(newError)}
-        disableFuture
-        orientation="portrait"
-        slotProps={{
-          textField: {
-            helperText: errorMessage ? errorMessage : 'Change if lost before today',
-            sx: {
-              backgroundColor: 'var(--mui-palette-FilledInput-bg)',
-              paddingTop: '7px',
-              borderRadius: '5px',
-              width: '100%',
-              '& .Mui-focused .MuiOutlinedInput-notchedOutline': { border: 'none' },
-              '& .MuiInputLabel-shrink': {
-                transform: 'translate(14px, 4px) scale(0.75)',
-              },
-              '& .MuiFormLabel-root.Mui-focused': {
-                color: 'var(--mui-palette-secondary-main)',
-              },
-              '& .MuiOutlinedInput-notchedOutline': {
-                borderWidth: '0',
-                borderBottom:
-                  '1px solid rgba(var(--mui-palette-common-onBackgroundChannel) / var(--mui-opacity-inputUnderline))',
-                borderRadius: '0',
-              },
-            },
-          },
-          layout: {
-            sx: {
-              '& .MuiPickersLayout-contentWrapper .Mui-selected': {
-                backgroundColor: 'var(--mui-palette-secondary-400)',
-              },
-              '.MuiPickersLayout-contentWrapper .MuiPickersDay-root:focus.Mui-selected': {
-                backgroundColor: 'var(--mui-palette-secondary-400)',
-              },
-              '.MuiPickersLayout-contentWrapper .MuiPickersDay-root.Mui-selected': {
-                backgroundColor: 'var(--mui-palette-secondary-400)',
-              },
-            },
-          },
-          actionBar: {
-            sx: {
-              '& .MuiButtonBase-root': {
-                color: 'var(--mui-palette-secondary-400)',
-              },
-            },
-          },
-        }}
-      />
-    </LocalizationProvider>
-  );
 
   const handleFormSubmit = async () => {
     if (!validateForm()) {
@@ -584,7 +451,18 @@ const FoundItemFormCreate = () => {
             />
 
             {/* Date Found */}
-            <div style={{ marginBottom: '1rem' }}>{customDatePicker}</div>
+            <div style={{ marginBottom: '1rem' }}>
+              <CustomDatePicker
+                value={formData.dateFound ? formData.dateFound : null}
+                onChange={(value) => {
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    dateFound: value ? value.toString() : '',
+                  }));
+                }}
+                onError={(newError) => setDateError(newError)}
+              />
+            </div>
 
             {/* Found By */}
             <Grid item margin={2}>
@@ -606,22 +484,7 @@ const FoundItemFormCreate = () => {
 
             {formData.isGordonFinder === 'yes' && (
               <Grid item margin={2}>
-                <Autocomplete
-                  loading={state.loading}
-                  options={state.searchResults}
-                  isOptionEqualToValue={(option, value) => option.UserName === value.UserName}
-                  onInputChange={handleInput}
-                  onChange={handleFinderSelect}
-                  renderOption={(props, person) => (
-                    <MenuItem {...props} key={person.UserName} divider>
-                      <Typography variant="body2">{`${person.FirstName} ${person.LastName}`}</Typography>
-                    </MenuItem>
-                  )}
-                  getOptionLabel={(option) => `${option.FirstName} ${option.LastName}`}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Search Gordon Person" fullWidth />
-                  )}
-                />
+                <GordonPersonAutocomplete onChange={handleFinderSelect} />
               </Grid>
             )}
 
@@ -713,22 +576,7 @@ const FoundItemFormCreate = () => {
 
             {formData.isGordonOwner === 'yes' && (
               <Grid item margin={2}>
-                <Autocomplete
-                  loading={state.loading}
-                  options={state.searchResults}
-                  isOptionEqualToValue={(option, value) => option.UserName === value.UserName}
-                  onInputChange={handleInput}
-                  onChange={handleOwnerSelect}
-                  renderOption={(props, person) => (
-                    <MenuItem {...props} key={person.UserName} divider>
-                      <Typography variant="body2">{`${person.FirstName} ${person.LastName}`}</Typography>
-                    </MenuItem>
-                  )}
-                  getOptionLabel={(option) => `${option.FirstName} ${option.LastName}`}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Search Gordon Person" fullWidth />
-                  )}
-                />
+                <GordonPersonAutocomplete onChange={handleOwnerSelect} />
               </Grid>
             )}
 

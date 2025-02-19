@@ -25,6 +25,8 @@ import GordonSnackbar from 'components/Snackbar';
 import { differenceInCalendarDays } from 'date-fns';
 import { LFCategories, LFColors } from 'views/CampusSafety/components/Constants';
 import { formatDateString } from 'views/CampusSafety/components/Helpers';
+import { getUrlParam, setUrlParam, clearUrlParams } from 'views/CampusSafety/components/Helpers';
+import { StatusChip } from 'views/CampusSafety/components/StatusChip';
 
 const yellowDateThreshold = 7;
 const redDateThreshold = 14;
@@ -53,23 +55,6 @@ const displayLastCheckedDate = (report: MissingItemReport) => {
     return formatDateString(dateString);
   }
   return 'Never';
-};
-
-const statusChip = (report: MissingItemReport) => {
-  return (
-    <Chip
-      label={report.status[0].toUpperCase() + report.status.slice(1)}
-      //@ts-ignore
-      color={
-        report.status.toLowerCase() === 'active'
-          ? 'secondary'
-          : report.status.toLowerCase() === 'found'
-            ? 'success'
-            : 'primary'
-      }
-      className={styles.chip}
-    />
-  );
 };
 
 const MissingItemList = () => {
@@ -111,10 +96,10 @@ const MissingItemList = () => {
     const updateFilters = async () => {
       try {
         if (
-          status === getUrlParam('status') &&
-          category === getUrlParam('category') &&
-          color === getUrlParam('color') &&
-          keywords === getUrlParam('keywords')
+          status === getUrlParam('status', location, searchParams) &&
+          category === getUrlParam('category', location, searchParams) &&
+          color === getUrlParam('color', location, searchParams) &&
+          keywords === getUrlParam('keywords', location, searchParams)
         ) {
           const fetchedReports = await lostAndFoundService.getMissingItemReports(
             status,
@@ -152,60 +137,25 @@ const MissingItemList = () => {
   useEffect(() => {
     const updateFilters = () => {
       // Set the filter values based on the url query params
-      let queryValue = getUrlParam('status');
+      let queryValue = getUrlParam('status', location, searchParams);
       if (status !== queryValue) {
         setStatus(queryValue);
       }
-      queryValue = getUrlParam('color');
+      queryValue = getUrlParam('color', location, searchParams);
       if (color !== queryValue) {
         setColor(queryValue);
       }
-      queryValue = getUrlParam('category');
+      queryValue = getUrlParam('category', location, searchParams);
       if (category !== queryValue) {
         setCategory(queryValue);
       }
-      queryValue = getUrlParam('keywords');
+      queryValue = getUrlParam('keywords', location, searchParams);
       if (keywords !== queryValue) {
         setKeywords(queryValue);
       }
     };
     updateFilters();
   }, [category, color, keywords, searchParams, status]);
-
-  // Set the search url params, used for filtering
-  const setUrlParam = (paramName: string, paramValue: string) => {
-    if (paramValue === '') {
-      // Delete the parameter if it's value is empty
-      setSearchParams((params) => {
-        params.delete(paramName);
-        return params;
-      });
-    } else {
-      setSearchParams((params) => {
-        params.set(paramName, paramValue);
-        return params;
-      });
-    }
-  };
-
-  // Get the value of the url param
-  const getUrlParam = (paramName: string) => {
-    if (location.search.includes(paramName)) {
-      return searchParams.get(paramName) || '';
-    }
-    return '';
-  };
-
-  // Delete the four filtering url params
-  const clearUrlParams = () => {
-    setSearchParams((params) => {
-      params.delete('status');
-      params.delete('category');
-      params.delete('keywords');
-      params.delete('color');
-      return params;
-    });
-  };
 
   // Lazy loading helper: load more reports
   const loadMoreReports = async () => {
@@ -283,7 +233,7 @@ const MissingItemList = () => {
                         variant="outlined"
                         size="small"
                         value={keywords}
-                        onChange={(e) => setUrlParam('keywords', e.target.value)}
+                        onChange={(e) => setUrlParam('keywords', e.target.value, setSearchParams)}
                         className={styles.textField}
                         fullWidth
                       />
@@ -295,7 +245,7 @@ const MissingItemList = () => {
                         <InputLabel>Status</InputLabel>
                         <Select
                           value={status}
-                          onChange={(e) => setUrlParam('status', e.target.value)}
+                          onChange={(e) => setUrlParam('status', e.target.value, setSearchParams)}
                         >
                           <MenuItem value="">All</MenuItem>
                           <MenuItem value="active">Active</MenuItem>
@@ -311,7 +261,7 @@ const MissingItemList = () => {
                         <InputLabel>Color</InputLabel>
                         <Select
                           value={color}
-                          onChange={(e) => setUrlParam('color', e.target.value)}
+                          onChange={(e) => setUrlParam('color', e.target.value, setSearchParams)}
                         >
                           <MenuItem value="">All</MenuItem>
                           {LFColors.map((colorOption) => (
@@ -327,7 +277,7 @@ const MissingItemList = () => {
                         <InputLabel>Category</InputLabel>
                         <Select
                           value={category}
-                          onChange={(e) => setUrlParam('category', e.target.value)}
+                          onChange={(e) => setUrlParam('category', e.target.value, setSearchParams)}
                         >
                           <MenuItem value="">All</MenuItem>
                           {LFCategories.map((categoryOption) => (
@@ -341,7 +291,7 @@ const MissingItemList = () => {
                     <Grid item xs={isMobile}>
                       <Button
                         onClick={() => {
-                          clearUrlParams();
+                          clearUrlParams(setSearchParams);
                         }}
                         variant="contained"
                         color="error"
@@ -450,7 +400,7 @@ const MissingItemList = () => {
                             Category: {report.category}
                           </Typography>
                           <Grid item xs={12}>
-                            {statusChip(report)}
+                            {StatusChip(report)}
                             {report.stolen && (
                               <Chip label="Stolen" color="error" className={styles.chip} />
                             )}
@@ -495,7 +445,7 @@ const MissingItemList = () => {
                           </Typography>
                         </Grid>
                         <Grid item xs={12}>
-                          {statusChip(report)}
+                          {StatusChip(report)}
                           {report.stolen && (
                             <Chip label="Stolen" color="error" className={styles.chip} />
                           )}

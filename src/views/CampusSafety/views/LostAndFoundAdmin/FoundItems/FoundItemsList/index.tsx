@@ -25,27 +25,8 @@ import lostAndFoundService, { FoundItem } from 'services/lostAndFound';
 import { differenceInCalendarDays } from 'date-fns';
 import { LFCategories, LFColors } from 'views/CampusSafety/components/Constants';
 import { formatDateString } from 'views/CampusSafety/components/Helpers';
-
-function statusChip(report: FoundItem) {
-  let normalized = report.status.toLowerCase();
-  let chipColor: 'primary' | 'secondary' | 'success' | 'error' | 'info' = 'primary';
-
-  if (normalized === 'found') {
-    chipColor = 'success';
-  } else if (normalized === 'disposed' || normalized === 'pickedup') {
-    chipColor = 'info';
-  } else if (normalized === 'active') {
-    chipColor = 'secondary';
-  }
-
-  return (
-    <Chip
-      label={report.status[0].toUpperCase() + report.status.slice(1)}
-      color={chipColor}
-      className={styles.chip}
-    />
-  );
-}
+import { getUrlParam, setUrlParam, clearUrlParams } from 'views/CampusSafety/components/Helpers';
+import { StatusChip } from 'views/CampusSafety/components/StatusChip';
 
 const FoundItemList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -91,23 +72,23 @@ const FoundItemList = () => {
   useEffect(() => {
     const syncFiltersFromUrl = () => {
       // "ID" param for Tag #
-      let paramVal = getUrlParam('ID');
+      let paramVal = getUrlParam('ID', location, searchParams);
       if (tagID !== paramVal) {
         setTagID(paramVal);
       }
-      paramVal = getUrlParam('status');
+      paramVal = getUrlParam('status', location, searchParams);
       if (status !== paramVal) {
         setStatus(paramVal);
       }
-      paramVal = getUrlParam('color');
+      paramVal = getUrlParam('color', location, searchParams);
       if (color !== paramVal) {
         setColor(paramVal);
       }
-      paramVal = getUrlParam('category');
+      paramVal = getUrlParam('category', location, searchParams);
       if (category !== paramVal) {
         setCategory(paramVal);
       }
-      paramVal = getUrlParam('keywords');
+      paramVal = getUrlParam('keywords', location, searchParams);
       if (keywords !== paramVal) {
         setKeywords(paramVal);
       }
@@ -167,41 +148,6 @@ const FoundItemList = () => {
     return () => observer.disconnect();
   }, [lazyLoading, hasMore]);
 
-  // Helper to read URL param
-  function getUrlParam(paramName: string) {
-    if (location.search.includes(paramName)) {
-      return searchParams.get(paramName) || '';
-    }
-    return '';
-  }
-
-  // Helper to set or remove a param
-  function setUrlParam(paramName: string, paramValue: string) {
-    if (!paramValue) {
-      setSearchParams((params) => {
-        params.delete(paramName);
-        return params;
-      });
-    } else {
-      setSearchParams((params) => {
-        params.set(paramName, paramValue);
-        return params;
-      });
-    }
-  }
-
-  // Helper to clear all filters
-  function clearUrlParams() {
-    setSearchParams((params) => {
-      params.delete('ID');
-      params.delete('status');
-      params.delete('category');
-      params.delete('keywords');
-      params.delete('color');
-      return params;
-    });
-  }
-
   return (
     <>
       <Header />
@@ -234,7 +180,7 @@ const FoundItemList = () => {
                         variant="outlined"
                         size="small"
                         value={tagID}
-                        onChange={(e) => setUrlParam('ID', e.target.value)}
+                        onChange={(e) => setUrlParam('ID', e.target.value, setSearchParams)}
                         className={styles.textField}
                         fullWidth
                       />
@@ -247,7 +193,7 @@ const FoundItemList = () => {
                         variant="outlined"
                         size="small"
                         value={keywords}
-                        onChange={(e) => setUrlParam('keywords', e.target.value)}
+                        onChange={(e) => setUrlParam('keywords', e.target.value, setSearchParams)}
                         className={styles.textField}
                         fullWidth
                       />
@@ -258,7 +204,7 @@ const FoundItemList = () => {
                         <InputLabel>Status</InputLabel>
                         <Select
                           value={status}
-                          onChange={(e) => setUrlParam('status', e.target.value)}
+                          onChange={(e) => setUrlParam('status', e.target.value, setSearchParams)}
                         >
                           <MenuItem value="">All</MenuItem>
                           <MenuItem value="active">Active</MenuItem>
@@ -275,7 +221,7 @@ const FoundItemList = () => {
                         <InputLabel>Color</InputLabel>
                         <Select
                           value={color}
-                          onChange={(e) => setUrlParam('color', e.target.value)}
+                          onChange={(e) => setUrlParam('color', e.target.value, setSearchParams)}
                         >
                           <MenuItem value="">All</MenuItem>
                           {LFColors.map((color) => (
@@ -291,7 +237,7 @@ const FoundItemList = () => {
                         <InputLabel>Category</InputLabel>
                         <Select
                           value={category}
-                          onChange={(e) => setUrlParam('category', e.target.value)}
+                          onChange={(e) => setUrlParam('category', e.target.value, setSearchParams)}
                         >
                           <MenuItem value="">All</MenuItem>
                           {LFCategories.map((category) => (
@@ -303,7 +249,12 @@ const FoundItemList = () => {
                       </FormControl>
                     </Grid>
                     <Grid item xs={isMobile}>
-                      <Button onClick={clearUrlParams} variant="contained" color="error" fullWidth>
+                      <Button
+                        onClick={() => clearUrlParams(setSearchParams)}
+                        variant="contained"
+                        color="error"
+                        fullWidth
+                      >
                         Clear
                       </Button>
                     </Grid>
@@ -394,7 +345,7 @@ const FoundItemList = () => {
                           <Typography variant="body2">Location: {report.locationFound}</Typography>
                           <Typography variant="body2">Category: {report.category}</Typography>
                           <Grid item xs={12}>
-                            {statusChip(report)}
+                            <StatusChip status={report.status} />
                             {differenceInCalendarDays(new Date(), Date.parse(report.dateCreated)) <
                               3 && <Chip label="NEW" color="success" className={styles.chip} />}
                           </Grid>
@@ -430,7 +381,7 @@ const FoundItemList = () => {
                           <div className={styles.dataCell}>{report.description}</div>
                         </Grid>
                         <Grid item xs={12}>
-                          {statusChip(report)}
+                          <StatusChip status={report.status} />
                           {differenceInCalendarDays(new Date(), Date.parse(report.dateCreated)) <
                             3 && <Chip label="NEW" color="success" className={styles.chip} />}
                         </Grid>
