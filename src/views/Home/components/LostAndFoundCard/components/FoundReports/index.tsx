@@ -2,12 +2,12 @@ import { Card, CardContent, CardHeader, Grid, Typography, useMediaQuery } from '
 import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import lostAndFoundService from 'services/lostAndFound';
-import styles from '../../../../../../views/CampusSafety/views/LostAndFound/LostAndFound.module.css';
+import styles from '/src/views/LostAndFound/views/Home/LostAndFound.module.scss';
 import { MissingItemReport } from 'services/lostAndFound';
 import Badge from '@mui/material/Badge';
 import GordonSnackbar from 'components/Snackbar';
 import { useUser } from 'hooks';
-import { formatDateString } from 'views/CampusSafety/components/Helpers';
+import { formatDateString } from 'views/LostAndFound/components/Helpers';
 
 const FoundReports = () => {
   const [foundReports, setFoundReports] = useState<MissingItemReport[] | null>(null);
