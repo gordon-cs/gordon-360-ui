@@ -374,36 +374,30 @@ const RAView = () => {
   );
 
   const contactMethod = () => (
-    <Card>
+    <Card elevation={3} sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <CardHeader title={'Preferred Contact Method'} className="gc360_header" />
-      <CardContent>
-        <Accordion>
-          <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
-            <Typography>Select Contact Method</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <FormControl component="fieldset">
-              <RadioGroup
-                aria-label="preferred-contact"
-                name="preferred-contact"
-                value={selectedContact}
-                onChange={handleContactChange}
-              >
-                <FormControlLabel value="teams" control={<Radio />} label="Teams" />
-                <FormControlLabel value="phone" control={<Radio />} label="Phone" />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleContactSubmit}
-                  disabled={!selectedContact}
-                  sx={{ mt: 2 }}
-                >
-                  Submit
-                </Button>
-              </RadioGroup>
-            </FormControl>
-          </AccordionDetails>
-        </Accordion>
+      <CardContent sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+        <FormControl component="fieldset">
+          <Typography>Select Contact Method</Typography>
+          <RadioGroup
+            aria-label="preferred-contact"
+            name="preferred-contact"
+            value={selectedContact}
+            onChange={handleContactChange}
+          >
+            <FormControlLabel value="teams" control={<Radio />} label="Teams" />
+            <FormControlLabel value="phone" control={<Radio />} label="Phone" />
+          </RadioGroup>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleContactSubmit}
+            disabled={!selectedContact}
+            sx={{ mt: 2 }}
+          >
+            Submit
+          </Button>
+        </FormControl>
         <Typography sx={{ mt: 2, color: 'text.secondary', fontStyle: 'italic' }}>
           *This is your preferred method to be contacted by your hall's residents.
         </Typography>

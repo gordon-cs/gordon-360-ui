@@ -35,10 +35,20 @@ const deleteTask = (taskID: number) => http.del(`Housing/halls/task/${taskID}`);
 const completeTask = (taskID: number, completedBy: string) =>
   http.patch(`Housing/halls/task/Complete/${taskID}`, completedBy);
 
+const incompleteTask = (taskID: number) => http.patch(`Housing/halls/task/Incomplete/${taskID}`);
+
 const getActiveTasksForHall = (hallID: string): Promise<Task[]> =>
   http.get(`Housing/Halls/${hallID}/ActiveTasks`);
 
 const getTasksForHall = (hallID: string): Promise<Task[]> =>
   http.get(`Housing/Halls/${hallID}/DailyTasks`);
 
-export { createTask, updateTask, deleteTask, completeTask, getActiveTasksForHall, getTasksForHall };
+export {
+  createTask,
+  updateTask,
+  deleteTask,
+  completeTask,
+  incompleteTask,
+  getActiveTasksForHall,
+  getTasksForHall,
+};

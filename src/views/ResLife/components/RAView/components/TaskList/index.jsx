@@ -8,9 +8,6 @@ import {
   FormControlLabel,
   Grid,
   Typography,
-} from '@mui/material';
-import React, { useCallback, useEffect, useState } from 'react';
-import {
   IconButton,
   ListItemIcon,
   ListItemText,
@@ -20,8 +17,9 @@ import {
   ListItem,
   Link,
 } from '@mui/material';
+import React, { useCallback, useEffect, useState } from 'react';
 import CommentIcon from '@mui/icons-material/Comment';
-import { completeTask, getTasksForHall } from 'services/residentLife/Tasks';
+import { completeTask, incompleteTask, getTasksForHall } from 'services/residentLife/Tasks';
 import { getRACurrentHalls } from 'services/residentLife/RA_Checkin';
 import { useUser } from 'hooks';
 import GordonDialogBox from 'components/GordonDialogBox';
@@ -29,15 +27,16 @@ import SimpleSnackbar from 'components/Snackbar';
 
 const TaskList = () => {
   const [taskList, setTaskList] = useState([]);
-
   const { profile } = useUser();
   const [descriptionOpen, setDescriptionOpen] = useState(false);
   const [taskCheckedOpen, setTaskCheckedOpen] = useState(false);
+  const [incompleteTaskDialogOpen, setIncompleteTaskDialogOpen] = useState(false);
   const [checkedList, setCheckedList] = useState([]);
   const [disabledList, setDisabledList] = useState([]);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
   const [hallList, setHallList] = useState([]);
   const [confirmTask, setConfirmTask] = useState(null);
+  const [confirmIncompleteTask, setConfirmIncompleteTask] = useState(null);
   const [selectedDescription, setSelectedDescription] = useState(null);
 
   const createSnackbar = useCallback((message, severity) => {
@@ -87,23 +86,21 @@ const TaskList = () => {
     try {
       await completeTask(taskID, profile.ID);
 
-      setCheckedList((prev) => {
-        const newCheckedList = prev.map((hall, hIndex) =>
+      setCheckedList((prev) =>
+        prev.map((hall, hIndex) =>
           hIndex === hallIndex
             ? hall.map((checked, tIndex) => (tIndex === taskIndex ? true : checked))
             : hall,
-        );
-        return newCheckedList;
-      });
+        ),
+      );
 
-      setDisabledList((prev) => {
-        const newDisabledList = prev.map((hall, hIndex) =>
+      setDisabledList((prev) =>
+        prev.map((hall, hIndex) =>
           hIndex === hallIndex
             ? hall.map((disabled, tIndex) => (tIndex === taskIndex ? true : disabled))
             : hall,
-        );
-        return newDisabledList;
-      });
+        ),
+      );
 
       createSnackbar(`Completed task: ${taskList[hallIndex].tasks[taskIndex].Name}`, 'success');
 
@@ -112,6 +109,46 @@ const TaskList = () => {
     } catch (error) {
       console.error('Error completing task', error);
       createSnackbar('Failed to complete task. Please try again.', 'error');
+    }
+  };
+
+  const handleMarkIncompleteConfirm = async () => {
+    if (!confirmIncompleteTask) {
+      console.error('No task selected for incomplete confirmation.');
+      return;
+    }
+
+    const { hallIndex, taskIndex, taskID } = confirmIncompleteTask;
+
+    try {
+      await incompleteTask(taskID, profile.ID);
+
+      setCheckedList((prev) =>
+        prev.map((hall, hIndex) =>
+          hIndex === hallIndex
+            ? hall.map((checked, tIndex) => (tIndex === taskIndex ? false : checked))
+            : hall,
+        ),
+      );
+
+      setDisabledList((prev) =>
+        prev.map((hall, hIndex) =>
+          hIndex === hallIndex
+            ? hall.map((disabled, tIndex) => (tIndex === taskIndex ? false : disabled))
+            : hall,
+        ),
+      );
+
+      createSnackbar(
+        `Marked task as incomplete: ${taskList[hallIndex].tasks[taskIndex].Name}`,
+        'success',
+      );
+
+      setIncompleteTaskDialogOpen(false);
+      setConfirmIncompleteTask(null);
+    } catch (error) {
+      console.error('Error marking task as incomplete', error);
+      createSnackbar('Failed to mark task as incomplete. Please try again.', 'error');
     }
   };
 
@@ -125,9 +162,14 @@ const TaskList = () => {
     }
   }, [taskList]);
 
-  const handleTaskChecked = (hallIndex, taskIndex, taskID) => {
-    setConfirmTask({ hallIndex, taskIndex, taskID });
-    setTaskCheckedOpen(true);
+  const handleTaskChecked = (hallIndex, taskIndex, taskID, taskCompleted) => {
+    if (taskCompleted) {
+      setConfirmIncompleteTask({ hallIndex, taskIndex, taskID });
+      setIncompleteTaskDialogOpen(true);
+    } else {
+      setConfirmTask({ hallIndex, taskIndex, taskID });
+      setTaskCheckedOpen(true);
+    }
   };
 
   const handleClickDescription = (hallIndex, taskIndex) => {
@@ -162,7 +204,14 @@ const TaskList = () => {
                           }
                         >
                           <ListItemButton
-                            onClick={() => handleTaskChecked(hallIndex, index, task.TaskID)}
+                            onClick={() =>
+                              handleTaskChecked(
+                                hallIndex,
+                                index,
+                                task.TaskID,
+                                checkedList[hallIndex]?.[index] || task.CompletedDate !== null,
+                              )
+                            }
                             dense
                           >
                             <ListItemIcon>
@@ -213,6 +262,18 @@ const TaskList = () => {
             Are you sure you have completed this task?
           </GordonDialogBox>
           <GordonDialogBox
+            open={incompleteTaskDialogOpen}
+            onClose={() => setIncompleteTaskDialogOpen(false)}
+            title={'Mark Task as Incomplete'}
+            buttonName="Confirm"
+            buttonClicked={handleMarkIncompleteConfirm}
+            cancelButtonName="CANCEL"
+            cancelButtonClicked={() => setIncompleteTaskDialogOpen(false)}
+          >
+            <br />
+            Are you sure you want to mark this task as incomplete?
+          </GordonDialogBox>
+          <GordonDialogBox
             open={descriptionOpen}
             onClose={() => setDescriptionOpen(false)}
             title="Task Description"
@@ -222,6 +283,12 @@ const TaskList = () => {
             <br />
             {selectedDescription}
           </GordonDialogBox>
+          <SimpleSnackbar
+            open={snackbar.open}
+            text={snackbar.message}
+            severity={snackbar.severity}
+            onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+          />
         </CardContent>
       </Card>
     </Grid>
