@@ -15,8 +15,10 @@ import {
   FormControlLabel,
 } from '@mui/material';
 import { addTask, updateTask, fetchTasks, removeTask } from 'services/residentLife/RD_TaskList';
+import { useColorScheme } from '@mui/material/styles';
 
 const TaskList = () => {
+  const { mode } = useColorScheme();
   const [tasks, setTasks] = useState([]);
   const [selectedHall, setSelectedHall] = useState('');
   const [loading, setLoading] = useState(false);
@@ -205,11 +207,28 @@ const TaskList = () => {
   return (
     <Grid container spacing={3} justifyContent="center">
       <Grid item xs={12}>
-        <h1 style={{ textAlign: 'center' }}>Task Manager</h1>
+        <Typography
+          variant="h3"
+          align="center"
+          style={{
+            color: mode === 'dark' ? '#f8b619' : '#36b9ed',
+          }}
+        >
+          Task Manager
+        </Typography>
       </Grid>
 
       <Grid item xs={10}>
-        <h2>Choose a Building</h2>
+        <Typography
+          variant="h6"
+          fontWeight="bold"
+          align="left"
+          style={{
+            color: mode === 'dark' ? '#f8b619' : '#36b9ed',
+          }}
+        >
+          Select a Hall
+        </Typography>
         <FormControl fullWidth>
           <Select value={selectedHall} onChange={(e) => setSelectedHall(e.target.value)}>
             <MenuItem value="BRO">Bromley</MenuItem>
@@ -314,7 +333,12 @@ const TaskList = () => {
                     name="interval"
                     value={currentTask.interval || ''}
                     onChange={handleInputChange}
-                    inputProps={{ min: 1 }}
+                    inputProps={{
+                      min: 1,
+                      placeholder: currentTask.interval
+                        ? `Current: ${currentTask.interval}`
+                        : 'How often will this task be repeated? (e.g. Weekly 2 = bi-weekly)',
+                    }}
                     required
                     sx={{ mb: 2 }}
                   />
@@ -330,7 +354,7 @@ const TaskList = () => {
       </Grid>
 
       <Grid item xs={12} md={5}>
-        <Card elevation={3}>
+        <Card>
           <CardContent>
             <Typography variant="h5" fontWeight="bold" gutterBottom>
               Task List ({hallDisplayNames[selectedHall] || selectedHall})
@@ -340,70 +364,78 @@ const TaskList = () => {
             ) : tasks.length === 0 ? (
               <Typography color="textSecondary">No tasks for this building</Typography>
             ) : (
-              <ol>
-                {tasks.map((task) => (
-                  <li
-                    key={task.taskID}
-                    className="p-2 border rounded-lg bg-gray-100"
-                    style={{ marginBottom: '16px' }}
-                  >
-                    <div>
-                      <Typography variant="subtitle1" fontWeight="bold">
-                        <strong>{task.Name}</strong>
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        <strong>Start Date: </strong>{' '}
-                        {new Date(task.StartDate).toLocaleDateString('en-US', {
-                          month: 'long',
-                          day: 'numeric',
-                          year: 'numeric',
-                        })}
-                      </Typography>
-                      <Typography variant="body2" color="textSecondary">
-                        <strong>End Date: </strong>{' '}
-                        {new Date(task.EndDate).toLocaleDateString('en-US', {
-                          month: 'long',
-                          day: 'numeric',
-                          year: 'numeric',
-                        })}
-                      </Typography>
+              <div style={{ height: '600px', overflow: 'hidden' }}>
+                <dt style={{ maxHeight: '100%', overflowY: 'auto' }}>
+                  {tasks.map((task) => (
+                    <Card
+                      key={task.taskID}
+                      className="p-2 border rounded-lg bg-gray-100"
+                      style={{
+                        marginBottom: '16px',
+                        textAlign: 'center',
+                        border: `2px solid ${mode === 'dark' ? '#f8b619' : '#36b9ed'}`,
+                        backgroundColor: mode === 'dark' ? '#033948' : '#d3e4fd',
+                      }}
+                    >
+                      <div style={{ marginTop: '10px', marginBottom: '10px' }}>
+                        <Typography variant="subtitle1" fontWeight="bold">
+                          <strong>{task.Name}</strong>
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                          <strong>Start Date: </strong>{' '}
+                          {new Date(task.StartDate).toLocaleDateString('en-US', {
+                            month: 'long',
+                            day: 'numeric',
+                            year: 'numeric',
+                          })}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                          <strong>End Date: </strong>{' '}
+                          {new Date(task.EndDate).toLocaleDateString('en-US', {
+                            month: 'long',
+                            day: 'numeric',
+                            year: 'numeric',
+                          })}
+                        </Typography>
 
-                      {task.Frequency && (
-                        <>
-                          <Typography variant="body2" color="textSecondary">
-                            <strong>Frequency: </strong> {task.Frequency}
-                          </Typography>
-                          <Typography variant="body2" color="textSecondary">
-                            <strong>Interval: </strong> {task.Interval}
-                          </Typography>
-                        </>
-                      )}
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        size="small"
-                        onClick={() => editTask(task)}
-                        sx={{ mr: 3 }}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color="error"
-                        size="small"
-                        onClick={async () => {
-                          await deleteTask(task.TaskID);
-                          loadTasks(selectedHall);
-                        }}
-                      >
-                        Delete
-                      </Button>
-                    </div>
-                  </li>
-                ))}
-              </ol>
+                        {task.Frequency && (
+                          <>
+                            <Typography variant="body2" color="textSecondary">
+                              <strong>Frequency: </strong> {task.Frequency}
+                            </Typography>
+
+                            <Typography variant="body2" color="textSecondary">
+                              <strong>Interval: </strong> {task.Interval}
+                            </Typography>
+                          </>
+                        )}
+                      </div>
+                      <div className="flex gap-2" style={{ marginBottom: '16px' }}>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          size="small"
+                          onClick={() => editTask(task)}
+                          sx={{ mr: 3 }}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="error"
+                          size="small"
+                          onClick={async () => {
+                            await deleteTask(task.TaskID);
+                            loadTasks(selectedHall);
+                          }}
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    </Card>
+                  ))}
+                </dt>
+              </div>
             )}
           </CardContent>
         </Card>
