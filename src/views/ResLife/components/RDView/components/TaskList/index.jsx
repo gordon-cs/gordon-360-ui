@@ -95,11 +95,20 @@ const TaskList = () => {
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
 
-    // Updates the changes in the form
-    setCurrentTask((prevTask) => ({
-      ...prevTask,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
+    setCurrentTask((prevTask) => {
+      let updatedTask = { ...prevTask, [name]: type === 'checkbox' ? checked : value };
+
+      // If "Recurring Task" is unchecked, set endDate to startDate
+      if (name === 'isRecurring') {
+        if (!checked) {
+          updatedTask.endDate = prevTask.startDate;
+        } else {
+          updatedTask.endDate = ''; // Allow user to manually enter an end date when checked
+        }
+      }
+
+      return updatedTask;
+    });
   };
 
   // Function to handle form submission when adding new tasks
@@ -278,26 +287,35 @@ const TaskList = () => {
               />
               <TextField
                 fullWidth
-                label="Start Date"
+                label={currentTask.isRecurring ? 'Start Date' : 'Task Date'}
                 type="date"
                 name="startDate"
                 InputLabelProps={{ shrink: true }}
                 value={currentTask.startDate ? currentTask.startDate.split('T')[0] : ''}
-                onChange={handleInputChange}
+                onChange={(e) => {
+                  handleInputChange(e);
+                  if (!currentTask.isRecurring) {
+                    setCurrentTask((prevTask) => ({ ...prevTask, endDate: e.target.value }));
+                  }
+                }}
                 required
                 sx={{ mb: 2 }}
               />
-              <TextField
-                fullWidth
-                label="End Date"
-                type="date"
-                name="endDate"
-                InputLabelProps={{ shrink: true }}
-                value={currentTask.endDate ? currentTask.endDate.split('T')[0] : ''}
-                onChange={handleInputChange}
-                required
-                sx={{ mb: 2 }}
-              />
+
+              {currentTask.isRecurring && (
+                <TextField
+                  fullWidth
+                  label="End Date"
+                  type="date"
+                  name="endDate"
+                  InputLabelProps={{ shrink: true }}
+                  value={currentTask.endDate ? currentTask.endDate.split('T')[0] : ''}
+                  onChange={handleInputChange}
+                  required
+                  sx={{ mb: 2 }}
+                />
+              )}
+
               <FormControlLabel
                 control={
                   <Checkbox

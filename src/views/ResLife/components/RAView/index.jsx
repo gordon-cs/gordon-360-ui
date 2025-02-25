@@ -32,7 +32,7 @@ import {
 import { preferredContact, PrefContactMethod } from 'services/residentLife/ResidentStaff';
 import { useUser } from 'hooks';
 import HousingBanner from '../ResidentView/components/HousingWelcome/Banner';
-import BasicSelect from '../RDView//components/MobileView';
+import OnDutyMobile from '../RDView/components/OnDutyMobileView';
 
 const RAView = () => {
   const [isCheckedIn, setCheckedIn] = useState(false);
@@ -421,7 +421,7 @@ const RAView = () => {
           className="gc360_header"
         />
         <CardContent>
-          <BasicSelect />
+          <OnDutyMobile />
         </CardContent>
       </Card>
     );
