@@ -19,7 +19,6 @@ import {
 } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Links from './components/Links';
-import TaskList from './components/TaskList';
 import MyHall from '../ResidentView/components/MyHall/index';
 import { React, useCallback, useEffect, useState } from 'react';
 import SimpleSnackbar from 'components/Snackbar';
@@ -226,16 +225,16 @@ const RAView = () => {
 
   const handleContactSubmit = async () => {
     if (!selectedContact) {
-      createSnackbar('Please select a contact method before submitting.', 'warning');
+      alert('Please select a contact method before submitting.');
       return;
     }
 
     try {
       await preferredContact(profile.ID, selectedContact);
-      createSnackbar('Preferred contact method successfully updated.', 'success');
+      alert('Preferred contact method successfully updated.');
     } catch (error) {
       console.error('Error updating preferred contact method:', error);
-      createSnackbar('Failed to update contact method. Please try again.', 'error');
+      alert('Failed to update contact method. Please try again.');
     }
   };
 
@@ -405,25 +404,25 @@ const RAView = () => {
     </Card>
   );
 
-  const OnCallTable = ({ isCheckedIn }) => {
-    if (!isCheckedIn) return null;
-
+  const OnCallTable = () => {
     return (
-      <Card sx={{ width: '100%' }}>
-        <CardHeader
-          title={
-            <Grid container direction="row" alignItems="center">
-              <Grid item xs={12} align="center">
-                RA/AC on Duty by Hall
+      <Grid item xs={12} md={20} padding={1}>
+        <Card sx={{ width: '100%' }}>
+          <CardHeader
+            title={
+              <Grid container direction="row" alignItems="center">
+                <Grid item xs={12} align="center">
+                  RA/AC on Duty by Hall
+                </Grid>
               </Grid>
-            </Grid>
-          }
-          className="gc360_header"
-        />
-        <CardContent>
-          <OnDutyMobile />
-        </CardContent>
-      </Card>
+            }
+            className="gc360_header"
+          />
+          <CardContent>
+            <OnDutyMobile />
+          </CardContent>
+        </Card>
+      </Grid>
     );
   };
 
@@ -432,21 +431,14 @@ const RAView = () => {
       {!isMobile && (
         <>
           <HousingBanner />
-          <Grid item xs={12} md={isCheckedIn ? 4 : 6}>
-            <OnCallTable isCheckedIn={isCheckedIn} />
+          <Grid item xs={12} md={4}>
+            <OnCallTable />
           </Grid>
-          <Grid item md={isCheckedIn ? 4 : 6}>
-            {contactMethod()}
-          </Grid>
-          <Grid item xs={12} md={isCheckedIn ? 4 : 6}>
+          {contactMethod()}
+          <Grid item xs={12} md={4}>
             <MyHall />
           </Grid>
           {checkInButton()}
-          {isCheckedIn ? (
-            <Grid item xs={12} md={4}>
-              <TaskList />
-            </Grid>
-          ) : null}
         </>
       )}
       {isMobile && (
@@ -458,17 +450,9 @@ const RAView = () => {
           <Grid item xs={12}>
             <MyHall />
           </Grid>
+          {contactMethod()}
           <Grid item xs={12}>
-            {contactMethod()}
-          </Grid>
-          <Grid item xs={12}>
-            {isCheckedIn ? <TaskList /> : null}
-          </Grid>
-          <Grid item xs={12}>
-            <Links />
-          </Grid>
-          <Grid item xs={12}>
-            <OnCallTable isCheckedIn={isCheckedIn} />
+            <OnCallTable />
           </Grid>
         </>
       )}
