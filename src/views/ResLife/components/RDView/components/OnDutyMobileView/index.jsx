@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import { fetchOnDutyData } from 'services/residentLife/RA_OnCall';
 import ScottieMascot from 'views/ResLife/ScottieMascot.png';
+import OnDuty from 'views/ResLife/components/ResidentView/components/OnDuty';
 
 // Hardcoded list of all halls
 const ALL_HALLS = [
@@ -37,7 +38,7 @@ const formatPhoneNumber = (phoneNumber) => {
   return `(${phoneNumber.slice(0, 3)}) ${phoneNumber.slice(3, 6)}-${phoneNumber.slice(6)}`;
 };
 
-const BasicSelect = () => {
+const OnDutyMobile = () => {
   const [value, setValue] = useState('');
   const [loading, setLoading] = useState(false);
   const [hallDetails, setHallDetails] = useState(null);
@@ -210,4 +211,4 @@ const BasicSelect = () => {
   );
 };
 
-export default BasicSelect;
+export default OnDutyMobile;
