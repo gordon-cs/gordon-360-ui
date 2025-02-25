@@ -415,14 +415,15 @@ const RAView = () => {
             <Grid container direction="row" alignItems="center">
               <Grid item xs={12} align="center">
                 RA/AC on Duty by Hall
-              </Grid>            }
-            className="gc360_header"
-          />
-          <CardContent>
-            <OnDutyMobile />
-          </CardContent>
-        </Card>
-      </Grid>
+              </Grid>
+            </Grid>
+          }
+          className="gc360_header"
+        />
+        <CardContent>
+          <OnDutyMobile />
+        </CardContent>
+      </Card>
     );
   };
 
