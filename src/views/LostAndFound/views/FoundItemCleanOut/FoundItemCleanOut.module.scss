@@ -92,15 +92,6 @@
   }
 }
 
-.clickableRow {
-  cursor: pointer;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: var(--mui-palette-primary-light);
-  }
-}
-
 .dataCell {
   overflow: hidden;
   white-space: nowrap;

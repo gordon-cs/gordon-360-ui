@@ -38,6 +38,7 @@ const FoundItemCleanOut = () => {
   // Filters
   // "ID" is the Tag # filter
   const [tagID, setTagID] = useState('');
+  const [latestDate, setLatestDate] = useState('');
   const [keywords, setKeywords] = useState('');
   const [status, setStatus] = useState('');
   const [color, setColor] = useState('');
@@ -98,8 +99,15 @@ const FoundItemCleanOut = () => {
         if (!pageLoaded) return;
         setLoading(true);
 
+        // Date set to April 9 for testing - uncomment next line once testing is completed
+        // const d = new Date();
+        const d = new Date(2025, 3, 9);
+        d.setMonth(d.getMonth() - 2);
+        setLatestDate(d.toDateString());
+
         const fetched = await lostAndFoundService.getFoundItems(
           tagID || '',
+          latestDate || '',
           status || '',
           color || '',
           category || '',
@@ -122,7 +130,7 @@ const FoundItemCleanOut = () => {
       fetchInitial();
     }, 700);
     return () => clearTimeout(timer);
-  }, [tagID, color, category, keywords, pageLoaded, status, createSnackbar]);
+  }, [tagID, latestDate, color, category, keywords, pageLoaded, status, createSnackbar]);
 
   return (
     <>
@@ -324,16 +332,7 @@ const FoundItemCleanOut = () => {
                       </Card>
                     ) : (
                       // DESKTOP Row Layout
-                      <Grid
-                        container
-                        key={report.recordID}
-                        className={`${styles.reportRow} ${styles.clickableRow}`}
-                        onClick={() =>
-                          navigate(
-                            `/lostandfound/lostandfoundadmin/founditemdatabase/${report.recordID}`,
-                          )
-                        }
-                      >
+                      <Grid container key={report.recordID} className={styles.reportRow}>
                         <Grid item xs={1.5}>
                           <Checkbox />
                         </Grid>
