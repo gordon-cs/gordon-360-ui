@@ -8,3 +8,38 @@
 .spacing {
   padding: 5px;
 }
+
+.filterCardPosition {
+  transform: translateY(15px);
+}
+
+.filterTitle {
+  color: var(--mui-palette-primary-contrastText); // Warning color for emphasis
+  background-color: var(--mui-palette-primary-main); // Primary color for header
+}
+
+.filterTitleText {
+  font-size: medium;
+  b {
+    font-size: x-large;
+  }
+}
+
+.filterContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--mui-palette-primary-contrastText); // Contrast text color for readability
+  padding: 1rem;
+  border-radius: 5px;
+}
+
+.formControl {
+  min-width: 120px;
+}
+
+.tableHeader {
+  padding: 1rem; // Ensure this style applies in production build
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
+}
