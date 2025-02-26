@@ -480,9 +480,43 @@ const FoundItemFormEdit = () => {
         <Card className={styles.form_card}>
           <CardHeader
             title={
-              <b>
-                Found Item: <span className={styles.title_id}>#{foundItem.recordID}</span>
-              </b>
+              <>
+                <Grid container rowGap={1}>
+                  <Grid container item xs={12} md={1}>
+                    <Button className={styles.backButton} onClick={() => navigate(-1)}>
+                      Back
+                    </Button>
+                  </Grid>
+                  <Grid
+                    container
+                    item
+                    columnGap={2}
+                    rowGap={1}
+                    xs={12}
+                    md={9}
+                    justifyContent="center"
+                  >
+                    <b>
+                      Found Item: <span className={styles.title_id}>#{foundItem.recordID}</span>
+                    </b>
+                    <Typography>
+                      <em>Status:</em> <StatusChip status={foundItem.status} />
+                    </Typography>
+                  </Grid>
+                  <Grid container item xs={12} md={2}>
+                    <Button
+                      variant="contained"
+                      className={styles.submit_button}
+                      color="secondary"
+                      onClick={handleSave}
+                      fullWidth
+                      disabled={foundItem === originalItemData}
+                    >
+                      Save Changes
+                    </Button>
+                  </Grid>
+                </Grid>
+              </>
             }
             titleTypographyProps={{ align: 'center' }}
             className="gc360_header"
@@ -672,30 +706,6 @@ const FoundItemFormEdit = () => {
                   {adminActionsCard}
                 </Grid>
               </Grid>
-            </Grid>
-          </Grid>
-
-          {/* Bottom row: Save / Cancel */}
-          <Grid container justifyContent="flex-end" spacing={2} padding={2}>
-            <Grid item xs={6} sm={3} md={2}>
-              <Button
-                variant="contained"
-                color="error"
-                onClick={() => navigate('/lostandfound/lostandfoundadmin/founditemdatabase')}
-                fullWidth
-              >
-                Cancel
-              </Button>
-            </Grid>
-            <Grid item xs={6} sm={3} md={2}>
-              <Button
-                variant="contained"
-                className={styles.submit_button}
-                onClick={handleSave}
-                fullWidth
-              >
-                Save
-              </Button>
             </Grid>
           </Grid>
         </Card>
