@@ -22,7 +22,11 @@ import { InfoOutlined, Add, Key, Launch } from '@mui/icons-material';
 import { StatusChip } from 'views/LostAndFound/components/StatusChip';
 
 import Header from 'views/LostAndFound/components/Header';
-import lostAndFoundService, { FoundItem, FoundAdminAction } from 'services/lostAndFound';
+import lostAndFoundService, {
+  FoundItem,
+  FoundAdminAction,
+  InitFoundAdminAction,
+} from 'services/lostAndFound';
 import GordonSnackbar from 'components/Snackbar';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
@@ -33,7 +37,7 @@ import { LFCategories, LFColors } from 'views/LostAndFound/components/Constants'
 import { CustomDatePicker } from 'views/LostAndFound/components/CustomDatePicker';
 import { DateValidationError } from '@mui/x-date-pickers';
 
-const actionTypes = ['CheckedIn', 'NotifiedOfficer', 'OwnerContact', 'Custom'];
+const actionTypes = ['OwnerContact', 'Custom'];
 
 interface ISnackbarState {
   message: string;
@@ -48,6 +52,20 @@ const FoundItemFormEdit = () => {
 
   /** The found item object we are editing. */
   const [foundItem, setFoundItem] = useState<FoundItem | null>(null);
+  const [originalItemData, setOriginalItemData] = useState<FoundItem>({
+    recordID: '0',
+    category: '',
+    colors: [] as string[],
+    brand: '',
+    description: '',
+    locationFound: '',
+    dateFound: '',
+    dateCreated: '',
+    submitterUsername: '',
+    status: 'active',
+    finderWants: false,
+    storageLocation: '',
+  });
 
   const [snackbar, setSnackbar] = useState<ISnackbarState>({
     message: '',
@@ -97,7 +115,9 @@ const FoundItemFormEdit = () => {
       try {
         const itemResponse = await lostAndFoundService.getFoundItem(itemId);
         setFoundItem(itemResponse);
+        setOriginalItemData(itemResponse);
         setAdminActions(itemResponse.adminActions || []);
+        setActionsLoading(false);
       } catch (err) {
         console.error(err);
         createSnackbar('Failed to load found item from server', 'error');
@@ -112,7 +132,7 @@ const FoundItemFormEdit = () => {
   /** 2) On mount or whenever `actionsUpdated` is set, fetch admin actions. */
   useEffect(() => {
     const fetchActions = async () => {
-      if (!itemId) return;
+      if (!itemId || !actionsUpdated) return;
       setActionsLoading(true);
       try {
         const actionsResp = (await lostAndFoundService.getFoundItem(itemId)).adminActions;
@@ -127,7 +147,7 @@ const FoundItemFormEdit = () => {
     };
 
     fetchActions();
-  }, [itemId, actionsUpdated]);
+  }, [actionsUpdated, itemId]);
 
   /** 3) Validate required fields. */
   const requiredFields = ['category', 'description', 'locationFound'];
@@ -183,7 +203,33 @@ const FoundItemFormEdit = () => {
     if (!validateForm()) return;
 
     try {
+      const formFields = Object.keys(foundItem);
+      let newActionNote = '';
+      for (let i = 0; i < formFields.length; i++) {
+        if (
+          JSON.stringify(originalItemData[formFields[i] as keyof typeof originalItemData]) !==
+          JSON.stringify(foundItem[formFields[i] as keyof typeof foundItem])
+        ) {
+          newActionNote +=
+            formFields[i] +
+            ': OLD: ' +
+            originalItemData[formFields[i] as keyof typeof originalItemData] +
+            ', NEW: ' +
+            foundItem[formFields[i] as keyof typeof foundItem] +
+            ' ';
+        }
+      }
+      // Update the found item
       await lostAndFoundService.updateFoundItem(foundItem, foundItem.recordID);
+
+      const actionRequestData: InitFoundAdminAction = {
+        foundID: itemId || '',
+        actionDate: new Date().toISOString(),
+        submitterUsername: profile?.AD_Username || '',
+        action: 'Edited',
+        actionNote: newActionNote,
+      };
+      await lostAndFoundService.createFoundAdminAction(itemId || '', actionRequestData);
       navigate('/lostandfound/lostandfoundadmin/founditemdatabase');
     } catch (err) {
       console.error(err);

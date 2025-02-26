@@ -300,6 +300,15 @@ const FoundItemFormCreate = () => {
 
       const response = await lostAndFoundService.createFoundItem(requestData);
 
+      const actionRequestData = {
+        foundID: response,
+        action: 'Created',
+        actionDate: new Date().toISOString(),
+        actionNote: '',
+        submitterUsername: user.AD_Username,
+      };
+      await lostAndFoundService.createFoundAdminAction(response, actionRequestData);
+
       navigate('/lostandfound/lostandfoundadmin');
     } catch (error) {
       console.error('Failed to create found item report:', error);
@@ -624,7 +633,7 @@ const FoundItemFormCreate = () => {
             )}
 
             {/* Initial Action - use typed SelectChangeEvent */}
-            <div style={{ marginBottom: '1rem', marginTop: '1rem' }}>
+            {/* <div style={{ marginBottom: '1rem', marginTop: '1rem' }}>
               <FormControl variant="filled" sx={{ width: 1 }}>
                 <InputLabel id="initial-action-label">Initial Action Taken</InputLabel>
                 <Select
@@ -642,7 +651,7 @@ const FoundItemFormCreate = () => {
                   <MenuItem value="Noted">Noted</MenuItem>
                 </Select>
               </FormControl>
-            </div>
+            </div> */}
 
             {/* Storage Location - also typed select */}
             <div style={{ marginBottom: '1rem' }}>
