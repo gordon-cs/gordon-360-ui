@@ -16,12 +16,19 @@ import {
 import { Grid, Button } from '@mui/material';
 import Header from 'views/LostAndFound/components/Header';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { useSearchParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import GordonLoader from 'components/Loader';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { LFCategories, LFColors } from 'views/LostAndFound/components/Constants';
-import { getUrlParam, setUrlParam, clearUrlParams } from 'views/LostAndFound/components/Helpers';
+import {
+  getUrlParam,
+  setUrlParam,
+  clearUrlParams,
+  formatDateString,
+} from 'views/LostAndFound/components/Helpers';
 import { Construction, Person, Storage } from '@mui/icons-material';
+import { differenceInCalendarDays } from 'date-fns';
 import lostAndFoundService, { MissingItemReport, FoundItem } from 'services/lostAndFound';
 
 const LostAndFoundAdmin = () => {
@@ -37,12 +44,167 @@ const LostAndFoundAdmin = () => {
   const [category, setCategory] = useState('');
   const [color, setColor] = useState('');
   const [keywords, setKeywords] = useState('');
+  const location = useLocation();
+  const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
+
+  const pageSize = 25;
+  const [lazyLoading, setLazyLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setPageLoaded(true);
+  }, []);
 
   useEffect(() => {
     if (!isAdmin && !isDev) {
       navigate('/lostandfound'); // Leave the page if user is not an admin
     }
   });
+
+  const createSnackbar = useCallback((message, severity) => {
+    setSnackbar({ message, severity, open: true });
+  }, []);
+
+  // Fetch initial reports when filters change
+  useEffect(() => {
+    const updateFilters = async () => {
+      try {
+        if (
+          status === getUrlParam('status', location, searchParams) &&
+          category === getUrlParam('category', location, searchParams) &&
+          color === getUrlParam('color', location, searchParams) &&
+          keywords === getUrlParam('keywords', location, searchParams)
+        ) {
+          const fetchedReports = await lostAndFoundService.getMissingItemReports(
+            status,
+            category,
+            color,
+            keywords,
+            undefined,
+            pageSize,
+          );
+          setReports(fetchedReports);
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('Error fetching missing items', error);
+        createSnackbar(`Failed to load missing item reports`, error);
+      }
+    };
+    // Check if the keywords have changed, and make the API request only if they have been stable
+    // to avoid making excessive API requests when users are typing keywords
+    const checkForChanges = () => {
+      if (currKeywords === keywords) {
+        updateFilters();
+      }
+    };
+
+    let currKeywords = keywords;
+    if (pageLoaded) {
+      setLoading(true);
+      setTimeout(() => {
+        checkForChanges();
+      }, 700);
+    }
+  }, [status, category, color, keywords, pageLoaded]);
+
+  useEffect(() => {
+    const updateFilters = () => {
+      // Set the filter values based on the url query params
+      let queryValue = getUrlParam('status', location, searchParams);
+      if (status !== queryValue) {
+        setStatus(queryValue);
+      }
+      queryValue = getUrlParam('color', location, searchParams);
+      if (color !== queryValue) {
+        setColor(queryValue);
+      }
+      queryValue = getUrlParam('category', location, searchParams);
+      if (category !== queryValue) {
+        setCategory(queryValue);
+      }
+      queryValue = getUrlParam('keywords', location, searchParams);
+      if (keywords !== queryValue) {
+        setKeywords(queryValue);
+      }
+    };
+    updateFilters();
+  }, [category, color, keywords, searchParams, status]);
+
+  // Intersection Observer to trigger lazy loading
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        loadMoreReports();
+      }
+    });
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+    return () => {
+      if (loadMoreRef.current) {
+        observer.unobserve(loadMoreRef.current);
+      }
+    };
+  }, [loadMoreRef, lazyLoading, hasMore, status, category, color, keywords, reports]);
+
+  const yellowDateThreshold = 7;
+  const redDateThreshold = 14;
+
+  // Return a color based on how long ago a date was.
+  const dateAgeColor = (date: string) => {
+    let dateGiven = Date.parse(date);
+    let today = new Date();
+    let dayDiff = differenceInCalendarDays(today, dateGiven);
+    // Return the color corresponding to the age of the date
+    if (dayDiff < yellowDateThreshold) {
+      return 'var(--mui-palette-success-main)';
+    } else if (dayDiff < redDateThreshold) {
+      return 'var(--mui-palette-warning-main)';
+    } else {
+      return 'var(--mui-palette-error-main)';
+    }
+  };
+
+  // Lazy loading helper: load more reports
+  const loadMoreReports = async () => {
+    if (lazyLoading || !hasMore) return;
+    setLazyLoading(true);
+    // Use the last report's recordID as the lastId; if none, it remains undefined.
+    const lastId = reports.length > 0 ? reports[reports.length - 1].recordID : undefined;
+    try {
+      const moreReports = await lostAndFoundService.getMissingItemReports(
+        status,
+        category,
+        color,
+        keywords,
+        lastId,
+        pageSize,
+      );
+      if (moreReports.length < pageSize) {
+        setHasMore(false);
+      } else {
+        setReports((prev) => [...prev, ...moreReports]);
+      }
+    } catch (error) {
+      console.error('Error loading more reports', error);
+      createSnackbar(`Failed to load more missing item reports`, error);
+    } finally {
+      setLazyLoading(false);
+    }
+  };
+
+  // Find and format the last checked date based on the list of admin actions for a given report.
+  const displayLastCheckedDate = (report: MissingItemReport) => {
+    let dateString = report.adminActions?.findLast((action) => {
+      return action.action === 'Checked';
+    })?.actionDate;
+    if (dateString !== '' && dateString !== undefined) {
+      return formatDateString(dateString);
+    }
+    return 'Never';
+  };
 
   const LostItemDatabase = (
     <>
@@ -144,11 +306,19 @@ const LostAndFoundAdmin = () => {
 
   const MissingItemsListHeader = (
     <>
-      <Grid container className={styles.tableHeader} justifyContent={'space-between'}>
-        <Grid item>Date Lost</Grid>
-        <Grid item>Location</Grid>
-        <Grid item>Category</Grid>
-        <Grid item>Description</Grid>
+      <Grid container className={styles.tableHeader} justifyContent={'left'}>
+        <Grid item xs={2}>
+          Date Lost
+        </Grid>
+        <Grid item xs={2.5}>
+          Location
+        </Grid>
+        <Grid item xs={2.5}>
+          Category
+        </Grid>
+        <Grid item xs={4}>
+          Description
+        </Grid>
       </Grid>
     </>
   );
@@ -282,7 +452,42 @@ const LostAndFoundAdmin = () => {
         </Grid>
       </Grid>
       <Grid container justifyContent="center" alignItems="center" marginTop={0} spacing={6}>
-        <Grid item>{MissingItemsListHeader}</Grid>
+        <Grid item>
+          {MissingItemsListHeader}
+          {reports.map((report) => (
+            <Grid
+              container
+              key={report.recordID}
+              className={`${styles.reportRow} ${styles.clickableRow}`}
+              onClick={() =>
+                navigate(`/lostandfound/lostandfoundadmin/missingitemdatabase/${report.recordID}`)
+              }
+            >
+              <Grid item xs={2}>
+                {formatDateString(report.dateLost)}
+              </Grid>
+              <Grid item xs={2.5}>
+                <div className={styles.dataCell}>{report.locationLost}</div>
+              </Grid>
+              <Grid item xs={2.5}>
+                <div className={styles.dataCell}>{report.category}</div>
+              </Grid>
+              <Grid item xs={4}>
+                <div className={styles.dataCell}>{report.description}</div>
+              </Grid>
+              <Grid item xs={0.1} sx={{ backgroundColor: 'red' }} marginRight={0}>
+                <Typography color={dateAgeColor(displayLastCheckedDate(report))}>
+                  <span>&#8226;</span>
+                </Typography>
+              </Grid>
+            </Grid>
+          ))}
+          {/* Sentinel element for lazy loading */}
+          <div ref={loadMoreRef} />
+
+          {/*Show a loader when lazy loading */}
+          {lazyLoading && <GordonLoader />}
+        </Grid>
         <Grid item>{FoundItemsListHeader}</Grid>
       </Grid>
     </>
