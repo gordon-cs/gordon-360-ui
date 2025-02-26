@@ -33,6 +33,7 @@ const FoundItemCleanOut = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [reports, setReports] = useState<FoundItem[]>([]);
+  const [reportsToCleanOut, setReportsToCleanOut] = useState<FoundItem[]>([]);
   const [pageLoaded, setPageLoaded] = useState(false);
 
   // Filters
@@ -54,6 +55,15 @@ const FoundItemCleanOut = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isMobile = useMediaQuery('(max-width:900px)');
+
+  const handleCheckboxClick = (report: FoundItem) => {
+    setReportsToCleanOut((reportsToCleanOut) => {
+      const cleanOutReports = reportsToCleanOut.includes(report)
+        ? reportsToCleanOut.filter((r) => r !== report)
+        : [...reportsToCleanOut, report];
+      return cleanOutReports;
+    });
+  };
 
   const createSnackbar = useCallback((message: string, severity) => {
     setSnackbar({ message, severity, open: true });
@@ -334,7 +344,10 @@ const FoundItemCleanOut = () => {
                       // DESKTOP Row Layout
                       <Grid container key={report.recordID} className={styles.reportRow}>
                         <Grid item xs={1.5}>
-                          <Checkbox />
+                          <Checkbox
+                            checked={reportsToCleanOut.includes(report)}
+                            onChange={() => handleCheckboxClick(report)}
+                          />
                         </Grid>
                         <Grid item xs={1.5}>
                           {report.recordID}
