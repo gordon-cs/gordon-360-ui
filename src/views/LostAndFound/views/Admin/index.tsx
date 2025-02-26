@@ -144,53 +144,23 @@ const LostAndFoundAdmin = () => {
 
   const MissingItemsListHeader = (
     <>
-      <Grid container className={styles.tableHeader} justifyContent={'center'}>
-        <Grid container item xs={11.85}>
-          <Grid item xs={2}>
-            Date Lost
-          </Grid>
-          <Grid item xs={2}>
-            Owner's Name
-          </Grid>
-          <Grid item xs={2}>
-            Location
-          </Grid>
-          <Grid item xs={1.5}>
-            Category
-          </Grid>
-          <Grid item xs={3}>
-            Description
-          </Grid>
-          <Grid item xs={1} className={styles.noWrap}>
-            Last Checked
-          </Grid>
-          <Grid item xs={1}></Grid>
-        </Grid>
+      <Grid container className={styles.tableHeader} justifyContent={'space-between'}>
+        <Grid item>Date Lost</Grid>
+        <Grid item>Location</Grid>
+        <Grid item>Category</Grid>
+        <Grid item>Description</Grid>
       </Grid>
     </>
   );
 
   const FoundItemsListHeader = (
     <>
-      <Grid container className={styles.tableHeader} justifyContent={'left'}>
-        <Grid container item xs={5.9}>
-          <Grid item xs={1}>
-            Tag #
-          </Grid>
-          <Grid item xs={1}>
-            Date Lost
-          </Grid>
-          <Grid item xs={1}>
-            Location
-          </Grid>
-          <Grid item xs={0.75}>
-            Category
-          </Grid>
-          <Grid item xs={1.5}>
-            Description
-          </Grid>
-          <Grid item xs={0.5}></Grid>
-        </Grid>
+      <Grid container className={styles.tableHeader} justifyContent={'space-between'}>
+        <Grid item>Tag #</Grid>
+        <Grid item>Date Found</Grid>
+        <Grid item>Location</Grid>
+        <Grid item>Category</Grid>
+        <Grid item>Description</Grid>
       </Grid>
     </>
   );
@@ -214,10 +184,10 @@ const LostAndFoundAdmin = () => {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={12} md={11} marginTop={6}>
+        <Grid item xs={12} md={11} marginTop={5}>
           <CardHeader title={'Comparison View'} className={styles.title}></CardHeader>
         </Grid>
-        <Grid item xs={11} marginTop={6}>
+        <Grid item xs={11} marginTop={3}>
           <Card className={styles.filterCardPosition}>
             <CardHeader
               title={
@@ -228,96 +198,92 @@ const LostAndFoundAdmin = () => {
               className={styles.filterTitle}
             ></CardHeader>
             <CardContent className={styles.filterContainer}>
+              {/* Keywords, Status, Color, Category, and Clear button on a single row */}
               <Grid
                 container
                 spacing={isMobile ? 1 : 2}
                 alignItems="center"
-                justifyContent="space-between"
+                justifyContent="center"
               >
-                <Grid item sm={6}>
-                  {/* Keywords, Status, Color, Category, and Clear button on a single row */}
-                  <Grid container spacing={isMobile ? 1 : 2}>
-                    <Grid item>
-                      <TextField
-                        label="Keywords"
-                        variant="outlined"
-                        size="small"
-                        value={keywords}
-                        onChange={(e) => setUrlParam('keywords', e.target.value, setSearchParams)}
-                        className={styles.textField}
-                        fullWidth
-                      />
-                    </Grid>
-                    <Grid item xs={isMobile}>
-                      <FormControl size="small" className={styles.formControl} fullWidth>
-                        <InputLabel>Status</InputLabel>
-                        <Select
-                          value={status}
-                          onChange={(e) => setUrlParam('status', e.target.value, setSearchParams)}
-                        >
-                          <MenuItem value="">All</MenuItem>
-                          <MenuItem value="active">Active</MenuItem>
-                          <MenuItem value="expired">Expired</MenuItem>
-                          <MenuItem value="found">Found</MenuItem>
-                          <MenuItem value="deleted">Deleted</MenuItem>
-                          <MenuItem value="PickedUp">PickedUp</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={isMobile}>
-                      <FormControl size="small" className={styles.formControl} fullWidth>
-                        <InputLabel>Color</InputLabel>
-                        <Select
-                          value={color}
-                          onChange={(e) => setUrlParam('color', e.target.value, setSearchParams)}
-                        >
-                          <MenuItem value="">All</MenuItem>
-                          {LFColors.map((colorOption) => (
-                            <MenuItem key={colorOption} value={colorOption}>
-                              {colorOption}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={isMobile}>
-                      <FormControl size="small" className={styles.formControl} fullWidth>
-                        <InputLabel>Category</InputLabel>
-                        <Select
-                          value={category}
-                          onChange={(e) => setUrlParam('category', e.target.value, setSearchParams)}
-                        >
-                          <MenuItem value="">All</MenuItem>
-                          {LFCategories.map((categoryOption) => (
-                            <MenuItem key={categoryOption} value={categoryOption}>
-                              {categoryOption}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={isMobile}>
-                      <Button
-                        onClick={() => {
-                          clearUrlParams(setSearchParams);
-                        }}
-                        variant="contained"
-                        color="error"
-                        fullWidth
-                      >
-                        Clear
-                      </Button>
-                    </Grid>
-                  </Grid>
+                <Grid item xs={isMobile} lg={4}>
+                  <TextField
+                    label="Keywords"
+                    variant="outlined"
+                    size="small"
+                    value={keywords}
+                    onChange={(e) => setUrlParam('keywords', e.target.value, setSearchParams)}
+                    className={styles.textField}
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={isMobile}>
+                  <FormControl size="small" className={styles.formControl} fullWidth>
+                    <InputLabel>Status</InputLabel>
+                    <Select
+                      value={status}
+                      onChange={(e) => setUrlParam('status', e.target.value, setSearchParams)}
+                    >
+                      <MenuItem value="">All</MenuItem>
+                      <MenuItem value="active">Active</MenuItem>
+                      <MenuItem value="expired">Expired</MenuItem>
+                      <MenuItem value="found">Found</MenuItem>
+                      <MenuItem value="deleted">Deleted</MenuItem>
+                      <MenuItem value="PickedUp">PickedUp</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={isMobile}>
+                  <FormControl size="small" className={styles.formControl} fullWidth>
+                    <InputLabel>Color</InputLabel>
+                    <Select
+                      value={color}
+                      onChange={(e) => setUrlParam('color', e.target.value, setSearchParams)}
+                    >
+                      <MenuItem value="">All</MenuItem>
+                      {LFColors.map((colorOption) => (
+                        <MenuItem key={colorOption} value={colorOption}>
+                          {colorOption}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={isMobile}>
+                  <FormControl size="small" className={styles.formControl} fullWidth>
+                    <InputLabel>Category</InputLabel>
+                    <Select
+                      value={category}
+                      onChange={(e) => setUrlParam('category', e.target.value, setSearchParams)}
+                    >
+                      <MenuItem value="">All</MenuItem>
+                      {LFCategories.map((categoryOption) => (
+                        <MenuItem key={categoryOption} value={categoryOption}>
+                          {categoryOption}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={isMobile}>
+                  <Button
+                    onClick={() => {
+                      clearUrlParams(setSearchParams);
+                    }}
+                    variant="contained"
+                    color="error"
+                    fullWidth
+                  >
+                    Clear
+                  </Button>
                 </Grid>
               </Grid>
             </CardContent>
           </Card>
         </Grid>
-        <Grid container xs={2}>
-          {MissingItemsListHeader}
-          {FoundItemsListHeader}
-        </Grid>
+      </Grid>
+      <Grid container justifyContent="center" alignItems="center" marginTop={0} spacing={6}>
+        <Grid item>{MissingItemsListHeader}</Grid>
+        <Grid item>{FoundItemsListHeader}</Grid>
       </Grid>
     </>
   );

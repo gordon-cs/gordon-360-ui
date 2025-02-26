@@ -18,6 +18,11 @@
   background-color: var(--mui-palette-primary-main); // Primary color for header
 }
 
+.textField {
+  flex-grow: 1;
+  min-width: 180px;
+}
+
 .filterTitleText {
   font-size: medium;
   b {
@@ -35,11 +40,13 @@
 }
 
 .formControl {
-  min-width: 120px;
+  min-width: 180px;
 }
 
 .tableHeader {
   padding: 1rem; // Ensure this style applies in production build
   background-color: var(--mui-palette-primary-main);
   color: var(--mui-palette-primary-contrastText);
+  min-width: 600px;
+  border-radius: 5px;
 }
