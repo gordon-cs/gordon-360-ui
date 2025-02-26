@@ -136,10 +136,6 @@ const LostAndFoundAdmin = () => {
             <Grid container item xs={12}>
               {EnterFoundItem}
             </Grid>
-            <Construction color="error" />
-            <Typography>
-              Under Construction! Use the existing system in FileMaker for found items
-            </Typography>
           </Grid>
         </CardContent>
       </Card>
