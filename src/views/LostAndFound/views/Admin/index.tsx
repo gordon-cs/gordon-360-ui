@@ -27,7 +27,8 @@ import {
   clearUrlParams,
   formatDateString,
 } from 'views/LostAndFound/components/Helpers';
-import { Construction, Person, Storage } from '@mui/icons-material';
+import { Person, Storage } from '@mui/icons-material';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { differenceInCalendarDays } from 'date-fns';
 import lostAndFoundService, { MissingItemReport, FoundItem } from 'services/lostAndFound';
 
@@ -316,7 +317,7 @@ const LostAndFoundAdmin = () => {
         <Grid item xs={2.5}>
           Category
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={3}>
           Description
         </Grid>
       </Grid>
@@ -453,42 +454,99 @@ const LostAndFoundAdmin = () => {
       </Grid>
       <Grid container justifyContent="center" alignItems="center" marginTop={0} spacing={6}>
         <Grid item>
+          <CardHeader
+            className={styles.titleSecondary}
+            title={
+              <span>
+                Pending{' '}
+                <b>
+                  <u>Lost</u>
+                </b>{' '}
+                Item Reports
+              </span>
+            }
+          ></CardHeader>
+          <CardContent className={styles.infoText}>
+            <InfoOutlinedIcon />
+            <span>Click on an item to view details</span>
+          </CardContent>
           {MissingItemsListHeader}
-          {reports.map((report) => (
-            <Grid
-              container
-              key={report.recordID}
-              className={`${styles.reportRow} ${styles.clickableRow}`}
-              onClick={() =>
-                navigate(`/lostandfound/lostandfoundadmin/missingitemdatabase/${report.recordID}`)
-              }
-            >
-              <Grid item xs={2}>
-                {formatDateString(report.dateLost)}
+          <div className={styles.scrollBox}>
+            {reports.map((report) => (
+              <Grid
+                key={report.recordID}
+                className={`${styles.reportRow} ${styles.clickableRow}`}
+                onClick={() =>
+                  navigate(`/lostandfound/lostandfoundadmin/missingitemdatabase/${report.recordID}`)
+                }
+              >
+                <Grid item xs={2}>
+                  {formatDateString(report.dateLost)}
+                </Grid>
+                <Grid item xs={2.5}>
+                  <div className={styles.dataCell}>{report.locationLost}</div>
+                </Grid>
+                <Grid item xs={2.5}>
+                  <div className={styles.dataCell}>{report.category}</div>
+                </Grid>
+                <Grid item xs={3}>
+                  <div className={styles.dataCell}>{report.description}</div>
+                </Grid>
+                <Grid item xs={0.1} className={styles.dataCell}>
+                  <div className={styles.dataCell}>
+                    <Typography color={dateAgeColor(displayLastCheckedDate(report))}>
+                      <span>&#8226;</span>
+                    </Typography>
+                  </div>
+                </Grid>
               </Grid>
-              <Grid item xs={2.5}>
-                <div className={styles.dataCell}>{report.locationLost}</div>
-              </Grid>
-              <Grid item xs={2.5}>
-                <div className={styles.dataCell}>{report.category}</div>
-              </Grid>
-              <Grid item xs={4}>
-                <div className={styles.dataCell}>{report.description}</div>
-              </Grid>
-              <Grid item xs={0.1} sx={{ backgroundColor: 'red' }} marginRight={0}>
-                <Typography color={dateAgeColor(displayLastCheckedDate(report))}>
-                  <span>&#8226;</span>
-                </Typography>
-              </Grid>
-            </Grid>
-          ))}
-          {/* Sentinel element for lazy loading */}
-          <div ref={loadMoreRef} />
+            ))}
+            {/* Sentinel element for lazy loading */}
+            <div ref={loadMoreRef} />
 
-          {/*Show a loader when lazy loading */}
-          {lazyLoading && <GordonLoader />}
+            {/*Show a loader when lazy loading */}
+            {lazyLoading && <GordonLoader />}
+          </div>
         </Grid>
-        <Grid item>{FoundItemsListHeader}</Grid>
+        <Grid item>
+          {FoundItemsListHeader}
+          <div className={styles.scrollBox}>
+            {reports.map((report) => (
+              <Grid
+                key={report.recordID}
+                className={`${styles.reportRow} ${styles.clickableRow}`}
+                onClick={() =>
+                  navigate(`/lostandfound/lostandfoundadmin/missingitemdatabase/${report.recordID}`)
+                }
+              >
+                <Grid item xs={2}>
+                  {formatDateString(report.dateLost)}
+                </Grid>
+                <Grid item xs={2.5}>
+                  <div className={styles.dataCell}>{report.locationLost}</div>
+                </Grid>
+                <Grid item xs={2.5}>
+                  <div className={styles.dataCell}>{report.category}</div>
+                </Grid>
+                <Grid item xs={3}>
+                  <div className={styles.dataCell}>{report.description}</div>
+                </Grid>
+                <Grid item xs={0.1} className={styles.dataCell}>
+                  <div className={styles.dataCell}>
+                    <Typography color={dateAgeColor(displayLastCheckedDate(report))}>
+                      <span>&#8226;</span>
+                    </Typography>
+                  </div>
+                </Grid>
+              </Grid>
+            ))}
+            {/* Sentinel element for lazy loading */}
+            <div ref={loadMoreRef} />
+
+            {/*Show a loader when lazy loading */}
+            {lazyLoading && <GordonLoader />}
+          </div>
+        </Grid>
       </Grid>
     </>
   );

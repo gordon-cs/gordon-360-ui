@@ -3,6 +3,15 @@
   padding: 1rem;
   background-color: var(--mui-palette-primary-main);
   color: var(--mui-palette-primary-contrastText);
+  border-radius: 5px;
+}
+
+.titleSecondary {
+  text-align: flex-start;
+  padding: 1rem;
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
+  border-radius: 5px;
 }
 
 .spacing {
@@ -57,9 +66,9 @@
   height: 3rem;
   min-height: fit-content;
   padding: 1rem;
-  // background-color: var(--mui-palette-neutral-200); // Light neutral background
   border-bottom: 1px solid var(--mui-palette-neutral-400);
   color: var(--mui-palette-neutral-contrastText);
+  width: 630px;
 
   &:nth-child(even) {
     background-color: var(--mui-palette-neutral-100); // Slightly darker neutral for zebra striping
@@ -90,6 +99,13 @@
 }
 
 .scrollBox {
-  height: '500px';
-  overflow-y: 'scroll';
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.infoText {
+  color: var(--mui-palette-primary-contrastText);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 }
