@@ -27,10 +27,12 @@ import {
   clearUrlParams,
   formatDateString,
 } from 'views/LostAndFound/components/Helpers';
-import { Person, Storage } from '@mui/icons-material';
+import { Person, StayPrimaryLandscapeSharp, Storage } from '@mui/icons-material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import CircleIcon from '@mui/icons-material/Circle';
 import { differenceInCalendarDays } from 'date-fns';
 import lostAndFoundService, { MissingItemReport, FoundItem } from 'services/lostAndFound';
+import { size } from 'lodash';
 
 const LostAndFoundAdmin = () => {
   const isAdmin = useAuthGroups(AuthGroup.LostAndFoundAdmin);
@@ -52,6 +54,8 @@ const LostAndFoundAdmin = () => {
   const [lazyLoading, setLazyLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const loadMoreRef = useRef<HTMLDivElement>(null);
+  const [showMissingPopUp, setShowMissingPopUp] = useState(false);
+  const [missingID, setMissingID] = useState<number>(0);
 
   useEffect(() => {
     setPageLoaded(true);
@@ -207,6 +211,11 @@ const LostAndFoundAdmin = () => {
     return 'Never';
   };
 
+  const handleMissingItemClick = (missingID: number) => {
+    setShowMissingPopUp(!showMissingPopUp);
+    setMissingID(missingID);
+  };
+
   const LostItemDatabase = (
     <>
       <Grid container rowGap={1}>
@@ -335,6 +344,35 @@ const LostAndFoundAdmin = () => {
       </Grid>
     </>
   );
+
+  const MissingItemPopUp = () => {
+    const report = reports.find((report) => report.recordID === missingID);
+
+    if (!report) {
+      return null;
+    }
+
+    return (
+      <>
+        <div>
+          <Grid container>
+            <Grid item>
+              <div>{report.locationLost}</div>
+            </Grid>
+            <Grid item>
+              <div>{report.category}</div>
+            </Grid>
+            <Grid item>
+              <div>{report.description}</div>
+            </Grid>
+            <Grid item>
+              <Typography>X</Typography>
+            </Grid>
+          </Grid>
+        </div>
+      </>
+    );
+  };
 
   return (
     <>
@@ -471,14 +509,13 @@ const LostAndFoundAdmin = () => {
             <span>Click on an item to view details</span>
           </CardContent>
           {MissingItemsListHeader}
+          {showMissingPopUp && { MissingItemPopUp }}
           <div className={styles.scrollBox}>
             {reports.map((report) => (
               <Grid
                 key={report.recordID}
                 className={`${styles.reportRow} ${styles.clickableRow}`}
-                onClick={() =>
-                  navigate(`/lostandfound/lostandfoundadmin/missingitemdatabase/${report.recordID}`)
-                }
+                onClick={() => handleMissingItemClick(report.recordID)}
               >
                 <Grid item xs={2}>
                   {formatDateString(report.dateLost)}
@@ -492,11 +529,13 @@ const LostAndFoundAdmin = () => {
                 <Grid item xs={3}>
                   <div className={styles.dataCell}>{report.description}</div>
                 </Grid>
-                <Grid item xs={0.1} className={styles.dataCell}>
+                <Grid item xs={1} className={styles.dataCell}>
                   <div className={styles.dataCell}>
-                    <Typography color={dateAgeColor(displayLastCheckedDate(report))}>
-                      <span>&#8226;</span>
-                    </Typography>
+                    <>
+                      <CircleIcon
+                        sx={{ color: dateAgeColor(displayLastCheckedDate(report)), fontSize: 10 }}
+                      />
+                    </>
                   </div>
                 </Grid>
               </Grid>
@@ -509,6 +548,24 @@ const LostAndFoundAdmin = () => {
           </div>
         </Grid>
         <Grid item>
+          <CardHeader
+            className={styles.titleSecondary}
+            title={
+              <span>
+                Active{' '}
+                <b>
+                  <u>Found</u>
+                </b>{' '}
+                Item Reports
+              </span>
+            }
+          >
+            <span>View All</span>
+          </CardHeader>
+          <CardContent className={styles.infoText}>
+            <InfoOutlinedIcon />
+            <span>Click on an item to view details</span>
+          </CardContent>
           {FoundItemsListHeader}
           <div className={styles.scrollBox}>
             {reports.map((report) => (
@@ -531,11 +588,13 @@ const LostAndFoundAdmin = () => {
                 <Grid item xs={3}>
                   <div className={styles.dataCell}>{report.description}</div>
                 </Grid>
-                <Grid item xs={0.1} className={styles.dataCell}>
+                <Grid item xs={1} className={styles.dataCell}>
                   <div className={styles.dataCell}>
-                    <Typography color={dateAgeColor(displayLastCheckedDate(report))}>
-                      <span>&#8226;</span>
-                    </Typography>
+                    <>
+                      <CircleIcon
+                        sx={{ color: dateAgeColor(displayLastCheckedDate(report)), fontSize: 10 }}
+                      />
+                    </>
                   </div>
                 </Grid>
               </Grid>

@@ -12,6 +12,7 @@
   background-color: var(--mui-palette-primary-main);
   color: var(--mui-palette-primary-contrastText);
   border-radius: 5px;
+  height: 6rem;
 }
 
 .spacing {
@@ -58,6 +59,13 @@
   color: var(--mui-palette-primary-contrastText);
   min-width: 600px;
   border-radius: 5px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-style: solid;
+  border-color: var(--mui-palette-neutral-400);
+  border-bottom: 0;
+  border-width: 2px;
+  height: 3rem;
 }
 
 .reportRow {
@@ -96,11 +104,20 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   padding-right: 0.5rem;
+  height: 1.5rem;
 }
 
 .scrollBox {
-  max-height: 300px;
+  height: 300px;
   overflow-y: auto;
+  margin-bottom: 3rem;
+  border-radius: 5px;
+  border-style: solid;
+  border-top: 0px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-color: var(--mui-palette-neutral-400);
+  border-width: 2px;
 }
 
 .infoText {
