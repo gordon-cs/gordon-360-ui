@@ -173,6 +173,10 @@ const TaskList = () => {
     setEditing(true);
   };
 
+  const cancelEdit = () => {
+    resetTaskForm();
+  };
+
   // Function to delete a task
   const deleteTask = async (taskID) => {
     try {
@@ -363,9 +367,20 @@ const TaskList = () => {
                 </>
               )}
 
-              <Button variant="contained" color="primary" type="submit" fullWidth>
-                {editing ? 'Edit Task' : 'Create Task'}
-              </Button>
+              <Grid container spacing={2}>
+                {editing && (
+                  <Grid item xs={6}>
+                    <Button variant="contained" color="primary" onClick={cancelEdit} fullWidth>
+                      Cancel Edit
+                    </Button>
+                  </Grid>
+                )}
+                <Grid item xs={editing ? 6 : 12}>
+                  <Button variant="contained" color="secondary" type="submit" fullWidth>
+                    {editing ? 'Save Changes' : 'Create Task'}
+                  </Button>
+                </Grid>
+              </Grid>
             </form>
           </CardContent>
         </Card>
