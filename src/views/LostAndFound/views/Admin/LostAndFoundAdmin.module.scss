@@ -13,6 +13,7 @@
   color: var(--mui-palette-primary-contrastText);
   border-radius: 5px;
   height: 6rem;
+  min-width: 635px;
 }
 
 .spacing {
@@ -107,6 +108,12 @@
   height: 1.5rem;
 }
 
+.itemsList {
+  justify-content: center;
+  align-items: center;
+  margin-top: 0;
+}
+
 .scrollBox {
   height: 300px;
   overflow-y: auto;
@@ -125,4 +132,26 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+}
+
+.popUpCard {
+  background-color: var(--mui-palette-neutral-100);
+  color: var(--mui-palette-neutral-contrastText);
+  min-height: 350px;
+  border-radius: 5px;
+  width: 635px;
+}
+
+.popUpHeader {
+  margin-top: 0.8rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  justify-content: space-between;
+  max-height: 10px;
+}
+
+.popUpBody {
+  margin-left: 2rem;
+  margin-bottom: 2rem;
+  justify-content: space-between;
 }

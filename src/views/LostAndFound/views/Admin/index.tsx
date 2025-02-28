@@ -27,9 +27,10 @@ import {
   clearUrlParams,
   formatDateString,
 } from 'views/LostAndFound/components/Helpers';
-import { Person, StayPrimaryLandscapeSharp, Storage } from '@mui/icons-material';
+import { Close, Person, StayPrimaryLandscapeSharp, Storage } from '@mui/icons-material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CircleIcon from '@mui/icons-material/Circle';
+import CloseIcon from '@mui/icons-material/Close';
 import { differenceInCalendarDays } from 'date-fns';
 import lostAndFoundService, { MissingItemReport, FoundItem } from 'services/lostAndFound';
 import { size } from 'lodash';
@@ -55,7 +56,8 @@ const LostAndFoundAdmin = () => {
   const [hasMore, setHasMore] = useState(true);
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const [showMissingPopUp, setShowMissingPopUp] = useState(false);
-  const [missingID, setMissingID] = useState<number>(0);
+  const [missingID, setMissingID] = useState('');
+  const [item, setItem] = useState<MissingItemReport | null>(null);
 
   useEffect(() => {
     setPageLoaded(true);
@@ -70,6 +72,16 @@ const LostAndFoundAdmin = () => {
   const createSnackbar = useCallback((message, severity) => {
     setSnackbar({ message, severity, open: true });
   }, []);
+
+  // Fetch the missing item report from the backend.
+  const fetchItem = async () => {
+    try {
+      const fetchedItem = await lostAndFoundService.getMissingItemReport(parseInt(missingID || ''));
+      setItem(fetchedItem);
+    } catch (error) {
+      console.error('Error fetching item:', error);
+    }
+  };
 
   // Fetch initial reports when filters change
   useEffect(() => {
@@ -154,6 +166,12 @@ const LostAndFoundAdmin = () => {
     };
   }, [loadMoreRef, lazyLoading, hasMore, status, category, color, keywords, reports]);
 
+  useEffect(() => {
+    if (missingID) {
+      fetchItem();
+    }
+  }, [missingID]);
+
   const yellowDateThreshold = 7;
   const redDateThreshold = 14;
 
@@ -211,9 +229,10 @@ const LostAndFoundAdmin = () => {
     return 'Never';
   };
 
-  const handleMissingItemClick = (missingID: number) => {
+  const handleMissingItemClick = (missingID: string) => {
     setShowMissingPopUp(!showMissingPopUp);
     setMissingID(missingID);
+    fetchItem();
   };
 
   const LostItemDatabase = (
@@ -346,30 +365,56 @@ const LostAndFoundAdmin = () => {
   );
 
   const MissingItemPopUp = () => {
-    const report = reports.find((report) => report.recordID === missingID);
-
-    if (!report) {
-      return null;
-    }
+    if (!item) return null;
 
     return (
       <>
-        <div>
-          <Grid container>
+        <Grid container className={styles.popUpCard}>
+          <Grid container className={styles.popUpHeader}>
             <Grid item>
-              <div>{report.locationLost}</div>
+              <div>{formatDateString(item.dateLost)}</div>
             </Grid>
             <Grid item>
-              <div>{report.category}</div>
+              <div>
+                {item.firstName}
+                {item.lastName}
+              </div>
             </Grid>
             <Grid item>
-              <div>{report.description}</div>
+              <div>{item.email}</div>
+              <div>{item.phone}</div>
             </Grid>
             <Grid item>
-              <Typography>X</Typography>
+              <CloseIcon />
             </Grid>
           </Grid>
-        </div>
+          <Grid container direction={'row'}>
+            <Grid container direction={'column'} className={styles.popUpBody} xs={3}>
+              <Grid item>
+                Category:
+                <div>{item.category}</div>
+              </Grid>
+              <Grid item>
+                Location:
+                <div>{item.locationLost}</div>
+              </Grid>
+              <Grid item>
+                Brand/Make:
+                <div>{item.brand}</div>
+              </Grid>
+              <Grid item>
+                Colors:
+                <div>{item.colors}</div>
+              </Grid>
+            </Grid>
+            <Grid container className={styles.popUpBody} xs={5}>
+              <Grid item>
+                Description:
+                <div>{item.description}</div>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
       </>
     );
   };
@@ -490,7 +535,7 @@ const LostAndFoundAdmin = () => {
           </Card>
         </Grid>
       </Grid>
-      <Grid container justifyContent="center" alignItems="center" marginTop={0} spacing={6}>
+      <Grid container className={styles.itemsList} spacing={6}>
         <Grid item>
           <CardHeader
             className={styles.titleSecondary}
@@ -508,45 +553,54 @@ const LostAndFoundAdmin = () => {
             <InfoOutlinedIcon />
             <span>Click on an item to view details</span>
           </CardContent>
-          {MissingItemsListHeader}
-          {showMissingPopUp && { MissingItemPopUp }}
-          <div className={styles.scrollBox}>
-            {reports.map((report) => (
-              <Grid
-                key={report.recordID}
-                className={`${styles.reportRow} ${styles.clickableRow}`}
-                onClick={() => handleMissingItemClick(report.recordID)}
-              >
-                <Grid item xs={2}>
-                  {formatDateString(report.dateLost)}
-                </Grid>
-                <Grid item xs={2.5}>
-                  <div className={styles.dataCell}>{report.locationLost}</div>
-                </Grid>
-                <Grid item xs={2.5}>
-                  <div className={styles.dataCell}>{report.category}</div>
-                </Grid>
-                <Grid item xs={3}>
-                  <div className={styles.dataCell}>{report.description}</div>
-                </Grid>
-                <Grid item xs={1} className={styles.dataCell}>
-                  <div className={styles.dataCell}>
-                    <>
-                      <CircleIcon
-                        sx={{ color: dateAgeColor(displayLastCheckedDate(report)), fontSize: 10 }}
-                      />
-                    </>
-                  </div>
-                </Grid>
-              </Grid>
-            ))}
-            {/* Sentinel element for lazy loading */}
-            <div ref={loadMoreRef} />
+          {showMissingPopUp ? (
+            <MissingItemPopUp />
+          ) : (
+            <>
+              {MissingItemsListHeader}
+              <div className={styles.scrollBox}>
+                {reports.map((report) => (
+                  <Grid
+                    key={report.recordID}
+                    className={`${styles.reportRow} ${styles.clickableRow}`}
+                    onClick={() => handleMissingItemClick(String(report.recordID))}
+                  >
+                    <Grid item xs={2}>
+                      {formatDateString(report.dateLost)}
+                    </Grid>
+                    <Grid item xs={2.5}>
+                      <div className={styles.dataCell}>{report.locationLost}</div>
+                    </Grid>
+                    <Grid item xs={2.5}>
+                      <div className={styles.dataCell}>{report.category}</div>
+                    </Grid>
+                    <Grid item xs={3}>
+                      <div className={styles.dataCell}>{report.description}</div>
+                    </Grid>
+                    <Grid item xs={1} className={styles.dataCell}>
+                      <div className={styles.dataCell}>
+                        <>
+                          <CircleIcon
+                            sx={{
+                              color: dateAgeColor(displayLastCheckedDate(report)),
+                              fontSize: 10,
+                            }}
+                          />
+                        </>
+                      </div>
+                    </Grid>
+                  </Grid>
+                ))}
+                {/* Sentinel element for lazy loading */}
+                <div ref={loadMoreRef} />
 
-            {/*Show a loader when lazy loading */}
-            {lazyLoading && <GordonLoader />}
-          </div>
+                {/*Show a loader when lazy loading */}
+                {lazyLoading && <GordonLoader />}
+              </div>
+            </>
+          )}
         </Grid>
+
         <Grid item>
           <CardHeader
             className={styles.titleSecondary}
