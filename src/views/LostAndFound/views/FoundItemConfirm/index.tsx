@@ -106,6 +106,7 @@ const FoundItemConfirmation = () => {
     };
     try {
       await lostAndFoundService.updateFoundItem(updatedFoundItem, foundItem.recordID);
+      await lostAndFoundService.updateReportStatus(Number(selectedMatchReport.recordID), 'found');
       setSnackbar({
         message: `Match confirmed for found item ${foundItem.recordID} with missing report ${selectedMatchReport.recordID}`,
         severity: 'success',
