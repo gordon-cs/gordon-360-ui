@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, Grid, useMediaQuery } from '@mui/material';
+import { Card, CardContent, CardHeader, Grid, useMediaQuery, Stack } from '@mui/material';
 import MyHall from '../ResidentView/components/MyHall/index';
 import { useEffect, useState } from 'react';
 import { checkIfCheckedIn } from 'services/residentLife/RA_Checkin';
@@ -12,8 +12,6 @@ import CheckIn from './components/CheckIn';
 const RAView = () => {
   const { profile } = useUser();
   const [isCheckedIn, setCheckedIn] = useState(false);
-
-  const isMobile = useMediaQuery('(max-width:600px)');
 
   useEffect(() => {
     const fetchIsCheckdIn = async () => {
@@ -31,13 +29,13 @@ const RAView = () => {
 
   const OnCallTable = () => {
     return (
-      <Grid item xs={12} md={20} padding={1}>
+      <Grid item xs={12} md={12}>
         <Card sx={{ width: '100%' }}>
           <CardHeader
             title={
               <Grid container direction="row" alignItems="center">
                 <Grid item xs={12} align="center">
-                  RA/AC on Duty by Hall
+                  RA/AC On-Duty by Hall
                 </Grid>
               </Grid>
             }
@@ -53,35 +51,22 @@ const RAView = () => {
 
   return (
     <Grid container item spacing={2}>
-      {!isMobile && (
-        <>
-          <HousingBanner />
-          <Grid item xs={12} md={4}>
-            <OnCallTable />
-          </Grid>
+      <HousingBanner />
+
+      <Grid item xs={12} md={4}>
+        <OnCallTable />
+      </Grid>
+
+      <Grid item xs={12} md={4}>
+        <Stack spacing={2}>
+          <MyHall />
           <ContactMethod />
-          <Grid item xs={12} md={4}>
-            <MyHall />
-          </Grid>
-          {isCheckedIn ? <TaskList /> : <></>}
-        </>
-      )}
-      {isMobile && (
-        <>
-          <HousingBanner />
-          <Grid item rowSpacing={0} xs={12}>
-            <CheckIn />
-          </Grid>
-          <Grid item xs={12}>
-            <MyHall />
-          </Grid>
-          <ContactMethod />
-          <Grid item xs={12}>
-            <OnCallTable />
-          </Grid>
-          {isCheckedIn ? <TaskList /> : <></>}
-        </>
-      )}
+        </Stack>
+      </Grid>
+
+      <Grid item xs={12} md={4}>
+        <TaskList />
+      </Grid>
     </Grid>
   );
 };

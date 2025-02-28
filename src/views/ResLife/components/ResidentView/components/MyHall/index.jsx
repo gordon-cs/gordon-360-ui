@@ -1,5 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, Grid, Tooltip, Typography, Avatar } from '@mui/material';
+import {
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Tooltip,
+  Typography,
+  Avatar,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useUser } from 'hooks';
 import { fetchRdInfo } from 'services/residentLife/ResidentStaff';
@@ -130,7 +139,6 @@ const MyHall = () => {
                 <StyledLink className="gc360_text_link">No RD Assigned</StyledLink>
               )}
             </Typography>
-            {/*{isRA ? <CheckIn /> : <></>}           */}
           </Grid>
 
           {/* Avatar Section */}
@@ -139,7 +147,7 @@ const MyHall = () => {
             xs={4}
             container
             justifyContent="center"
-            sx={{ marginTop: { xs: 1, sm: 2, md: 2 } }}
+            sx={{ marginTop: { xs: 1, sm: 2, md: 2 }, marginBottom: { xs: 1, sm: 1, md: 1 } }}
           >
             <Tooltip title={hallPhotoAlt || 'Hall Mascot'}>
               <Avatar
@@ -154,6 +162,7 @@ const MyHall = () => {
               />
             </Tooltip>
           </Grid>
+          {/* {isRA ? <CheckIn /> : <></>} */}
           <CheckIn />
         </Grid>
       </CardContent>

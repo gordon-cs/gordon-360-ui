@@ -189,7 +189,7 @@ const CheckIn = () => {
     <Grid container item justifyContent="center" alignItems="center">
       <Grid item xs={12} md={12}>
         <Button variant="contained" fullWidth={true} onClick={() => setOpen(true)}>
-          {isCheckedIn ? 'check in to additional Halls?' : 'Check In To Your Shift'}
+          {isCheckedIn ? 'check in to extra Halls' : 'Check In To Your Shift'}
         </Button>
         <Grid item xs={12} md={4} padding={1}>
           <GordonDialogBox

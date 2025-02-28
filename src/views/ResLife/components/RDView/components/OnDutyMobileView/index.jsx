@@ -117,94 +117,115 @@ const OnDutyMobile = () => {
         </Box>
       ) : (
         value && (
-          <Paper elevation={3} sx={{ padding: 2, marginTop: 2 }}>
-            <Box display="flex" flexDirection="column" alignItems="center">
-              {hallDetails?.RA_Name ? (
-                <>
-                  <a
-                    href={DEFAULT_PROFILE_URL + hallDetails.RA_UserName || '#'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Avatar
-                      src={hallDetails.RA_Photo || 'https://placehold.jp/150x150.png'}
-                      alt={hallDetails.RA_Name || 'No RA'}
-                      sx={{ width: 120, height: 120, marginBottom: 2 }}
-                    />
-                  </a>
-                  <Typography variant="h6">
-                    <strong>{hallDetails.Hall_Name}</strong>
-                  </Typography>
-                  <Typography>
-                    <strong>On-Duty:</strong> {hallDetails.RA_Name}
-                  </Typography>
-                  <Typography>
-                    <strong>Contact:</strong>{' '}
-                    {hallDetails.PreferredContact?.includes('http') ? (
-                      <a
-                        href={hallDetails.PreferredContact}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Teams
-                      </a>
-                    ) : hallDetails.PreferredContact ? (
-                      <a
-                        href={`tel:${hallDetails.PreferredContact}`}
-                        style={{ textDecoration: 'none', color: 'inherit' }}
-                      >
-                        {formatPhoneNumber(hallDetails.PreferredContact)}
-                      </a>
-                    ) : (
-                      'No Contact Info'
-                    )}
-                  </Typography>
-                  <Typography>
-                    <strong>Check-In Time:</strong>{' '}
-                    {hallDetails.Check_in_time
-                      ? new Date(hallDetails.Check_in_time).toLocaleTimeString([], {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })
-                      : 'No Check-In Time'}
-                  </Typography>
-                  <Typography>
-                    <strong>Hall RD:</strong>{' '}
+          <Box display="flex" flexDirection="column" alignItems="center">
+            {hallDetails?.RA_Name ? (
+              <>
+                <a
+                  href={DEFAULT_PROFILE_URL + hallDetails.RA_UserName || '#'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Avatar
+                    src={hallDetails.RA_Photo || 'https://placehold.jp/150x150.png'}
+                    alt={hallDetails.RA_Name || 'No RA'}
+                    sx={{
+                      width: { xs: 80, sm: 80, md: 90, lg: 90 },
+                      height: { xs: 80, sm: 80, md: 90, lg: 90 },
+                      margin: '0 auto',
+                      marginBottom: 2,
+                      transition: 'width 0.3s, height 0.3s',
+                    }}
+                  />
+                </a>
+                <Typography variant="h6">
+                  <strong>{hallDetails.Hall_Name}</strong>
+                </Typography>
+                <Typography>
+                  <strong>On-Duty:</strong> {hallDetails.RA_Name}
+                </Typography>
+                <Typography>
+                  <strong>Contact:</strong>{' '}
+                  {hallDetails.PreferredContact?.includes('http') ? (
                     <a
-                      href={DEFAULT_PROFILE_URL + hallDetails.RD_UserName}
+                      href={hallDetails.PreferredContact}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      {hallDetails.RD_Name || 'No RD Info'}
+                      Teams
                     </a>
-                  </Typography>
-                </>
-              ) : (
-                // when there is no on call ra tell user when they select that hall
-                <Box
+                  ) : hallDetails.PreferredContact ? (
+                    <a
+                      href={`tel:${hallDetails.PreferredContact}`}
+                      style={{ textDecoration: 'none', color: 'inherit' }}
+                    >
+                      {formatPhoneNumber(hallDetails.PreferredContact)}
+                    </a>
+                  ) : (
+                    'No Contact Info'
+                  )}
+                </Typography>
+                <Typography>
+                  <strong>Check-In Time:</strong>{' '}
+                  {hallDetails.Check_in_time
+                    ? new Date(hallDetails.Check_in_time).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })
+                    : 'No Check-In Time'}
+                </Typography>
+                <Typography>
+                  <strong>Hall RD:</strong>{' '}
+                  <a
+                    href={DEFAULT_PROFILE_URL + hallDetails.RD_UserName}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {hallDetails.RD_Name || 'No RD Info'}
+                  </a>
+                </Typography>
+              </>
+            ) : (
+              // when there is no on call ra tell user when they select that hall
+              <Box
+                sx={{
+                  textAlign: 'center',
+                  mt: '20px',
+                  backgroundColor: 'transparent',
+                  borderColor: 'warning.main',
+                  borderRadius: 2,
+                }}
+              >
+                <Avatar
+                  src={ScottieMascot}
+                  alt="Scottie"
                   sx={{
-                    textAlign: 'center',
-                    padding: 3,
-                    backgroundColor: 'background.paper',
-                    borderColor: 'warning.main',
-                    borderRadius: 2,
+                    width: { xs: 80, sm: 80, md: 90, lg: 90 },
+                    height: { xs: 80, sm: 80, md: 90, lg: 90 },
+                    margin: '0 auto',
+                    marginBottom: 2,
+                    transition: 'width 0.3s, height 0.3s',
+                  }}
+                />
+                <Typography
+                  color="warning.main"
+                  sx={{
+                    typography: { xs: 'h5', sm: 'h5', md: 'h6', lg: 'h6' },
                   }}
                 >
-                  <Avatar
-                    src={ScottieMascot}
-                    alt="Scottie"
-                    sx={{ width: 100, height: 100, margin: '0 auto', marginBottom: 2 }}
-                  />
-                  <Typography variant="h5" color="warning.main">
-                    No one is on call right now!
-                  </Typography>
-                  <Typography variant="body1" color="text.secondary">
-                    Scottie’s keeping an eye on things. 🐾
-                  </Typography>
-                </Box>
-              )}
-            </Box>
-          </Paper>
+                  No one is on call right now!
+                </Typography>
+
+                <Typography
+                  color="text.secondary"
+                  sx={{
+                    typography: { xs: 'body1', sm: 'body1', md: 'body1', lg: 'body1' },
+                  }}
+                >
+                  Scottie’s keeping an eye on things. 🐾
+                </Typography>
+              </Box>
+            )}
+          </Box>
         )
       )}
     </FormControl>
