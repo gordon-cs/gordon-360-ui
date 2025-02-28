@@ -52,20 +52,7 @@ const FoundItemFormEdit = () => {
 
   /** The found item object we are editing. */
   const [foundItem, setFoundItem] = useState<FoundItem | null>(null);
-  const [originalItemData, setOriginalItemData] = useState<FoundItem>({
-    recordID: '0',
-    category: '',
-    colors: [] as string[],
-    brand: '',
-    description: '',
-    locationFound: '',
-    dateFound: '',
-    dateCreated: '',
-    submitterUsername: '',
-    status: 'active',
-    finderWants: false,
-    storageLocation: '',
-  });
+  const [originalItemData, setOriginalItemData] = useState<FoundItem | null>(null);
 
   const [snackbar, setSnackbar] = useState<ISnackbarState>({
     message: '',
@@ -203,34 +190,36 @@ const FoundItemFormEdit = () => {
     if (!validateForm()) return;
 
     try {
-      const formFields = Object.keys(foundItem);
-      let newActionNote = '';
-      for (let i = 0; i < formFields.length; i++) {
-        if (
-          JSON.stringify(originalItemData[formFields[i] as keyof typeof originalItemData]) !==
-          JSON.stringify(foundItem[formFields[i] as keyof typeof foundItem])
-        ) {
-          newActionNote +=
-            formFields[i] +
-            ': OLD: ' +
-            originalItemData[formFields[i] as keyof typeof originalItemData] +
-            ', NEW: ' +
-            foundItem[formFields[i] as keyof typeof foundItem] +
-            ' ';
+      if (originalItemData) {
+        const formFields = Object.keys(foundItem);
+        let newActionNote = '';
+        for (let i = 0; i < formFields.length; i++) {
+          if (
+            JSON.stringify(originalItemData[formFields[i] as keyof typeof originalItemData]) !==
+            JSON.stringify(foundItem[formFields[i] as keyof typeof foundItem])
+          ) {
+            newActionNote +=
+              formFields[i] +
+              ': OLD: ' +
+              originalItemData[formFields[i] as keyof typeof originalItemData] +
+              ', NEW: ' +
+              foundItem[formFields[i] as keyof typeof foundItem] +
+              ' ';
+          }
         }
-      }
-      // Update the found item
-      await lostAndFoundService.updateFoundItem(foundItem, foundItem.recordID);
+        // Update the found item
+        await lostAndFoundService.updateFoundItem(foundItem, foundItem.recordID);
 
-      const actionRequestData: InitFoundAdminAction = {
-        foundID: itemId || '',
-        actionDate: new Date().toISOString(),
-        submitterUsername: profile?.AD_Username || '',
-        action: 'Edited',
-        actionNote: newActionNote,
-      };
-      await lostAndFoundService.createFoundAdminAction(itemId || '', actionRequestData);
-      navigate('/lostandfound/lostandfoundadmin/founditemdatabase');
+        const actionRequestData: InitFoundAdminAction = {
+          foundID: itemId || '',
+          actionDate: new Date().toISOString(),
+          submitterUsername: profile?.AD_Username || '',
+          action: 'Edited',
+          actionNote: newActionNote,
+        };
+        await lostAndFoundService.createFoundAdminAction(itemId || '', actionRequestData);
+        navigate('/lostandfound/lostandfoundadmin/founditemdatabase');
+      }
     } catch (err) {
       console.error(err);
       createSnackbar('Failed to save changes.', 'error');

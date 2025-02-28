@@ -326,9 +326,28 @@ const FoundItemFormCreate = () => {
       <Card className={styles.form_card}>
         <CardHeader
           title={
-            <b>
-              Found Item <span style={{ textDecoration: 'underline' }}>Entry</span>
-            </b>
+            <>
+              <Grid container rowGap={1}>
+                <Grid container item xs={12} md={1}>
+                  <Button className={styles.backButton} onClick={() => navigate(-1)}>
+                    Back
+                  </Button>
+                </Grid>
+                <Grid
+                  container
+                  item
+                  columnGap={2}
+                  rowGap={1}
+                  xs={12}
+                  md={9}
+                  justifyContent="center"
+                >
+                  <b>
+                    Found Item <span style={{ textDecoration: 'underline' }}>Entry</span>
+                  </b>
+                </Grid>
+              </Grid>
+            </>
           }
           titleTypographyProps={{ align: 'center' }}
           className="gc360_header"
