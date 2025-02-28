@@ -63,7 +63,6 @@ const RAView = () => {
           <Grid item xs={12} md={4}>
             <MyHall />
           </Grid>
-          <CheckIn />
           {isCheckedIn ? <TaskList /> : <></>}
         </>
       )}

@@ -12,6 +12,9 @@ import nylandHallMascot from 'views/ResLife/Nyland.png';
 import tavillaHallMascot from 'views/ResLife/Tavilla.png';
 import villageHallMascot from 'views/ResLife/Village.png';
 import wilsonHallMascot from 'views/ResLife/Wilson.png';
+import { useAuthGroups } from 'hooks';
+import { AuthGroup } from 'services/auth';
+import CheckIn from 'views/ResLife/components/RAView/components/CheckIn';
 
 const DEFAULT_PROFILE_URL = '/profile/';
 const COLOR_80808026_1X1 =
@@ -32,6 +35,7 @@ const MyHall = () => {
   const [hallPhoto, setHallPhoto] = useState('');
   const [hallPhotoAlt, setHallPhotoAlt] = useState('');
   const { profile } = useUser();
+  const isRA = useAuthGroups(AuthGroup.ResidentAdvisor);
 
   useEffect(() => {
     if (profile) {
@@ -126,6 +130,7 @@ const MyHall = () => {
                 <StyledLink className="gc360_text_link">No RD Assigned</StyledLink>
               )}
             </Typography>
+            {/*{isRA ? <CheckIn /> : <></>}           */}
           </Grid>
 
           {/* Avatar Section */}
@@ -149,6 +154,7 @@ const MyHall = () => {
               />
             </Tooltip>
           </Grid>
+          <CheckIn />
         </Grid>
       </CardContent>
     </Card>
