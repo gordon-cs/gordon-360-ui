@@ -371,46 +371,70 @@ const LostAndFoundAdmin = () => {
       <>
         <Grid container className={styles.popUpCard}>
           <Grid container className={styles.popUpHeader}>
-            <Grid item>
+            <Grid item fontSize={'1.3em'}>
               <div>{formatDateString(item.dateLost)}</div>
             </Grid>
-            <Grid item>
+            <Grid item fontSize={'1.2em'}>
               <div>
-                {item.firstName}
-                {item.lastName}
+                <b>
+                  {item.firstName}
+                  <span>&nbsp;</span>
+                  {item.lastName}
+                </b>
               </div>
             </Grid>
-            <Grid item>
+            <Grid item fontSize={'0.8em'}>
               <div>{item.email}</div>
               <div>{item.phone}</div>
             </Grid>
             <Grid item>
-              <CloseIcon />
+              <Button
+                color="inherit"
+                variant="contained"
+                onClick={() => {
+                  setShowMissingPopUp(!showMissingPopUp);
+                  setMissingID('');
+                }}
+              >
+                <CloseIcon className={styles.xIcon} />
+              </Button>
             </Grid>
           </Grid>
           <Grid container direction={'row'}>
-            <Grid container direction={'column'} className={styles.popUpBody} xs={3}>
+            <Grid container direction={'column'} className={styles.popUpBody} xs={3} height="200px">
               <Grid item>
-                Category:
+                <span className={styles.smallText}>Category:</span>
                 <div>{item.category}</div>
               </Grid>
               <Grid item>
-                Location:
-                <div>{item.locationLost}</div>
-              </Grid>
-              <Grid item>
-                Brand/Make:
+                <span className={styles.smallText}>Brand/Make:</span>
                 <div>{item.brand}</div>
               </Grid>
               <Grid item>
-                Colors:
+                <span className={styles.smallText}>Colors:</span>
                 <div>{item.colors}</div>
               </Grid>
             </Grid>
-            <Grid container className={styles.popUpBody} xs={5}>
+            <Grid container direction={'column'} className={styles.popUpBody} xs={5}>
               <Grid item>
-                Description:
+                <span className={styles.smallText}>Location:</span>
+                <div>{item.locationLost}</div>
+              </Grid>
+              <Grid item>
+                <span className={styles.smallText}>Description:</span>
                 <div>{item.description}</div>
+              </Grid>
+              <Grid item marginLeft="auto">
+                <Button
+                  color="success"
+                  variant="contained"
+                  className={styles.markButton}
+                  onClick={() => {
+                    //no match found code will go here
+                  }}
+                >
+                  <b>Mark No Match Found</b>
+                </Button>
               </Grid>
             </Grid>
           </Grid>
@@ -549,14 +573,18 @@ const LostAndFoundAdmin = () => {
               </span>
             }
           ></CardHeader>
-          <CardContent className={styles.infoText}>
-            <InfoOutlinedIcon />
-            <span>Click on an item to view details</span>
-          </CardContent>
           {showMissingPopUp ? (
-            <MissingItemPopUp />
+            <>
+              <CardContent className={styles.infoText} />
+              <MissingItemPopUp />
+            </>
           ) : (
             <>
+              <CardContent className={styles.infoText}>
+                <InfoOutlinedIcon />
+                <span>&nbsp;</span>
+                <span>Click on a report to view details</span>
+              </CardContent>
               {MissingItemsListHeader}
               <div className={styles.scrollBox}>
                 {reports.map((report) => (
@@ -618,6 +646,7 @@ const LostAndFoundAdmin = () => {
           </CardHeader>
           <CardContent className={styles.infoText}>
             <InfoOutlinedIcon />
+            <span>&nbsp;</span>
             <span>Click on an item to view details</span>
           </CardContent>
           {FoundItemsListHeader}

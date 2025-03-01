@@ -128,30 +128,50 @@
 }
 
 .infoText {
-  color: var(--mui-palette-primary-contrastText);
+  color: var(--mui-palette-neutral-contrastText);
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+  height: 50px;
 }
 
 .popUpCard {
   background-color: var(--mui-palette-neutral-100);
   color: var(--mui-palette-neutral-contrastText);
-  min-height: 350px;
+  height: 348px;
   border-radius: 5px;
   width: 635px;
+  margin-bottom: 3rem;
 }
 
 .popUpHeader {
   margin-top: 0.8rem;
   margin-left: 1rem;
   margin-right: 1rem;
+  margin-bottom: -1rem;
   justify-content: space-between;
-  max-height: 10px;
+  max-height: 50px;
+  border: 0;
+  border-bottom: 1px;
+  border-style: solid;
+  border-color: var(--mui-palette-neutral-400);
+}
+
+.xIcon {
+  transform: scale(1.5);
 }
 
 .popUpBody {
   margin-left: 2rem;
   margin-bottom: 2rem;
   justify-content: space-between;
+  font-size: 1.3em;
+}
+
+.smallText {
+  font-size: 0.6em;
+}
+
+.markButton {
+  border-radius: 25px;
 }
