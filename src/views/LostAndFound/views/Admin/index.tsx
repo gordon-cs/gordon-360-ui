@@ -335,7 +335,7 @@ const LostAndFoundAdmin = () => {
 
   const MissingItemsListHeader = (
     <>
-      <Grid container className={styles.tableHeader} justifyContent={'left'}>
+      <Grid container className={styles.tableHeader} justifyContent={'space-between'}>
         <Grid item xs={2}>
           Date Lost
         </Grid>
@@ -348,6 +348,7 @@ const LostAndFoundAdmin = () => {
         <Grid item xs={3}>
           Description
         </Grid>
+        <Grid item xs={0.5} />
       </Grid>
     </>
   );
@@ -424,18 +425,18 @@ const LostAndFoundAdmin = () => {
                 <span className={styles.smallText}>Description:</span>
                 <div>{item.description}</div>
               </Grid>
-              <Grid item marginLeft="auto">
-                <Button
-                  color="success"
-                  variant="contained"
-                  className={styles.markButton}
-                  onClick={() => {
-                    //no match found code will go here
-                  }}
-                >
-                  <b>Mark No Match Found</b>
-                </Button>
-              </Grid>
+            </Grid>
+            <Grid item marginLeft={'auto'} marginRight={'1rem'} marginBottom={'0.5rem'}>
+              <Button
+                color="success"
+                variant="contained"
+                className={styles.markButton}
+                onClick={() => {
+                  //no match found code will go here
+                }}
+              >
+                <b>Mark No Match Found</b>
+              </Button>
             </Grid>
           </Grid>
         </Grid>
@@ -589,6 +590,8 @@ const LostAndFoundAdmin = () => {
               <div className={styles.scrollBox}>
                 {reports.map((report) => (
                   <Grid
+                    container
+                    justifyContent={'space-between'}
                     key={report.recordID}
                     className={`${styles.reportRow} ${styles.clickableRow}`}
                     onClick={() => handleMissingItemClick(String(report.recordID))}
@@ -605,17 +608,13 @@ const LostAndFoundAdmin = () => {
                     <Grid item xs={3}>
                       <div className={styles.dataCell}>{report.description}</div>
                     </Grid>
-                    <Grid item xs={1} className={styles.dataCell}>
-                      <div className={styles.dataCell}>
-                        <>
-                          <CircleIcon
-                            sx={{
-                              color: dateAgeColor(displayLastCheckedDate(report)),
-                              fontSize: 10,
-                            }}
-                          />
-                        </>
-                      </div>
+                    <Grid item xs={0.5} className={styles.dataCell}>
+                      <CircleIcon
+                        sx={{
+                          color: dateAgeColor(displayLastCheckedDate(report)),
+                          fontSize: 10,
+                        }}
+                      />
                     </Grid>
                   </Grid>
                 ))}

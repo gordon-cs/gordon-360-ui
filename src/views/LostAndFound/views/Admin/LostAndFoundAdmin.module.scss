@@ -78,6 +78,8 @@
   border-bottom: 1px solid var(--mui-palette-neutral-400);
   color: var(--mui-palette-neutral-contrastText);
   width: 630px;
+  flex-wrap: nowrap;
+  box-sizing: border-box;
 
   &:nth-child(even) {
     background-color: var(--mui-palette-neutral-100); // Slightly darker neutral for zebra striping
@@ -162,8 +164,7 @@
 }
 
 .popUpBody {
-  margin-left: 2rem;
-  margin-bottom: 2rem;
+  margin: 2rem;
   justify-content: space-between;
   font-size: 1.3em;
 }
