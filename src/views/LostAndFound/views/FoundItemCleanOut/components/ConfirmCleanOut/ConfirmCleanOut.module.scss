@@ -1,0 +1,12 @@
+.confirmCard {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  background-color: var(--mui-palette-background-paper); // For card background color
+  color: var(--mui-palette-text-primary); // For text color
+}
+
+.header {
+  background-color: var(--mui-palette-primary-main); // GordonBlue theme color
+  color: var(--mui-palette-primary-contrastText); // Text color from primary theme
+}
