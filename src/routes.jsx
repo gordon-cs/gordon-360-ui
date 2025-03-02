@@ -22,7 +22,7 @@ import PublicProfile from './views/PublicProfile';
 import Timesheets from './views/Timesheets';
 import RecIM from './views/RecIM';
 import RoomRanges from 'views/ResLife/components/RDView/components/RoomRanges';
-import CampusSafety from './views/CampusSafety';
+import CampusSafety from './views/LostAndFound';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
 const routes = [
