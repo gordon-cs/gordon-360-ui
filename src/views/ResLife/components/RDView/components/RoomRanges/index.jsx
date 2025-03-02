@@ -21,12 +21,15 @@ import {
   removeRoomRange,
   removeAssignment,
   assignPersonToRange,
+  fetchMissingRooms,
 } from 'services/residentLife/roomRanges';
 import Page404 from 'views/Page404';
 import { useAuthGroups } from 'hooks';
 import { AuthGroup } from 'services/auth';
+import { useColorScheme } from '@mui/material/styles';
 
 const RoomRanges = () => {
+  const { mode } = useColorScheme();
   const [building, setBuilding] = useState('');
   const [roomStart, setRoomStart] = useState('');
   const [roomEnd, setRoomEnd] = useState('');
@@ -39,6 +42,8 @@ const RoomRanges = () => {
   const [filteredRoomRanges, setFilteredRoomRanges] = useState([]);
   const [filteredAssignments, setFilteredAssignments] = useState([]);
   const [filteredPeople, setFilteredPeople] = useState([]);
+  const [unassignedRooms, setUnassignedRooms] = useState([]);
+  const [filteredUnassigned, setFilteredUnassigned] = useState([]);
 
   // Fetch data when the page loads
   useEffect(() => {
@@ -57,6 +62,10 @@ const RoomRanges = () => {
         setAssignments(response);
       })
       .catch((error) => console.error('Error fetching assignments:', error));
+
+    fetchMissingRooms()
+      .then((response) => setUnassignedRooms(response))
+      .catch((error) => console.error('Error fetching missing rooms:', error));
   }, []);
 
   // Update filtered data when building changes
@@ -67,6 +76,11 @@ const RoomRanges = () => {
 
       const filteredRAs = people.filter((person) => person.BLDG_Code === building);
       setFilteredPeople(filteredRAs);
+
+      const filteredUnassigendrooms = unassignedRooms.filter(
+        (room) => room.Building_Code === building,
+      );
+      setFilteredUnassigned(filteredUnassigendrooms);
 
       const filteredAssign = assignments.filter((assignment) => assignment.Hall_ID === building);
       setFilteredAssignments(filteredAssign);
@@ -166,27 +180,28 @@ const RoomRanges = () => {
   if (housingadmin || RD || developer) {
     return (
       <Box p={3}>
-        <Card
-          variant="outlined"
-          sx={{
-            backgroundColor: 'transparent',
-            boxShadow: 'none',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            textAlign: 'center',
+        <Typography
+          variant="h3"
+          align="center"
+          style={{
+            color: mode === 'dark' ? '#f8b619' : '#36b9ed',
+            marginBottom: '10px',
           }}
         >
-          <Typography variant="h4" gutterBottom>
-            Room Assignments
-          </Typography>
-        </Card>
+          Room Assignments
+        </Typography>
 
         {/* Building Selection Section */}
         <Card variant="outlined" sx={{ mb: 3 }}>
           <CardContent>
             <Typography variant="h6">Building Selection</Typography>
-            <Typography variant="body1" gutterBottom color="secondary">
+            <Typography
+              variant="body1"
+              gutterBottom
+              style={{
+                color: '#9cb0b6',
+              }}
+            >
               Select a building to update the list of available RA/ACs and room ranges for that
               building. This will also adjust the assignments you can view or modify.
             </Typography>
@@ -223,7 +238,13 @@ const RoomRanges = () => {
         <Card variant="outlined" sx={{ mb: 3 }}>
           <CardContent>
             <Typography variant="h6">Add Room Range</Typography>
-            <Typography variant="body1" gutterBottom color="secondary">
+            <Typography
+              variant="body1"
+              gutterBottom
+              style={{
+                color: '#9cb0b6',
+              }}
+            >
               When creating a room range, enter only the root number for rooms. For example, if a
               room number is B20, B20A, or similar, enter it as 20. Select a building, specify a
               start and end room number, and click "Save Range" to add it.
@@ -294,7 +315,9 @@ const RoomRanges = () => {
                     </ListItem>
                   ))
                 ) : (
-                  <ListItem>Please select a building to see the list of Room Ranges.</ListItem>
+                  <ListItem style={{ color: '#9cb0b6' }}>
+                    Please select a building to see the list of Room Ranges.
+                  </ListItem>
                 )
               ) : (
                 <ListItem>Loading room ranges...</ListItem>
@@ -310,7 +333,7 @@ const RoomRanges = () => {
             <List>
               {filteredPeople.length > 0 ? (
                 <>
-                  <Typography variant="body1" gutterBottom color="secondary">
+                  <Typography variant="body1" gutterBottom style={{ color: '#9cb0b6' }}>
                     Select a room range and a person, then click "Assign Person" to add them to the
                     room assignments list below.
                   </Typography>
@@ -339,7 +362,7 @@ const RoomRanges = () => {
                   ))}
                 </>
               ) : (
-                <ListItem>
+                <ListItem style={{ color: '#9cb0b6' }}>
                   Please select a building to see the list of RA/ACs for that building.
                 </ListItem>
               )}
@@ -354,7 +377,7 @@ const RoomRanges = () => {
         </Card>
 
         {/* Assignments Section */}
-        <Card variant="outlined">
+        <Card variant="outlined" sx={{ mb: 3 }}>
           <CardContent>
             <Typography variant="h6">Assignments</Typography>
             <List>
@@ -378,7 +401,36 @@ const RoomRanges = () => {
                   </ListItem>
                 ))
               ) : (
-                <ListItem>Please select a building to see the list of assignments.</ListItem>
+                <ListItem style={{ color: '#9cb0b6' }}>
+                  Please select a building to see the list of assignments.
+                </ListItem>
+              )}
+            </List>
+          </CardContent>
+        </Card>
+
+        {/* Unassigned Rooms Section */}
+        <Card variant="outlined">
+          <CardContent>
+            <Typography variant="h6">Unassigned Rooms</Typography>
+            <Typography
+              variant="body1"
+              gutterBottom
+              style={{ color: mode === 'dark' ? '#f8b619' : '#36b9ed' }}
+            >
+              The rooms below do not fall under any of the current room ranges.
+            </Typography>
+            <List>
+              {filteredUnassigned.length > 0 ? (
+                filteredUnassigned.map((room) => (
+                  <ListItem key={room.Room_Number}>
+                    <Box>{room.Room_Name}</Box>
+                  </ListItem>
+                ))
+              ) : (
+                <ListItem style={{ color: '#9cb0b6' }}>
+                  No unassigned rooms available for the selected hall.
+                </ListItem>
               )}
             </List>
           </CardContent>

@@ -24,7 +24,6 @@ const ResidentView = () => {
   return (
     <Grid container spacing={3} padding={3}>
       {/* Page Header */}
-
       <HousingBanner />
 
       {/* Horizontal Card Section for OnDuty, MyHall, and MyRA */}
@@ -32,24 +31,24 @@ const ResidentView = () => {
         <Grid container spacing={3} justifyContent="center">
           {/* OnDuty */}
           <Grid item xs={12} md={4}>
-            <Card elevation={3}>
-              <CardContent>
+            <Card elevation={3} sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+              <CardContent sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                 <OnDuty />
               </CardContent>
             </Card>
           </Grid>
           {/* MyHall */}
           <Grid item xs={12} md={4}>
-            <Card elevation={3}>
-              <CardContent>
+            <Card elevation={3} sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+              <CardContent sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                 <MyHall />
               </CardContent>
             </Card>
           </Grid>
           {/* MyRAC */}
           <Grid item xs={12} md={4}>
-            <Card elevation={3}>
-              <CardContent>
+            <Card elevation={3} sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+              <CardContent sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
                 <MyRAC />
               </CardContent>
             </Card>

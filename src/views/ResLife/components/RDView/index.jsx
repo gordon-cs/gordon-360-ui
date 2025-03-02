@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import CustomizedTable from './components/OnDutyTable';
 import { Link as RouterLink } from 'react-router-dom';
-import BasicSelect from './components/MobileView';
+import OnDutyMobile from './components/OnDutyMobileView';
 import EditDocs from './components/EditDocs';
 
 const RDView = () => {
@@ -28,7 +28,7 @@ const RDView = () => {
               title={
                 <Grid container direction="row" alignItems="center">
                   <Grid item xs={12} align="center">
-                    RA/AC on Duty by Hall
+                    RA/AC On-Duty by Hall
                   </Grid>
                 </Grid>
               }
@@ -49,14 +49,14 @@ const RDView = () => {
                 title={
                   <Grid container direction="row" alignItems="center">
                     <Grid item xs={12} align="center">
-                      RA/AC on Duty by Hall
+                      RA/AC On-Duty by Hall
                     </Grid>
                   </Grid>
                 }
                 className="gc360_header"
               />
               <CardContent>
-                <BasicSelect />
+                <OnDutyMobile />
               </CardContent>
             </Card>
           </Grid>

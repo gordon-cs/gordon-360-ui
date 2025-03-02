@@ -23,6 +23,7 @@ import PublicProfile from './views/PublicProfile';
 import Timesheets from './views/Timesheets';
 import RecIM from './views/RecIM';
 import RoomRanges from 'views/ResLife/components/RDView/components/RoomRanges';
+import TaskList from 'views/ResLife/components/RDView/components/TaskList';
 import { element } from 'prop-types';
 import { Room } from '@mui/icons-material';
 import CampusSafety from './views/CampusSafety';
@@ -158,6 +159,11 @@ const routes = [
     name: 'RoomRanges',
     path: '/RoomRanges',
     element: <RoomRanges />,
+  },
+  {
+    name: 'TaskList',
+    path: '/TaskList',
+    element: <TaskList />,
   },
 ];
 

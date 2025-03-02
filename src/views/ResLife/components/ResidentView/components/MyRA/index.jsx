@@ -46,6 +46,19 @@ const MyRA = () => {
     }
   }, [raInfo]);
 
+  const avatar = (
+    <Avatar
+      src={raInfo.PhotoURL || COLOR_80808026_1X1}
+      alt={`Profile of ${raInfo.FirstName} ${raInfo.LastName}`}
+      sx={{
+        width: { xs: 80, sm: 90, md: 100, lg: 130 },
+        height: { xs: 80, sm: 90, md: 100, lg: 130 },
+        borderRadius: '50%',
+        transition: 'width 0.3s, height 0.3s',
+      }}
+    />
+  );
+
   // Show loading state if profile is not yet loaded
   if (!profile) {
     return (
@@ -61,7 +74,7 @@ const MyRA = () => {
         title={
           <Grid container direction="row" alignItems="center">
             <Grid item xs={12} align="center">
-              My {staffTypeLabel}
+              {`My ${staffTypeLabel || 'RA/AC'}`}
             </Grid>
           </Grid>
         }
@@ -73,7 +86,7 @@ const MyRA = () => {
           {/* Text Section */}
           <Grid item xs={8}>
             <Typography variant="body1">
-              <strong>RA: </strong>
+              <strong>{staffTypeLabel ? staffTypeLabel : 'Loading'}: </strong>
               {raInfo?.FirstName && raInfo?.LastName ? (
                 <StyledLink
                   href={raProfileLink}
@@ -84,12 +97,14 @@ const MyRA = () => {
                   {raInfo.FirstName} {raInfo.LastName}
                 </StyledLink>
               ) : (
-                <Typography className="gc360_text_link">No RA Assigned</Typography>
+                <StyledLink className="gc360_text_link">
+                  {`No ${staffTypeLabel || 'Staff'} Assigned`}
+                </StyledLink>
               )}
             </Typography>
 
             <Typography variant="body1">
-              <strong>Room #:</strong> {raInfo.RoomNumber}
+              <strong>Room #:</strong> {raInfo.RoomNumber ? raInfo.RoomNumber : 'N/A'}
             </Typography>
 
             <Typography variant="body1">
@@ -109,29 +124,31 @@ const MyRA = () => {
                   {formatPhoneNumber(raInfo.PreferredContact)}
                 </StyledLink>
               ) : (
-                'No contact available'
+                <StyledLink className="gc360_text_link">No contact available</StyledLink>
               )}
             </Typography>
           </Grid>
 
           {/* Avatar Section */}
-          <Grid item xs={4}>
-            <StyledLink
-              href={raProfileLink}
-              className="gc360_text_link"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Avatar
-                src={raInfo.PhotoURL || COLOR_80808026_1X1}
-                alt={`Profile of ${raInfo.FirstName} ${raInfo.LastName}`}
-                sx={{
-                  width: { xs: 80, sm: 110, md: 80, lg: 120 },
-                  height: { xs: 80, sm: 110, md: 80, lg: 120 },
-                  borderRadius: '50%',
-                }}
-              />
-            </StyledLink>
+          <Grid
+            item
+            xs={4}
+            container
+            justifyContent="center"
+            sx={{ marginTop: { xs: 1, sm: 2, md: 2 } }}
+          >
+            {raProfileLink ? (
+              <StyledLink
+                href={raProfileLink}
+                className="gc360_text_link"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {avatar}
+              </StyledLink>
+            ) : (
+              <StyledLink className="gc360_text_link">{avatar}</StyledLink>
+            )}
           </Grid>
         </Grid>
       </CardContent>

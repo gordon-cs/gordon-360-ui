@@ -1,6 +1,6 @@
 import { Card, CardContent, Box, CardHeader, Grid, useMediaQuery } from '@mui/material';
 import CustomizedTable from '../RDView/components/OnDutyTable';
-import BasicSelect from '../RDView//components/MobileView';
+import OnDutyMobile from '../RDView/components/OnDutyMobileView';
 
 const StaffView = () => {
   const isMobile = useMediaQuery('(max-width:600px)');
@@ -42,7 +42,7 @@ const StaffView = () => {
                 className="gc360_header"
               />
               <CardContent>
-                <BasicSelect />
+                <OnDutyMobile />
               </CardContent>
             </Card>
           </Grid>
