@@ -23,14 +23,10 @@ import GordonSnackbar from 'components/Snackbar';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
 
-import lostAndFoundService, {
-  MissingItemReport,
-  FoundItem,
-} from 'services/lostAndFound';
+import lostAndFoundService, { MissingItemReport, FoundItem } from 'services/lostAndFound';
 
 import FoundItemConfirmationStyles from './FoundItemConfirmation.module.scss';
 import { LFCategories } from 'views/LostAndFound/components/Constants';
-
 
 type MissingItemRow = Pick<
   MissingItemReport,
@@ -102,7 +98,7 @@ const FoundItemConfirmation = () => {
     const updatedFoundItem = {
       ...foundItem,
       matchingMissingID: selectedMatchReport.recordID.toString(),
-      status: 'found', 
+      status: 'found',
     };
     try {
       await lostAndFoundService.updateFoundItem(updatedFoundItem, foundItem.recordID);
@@ -122,7 +118,6 @@ const FoundItemConfirmation = () => {
       });
     }
   };
-  
 
   const handleMatchCancel = () => {
     setMatchDialogOpen(false);
@@ -182,7 +177,7 @@ const FoundItemConfirmation = () => {
     if (foundItem) {
       navigate(
         `/lostandfound/lostandfoundadmin/founditemform/founditemdatabase/${foundItem.recordID}`,
-        { state: { fromConfirmation: true } }
+        { state: { fromConfirmation: true } },
       );
     }
   };
@@ -246,8 +241,13 @@ const FoundItemConfirmation = () => {
           <CardHeader
             title={
               <div className={FoundItemConfirmationStyles.titleBar}>
-                <Typography variant="h4" component="span" className={FoundItemConfirmationStyles.pageTitle}>
-                  Confirm Found Item <span className={FoundItemConfirmationStyles.yellowText}>Entry</span>
+                <Typography
+                  variant="h4"
+                  component="span"
+                  className={FoundItemConfirmationStyles.pageTitle}
+                >
+                  Confirm Found Item{' '}
+                  <span className={FoundItemConfirmationStyles.yellowText}>Entry</span>
                 </Typography>
                 <Button
                   variant="contained"
@@ -268,10 +268,8 @@ const FoundItemConfirmation = () => {
               <Grid item xs={12}>
                 <Typography variant="body1" component="div">
                   <b>{foundItem.recordID}</b>{' '}
-                  <em style={{ fontSize: '0.9rem' }}>
-                    Serial # for Tag
-                  </em>{' '}
-                  — please write this number on the item tag <u>before proceeding</u>
+                  <em style={{ fontSize: '0.9rem' }}>Serial # for Tag</em> — please write this
+                  number on the item tag <u>before proceeding</u>
                 </Typography>
               </Grid>
             </Grid>
@@ -348,14 +346,16 @@ const FoundItemConfirmation = () => {
           ) : (
             <div className={FoundItemConfirmationStyles.missingReportTableContainer}>
               <AppBar position="static" className={FoundItemConfirmationStyles.missingTableHeader}>
-                <Toolbar
-                  variant="dense"
-                  sx={{ display: 'flex', justifyContent: 'space-between' }}
-                >
+                <Toolbar variant="dense" sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant="h6" component="div">
                     Missing Item Reports
                   </Typography>
-                  <Grid container alignItems="center" justifyContent="flex-end" sx={{ width: 'auto' }}>
+                  <Grid
+                    container
+                    alignItems="center"
+                    justifyContent="flex-end"
+                    sx={{ width: 'auto' }}
+                  >
                     <Typography variant="body2" sx={{ marginRight: '0.5rem' }}>
                       Filter By:
                     </Typography>
@@ -382,11 +382,21 @@ const FoundItemConfirmation = () => {
               </AppBar>
               <Grid container className={FoundItemConfirmationStyles.missingTableBody}>
                 <Grid container item className={FoundItemConfirmationStyles.missingTableRowHeader}>
-                  <Grid item xs={2}>View Details</Grid>
-                  <Grid item xs={2}>Date Lost</Grid>
-                  <Grid item xs={2}>Location</Grid>
-                  <Grid item xs={2}>Category</Grid>
-                  <Grid item xs={4}>Description</Grid>
+                  <Grid item xs={2}>
+                    View Details
+                  </Grid>
+                  <Grid item xs={2}>
+                    Date Lost
+                  </Grid>
+                  <Grid item xs={2}>
+                    Location
+                  </Grid>
+                  <Grid item xs={2}>
+                    Category
+                  </Grid>
+                  <Grid item xs={4}>
+                    Description
+                  </Grid>
                 </Grid>
                 {(selectedCategory
                   ? missingReports.filter((r) => r.category.toLowerCase() === selectedCategory)
@@ -399,17 +409,19 @@ const FoundItemConfirmation = () => {
                       className={`${FoundItemConfirmationStyles.missingTableRow} ${FoundItemConfirmationStyles.clickableRow}`}
                     >
                       <Grid item xs={2} className={FoundItemConfirmationStyles.tableCell}>
-                      <Button
-                      variant="text"
-                      size="small"
-                      color="info"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/lostandfound/lostandfoundadmin/missingitemdatabase/${report.recordID}`);
-                      }}
-                    >
-                      Details
-                    </Button>
+                        <Button
+                          variant="text"
+                          size="small"
+                          color="info"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(
+                              `/lostandfound/lostandfoundadmin/missingitemdatabase/${report.recordID}`,
+                            );
+                          }}
+                        >
+                          Details
+                        </Button>
                       </Grid>
                       <Grid item xs={2} className={FoundItemConfirmationStyles.tableCell}>
                         {new Date(report.dateLost).toLocaleDateString()}
@@ -461,51 +473,63 @@ const FoundItemConfirmation = () => {
       {/* MATCH CONFIRMATION DIALOG */}
       {matchDialogOpen && foundItem && selectedMatchReport && (
         <GordonDialogBox
-        open={matchDialogOpen}
-        title="Confirm Match"
-        buttonName="Yes"
-        buttonClicked={handleMatchConfirmation}
-        cancelButtonName="Cancel"
-        cancelButtonClicked={handleMatchCancel}
-      >
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Typography>
-              You would like to confirm that the current found item is a match with the selected missing report.
-            </Typography>
+          open={matchDialogOpen}
+          title="Confirm Match"
+          buttonName="Yes"
+          buttonClicked={handleMatchConfirmation}
+          cancelButtonName="Cancel"
+          cancelButtonClicked={handleMatchCancel}
+        >
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography>
+                You would like to confirm that the current found item is a match with the selected
+                missing report.
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="subtitle1">
+                <strong>Found Item Details:</strong>
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography>
+                <strong>Category:</strong> {foundItem.category}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography>
+                <strong>Description:</strong> {foundItem.description}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="subtitle1">
+                <strong>Missing Report Details:</strong>
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography>
+                <strong>Category:</strong> {selectedMatchReport.category}
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography>
+                <strong>Owner:</strong> {selectedMatchReport.firstName}{' '}
+                {selectedMatchReport.lastName}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography>
+                <strong>Contact:</strong> {selectedMatchReport.email} | {selectedMatchReport.phone}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography>
+                <strong>Description:</strong> {selectedMatchReport.description}
+              </Typography>
+            </Grid>
           </Grid>
-          <Grid item xs={12}>
-            <Typography variant="subtitle1"><strong>Found Item Details:</strong></Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <Typography><strong>Category:</strong> {foundItem.category}</Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <Typography><strong>Description:</strong> {foundItem.description}</Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="subtitle1"><strong>Missing Report Details:</strong></Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <Typography><strong>Category:</strong> {selectedMatchReport.category}</Typography>
-          </Grid>
-          <Grid item xs={6}>
-            <Typography>
-              <strong>Owner:</strong> {selectedMatchReport.firstName} {selectedMatchReport.lastName}
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography>
-              <strong>Contact:</strong> {selectedMatchReport.email} | {selectedMatchReport.phone}
-            </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography>
-              <strong>Description:</strong> {selectedMatchReport.description}
-            </Typography>
-          </Grid>
-        </Grid>
-      </GordonDialogBox>
+        </GordonDialogBox>
       )}
       <GordonSnackbar
         open={snackbar.open}
