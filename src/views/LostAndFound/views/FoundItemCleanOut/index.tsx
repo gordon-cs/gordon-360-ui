@@ -41,7 +41,6 @@ const FoundItemCleanOut = () => {
   // Filters
   // "ID" is the Tag # filter
   const [tagID, setTagID] = useState('');
-  const [latestDate, setLatestDate] = useState('');
   const [keywords, setKeywords] = useState('');
   const [status, setStatus] = useState('');
   const [color, setColor] = useState('');
@@ -119,11 +118,10 @@ const FoundItemCleanOut = () => {
         // const d = new Date();
         const d = new Date(2025, 3, 9);
         d.setMonth(d.getMonth() - 2);
-        setLatestDate(d.toDateString());
 
         const fetched = await lostAndFoundService.getFoundItems(
           tagID || '',
-          latestDate || '',
+          d.toDateString() || '',
           status || '',
           color || '',
           category || '',
@@ -146,7 +144,7 @@ const FoundItemCleanOut = () => {
       fetchInitial();
     }, 700);
     return () => clearTimeout(timer);
-  }, [tagID, latestDate, color, category, keywords, pageLoaded, status, createSnackbar]);
+  }, [tagID, color, category, keywords, pageLoaded, status, createSnackbar]);
 
   return (
     <>
