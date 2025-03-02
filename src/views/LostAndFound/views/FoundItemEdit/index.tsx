@@ -17,7 +17,7 @@ import {
   InputLabel,
   useMediaQuery,
 } from '@mui/material';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { InfoOutlined, Add, Key, Launch } from '@mui/icons-material';
 import { StatusChip } from 'views/LostAndFound/components/StatusChip';
 
@@ -41,10 +41,13 @@ interface ISnackbarState {
   open: boolean;
 }
 
+
+
 const FoundItemFormEdit = () => {
   const { itemId } = useParams<{ itemId: string }>();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
 
   /** The found item object we are editing. */
   const [foundItem, setFoundItem] = useState<FoundItem | null>(null);
@@ -184,7 +187,14 @@ const FoundItemFormEdit = () => {
 
     try {
       await lostAndFoundService.updateFoundItem(foundItem, foundItem.recordID);
+      if (location.state && (location.state as any).fromConfirmation) {
+        navigate(
+          `/lostandfound/lostandfoundadmin/founditemform/${foundItem.recordID}`
+        );
+      } else {
+        // Otherwise, go to the normal database page.
       navigate('/lostandfound/lostandfoundadmin/founditemdatabase');
+      }
     } catch (err) {
       console.error(err);
       createSnackbar('Failed to save changes.', 'error');
@@ -632,14 +642,23 @@ const FoundItemFormEdit = () => {
           {/* Bottom row: Save / Cancel */}
           <Grid container justifyContent="flex-end" spacing={2} padding={2}>
             <Grid item xs={6} sm={3} md={2}>
-              <Button
-                variant="contained"
-                color="error"
-                onClick={() => navigate('/lostandfound/lostandfoundadmin/founditemdatabase')}
-                fullWidth
-              >
-                Cancel
-              </Button>
+            <Button
+              variant="contained"
+              color="error"
+              fullWidth
+              onClick={() => {
+                if (location.state && (location.state as any).fromConfirmation) {
+                  navigate(
+                    `/lostandfound/lostandfoundadmin/founditemform/${foundItem?.recordID}`
+                  );
+                } else {
+                  navigate('/lostandfound/lostandfoundadmin/founditemdatabase');
+                }
+              }}
+            >
+              Cancel
+            </Button>
+
             </Grid>
             <Grid item xs={6} sm={3} md={2}>
               <Button

@@ -11,6 +11,7 @@ import ReportFound from './views/ReportFound';
 import FoundItemFormCreate from './views/FoundItemCreate';
 import FoundItemList from './views/FoundItemList';
 import FoundItemFormEdit from './views/FoundItemEdit';
+import FoundItemConfirmation from './views/FoundItemConfirm';
 import GordonLoader from 'components/Loader';
 import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import { useUser } from 'hooks';
@@ -40,6 +41,10 @@ export const CampusSafetyRoutes: CampusSafetyRoutesObject = {
     element: <MissingItemReportData />,
     formattedName: 'View Report #~',
   },
+  '/lostandfoundadmin/founditemform/:recordID': {
+    element: <FoundItemConfirmation />,
+    formattedName: 'Found Item Confirmation #~',
+  },
   '/lostandfoundadmin/missingitemdatabase': {
     element: <MissingItemList />,
     formattedName: 'Lost Item Database',
@@ -53,9 +58,17 @@ export const CampusSafetyRoutes: CampusSafetyRoutesObject = {
     element: <FoundItemList />,
     formattedName: 'Found Items Database',
   },
+  '/lostandfoundadmin/founditemform/founditemdatabase': {
+    element: <FoundItemList />,
+    formattedName: 'Found Items Databases',
+  },
   '/lostandfoundadmin/founditemdatabase/:itemId': {
     element: <FoundItemFormEdit />,
     formattedName: 'View Found Item #~',
+  },
+  '/lostandfoundadmin/founditemform/founditemdatabase/:itemId': {
+    element: <FoundItemFormEdit />,
+    formattedName: 'View Found #~',
   },
   '/lostandfoundadmin': { element: <LostAndFoundAdmin />, formattedName: 'Lost and Found Admin' },
   '*': { element: <Page404 />, formattedName: 'Not Found' },

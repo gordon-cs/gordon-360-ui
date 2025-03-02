@@ -117,7 +117,7 @@ const FoundItemFormCreate = () => {
     finderWantsItem: false,
     initialAction: '',
     storageLocation: '',
-    status: 'found',
+    status: 'active',
   });
 
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
@@ -299,8 +299,9 @@ const FoundItemFormCreate = () => {
       };
 
       const response = await lostAndFoundService.createFoundItem(requestData);
+      console.log("this is the response" + response);
 
-      navigate('/lostandfound/lostandfoundadmin');
+      navigate(`/lostandfound/lostandfoundadmin/founditemform/${response}`,)
     } catch (error) {
       console.error('Failed to create found item report:', error);
       createSnackbar('Error submitting the form. Please try again.', 'error');

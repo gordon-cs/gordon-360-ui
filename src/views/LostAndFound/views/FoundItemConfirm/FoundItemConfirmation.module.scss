@@ -1,0 +1,207 @@
+@import '../../../../vars';
+
+/* The main card wrapper */
+.confirmCard {
+  margin: 2rem;
+  padding: 0;
+  background-color: var(--mui-palette-background-paper);
+  color: var(--mui-palette-text-primary);
+}
+
+.titleBar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pageTitle {
+  font-weight: 600;
+  font-size: 2rem;
+}
+
+.yellowText {
+  color: var(--mui-palette-warning-main);
+}
+
+.disclaimer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 1.5rem;
+  margin: 20px;
+}
+
+.confirmCardContent {
+  padding: 1.5rem;
+}
+
+.itemDetailsColumn {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.8rem;
+}
+
+.sectionDivider {
+  margin: 1rem 0;
+}
+
+.checkMissingHeading {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* Container for the missing item table */
+.missingReportTableContainer {
+  margin: 0 1rem 1rem 1rem;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+
+.missingTableHeader {
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
+}
+
+/* The body area of the table: a column of row items */
+.missingTableBody {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+/* The header row (column labels) */
+.missingTableRowHeader {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  display: flex;
+  color: var(--mui-palette-primary-contrastText);
+}
+
+/* Each data row in the table */
+.missingTableRow {
+  display: flex;
+  align-items: center;
+  min-height: 2.5rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--mui-palette-neutral-400);
+  color: var(--mui-palette-neutral-contrastText);
+
+  /* Even-row background color */
+  &:nth-child(even) {
+    background-color: var(--mui-palette-neutral-100);
+  }
+
+  /* Hover effect */
+  transition: background-color 0.2s;
+  &:hover {
+    background-color: var(--mui-palette-primary-light);
+  }
+
+  @media (max-width: 1000px) {
+    flex-wrap: wrap;
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--mui-palette-neutral-300);
+  }
+}
+
+/* Cells within each row */
+.tableCell {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-right: 0.5rem;
+}
+
+/* Confirmation checkbox area */
+.confirmCheckboxArea {
+  margin: 1rem 2rem;
+}
+
+/* The "Edit Entry" button in the header */
+.editButton {
+  font-size: 1.1rem;
+  margin-left: 1rem;
+}
+
+/* MOBILE: container for missing reports as cards */
+.mobileMissingReportsContainer {
+  margin: 0.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* MOBILE: each missing report as a card */
+.mobileReportCard {
+  cursor: pointer;
+  border-radius: 6px;
+  background-color: var(--mui-palette-neutral-light);
+  color: var(--mui-palette-neutral-contrastText);
+  transition: background-color 0.2s;
+  padding: 0.5rem 1rem;
+
+  &:nth-child(even) {
+    background-color: var(--mui-palette-neutral-100);
+  }
+
+  &:hover {
+    background-color: var(--mui-palette-primary-light);
+  }
+}
+
+/* The expanded details area for each row/card */
+.expandedDetails {
+  padding: 1rem;
+  margin-top: 0.5rem;
+  background-color: var(--mui-palette-neutral-100);
+  border: 1px solid var(--mui-palette-neutral-400);
+  border-radius: 4px;
+  color: var(--mui-palette-neutral-contrastText);
+}
+
+/* Adjust spacing for smaller screens */
+@media (max-width: 1000px) {
+  .confirmCard {
+    margin: 1rem;
+  }
+
+  .titleBar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .pageTitle {
+    font-size: 1.6rem;
+  }
+
+  .disclaimer {
+    margin: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+    row-gap: 0.5rem;
+  }
+
+  .confirmCardContent {
+    padding: 1rem;
+  }
+
+  .itemDetailsColumn {
+    row-gap: 0.5rem;
+  }
+
+  .missingReportTableContainer {
+    margin: 0.5rem;
+  }
+
+  .missingTableBody {
+    padding: 0.5rem;
+  }
+
+  .confirmCheckboxArea {
+    margin: 1rem;
+  }
+}
