@@ -162,7 +162,7 @@ const MyHall = () => {
               />
             </Tooltip>
           </Grid>
-          {/* {isRA ? <CheckIn /> : <></>} */}
+          {isRA ? <CheckIn /> : <></>}
           <CheckIn />
         </Grid>
       </CardContent>
