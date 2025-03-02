@@ -11,7 +11,6 @@ import {
   CardHeader,
   AppBar,
   Typography,
-  Chip,
   Checkbox,
 } from '@mui/material';
 import Header from 'views/LostAndFound/components/Header';
@@ -25,7 +24,6 @@ import GordonLoader from 'components/Loader';
 import lostAndFoundService, { FoundItem } from 'services/lostAndFound';
 import { useLocation, useNavigate } from 'react-router';
 import { formatDateString } from 'views/LostAndFound/components/Helpers';
-import { StatusChip } from 'views/LostAndFound/components/StatusChip';
 import { differenceInCalendarDays } from 'date-fns';
 import GordonSnackbar from 'components/Snackbar';
 import ConfirmCleanOut from './components/ConfirmCleanOut/index';
@@ -42,7 +40,6 @@ const FoundItemCleanOut = () => {
   // "ID" is the Tag # filter
   const [tagID, setTagID] = useState('');
   const [keywords, setKeywords] = useState('');
-  const [status, setStatus] = useState('');
   const [color, setColor] = useState('');
   const [category, setCategory] = useState('');
 
@@ -87,10 +84,6 @@ const FoundItemCleanOut = () => {
       if (tagID !== paramVal) {
         setTagID(paramVal);
       }
-      paramVal = getUrlParam('status', location, searchParams);
-      if (status !== paramVal) {
-        setStatus(paramVal);
-      }
       paramVal = getUrlParam('color', location, searchParams);
       if (color !== paramVal) {
         setColor(paramVal);
@@ -116,13 +109,13 @@ const FoundItemCleanOut = () => {
 
         // Date set to April 9 for testing - uncomment next line once testing is completed
         // const d = new Date();
-        const d = new Date(2025, 3, 9);
+        const d = new Date(2025, 3, 26);
         d.setMonth(d.getMonth() - 2);
 
         const fetched = await lostAndFoundService.getFoundItems(
           tagID || '',
           d.toDateString() || '',
-          status || '',
+          'active',
           color || '',
           category || '',
           keywords || '',
@@ -144,7 +137,7 @@ const FoundItemCleanOut = () => {
       fetchInitial();
     }, 700);
     return () => clearTimeout(timer);
-  }, [tagID, color, category, keywords, pageLoaded, status, createSnackbar]);
+  }, [tagID, color, category, keywords, pageLoaded, createSnackbar]);
 
   return (
     <>
@@ -208,25 +201,6 @@ const FoundItemCleanOut = () => {
                             className={styles.textField}
                             fullWidth
                           />
-                        </Grid>
-                        {/* Status */}
-                        <Grid item xs={isMobile}>
-                          <FormControl size="small" className={styles.formControl} fullWidth>
-                            <InputLabel>Status</InputLabel>
-                            <Select
-                              value={status}
-                              onChange={(e) =>
-                                setUrlParam('status', e.target.value, setSearchParams)
-                              }
-                            >
-                              <MenuItem value="">All</MenuItem>
-                              <MenuItem value="active">Active</MenuItem>
-                              <MenuItem value="expired">Expired</MenuItem>
-                              <MenuItem value="found">Found</MenuItem>
-                              <MenuItem value="deleted">Disposed</MenuItem>
-                              <MenuItem value="pickedup">PickedUp</MenuItem>
-                            </Select>
-                          </FormControl>
                         </Grid>
                         {/* Color, Category, Clear button row */}
                         <Grid item xs={isMobile}>
@@ -360,13 +334,10 @@ const FoundItemCleanOut = () => {
                               </Typography>
                               <Typography variant="body2">Category: {report.category}</Typography>
                               <Grid item xs={12}>
-                                <StatusChip status={report.status} />
                                 {differenceInCalendarDays(
                                   new Date(),
                                   Date.parse(report.dateCreated),
-                                ) < 3 && (
-                                  <Chip label="NEW" color="success" className={styles.chip} />
-                                )}
+                                ) < 3}
                               </Grid>
                             </CardContent>
                           </Card>
@@ -397,11 +368,10 @@ const FoundItemCleanOut = () => {
                               <div className={styles.dataCell}>{report.description}</div>
                             </Grid>
                             <Grid item xs={12}>
-                              <StatusChip status={report.status} />
                               {differenceInCalendarDays(
                                 new Date(),
                                 Date.parse(report.dateCreated),
-                              ) < 3 && <Chip label="NEW" color="success" className={styles.chip} />}
+                              ) < 3}
                             </Grid>
                           </Grid>
                         ),
