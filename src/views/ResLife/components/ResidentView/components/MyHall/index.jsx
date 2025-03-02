@@ -1,5 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, Grid, Tooltip, Typography, Avatar } from '@mui/material';
+import {
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Tooltip,
+  Typography,
+  Avatar,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useUser } from 'hooks';
 import { fetchRdInfo } from 'services/residentLife/ResidentStaff';
@@ -12,6 +21,9 @@ import nylandHallMascot from 'views/ResLife/Nyland.png';
 import tavillaHallMascot from 'views/ResLife/Tavilla.png';
 import villageHallMascot from 'views/ResLife/Village.png';
 import wilsonHallMascot from 'views/ResLife/Wilson.png';
+import { useAuthGroups } from 'hooks';
+import { AuthGroup } from 'services/auth';
+import CheckIn from 'views/ResLife/components/RAView/components/CheckIn';
 
 const DEFAULT_PROFILE_URL = '/profile/';
 const COLOR_80808026_1X1 =
@@ -32,6 +44,7 @@ const MyHall = () => {
   const [hallPhoto, setHallPhoto] = useState('');
   const [hallPhotoAlt, setHallPhotoAlt] = useState('');
   const { profile } = useUser();
+  const isRA = useAuthGroups(AuthGroup.ResidentAdvisor);
 
   useEffect(() => {
     if (profile) {
@@ -134,7 +147,7 @@ const MyHall = () => {
             xs={4}
             container
             justifyContent="center"
-            sx={{ marginTop: { xs: 1, sm: 2, md: 2 } }}
+            sx={{ marginTop: { xs: 1, sm: 2, md: 2 }, marginBottom: { xs: 1, sm: 1, md: 1 } }}
           >
             <Tooltip title={hallPhotoAlt || 'Hall Mascot'}>
               <Avatar
@@ -149,6 +162,8 @@ const MyHall = () => {
               />
             </Tooltip>
           </Grid>
+          {/* {isRA ? <CheckIn /> : <></>} */}
+          <CheckIn />
         </Grid>
       </CardContent>
     </Card>

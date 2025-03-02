@@ -28,7 +28,7 @@ const RDView = () => {
               title={
                 <Grid container direction="row" alignItems="center">
                   <Grid item xs={12} align="center">
-                    RA/AC on Duty by Hall
+                    RA/AC On-Duty by Hall
                   </Grid>
                 </Grid>
               }
@@ -49,7 +49,7 @@ const RDView = () => {
                 title={
                   <Grid container direction="row" alignItems="center">
                     <Grid item xs={12} align="center">
-                      RA/AC on Duty by Hall
+                      RA/AC On-Duty by Hall
                     </Grid>
                   </Grid>
                 }

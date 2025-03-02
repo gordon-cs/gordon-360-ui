@@ -25,9 +25,12 @@ import { useUser } from 'hooks';
 import GordonDialogBox from 'components/GordonDialogBox';
 import SimpleSnackbar from 'components/Snackbar';
 
+import { checkIfCheckedIn } from 'services/residentLife/RA_Checkin';
+
 const TaskList = () => {
   const [taskList, setTaskList] = useState([]);
   const { profile } = useUser();
+  const [isCheckedIn, setCheckedIn] = useState(false);
   const [descriptionOpen, setDescriptionOpen] = useState(false);
   const [taskCheckedOpen, setTaskCheckedOpen] = useState(false);
   const [incompleteTaskDialogOpen, setIncompleteTaskDialogOpen] = useState(false);
@@ -42,6 +45,20 @@ const TaskList = () => {
   const createSnackbar = useCallback((message, severity) => {
     setSnackbar({ message, severity, open: true });
   }, []);
+
+  useEffect(() => {
+    const fetchIsCheckdIn = async () => {
+      if (profile?.ID) {
+        try {
+          const isChecked = await checkIfCheckedIn(profile.ID);
+          setCheckedIn(isChecked);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      }
+    };
+    fetchIsCheckdIn();
+  }, [profile?.ID]);
 
   useEffect(() => {
     const fetchCheckedInHalls = async () => {
@@ -181,70 +198,79 @@ const TaskList = () => {
   return (
     <Grid item xs={12} md={12} padding={0}>
       <Card>
-        <CardHeader title={`On-Call Tasks`} className="gc360_header" />
+        <CardHeader title={`On-Duty Tasks`} className="gc360_header" />
         <CardContent>
           <Typography>
             <List disablePadding>
-              {taskList.length > 0 ? (
-                taskList.map((hallData, hallIndex) => (
-                  <React.Fragment key={hallData.hallID}>
-                    <ListSubheader>{hallData.hallID}</ListSubheader>
-                    {hallData.tasks.length > 0 ? (
-                      hallData.tasks.map((task, index) => (
-                        <ListItem
-                          key={task.TaskID}
-                          secondaryAction={
-                            <IconButton
-                              edge="end"
-                              aria-label="description"
-                              onClick={() => handleClickDescription(hallIndex, index)}
-                            >
-                              <CommentIcon />
-                            </IconButton>
-                          }
-                        >
-                          <ListItemButton
-                            onClick={() =>
-                              handleTaskChecked(
-                                hallIndex,
-                                index,
-                                task.TaskID,
-                                checkedList[hallIndex]?.[index] || task.CompletedDate !== null,
-                              )
+              {isCheckedIn ? (
+                taskList.length > 0 ? (
+                  taskList.map((hallData, hallIndex) => (
+                    <React.Fragment key={hallData.hallID}>
+                      <ListSubheader>{hallData.hallID}</ListSubheader>
+                      {hallData.tasks.length > 0 ? (
+                        hallData.tasks.map((task, index) => (
+                          <ListItem
+                            key={task.TaskID}
+                            secondaryAction={
+                              <IconButton
+                                edge="end"
+                                aria-label="description"
+                                onClick={() => handleClickDescription(hallIndex, index)}
+                              >
+                                <CommentIcon />
+                              </IconButton>
                             }
-                            dense
                           >
-                            <ListItemIcon>
-                              <FormControlLabel
-                                label={task.Name}
-                                control={
-                                  <Checkbox
-                                    id={`task-checkbox-${task.TaskID}`}
-                                    edge="start"
-                                    checked={
-                                      checkedList[hallIndex]?.[index] ?? task.CompletedDate !== null
-                                    }
-                                    disabled={
-                                      disabledList[hallIndex]?.[index] ??
-                                      task.CompletedDate !== null
-                                    }
-                                  />
-                                }
-                              />
-                            </ListItemIcon>
-                          </ListItemButton>
+                            <ListItemButton
+                              onClick={() =>
+                                handleTaskChecked(
+                                  hallIndex,
+                                  index,
+                                  task.TaskID,
+                                  checkedList[hallIndex]?.[index] || task.CompletedDate !== null,
+                                )
+                              }
+                              dense
+                            >
+                              <ListItemIcon>
+                                <FormControlLabel
+                                  label={task.Name}
+                                  control={
+                                    <Checkbox
+                                      id={`task-checkbox-${task.TaskID}`}
+                                      edge="start"
+                                      checked={
+                                        checkedList[hallIndex]?.[index] ??
+                                        task.CompletedDate !== null
+                                      }
+                                      disabled={
+                                        disabledList[hallIndex]?.[index] ??
+                                        task.CompletedDate !== null
+                                      }
+                                    />
+                                  }
+                                />
+                              </ListItemIcon>
+                            </ListItemButton>
+                          </ListItem>
+                        ))
+                      ) : (
+                        <ListItem key={`no-tasks-${hallData.hallID}`}>
+                          <ListItemText>No tasks available for {hallData.hallID}</ListItemText>
                         </ListItem>
-                      ))
-                    ) : (
-                      <ListItem key={`no-tasks-${hallData.hallID}`}>
-                        <ListItemText>No tasks available for {hallData.hallID}</ListItemText>
-                      </ListItem>
-                    )}
-                  </React.Fragment>
-                ))
+                      )}
+                    </React.Fragment>
+                  ))
+                ) : (
+                  <ListItem>
+                    <ListItemText>No tasks to see</ListItemText>
+                  </ListItem>
+                )
               ) : (
                 <ListItem>
-                  <ListItemText>No tasks to see</ListItemText>
+                  <ListItemText>
+                    Tasks unavailable - only On-Duty Staff can view hall tasks
+                  </ListItemText>
                 </ListItem>
               )}
             </List>
