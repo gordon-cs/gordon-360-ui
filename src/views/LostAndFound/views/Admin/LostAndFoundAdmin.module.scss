@@ -117,7 +117,7 @@
 }
 
 .scrollBox {
-  height: 300px;
+  height: 21rem;
   overflow-y: auto;
   margin-bottom: 3rem;
   border-radius: 5px;
@@ -140,9 +140,9 @@
 .popUpCard {
   background-color: var(--mui-palette-neutral-100);
   color: var(--mui-palette-neutral-contrastText);
-  height: 348px;
   border-radius: 5px;
-  width: 635px;
+  height: 24rem;
+  width: 40rem;
   margin-bottom: 3rem;
 }
 
@@ -152,7 +152,7 @@
   margin-right: 1rem;
   margin-bottom: -1rem;
   justify-content: space-between;
-  max-height: 50px;
+  height: 2.5rem;
   border: 0;
   border-bottom: 1px;
   border-style: solid;
@@ -166,7 +166,7 @@
 .popUpBody {
   margin: 2rem;
   justify-content: space-between;
-  font-size: 1.3em;
+  font-size: 1vw;
 }
 
 .smallText {

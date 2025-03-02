@@ -402,7 +402,7 @@ const LostAndFoundAdmin = () => {
             </Grid>
           </Grid>
           <Grid container direction={'row'}>
-            <Grid container direction={'column'} className={styles.popUpBody} xs={3} height="200px">
+            <Grid container direction={'column'} className={styles.popUpBody} xs={3}>
               <Grid item>
                 <span className={styles.smallText}>Category:</span>
                 <div>{item.category}</div>
@@ -416,7 +416,7 @@ const LostAndFoundAdmin = () => {
                 <div>{item.colors}</div>
               </Grid>
             </Grid>
-            <Grid container direction={'column'} className={styles.popUpBody} xs={5}>
+            <Grid container direction={'column'} className={styles.popUpBody} xs={6.5}>
               <Grid item>
                 <span className={styles.smallText}>Location:</span>
                 <div>{item.locationLost}</div>
