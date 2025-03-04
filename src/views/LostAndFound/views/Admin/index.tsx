@@ -31,6 +31,7 @@ import { Close, Person, StayPrimaryLandscapeSharp, Storage } from '@mui/icons-ma
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CircleIcon from '@mui/icons-material/Circle';
 import CloseIcon from '@mui/icons-material/Close';
+import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
 import { differenceInCalendarDays } from 'date-fns';
 import lostAndFoundService, { MissingItemReport, FoundItem } from 'services/lostAndFound';
 import { size } from 'lodash';
@@ -54,14 +55,19 @@ const LostAndFoundAdmin = () => {
 
   const pageSize = 25;
   const [lazyLoading, setLazyLoading] = useState(false);
+  const [foundLazyLoading, setFoundLazyLoading] = useState(false);
+  const [hasMoreFound, setHasMoreFound] = useState(true);
   const [hasMore, setHasMore] = useState(true);
   const loadMoreRef = useRef<HTMLDivElement>(null);
+  const loadMoreFoundRef = useRef<HTMLDivElement>(null);
   const [showMissingPopUp, setShowMissingPopUp] = useState(false);
   const [showFoundPopUp, setShowFoundPopUp] = useState(false);
   const [missingID, setMissingID] = useState('');
   const [foundID, setFoundID] = useState('');
   const [missingItem, setMissingItem] = useState<MissingItemReport | null>(null);
   const [foundItem, setFoundItem] = useState<FoundItem | null>(null);
+  const [fetchMissingLoading, setFetchMissingLoading] = useState(false);
+  const [fetchFoundLoading, setFetchFoundLoading] = useState(false);
 
   useEffect(() => {
     setPageLoaded(true);
@@ -85,9 +91,11 @@ const LostAndFoundAdmin = () => {
           parseInt(missingID || ''),
         );
         setMissingItem(fetchedItem);
+        setFetchMissingLoading(false);
       } else if (itemType === 'found') {
         const fetchedItem = await lostAndFoundService.getFoundItem(foundID || '');
         setFoundItem(fetchedItem);
+        setFetchFoundLoading(false);
       }
     } catch (error) {
       console.error('Error fetching item:', error);
@@ -185,6 +193,32 @@ const LostAndFoundAdmin = () => {
     };
   }, [loadMoreRef, lazyLoading, hasMore, status, category, color, keywords, missingReports]);
 
+  // Intersection Observer to trigger lazy loading
+  useEffect(() => {
+    const observer = new IntersectionObserver((foundEntries) => {
+      if (foundEntries[0].isIntersecting) {
+        loadMoreFoundItems();
+      }
+    });
+    if (loadMoreFoundRef.current) {
+      observer.observe(loadMoreFoundRef.current);
+    }
+    return () => {
+      if (loadMoreFoundRef.current) {
+        observer.unobserve(loadMoreFoundRef.current);
+      }
+    };
+  }, [
+    loadMoreFoundRef,
+    foundLazyLoading,
+    hasMoreFound,
+    status,
+    color,
+    category,
+    keywords,
+    foundItems,
+  ]);
+
   useEffect(() => {
     if (missingID) {
       fetchItem('missing');
@@ -244,6 +278,33 @@ const LostAndFoundAdmin = () => {
     }
   };
 
+  // Lazy loading helper: load more reports
+  const loadMoreFoundItems = async () => {
+    if (foundLazyLoading || !hasMoreFound) return;
+    setFoundLazyLoading(true);
+    // Use the last report's recordID as the lastId; if none, it remains undefined.
+    const lastId = foundItems.length > 0 ? foundItems[foundItems.length - 1].recordID : undefined;
+    try {
+      const moreReports = await lostAndFoundService.getFoundItems(
+        undefined,
+        status,
+        color,
+        category,
+        keywords,
+      );
+      if (moreReports.length < pageSize) {
+        setHasMoreFound(false);
+      } else {
+        setFoundItems((prev) => [...prev, ...moreReports]);
+      }
+    } catch (error) {
+      console.error('Error loading more reports', error);
+      createSnackbar(`Failed to load more missing item reports`, error);
+    } finally {
+      setLazyLoading(false);
+    }
+  };
+
   // Find and format the last checked date based on the list of admin actions for a given report.
   const displayLastCheckedDate = (report: MissingItemReport) => {
     let dateString = report.adminActions?.findLast((action) => {
@@ -256,11 +317,13 @@ const LostAndFoundAdmin = () => {
   };
 
   const handleMissingItemClick = (missingID: string) => {
+    setFetchMissingLoading(true);
     setShowMissingPopUp(!showMissingPopUp);
     setMissingID(missingID);
   };
 
   const handleFoundItemClick = (foundID: string) => {
+    setFetchFoundLoading(true);
     setShowFoundPopUp(!showFoundPopUp);
     setFoundID(foundID);
   };
@@ -405,6 +468,53 @@ const LostAndFoundAdmin = () => {
       </Grid>
     </>
   );
+
+  const SkeletonPopUp = () => {
+    return (
+      <>
+        <Grid container className={styles.popUpCard}>
+          <Grid container className={styles.popUpHeader}>
+            <Grid item fontSize={'1.3em'}>
+              <div></div>
+            </Grid>
+            <Grid item fontSize={'1.2em'}>
+              <div></div>
+            </Grid>
+            <Grid item fontSize={'0.8em'}>
+              <div></div>
+              <div></div>
+            </Grid>
+            <Grid item>
+              <Button disabled color="inherit"></Button>
+            </Grid>
+          </Grid>
+          <Grid container direction={'row'}>
+            <Grid container direction={'column'} className={styles.popUpBodyLeft}>
+              <Grid item>
+                <div></div>
+              </Grid>
+              <Grid item>
+                <div></div>
+              </Grid>
+              <Grid item>
+                <div></div>
+              </Grid>
+            </Grid>
+            <Grid container direction={'column'} className={styles.popUpBodyRight}>
+              <Grid item xs={6.5}>
+                <Grid item>
+                  <div></div>
+                </Grid>
+                <Grid item>
+                  <div></div>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </>
+    );
+  };
 
   const MissingItemPopUp = () => {
     if (!missingItem) return null;
@@ -693,7 +803,13 @@ const LostAndFoundAdmin = () => {
           {showMissingPopUp ? (
             <>
               <CardContent className={styles.infoText} />
-              <MissingItemPopUp />
+              {fetchMissingLoading ? (
+                <SkeletonPopUp />
+              ) : (
+                <>
+                  <MissingItemPopUp />
+                </>
+              )}
             </>
           ) : (
             <>
@@ -806,15 +922,36 @@ const LostAndFoundAdmin = () => {
                   </Grid>
                 ))}
                 {/* Sentinel element for lazy loading */}
-                <div ref={loadMoreRef} />
+                <div ref={loadMoreFoundRef} />
 
                 {/*Show a loader when lazy loading */}
-                {lazyLoading && <GordonLoader />}
+                {foundLazyLoading && <GordonLoader />}
               </div>
             </>
           )}
         </Grid>
       </Grid>
+      {showMissingPopUp && showFoundPopUp ? (
+        <Card>
+          <CardContent>
+            <Grid container justifyContent={'center'}>
+              <Button
+                className={styles.matchButton}
+                onClick={() => {
+                  // Mark match code
+                }}
+                variant="contained"
+                color="secondary"
+              >
+                <ContentCopyRoundedIcon />
+                <b>Match Found</b>
+              </Button>
+            </Grid>
+          </CardContent>
+        </Card>
+      ) : (
+        <div></div>
+      )}
     </>
   );
 };

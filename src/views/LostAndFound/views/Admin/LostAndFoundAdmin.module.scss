@@ -167,7 +167,6 @@
   margin: 2rem;
   margin-bottom: 0;
   justify-content: space-between;
-  font-size: clamp(0.8vw, 1.3vw, 2rem);
   max-width: 8rem;
   text-overflow: ellipsis;
   word-wrap: break-word;
@@ -196,7 +195,7 @@
 
 .bolderText {
   font-weight: bolder;
-  font-size: 1.5vw;
+  font-size: 1.2rem;
   margin-bottom: 1rem;
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -208,7 +207,7 @@
 }
 
 .regText {
-  font-size: 1.2vw;
+  font-size: 1.2rem;
   margin-bottom: 1rem;
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -220,6 +219,14 @@
 }
 
 .padding {
-  min-height: 18rem;
-  background-color: red;
+  min-height: 20rem;
+}
+
+.matchButton {
+  width: 15%;
+  border-radius: 25px;
+}
+
+.matchIcon {
+  //margin-right: auto;
 }
