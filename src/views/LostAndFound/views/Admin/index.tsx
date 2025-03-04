@@ -480,15 +480,50 @@ const LostAndFoundAdmin = () => {
             <Grid item height={'2em'} width={'3.8rem'} className={styles.skeletonAnimation} />
           </Grid>
           <Grid container direction={'row'}>
-            <Grid container direction={'column'} className={styles.popUpBodyLeft}>
-              <Grid item height={'7em'} width={'5rem'} className={styles.skeletonAnimation} />
-              <Grid item className={styles.skeletonAnimation} />
-              <Grid item className={styles.skeletonAnimation} />
+            <Grid
+              container
+              justifyContent={'space-between'}
+              direction={'column'}
+              className={styles.popUpBodyLeft}
+            >
+              <Grid
+                item
+                height={'3em'}
+                width={'8rem'}
+                marginBottom={'2em'}
+                className={styles.skeletonAnimation}
+              />
+              <Grid
+                item
+                height={'3em'}
+                width={'8rem'}
+                marginBottom={'2em'}
+                className={styles.skeletonAnimation}
+              />
+              <Grid
+                item
+                height={'3em'}
+                width={'8rem'}
+                marginBottom={'2em'}
+                className={styles.skeletonAnimation}
+              />
             </Grid>
             <Grid container direction={'column'} className={styles.popUpBodyRight}>
               <Grid item xs={6.5}>
-                <Grid item className={styles.skeletonAnimation} />
-                <Grid item className={styles.skeletonAnimation} />
+                <Grid
+                  item
+                  height={'6em'}
+                  width={'23em'}
+                  marginBottom={'2em'}
+                  className={styles.skeletonAnimation}
+                />
+                <Grid
+                  item
+                  height={'6em'}
+                  width={'23em'}
+                  marginBottom={'2em'}
+                  className={styles.skeletonAnimation}
+                />
               </Grid>
             </Grid>
           </Grid>

@@ -228,6 +228,23 @@
 }
 
 .skeletonAnimation {
-  background-color: var(--mui-palette-neutral-400);
+  //background-color: var(--mui-palette-neutral-400);
   border-radius: 5px;
+  background: linear-gradient(
+    90deg,
+    var(--mui-palette-neutral-100),
+    var(--mui-palette-neutral-400),
+    var(--mui-palette-neutral-100)
+  );
+  background-size: 200% 100%;
+  animation: gradient 1s ease infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 200%;
+  }
+  100% {
+    background-position: 0%;
+  }
 }
