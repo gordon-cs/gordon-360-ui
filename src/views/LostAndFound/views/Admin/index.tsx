@@ -27,7 +27,7 @@ import {
   clearUrlParams,
   formatDateString,
 } from 'views/LostAndFound/components/Helpers';
-import { Close, Person, StayPrimaryLandscapeSharp, Storage } from '@mui/icons-material';
+import { Close, Person, StayPrimaryLandscapeSharp, Storage, StyleSharp } from '@mui/icons-material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CircleIcon from '@mui/icons-material/Circle';
 import CloseIcon from '@mui/icons-material/Close';
@@ -474,40 +474,21 @@ const LostAndFoundAdmin = () => {
       <>
         <Grid container className={styles.popUpCard}>
           <Grid container className={styles.popUpHeader}>
-            <Grid item fontSize={'1.3em'}>
-              <div></div>
-            </Grid>
-            <Grid item fontSize={'1.2em'}>
-              <div></div>
-            </Grid>
-            <Grid item fontSize={'0.8em'}>
-              <div></div>
-              <div></div>
-            </Grid>
-            <Grid item>
-              <Button disabled color="inherit"></Button>
-            </Grid>
+            <Grid item height={'1.5em'} width={'5rem'} className={styles.skeletonAnimation} />
+            <Grid item height={'1.5em'} width={'8rem'} className={styles.skeletonAnimation} />
+            <Grid item height={'1.5em'} width={'10rem'} className={styles.skeletonAnimation} />
+            <Grid item height={'2em'} width={'3.8rem'} className={styles.skeletonAnimation} />
           </Grid>
           <Grid container direction={'row'}>
             <Grid container direction={'column'} className={styles.popUpBodyLeft}>
-              <Grid item>
-                <div></div>
-              </Grid>
-              <Grid item>
-                <div></div>
-              </Grid>
-              <Grid item>
-                <div></div>
-              </Grid>
+              <Grid item height={'7em'} width={'5rem'} className={styles.skeletonAnimation} />
+              <Grid item className={styles.skeletonAnimation} />
+              <Grid item className={styles.skeletonAnimation} />
             </Grid>
             <Grid container direction={'column'} className={styles.popUpBodyRight}>
               <Grid item xs={6.5}>
-                <Grid item>
-                  <div></div>
-                </Grid>
-                <Grid item>
-                  <div></div>
-                </Grid>
+                <Grid item className={styles.skeletonAnimation} />
+                <Grid item className={styles.skeletonAnimation} />
               </Grid>
             </Grid>
           </Grid>
