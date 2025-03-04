@@ -43,7 +43,8 @@ const LostAndFoundAdmin = () => {
   const isMobile = useMediaQuery('(max-width:900px)');
   const [loading, setLoading] = useState(true);
   const [pageLoaded, setPageLoaded] = useState(false);
-  const [reports, setReports] = useState<MissingItemReport[]>([]);
+  const [missingReports, setMissingReports] = useState<MissingItemReport[]>([]);
+  const [foundItems, setFoundItems] = useState<FoundItem[]>([]);
   const [status, setStatus] = useState(''); // Default value active
   const [category, setCategory] = useState('');
   const [color, setColor] = useState('');
@@ -56,8 +57,11 @@ const LostAndFoundAdmin = () => {
   const [hasMore, setHasMore] = useState(true);
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const [showMissingPopUp, setShowMissingPopUp] = useState(false);
+  const [showFoundPopUp, setShowFoundPopUp] = useState(false);
   const [missingID, setMissingID] = useState('');
-  const [item, setItem] = useState<MissingItemReport | null>(null);
+  const [foundID, setFoundID] = useState('');
+  const [missingItem, setMissingItem] = useState<MissingItemReport | null>(null);
+  const [foundItem, setFoundItem] = useState<FoundItem | null>(null);
 
   useEffect(() => {
     setPageLoaded(true);
@@ -74,10 +78,17 @@ const LostAndFoundAdmin = () => {
   }, []);
 
   // Fetch the missing item report from the backend.
-  const fetchItem = async () => {
+  const fetchItem = async (itemType: string) => {
     try {
-      const fetchedItem = await lostAndFoundService.getMissingItemReport(parseInt(missingID || ''));
-      setItem(fetchedItem);
+      if (itemType === 'missing') {
+        const fetchedItem = await lostAndFoundService.getMissingItemReport(
+          parseInt(missingID || ''),
+        );
+        setMissingItem(fetchedItem);
+      } else if (itemType === 'found') {
+        const fetchedItem = await lostAndFoundService.getFoundItem(foundID || '');
+        setFoundItem(fetchedItem);
+      }
     } catch (error) {
       console.error('Error fetching item:', error);
     }
@@ -93,7 +104,7 @@ const LostAndFoundAdmin = () => {
           color === getUrlParam('color', location, searchParams) &&
           keywords === getUrlParam('keywords', location, searchParams)
         ) {
-          const fetchedReports = await lostAndFoundService.getMissingItemReports(
+          const fetchedMissingReports = await lostAndFoundService.getMissingItemReports(
             status,
             category,
             color,
@@ -101,12 +112,20 @@ const LostAndFoundAdmin = () => {
             undefined,
             pageSize,
           );
-          setReports(fetchedReports);
+          const fetchedFoundReports = await lostAndFoundService.getFoundItems(
+            undefined,
+            status,
+            color,
+            category,
+            keywords,
+          );
+          setMissingReports(fetchedMissingReports);
+          setFoundItems(fetchedFoundReports);
           setLoading(false);
         }
       } catch (error) {
-        console.error('Error fetching missing items', error);
-        createSnackbar(`Failed to load missing item reports`, error);
+        console.error('Error fetching missing or found items', error);
+        createSnackbar(`Failed to load missing or found items`, error);
       }
     };
     // Check if the keywords have changed, and make the API request only if they have been stable
@@ -153,7 +172,7 @@ const LostAndFoundAdmin = () => {
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
-        loadMoreReports();
+        loadMoreMissingReports();
       }
     });
     if (loadMoreRef.current) {
@@ -164,13 +183,19 @@ const LostAndFoundAdmin = () => {
         observer.unobserve(loadMoreRef.current);
       }
     };
-  }, [loadMoreRef, lazyLoading, hasMore, status, category, color, keywords, reports]);
+  }, [loadMoreRef, lazyLoading, hasMore, status, category, color, keywords, missingReports]);
 
   useEffect(() => {
     if (missingID) {
-      fetchItem();
+      fetchItem('missing');
     }
   }, [missingID]);
+
+  useEffect(() => {
+    if (foundID) {
+      fetchItem('found');
+    }
+  }, [foundID]);
 
   const yellowDateThreshold = 7;
   const redDateThreshold = 14;
@@ -191,11 +216,12 @@ const LostAndFoundAdmin = () => {
   };
 
   // Lazy loading helper: load more reports
-  const loadMoreReports = async () => {
+  const loadMoreMissingReports = async () => {
     if (lazyLoading || !hasMore) return;
     setLazyLoading(true);
     // Use the last report's recordID as the lastId; if none, it remains undefined.
-    const lastId = reports.length > 0 ? reports[reports.length - 1].recordID : undefined;
+    const lastId =
+      missingReports.length > 0 ? missingReports[missingReports.length - 1].recordID : undefined;
     try {
       const moreReports = await lostAndFoundService.getMissingItemReports(
         status,
@@ -208,7 +234,7 @@ const LostAndFoundAdmin = () => {
       if (moreReports.length < pageSize) {
         setHasMore(false);
       } else {
-        setReports((prev) => [...prev, ...moreReports]);
+        setMissingReports((prev) => [...prev, ...moreReports]);
       }
     } catch (error) {
       console.error('Error loading more reports', error);
@@ -232,7 +258,11 @@ const LostAndFoundAdmin = () => {
   const handleMissingItemClick = (missingID: string) => {
     setShowMissingPopUp(!showMissingPopUp);
     setMissingID(missingID);
-    fetchItem();
+  };
+
+  const handleFoundItemClick = (foundID: string) => {
+    setShowFoundPopUp(!showFoundPopUp);
+    setFoundID(foundID);
   };
 
   const LostItemDatabase = (
@@ -356,37 +386,48 @@ const LostAndFoundAdmin = () => {
   const FoundItemsListHeader = (
     <>
       <Grid container className={styles.tableHeader} justifyContent={'space-between'}>
-        <Grid item>Tag #</Grid>
-        <Grid item>Date Found</Grid>
-        <Grid item>Location</Grid>
-        <Grid item>Category</Grid>
-        <Grid item>Description</Grid>
+        <Grid item xs={2}>
+          Tag #
+        </Grid>
+        <Grid item xs={2}>
+          Date Found
+        </Grid>
+        <Grid item xs={2.5}>
+          Location
+        </Grid>
+        <Grid item xs={2.5}>
+          Category
+        </Grid>
+        <Grid item xs={3}>
+          Description
+        </Grid>
+        <Grid item xs={0.5} />
       </Grid>
     </>
   );
 
   const MissingItemPopUp = () => {
-    if (!item) return null;
+    if (!missingItem) return null;
 
     return (
       <>
         <Grid container className={styles.popUpCard}>
           <Grid container className={styles.popUpHeader}>
             <Grid item fontSize={'1.3em'}>
-              <div>{formatDateString(item.dateLost)}</div>
+              <div>{formatDateString(missingItem.dateLost)}</div>
             </Grid>
             <Grid item fontSize={'1.2em'}>
               <div>
                 <b>
-                  {item.firstName}
+                  {missingItem.firstName}
                   <span>&nbsp;</span>
-                  {item.lastName}
+                  {missingItem.lastName}
                 </b>
               </div>
             </Grid>
             <Grid item fontSize={'0.8em'}>
-              <div>{item.email}</div>
-              <div>{item.phone}</div>
+              <div>{missingItem.email}</div>
+              <div>{missingItem.phone}</div>
             </Grid>
             <Grid item>
               <Button
@@ -405,26 +446,26 @@ const LostAndFoundAdmin = () => {
             <Grid container direction={'column'} className={styles.popUpBodyLeft}>
               <Grid item>
                 <span className={styles.smallText}>Category:</span>
-                <div className={styles.bolderText}>{item.category}</div>
+                <div className={styles.bolderText}>{missingItem.category}</div>
               </Grid>
               <Grid item>
                 <span className={styles.smallText}>Brand/Make:</span>
-                <div className={styles.bolderText}>{item.brand}</div>
+                <div className={styles.bolderText}>{missingItem.brand}</div>
               </Grid>
               <Grid item>
                 <span className={styles.smallText}>Colors:</span>
-                <div className={styles.bolderText}>{item.colors.join(', ')}</div>
+                <div className={styles.bolderText}>{missingItem.colors.join(', ')}</div>
               </Grid>
             </Grid>
             <Grid container direction={'column'} className={styles.popUpBodyRight}>
               <Grid item xs={6.5}>
                 <Grid item>
                   <span className={styles.smallText}>Location:</span>
-                  <div className={styles.regText}>{item.locationLost}</div>
+                  <div className={styles.regText}>{missingItem.locationLost}</div>
                 </Grid>
                 <Grid item>
                   <span className={styles.smallText}>Description:</span>
-                  <div className={styles.regText}>{item.description}</div>
+                  <div className={styles.regText}>{missingItem.description}</div>
                 </Grid>
               </Grid>
             </Grid>
@@ -440,6 +481,79 @@ const LostAndFoundAdmin = () => {
             >
               <b>Mark No Match Found</b>
             </Button>
+          </Grid>
+        </Grid>
+      </>
+    );
+  };
+
+  const FoundItemPopUp = () => {
+    if (!foundItem) return null;
+
+    return (
+      <>
+        <Grid container className={styles.popUpCard}>
+          <Grid container className={styles.popUpHeader}>
+            <Grid item fontSize={'1.3em'}>
+              <div>{formatDateString(foundItem.dateFound)}</div>
+            </Grid>
+            <Grid item fontSize={'1.2em'}>
+              <div>
+                <b>
+                  {foundItem.ownerFirstName || foundItem.ownerLastName
+                    ? `${foundItem.ownerFirstName || ''} ${foundItem.ownerLastName || ''}`
+                    : 'Unknown'}
+                </b>
+              </div>
+            </Grid>
+            <Grid item fontSize={'0.8em'}>
+              <div>{foundItem.ownerEmail}</div>
+              <div>{foundItem.ownerPhone}</div>
+            </Grid>
+            <Grid item fontSize={'1.4em'}>
+              <div>{foundItem.recordID}</div>
+            </Grid>
+            <Grid item>
+              <Button
+                color="inherit"
+                variant="contained"
+                onClick={() => {
+                  setShowFoundPopUp(!showFoundPopUp);
+                  setFoundID('');
+                }}
+              >
+                <CloseIcon className={styles.xIcon} />
+              </Button>
+            </Grid>
+          </Grid>
+          <Grid container direction={'row'}>
+            <Grid container direction={'column'} className={styles.popUpBodyLeft}>
+              <Grid item>
+                <span className={styles.smallText}>Category:</span>
+                <div className={styles.bolderText}>{foundItem.category}</div>
+              </Grid>
+              <Grid item>
+                <span className={styles.smallText}>Brand/Make:</span>
+                <div className={styles.bolderText}>{foundItem.brand}</div>
+              </Grid>
+              <Grid item>
+                <span className={styles.smallText}>Colors:</span>
+                <div className={styles.bolderText}>{foundItem.colors.join(', ')}</div>
+              </Grid>
+            </Grid>
+            <Grid container direction={'column'} className={styles.popUpBodyRight}>
+              <Grid item xs={6.5}>
+                <Grid item>
+                  <span className={styles.smallText}>Location:</span>
+                  <div className={styles.regText}>{foundItem.locationFound}</div>
+                </Grid>
+                <Grid item>
+                  <span className={styles.smallText}>Description:</span>
+                  <div className={styles.regText}>{foundItem.description}</div>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item className={styles.padding} />
           </Grid>
         </Grid>
       </>
@@ -590,30 +704,30 @@ const LostAndFoundAdmin = () => {
               </CardContent>
               {MissingItemsListHeader}
               <div className={styles.scrollBox}>
-                {reports.map((report) => (
+                {missingReports.map((missingReport) => (
                   <Grid
                     container
                     justifyContent={'space-between'}
-                    key={report.recordID}
+                    key={missingReport.recordID}
                     className={`${styles.reportRow} ${styles.clickableRow}`}
-                    onClick={() => handleMissingItemClick(String(report.recordID))}
+                    onClick={() => handleMissingItemClick(String(missingReport.recordID))}
                   >
                     <Grid item xs={2}>
-                      {formatDateString(report.dateLost)}
+                      {formatDateString(missingReport.dateLost)}
                     </Grid>
                     <Grid item xs={2.5}>
-                      <div className={styles.dataCell}>{report.locationLost}</div>
+                      <div className={styles.dataCell}>{missingReport.locationLost}</div>
                     </Grid>
                     <Grid item xs={2.5}>
-                      <div className={styles.dataCell}>{report.category}</div>
+                      <div className={styles.dataCell}>{missingReport.category}</div>
                     </Grid>
                     <Grid item xs={3}>
-                      <div className={styles.dataCell}>{report.description}</div>
+                      <div className={styles.dataCell}>{missingReport.description}</div>
                     </Grid>
                     <Grid item xs={0.5} className={styles.dataCell}>
                       <CircleIcon
                         sx={{
-                          color: dateAgeColor(displayLastCheckedDate(report)),
+                          color: dateAgeColor(displayLastCheckedDate(missingReport)),
                           fontSize: 10,
                         }}
                       />
@@ -645,50 +759,60 @@ const LostAndFoundAdmin = () => {
           >
             <span>View All</span>
           </CardHeader>
-          <CardContent className={styles.infoText}>
-            <InfoOutlinedIcon />
-            <span>&nbsp;</span>
-            <span>Click on an item to view details</span>
-          </CardContent>
-          {FoundItemsListHeader}
-          <div className={styles.scrollBox}>
-            {reports.map((report) => (
-              <Grid
-                key={report.recordID}
-                className={`${styles.reportRow} ${styles.clickableRow}`}
-                onClick={() =>
-                  navigate(`/lostandfound/lostandfoundadmin/missingitemdatabase/${report.recordID}`)
-                }
-              >
-                <Grid item xs={2}>
-                  {formatDateString(report.dateLost)}
-                </Grid>
-                <Grid item xs={2.5}>
-                  <div className={styles.dataCell}>{report.locationLost}</div>
-                </Grid>
-                <Grid item xs={2.5}>
-                  <div className={styles.dataCell}>{report.category}</div>
-                </Grid>
-                <Grid item xs={3}>
-                  <div className={styles.dataCell}>{report.description}</div>
-                </Grid>
-                <Grid item xs={1} className={styles.dataCell}>
-                  <div className={styles.dataCell}>
-                    <>
-                      <CircleIcon
-                        sx={{ color: dateAgeColor(displayLastCheckedDate(report)), fontSize: 10 }}
-                      />
-                    </>
-                  </div>
-                </Grid>
-              </Grid>
-            ))}
-            {/* Sentinel element for lazy loading */}
-            <div ref={loadMoreRef} />
+          {showFoundPopUp ? (
+            <>
+              <CardContent className={styles.infoText} />
+              <FoundItemPopUp />
+            </>
+          ) : (
+            <>
+              <CardContent className={styles.infoText}>
+                <InfoOutlinedIcon />
+                <span>&nbsp;</span>
+                <span>Click on an item to view details</span>
+              </CardContent>
+              {FoundItemsListHeader}
+              <div className={styles.scrollBox}>
+                {foundItems.map((foundItem) => (
+                  <Grid
+                    container
+                    justifyContent={'space-between'}
+                    key={foundItem.recordID}
+                    className={`${styles.reportRow} ${styles.clickableRow}`}
+                    onClick={() => handleFoundItemClick(String(foundItem.recordID))}
+                  >
+                    <Grid item xs={2}>
+                      <div className={styles.dataCell}>{foundItem.recordID}</div>
+                    </Grid>
+                    <Grid item xs={2}>
+                      {formatDateString(foundItem.dateFound)}
+                    </Grid>
+                    <Grid item xs={2.5}>
+                      <div className={styles.dataCell}>{foundItem.locationFound}</div>
+                    </Grid>
+                    <Grid item xs={2.5}>
+                      <div className={styles.dataCell}>{foundItem.category}</div>
+                    </Grid>
+                    <Grid item xs={3}>
+                      <div className={styles.dataCell}>{foundItem.description}</div>
+                    </Grid>
+                    <Grid item xs={0.5} className={styles.dataCell}>
+                      <div>
+                        <>
+                          <CircleIcon sx={{ fontSize: 10 }} />
+                        </>
+                      </div>
+                    </Grid>
+                  </Grid>
+                ))}
+                {/* Sentinel element for lazy loading */}
+                <div ref={loadMoreRef} />
 
-            {/*Show a loader when lazy loading */}
-            {lazyLoading && <GordonLoader />}
-          </div>
+                {/*Show a loader when lazy loading */}
+                {lazyLoading && <GordonLoader />}
+              </div>
+            </>
+          )}
         </Grid>
       </Grid>
     </>
