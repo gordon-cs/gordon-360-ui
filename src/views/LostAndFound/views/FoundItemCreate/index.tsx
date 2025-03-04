@@ -300,6 +300,15 @@ const FoundItemFormCreate = () => {
 
       const response = await lostAndFoundService.createFoundItem(requestData);
 
+      const actionRequestData = {
+        foundID: response,
+        action: 'Created',
+        actionDate: new Date().toISOString(),
+        actionNote: '',
+        submitterUsername: user.AD_Username,
+      };
+      await lostAndFoundService.createFoundAdminAction(response, actionRequestData);
+
       navigate('/lostandfound/lostandfoundadmin');
     } catch (error) {
       console.error('Failed to create found item report:', error);
@@ -317,9 +326,28 @@ const FoundItemFormCreate = () => {
       <Card className={styles.form_card}>
         <CardHeader
           title={
-            <b>
-              Found Item <span style={{ textDecoration: 'underline' }}>Entry</span>
-            </b>
+            <>
+              <Grid container rowGap={1}>
+                <Grid container item xs={12} md={1}>
+                  <Button className={styles.backButton} onClick={() => navigate(-1)}>
+                    Back
+                  </Button>
+                </Grid>
+                <Grid
+                  container
+                  item
+                  columnGap={2}
+                  rowGap={1}
+                  xs={12}
+                  md={9}
+                  justifyContent="center"
+                >
+                  <b>
+                    Found Item <span style={{ textDecoration: 'underline' }}>Entry</span>
+                  </b>
+                </Grid>
+              </Grid>
+            </>
           }
           titleTypographyProps={{ align: 'center' }}
           className="gc360_header"
@@ -624,7 +652,7 @@ const FoundItemFormCreate = () => {
             )}
 
             {/* Initial Action - use typed SelectChangeEvent */}
-            <div style={{ marginBottom: '1rem', marginTop: '1rem' }}>
+            {/* <div style={{ marginBottom: '1rem', marginTop: '1rem' }}>
               <FormControl variant="filled" sx={{ width: 1 }}>
                 <InputLabel id="initial-action-label">Initial Action Taken</InputLabel>
                 <Select
@@ -642,7 +670,7 @@ const FoundItemFormCreate = () => {
                   <MenuItem value="Noted">Noted</MenuItem>
                 </Select>
               </FormControl>
-            </div>
+            </div> */}
 
             {/* Storage Location - also typed select */}
             <div style={{ marginBottom: '1rem' }}>

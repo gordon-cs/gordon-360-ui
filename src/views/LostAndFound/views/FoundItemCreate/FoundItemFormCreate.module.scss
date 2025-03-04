@@ -10,6 +10,17 @@
   margin: 0.7rem;
 }
 
+/* The "Back" button in the header, top-left */
+.backButton {
+  align-self: start;
+  background-color: var(--mui-palette-error-light);
+  color: var(--mui-palette-primary-contrastText);
+  &:hover {
+    background-color: var(--mui-palette-error-main);
+  }
+  margin-bottom: 1rem;
+}
+
 /* Reuse the same approach for radio & checkbox groups */
 .radio_group {
   display: contents;

@@ -22,7 +22,11 @@ import { InfoOutlined, Add, Key, Launch } from '@mui/icons-material';
 import { StatusChip } from 'views/LostAndFound/components/StatusChip';
 
 import Header from 'views/LostAndFound/components/Header';
-import lostAndFoundService, { FoundItem, FoundAdminAction } from 'services/lostAndFound';
+import lostAndFoundService, {
+  FoundItem,
+  FoundAdminAction,
+  InitFoundAdminAction,
+} from 'services/lostAndFound';
 import GordonSnackbar from 'components/Snackbar';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
@@ -33,7 +37,7 @@ import { LFCategories, LFColors } from 'views/LostAndFound/components/Constants'
 import { CustomDatePicker } from 'views/LostAndFound/components/CustomDatePicker';
 import { DateValidationError } from '@mui/x-date-pickers';
 
-const actionTypes = ['CheckedIn', 'NotifiedOfficer', 'OwnerContact', 'Custom'];
+const actionTypes = ['OwnerContact', 'Custom'];
 
 interface ISnackbarState {
   message: string;
@@ -48,6 +52,7 @@ const FoundItemFormEdit = () => {
 
   /** The found item object we are editing. */
   const [foundItem, setFoundItem] = useState<FoundItem | null>(null);
+  const [originalItemData, setOriginalItemData] = useState<FoundItem | null>(null);
 
   const [snackbar, setSnackbar] = useState<ISnackbarState>({
     message: '',
@@ -97,7 +102,9 @@ const FoundItemFormEdit = () => {
       try {
         const itemResponse = await lostAndFoundService.getFoundItem(itemId);
         setFoundItem(itemResponse);
+        setOriginalItemData(itemResponse);
         setAdminActions(itemResponse.adminActions || []);
+        setActionsLoading(false);
       } catch (err) {
         console.error(err);
         createSnackbar('Failed to load found item from server', 'error');
@@ -112,7 +119,7 @@ const FoundItemFormEdit = () => {
   /** 2) On mount or whenever `actionsUpdated` is set, fetch admin actions. */
   useEffect(() => {
     const fetchActions = async () => {
-      if (!itemId) return;
+      if (!itemId || !actionsUpdated) return;
       setActionsLoading(true);
       try {
         const actionsResp = (await lostAndFoundService.getFoundItem(itemId)).adminActions;
@@ -127,7 +134,7 @@ const FoundItemFormEdit = () => {
     };
 
     fetchActions();
-  }, [itemId, actionsUpdated]);
+  }, [actionsUpdated, itemId]);
 
   /** 3) Validate required fields. */
   const requiredFields = ['category', 'description', 'locationFound'];
@@ -183,8 +190,36 @@ const FoundItemFormEdit = () => {
     if (!validateForm()) return;
 
     try {
-      await lostAndFoundService.updateFoundItem(foundItem, foundItem.recordID);
-      navigate('/lostandfound/lostandfoundadmin/founditemdatabase');
+      if (originalItemData) {
+        const formFields = Object.keys(foundItem);
+        let newActionNote = '';
+        for (let i = 0; i < formFields.length; i++) {
+          if (
+            JSON.stringify(originalItemData[formFields[i] as keyof typeof originalItemData]) !==
+            JSON.stringify(foundItem[formFields[i] as keyof typeof foundItem])
+          ) {
+            newActionNote +=
+              formFields[i] +
+              ': OLD: ' +
+              originalItemData[formFields[i] as keyof typeof originalItemData] +
+              ', NEW: ' +
+              foundItem[formFields[i] as keyof typeof foundItem] +
+              ' ';
+          }
+        }
+        // Update the found item
+        await lostAndFoundService.updateFoundItem(foundItem, foundItem.recordID);
+
+        const actionRequestData: InitFoundAdminAction = {
+          foundID: itemId || '',
+          actionDate: new Date().toISOString(),
+          submitterUsername: profile?.AD_Username || '',
+          action: 'Edited',
+          actionNote: newActionNote,
+        };
+        await lostAndFoundService.createFoundAdminAction(itemId || '', actionRequestData);
+        navigate('/lostandfound/lostandfoundadmin/founditemdatabase');
+      }
     } catch (err) {
       console.error(err);
       createSnackbar('Failed to save changes.', 'error');
@@ -434,9 +469,43 @@ const FoundItemFormEdit = () => {
         <Card className={styles.form_card}>
           <CardHeader
             title={
-              <b>
-                Found Item: <span className={styles.title_id}>#{foundItem.recordID}</span>
-              </b>
+              <>
+                <Grid container rowGap={1}>
+                  <Grid container item xs={12} md={1}>
+                    <Button className={styles.backButton} onClick={() => navigate(-1)}>
+                      Back
+                    </Button>
+                  </Grid>
+                  <Grid
+                    container
+                    item
+                    columnGap={2}
+                    rowGap={1}
+                    xs={12}
+                    md={9}
+                    justifyContent="center"
+                  >
+                    <b>
+                      Found Item: <span className={styles.title_id}>#{foundItem.recordID}</span>
+                    </b>
+                    <Typography>
+                      <em>Status:</em> <StatusChip status={foundItem.status} />
+                    </Typography>
+                  </Grid>
+                  <Grid container item xs={12} md={2}>
+                    <Button
+                      variant="contained"
+                      className={styles.submit_button}
+                      color="secondary"
+                      onClick={handleSave}
+                      fullWidth
+                      disabled={foundItem === originalItemData}
+                    >
+                      Save Changes
+                    </Button>
+                  </Grid>
+                </Grid>
+              </>
             }
             titleTypographyProps={{ align: 'center' }}
             className="gc360_header"
@@ -626,30 +695,6 @@ const FoundItemFormEdit = () => {
                   {adminActionsCard}
                 </Grid>
               </Grid>
-            </Grid>
-          </Grid>
-
-          {/* Bottom row: Save / Cancel */}
-          <Grid container justifyContent="flex-end" spacing={2} padding={2}>
-            <Grid item xs={6} sm={3} md={2}>
-              <Button
-                variant="contained"
-                color="error"
-                onClick={() => navigate('/lostandfound/lostandfoundadmin/founditemdatabase')}
-                fullWidth
-              >
-                Cancel
-              </Button>
-            </Grid>
-            <Grid item xs={6} sm={3} md={2}>
-              <Button
-                variant="contained"
-                className={styles.submit_button}
-                onClick={handleSave}
-                fullWidth
-              >
-                Save
-              </Button>
             </Grid>
           </Grid>
         </Card>
