@@ -402,42 +402,44 @@ const LostAndFoundAdmin = () => {
             </Grid>
           </Grid>
           <Grid container direction={'row'}>
-            <Grid container direction={'column'} className={styles.popUpBody} xs={3}>
+            <Grid container direction={'column'} className={styles.popUpBodyLeft}>
               <Grid item>
                 <span className={styles.smallText}>Category:</span>
-                <div>{item.category}</div>
+                <div className={styles.bolderText}>{item.category}</div>
               </Grid>
               <Grid item>
                 <span className={styles.smallText}>Brand/Make:</span>
-                <div>{item.brand}</div>
+                <div className={styles.bolderText}>{item.brand}</div>
               </Grid>
               <Grid item>
                 <span className={styles.smallText}>Colors:</span>
-                <div>{item.colors}</div>
+                <div className={styles.bolderText}>{item.colors.join(', ')}</div>
               </Grid>
             </Grid>
-            <Grid container direction={'column'} className={styles.popUpBody} xs={6.5}>
-              <Grid item>
-                <span className={styles.smallText}>Location:</span>
-                <div>{item.locationLost}</div>
-              </Grid>
-              <Grid item>
-                <span className={styles.smallText}>Description:</span>
-                <div>{item.description}</div>
+            <Grid container direction={'column'} className={styles.popUpBodyRight}>
+              <Grid item xs={6.5}>
+                <Grid item>
+                  <span className={styles.smallText}>Location:</span>
+                  <div className={styles.regText}>{item.locationLost}</div>
+                </Grid>
+                <Grid item>
+                  <span className={styles.smallText}>Description:</span>
+                  <div className={styles.regText}>{item.description}</div>
+                </Grid>
               </Grid>
             </Grid>
-            <Grid item marginLeft={'auto'} marginRight={'1rem'} marginBottom={'0.5rem'}>
-              <Button
-                color="success"
-                variant="contained"
-                className={styles.markButton}
-                onClick={() => {
-                  //no match found code will go here
-                }}
-              >
-                <b>Mark No Match Found</b>
-              </Button>
-            </Grid>
+          </Grid>
+          <Grid item className={styles.buttonAlign}>
+            <Button
+              color="success"
+              variant="contained"
+              className={styles.markButton}
+              onClick={() => {
+                //no match found code will go here
+              }}
+            >
+              <b>Mark No Match Found</b>
+            </Button>
           </Grid>
         </Grid>
       </>

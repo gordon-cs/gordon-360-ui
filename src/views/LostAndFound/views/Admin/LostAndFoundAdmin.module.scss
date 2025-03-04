@@ -147,12 +147,12 @@
 }
 
 .popUpHeader {
-  margin-top: 0.8rem;
   margin-left: 1rem;
   margin-right: 1rem;
   margin-bottom: -1rem;
   justify-content: space-between;
-  height: 2.5rem;
+  align-items: center;
+  height: 3.5rem;
   border: 0;
   border-bottom: 1px;
   border-style: solid;
@@ -163,16 +163,58 @@
   transform: scale(1.5);
 }
 
-.popUpBody {
+.popUpBodyLeft {
+  margin: 2rem;
+  margin-bottom: 0;
+  justify-content: space-between;
+  font-size: clamp(0.8vw, 1.3vw, 2rem);
+  max-width: 8rem;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  height: fit-content;
+}
+
+.popUpBodyRight {
   margin: 2rem;
   justify-content: space-between;
-  font-size: 1vw;
+  height: fit-content;
+  width: 24rem;
 }
 
 .smallText {
-  font-size: 0.6em;
+  font-size: 0.8vw;
+}
+
+.buttonAlign {
+  margin-left: auto;
+  margin-right: 1rem;
 }
 
 .markButton {
   border-radius: 25px;
+}
+
+.bolderText {
+  font-weight: bolder;
+  font-size: 1.5vw;
+  margin-bottom: 1rem;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  max-width: 100%;
+}
+
+.regText {
+  font-size: 1.2vw;
+  margin-bottom: 1rem;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  max-width: 100%;
 }
