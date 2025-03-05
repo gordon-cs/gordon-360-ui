@@ -2,7 +2,6 @@ import styles from './LostAndFoundAdmin.module.css';
 import { AuthGroup } from 'services/auth';
 import { useAuthGroups } from 'hooks';
 import {
-  AppBar,
   Card,
   CardContent,
   CardHeader,
@@ -10,7 +9,6 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  Typography,
   TextField,
 } from '@mui/material';
 import { Grid, Button } from '@mui/material';
@@ -27,14 +25,16 @@ import {
   clearUrlParams,
   formatDateString,
 } from 'views/LostAndFound/components/Helpers';
-import { Close, Person, StayPrimaryLandscapeSharp, Storage, StyleSharp } from '@mui/icons-material';
+import userService from 'services/user';
+import { Person, Storage } from '@mui/icons-material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import SimpleSnackbar from 'components/Snackbar';
 import CircleIcon from '@mui/icons-material/Circle';
 import CloseIcon from '@mui/icons-material/Close';
 import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
 import { differenceInCalendarDays } from 'date-fns';
 import lostAndFoundService, { MissingItemReport, FoundItem } from 'services/lostAndFound';
-import { size } from 'lodash';
+import { useUser } from 'hooks';
 
 const LostAndFoundAdmin = () => {
   const isAdmin = useAuthGroups(AuthGroup.LostAndFoundAdmin);
@@ -52,6 +52,7 @@ const LostAndFoundAdmin = () => {
   const [keywords, setKeywords] = useState('');
   const location = useLocation();
   const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
+  const [errorSnackbarOpen, setErrorSnackbarOpen] = useState<boolean>(false);
 
   const pageSize = 25;
   const [lazyLoading, setLazyLoading] = useState(false);
@@ -68,6 +69,7 @@ const LostAndFoundAdmin = () => {
   const [foundItem, setFoundItem] = useState<FoundItem | null>(null);
   const [fetchMissingLoading, setFetchMissingLoading] = useState(false);
   const [fetchFoundLoading, setFetchFoundLoading] = useState(false);
+  const user = useUser();
 
   useEffect(() => {
     setPageLoaded(true);
@@ -99,6 +101,26 @@ const LostAndFoundAdmin = () => {
       }
     } catch (error) {
       console.error('Error fetching item:', error);
+    }
+  };
+
+  const handleNoMatchSubmit = async (itemId: string) => {
+    let requestData = {
+      missingID: parseInt(itemId || ''),
+      action: 'Checked',
+      actionNote: '',
+      actionDate: new Date().toISOString(),
+      username: user.profile?.AD_Username || '',
+      isPublic: false,
+    };
+    try {
+      await lostAndFoundService.createAdminAction(parseInt(itemId ? itemId : ''), requestData);
+    } catch {
+      setErrorSnackbarOpen(true);
+      console.error('No Match Submit Failed');
+    } finally {
+      console.log(requestData);
+      setShowMissingPopUp(false);
     }
   };
 
@@ -602,7 +624,7 @@ const LostAndFoundAdmin = () => {
               variant="contained"
               className={styles.markButton}
               onClick={() => {
-                //no match found code will go here
+                handleNoMatchSubmit(missingID);
               }}
             >
               <b>Mark No Match Found</b>
@@ -953,9 +975,7 @@ const LostAndFoundAdmin = () => {
             <Grid container justifyContent={'center'}>
               <Button
                 className={styles.matchButton}
-                onClick={() => {
-                  // Mark match code
-                }}
+                onClick={() => {}}
                 variant="contained"
                 color="secondary"
               >
@@ -968,6 +988,14 @@ const LostAndFoundAdmin = () => {
       ) : (
         <div></div>
       )}
+      <SimpleSnackbar
+        open={errorSnackbarOpen}
+        onClose={() => {
+          setErrorSnackbarOpen(false);
+        }}
+        severity="error"
+        text="No Match Submit Failed."
+      />
     </>
   );
 };
