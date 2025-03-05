@@ -894,7 +894,7 @@ const LostAndFoundAdmin = () => {
           {showFoundPopUp ? (
             <>
               <CardContent className={styles.infoText} />
-              <FoundItemPopUp />
+              {fetchFoundLoading ? <SkeletonPopUp /> : <FoundItemPopUp />}
             </>
           ) : (
             <>
