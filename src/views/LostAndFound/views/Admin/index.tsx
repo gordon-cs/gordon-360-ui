@@ -872,6 +872,7 @@ const LostAndFoundAdmin = () => {
                     key={missingReport.recordID}
                     className={`${styles.reportRow} ${styles.clickableRow}`}
                     onClick={() => handleMissingItemClick(String(missingReport.recordID))}
+                    tabIndex={0}
                   >
                     <Grid item xs={2}>
                       {formatDateString(missingReport.dateLost)}
@@ -941,6 +942,7 @@ const LostAndFoundAdmin = () => {
                     key={foundItem.recordID}
                     className={`${styles.reportRow} ${styles.clickableRow}`}
                     onClick={() => handleFoundItemClick(String(foundItem.recordID))}
+                    tabIndex={0}
                   >
                     <Grid item xs={2}>
                       <div className={styles.dataCell}>{foundItem.recordID}</div>
