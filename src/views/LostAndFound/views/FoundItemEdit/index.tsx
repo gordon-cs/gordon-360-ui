@@ -17,7 +17,7 @@ import {
   InputLabel,
   useMediaQuery,
 } from '@mui/material';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { InfoOutlined, Add, Key, Launch } from '@mui/icons-material';
 import { StatusChip } from 'views/LostAndFound/components/StatusChip';
 
@@ -49,6 +49,7 @@ const FoundItemFormEdit = () => {
   const { itemId } = useParams<{ itemId: string }>();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
 
   /** The found item object we are editing. */
   const [foundItem, setFoundItem] = useState<FoundItem | null>(null);
@@ -190,36 +191,8 @@ const FoundItemFormEdit = () => {
     if (!validateForm()) return;
 
     try {
-      if (originalItemData) {
-        const formFields = Object.keys(foundItem);
-        let newActionNote = '';
-        for (let i = 0; i < formFields.length; i++) {
-          if (
-            JSON.stringify(originalItemData[formFields[i] as keyof typeof originalItemData]) !==
-            JSON.stringify(foundItem[formFields[i] as keyof typeof foundItem])
-          ) {
-            newActionNote +=
-              formFields[i] +
-              ': OLD: ' +
-              originalItemData[formFields[i] as keyof typeof originalItemData] +
-              ', NEW: ' +
-              foundItem[formFields[i] as keyof typeof foundItem] +
-              ' ';
-          }
-        }
-        // Update the found item
-        await lostAndFoundService.updateFoundItem(foundItem, foundItem.recordID);
-
-        const actionRequestData: InitFoundAdminAction = {
-          foundID: itemId || '',
-          actionDate: new Date().toISOString(),
-          submitterUsername: profile?.AD_Username || '',
-          action: 'Edited',
-          actionNote: newActionNote,
-        };
-        await lostAndFoundService.createFoundAdminAction(itemId || '', actionRequestData);
-        navigate('/lostandfound/lostandfoundadmin/founditemdatabase');
-      }
+      await lostAndFoundService.updateFoundItem(foundItem, foundItem.recordID);
+      navigate('/lostandfound/lostandfoundadmin/founditemdatabase');
     } catch (err) {
       console.error(err);
       createSnackbar('Failed to save changes.', 'error');
@@ -472,8 +445,21 @@ const FoundItemFormEdit = () => {
               <>
                 <Grid container rowGap={1}>
                   <Grid container item xs={12} md={1}>
-                    <Button className={styles.backButton} onClick={() => navigate(-1)}>
-                      Back
+                    <Button
+                      variant="contained"
+                      color="error"
+                      fullWidth
+                      onClick={() => {
+                        if (location.state && (location.state as any).fromConfirmation) {
+                          navigate(
+                            `/lostandfound/lostandfoundadmin/founditemform/${foundItem?.recordID}`,
+                          );
+                        } else {
+                          navigate('/lostandfound/lostandfoundadmin/founditemdatabase');
+                        }
+                      }}
+                    >
+                      Cancel
                     </Button>
                   </Grid>
                   <Grid
