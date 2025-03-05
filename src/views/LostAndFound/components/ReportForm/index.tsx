@@ -13,7 +13,7 @@ import {
   Typography,
   Chip,
 } from '@mui/material';
-import styles from './ItemForm.module.css';
+import styles from './ReportForm.module.css';
 import lostAndFoundService, { MissingItemReport } from 'services/lostAndFound';
 import userService from 'services/user';
 import ReportStolenModal from 'views/LostAndFound/views/MissingReportCreate/components/reportStolen';
@@ -65,7 +65,7 @@ const pageHeader = (formType: string) => {
   }
 };
 
-const ItemForm = ({ formType }: { formType: string }) => {
+const ReportForm = ({ formType }: { formType: string }) => {
   const navigate = useNavigate();
   const { itemId } = useParams<{ itemId: string }>();
   const [loading, setLoading] = useState<boolean>(true);
@@ -766,4 +766,4 @@ const ItemForm = ({ formType }: { formType: string }) => {
   );
 };
 
-export default ItemForm;
+export default ReportForm;

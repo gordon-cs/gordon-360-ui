@@ -1,11 +1,11 @@
 import Header from 'views/LostAndFound/components/Header';
-import ItemForm from 'views/LostAndFound/components/ItemForm';
+import ReportForm from 'views/LostAndFound/components/ReportForm';
 
 const MissingItemFormEdit = () => {
   return (
     <>
       <Header />
-      <ItemForm formType={'edit'} />
+      <ReportForm formType={'edit'} />
     </>
   );
 };
