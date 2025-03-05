@@ -70,6 +70,7 @@ const LostAndFoundAdmin = () => {
   const [fetchMissingLoading, setFetchMissingLoading] = useState(false);
   const [fetchFoundLoading, setFetchFoundLoading] = useState(false);
   const user = useUser();
+  const matchButtonRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     setPageLoaded(true);
@@ -252,6 +253,12 @@ const LostAndFoundAdmin = () => {
       fetchItem('found');
     }
   }, [foundID]);
+
+  useEffect(() => {
+    if (showMissingPopUp && showFoundPopUp && matchButtonRef.current) {
+      matchButtonRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [showMissingPopUp, showFoundPopUp]);
 
   const yellowDateThreshold = 7;
   const redDateThreshold = 14;
@@ -974,6 +981,7 @@ const LostAndFoundAdmin = () => {
           <CardContent>
             <Grid container justifyContent={'center'}>
               <Button
+                ref={matchButtonRef}
                 className={styles.matchButton}
                 onClick={() => {}}
                 variant="contained"
