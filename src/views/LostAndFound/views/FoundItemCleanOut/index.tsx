@@ -144,7 +144,10 @@ const FoundItemCleanOut = () => {
       <Header />
       {showConfirm ? (
         <>
-          <ConfirmCleanOut reportsToCleanOut={reportsToCleanOut} />
+          <ConfirmCleanOut
+            reportsToCleanOut={reportsToCleanOut}
+            onCancel={() => setShowConfirm(false)}
+          />
           <GordonSnackbar
             open={snackbar.open}
             text={snackbar.message}
