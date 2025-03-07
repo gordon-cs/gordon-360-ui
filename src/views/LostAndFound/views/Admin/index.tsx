@@ -71,6 +71,7 @@ const LostAndFoundAdmin = () => {
   const [fetchFoundLoading, setFetchFoundLoading] = useState(false);
   const user = useUser();
   const matchButtonRef = useRef<HTMLButtonElement | null>(null);
+  const [noMatchIsClicked, setNoMatchIsClicked] = useState(false);
 
   useEffect(() => {
     setPageLoaded(true);
@@ -106,6 +107,7 @@ const LostAndFoundAdmin = () => {
   };
 
   const handleNoMatchSubmit = async (itemId: string) => {
+    if (!noMatchIsClicked) setNoMatchIsClicked(true);
     let requestData = {
       missingID: parseInt(itemId || ''),
       action: 'Checked',
@@ -122,6 +124,7 @@ const LostAndFoundAdmin = () => {
     } finally {
       console.log(requestData);
       setShowMissingPopUp(false);
+      setNoMatchIsClicked(false);
     }
   };
 
@@ -630,6 +633,7 @@ const LostAndFoundAdmin = () => {
               color="success"
               variant="contained"
               className={styles.markButton}
+              disabled={noMatchIsClicked}
               onClick={() => {
                 handleNoMatchSubmit(missingID);
               }}
