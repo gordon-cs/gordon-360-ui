@@ -71,7 +71,6 @@ const pathSubstringToFormattedName = (substring: string, pathnames: string[]) =>
   return ['', ''];
 };
 
-
 const Header: React.FC<HeaderProps> = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -101,7 +100,7 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
                 className={styles.button}
                 variant="contained"
                 onClick={() => {
-                  navigate('/lostandfound/lostandfoundadmin');
+                  navigate('/lostandfound/lostandfoundadmin?status=active');
                 }}
               >
                 <AdminPanelSettingsIcon sx={{ marginRight: '0.3rem' }} />
