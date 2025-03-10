@@ -72,6 +72,7 @@ const LostAndFoundAdmin = () => {
   const user = useUser();
   const matchButtonRef = useRef<HTMLButtonElement | null>(null);
   const [noMatchIsClicked, setNoMatchIsClicked] = useState(false);
+  const [matchFoundIsClicked, setMatchFoundIsClicked] = useState(false);
 
   useEffect(() => {
     setPageLoaded(true);
@@ -122,9 +123,25 @@ const LostAndFoundAdmin = () => {
       setErrorSnackbarOpen(true);
       console.error('No Match Submit Failed');
     } finally {
-      console.log(requestData);
       setShowMissingPopUp(false);
       setNoMatchIsClicked(false);
+    }
+  };
+
+  const handleMatchFoundSubmit = async (missingID: string, foundID: string) => {
+    if (!foundItem) return;
+    if (!matchFoundIsClicked) setMatchFoundIsClicked(true);
+    try {
+      await lostAndFoundService.updateFoundItem(foundItem, foundID);
+      await lostAndFoundService.updateReportStatus(parseInt(missingID || ''), 'found');
+      await lostAndFoundService.updateFoundReportStatus(foundID, 'found');
+    } catch {
+      setErrorSnackbarOpen(true);
+      console.log('Match Found Failed');
+    } finally {
+      setShowMissingPopUp(false);
+      setShowFoundPopUp(false);
+      setMatchFoundIsClicked(false);
     }
   };
 
@@ -989,7 +1006,10 @@ const LostAndFoundAdmin = () => {
               <Button
                 ref={matchButtonRef}
                 className={styles.matchButton}
-                onClick={() => {}}
+                onClick={() => {
+                  handleMatchFoundSubmit(missingID, foundID);
+                }}
+                disabled={matchFoundIsClicked}
                 variant="contained"
                 color="secondary"
               >
