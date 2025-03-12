@@ -3,6 +3,7 @@ import { Avatar, Card, CardContent, CardHeader, Grid, Typography } from '@mui/ma
 import { styled } from '@mui/material/styles';
 import { useUser } from 'hooks';
 import { fetchRaInfo } from 'services/residentLife/ResidentStaff';
+import { fetchRAStatuses } from 'services/residentLife/RA_Statuses';
 import { formatPhoneNumber } from '../../../../utils/formatPhoneNumber/formatPhoneNumber';
 import { staffType } from '../../../../utils/staffType/staffType';
 
@@ -23,7 +24,9 @@ const MyRA = () => {
   const [raInfo, setRaInfo] = useState({});
   const [raProfileLink, setRaProfileLink] = useState('');
   const [staffTypeLabel, setStaffTypeLabel] = useState('');
+  const [statusList, setStatusList] = useState([]);
   const { profile } = useUser();
+  const [currentStatus, setCurrentStatus] = useState('');
 
   useEffect(() => {
     if (profile) {
@@ -44,7 +47,34 @@ const MyRA = () => {
       const [firstName, lastName] = raInfo.Email.split('@')[0].split('.');
       setRaProfileLink(DEFAULT_PROFILE_URL + `${firstName}.${lastName}`);
     }
+
+    if (raInfo?.ID) {
+      fetchRAStatuses(raInfo.ID)
+        .then((response) => setStatusList(response))
+        .catch((error) => console.error('Failed to fetch statuses', error));
+    }
   }, [raInfo]);
+
+  useEffect(() => {
+    if (statusList.length > 0) {
+      for (let index = 0; index < statusList.length; index++) {
+        const status = statusList[index];
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        const seconds = now.getSeconds();
+        const currentTime = hours * 10000 + minutes * 100 + seconds;
+
+        const startTime = Number(status.Start_Time.replaceAll(':', ''));
+        const endTime = Number(status.End_Time.replaceAll(':', ''));
+
+        if (startTime <= currentTime && endTime >= currentTime) {
+          setCurrentStatus(status.StatusName);
+          break;
+        }
+      }
+    }
+  }, [statusList]);
 
   const avatar = (
     <Avatar
@@ -126,6 +156,16 @@ const MyRA = () => {
               ) : (
                 <StyledLink className="gc360_text_link">No contact available</StyledLink>
               )}
+            </Typography>
+
+            <Typography variant="body1">
+              <strong>Status:</strong> {currentStatus}
+            </Typography>
+
+            <Typography variant="body1">
+              <strong>
+                Next available<span style={{ color: 'red' }}>*</span>:
+              </strong>
             </Typography>
           </Grid>
 
