@@ -12,6 +12,7 @@ export type Status = {
   StartDate: Date;
   EndDate: Date;
   CreatedDate: Date;
+  Available: Boolean;
 };
 
 type NewStatus = Omit<Status, 'StatusID' | 'CreatedDate'>;

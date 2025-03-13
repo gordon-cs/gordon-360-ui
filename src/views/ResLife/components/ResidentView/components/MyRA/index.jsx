@@ -26,7 +26,9 @@ const MyRA = () => {
   const [staffTypeLabel, setStaffTypeLabel] = useState('');
   const [statusList, setStatusList] = useState([]);
   const { profile } = useUser();
-  const [currentStatus, setCurrentStatus] = useState('');
+  const [currentStatus, setCurrentStatus] = useState('No current status');
+  const [isAvailable, setIsAvailable] = useState(true);
+  const [nextEventTime, setNextEventTime] = useState('N/A');
 
   useEffect(() => {
     if (profile) {
@@ -57,24 +59,73 @@ const MyRA = () => {
 
   useEffect(() => {
     if (statusList.length > 0) {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
+      const currentTime = hours * 10000 + minutes * 100 + seconds;
+
       for (let index = 0; index < statusList.length; index++) {
         const status = statusList[index];
-        const now = new Date();
-        const hours = now.getHours();
-        const minutes = now.getMinutes();
-        const seconds = now.getSeconds();
-        const currentTime = hours * 10000 + minutes * 100 + seconds;
 
         const startTime = Number(status.Start_Time.replaceAll(':', ''));
         const endTime = Number(status.End_Time.replaceAll(':', ''));
 
         if (startTime <= currentTime && endTime >= currentTime) {
           setCurrentStatus(status.StatusName);
+          setIsAvailable(status.Available);
+          findNextStatus(index);
           break;
+        } else {
+          // if there is no status currently going on, find when next status occurs (if any)
+          if (index == statusList.length - 1) {
+            findNextTime(currentTime);
+            setCurrentStatus('No current status');
+          }
         }
       }
     }
   }, [statusList]);
+
+  const findNextStatus = (statusIndex) => {
+    const nextIndex = statusIndex + 1;
+    if (nextIndex >= statusList.length) {
+      setNextEventTime('N/A');
+    } else {
+      if (statusList[nextIndex].Available != statusList[statusIndex].Available) {
+        setNextEventTime(convertTo12HourFormat(statusList[nextIndex].Start_Time.slice(0, 5)));
+      } else {
+        findNextStatus(nextIndex);
+      }
+    }
+  };
+
+  const findNextTime = (currTime) => {
+    for (let index = 0; index < statusList.length; index++) {
+      const status = statusList[index];
+      const startTime = Number(status.Start_Time.replaceAll(':', ''));
+      if (startTime >= currTime) {
+        setNextEventTime(convertTo12HourFormat(status.Start_Time.slice(0, 5)));
+        setIsAvailable(true);
+        break;
+      }
+    }
+  };
+
+  const convertTo12HourFormat = (time24) => {
+    let [hours, minutes] = time24.split(':');
+    let period = 'AM';
+
+    hours = parseInt(hours, 10);
+    if (hours >= 12) {
+      period = 'PM';
+      if (hours > 12) hours -= 12;
+    } else if (hours === 0) {
+      hours = 12;
+    }
+
+    return `${hours}:${minutes} ${period}`;
+  };
 
   const avatar = (
     <Avatar
@@ -163,9 +214,16 @@ const MyRA = () => {
             </Typography>
 
             <Typography variant="body1">
-              <strong>
-                Next available<span style={{ color: 'red' }}>*</span>:
-              </strong>
+              {isAvailable ? (
+                <strong>
+                  Available until<span style={{ color: 'red' }}>*</span>:{' '}
+                </strong>
+              ) : (
+                <strong>
+                  Next available<span style={{ color: 'red' }}>*</span>:{' '}
+                </strong>
+              )}
+              {nextEventTime}
             </Typography>
           </Grid>
 
@@ -190,6 +248,10 @@ const MyRA = () => {
               <StyledLink className="gc360_text_link">{avatar}</StyledLink>
             )}
           </Grid>
+
+          <Typography variant="caption">
+            <span style={{ color: 'red' }}>*</span>Times are approximate
+          </Typography>
         </Grid>
       </CardContent>
     </Card>
