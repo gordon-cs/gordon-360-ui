@@ -106,7 +106,7 @@ const MyRA = () => {
       const startTime = Number(status.Start_Time.replaceAll(':', ''));
       if (startTime >= currTime) {
         setNextEventTime(convertTo12HourFormat(status.Start_Time.slice(0, 5)));
-        setIsAvailable(true);
+        setIsAvailable(!status.Available);
         break;
       }
     }
