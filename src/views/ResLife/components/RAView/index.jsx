@@ -9,6 +9,7 @@ import OnDutyMobile from '../RDView/components/OnDutyMobileView';
 import TaskList from './components/TaskList';
 import CheckIn from './components/CheckIn';
 import AssignedRooms from './components/MyAssignments';
+import OnDutyRD from './components/RD-OnCall';
 
 const RAView = () => {
   const { profile } = useUser();
@@ -58,6 +59,7 @@ const RAView = () => {
         <Stack spacing={2}>
           <OnCallTable />
           <AssignedRooms />
+          <OnDutyRD />
         </Stack>
       </Grid>
 
