@@ -8,11 +8,10 @@ import {
   Avatar,
   Box,
   CircularProgress,
-  Paper,
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { fetchOnDutyData } from 'services/residentLife/RA_OnCall';
 import ScottieMascot from 'views/ResLife/ScottieMascot.png';
-import OnDuty from 'views/ResLife/components/ResidentView/components/OnDuty';
 
 // Hardcoded list of all halls
 const ALL_HALLS = [
@@ -31,6 +30,15 @@ const ALL_HALLS = [
 const VILLAGE_IDS = ['GRA', 'RID', 'MCI', 'CON'];
 
 const DEFAULT_PROFILE_URL = '/profile/';
+
+// Styling for links using existing 360 colors
+const StyledLink = styled('a')(({ theme }) => ({
+  color: theme.palette.primary.main,
+  textDecoration: 'none',
+  '&:hover': {
+    color: theme.palette.warning.main,
+  },
+}));
 
 // takes phone number from api return and makes readable version
 const formatPhoneNumber = (phoneNumber) => {
@@ -117,7 +125,15 @@ const OnDutyMobile = () => {
         </Box>
       ) : (
         value && (
-          <Box display="flex" flexDirection="column" alignItems="center">
+          <Box
+            sx={{
+              textAlign: 'center',
+              mt: '20px',
+              backgroundColor: 'transparent',
+              borderColor: 'warning.main',
+              borderRadius: 2,
+            }}
+          >
             {hallDetails?.RA_Name ? (
               <>
                 <a
@@ -140,30 +156,45 @@ const OnDutyMobile = () => {
                 <Typography variant="h6">
                   <strong>{hallDetails.Hall_Name}</strong>
                 </Typography>
+
+                {/* RA Name  */}
                 <Typography>
-                  <strong>On-Duty:</strong> {hallDetails.RA_Name}
+                  <strong>On-Duty: </strong>
+
+                  <StyledLink
+                    href={DEFAULT_PROFILE_URL + hallDetails.RA_UserName || '#'}
+                    className="gc360_text_link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {hallDetails.RA_Name}{' '}
+                  </StyledLink>
                 </Typography>
+
                 <Typography>
                   <strong>Contact:</strong>{' '}
                   {hallDetails.PreferredContact?.includes('http') ? (
-                    <a
+                    <StyledLink
                       href={hallDetails.PreferredContact}
+                      underline="hover"
+                      className="gc360_text_link"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
                       Teams
-                    </a>
+                    </StyledLink>
                   ) : hallDetails.PreferredContact ? (
-                    <a
+                    <StyledLink
                       href={`tel:${hallDetails.PreferredContact}`}
-                      style={{ textDecoration: 'none', color: 'inherit' }}
+                      className="gc360_text_link"
                     >
                       {formatPhoneNumber(hallDetails.PreferredContact)}
-                    </a>
+                    </StyledLink>
                   ) : (
-                    'No Contact Info'
+                    <StyledLink className="gc360_text_link">No Contact Info</StyledLink>
                   )}
                 </Typography>
+
                 <Typography>
                   <strong>Check-In Time:</strong>{' '}
                   {hallDetails.Check_in_time
@@ -173,15 +204,17 @@ const OnDutyMobile = () => {
                       })
                     : 'No Check-In Time'}
                 </Typography>
+
                 <Typography>
                   <strong>Hall RD:</strong>{' '}
-                  <a
+                  <StyledLink
                     href={DEFAULT_PROFILE_URL + hallDetails.RD_UserName}
+                    className="gc360_text_link"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {hallDetails.RD_Name || 'No RD Info'}
-                  </a>
+                    {hallDetails.RD_Name || 'No RD Info'}{' '}
+                  </StyledLink>
                 </Typography>
               </>
             ) : (
