@@ -131,8 +131,13 @@ const LostAndFoundAdmin = () => {
   const handleMatchFoundSubmit = async (missingID: string, foundID: string) => {
     if (!foundItem) return;
     if (!matchFoundIsClicked) setMatchFoundIsClicked(true);
+    const updatedFoundItem = {
+      ...foundItem,
+      matchingMissingID: missingID,
+      status: 'found',
+    };
     try {
-      await lostAndFoundService.updateFoundItem(foundItem, foundID);
+      await lostAndFoundService.updateFoundItem(updatedFoundItem, foundID);
       await lostAndFoundService.updateReportStatus(parseInt(missingID || ''), 'found');
       await lostAndFoundService.updateFoundReportStatus(foundID, 'found');
     } catch {
