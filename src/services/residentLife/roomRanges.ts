@@ -54,6 +54,10 @@ const assignPersonToRange = (newRange: AssignedRange) =>
 // Fetches the list of RA room range assignments from the API endpoint "Housing/roomrangeassignments"
 const fetchAssignmentList = (): Promise<Assignment[]> => http.get('Housing/roomrangeassignments');
 
+// Fetch assignments for a specific RA_ID from the API endpoint "Housing/roomrangeassignments/${raId}"
+const fetchAssignmentsByRAId = (raId: string): Promise<Assignment[]> =>
+  http.get(`Housing/roomrangeassignments/${raId}`);
+
 // Fetches the list of room ranges from the API endpoint "Housing/roomranges"
 const fetchRoomRanges = (): Promise<RoomRange[]> => http.get('Housing/roomranges');
 
@@ -75,6 +79,7 @@ export {
   addRoomRange,
   assignPersonToRange,
   fetchAssignmentList,
+  fetchAssignmentsByRAId,
   fetchRoomRanges,
   raList,
   removeAssignment,
