@@ -24,6 +24,7 @@ import Timesheets from './views/Timesheets';
 import RecIM from './views/RecIM';
 import RoomRanges from 'views/ResLife/components/RDView/components/RoomRanges';
 import TaskList from 'views/ResLife/components/RDView/components/TaskList';
+import RDOnCallForm from 'views/ResLife/components/RDView/components/RDOnCallForm';
 import { element } from 'prop-types';
 import { Room } from '@mui/icons-material';
 import CampusSafety from './views/CampusSafety';
@@ -164,6 +165,11 @@ const routes = [
     name: 'TaskList',
     path: '/TaskList',
     element: <TaskList />,
+  },
+  {
+    name: 'RD-OnCall',
+    path: '/RD-OnCall',
+    element: <RDOnCallForm />,
   },
 ];
 

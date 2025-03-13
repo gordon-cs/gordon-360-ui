@@ -1,0 +1,184 @@
+import React, { useState, useEffect } from 'react';
+import { Avatar, Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import ScottieMascot from 'views/ResLife/ScottieMascot.png';
+import { getRDOnCall } from 'services/residentLife/RD_OnCall';
+
+const COLOR_80808026_1X1 =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNsUAMAASwAqHb28sMAAAAASUVORK5CYII=';
+
+const RD_PHONE_NUMBER = 'RD Phone number here';
+
+const StyledLink = styled('a')(({ theme }) => ({
+  color: theme.palette.primary.main,
+  textDecoration: 'none',
+  '&:hover': {
+    color: theme.palette.warning.main,
+  },
+}));
+
+function getUsernameFromEmail(email) {
+  if (!email) return '';
+  return email.split('@')[0];
+}
+
+const OnDutyRD = () => {
+  const [onDutyRdInfo, setOnDutyRdInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchRD() {
+      try {
+        const rdInfo = await getRDOnCall();
+        setOnDutyRdInfo(rdInfo);
+      } catch (error) {
+        console.error('Failed to fetch On Duty RD info:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchRD();
+  }, []);
+
+  if (loading) {
+    return (
+      <Typography align="center" color="textSecondary">
+        Loading on-duty RD...
+      </Typography>
+    );
+  }
+  if (!onDutyRdInfo || !onDutyRdInfo.RD_Name) {
+    return (
+      <Card>
+        <CardHeader
+          title={
+            <Grid container justifyContent="center" alignItems="center">
+              <Grid item xs={12} align="center">
+                On Duty RD
+              </Grid>
+            </Grid>
+          }
+          className="gc360_header"
+        />
+        <CardContent>
+          <Grid container spacing={2} alignItems="center">
+            {/* Text Section */}
+            <Grid item xs={8}>
+              <Typography variant="subtitle1" color="warning.main">
+                No RD is on duty right now! 🐾
+              </Typography>
+              <Typography variant="body1" color="text.secondary">
+                Scottie’s keeping an eye on things.
+              </Typography>
+              <Typography variant="body1" color="text.secondary">
+                RD On-Call Phone: {RD_PHONE_NUMBER}
+              </Typography>
+            </Grid>
+
+            {/* Avatar Section */}
+            <Grid
+              item
+              xs={4}
+              container
+              justifyContent="center"
+              sx={{ marginTop: { xs: 1, sm: 2, md: 2 } }}
+            >
+              <Avatar
+                src={ScottieMascot}
+                alt="Scottie"
+                sx={{
+                  width: { xs: 80, sm: 90, md: 100, lg: 130 },
+                  height: { xs: 80, sm: 90, md: 100, lg: 130 },
+                  borderRadius: '50%',
+                  transition: 'width 0.3s, height 0.3s',
+                }}
+              />
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const rdUsername = getUsernameFromEmail(onDutyRdInfo.RD_Email);
+  const profileLink = `/profile/${rdUsername}`;
+
+  return (
+    <Card>
+      <CardHeader
+        title={
+          <Grid container justifyContent="center" alignItems="center">
+            <Grid item xs={12} align="center">
+              On Duty RD
+            </Grid>
+          </Grid>
+        }
+        className="gc360_header"
+      />
+      <CardContent>
+        <Grid container spacing={2} alignItems="center">
+          {/* Text Section */}
+          <Grid item xs={8}>
+            <Typography variant="body1">
+              <strong>Name: </strong>
+              {onDutyRdInfo.RD_Email ? (
+                <StyledLink
+                  href={profileLink}
+                  className="gc360_text_link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {onDutyRdInfo.RD_Name}
+                </StyledLink>
+              ) : (
+                onDutyRdInfo.RD_Name
+              )}
+            </Typography>
+
+            {onDutyRdInfo.RD_Email && (
+              <Typography variant="body1">
+                <strong>Email: </strong>
+                <StyledLink href={`mailto:${onDutyRdInfo.RD_Email}`} className="gc360_text_link">
+                  {onDutyRdInfo.RD_Email}
+                </StyledLink>
+              </Typography>
+            )}
+
+            <Typography variant="body1">
+              <strong>On-Call Contact:</strong> {RD_PHONE_NUMBER}
+            </Typography>
+          </Grid>
+
+          {/* Avatar Section */}
+          <Grid
+            item
+            xs={4}
+            container
+            justifyContent="center"
+            sx={{ marginTop: { xs: 1, sm: 2, md: 2 } }}
+          >
+            <StyledLink
+              href={profileLink}
+              className="gc360_text_link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Avatar
+                src={onDutyRdInfo.RD_Photo || COLOR_80808026_1X1}
+                alt={`Profile of ${onDutyRdInfo.RD_Name}`}
+                sx={{
+                  width: { xs: 80, sm: 90, md: 100, lg: 130 },
+                  height: { xs: 80, sm: 90, md: 100, lg: 130 },
+                  borderRadius: '50%',
+                  transition: 'width 0.3s, height 0.3s',
+                }}
+              />
+            </StyledLink>
+          </Grid>
+        </Grid>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default OnDutyRD;
