@@ -34,7 +34,7 @@ const MissingItemReportData = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState({ AD_Username: '' });
 
-  // Pull the itemId from the url
+  // Pull the itemId from the url.
   const { itemId } = useParams<{ itemId: string }>();
   const [reportUpdated, setReportUpdated] = useState<number>(0);
 
