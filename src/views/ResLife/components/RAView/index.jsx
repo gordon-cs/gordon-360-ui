@@ -7,6 +7,8 @@ import { useUser } from 'hooks';
 import HousingBanner from '../ResidentView/components/HousingWelcome/Banner';
 import OnDutyMobile from '../RDView/components/OnDutyMobileView';
 import TaskList from './components/TaskList';
+import OnDutyRD from './components/RD-OnCall';
+
 
 const RAView = () => {
   const { profile } = useUser();
@@ -53,7 +55,10 @@ const RAView = () => {
       <HousingBanner />
 
       <Grid item xs={12} md={4}>
-        <OnCallTable />
+        <Stack spacing={2}>
+          <OnCallTable />
+          <OnDutyRD />
+        </Stack>
       </Grid>
 
       <Grid item xs={12} md={4}>
