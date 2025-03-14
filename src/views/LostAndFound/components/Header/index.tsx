@@ -53,22 +53,24 @@ const pathSubstringToFormattedName = (substring: string, pathnames: string[]) =>
       breadcrumbRoute = '/' + pathnames.slice(1, PathSubstringIndex + 1).join('/');
     }
 
-    // Find the formatted name in the routes object
-    formattedName = CampusSafetyRoutes[breadcrumbRoute].formattedName;
-
-    let queryString = '';
-    if (CampusSafetyRoutes[breadcrumbRoute].queryString) {
-      queryString += CampusSafetyRoutes[breadcrumbRoute].queryString;
-    }
-
-    if (formattedName) {
-      formattedName = formattedName.replace('~', substring);
-      return [formattedName, queryString];
+    // Safely find the route config
+    const routeConfig = CampusSafetyRoutes[breadcrumbRoute];
+    if (routeConfig) {
+      formattedName = routeConfig.formattedName;
+      let queryString = '';
+      if (routeConfig.queryString) {
+        queryString = routeConfig.queryString;
+      }
+      if (formattedName) {
+        formattedName = formattedName.replace('~', substring);
+        return [formattedName, queryString];
+      }
     }
     return [substring, ''];
   }
   return ['', ''];
 };
+
 
 const Header: React.FC<HeaderProps> = ({ children }) => {
   const location = useLocation();

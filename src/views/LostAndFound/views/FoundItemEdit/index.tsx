@@ -17,12 +17,16 @@ import {
   InputLabel,
   useMediaQuery,
 } from '@mui/material';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { InfoOutlined, Add, Key, Launch } from '@mui/icons-material';
 import { StatusChip } from 'views/LostAndFound/components/StatusChip';
 
 import Header from 'views/LostAndFound/components/Header';
-import lostAndFoundService, { FoundItem, FoundAdminAction } from 'services/lostAndFound';
+import lostAndFoundService, {
+  FoundItem,
+  FoundAdminAction,
+  InitFoundAdminAction,
+} from 'services/lostAndFound';
 import GordonSnackbar from 'components/Snackbar';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
@@ -33,7 +37,7 @@ import { LFCategories, LFColors } from 'views/LostAndFound/components/Constants'
 import { CustomDatePicker } from 'views/LostAndFound/components/CustomDatePicker';
 import { DateValidationError } from '@mui/x-date-pickers';
 
-const actionTypes = ['CheckedIn', 'NotifiedOfficer', 'OwnerContact', 'Custom'];
+const actionTypes = ['OwnerContact', 'Custom'];
 
 interface ISnackbarState {
   message: string;
@@ -45,9 +49,11 @@ const FoundItemFormEdit = () => {
   const { itemId } = useParams<{ itemId: string }>();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
 
   /** The found item object we are editing. */
   const [foundItem, setFoundItem] = useState<FoundItem | null>(null);
+  const [originalItemData, setOriginalItemData] = useState<FoundItem | null>(null);
 
   const [snackbar, setSnackbar] = useState<ISnackbarState>({
     message: '',
@@ -97,7 +103,9 @@ const FoundItemFormEdit = () => {
       try {
         const itemResponse = await lostAndFoundService.getFoundItem(itemId);
         setFoundItem(itemResponse);
+        setOriginalItemData(itemResponse);
         setAdminActions(itemResponse.adminActions || []);
+        setActionsLoading(false);
       } catch (err) {
         console.error(err);
         createSnackbar('Failed to load found item from server', 'error');
@@ -112,7 +120,7 @@ const FoundItemFormEdit = () => {
   /** 2) On mount or whenever `actionsUpdated` is set, fetch admin actions. */
   useEffect(() => {
     const fetchActions = async () => {
-      if (!itemId) return;
+      if (!itemId || !actionsUpdated) return;
       setActionsLoading(true);
       try {
         const actionsResp = (await lostAndFoundService.getFoundItem(itemId)).adminActions;
@@ -127,7 +135,7 @@ const FoundItemFormEdit = () => {
     };
 
     fetchActions();
-  }, [itemId, actionsUpdated]);
+  }, [actionsUpdated, itemId]);
 
   /** 3) Validate required fields. */
   const requiredFields = ['category', 'description', 'locationFound'];
@@ -434,9 +442,56 @@ const FoundItemFormEdit = () => {
         <Card className={styles.form_card}>
           <CardHeader
             title={
-              <b>
-                Found Item: <span className={styles.title_id}>#{foundItem.recordID}</span>
-              </b>
+              <>
+                <Grid container rowGap={1}>
+                  <Grid container item xs={12} md={1}>
+                    <Button
+                      variant="contained"
+                      color="error"
+                      fullWidth
+                      onClick={() => {
+                        if (location.state && (location.state as any).fromConfirmation) {
+                          navigate(
+                            `/lostandfound/lostandfoundadmin/founditemform/${foundItem?.recordID}`,
+                          );
+                        } else {
+                          navigate('/lostandfound/lostandfoundadmin/founditemdatabase');
+                        }
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Grid>
+                  <Grid
+                    container
+                    item
+                    columnGap={2}
+                    rowGap={1}
+                    xs={12}
+                    md={9}
+                    justifyContent="center"
+                  >
+                    <b>
+                      Found Item: <span className={styles.title_id}>#{foundItem.recordID}</span>
+                    </b>
+                    <Typography>
+                      <em>Status:</em> <StatusChip status={foundItem.status} />
+                    </Typography>
+                  </Grid>
+                  <Grid container item xs={12} md={2}>
+                    <Button
+                      variant="contained"
+                      className={styles.submit_button}
+                      color="secondary"
+                      onClick={handleSave}
+                      fullWidth
+                      disabled={foundItem === originalItemData}
+                    >
+                      Save Changes
+                    </Button>
+                  </Grid>
+                </Grid>
+              </>
             }
             titleTypographyProps={{ align: 'center' }}
             className="gc360_header"
@@ -626,30 +681,6 @@ const FoundItemFormEdit = () => {
                   {adminActionsCard}
                 </Grid>
               </Grid>
-            </Grid>
-          </Grid>
-
-          {/* Bottom row: Save / Cancel */}
-          <Grid container justifyContent="flex-end" spacing={2} padding={2}>
-            <Grid item xs={6} sm={3} md={2}>
-              <Button
-                variant="contained"
-                color="error"
-                onClick={() => navigate('/lostandfound/lostandfoundadmin/founditemdatabase')}
-                fullWidth
-              >
-                Cancel
-              </Button>
-            </Grid>
-            <Grid item xs={6} sm={3} md={2}>
-              <Button
-                variant="contained"
-                className={styles.submit_button}
-                onClick={handleSave}
-                fullWidth
-              >
-                Save
-              </Button>
             </Grid>
           </Grid>
         </Card>

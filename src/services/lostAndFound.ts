@@ -307,7 +307,7 @@ const updateFoundReportStatus = (id: string, status: string): Promise<void> =>
  * @returns the id of the created admin action
  */
 const createFoundAdminAction = (itemID: string, data: InitFoundAdminAction): Promise<string> =>
-  http.post<string>(`/api/lostandfound/founditems/${itemID}/actionstaken`, data);
+  http.post<string>(`lostandfound/founditems/${itemID}/actionstaken`, data);
 
 const lostAndFoundService = {
   getMissingItemReports,
