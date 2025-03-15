@@ -301,6 +301,51 @@ const FoundItemFormCreate = () => {
       const response = await lostAndFoundService.createFoundItem(requestData);
       console.log('this is the response' + response);
 
+     // If the item belongs to a Gordon owner, create a missing item report for them 
+    // so that it shows up in their found items list.
+    let missingReportId: number | undefined;
+    if (formData.isGordonOwner === 'yes' && formData.ownerUsername) {
+      const missingReportData = {
+        submitterUsername: formData.ownerUsername,
+        category: formData.category,
+        colors: formData.colors,
+        brand: formData.brand || '',
+        description: formData.description,
+        locationLost: formData.locationFound, // Use found location as lost location
+        stolen: false,
+        stolenDescription: '',
+        dateLost: formData.dateFound ? new Date(formData.dateFound).toISOString() : now,
+        dateCreated: now,
+        phone: formData.ownerPhoneNumber,
+        email: formData.ownerEmail,
+        status: 'found',
+        forGuest: false,
+      };
+      missingReportId = await lostAndFoundService.createMissingItemReport(missingReportData);
+
+      // Update the found item with the matching missing item report ID and ensure its status is 'found'
+      const updatedFoundItem = { 
+        recordID: response, 
+        ...requestData, 
+        matchingMissingID: missingReportId.toString(), 
+        status: 'found' 
+      };
+      await lostAndFoundService.updateFoundItem(updatedFoundItem, response);      
+
+      // Update the missing item report's status to 'found'
+      await lostAndFoundService.updateReportStatus(missingReportId, 'found');
+
+      // Record an admin action for the match
+      const matchActionData = {
+        foundID: response,
+        action: 'Match',
+        actionDate: new Date().toISOString(),
+        actionNote: `Found item matched with missing report ${missingReportId}`,
+        submitterUsername: user.AD_Username,
+      };
+      await lostAndFoundService.createFoundAdminAction(response, matchActionData);
+    }
+
       const actionRequestData = {
         foundID: response,
         action: 'Created',
