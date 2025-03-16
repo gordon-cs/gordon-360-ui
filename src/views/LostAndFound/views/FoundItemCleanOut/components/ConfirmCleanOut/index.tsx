@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { formatDateString } from 'views/LostAndFound/components/Helpers';
 import { differenceInCalendarDays } from 'date-fns';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useUser } from 'hooks';
 import { useNavigate } from 'react-router';
 
@@ -27,19 +27,25 @@ interface ConfirmCleanOutProps {
 
 const ConfirmCleanOut: React.FC<ConfirmCleanOutProps> = ({ reportsToCleanOut, onCancel }) => {
   const [enableCleanOut, setEnableCleanOut] = useState(false);
+  const [reportStatuses, setReportStatuses] = useState(new Map());
   const { profile } = useUser();
   const navigate = useNavigate();
-
-  const reportStatuses = new Map();
 
   const handleCheckboxClick = () => {
     setEnableCleanOut(!enableCleanOut);
   };
 
+  const handleStatusChange = (recordID: string, value: string) => {
+    setReportStatuses((prev) => {
+      const newMap = new Map(prev);
+      newMap.set(recordID, value);
+      return newMap;
+    });
+  };
+
   const handleCleanOut = (reports: FoundItem[]) => {
-    console.log('actionNotes:');
     for (const report of reports) {
-      // lostAndFoundService.updateFoundReportStatus(report.recordID, 'deleted');
+      lostAndFoundService.updateFoundReportStatus(report.recordID, 'deleted');
       const actionRequestData = {
         foundID: report.recordID,
         actionDate: new Date().toISOString(),
@@ -47,11 +53,6 @@ const ConfirmCleanOut: React.FC<ConfirmCleanOutProps> = ({ reportsToCleanOut, on
         action: 'Expiring Action',
         actionNote: reportStatuses.get(report.recordID),
       };
-      console.log(actionRequestData.foundID);
-      console.log(actionRequestData.actionDate);
-      console.log(actionRequestData.submitterUsername);
-      console.log(actionRequestData.action);
-      console.log(actionRequestData.actionNote);
       lostAndFoundService.createFoundAdminAction(report.recordID, actionRequestData);
     }
     navigate('/lostandfound/lostandfoundadmin');
@@ -92,7 +93,7 @@ const ConfirmCleanOut: React.FC<ConfirmCleanOutProps> = ({ reportsToCleanOut, on
                     labelId="item-status-label"
                     name="itemStatus"
                     value={reportStatuses.get(report.recordID)}
-                    onChange={(e) => reportStatuses.set(report.recordID, e.target.value)}
+                    onChange={(e) => handleStatusChange(report.recordID, e.target.value)}
                     fullWidth
                   >
                     <MenuItem value="">
