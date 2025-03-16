@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Avatar, Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
+import {
+  Avatar,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import ScottieMascot from 'views/ResLife/ScottieMascot.png';
 import { getRDOnCall } from 'services/residentLife/RD_OnCall';
@@ -25,6 +33,7 @@ function getUsernameFromEmail(email) {
 const OnDutyRD = () => {
   const [onDutyRdInfo, setOnDutyRdInfo] = useState(null);
   const [loading, setLoading] = useState(true);
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   useEffect(() => {
     async function fetchRD() {
@@ -125,8 +134,8 @@ const OnDutyRD = () => {
                 <StyledLink
                   href={profileLink}
                   className="gc360_text_link"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target={isMobile ? '_self' : '_blank'}
+                  rel={isMobile ? '' : 'noopener noreferrer'}
                 >
                   {onDutyRdInfo.RD_Name}
                 </StyledLink>
@@ -160,8 +169,8 @@ const OnDutyRD = () => {
             <StyledLink
               href={profileLink}
               className="gc360_text_link"
-              target="_blank"
-              rel="noopener noreferrer"
+              target={isMobile ? '_self' : '_blank'}
+              rel={isMobile ? '' : 'noopener noreferrer'}
             >
               <Avatar
                 src={onDutyRdInfo.RD_Photo || COLOR_80808026_1X1}

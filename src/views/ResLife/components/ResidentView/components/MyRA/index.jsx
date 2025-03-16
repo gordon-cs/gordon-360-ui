@@ -1,5 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Avatar, Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
+import {
+  Avatar,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useUser } from 'hooks';
 import { fetchRaInfo } from 'services/residentLife/ResidentStaff';
@@ -29,6 +37,7 @@ const MyRA = () => {
   const [currentStatus, setCurrentStatus] = useState('No current status');
   const [isAvailable, setIsAvailable] = useState(true);
   const [nextEventTime, setNextEventTime] = useState('N/A');
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   useEffect(() => {
     if (profile) {
@@ -172,8 +181,8 @@ const MyRA = () => {
                 <StyledLink
                   href={raProfileLink}
                   className="gc360_text_link"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target={isMobile ? '_self' : '_blank'}
+                  rel={isMobile ? '' : 'noopener noreferrer'}
                 >
                   {raInfo.FirstName} {raInfo.LastName}
                 </StyledLink>
@@ -195,8 +204,8 @@ const MyRA = () => {
                   href={raInfo.PreferredContact}
                   underline="hover"
                   className="gc360_text_link"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target={isMobile ? '_self' : '_blank'}
+                  rel={isMobile ? '' : 'noopener noreferrer'}
                 >
                   Teams
                 </StyledLink>
@@ -239,8 +248,8 @@ const MyRA = () => {
               <StyledLink
                 href={raProfileLink}
                 className="gc360_text_link"
-                target="_blank"
-                rel="noopener noreferrer"
+                target={isMobile ? '_self' : '_blank'}
+                rel={isMobile ? '' : 'noopener noreferrer'}
               >
                 {avatar}
               </StyledLink>

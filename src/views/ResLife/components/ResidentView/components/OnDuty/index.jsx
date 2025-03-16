@@ -1,5 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Avatar, Card, CardContent, CardHeader, Grid, Typography, Box } from '@mui/material';
+import {
+  Avatar,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Typography,
+  Box,
+  useMediaQuery,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useUser } from 'hooks';
 import { fetchOnDutyRA } from 'services/residentLife/RA_OnCall';
@@ -24,6 +33,7 @@ const OnDuty = () => {
   const [onDutyRaInfo, setOnDutyRaInfo] = useState({});
   const [staffTypeLabel, setStaffTypeLabel] = useState('');
   const { profile } = useUser();
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   useEffect(() => {
     if (profile) {
@@ -115,8 +125,8 @@ const OnDuty = () => {
               <StyledLink
                 href={DEFAULT_PROFILE_URL + onDutyRaInfo.RA_UserName}
                 className="gc360_text_link"
-                target="_blank"
-                rel="noopener noreferrer"
+                target={isMobile ? '_self' : '_blank'}
+                rel={isMobile ? '' : 'noopener noreferrer'}
               >
                 {onDutyRaInfo.RA_Name}
               </StyledLink>
@@ -133,8 +143,8 @@ const OnDuty = () => {
                   href={onDutyRaInfo.PreferredContact}
                   underline="hover"
                   className="gc360_text_link"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target={isMobile ? '_self' : '_blank'}
+                  rel={isMobile ? '' : 'noopener noreferrer'}
                 >
                   Teams
                 </StyledLink>
@@ -162,8 +172,8 @@ const OnDuty = () => {
             <StyledLink
               href={DEFAULT_PROFILE_URL + onDutyRaInfo.RA_UserName}
               className="gc360_text_link"
-              target="_blank"
-              rel="noopener noreferrer"
+              target={isMobile ? '_self' : '_blank'}
+              rel={isMobile ? '' : 'noopener noreferrer'}
             >
               <Avatar
                 src={onDutyRaInfo.RA_Photo || COLOR_80808026_1X1}

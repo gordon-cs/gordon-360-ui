@@ -138,8 +138,8 @@ const OnDutyMobile = () => {
               <>
                 <a
                   href={DEFAULT_PROFILE_URL + hallDetails.RA_UserName || '#'}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target="_self"
+                  rel=""
                 >
                   <Avatar
                     src={hallDetails.RA_Photo || 'https://placehold.jp/150x150.png'}
@@ -164,8 +164,8 @@ const OnDutyMobile = () => {
                   <StyledLink
                     href={DEFAULT_PROFILE_URL + hallDetails.RA_UserName || '#'}
                     className="gc360_text_link"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target="_self"
+                    rel=""
                   >
                     {hallDetails.RA_Name}{' '}
                   </StyledLink>
@@ -178,8 +178,8 @@ const OnDutyMobile = () => {
                       href={hallDetails.PreferredContact}
                       underline="hover"
                       className="gc360_text_link"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      target="_self"
+                      rel=""
                     >
                       Teams
                     </StyledLink>
@@ -210,8 +210,8 @@ const OnDutyMobile = () => {
                   <StyledLink
                     href={DEFAULT_PROFILE_URL + hallDetails.RD_UserName}
                     className="gc360_text_link"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    target="_self"
+                    rel=""
                   >
                     {hallDetails.RD_Name || 'No RD Info'}{' '}
                   </StyledLink>
