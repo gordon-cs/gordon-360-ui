@@ -117,14 +117,25 @@ const LostAndFoundAdmin = () => {
       username: user.profile?.AD_Username || '',
       isPublic: false,
     };
+    setLazyLoading(true);
     try {
       await lostAndFoundService.createAdminAction(parseInt(itemId ? itemId : ''), requestData);
+      setShowMissingPopUp(false);
+      setNoMatchIsClicked(false);
+      const fetchedMissingReports = await lostAndFoundService.getMissingItemReports(
+        status,
+        category,
+        color,
+        keywords,
+        undefined,
+        pageSize,
+      );
+      setMissingReports(fetchedMissingReports);
     } catch {
       setErrorSnackbarOpen(true);
       console.error('No Match Submit Failed');
     } finally {
-      setShowMissingPopUp(false);
-      setNoMatchIsClicked(false);
+      setLazyLoading(false);
     }
   };
 
@@ -136,17 +147,39 @@ const LostAndFoundAdmin = () => {
       matchingMissingID: missingID,
       status: 'found',
     };
+    setLazyLoading(true);
+    setFoundLazyLoading(true);
     try {
       await lostAndFoundService.updateFoundItem(updatedFoundItem, foundID);
       await lostAndFoundService.updateReportStatus(parseInt(missingID || ''), 'found');
       await lostAndFoundService.updateFoundReportStatus(foundID, 'found');
+      setShowMissingPopUp(false);
+      setShowFoundPopUp(false);
+      setMatchFoundIsClicked(false);
+      const fetchedMissingReports = await lostAndFoundService.getMissingItemReports(
+        status,
+        category,
+        color,
+        keywords,
+        undefined,
+        pageSize,
+      );
+      const fetchedFoundReports = await lostAndFoundService.getFoundItems(
+        '',
+        '',
+        status || '',
+        color || '',
+        category || '',
+        keywords || '',
+      );
+      setMissingReports(fetchedMissingReports);
+      setFoundItems(fetchedFoundReports);
     } catch {
       setErrorSnackbarOpen(true);
       console.log('Match Found Failed');
     } finally {
-      setShowMissingPopUp(false);
-      setShowFoundPopUp(false);
-      setMatchFoundIsClicked(false);
+      setLazyLoading(false);
+      setFoundLazyLoading(false);
     }
   };
 
