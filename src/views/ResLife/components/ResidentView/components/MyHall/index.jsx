@@ -8,6 +8,7 @@ import {
   Tooltip,
   Typography,
   Avatar,
+  useMediaQuery,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useUser } from 'hooks';
@@ -45,6 +46,7 @@ const MyHall = () => {
   const [hallPhotoAlt, setHallPhotoAlt] = useState('');
   const { profile } = useUser();
   const isRA = useAuthGroups(AuthGroup.ResidentAdvisor);
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   useEffect(() => {
     if (profile) {
@@ -130,8 +132,8 @@ const MyHall = () => {
                 <StyledLink
                   href={rdProfileLink}
                   className="gc360_text_link"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target={isMobile ? '_self' : '_blank'}
+                  rel={isMobile ? '' : 'noopener noreferrer'}
                 >
                   {rdInfo.RD_Name}
                 </StyledLink>
