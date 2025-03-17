@@ -153,6 +153,8 @@ const LostAndFoundAdmin = () => {
   // Fetch initial reports when filters change
   useEffect(() => {
     const updateFilters = async () => {
+      setLazyLoading(true);
+      setFoundLazyLoading(true);
       try {
         if (
           status === getUrlParam('status', location, searchParams) &&
@@ -179,6 +181,8 @@ const LostAndFoundAdmin = () => {
           setMissingReports(fetchedMissingReports);
           setFoundItems(fetchedFoundReports);
           setLoading(false);
+          setLazyLoading(false);
+          setFoundLazyLoading(false);
         }
       } catch (error) {
         console.error('Error fetching missing or found items', error);
@@ -196,6 +200,8 @@ const LostAndFoundAdmin = () => {
     let currKeywords = keywords;
     if (pageLoaded) {
       setLoading(true);
+      setLazyLoading(true);
+      setFoundLazyLoading(true);
       setTimeout(() => {
         checkForChanges();
       }, 700);
@@ -923,42 +929,47 @@ const LostAndFoundAdmin = () => {
               </CardContent>
               {MissingItemsListHeader}
               <div className={styles.scrollBox}>
-                {missingReports.map((missingReport) => (
-                  <Grid
-                    container
-                    justifyContent={'space-between'}
-                    key={missingReport.recordID}
-                    className={`${styles.reportRow} ${styles.clickableRow}`}
-                    onClick={() => handleMissingItemClick(String(missingReport.recordID))}
-                    tabIndex={0}
-                  >
-                    <Grid item xs={2}>
-                      {formatDateString(missingReport.dateLost)}
-                    </Grid>
-                    <Grid item xs={2.5}>
-                      <div className={styles.dataCell}>{missingReport.locationLost}</div>
-                    </Grid>
-                    <Grid item xs={2.5}>
-                      <div className={styles.dataCell}>{missingReport.category}</div>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <div className={styles.dataCell}>{missingReport.description}</div>
-                    </Grid>
-                    <Grid item xs={0.5} className={styles.dataCell}>
-                      <CircleIcon
-                        sx={{
-                          color: dateAgeColor(displayLastCheckedDate(missingReport)),
-                          fontSize: 10,
-                        }}
-                      />
-                    </Grid>
-                  </Grid>
-                ))}
-                {/* Sentinel element for lazy loading */}
-                <div ref={loadMoreRef} />
-
                 {/*Show a loader when lazy loading */}
-                {lazyLoading && <GordonLoader />}
+                {lazyLoading ? (
+                  <GordonLoader />
+                ) : (
+                  <>
+                    {missingReports.map((missingReport) => (
+                      <Grid
+                        container
+                        justifyContent={'space-between'}
+                        key={missingReport.recordID}
+                        className={`${styles.reportRow} ${styles.clickableRow}`}
+                        onClick={() => handleMissingItemClick(String(missingReport.recordID))}
+                        tabIndex={0}
+                      >
+                        <Grid item xs={2}>
+                          {formatDateString(missingReport.dateLost)}
+                        </Grid>
+                        <Grid item xs={2.5}>
+                          <div className={styles.dataCell}>{missingReport.locationLost}</div>
+                        </Grid>
+                        <Grid item xs={2.5}>
+                          <div className={styles.dataCell}>{missingReport.category}</div>
+                        </Grid>
+                        <Grid item xs={3}>
+                          <div className={styles.dataCell}>{missingReport.description}</div>
+                        </Grid>
+                        <Grid item xs={0.5} className={styles.dataCell}>
+                          <CircleIcon
+                            sx={{
+                              color: dateAgeColor(displayLastCheckedDate(missingReport)),
+                              fontSize: 10,
+                            }}
+                          />
+                        </Grid>
+                      </Grid>
+                    ))}
+
+                    {/* Sentinel element for lazy loading */}
+                    <div ref={loadMoreRef} />
+                  </>
+                )}
               </div>
             </>
           )}
@@ -993,44 +1004,47 @@ const LostAndFoundAdmin = () => {
               </CardContent>
               {FoundItemsListHeader}
               <div className={styles.scrollBox}>
-                {foundItems.map((foundItem) => (
-                  <Grid
-                    container
-                    justifyContent={'space-between'}
-                    key={foundItem.recordID}
-                    className={`${styles.reportRow} ${styles.clickableRow}`}
-                    onClick={() => handleFoundItemClick(String(foundItem.recordID))}
-                    tabIndex={0}
-                  >
-                    <Grid item xs={2}>
-                      <div className={styles.dataCell}>{foundItem.recordID}</div>
-                    </Grid>
-                    <Grid item xs={2}>
-                      {formatDateString(foundItem.dateFound)}
-                    </Grid>
-                    <Grid item xs={2.5}>
-                      <div className={styles.dataCell}>{foundItem.locationFound}</div>
-                    </Grid>
-                    <Grid item xs={2.5}>
-                      <div className={styles.dataCell}>{foundItem.category}</div>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <div className={styles.dataCell}>{foundItem.description}</div>
-                    </Grid>
-                    <Grid item xs={0.5} className={styles.dataCell}>
-                      <div>
-                        <>
-                          <CircleIcon sx={{ color: foundItemColor(foundItem), fontSize: 10 }} />
-                        </>
-                      </div>
-                    </Grid>
-                  </Grid>
-                ))}
-                {/* Sentinel element for lazy loading */}
-                <div ref={loadMoreFoundRef} />
-
-                {/*Show a loader when lazy loading */}
-                {foundLazyLoading && <GordonLoader />}
+                {foundLazyLoading ? (
+                  <GordonLoader />
+                ) : (
+                  <>
+                    {foundItems.map((foundItem) => (
+                      <Grid
+                        container
+                        justifyContent={'space-between'}
+                        key={foundItem.recordID}
+                        className={`${styles.reportRow} ${styles.clickableRow}`}
+                        onClick={() => handleFoundItemClick(String(foundItem.recordID))}
+                        tabIndex={0}
+                      >
+                        <Grid item xs={2}>
+                          <div className={styles.dataCell}>{foundItem.recordID}</div>
+                        </Grid>
+                        <Grid item xs={2}>
+                          {formatDateString(foundItem.dateFound)}
+                        </Grid>
+                        <Grid item xs={2.5}>
+                          <div className={styles.dataCell}>{foundItem.locationFound}</div>
+                        </Grid>
+                        <Grid item xs={2.5}>
+                          <div className={styles.dataCell}>{foundItem.category}</div>
+                        </Grid>
+                        <Grid item xs={3}>
+                          <div className={styles.dataCell}>{foundItem.description}</div>
+                        </Grid>
+                        <Grid item xs={0.5} className={styles.dataCell}>
+                          <div>
+                            <>
+                              <CircleIcon sx={{ color: foundItemColor(foundItem), fontSize: 10 }} />
+                            </>
+                          </div>
+                        </Grid>
+                      </Grid>
+                    ))}
+                    {/* Sentinel element for lazy loading */}
+                    <div ref={loadMoreFoundRef} />
+                  </>
+                )}
               </div>
             </>
           )}
