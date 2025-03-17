@@ -1,0 +1,100 @@
+.filterCardPosition {
+  transform: translateY(15px);
+}
+
+.filterTitle {
+  color: var(--mui-palette-primary-contrastText);
+  background-color: var(--mui-palette-primary-main);
+}
+
+.filterTitleText {
+  font-size: medium;
+
+  b {
+    font-size: x-large;
+  }
+}
+
+.filterContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--mui-palette-primary-contrastText);
+  padding: 1rem;
+  border-radius: 5px;
+}
+
+.textField {
+  flex-grow: 1;
+}
+
+.formControl {
+  min-width: 120px;
+}
+
+.listCard {
+  margin-top: 0.3rem;
+}
+
+.listContainer {
+  padding: 0rem;
+}
+
+.titleHeader {
+  padding: 1rem;
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
+  margin-top: 5rem;
+  margin-bottom: -1.5rem;
+}
+
+.stickyHeader {
+  margin-left: -0.5rem;
+  background-color: var(--mui-palette-neutral-light);
+  position: sticky;
+  top: -1rem;
+  z-index: 9;
+  transform: translateY(55px);
+  width: calc(100% + 1rem);
+  clip-path: inset(0px -10px 0px -10px);
+}
+
+.tableHeader {
+  padding: 1rem;
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
+}
+
+.headerPlaceholder {
+  padding: 1rem;
+}
+
+.verticalSpacer {
+  height: 1rem;
+}
+
+.reportRow {
+  display: flex;
+  align-items: center;
+  height: 6rem;
+  padding: 1rem;
+  border-bottom: 1px solid var(--mui-palette-neutral-400);
+  color: var(--mui-palette-neutral-contrastText);
+
+  &:nth-child(even) {
+    background-color: var(--mui-palette-neutral-100);
+  }
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+  }
+}
+
+.dataCell {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-right: 0.5rem;
+}
