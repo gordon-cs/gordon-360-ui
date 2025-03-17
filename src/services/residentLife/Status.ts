@@ -18,10 +18,13 @@ const createStatus = (newStatus: NewStatus): Promise<Status[]> =>
   http.post('Housing/ras/status-event', newStatus);
 
 //Update Status??
+// const updateStatus = (StatusID: number, newStatus: Status) =>
+//   http.patch(`Housing/ras/status-event/${StatusID}`, newStatus);
+
 const updateStatus = (StatusID: number, updatedStatus: Partial<NewStatus>): Promise<Status[]> =>
   http.patch(`Housing/ras/status-event/${StatusID}`, updatedStatus);
 
-const deleteStatus = (StatusID: number) => http.del(`Housing/ras/status-event/${StatusID}`);
+const removeStatus = (StatusID: number) => http.del(`Housing/ras/status-event/${StatusID}`);
 
 const getActiveStatusListForRA = (RaID: string): Promise<Status[]> =>
   http.get(`Housing/ras/${RaID}/active-status-events`);
@@ -33,7 +36,7 @@ const getDailyStatusListForRA = (RaID: string): Promise<String[]> =>
 
 export {
   createStatus,
-  deleteStatus,
+  removeStatus,
   getActiveStatusListForRA,
   getDailyStatusListForRA,
   updateStatus,

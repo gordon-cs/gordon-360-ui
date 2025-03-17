@@ -173,7 +173,6 @@ const TaskList = () => {
       endDate: task.EndDate ? task.EndDate.split('T')[0] : '',
     });
     setEditing(true);
-    console.log('current Task:', currentTask);
   };
 
   const cancelEdit = () => {
@@ -280,7 +279,6 @@ const TaskList = () => {
                   fullWidth
                   label="Task Name"
                   name="name"
-                  // value={currentTask.name || ''
                   value={currentTask.name}
                   onChange={handleInputChange}
                   required
@@ -292,7 +290,6 @@ const TaskList = () => {
                   name="description"
                   multiline
                   rows={3}
-                  // value={currentTask.description || ''}
                   value={currentTask.description}
                   onChange={handleInputChange}
                   sx={{ mb: 2 }}

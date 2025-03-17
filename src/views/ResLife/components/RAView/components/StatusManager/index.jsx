@@ -21,7 +21,7 @@ import dayjs from 'dayjs';
 
 import {
   createStatus,
-  deleteStatus,
+  removeStatus,
   updateStatus,
   getActiveStatusListForRA,
   getDailyStatusListForRA,
@@ -48,8 +48,8 @@ const StatusManager = () => {
     Interval: 0,
     Start_Time: '',
     End_Time: '',
-    Start_Date: '',
-    End_Date: '',
+    startDate: '',
+    endDate: '',
     Created_Date: '',
     Available: true,
   });
@@ -65,8 +65,9 @@ const StatusManager = () => {
 
     try {
       // Wait until all statuses are fetched from API
-      const response = await getDailyStatusListForRA(RaID);
-      console.log('getDailyStatusListForRA response', response);
+      // const response = await getDailyStatusListForRA(RaID);
+      const response = await getActiveStatusListForRA(RaID);
+      console.log('getActiveStatusListForRA response', response);
 
       // prevStatuses - represents current state of value before any changes
       // if length changes or some task IDs do not match, return new task array
@@ -92,8 +93,9 @@ const StatusManager = () => {
 
     try {
       // Wait until all statuses are fetched from API
-      const response = await getDailyStatusListForRA(RaID);
-      console.log('getDailyStatusListForRA edit response', response);
+      // const response = await getDailyStatusListForRA(RaID);
+      const response = await getActiveStatusListForRA(RaID);
+      console.log('getActiveStatusListForRA edit response', response);
       setStatusList(response);
     } catch (error) {
       console.error('Error fetching RA statuses:', error);
@@ -103,6 +105,25 @@ const StatusManager = () => {
   };
 
   // Function to handle changes in the form
+  // const handleInputChange = (e) => {
+  //   const { name, value, type, checked } = e.target;
+
+  //   setCurrentStatus((prevStatus) => {
+  //     let updatedStatus = { ...prevStatus, [name]: type === 'checkbox' ? checked : value };
+
+  //     // If "Recurring Status" is unchecked, set endDate to startDate
+  //     if (name === 'isRecurring') {
+  //       if (!checked) {
+  //         updatedStatus.endDate = prevStatus.startDate;
+  //       } else {
+  //         updatedStatus.endDate = ''; // Allow user to manually enter an end date when checked
+  //       }
+  //     }
+
+  //     return updatedStatus;
+  //   });
+  // };
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -112,10 +133,15 @@ const StatusManager = () => {
       // If "Recurring Status" is unchecked, set endDate to startDate
       if (name === 'isRecurring') {
         if (!checked) {
-          updatedStatus.End_Date = prevStatus.Start_Date;
+          updatedStatus.endDate = prevStatus.startDate;
         } else {
-          updatedStatus.End_Date = ''; // Allow user to manually enter an end date when checked
+          updatedStatus.endDate = ''; // Allow user to manually enter an end date when checked
         }
+      }
+
+      // If handling time input, store it in 24-hour format
+      if (name === 'Start_Time' || name === 'End_Time') {
+        updatedStatus[name] = dayjs(value).format('HH:mm');
       }
 
       return updatedStatus;
@@ -170,6 +196,7 @@ const StatusManager = () => {
   };
 
   // Function to fill in the form with data that user wants to edit
+  // Names go off of ViewModel
   const editStatus = (status) => {
     console.log('Status', status);
     setCurrentStatus({
@@ -179,8 +206,8 @@ const StatusManager = () => {
       IsRecurring: status?.IsRecurring,
       Frequency: status.Frequency,
       Interval: status.Interval,
-      Start_Date: status.Start_Date ? status.Start_Date.split('T')[0] : '',
-      End_Date: status.End_Date ? status.End_Date.split('T')[0] : '',
+      startDate: status.StartDate ? status.StartDate.split('T')[0] : '',
+      endDate: status.EndDate ? status.EndDate.split('T')[0] : '', // should be uppercase
       Start_Time: status.Start_Time,
       End_Time: status.End_Time,
       Available: true,
@@ -193,11 +220,11 @@ const StatusManager = () => {
     resetStatusForm();
   };
 
-  // Function to delete a task
-  const deleteStatus = async (taskID) => {
+  // Function to delete a status
+  const deleteStatus = async (statusID) => {
     try {
-      await deleteStatus(taskID);
-      setStatusList(statusList.filter((task) => task.taskID !== taskID));
+      await removeStatus(statusID);
+      setStatusList(statusList.filter((status) => status.statusID !== statusID));
     } catch (error) {
       console.error('Error deleting task:', error);
     }
@@ -213,8 +240,8 @@ const StatusManager = () => {
       Interval: 0,
       Start_Time: null,
       End_Time: null,
-      Start_Date: '',
-      End_Date: '',
+      startDate: '',
+      endDate: '',
       Created_Date: '',
       Available: true,
     });
@@ -259,40 +286,58 @@ const StatusManager = () => {
                 />
 
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <TimePicker
-                    fullWidth
-                    label="Start Time"
-                    name="Start_Time"
-                    value={currentStatus.Start_Time}
-                    onChange={handleInputChange}
-                    required
-                    sx={{ mb: 2 }}
-                  />
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={5}>
+                      <TimePicker
+                        label="Start Time"
+                        name="Start_Time"
+                        value={
+                          currentStatus.Start_Time ? dayjs(currentStatus.Start_Time, 'HH:mm') : null
+                        }
+                        onChange={(newValue) =>
+                          setCurrentStatus((prev) => ({
+                            ...prev,
+                            Start_Time: dayjs(newValue).format('HH:mm'),
+                          }))
+                        }
+                        required
+                        sx={{ mb: 2 }}
+                      />
+                    </Grid>
 
-                  <TimePicker
-                    fullWidth
-                    label="End Time"
-                    name="End_Time"
-                    value={currentStatus.End_Time}
-                    onChange={handleInputChange}
-                    required
-                    sx={{ mb: 2, ml: 10.5 }}
-                  />
+                    <Grid item xs={12} md={5}>
+                      <TimePicker
+                        label="End Time"
+                        name="End_Time"
+                        value={
+                          currentStatus.End_Time ? dayjs(currentStatus.End_Time, 'HH:mm') : null
+                        }
+                        onChange={(newValue) =>
+                          setCurrentStatus((prev) => ({
+                            ...prev,
+                            End_Time: dayjs(newValue).format('HH:mm'),
+                          }))
+                        }
+                        required
+                        sx={{ mb: 2 }}
+                      />
+                    </Grid>
+                  </Grid>
                 </LocalizationProvider>
 
                 <TextField
                   fullWidth
                   label={currentStatus.IsRecurring ? 'Start Date' : 'Status Date'}
                   type="date"
-                  name="Start_Date"
+                  name="startDate"
                   InputLabelProps={{ shrink: true }}
-                  value={currentStatus.Start_Date ? currentStatus.Start_Date.split('T')[0] : ''}
+                  value={currentStatus.startDate ? currentStatus.startDate.split('T')[0] : ''}
                   onChange={(e) => {
                     handleInputChange(e);
                     if (!currentStatus.IsRecurring) {
                       setCurrentStatus((prevStatus) => ({
                         ...prevStatus,
-                        End_Date: e.target.value,
+                        endDate: e.target.value,
                       }));
                     }
                   }}
@@ -305,14 +350,25 @@ const StatusManager = () => {
                     fullWidth
                     label="End Date"
                     type="date"
-                    name="End_Date"
+                    name="endDate"
                     InputLabelProps={{ shrink: true }}
-                    value={currentStatus.End_Date ? currentStatus.End_Date.split('T')[0] : ''}
+                    value={currentStatus.endDate ? currentStatus.endDate.split('T')[0] : ''}
                     onChange={handleInputChange}
                     required
                     sx={{ mb: 2 }}
                   />
                 )}
+
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name="Available"
+                      checked={currentStatus.Available}
+                      onChange={handleInputChange}
+                    />
+                  }
+                  label="Available"
+                />
 
                 <FormControlLabel
                   control={
@@ -410,7 +466,8 @@ const StatusManager = () => {
                           </Typography>
                           <Typography variant="body2" color="textSecondary">
                             <strong>Start Date: </strong>{' '}
-                            {new Date(status.Start_Date).toLocaleDateString('en-US', {
+                            {new Date(status.StartDate).toLocaleDateString('en-US', {
+                              //change back to Start_Date
                               month: 'long',
                               day: 'numeric',
                               year: 'numeric',
@@ -418,7 +475,7 @@ const StatusManager = () => {
                           </Typography>
                           <Typography variant="body2" color="textSecondary">
                             <strong>End Date: </strong>{' '}
-                            {new Date(status.End_Date).toLocaleDateString('en-US', {
+                            {new Date(status.EndDate).toLocaleDateString('en-US', {
                               month: 'long',
                               day: 'numeric',
                               year: 'numeric',
@@ -442,6 +499,10 @@ const StatusManager = () => {
                               </Typography>
                             </>
                           )}
+
+                          <Typography variant="body2" color="textSecondary">
+                            <strong>Available: </strong> {status.Available ? 'Yes' : 'No'}
+                          </Typography>
                         </div>
                         <div className="flex gap-2" style={{ marginBottom: '16px' }}>
                           <Button
