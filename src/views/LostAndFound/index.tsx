@@ -20,6 +20,7 @@ import lostAndFoundService from 'services/lostAndFound';
 import { useEffect } from 'react';
 import { AuthGroup } from 'services/auth';
 import { useAuthGroups } from 'hooks';
+import FoundItemCleanOut from './views/FoundItemCleanOut';
 
 type CampusSafetyRoutesObject = {
   [key: string]: {
@@ -54,6 +55,10 @@ export const CampusSafetyRoutes: CampusSafetyRoutesObject = {
   '/lostandfoundadmin/reportitemforothers': {
     element: <ReportItemPage />,
     formattedName: 'Report a Lost Item for Others',
+  },
+  '/lostandfoundadmin/founditemcleanout': {
+    element: <FoundItemCleanOut />,
+    formattedName: 'Found Item Clean Out',
   },
   '/lostandfoundadmin/founditemdatabase': {
     element: <FoundItemList />,

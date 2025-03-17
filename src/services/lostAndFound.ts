@@ -206,6 +206,7 @@ export type InitFoundAdminAction = Omit<FoundAdminAction, 'ID'>;
  * Fetch an array containing the full list of all found item reports, filtered by the given
  * parameters.
  * @param ID the tag ID to filter by
+ * @param latestDate filter out all reports created after this date
  * @param status the item status to filter by
  * @param color the item color to filter by
  * @param category the item category to filter by
@@ -214,6 +215,7 @@ export type InitFoundAdminAction = Omit<FoundAdminAction, 'ID'>;
  */
 function getFoundItems(
   ID?: string,
+  latestDate?: string,
   status?: string,
   color?: string,
   category?: string,
@@ -222,6 +224,7 @@ function getFoundItems(
   // Define the query as a key-value object
   const query = {
     ID,
+    latestDate,
     status,
     category,
     color,
