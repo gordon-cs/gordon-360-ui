@@ -1,10 +1,11 @@
-import { Grid, Typography, Box, AppBar, Breadcrumbs, Button } from '@mui/material';
+import { Grid, Typography, Box, AppBar, Breadcrumbs, Button, Menu, MenuItem } from '@mui/material';
 import { Link as LinkRouter, useLocation, useNavigate } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 import {
   NavigateNext as NavigateNextIcon,
   AdminPanelSettings as AdminPanelSettingsIcon,
 } from '@mui/icons-material';
+import { useState } from 'react';
 import styles from './Header.module.css';
 import { useAuthGroups } from 'hooks';
 import { AuthGroup } from 'services/auth';
@@ -71,7 +72,6 @@ const pathSubstringToFormattedName = (substring: string, pathnames: string[]) =>
   return ['', ''];
 };
 
-
 const Header: React.FC<HeaderProps> = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -79,6 +79,28 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
   const isAdmin = useAuthGroups(AuthGroup.LostAndFoundAdmin);
   const isKiosk = useAuthGroups(AuthGroup.LostAndFoundKiosk);
   const isDev = useAuthGroups(AuthGroup.LostAndFoundDevelopers);
+
+  console.log('iskiosktrue', isKiosk);
+  // For the dropdown menu
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+  const open = Boolean(anchorEl);
+
+  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const handleGotoKiosk = () => {
+    handleCloseMenu();
+    navigate('/lostandfound/kiosk');
+  };
+  const handleGotoAdmin = () => {
+    handleCloseMenu();
+    navigate('/lostandfound/lostandfoundadmin?status=active');
+  };
 
   return (
     <>
@@ -93,20 +115,42 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
             </Typography>
           </Grid>
         </Grid>
-        {(isAdmin || isKiosk || isDev) &&
+
+        {/* If user is kiosk, admin, or dev, and not currently on an admin path, show button */}
+        {(isAdmin || isDev || isKiosk) &&
           !pathnames.find((x) => x.toLowerCase() === 'lostandfoundadmin') && (
             <Grid item xs={5} className={styles.buttonContainer}>
-              <Button
-                color="secondary"
-                className={styles.button}
-                variant="contained"
-                onClick={() => {
-                  navigate('/lostandfound/lostandfoundadmin');
-                }}
-              >
-                <AdminPanelSettingsIcon sx={{ marginRight: '0.3rem' }} />
-                <b>Lost & Found Admin</b>
-              </Button>
+              {isKiosk && !isAdmin && !isDev ? (
+                // If kiosk-only, navigate directly to kiosk page
+                <Button
+                  color="secondary"
+                  className={styles.button}
+                  variant="contained"
+                  onClick={() => {
+                    navigate('/lostandfound/kiosk');
+                  }}
+                >
+                  <AdminPanelSettingsIcon sx={{ marginRight: '0.3rem' }} />
+                  <b>Lost & Found Admin</b>
+                </Button>
+              ) : (
+                // If admin or dev, open a dropdown with Kiosk or Admin
+                <>
+                  <Button
+                    color="secondary"
+                    className={styles.button}
+                    variant="contained"
+                    onClick={handleOpenMenu}
+                  >
+                    <AdminPanelSettingsIcon sx={{ marginRight: '0.3rem' }} />
+                    <b>Lost & Found Admin</b>
+                  </Button>
+                  <Menu anchorEl={anchorEl} open={open} onClose={handleCloseMenu}>
+                    <MenuItem onClick={handleGotoKiosk}>Kiosk User</MenuItem>
+                    <MenuItem onClick={handleGotoAdmin}>Admin Page</MenuItem>
+                  </Menu>
+                </>
+              )}
             </Grid>
           )}
       </Grid>
