@@ -27,12 +27,16 @@ import { LFCategories, LFColors } from 'views/LostAndFound/components/Constants'
 import { formatDateString } from 'views/LostAndFound/components/Helpers';
 import { getUrlParam, setUrlParam, clearUrlParams } from 'views/LostAndFound/components/Helpers';
 import { StatusChip } from 'views/LostAndFound/components/StatusChip';
+import { useAuthGroups } from 'hooks';
+import { AuthGroup } from 'services/auth';
 
 const FoundItemList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [reports, setReports] = useState<FoundItem[]>([]);
   const [pageLoaded, setPageLoaded] = useState(false);
+  const isKiosk = useAuthGroups(AuthGroup.LostAndFoundKiosk);
+  const readOnly = isKiosk;
 
   // Filters
   // "ID" is the Tag # filter
@@ -269,6 +273,7 @@ const FoundItemList = () => {
                     onClick={() => navigate('/lostandfound/lostandfoundadmin/founditemform')}
                     fullWidth={isMobile}
                     className={styles.reportButton}
+                    disabled ={readOnly}
                   >
                     Enter New Found Item
                   </Button>
@@ -326,7 +331,9 @@ const FoundItemList = () => {
                         className={styles.clickableRow}
                         onClick={() =>
                           navigate(
-                            `/lostandfound/lostandfoundadmin/founditemdatabase/${report.recordID}`,
+                            isKiosk
+                              ? `/lostandfound/kiosk/founditemdatabase/${report.recordID}`
+                              : `/lostandfound/lostandfoundadmin/founditemdatabase/${report.recordID}`
                           )
                         }
                       >
@@ -359,7 +366,9 @@ const FoundItemList = () => {
                         className={`${styles.reportRow} ${styles.clickableRow}`}
                         onClick={() =>
                           navigate(
-                            `/lostandfound/lostandfoundadmin/founditemdatabase/${report.recordID}`,
+                            isKiosk
+                              ? `/lostandfound/kiosk/founditemdatabase/${report.recordID}`
+                              : `/lostandfound/lostandfoundadmin/founditemdatabase/${report.recordID}`
                           )
                         }
                       >

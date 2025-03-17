@@ -1,0 +1,58 @@
+@import '../../../../vars';
+
+/* Container for the entire kiosk page */
+.container {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  text-align: center; // Center all content in container
+}
+
+/* The main card */
+.card {
+  background-color: var(--mui-palette-background-paper);
+  color: var(--mui-palette-text-primary);
+  border-radius: 6px;
+}
+
+/* Header styling for the card */
+.cardHeader {
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
+  text-align: center;
+  padding: 1rem;
+}
+
+/* The top title text */
+.title {
+  margin: 0;
+  font-weight: bold;
+  font-size: 1.8rem;
+}
+
+/* CardContent overrides */
+.cardContent {
+  text-align: center;
+}
+
+/* Step heading text */
+.stepHeading {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+/* Smaller note text */
+.subText {
+  margin-bottom: 1rem;
+  color: var(--mui-palette-text-primary);
+}
+
+/* The large action buttons */
+.actionButton {
+  width: 100%;
+  max-width: 300px;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-top: 0.5rem;
+  margin-left: auto;
+  margin-right: auto;
+}
