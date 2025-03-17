@@ -14,80 +14,89 @@ import {
   Box,
   FormControlLabel,
 } from '@mui/material';
-import { addTask, updateTask, fetchTasks, removeTask } from 'services/residentLife/RD_TaskList';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+
+import {
+  createStatus,
+  deleteStatus,
+  updateStatus,
+  getActiveStatusListForRA,
+  getDailyStatusListForRA,
+} from 'services/residentLife/Status';
 import { useColorScheme } from '@mui/material/styles';
 import { useAuthGroups } from 'hooks';
 import { AuthGroup } from 'services/auth';
 
-const TaskList = () => {
+const StatusManager = () => {
   const { mode } = useColorScheme();
-  const [tasks, setTasks] = useState([]);
-  const [selectedHall, setSelectedHall] = useState('');
+  const [statusList, setStatusList] = useState([]);
+  const [RA, setRA] = useState('50223925');
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
+  // const { profile } = useUser();
 
-  // All parameters of a task that will be filled later
-  const [currentTask, setCurrentTask] = useState({
-    // taskID: null,
-    name: '',
-    description: '',
-    hallId: '',
-    isRecurring: false,
-    frequency: '',
-    interval: 0,
-    startDate: '',
-    endDate: '',
+  // All parameters of a status that will be filled later
+  const [currentStatus, setCurrentStatus] = useState({
+    // StatusID: '',
+    StatusName: '',
+    RaID: '',
+    IsRecurring: true,
+    Frequency: '',
+    Interval: 0,
+    Start_Time: '',
+    End_Time: '',
+    Start_Date: '',
+    End_Date: '',
+    Created_Date: '',
+    Available: true,
   });
 
-  // UseEffect - Immediately runs `loadTasks`
+  // UseEffect - Immediately runs `loadStatusList`
   useEffect(() => {
-    if (selectedHall) {
-      loadTasks(selectedHall);
-    }
-  }, [selectedHall]);
+    loadStatusList(RA);
+  }, [RA]);
 
-  // Function to get all the tasks from the selected hall
-  const loadTasks = async (hallId) => {
+  // Function to get all the statuses from the selected hall
+  const loadStatusList = async (RaID) => {
     setLoading(true);
 
     try {
-      // Wait until all tasks are fetched from API
-      const response = await fetchTasks(hallId);
-      console.log('fetchTasks response', response);
+      // Wait until all statuses are fetched from API
+      const response = await getDailyStatusListForRA(RaID);
+      console.log('getDailyStatusListForRA response', response);
 
-      // prevTasks - represents current state of value before any changes
+      // prevStatuses - represents current state of value before any changes
       // if length changes or some task IDs do not match, return new task array
-      // else nothing has changed, so return prevTasks
-      setTasks((prevTasks) => {
+      // else nothing has changed, so return prevStatuses
+      setStatusList((prevStatuses) => {
         if (
-          prevTasks.length !== response.length ||
-          !prevTasks.every((task, index) => task.TaskID === response[index]?.TaskID)
+          prevStatuses.length !== response.length ||
+          !prevStatuses.every((status, index) => status.statusID === response[index]?.StatusID)
         ) {
           return response;
         }
-        return prevTasks;
+        return prevStatuses;
       });
     } catch (error) {
-      console.error('Error fetching hall tasks:', error);
+      console.error('Error fetching hall statuses:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const loadEditedTasks = async (hallId) => {
+  const loadEditedStatusList = async (RaID) => {
     setLoading(true);
 
     try {
-      // Wait until all tasks are fetched from API
-      const response = await fetchTasks(hallId);
-      console.log('fetchTasks response', response);
-
-      // prevTasks - represents current state of value before any changes
-      // if length changes or some task IDs do not match, return new task array
-      // else nothing has changed, so return prevTasks
-      setTasks(response);
+      // Wait until all statuses are fetched from API
+      const response = await getDailyStatusListForRA(RaID);
+      console.log('getDailyStatusListForRA edit response', response);
+      setStatusList(response);
     } catch (error) {
-      console.error('Error fetching hall tasks:', error);
+      console.error('Error fetching RA statuses:', error);
     } finally {
       setLoading(false);
     }
@@ -97,127 +106,119 @@ const TaskList = () => {
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
 
-    setCurrentTask((prevTask) => {
-      let updatedTask = { ...prevTask, [name]: type === 'checkbox' ? checked : value };
+    setCurrentStatus((prevStatus) => {
+      let updatedStatus = { ...prevStatus, [name]: type === 'checkbox' ? checked : value };
 
-      // If "Recurring Task" is unchecked, set endDate to startDate
+      // If "Recurring Status" is unchecked, set endDate to startDate
       if (name === 'isRecurring') {
         if (!checked) {
-          updatedTask.endDate = prevTask.startDate;
+          updatedStatus.End_Date = prevStatus.Start_Date;
         } else {
-          updatedTask.endDate = ''; // Allow user to manually enter an end date when checked
+          updatedStatus.End_Date = ''; // Allow user to manually enter an end date when checked
         }
       }
 
-      return updatedTask;
+      return updatedStatus;
     });
   };
 
-  // Function to handle form submission when adding new tasks
+  // Function to handle form submission when adding new statuses
   const handleSubmit = async (e) => {
     e.preventDefault(); // Stops the website from reloading
     try {
-      const newTask = { ...currentTask, hallId: selectedHall };
-      console.log('newTask', newTask);
-      console.log('About to run addTask');
-      await addTask(newTask);
-      console.log('Ran addTask');
+      console.log('RA:', RA);
+      const newStatus = { ...currentStatus, RaID: RA };
+      console.log('newStatus', newStatus);
+      console.log('About to run addStatus');
+      await createStatus(newStatus);
+      console.log('Ran addStatus');
 
-      console.log('About to run loadTasks');
-      loadTasks(selectedHall);
-      console.log('Ran loadTasks');
+      console.log('About to run loadStatusList');
+      loadStatusList(RA);
+      console.log('Ran loadStatusList');
 
-      resetTaskForm();
+      resetStatusForm();
     } catch (error) {
       console.error('Error adding task:', error);
     }
   };
 
-  // // Function to handle form submission when adding updated tasks
+  // // Function to handle form submission when adding updated statuses
   const handleEdit = async (e) => {
     e.preventDefault();
     try {
       // Check if the task has a task ID
-      if (!currentTask.taskID) {
-        console.error('Error: Task ID is missing');
+      if (!currentStatus.StatusID) {
+        console.error('Error: Status ID is missing');
         return;
       }
 
-      const updatedTask = { ...currentTask, hallId: selectedHall };
+      const updatedStatus = { ...currentStatus, RaID: RA };
+      console.log('edited Status:', updatedStatus);
+      console.log('About to run updateStatus');
+      await updateStatus(currentStatus.StatusID, updatedStatus);
+      console.log('Ran updateStatus');
 
-      console.log('About to run updateTask');
-      await updateTask(currentTask.taskID, updatedTask);
-      console.log('Ran updateTasks');
+      console.log('About to run loadStatusList');
+      loadEditedStatusList(RA);
+      console.log('Ran loadStatusList');
 
-      console.log('About to run loadTasks');
-      loadEditedTasks(selectedHall);
-      console.log('Ran loadTasks');
-
-      resetTaskForm();
+      resetStatusForm();
     } catch (error) {
       console.error('Error editing task:', error);
     }
   };
 
   // Function to fill in the form with data that user wants to edit
-  const editTask = (task) => {
-    setCurrentTask({
-      taskID: task.TaskID,
-      name: task.Name,
-      description: task.Description,
-      hallId: task.HallID,
-      isRecurring: task?.IsRecurring,
-      frequency: task.Frequency,
-      interval: task.Interval,
-      startDate: task.StartDate ? task.StartDate.split('T')[0] : '',
-      endDate: task.EndDate ? task.EndDate.split('T')[0] : '',
+  const editStatus = (status) => {
+    console.log('Status', status);
+    setCurrentStatus({
+      StatusID: status.StatusID,
+      StatusName: status.StatusName,
+      RaID: status.RaID,
+      IsRecurring: status?.IsRecurring,
+      Frequency: status.Frequency,
+      Interval: status.Interval,
+      Start_Date: status.Start_Date ? status.Start_Date.split('T')[0] : '',
+      End_Date: status.End_Date ? status.End_Date.split('T')[0] : '',
+      Start_Time: status.Start_Time,
+      End_Time: status.End_Time,
+      Available: true,
     });
+    console.log('current Status:', currentStatus);
     setEditing(true);
-    console.log('current Task:', currentTask);
   };
 
   const cancelEdit = () => {
-    resetTaskForm();
+    resetStatusForm();
   };
 
   // Function to delete a task
-  const deleteTask = async (taskID) => {
+  const deleteStatus = async (taskID) => {
     try {
-      await removeTask(taskID);
-      setTasks(tasks.filter((task) => task.taskID !== taskID));
+      await deleteStatus(taskID);
+      setStatusList(statusList.filter((task) => task.taskID !== taskID));
     } catch (error) {
       console.error('Error deleting task:', error);
     }
   };
 
   // Function to reset the form inputs
-  const resetTaskForm = () => {
-    setCurrentTask({
-      name: '',
-      description: '',
-      hallId: selectedHall,
-      isRecurring: false,
-      frequency: '',
-      interval: 0,
-      startDate: '',
-      endDate: '',
+  const resetStatusForm = () => {
+    setCurrentStatus({
+      StatusName: '',
+      RaID: '',
+      IsRecurring: true,
+      Frequency: '',
+      Interval: 0,
+      Start_Time: null,
+      End_Time: null,
+      Start_Date: '',
+      End_Date: '',
+      Created_Date: '',
+      Available: true,
     });
     setEditing(false);
-  };
-
-  const hallDisplayNames = {
-    BRO: 'Bromley',
-    FER: 'Ferrin',
-    WIL: 'Wilson',
-    EVN: 'Evans',
-    CHA: 'Chase',
-    TAV: 'Tavilla',
-    NYL: 'Nyland',
-    FUL: 'Fulton',
-    GRA: 'Grace',
-    MCI: 'MacInnis',
-    CON: 'Conrad',
-    RID: 'Rider',
   };
 
   const housingadmin = useAuthGroups(AuthGroup.HousingAdmin);
@@ -235,93 +236,78 @@ const TaskList = () => {
               color: mode === 'dark' ? '#f8b619' : '#36b9ed',
             }}
           >
-            Task Manager
+            Status Manager
           </Typography>
-        </Grid>
-
-        <Grid item xs={10}>
-          <Typography
-            variant="h6"
-            fontWeight="bold"
-            align="left"
-            style={{
-              color: mode === 'dark' ? '#f8b619' : '#36b9ed',
-            }}
-          >
-            Select a Hall
-          </Typography>
-          <FormControl fullWidth>
-            <Select value={selectedHall} onChange={(e) => setSelectedHall(e.target.value)}>
-              <MenuItem value="BRO">Bromley</MenuItem>
-              <MenuItem value="FER">Ferrin</MenuItem>
-              <MenuItem value="EVN">Evans</MenuItem>
-              <MenuItem value="WIL">Wilson</MenuItem>
-              <MenuItem value="CHA">Chase</MenuItem>
-              <MenuItem value="TAV">Tavilla</MenuItem>
-              <MenuItem value="FUL">Fulton</MenuItem>
-              <MenuItem value="NYL">Nyland</MenuItem>
-              <MenuItem value="GRA">Grace</MenuItem>
-              <MenuItem value="MCI">MacInnis</MenuItem>
-              <MenuItem value="CON">Conrad</MenuItem>
-              <MenuItem value="RID">Rider</MenuItem>
-            </Select>
-          </FormControl>
         </Grid>
 
         <Grid item xs={12} md={5}>
           <Card elevation={3}>
             <CardContent>
               <Typography variant="h5" fontWeight="bold" gutterBottom>
-                {editing ? 'Edit Task' : 'Create Task'}
+                {editing ? 'Edit Status' : 'Create Status'}
               </Typography>
 
               <form onSubmit={editing ? handleEdit : handleSubmit}>
                 <TextField
                   fullWidth
-                  label="Task Name"
-                  name="name"
-                  // value={currentTask.name || ''
-                  value={currentTask.name}
+                  label="Status Name"
+                  name="StatusName"
+                  value={currentStatus.StatusName}
                   onChange={handleInputChange}
                   required
                   sx={{ mb: 2 }}
                 />
+
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <TimePicker
+                    fullWidth
+                    label="Start Time"
+                    name="Start_Time"
+                    value={currentStatus.Start_Time}
+                    onChange={handleInputChange}
+                    required
+                    sx={{ mb: 2 }}
+                  />
+
+                  <TimePicker
+                    fullWidth
+                    label="End Time"
+                    name="End_Time"
+                    value={currentStatus.End_Time}
+                    onChange={handleInputChange}
+                    required
+                    sx={{ mb: 2, ml: 10.5 }}
+                  />
+                </LocalizationProvider>
+
                 <TextField
                   fullWidth
-                  label="Description (Optional)"
-                  name="description"
-                  multiline
-                  rows={3}
-                  // value={currentTask.description || ''}
-                  value={currentTask.description}
-                  onChange={handleInputChange}
-                  sx={{ mb: 2 }}
-                />
-                <TextField
-                  fullWidth
-                  label={currentTask.isRecurring ? 'Start Date' : 'Task Date'}
+                  label={currentStatus.IsRecurring ? 'Start Date' : 'Status Date'}
                   type="date"
-                  name="startDate"
+                  name="Start_Date"
                   InputLabelProps={{ shrink: true }}
-                  value={currentTask.startDate ? currentTask.startDate.split('T')[0] : ''}
+                  value={currentStatus.Start_Date ? currentStatus.Start_Date.split('T')[0] : ''}
                   onChange={(e) => {
                     handleInputChange(e);
-                    if (!currentTask.isRecurring) {
-                      setCurrentTask((prevTask) => ({ ...prevTask, endDate: e.target.value }));
+                    if (!currentStatus.IsRecurring) {
+                      setCurrentStatus((prevStatus) => ({
+                        ...prevStatus,
+                        End_Date: e.target.value,
+                      }));
                     }
                   }}
                   required
                   sx={{ mb: 2 }}
                 />
 
-                {currentTask.isRecurring && (
+                {currentStatus.IsRecurring && (
                   <TextField
                     fullWidth
                     label="End Date"
                     type="date"
-                    name="endDate"
+                    name="End_Date"
                     InputLabelProps={{ shrink: true }}
-                    value={currentTask.endDate ? currentTask.endDate.split('T')[0] : ''}
+                    value={currentStatus.End_Date ? currentStatus.End_Date.split('T')[0] : ''}
                     onChange={handleInputChange}
                     required
                     sx={{ mb: 2 }}
@@ -331,21 +317,21 @@ const TaskList = () => {
                 <FormControlLabel
                   control={
                     <Checkbox
-                      name="isRecurring"
-                      checked={currentTask.isRecurring}
+                      name="IsRecurring"
+                      checked={currentStatus.IsRecurring}
                       onChange={handleInputChange}
                     />
                   }
-                  label="Recurring Task"
+                  label="Recurring Status"
                 />
 
-                {currentTask.isRecurring && (
+                {currentStatus.IsRecurring && (
                   <>
                     <FormControl fullWidth sx={{ mb: 2 }}>
                       <InputLabel>Frequency</InputLabel>
                       <Select
-                        name="frequency"
-                        value={currentTask.frequency || ''}
+                        name="Frequency"
+                        value={currentStatus.Frequency || ''}
                         onChange={handleInputChange}
                         required
                         label="Frequency"
@@ -360,14 +346,14 @@ const TaskList = () => {
                       fullWidth
                       label="Interval"
                       type="number"
-                      name="interval"
-                      value={currentTask.interval || ''}
+                      name="Interval"
+                      value={currentStatus.Interval || ''}
                       onChange={handleInputChange}
                       inputProps={{
                         min: 1,
-                        placeholder: currentTask.interval
-                          ? `Current: ${currentTask.interval}`
-                          : 'How often will this task be repeated? (e.g. Weekly 2 = bi-weekly)',
+                        placeholder: currentStatus.Interval
+                          ? `Current: ${currentStatus.Interval}`
+                          : 'How often will this status be repeated? (e.g. Weekly 2 = bi-weekly)',
                       }}
                       required
                       sx={{ mb: 2 }}
@@ -385,7 +371,7 @@ const TaskList = () => {
                   )}
                   <Grid item xs={editing ? 6 : 12}>
                     <Button variant="contained" color="secondary" type="submit" fullWidth>
-                      {editing ? 'Save Changes' : 'Create Task'}
+                      {editing ? 'Save Changes' : 'Create Status'}
                     </Button>
                   </Grid>
                 </Grid>
@@ -398,18 +384,18 @@ const TaskList = () => {
           <Card>
             <CardContent>
               <Typography variant="h5" fontWeight="bold" gutterBottom>
-                Task List ({hallDisplayNames[selectedHall] || selectedHall})
+                Status by Day
               </Typography>
               {loading ? (
-                <Typography color="textSecondary">Loading tasks...</Typography>
-              ) : tasks.length === 0 ? (
-                <Typography color="textSecondary">No tasks for this building</Typography>
+                <Typography color="textSecondary">Loading status list...</Typography>
+              ) : statusList.length === 0 ? (
+                <Typography color="textSecondary">No status for this day</Typography>
               ) : (
                 <div style={{ height: '600px', overflow: 'hidden' }}>
                   <dt style={{ maxHeight: '100%', overflowY: 'auto' }}>
-                    {tasks.map((task) => (
+                    {statusList.map((status) => (
                       <Card
-                        key={task.taskID}
+                        key={status.StatusID}
                         className="p-2 border rounded-lg bg-gray-100"
                         style={{
                           marginBottom: '16px',
@@ -420,11 +406,11 @@ const TaskList = () => {
                       >
                         <div style={{ marginTop: '10px', marginBottom: '10px' }}>
                           <Typography variant="subtitle1" fontWeight="bold">
-                            <strong>{task.Name}</strong>
+                            <strong>{status.StatusName}</strong>
                           </Typography>
                           <Typography variant="body2" color="textSecondary">
                             <strong>Start Date: </strong>{' '}
-                            {new Date(task.StartDate).toLocaleDateString('en-US', {
+                            {new Date(status.Start_Date).toLocaleDateString('en-US', {
                               month: 'long',
                               day: 'numeric',
                               year: 'numeric',
@@ -432,21 +418,27 @@ const TaskList = () => {
                           </Typography>
                           <Typography variant="body2" color="textSecondary">
                             <strong>End Date: </strong>{' '}
-                            {new Date(task.EndDate).toLocaleDateString('en-US', {
+                            {new Date(status.End_Date).toLocaleDateString('en-US', {
                               month: 'long',
                               day: 'numeric',
                               year: 'numeric',
                             })}
                           </Typography>
+                          <Typography variant="body2" color="textSecondary">
+                            <strong>Start Time: </strong> {status.Start_Time}
+                          </Typography>
+                          <Typography variant="body2" color="textSecondary">
+                            <strong>End Time: </strong> {status.End_Time}
+                          </Typography>
 
-                          {task.Frequency && (
+                          {status.Frequency && (
                             <>
                               <Typography variant="body2" color="textSecondary">
-                                <strong>Frequency: </strong> {task.Frequency}
+                                <strong>Frequency: </strong> {status.Frequency}
                               </Typography>
 
                               <Typography variant="body2" color="textSecondary">
-                                <strong>Interval: </strong> {task.Interval}
+                                <strong>Interval: </strong> {status.Interval}
                               </Typography>
                             </>
                           )}
@@ -456,7 +448,7 @@ const TaskList = () => {
                             variant="contained"
                             color="secondary"
                             size="small"
-                            onClick={() => editTask(task)}
+                            onClick={() => editStatus(status)}
                             sx={{ mr: 3 }}
                           >
                             Edit
@@ -466,8 +458,8 @@ const TaskList = () => {
                             color="error"
                             size="small"
                             onClick={async () => {
-                              await deleteTask(task.TaskID);
-                              loadTasks(selectedHall);
+                              await deleteStatus(status.StatusID);
+                              loadStatusList(RA);
                             }}
                           >
                             Delete
@@ -486,4 +478,4 @@ const TaskList = () => {
   }
 };
 
-export default TaskList;
+export default StatusManager;
