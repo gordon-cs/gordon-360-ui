@@ -76,7 +76,11 @@ export const CampusSafetyRoutes: CampusSafetyRoutesObject = {
     element: <FoundItemFormEdit />,
     formattedName: 'View Found #~',
   },
-  '/lostandfoundadmin': { element: <LostAndFoundAdmin />, formattedName: 'Lost and Found Admin' },
+  '/lostandfoundadmin': {
+    element: <LostAndFoundAdmin />,
+    formattedName: 'Lost and Found Admin',
+    queryString: '?status=active',
+  },
   '*': { element: <Page404 />, formattedName: 'Not Found' },
 };
 
