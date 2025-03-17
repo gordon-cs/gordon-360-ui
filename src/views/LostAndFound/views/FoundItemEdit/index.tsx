@@ -288,7 +288,7 @@ const FoundItemFormEdit = () => {
               <Typography variant="h5">Admin Actions</Typography>
             </Grid>
             <Grid container item xs={5} justifyContent="flex-end">
-              <Button variant="contained" color="secondary" onClick={openNewActionModal}>
+              <Button variant="contained" color="secondary" onClick={openNewActionModal}  disabled = {readOnly}>
                 <Add />
                 New Action
               </Button>
