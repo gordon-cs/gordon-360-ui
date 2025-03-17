@@ -198,7 +198,13 @@ const FoundItemFormEdit = () => {
 
     try {
       await lostAndFoundService.updateFoundItem(foundItem, foundItem.recordID);
-      navigate('/lostandfound/lostandfoundadmin/founditemdatabase');
+      if (location.state && (location.state as any).fromConfirmation) {
+        navigate(
+          `/lostandfound/lostandfoundadmin/founditemform/${foundItem?.recordID}`,
+        );
+      }else{
+        navigate('/lostandfound/lostandfoundadmin/founditemdatabase');
+        }
     } catch (err) {
       console.error(err);
       createSnackbar('Failed to save changes.', 'error');
