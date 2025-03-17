@@ -107,9 +107,9 @@ const FoundItemCleanOut = () => {
         if (!pageLoaded) return;
         setLoading(true);
 
-        // Date set to April 9 for testing - uncomment next line once testing is completed
+        // Date set to May 31 for testing - uncomment next line once testing is completed
         // const d = new Date();
-        const d = new Date(2025, 3, 26);
+        const d = new Date(2025, 4, 31);
         d.setMonth(d.getMonth() - 2);
 
         const fetched = await lostAndFoundService.getFoundItems(
