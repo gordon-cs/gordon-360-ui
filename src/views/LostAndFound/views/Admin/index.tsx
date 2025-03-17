@@ -26,7 +26,7 @@ import {
   formatDateString,
 } from 'views/LostAndFound/components/Helpers';
 import userService from 'services/user';
-import { Person, Storage } from '@mui/icons-material';
+import { Delete, Person, Storage } from '@mui/icons-material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import SimpleSnackbar from 'components/Snackbar';
 import CircleIcon from '@mui/icons-material/Circle';
@@ -462,6 +462,20 @@ const LostAndFoundAdmin = () => {
     </Button>
   );
 
+  const FoundItemCleanout = (
+    <Button
+      color="secondary"
+      variant="contained"
+      onClick={() => {
+        navigate('founditemcleanout');
+      }}
+    >
+      <Delete />
+      <span className={styles.spacing}></span>
+      <b>Found Item Cleanout</b>
+    </Button>
+  );
+
   const FoundItemsCard = (
     <>
       <Card>
@@ -473,6 +487,9 @@ const LostAndFoundAdmin = () => {
             </Grid>
             <Grid container item xs={12}>
               {EnterFoundItem}
+            </Grid>
+            <Grid container item xs={12}>
+              {FoundItemCleanout}
             </Grid>
           </Grid>
         </CardContent>
