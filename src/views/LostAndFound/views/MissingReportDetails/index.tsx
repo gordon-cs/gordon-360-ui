@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { Add, Key, Launch } from '@mui/icons-material';
 import styles from './MissingItemReportData.module.scss';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState , useCallback} from 'react';
 import lostAndFoundService from 'services/lostAndFound';
 import type { MissingItemReport, MissingAdminAction } from 'services/lostAndFound';
 import Header from 'views/LostAndFound/components/Header';
@@ -28,16 +28,31 @@ import userService from 'services/user';
 import SimpleSnackbar from 'components/Snackbar';
 import { formatDateString } from 'views/LostAndFound/components/Helpers';
 import { StatusChip } from 'views/LostAndFound/components/StatusChip';
+import { LFCategories } from 'views/LostAndFound/components/Constants';
 
 const MissingItemReportData = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState({ AD_Username: '' });
 
-  // Pull the itemId from the url
+  // Pull the itemId from the url.
   const { itemId } = useParams<{ itemId: string }>();
   const [reportUpdated, setReportUpdated] = useState<number>(0);
 
   const [errorSnackbarOpen, setErrorSnackbarOpen] = useState<boolean>(false);
+
+  interface ISnackbarState {
+    message: string;
+    severity: 'error' | 'success' | 'info' | 'warning' | undefined;
+    open: boolean;
+  }
+  const [snackbar, setSnackbar] = useState<ISnackbarState>({
+      message: '',
+      severity: undefined,
+      open: false,
+    });
+    const createSnackbar = useCallback((message: string, severity: ISnackbarState['severity']) => {
+      setSnackbar({ message, severity, open: true });
+    }, []);
 
   // Page State
   const [loading, setLoading] = useState<boolean>(true);
@@ -745,6 +760,44 @@ const MissingItemReportData = () => {
     );
   };
 
+  const handleCategoryChange = async (event: SelectChangeEvent<string>) => {
+    if (!item) return;
+    const newCategory = event.target.value;
+    const oldCategory = item.category;
+    // If the category hasn’t changed, do nothing.
+    if (newCategory === oldCategory) return;
+  
+    // Update the item state with the new category.
+    const updatedItem = { ...item, category: newCategory };
+    setItem(updatedItem);
+  
+    // Update the missing item report in the backend.
+    try {
+      await lostAndFoundService.updateMissingItemReport(updatedItem, item.recordID);
+    } catch (err) {
+      createSnackbar('Failed to update category.', 'error');
+      return;
+    }
+    
+    // Create an admin action to record the category change.
+    const actionData = {
+      missingID: item.recordID,
+      action: 'Custom',
+      actionNote: `Category change from "${oldCategory}" to "${newCategory}"`,
+      actionDate: new Date().toISOString(),
+      username: username.AD_Username, 
+      isPublic: true,
+    };
+    try {
+      await lostAndFoundService.createAdminAction(item.recordID, actionData);
+      // Refresh the admin actions list.
+      const updatedActions = await lostAndFoundService.getAdminActions(item.recordID);
+      setAdminActionsArray(updatedActions);
+    } catch (err) {
+      createSnackbar('Failed to record category change action.', 'error');
+    }
+  };
+
   return (
     <>
       <Header />
@@ -814,14 +867,20 @@ const MissingItemReportData = () => {
                       </Grid>
                       {/* Item Category */}
                       <Grid item xs={12} className={styles.boxBackground}>
-                        <TextField
-                          label="Category"
-                          variant="filled"
-                          disabled
-                          fullWidth
-                          value={`${item.category}`}
-                          InputProps={{ readOnly: true }}
-                        />
+                        <FormControl variant="filled" fullWidth>
+                          <InputLabel id="category-label">Category</InputLabel>
+                          <Select
+                            labelId="category-label"
+                            value={item.category}
+                            onChange={handleCategoryChange}
+                          >
+                            {LFCategories.map((cat) => (
+                              <MenuItem key={cat} value={cat.toLowerCase().replace(/ /g, '/')}>
+                                {cat}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
                       </Grid>
                       {/*Color Category*/}
                       <Grid item xs={12} className={styles.boxBackground}>
