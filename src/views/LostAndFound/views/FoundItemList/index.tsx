@@ -108,6 +108,7 @@ const FoundItemList = () => {
         setLoading(true);
 
         const fetched = await lostAndFoundService.getFoundItems(
+          '',
           tagID || '',
           status || '',
           color || '',
