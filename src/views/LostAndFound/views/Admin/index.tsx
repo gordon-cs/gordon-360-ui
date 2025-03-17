@@ -358,14 +358,14 @@ const LostAndFoundAdmin = () => {
     if (foundLazyLoading || !hasMoreFound) return;
     setFoundLazyLoading(true);
     // Use the last report's recordID as the lastId; if none, it remains undefined.
-    const lastId = foundItems.length > 0 ? foundItems[foundItems.length - 1].recordID : undefined;
     try {
       const moreReports = await lostAndFoundService.getFoundItems(
-        undefined,
-        status,
-        color,
-        category,
-        keywords,
+        '',
+        '',
+        status || '',
+        color || '',
+        category || '',
+        keywords || '',
       );
       if (moreReports.length < pageSize) {
         setHasMoreFound(false);
@@ -374,9 +374,9 @@ const LostAndFoundAdmin = () => {
       }
     } catch (error) {
       console.error('Error loading more reports', error);
-      createSnackbar(`Failed to load more missing item reports`, error);
+      createSnackbar(`Failed to load more found item reports`, error);
     } finally {
-      setLazyLoading(false);
+      setFoundLazyLoading(false);
     }
   };
 
