@@ -12,6 +12,7 @@ import FoundItemFormCreate from './views/FoundItemCreate';
 import FoundItemList from './views/FoundItemList';
 import FoundItemFormEdit from './views/FoundItemEdit';
 import FoundItemConfirmation from './views/FoundItemConfirm';
+import KioskRoutes from './views/Kiosk/KioskRoutes';
 import GordonLoader from 'components/Loader';
 import GordonUnauthenticated from 'components/GordonUnauthenticated';
 import { useUser } from 'hooks';
@@ -88,6 +89,7 @@ const CampusSafetyApp = () => {
   const { profile, loading: loadingProfile } = useUser();
   const isAdmin = useAuthGroups(AuthGroup.LostAndFoundAdmin);
   const isDev = useAuthGroups(AuthGroup.LostAndFoundDevelopers);
+  const isKiosk =
 
   useEffect(() => {
     const updateAndFixReports = async () => {
@@ -126,9 +128,11 @@ const CampusSafetyApp = () => {
 
   return (
     <Routes>
-      {Object.keys(CampusSafetyRoutes).map((route) => {
-        return <Route path={route} element={CampusSafetyRoutes[route].element} />;
-      })}
+      {Object.keys(CampusSafetyRoutes).map((route) => (
+        <Route key={route} path={route} element={CampusSafetyRoutes[route].element} />
+      ))}
+      {/* Kiosk route wrapper */}
+      <Route path="kiosk/*" element={<KioskRoutes />} />
     </Routes>
   );
 };

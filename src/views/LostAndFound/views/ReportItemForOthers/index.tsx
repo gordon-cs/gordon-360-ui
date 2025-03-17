@@ -27,9 +27,12 @@ import { useUser } from 'hooks';
 import { LFCategories, LFColors } from 'views/LostAndFound/components/Constants';
 import { CustomDatePicker } from 'views/LostAndFound/components/CustomDatePicker';
 import { GordonPersonAutocomplete } from 'views/LostAndFound/components/GordonPersonAutocomplete';
+import { useAuthGroups } from 'hooks';
+import { AuthGroup } from 'services/auth';
 
 const ReportItemPage = () => {
   const navigate = useNavigate();
+  const isKiosk = useAuthGroups(AuthGroup.LostAndFoundKiosk);
 
   const createSnackbar = useCallback((message, severity) => {
     setSnackbar({ message, severity, open: true });
@@ -237,8 +240,13 @@ const ReportItemPage = () => {
         };
         await lostAndFoundService.createAdminAction(newReportId, actionRequestData);
 
-        // Redirect to the missing item database after successful submission
-        navigate('/lostandfound/lostandfoundadmin/missingitemdatabase?status=active');
+        // If the user is a kiosk user, navigate to the kiosk page,
+        // otherwise, navigate to the admin missing item database.
+        if (isKiosk) {
+          navigate('/lostandfound/kiosk');
+        } else {
+          navigate('/lostandfound/lostandfoundadmin/missingitemdatabase?status=active');
+        }
       } catch (error) {
         createSnackbar(`Failed to create the missing item report.`, `error`);
         setDisableSubmit(false);
