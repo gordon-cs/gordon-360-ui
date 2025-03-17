@@ -10,6 +10,7 @@ import TaskList from './components/TaskList';
 import CheckIn from './components/CheckIn';
 import AssignedRooms from './components/MyAssignments';
 import OnDutyRD from './components/RD-OnCall';
+import StatusCard from './components/StatusCard';
 
 const RAView = () => {
   const { profile } = useUser();
@@ -58,7 +59,6 @@ const RAView = () => {
       <Grid item xs={12} md={4}>
         <Stack spacing={2}>
           <OnCallTable />
-          <AssignedRooms />
           <OnDutyRD />
         </Stack>
       </Grid>
@@ -67,11 +67,15 @@ const RAView = () => {
         <Stack spacing={2}>
           <MyHall />
           <ContactMethod />
+          <AssignedRooms />
         </Stack>
       </Grid>
 
       <Grid item xs={12} md={4}>
-        <TaskList />
+        <Stack spacing={2}>
+          <StatusCard />
+          <TaskList />
+        </Stack>
       </Grid>
     </Grid>
   );

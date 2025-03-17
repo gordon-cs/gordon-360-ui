@@ -118,7 +118,7 @@ const TaskList = () => {
     e.preventDefault(); // Stops the website from reloading
     try {
       const newTask = { ...currentTask, hallId: selectedHall };
-
+      console.log('newTask', newTask);
       console.log('About to run addTask');
       await addTask(newTask);
       console.log('Ran addTask');
@@ -279,7 +279,6 @@ const TaskList = () => {
                   fullWidth
                   label="Task Name"
                   name="name"
-                  // value={currentTask.name || ''
                   value={currentTask.name}
                   onChange={handleInputChange}
                   required
@@ -291,7 +290,6 @@ const TaskList = () => {
                   name="description"
                   multiline
                   rows={3}
-                  // value={currentTask.description || ''}
                   value={currentTask.description}
                   onChange={handleInputChange}
                   sx={{ mb: 2 }}

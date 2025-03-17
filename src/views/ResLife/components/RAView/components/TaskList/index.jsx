@@ -198,7 +198,7 @@ const TaskList = () => {
   return (
     <Grid item xs={12} md={12} padding={0}>
       <Card>
-        <CardHeader title={`On-Duty Tasks`} className="gc360_header" />
+        <CardHeader align="center" title={`On-Duty Tasks`} className="gc360_header" />
         <CardContent>
           <Typography>
             <List disablePadding>

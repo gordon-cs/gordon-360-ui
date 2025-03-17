@@ -25,6 +25,7 @@ import RecIM from './views/RecIM';
 import RoomRanges from 'views/ResLife/components/RDView/components/RoomRanges';
 import TaskList from 'views/ResLife/components/RDView/components/TaskList';
 import RDOnCallForm from 'views/ResLife/components/RDView/components/RDOnCallForm';
+import StatusManager from 'views/ResLife/components/RAView/components/StatusManager';
 import { element } from 'prop-types';
 import { Room } from '@mui/icons-material';
 import CampusSafety from './views/CampusSafety';
@@ -170,6 +171,11 @@ const routes = [
     name: 'RD-OnCall',
     path: '/RD-OnCall',
     element: <RDOnCallForm />,
+  },
+  {
+    name: 'StatusManager',
+    path: '/StatusManager',
+    element: <StatusManager />,
   },
 ];
 
