@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Avatar, Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
+import {
+  Avatar,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import ScottieMascot from 'views/ResLife/ScottieMascot.png';
 import { getRDOnCall } from 'services/residentLife/RD_OnCall';
@@ -47,12 +57,13 @@ const OnDutyRD = () => {
       </Typography>
     );
   }
+
   if (!onDutyRdInfo || !onDutyRdInfo.RD_Name) {
     return (
       <Card>
         <CardHeader
           title={
-            <Grid container justifyContent="center" alignItems="center">
+            <Grid container direction="row" alignItems="center">
               <Grid item xs={12} align="center">
                 On Duty RD
               </Grid>
@@ -64,25 +75,33 @@ const OnDutyRD = () => {
           <Grid container spacing={2} alignItems="center">
             {/* Text Section */}
             <Grid item xs={8}>
-              <Typography variant="subtitle1" color="warning.main">
-                No RD is on duty right now! 🐾
-              </Typography>
-              <Typography variant="body1" color="text.secondary">
-                Scottie’s keeping an eye on things.
-              </Typography>
-              <Typography variant="body1" color="text.secondary">
-                RD On-Call Phone: {RD_PHONE_NUMBER}
-              </Typography>
+              <List>
+                <ListItem>
+                  <ListItemText
+                    primary={
+                      <Typography variant="subtitle1" color="warning.main">
+                        No RD is on duty right now! 🐾
+                      </Typography>
+                    }
+                  />
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary="Scottie’s keeping an eye on things." />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary={
+                      <Typography variant="body1">
+                        <strong>RD On-Call Phone:</strong> {RD_PHONE_NUMBER}
+                      </Typography>
+                    }
+                  />
+                </ListItem>
+              </List>
             </Grid>
 
             {/* Avatar Section */}
-            <Grid
-              item
-              xs={4}
-              container
-              justifyContent="center"
-              sx={{ marginTop: { xs: 1, sm: 2, md: 2 } }}
-            >
+            <Grid item xs={4} container justifyContent="center">
               <Avatar
                 src={ScottieMascot}
                 alt="Scottie"
@@ -107,7 +126,7 @@ const OnDutyRD = () => {
     <Card>
       <CardHeader
         title={
-          <Grid container justifyContent="center" alignItems="center">
+          <Grid container direction="row" alignItems="center">
             <Grid item xs={12} align="center">
               On Duty RD
             </Grid>
@@ -119,44 +138,59 @@ const OnDutyRD = () => {
         <Grid container spacing={2} alignItems="center">
           {/* Text Section */}
           <Grid item xs={8}>
-            <Typography variant="body1">
-              <strong>Name: </strong>
-              {onDutyRdInfo.RD_Email ? (
-                <StyledLink
-                  href={profileLink}
-                  className="gc360_text_link"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {onDutyRdInfo.RD_Name}
-                </StyledLink>
-              ) : (
-                onDutyRdInfo.RD_Name
+            <List>
+              <ListItem>
+                <ListItemText
+                  primary={
+                    <Typography variant="body1">
+                      <strong>Name: </strong>
+                      {onDutyRdInfo.RD_Email ? (
+                        <StyledLink
+                          href={profileLink}
+                          className="gc360_text_link"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {onDutyRdInfo.RD_Name}
+                        </StyledLink>
+                      ) : (
+                        onDutyRdInfo.RD_Name
+                      )}
+                    </Typography>
+                  }
+                />
+              </ListItem>
+              {onDutyRdInfo.RD_Email && (
+                <ListItem>
+                  <ListItemText
+                    primary={
+                      <Typography variant="body1">
+                        <strong>Email: </strong>
+                        <StyledLink
+                          href={`mailto:${onDutyRdInfo.RD_Email}`}
+                          className="gc360_text_link"
+                        >
+                          {onDutyRdInfo.RD_Email}
+                        </StyledLink>
+                      </Typography>
+                    }
+                  />
+                </ListItem>
               )}
-            </Typography>
-
-            {onDutyRdInfo.RD_Email && (
-              <Typography variant="body1">
-                <strong>Email: </strong>
-                <StyledLink href={`mailto:${onDutyRdInfo.RD_Email}`} className="gc360_text_link">
-                  {onDutyRdInfo.RD_Email}
-                </StyledLink>
-              </Typography>
-            )}
-
-            <Typography variant="body1">
-              <strong>On-Call Contact:</strong> {RD_PHONE_NUMBER}
-            </Typography>
+              <ListItem>
+                <ListItemText
+                  primary={
+                    <Typography variant="body1">
+                      <strong>On-Call Contact:</strong> {RD_PHONE_NUMBER}
+                    </Typography>
+                  }
+                />
+              </ListItem>
+            </List>
           </Grid>
 
           {/* Avatar Section */}
-          <Grid
-            item
-            xs={4}
-            container
-            justifyContent="center"
-            sx={{ marginTop: { xs: 1, sm: 2, md: 2 } }}
-          >
+          <Grid item xs={4} container justifyContent="center">
             <StyledLink
               href={profileLink}
               className="gc360_text_link"
