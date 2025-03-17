@@ -10,6 +10,9 @@ const HousingBanner = () => {
   const { profile } = useUser();
   const [roleMessage, setRoleMessage] = useState('');
   const isRA = useAuthGroups(AuthGroup.ResidentAdvisor);
+  const isPolice = useAuthGroups(AuthGroup.Police);
+  const isHallInfoViewer = useAuthGroups(AuthGroup.HallInfoViewer);
+  const hasStandardAccess = isPolice || isHallInfoViewer;
 
   useEffect(() => {
     if (profile) {
@@ -24,6 +27,9 @@ const HousingBanner = () => {
         setRoleMessage(
           'Check in to your shift, set your preferred contact method, and view available resources',
         );
+      }
+      if (hasStandardAccess) {
+        setRoleMessage('View On-Call RDs and RAs by hall. This information is updated regularly');
       } else {
         setRoleMessage(
           `View your ${staffTypeLabel} details, on-duty schedules, and available housing resources.`,
