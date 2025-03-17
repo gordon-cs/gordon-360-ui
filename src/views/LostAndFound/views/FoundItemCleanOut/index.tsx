@@ -27,6 +27,7 @@ import { formatDateString } from 'views/LostAndFound/components/Helpers';
 import { differenceInCalendarDays } from 'date-fns';
 import GordonSnackbar from 'components/Snackbar';
 import ConfirmCleanOut from './components/ConfirmCleanOut/index';
+import { InfoOutlined } from '@mui/icons-material';
 
 const FoundItemCleanOut = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -268,6 +269,22 @@ const FoundItemCleanOut = () => {
                   Found Items Pending Expiration
                 </Typography>
               </Grid>
+              <div className={styles.disclaimer}>
+                <InfoOutlined />
+                <Grid container item rowGap={1}>
+                  <Grid item xs={12}>
+                    <Typography variant="body1">
+                      This is a list of all items due to be removed from the inventory.
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography variant="body2">
+                      Select all items being removed and specify the method of removal on the next
+                      page.
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </div>
               <AppBar className={styles.stickyHeader}>
                 <Grid container className={styles.tableHeader} justifyContent="center">
                   <Grid container item xs={11.85}>

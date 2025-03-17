@@ -98,3 +98,12 @@
   text-overflow: ellipsis;
   padding-right: 0.5rem;
 }
+
+.disclaimer {
+  padding-top: 3rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  column-gap: 1.5rem;
+  color: var(--mui-palette-neutral-contrastText);
+}
