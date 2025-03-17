@@ -169,11 +169,12 @@ const LostAndFoundAdmin = () => {
             pageSize,
           );
           const fetchedFoundReports = await lostAndFoundService.getFoundItems(
-            undefined,
-            status,
-            color,
-            category,
-            keywords,
+            '',
+            '',
+            status || '',
+            color || '',
+            category || '',
+            keywords || '',
           );
           setMissingReports(fetchedMissingReports);
           setFoundItems(fetchedFoundReports);
@@ -300,6 +301,20 @@ const LostAndFoundAdmin = () => {
       return 'var(--mui-palette-warning-main)';
     } else {
       return 'var(--mui-palette-error-main)';
+    }
+  };
+
+  const foundItemColor = (report: FoundItem) => {
+    let dateCreated = new Date(report.dateCreated);
+    let today = new Date();
+    let twoMonths = new Date(today.setMonth(today.getMonth() - 2));
+    console.log(report.status);
+    if (report.status == 'found') {
+      return 'var(--mui-palette-success-main)';
+    } else if (dateCreated < twoMonths) {
+      return 'var(--mui-palette-error-main)';
+    } else {
+      return '#00AEEF';
     }
   };
 
@@ -1005,7 +1020,7 @@ const LostAndFoundAdmin = () => {
                     <Grid item xs={0.5} className={styles.dataCell}>
                       <div>
                         <>
-                          <CircleIcon sx={{ fontSize: 10 }} />
+                          <CircleIcon sx={{ color: foundItemColor(foundItem), fontSize: 10 }} />
                         </>
                       </div>
                     </Grid>

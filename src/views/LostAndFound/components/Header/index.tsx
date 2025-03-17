@@ -80,27 +80,27 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
   const isKiosk = useAuthGroups(AuthGroup.LostAndFoundKiosk);
   const isDev = useAuthGroups(AuthGroup.LostAndFoundDevelopers);
 
-  console.log("iskiosktrue", isKiosk);
-   // For the dropdown menu
-   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  console.log('iskiosktrue', isKiosk);
+  // For the dropdown menu
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-   const open = Boolean(anchorEl);
- 
-   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
-     setAnchorEl(event.currentTarget);
-   };
-   const handleCloseMenu = () => {
-     setAnchorEl(null);
-   };
- 
-   const handleGotoKiosk = () => {
-     handleCloseMenu();
-     navigate('/lostandfound/kiosk');
-   };
-   const handleGotoAdmin = () => {
-     handleCloseMenu();
-     navigate('/lostandfound/lostandfoundadmin');
-   };
+  const open = Boolean(anchorEl);
+
+  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const handleGotoKiosk = () => {
+    handleCloseMenu();
+    navigate('/lostandfound/kiosk');
+  };
+  const handleGotoAdmin = () => {
+    handleCloseMenu();
+    navigate('/lostandfound/lostandfoundadmin?status=active');
+  };
 
   return (
     <>
