@@ -1,24 +1,24 @@
 import http from '../http';
 
 type RA = {
-  FirstName: string;
-  LastName: string;
+  First_Name: string;
+  Last_Name: string;
   Dorm: string;
   BLDG_Code: string;
-  RoomNumber: string;
+  Room_Number: string;
   Email: string;
-  PhoneNumber: string;
+  Phone_Number: string;
   ID: string;
 };
 
 type Contact = {
   raId: string;
-  preferredContactMethod: string;
+  preferred_Contact_Method: string;
 };
 
 type RD = {
-  HallName: string;
-  BuildingCode: string;
+  Hall_Name: string;
+  Building_Code: string;
   RD_Email: string;
   RD_Id: string;
   RD_Name: string;
@@ -26,7 +26,7 @@ type RD = {
 
 type method = {
   Ra_ID: string;
-  PreferredContactMethod: string;
+  Preferred_Contact_Method: string;
   Contact: string;
 };
 

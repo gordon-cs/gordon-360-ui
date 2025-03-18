@@ -7,8 +7,8 @@ type AssignedRange = {
 
 type Assignment = {
   RA_ID: string;
-  Fname: string;
-  Lname: string;
+  F_name: string;
+  L_name: string;
   Hall_Name: string;
   Room_Start: string;
   Room_End: string;
@@ -16,21 +16,21 @@ type Assignment = {
 };
 
 type RA = {
-  FirstName: string;
-  LastName: string;
+  First_Name: string;
+  Last_Name: string;
   Dorm: string;
   BLDG_Code: string;
-  RoomNumber: string;
+  Room_Number: string;
   Email: string;
-  PhoneNumber: string;
+  Phone_Number: string;
   ID: string;
 };
 
 type RoomRange = {
   Hall_ID: string;
   Range_ID: number;
-  RoomStart: string;
-  RoomEnd: string;
+  Room_Start: string;
+  Room_End: string;
 };
 
 type MissingRoom = {

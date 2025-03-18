@@ -3,9 +3,9 @@ import http from 'services/http';
 type RA = {
   Hall_ID: string;
   Hall_Name: string;
-  RoomNumber: string;
+  Room_Number: string;
   RA_Name: string;
-  PreferredContact: string;
+  Preferred_Contact: string;
   Check_in_time: Date;
   RD_Email: string;
   RD_Name: string;

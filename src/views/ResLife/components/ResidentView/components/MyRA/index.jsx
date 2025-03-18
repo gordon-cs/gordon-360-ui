@@ -81,7 +81,7 @@ const MyRA = () => {
         const endTime = Number(status.End_Time.replaceAll(':', ''));
 
         if (startTime <= currentTime && endTime >= currentTime) {
-          setCurrentStatus(status.StatusName);
+          setCurrentStatus(status.Status_Name);
           setIsAvailable(status.Available);
           findNextStatus(index);
           break;

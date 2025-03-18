@@ -19,10 +19,10 @@ export type DailyTask = {
   Task_ID: number;
   Name: string;
   Description: string;
-  HallID: string;
-  CompletedDate?: Date;
-  CompletedBy?: string;
-  OccurDate?: Date;
+  Hall_ID: string;
+  Completed_Date?: Date;
+  Completed_By?: string;
+  Occur_Date?: Date;
 };
 
 const createTask = (newTask: Task) => http.post('Housing/halls/task', newTask);
@@ -40,7 +40,7 @@ const incompleteTask = (taskID: number) => http.patch(`Housing/halls/task/Incomp
 const getActiveTasksForHall = (hallID: string): Promise<Task[]> =>
   http.get(`Housing/Halls/${hallID}/ActiveTasks`);
 
-const getTasksForHall = (hallID: string): Promise<Task[]> =>
+const getTasksForHall = (hallID: string): Promise<DailyTask[]> =>
   http.get(`Housing/Halls/${hallID}/DailyTasks`);
 
 export {

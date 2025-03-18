@@ -1,19 +1,19 @@
 import http from '../http';
 
 type Task = {
-  taskID: number;
+  task_ID: number;
   name: string;
   description: string;
-  hallId: string;
-  isRecurring: boolean;
+  hall_Id: string;
+  is_Recurring: boolean;
   frequency: string;
   interval: number;
-  startDate: string;
-  endDate: string;
-  createdDate: string;
-  completedDate?: string;
-  completedBy?: string;
-  occurDate?: string;
+  start_Date: string;
+  end_Date: string;
+  created_Date: string;
+  completed_Date?: string;
+  completed_By?: string;
+  occur_Date?: string;
 };
 
 type NewTask = Omit<Task, 'taskID' | 'createdDate' | 'completedDate' | 'completedBy'>;

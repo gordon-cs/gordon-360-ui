@@ -11,10 +11,10 @@ const ALLOWED_GROUPS = [
   //'360-Staff-SG',
 ];
 
-const checkIfResidentialStudent = async (idNum: string): Promise<boolean> => {
+const checkIfResidentialStudent = async (id_Num: string): Promise<boolean> => {
   try {
     const response = await http.get<{ IsResidential: boolean }>(
-      `Housing/students/${idNum}/is-residential/`,
+      `Housing/students/${id_Num}/is-residential/`,
     );
     return response.IsResidential; // Extract the IsResidential property
   } catch (error) {
