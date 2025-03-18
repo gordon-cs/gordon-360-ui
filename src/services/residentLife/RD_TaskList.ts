@@ -16,7 +16,7 @@ type Task = {
   occur_Date?: string;
 };
 
-type NewTask = Omit<Task, 'taskID' | 'createdDate' | 'completedDate' | 'completedBy'>;
+type NewTask = Omit<Task, 'task_ID' | 'created_Date' | 'completed_Date' | 'completed_By'>;
 
 // Post request to the API endpoint "Housing/halls/task" which adds a new task
 const addTask = (newTask: NewTask): Promise<Task[]> => http.post('Housing/halls/task', newTask);

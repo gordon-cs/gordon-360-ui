@@ -12,7 +12,7 @@ type RA = {
 };
 
 type Contact = {
-  raId: string;
+  RA_ID: string;
   preferred_Contact_Method: string;
 };
 
@@ -20,12 +20,12 @@ type RD = {
   Hall_Name: string;
   Building_Code: string;
   RD_Email: string;
-  RD_Id: string;
+  RD_ID: string;
   RD_Name: string;
 };
 
 type method = {
-  Ra_ID: string;
+  RA_ID: string;
   Preferred_Contact_Method: string;
   Contact: string;
 };

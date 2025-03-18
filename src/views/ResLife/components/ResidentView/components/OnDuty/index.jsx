@@ -133,14 +133,14 @@ const OnDuty = () => {
             </Typography>
 
             <Typography variant="body1">
-              <strong>Room #:</strong> {onDutyRaInfo.RoomNumber}
+              <strong>Room #:</strong> {onDutyRaInfo.Room_Number}
             </Typography>
 
             <Typography variant="body1">
               <strong>Contact:</strong>{' '}
-              {onDutyRaInfo.PreferredContact && onDutyRaInfo.PreferredContact.includes('http') ? (
+              {onDutyRaInfo.Preferred_Contact && onDutyRaInfo.Preferred_Contact.includes('http') ? (
                 <StyledLink
-                  href={onDutyRaInfo.PreferredContact}
+                  href={onDutyRaInfo.Preferred_Contact}
                   underline="hover"
                   className="gc360_text_link"
                   target={isMobile ? '_self' : '_blank'}
@@ -148,12 +148,12 @@ const OnDuty = () => {
                 >
                   Teams
                 </StyledLink>
-              ) : onDutyRaInfo.PreferredContact ? (
+              ) : onDutyRaInfo.Preferred_Contact ? (
                 <StyledLink
-                  href={`tel:${onDutyRaInfo.PreferredContact}`}
+                  href={`tel:${onDutyRaInfo.Preferred_Contact}`}
                   className="gc360_text_link"
                 >
-                  {formatPhoneNumber(onDutyRaInfo.PreferredContact)}
+                  {formatPhoneNumber(onDutyRaInfo.Preferred_Contact)}
                 </StyledLink>
               ) : (
                 'No contact available'

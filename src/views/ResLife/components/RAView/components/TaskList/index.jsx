@@ -63,6 +63,7 @@ const TaskList = () => {
   useEffect(() => {
     const fetchCheckedInHalls = async () => {
       try {
+        // CHANGE CHANGE CHANGE JUST FOR TESTING
         const halls = await getRACurrentHalls('Daniel.Fagerland');
         setHallList(halls);
         console.log(halls);
@@ -205,8 +206,8 @@ const TaskList = () => {
               {isCheckedIn ? (
                 taskList.length > 0 ? (
                   taskList.map((hallData, hallIndex) => (
-                    <React.Fragment key={hallData.hallID}>
-                      <ListSubheader>{hallData.hallID}</ListSubheader>
+                    <React.Fragment key={hallData.hall_ID}>
+                      <ListSubheader>{hallData.hall_ID}</ListSubheader>
                       {hallData.tasks.length > 0 ? (
                         hallData.tasks.map((task, index) => (
                           <ListItem
@@ -255,8 +256,8 @@ const TaskList = () => {
                           </ListItem>
                         ))
                       ) : (
-                        <ListItem key={`no-tasks-${hallData.hallID}`}>
-                          <ListItemText>No tasks available for {hallData.hallID}</ListItemText>
+                        <ListItem key={`no-tasks-${hallData.hall_ID}`}>
+                          <ListItemText>No tasks available for {hallData.hall_ID}</ListItemText>
                         </ListItem>
                       )}
                     </React.Fragment>

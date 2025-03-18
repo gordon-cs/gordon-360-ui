@@ -101,8 +101,8 @@ const OnDutyTable = () => {
             RA_Photo: villageData[0].RA_Photo,
             RA_Name: villageData[0].RA_Name,
             RA_UserName: villageData[0].RA_UserName,
-            PreferredContact: villageData[0].PreferredContact,
-            Check_in_time: villageData[0].Check_in_time,
+            Preferred_Contact: villageData[0].Preferred_Contact,
+            Check_In_Time: villageData[0].Check_In_Time,
             RD_Name: villageData[0].RD_Name,
             RD_UserName: villageData[0].RD_UserName,
           };
@@ -112,9 +112,9 @@ const OnDutyTable = () => {
         const fetchedRows = [...otherHalls, ...consolidatedData].map((item) => ({
           hall: item.Hall_Name,
           onDutyPhoto: makeRAPhoto(item),
-          preferredContact: item.PreferredContact.includes('http') ? (
+          preferred_Contact: item.Preferred_Contact.includes('http') ? (
             <StyledLink
-              href={item.PreferredContact}
+              href={item.Preferred_Contact}
               underline="hover"
               className="gc360_text_link"
               target="_blank"
@@ -124,14 +124,14 @@ const OnDutyTable = () => {
             </StyledLink>
           ) : (
             <StyledLink
-              href={`tel:${item.PreferredContact}`}
+              href={`tel:${item.Preferred_Contact}`}
               underline="hover"
               className="gc360_text_link"
             >
-              {formatPhoneNumber(item.PreferredContact)}
+              {formatPhoneNumber(item.Preferred_Contact)}
             </StyledLink>
           ),
-          checkInTime: new Date(item.Check_in_time).toLocaleTimeString([], {
+          checkInTime: new Date(item.Check_In_Time).toLocaleTimeString([], {
             hour: '2-digit',
             minute: '2-digit',
           }),
@@ -207,7 +207,7 @@ const OnDutyTable = () => {
             <StyledTableRow key={index}>
               <StyledTableCell align="center">{row.hall}</StyledTableCell>
               <StyledTableCell align="center">{row.onDutyPhoto}</StyledTableCell>
-              <StyledTableCell align="center">{row.preferredContact}</StyledTableCell>
+              <StyledTableCell align="center">{row.preferred_Contact}</StyledTableCell>
               <StyledTableCell align="center">{row.checkInTime}</StyledTableCell>
               <StyledTableCell align="center">{row.hallRD}</StyledTableCell>
             </StyledTableRow>

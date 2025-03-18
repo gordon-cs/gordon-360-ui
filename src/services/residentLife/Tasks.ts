@@ -3,16 +3,16 @@ import http from '../http';
 export type Task = {
   Name: string;
   Description: string;
-  HallID: string;
-  IsRecurring: boolean;
+  Hall_ID: string;
+  Is_Recurring: boolean;
   Frequency: string;
   Interval: number;
-  StartDate: Date;
-  EndDate?: Date;
-  CreatedDate: Date;
-  CompletedDate?: Date;
-  CompletedBy?: string;
-  OccurDate?: Date;
+  Start_Date: Date;
+  End_Date?: Date;
+  Created_Date: Date;
+  Completed_Date?: Date;
+  Completed_By?: string;
+  Occur_Date?: Date;
 };
 
 export type DailyTask = {

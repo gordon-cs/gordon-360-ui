@@ -31,10 +31,10 @@ const RDOnCallForm = () => {
   const [editing, setEditing] = useState(false);
 
   const [currentOnCall, setCurrentOnCall] = useState({
-    onCallID: null,
+    on_Call_ID: null,
     RD_ID: '',
-    startDate: '',
-    endDate: '',
+    start_Date: '',
+    end_Date: '',
   });
 
   const [snackbar, setSnackbar] = useState({
@@ -71,7 +71,7 @@ const RDOnCallForm = () => {
     try {
       const response = await fetchActiveRDOnCalls();
       const transformed = response.map((item) => ({
-        onCallID: item.Record_ID,
+        onCallID: item.RecoRD_ID,
         RD_ID: String(item.RD_ID),
         startDate: formatDateForInput(item.Start_Date),
         endDate: formatDateForInput(item.End_Date),
@@ -99,8 +99,8 @@ const RDOnCallForm = () => {
     try {
       await createRDOnCall({
         rdId: +currentOnCall.RD_ID,
-        startDate: currentOnCall.startDate,
-        endDate: currentOnCall.endDate,
+        startDate: currentOnCall.start_Date,
+        endDate: currentOnCall.end_Date,
       });
       await loadOnCallList();
       resetOnCallForm();
@@ -114,17 +114,17 @@ const RDOnCallForm = () => {
   // existing on-call entry
   const handleEdit = async (e) => {
     e.preventDefault();
-    if (!currentOnCall.onCallID) {
+    if (!currentOnCall.on_Call_ID) {
       const msg = 'No onCallID found for editing.';
       console.error(msg);
       createSnackbar(msg, 'error');
       return;
     }
     try {
-      await updateRDOnCall(currentOnCall.onCallID, {
+      await updateRDOnCall(currentOnCall.on_Call_ID, {
         RD_ID: +currentOnCall.RD_ID,
-        Start_Date: currentOnCall.startDate,
-        End_Date: currentOnCall.endDate,
+        Start_Date: currentOnCall.start_Date,
+        End_Date: currentOnCall.end_Date,
       });
       await loadOnCallList();
       resetOnCallForm();
@@ -138,17 +138,17 @@ const RDOnCallForm = () => {
   const editOnCall = (entry) => {
     setEditing(true);
     setCurrentOnCall({
-      onCallID: entry.onCallID,
+      onCallID: entry.on_Call_ID,
       RD_ID: entry.RD_ID,
-      startDate: entry.startDate,
-      endDate: entry.endDate,
+      startDate: entry.start_Date,
+      endDate: entry.end_Date,
     });
   };
 
   const deleteOnCallEntry = async (onCallID) => {
     try {
       await deleteRDOnCall(onCallID);
-      setOnCallList((prev) => prev.filter((item) => item.onCallID !== onCallID));
+      setOnCallList((prev) => prev.filter((item) => item.on_Call_ID !== onCallID));
       createSnackbar('Successfully deleted on-call entry!', 'success');
     } catch (error) {
       console.error('Error deleting on-call entry:', error);
@@ -168,7 +168,7 @@ const RDOnCallForm = () => {
 
   // convert rd id to name from rd list
   const getRDNameFromID = (rdid) => {
-    const found = rdNames.find((rd) => rd.RD_Id === rdid);
+    const found = rdNames.find((rd) => rd.RD_ID === rdid);
     return found ? found.RD_Name : 'Unknown RD';
   };
 
@@ -218,7 +218,7 @@ const RDOnCallForm = () => {
                       label="RD Name"
                     >
                       {rdNames.map((rd) => (
-                        <MenuItem key={rd.RD_Id} value={rd.RD_Id}>
+                        <MenuItem key={rd.RD_ID} value={rd.RD_ID}>
                           {rd.RD_Name}
                         </MenuItem>
                       ))}
@@ -231,7 +231,7 @@ const RDOnCallForm = () => {
                     type="date"
                     name="startDate"
                     InputLabelProps={{ shrink: true }}
-                    value={currentOnCall.startDate}
+                    value={currentOnCall.start_Date}
                     onChange={handleInputChange}
                     required
                     sx={{ mb: 2 }}
@@ -243,7 +243,7 @@ const RDOnCallForm = () => {
                     type="date"
                     name="endDate"
                     InputLabelProps={{ shrink: true }}
-                    value={currentOnCall.endDate}
+                    value={currentOnCall.end_Date}
                     onChange={handleInputChange}
                     required
                     sx={{ mb: 2 }}
@@ -311,10 +311,10 @@ const RDOnCallForm = () => {
                               <strong>RD: {getRDNameFromID(entry.RD_ID)}</strong>
                             </Typography>
                             <Typography variant="body2" color="textSecondary">
-                              <strong>Start Date:</strong> {entry.startDate}
+                              <strong>Start Date:</strong> {entry.start_Date}
                             </Typography>
                             <Typography variant="body2" color="textSecondary">
-                              <strong>End Date:</strong> {entry.endDate}
+                              <strong>End Date:</strong> {entry.end_Date}
                             </Typography>
                           </div>
 
@@ -333,7 +333,7 @@ const RDOnCallForm = () => {
                               color="error"
                               size="small"
                               onClick={async () => {
-                                await deleteOnCallEntry(entry.onCallID);
+                                await deleteOnCallEntry(entry.on_Call_ID);
                                 loadOnCallList();
                               }}
                             >

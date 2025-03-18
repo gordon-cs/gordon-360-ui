@@ -1,7 +1,7 @@
 import http from 'services/http';
 
 type RDOnCall = {
-  Record_ID: number;
+  RecoRD_ID: number;
   RD_ID: number;
   RD_Name: string;
   Start_Date: string;
@@ -10,14 +10,14 @@ type RDOnCall = {
 };
 
 type RDOnCallCreate = {
-  rd_Id: number;
+  RD_ID: number;
   start_Date: string;
   end_Date: string;
 };
 
 type RDStudentsViewModel = {
   RD_Email: string | null;
-  RD_Id: string;
+  RD_ID: string;
   RD_Name: string;
   RD_Photo: string | null;
 };
@@ -42,9 +42,9 @@ const fetchRDNames = async (): Promise<{ RD_ID: number; RD_Name: string }[]> => 
 
 const createRDOnCall = async (data: RDOnCallCreate): Promise<string> => {
   try {
-    const { rd_Id, start_Date, end_Date } = data;
+    const { RD_ID, start_Date, end_Date } = data;
     return await http.post(
-      `housing/rds/${rd_Id}/on-call?startDate=${start_Date}&endDate=${end_Date}`,
+      `housing/rds/${RD_ID}/on-call?startDate=${start_Date}&endDate=${end_Date}`,
     );
   } catch (error) {
     console.error('Error creating RD on-call record:', error);

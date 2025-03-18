@@ -24,7 +24,6 @@ import {
   removeStatus,
   updateStatus,
   getActiveStatusListForRA,
-  getDailyStatusListForRA,
 } from 'services/residentLife/Status';
 import { useColorScheme } from '@mui/material/styles';
 import { useAuthGroups } from 'hooks';
@@ -33,6 +32,7 @@ import { AuthGroup } from 'services/auth';
 const StatusManager = () => {
   const { mode } = useColorScheme();
   const [statusList, setStatusList] = useState([]);
+  // REMOVE BEFORE WE ACTUALLY PUSH THIS IS JUST FOR TESTING PURPOSES
   const [RA, setRA] = useState('50223925');
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
@@ -41,15 +41,15 @@ const StatusManager = () => {
   // All parameters of a status that will be filled later
   const [currentStatus, setCurrentStatus] = useState({
     // StatusID: '',
-    StatusName: '',
-    RaID: '',
-    IsRecurring: true,
+    Status_Name: '',
+    RA_ID: '',
+    Is_Recurring: true,
     Frequency: '',
     Interval: 0,
     Start_Time: '',
     End_Time: '',
-    startDate: '',
-    endDate: '',
+    start_Date: '',
+    end_Date: '',
     Created_Date: '',
     Available: true,
   });
@@ -75,7 +75,7 @@ const StatusManager = () => {
       setStatusList((prevStatuses) => {
         if (
           prevStatuses.length !== response.length ||
-          !prevStatuses.every((status, index) => status.statusID === response[index]?.StatusID)
+          !prevStatuses.every((status, index) => status.status_ID === response[index]?.Status_ID)
         ) {
           return response;
         }
@@ -93,7 +93,6 @@ const StatusManager = () => {
 
     try {
       // Wait until all statuses are fetched from API
-      // const response = await getDailyStatusListForRA(RaID);
       const response = await getActiveStatusListForRA(RaID);
       console.log('getActiveStatusListForRA edit response', response);
       setStatusList(response);
@@ -104,26 +103,6 @@ const StatusManager = () => {
     }
   };
 
-  // Function to handle changes in the form
-  // const handleInputChange = (e) => {
-  //   const { name, value, type, checked } = e.target;
-
-  //   setCurrentStatus((prevStatus) => {
-  //     let updatedStatus = { ...prevStatus, [name]: type === 'checkbox' ? checked : value };
-
-  //     // If "Recurring Status" is unchecked, set endDate to startDate
-  //     if (name === 'isRecurring') {
-  //       if (!checked) {
-  //         updatedStatus.endDate = prevStatus.startDate;
-  //       } else {
-  //         updatedStatus.endDate = ''; // Allow user to manually enter an end date when checked
-  //       }
-  //     }
-
-  //     return updatedStatus;
-  //   });
-  // };
-
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
 
@@ -131,11 +110,11 @@ const StatusManager = () => {
       let updatedStatus = { ...prevStatus, [name]: type === 'checkbox' ? checked : value };
 
       // If "Recurring Status" is unchecked, set endDate to startDate
-      if (name === 'isRecurring') {
+      if (name === 'is_Recurring') {
         if (!checked) {
-          updatedStatus.endDate = prevStatus.startDate;
+          updatedStatus.end_Date = prevStatus.start_Date;
         } else {
-          updatedStatus.endDate = ''; // Allow user to manually enter an end date when checked
+          updatedStatus.end_Date = ''; // Allow user to manually enter an end date when checked
         }
       }
 
@@ -153,7 +132,7 @@ const StatusManager = () => {
     e.preventDefault(); // Stops the website from reloading
     try {
       console.log('RA:', RA);
-      const newStatus = { ...currentStatus, RaID: RA };
+      const newStatus = { ...currentStatus, RA_ID: RA };
       console.log('newStatus', newStatus);
       console.log('About to run addStatus');
       await createStatus(newStatus);
@@ -174,15 +153,15 @@ const StatusManager = () => {
     e.preventDefault();
     try {
       // Check if the task has a task ID
-      if (!currentStatus.StatusID) {
+      if (!currentStatus.Status_ID) {
         console.error('Error: Status ID is missing');
         return;
       }
 
-      const updatedStatus = { ...currentStatus, RaID: RA };
+      const updatedStatus = { ...currentStatus, RA_ID: RA };
       console.log('edited Status:', updatedStatus);
       console.log('About to run updateStatus');
-      await updateStatus(currentStatus.StatusID, updatedStatus);
+      await updateStatus(currentStatus.Status_ID, updatedStatus);
       console.log('Ran updateStatus');
 
       console.log('About to run loadStatusList');
@@ -200,14 +179,14 @@ const StatusManager = () => {
   const editStatus = (status) => {
     console.log('Status', status);
     setCurrentStatus({
-      StatusID: status.StatusID,
-      StatusName: status.StatusName,
-      RaID: status.RaID,
-      IsRecurring: status?.IsRecurring,
+      Status_ID: status.Status_ID,
+      Status_Name: status.Status_Name,
+      RA_ID: status.RA_ID,
+      Is_Recurring: status?.Is_Recurring,
       Frequency: status.Frequency,
       Interval: status.Interval,
-      startDate: status.StartDate ? status.StartDate.split('T')[0] : '',
-      endDate: status.EndDate ? status.EndDate.split('T')[0] : '', // should be uppercase
+      start_Date: status.Start_Date ? status.Start_Date.split('T')[0] : '',
+      end_Date: status.End_Date ? status.End_Date.split('T')[0] : '', // should be uppercase
       Start_Time: status.Start_Time,
       End_Time: status.End_Time,
       Available: true,
@@ -224,7 +203,7 @@ const StatusManager = () => {
   const deleteStatus = async (statusID) => {
     try {
       await removeStatus(statusID);
-      setStatusList(statusList.filter((status) => status.statusID !== statusID));
+      setStatusList(statusList.filter((status) => status.status_ID !== statusID));
     } catch (error) {
       console.error('Error deleting task:', error);
     }
@@ -233,15 +212,15 @@ const StatusManager = () => {
   // Function to reset the form inputs
   const resetStatusForm = () => {
     setCurrentStatus({
-      StatusName: '',
-      RaID: '',
-      IsRecurring: true,
+      Status_Name: '',
+      RA_ID: '',
+      Is_Recurring: true,
       Frequency: '',
       Interval: 0,
       Start_Time: null,
       End_Time: null,
-      startDate: '',
-      endDate: '',
+      start_Date: '',
+      end_Date: '',
       Created_Date: '',
       Available: true,
     });
@@ -279,7 +258,7 @@ const StatusManager = () => {
                   fullWidth
                   label="Status Name"
                   name="StatusName"
-                  value={currentStatus.StatusName}
+                  value={currentStatus.Status_Name}
                   onChange={handleInputChange}
                   required
                   sx={{ mb: 2 }}
@@ -327,14 +306,14 @@ const StatusManager = () => {
 
                 <TextField
                   fullWidth
-                  label={currentStatus.IsRecurring ? 'Start Date' : 'Status Date'}
+                  label={currentStatus.Is_Recurring ? 'Start Date' : 'Status Date'}
                   type="date"
                   name="startDate"
                   InputLabelProps={{ shrink: true }}
-                  value={currentStatus.startDate ? currentStatus.startDate.split('T')[0] : ''}
+                  value={currentStatus.start_Date ? currentStatus.start_Date.split('T')[0] : ''}
                   onChange={(e) => {
                     handleInputChange(e);
-                    if (!currentStatus.IsRecurring) {
+                    if (!currentStatus.Is_Recurring) {
                       setCurrentStatus((prevStatus) => ({
                         ...prevStatus,
                         endDate: e.target.value,
@@ -352,7 +331,7 @@ const StatusManager = () => {
                     type="date"
                     name="endDate"
                     InputLabelProps={{ shrink: true }}
-                    value={currentStatus.endDate ? currentStatus.endDate.split('T')[0] : ''}
+                    value={currentStatus.end_Date ? currentStatus.end_Date.split('T')[0] : ''}
                     onChange={handleInputChange}
                     required
                     sx={{ mb: 2 }}
@@ -374,14 +353,14 @@ const StatusManager = () => {
                   control={
                     <Checkbox
                       name="IsRecurring"
-                      checked={currentStatus.IsRecurring}
+                      checked={currentStatus.Is_Recurring}
                       onChange={handleInputChange}
                     />
                   }
                   label="Recurring Status"
                 />
 
-                {currentStatus.IsRecurring && (
+                {currentStatus.Is_Recurring && (
                   <>
                     <FormControl fullWidth sx={{ mb: 2 }}>
                       <InputLabel>Frequency</InputLabel>
@@ -451,7 +430,7 @@ const StatusManager = () => {
                   <dt style={{ maxHeight: '100%', overflowY: 'auto' }}>
                     {statusList.map((status) => (
                       <Card
-                        key={status.StatusID}
+                        key={status.Status_ID}
                         className="p-2 border rounded-lg bg-gray-100"
                         style={{
                           marginBottom: '16px',
@@ -462,11 +441,11 @@ const StatusManager = () => {
                       >
                         <div style={{ marginTop: '10px', marginBottom: '10px' }}>
                           <Typography variant="subtitle1" fontWeight="bold">
-                            <strong>{status.StatusName}</strong>
+                            <strong>{status.Status_Name}</strong>
                           </Typography>
                           <Typography variant="body2" color="textSecondary">
                             <strong>Start Date: </strong>{' '}
-                            {new Date(status.StartDate).toLocaleDateString('en-US', {
+                            {new Date(status.Start_Date).toLocaleDateString('en-US', {
                               //change back to Start_Date
                               month: 'long',
                               day: 'numeric',
@@ -475,7 +454,7 @@ const StatusManager = () => {
                           </Typography>
                           <Typography variant="body2" color="textSecondary">
                             <strong>End Date: </strong>{' '}
-                            {new Date(status.EndDate).toLocaleDateString('en-US', {
+                            {new Date(status.End_Date).toLocaleDateString('en-US', {
                               month: 'long',
                               day: 'numeric',
                               year: 'numeric',
@@ -519,7 +498,7 @@ const StatusManager = () => {
                             color="error"
                             size="small"
                             onClick={async () => {
-                              await deleteStatus(status.StatusID);
+                              await deleteStatus(status.Status_ID);
                               loadStatusList(RA);
                             }}
                           >

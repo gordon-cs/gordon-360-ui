@@ -3,8 +3,8 @@ import http from '../http';
 export type Status = {
   Status_Name: string;
   Status_ID: number;
-  Ra_ID: string;
-  IsRecurring: boolean;
+  RA_ID: string;
+  Is_Recurring: boolean;
   Frequency: string;
   Interval: number;
   Start_Date: Date;

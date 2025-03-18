@@ -142,7 +142,7 @@ const RoomRanges = () => {
     if (selectedPerson && selectedRoomRange) {
       const newRange = {
         Range_ID: selectedRoomRange,
-        Ra_ID: selectedPerson,
+        RA_ID: selectedPerson,
       };
 
       assignPersonToRange(newRange)
@@ -280,12 +280,12 @@ const RoomRanges = () => {
                 filteredRoomRanges.length > 0 ? (
                   filteredRoomRanges.map((range) => (
                     <ListItem
-                      key={range.RangeID}
-                      onClick={() => setSelectedRoomRange(range.RangeID)}
+                      key={range.Range_ID}
+                      onClick={() => setSelectedRoomRange(range.Range_ID)}
                       sx={{
                         cursor: 'pointer',
                         backgroundColor:
-                          selectedRoomRange === range.RangeID ? 'primary.main' : 'transparent',
+                          selectedRoomRange === range.Range_ID ? 'primary.main' : 'transparent',
                         '&:hover': {
                           textDecoration: 'none',
                           backgroundColor: 'primary.main',
@@ -307,7 +307,7 @@ const RoomRanges = () => {
                         sx={{ ml: 1 }}
                         onClick={(e) => {
                           e.stopPropagation();
-                          onClickRemoveRoomRange(range.RangeID);
+                          onClickRemoveRoomRange(range.Range_ID);
                         }}
                       >
                         Remove
@@ -357,7 +357,7 @@ const RoomRanges = () => {
                         },
                       }}
                     >
-                      {person.FirstName} {person.LastName}
+                      {person.First_Name} {person.Last_Name}
                     </ListItem>
                   ))}
                 </>
@@ -385,7 +385,7 @@ const RoomRanges = () => {
                 filteredAssignments.map((assignment) => (
                   <ListItem key={assignment.Range_ID}>
                     <Box>
-                      {assignment.Fname} {assignment.Lname}: {assignment.Hall_Name}{' '}
+                      {assignment.First_Name} {assignment.Last_Name}: {assignment.Hall_Name}{' '}
                       {assignment.Room_Start} - {assignment.Room_End}
                     </Box>
 

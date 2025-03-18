@@ -2,13 +2,13 @@ import http from '../http';
 
 type AssignedRange = {
   Range_ID: number;
-  Ra_ID: string;
+  RA_ID: string;
 };
 
 type Assignment = {
   RA_ID: string;
-  F_name: string;
-  L_name: string;
+  First_Name: string;
+  Last_Name: string;
   Hall_Name: string;
   Room_Start: string;
   Room_End: string;

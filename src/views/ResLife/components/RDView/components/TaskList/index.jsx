@@ -28,15 +28,15 @@ const TaskList = () => {
 
   // All parameters of a task that will be filled later
   const [currentTask, setCurrentTask] = useState({
-    // taskID: null,
+    // task_ID: null,
     name: '',
     description: '',
-    hallId: '',
-    isRecurring: false,
+    hall_Id: '',
+    is_Recurring: false,
     frequency: '',
     interval: 0,
-    startDate: '',
-    endDate: '',
+    start_Date: '',
+    end_Date: '',
   });
 
   // UseEffect - Immediately runs `loadTasks`
@@ -61,7 +61,7 @@ const TaskList = () => {
       setTasks((prevTasks) => {
         if (
           prevTasks.length !== response.length ||
-          !prevTasks.every((task, index) => task.TaskID === response[index]?.TaskID)
+          !prevTasks.every((task, index) => task.Task_ID === response[index]?.Task_ID)
         ) {
           return response;
         }
@@ -103,9 +103,9 @@ const TaskList = () => {
       // If "Recurring Task" is unchecked, set endDate to startDate
       if (name === 'isRecurring') {
         if (!checked) {
-          updatedTask.endDate = prevTask.startDate;
+          updatedTask.end_Date = prevTask.start_Date;
         } else {
-          updatedTask.endDate = ''; // Allow user to manually enter an end date when checked
+          updatedTask.end_Date = ''; // Allow user to manually enter an end date when checked
         }
       }
 
@@ -138,15 +138,15 @@ const TaskList = () => {
     e.preventDefault();
     try {
       // Check if the task has a task ID
-      if (!currentTask.taskID) {
+      if (!currentTask.task_ID) {
         console.error('Error: Task ID is missing');
         return;
       }
 
-      const updatedTask = { ...currentTask, hallId: selectedHall };
+      const updatedTask = { ...currentTask, hall_Id: selectedHall };
 
       console.log('About to run updateTask');
-      await updateTask(currentTask.taskID, updatedTask);
+      await updateTask(currentTask.task_ID, updatedTask);
       console.log('Ran updateTasks');
 
       console.log('About to run loadTasks');
@@ -162,15 +162,15 @@ const TaskList = () => {
   // Function to fill in the form with data that user wants to edit
   const editTask = (task) => {
     setCurrentTask({
-      taskID: task.TaskID,
+      task_ID: task.Task_ID,
       name: task.Name,
       description: task.Description,
-      hallId: task.HallID,
-      isRecurring: task?.IsRecurring,
+      hall_Id: task.Hall_ID,
+      is_Recurring: task?.Is_Recurring,
       frequency: task.Frequency,
       interval: task.Interval,
-      startDate: task.StartDate ? task.StartDate.split('T')[0] : '',
-      endDate: task.EndDate ? task.EndDate.split('T')[0] : '',
+      start_Date: task.Start_Date ? task.Start_Date.split('T')[0] : '',
+      end_Date: task.EndDate ? task.End_Date.split('T')[0] : '',
     });
     setEditing(true);
   };
@@ -183,7 +183,7 @@ const TaskList = () => {
   const deleteTask = async (taskID) => {
     try {
       await removeTask(taskID);
-      setTasks(tasks.filter((task) => task.taskID !== taskID));
+      setTasks(tasks.filter((task) => task.task_ID !== taskID));
     } catch (error) {
       console.error('Error deleting task:', error);
     }
@@ -194,12 +194,12 @@ const TaskList = () => {
     setCurrentTask({
       name: '',
       description: '',
-      hallId: selectedHall,
-      isRecurring: false,
+      hall_Id: selectedHall,
+      is_Recurring: false,
       frequency: '',
       interval: 0,
-      startDate: '',
-      endDate: '',
+      start_Date: '',
+      end_Date: '',
     });
     setEditing(false);
   };
@@ -300,10 +300,10 @@ const TaskList = () => {
                   type="date"
                   name="startDate"
                   InputLabelProps={{ shrink: true }}
-                  value={currentTask.startDate ? currentTask.startDate.split('T')[0] : ''}
+                  value={currentTask.start_Date ? currentTask.start_Date.split('T')[0] : ''}
                   onChange={(e) => {
                     handleInputChange(e);
-                    if (!currentTask.isRecurring) {
+                    if (!currentTask.is_Recurring) {
                       setCurrentTask((prevTask) => ({ ...prevTask, endDate: e.target.value }));
                     }
                   }}
@@ -318,7 +318,7 @@ const TaskList = () => {
                     type="date"
                     name="endDate"
                     InputLabelProps={{ shrink: true }}
-                    value={currentTask.endDate ? currentTask.endDate.split('T')[0] : ''}
+                    value={currentTask.end_Date ? currentTask.end_Date.split('T')[0] : ''}
                     onChange={handleInputChange}
                     required
                     sx={{ mb: 2 }}
@@ -329,14 +329,14 @@ const TaskList = () => {
                   control={
                     <Checkbox
                       name="isRecurring"
-                      checked={currentTask.isRecurring}
+                      checked={currentTask.is_Recurring}
                       onChange={handleInputChange}
                     />
                   }
                   label="Recurring Task"
                 />
 
-                {currentTask.isRecurring && (
+                {currentTask.is_Recurring && (
                   <>
                     <FormControl fullWidth sx={{ mb: 2 }}>
                       <InputLabel>Frequency</InputLabel>
@@ -406,7 +406,7 @@ const TaskList = () => {
                   <dt style={{ maxHeight: '100%', overflowY: 'auto' }}>
                     {tasks.map((task) => (
                       <Card
-                        key={task.taskID}
+                        key={task.task_ID}
                         className="p-2 border rounded-lg bg-gray-100"
                         style={{
                           marginBottom: '16px',
@@ -421,7 +421,7 @@ const TaskList = () => {
                           </Typography>
                           <Typography variant="body2" color="textSecondary">
                             <strong>Start Date: </strong>{' '}
-                            {new Date(task.StartDate).toLocaleDateString('en-US', {
+                            {new Date(task.Start_Date).toLocaleDateString('en-US', {
                               month: 'long',
                               day: 'numeric',
                               year: 'numeric',
@@ -429,7 +429,7 @@ const TaskList = () => {
                           </Typography>
                           <Typography variant="body2" color="textSecondary">
                             <strong>End Date: </strong>{' '}
-                            {new Date(task.EndDate).toLocaleDateString('en-US', {
+                            {new Date(task.End_Date).toLocaleDateString('en-US', {
                               month: 'long',
                               day: 'numeric',
                               year: 'numeric',
@@ -463,7 +463,7 @@ const TaskList = () => {
                             color="error"
                             size="small"
                             onClick={async () => {
-                              await deleteTask(task.TaskID);
+                              await deleteTask(task.Task_ID);
                               loadTasks(selectedHall);
                             }}
                           >

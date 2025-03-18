@@ -2,7 +2,7 @@ import http from '../http';
 
 export type Status = {
   Status_ID: number;
-  Ra_ID: string;
+  RA_ID: string;
   Status_Name: string;
   Is_Recurring: boolean;
   Frequency: string;
@@ -17,7 +17,7 @@ export type Status = {
 
 type NewStatus = Omit<Status, 'StatusID' | 'CreatedDate'>;
 
-const fetchRAStatuses = (ra_ID: string): Promise<Status[]> =>
-  http.get(`Housing/ras/${ra_ID}/daily-status-events`);
+const fetchRAStatuses = (RA_ID: string): Promise<Status[]> =>
+  http.get(`Housing/ras/${RA_ID}/daily-status-events`);
 
 export { fetchRAStatuses };
