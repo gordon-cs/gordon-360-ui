@@ -14,24 +14,24 @@ export type Status = {
 };
 type NewStatus = Omit<Status, 'StatusID' | 'Created_Date'>;
 
-const createStatus = (newStatus: NewStatus): Promise<Status[]> =>
-  http.post('Housing/ras/status-event', newStatus);
+const createStatus = (New_Status: NewStatus): Promise<Status[]> =>
+  http.post('Housing/ras/status-event', New_Status);
 
 //Update Status??
 // const updateStatus = (StatusID: number, newStatus: Status) =>
 //   http.patch(`Housing/ras/status-event/${StatusID}`, newStatus);
 
-const updateStatus = (StatusID: number, updatedStatus: Partial<NewStatus>): Promise<Status[]> =>
-  http.patch(`Housing/ras/status-event/${StatusID}`, updatedStatus);
+const updateStatus = (Status_ID: number, Updated_Status: Partial<NewStatus>): Promise<Status[]> =>
+  http.patch(`Housing/ras/status-event/${Status_ID}`, Updated_Status);
 
-const removeStatus = (StatusID: number) => http.del(`Housing/ras/status-event/${StatusID}`);
+const removeStatus = (Status_ID: number) => http.del(`Housing/ras/status-event/${Status_ID}`);
 
-const getActiveStatusListForRA = (RaID: string): Promise<Status[]> =>
-  http.get(`Housing/ras/${RaID}/active-status-events`);
+const getActiveStatusListForRA = (RA_ID: string): Promise<Status[]> =>
+  http.get(`Housing/ras/${RA_ID}/active-status-events`);
 // http.get(`Housing/ras/50223925/active-status-events`);
 
-const getDailyStatusListForRA = (RaID: string): Promise<String[]> =>
-  http.get(`Housing/ras/${RaID}/daily-status-events`);
+const getDailyStatusListForRA = (RA_ID: string): Promise<String[]> =>
+  http.get(`Housing/ras/${RA_ID}/daily-status-events`);
 //   http.get(`Housing/ras/50223925/daily-status-events`);
 
 export {

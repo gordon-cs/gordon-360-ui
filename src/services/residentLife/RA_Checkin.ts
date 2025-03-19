@@ -5,11 +5,11 @@ const checkIfCheckedIn = async (RA_ID: string): Promise<boolean> => {
   return response.IsOnCall;
 };
 
-const submitCheckIn = async (RA_ID: string, hall_Ids: string[]): Promise<void> => {
-  await http.post(`Housing/ras/${RA_ID}/checkin`, hall_Ids);
+const submitCheckIn = async (RA_ID: string, Hall_IDs: string[]): Promise<void> => {
+  await http.post(`Housing/ras/${RA_ID}/checkin`, Hall_IDs);
 };
 
-const getRACurrentHalls = (user_Name: string): Promise<String[]> =>
-  http.get(`Housing/halls/on-calls/${user_Name}/locations`);
+const getRACurrentHalls = (User_Name: string): Promise<String[]> =>
+  http.get(`Housing/halls/on-calls/${User_Name}/locations`);
 
 export { checkIfCheckedIn, submitCheckIn, getRACurrentHalls };

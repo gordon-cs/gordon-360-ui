@@ -98,7 +98,7 @@ const RDOnCallForm = () => {
     e.preventDefault();
     try {
       await createRDOnCall({
-        rdId: +currentOnCall.RD_ID,
+        RD_ID: +currentOnCall.RD_ID,
         Start_Date: currentOnCall.Start_Date,
         End_Date: currentOnCall.End_Date,
       });
@@ -167,8 +167,8 @@ const RDOnCallForm = () => {
   };
 
   // convert rd id to name from rd list
-  const getRDNameFromID = (rdid) => {
-    const found = rdNames.find((rd) => rd.RD_ID === rdid);
+  const getRDNameFromID = (RD_ID) => {
+    const found = rdNames.find((rd) => rd.RD_ID === RD_ID);
     return found ? found.RD_Name : 'Unknown RD';
   };
 
@@ -229,7 +229,7 @@ const RDOnCallForm = () => {
                     fullWidth
                     label="Start Date"
                     type="date"
-                    name="startDate"
+                    name="Start_Date"
                     InputLabelProps={{ shrink: true }}
                     value={currentOnCall.Start_Date}
                     onChange={handleInputChange}
@@ -241,7 +241,7 @@ const RDOnCallForm = () => {
                     fullWidth
                     label="End Date"
                     type="date"
-                    name="endDate"
+                    name="End_Date"
                     InputLabelProps={{ shrink: true }}
                     value={currentOnCall.End_Date}
                     onChange={handleInputChange}

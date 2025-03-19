@@ -25,23 +25,23 @@ export type DailyTask = {
   Occur_Date?: Date;
 };
 
-const createTask = (newTask: Task) => http.post('Housing/halls/task', newTask);
+const createTask = (New_Task: Task) => http.post('Housing/halls/task', New_Task);
 
-const updateTask = (taskID: number, newTask: Task) =>
-  http.patch(`Housing/halls/task/${taskID}`, newTask);
+const updateTask = (Task_ID: number, New_Task: Task) =>
+  http.patch(`Housing/halls/task/${Task_ID}`, New_Task);
 
-const deleteTask = (taskID: number) => http.del(`Housing/halls/task/${taskID}`);
+const deleteTask = (Task_ID: number) => http.del(`Housing/halls/task/${Task_ID}`);
 
-const completeTask = (taskID: number, completedBy: string) =>
-  http.patch(`Housing/halls/task/Complete/${taskID}`, completedBy);
+const completeTask = (Task_ID: number, Completed_By: string) =>
+  http.patch(`Housing/halls/task/Complete/${Task_ID}`, Completed_By);
 
-const incompleteTask = (taskID: number) => http.patch(`Housing/halls/task/Incomplete/${taskID}`);
+const incompleteTask = (Task_ID: number) => http.patch(`Housing/halls/task/Incomplete/${Task_ID}`);
 
-const getActiveTasksForHall = (hallID: string): Promise<Task[]> =>
-  http.get(`Housing/Halls/${hallID}/ActiveTasks`);
+const getActiveTasksForHall = (Hall_ID: string): Promise<Task[]> =>
+  http.get(`Housing/Halls/${Hall_ID}/ActiveTasks`);
 
-const getTasksForHall = (hallID: string): Promise<DailyTask[]> =>
-  http.get(`Housing/Halls/${hallID}/DailyTasks`);
+const getTasksForHall = (Hall_ID: string): Promise<DailyTask[]> =>
+  http.get(`Housing/Halls/${Hall_ID}/DailyTasks`);
 
 export {
   createTask,

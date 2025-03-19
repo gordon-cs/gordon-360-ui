@@ -31,17 +31,18 @@ type method = {
 };
 
 // Fetches the information of an RA from the API endpoint "Housing/ras"
-const fetchRaInfo = (hallId: string, roomNumber: number): Promise<RA[]> =>
-  http.get(`Housing/resident/ra${http.toQueryString({ hallId, roomNumber })}`);
+const fetchRaInfo = (Hall_ID: string, Room_Number: number): Promise<RA[]> =>
+  http.get(`Housing/resident/ra${http.toQueryString({ Hall_ID, Room_Number })}`);
 
 // Fetches the information of an RD from the API endpoint "Housing/rds"
-const fetchRdInfo = (hallId: string): Promise<RD[]> => http.get(`Housing/rds?hallId=${hallId}`);
+const fetchRdInfo = (Hall_ID: string): Promise<RD[]> => http.get(`Housing/rds?hallId=${Hall_ID}`);
 
 // Adds the information of which method of contact the RA/AC prefers to the database
-const preferredContact = (raId: string, preferredContactMethod: string): Promise<Contact> =>
-  http.post(`Housing/ras/${raId}/contact?preferredContactMethod=${preferredContactMethod}`);
+const preferredContact = (RA_ID: string, PreferredContactMethod: string): Promise<Contact> =>
+  http.post(`Housing/ras/${RA_ID}/contact?preferredContactMethod=${PreferredContactMethod}`);
 
 // gets the contact prefernce for the RA
-const PrefContactMethod = (raId: string): Promise<method> => http.get(`Housing/ra/${raId}/contact`);
+const PrefContactMethod = (RA_ID: string): Promise<method> =>
+  http.get(`Housing/ra/${RA_ID}/contact`);
 
 export { fetchRaInfo, fetchRdInfo, preferredContact, PrefContactMethod };

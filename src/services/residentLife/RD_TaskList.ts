@@ -19,17 +19,17 @@ type Task = {
 type NewTask = Omit<Task, 'task_ID' | 'created_Date' | 'completed_Date' | 'completed_By'>;
 
 // Post request to the API endpoint "Housing/halls/task" which adds a new task
-const addTask = (newTask: NewTask): Promise<Task[]> => http.post('Housing/halls/task', newTask);
+const addTask = (New_Task: NewTask): Promise<Task[]> => http.post('Housing/halls/task', New_Task);
 
 // Fetches the list of tasks from the API endpoint "Housing/Halls/${hallId}/ActiveTasks"
-const fetchTasks = (hallId: string): Promise<Task[]> =>
-  http.get(`Housing/Halls/${hallId}/ActiveTasks`);
+const fetchTasks = (Hall_ID: string): Promise<Task[]> =>
+  http.get(`Housing/Halls/${Hall_ID}/ActiveTasks`);
 
 // Delete request to remove a specific task by ID using endpoint "Housing/halls/task/${taskID}"
-const removeTask = (taskID: number) => http.del(`Housing/halls/task/${taskID}`);
+const removeTask = (Task_ID: number) => http.del(`Housing/halls/task/${Task_ID}`);
 
 // Patch request to the API endpoint "Housing/halls/task/${taskID}" which updates an existing task
-const updateTask = (taskID: number, updatedTask: Partial<NewTask>): Promise<Task[]> =>
-  http.patch(`Housing/halls/task/${taskID}`, updatedTask);
+const updateTask = (Task_ID: number, Updated_Task: Partial<NewTask>): Promise<Task[]> =>
+  http.patch(`Housing/halls/task/${Task_ID}`, Updated_Task);
 
 export { addTask, updateTask, fetchTasks, removeTask };
