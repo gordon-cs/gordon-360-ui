@@ -228,17 +228,16 @@ const StatusManager = () => {
 
   return (
     <Grid container spacing={3} justifyContent="center">
-      {/* Three-column row */}
       <Grid item xs={12}>
         <Grid container alignItems="center">
-          {/* Left column: "Go Back" button */}
+          {/* Left column: Go Back button */}
           <Grid
             item
             xs={4}
             sx={{
               display: 'flex',
-              justifyContent: 'center', // This pushes the button to the right side of its column
-              alignItems: 'center', // Keep it vertically centered
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
           >
             <Button
@@ -255,7 +254,7 @@ const StatusManager = () => {
             </Button>
           </Grid>
 
-          {/* Middle column: your existing heading, unchanged */}
+          {/* Middle column: page heading */}
           <Grid item xs={4}>
             <Typography
               variant="h3"
@@ -268,7 +267,7 @@ const StatusManager = () => {
             </Typography>
           </Grid>
 
-          {/* Right column: blank (or add something later) */}
+          {/* Right column: blank  */}
           <Grid item xs={4} />
         </Grid>
       </Grid>
