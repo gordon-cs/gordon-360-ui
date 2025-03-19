@@ -7,7 +7,7 @@ const StatusCard = () => (
     <CardContent>
       <Typography>
         <RouterLink
-          to="/StatusManager"
+          to="statusmanager"
           className="gc360_text_link"
           style={{ textDecoration: 'none' }}
         >

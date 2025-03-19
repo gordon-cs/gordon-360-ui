@@ -20,8 +20,6 @@ import {
   deleteRDOnCall,
 } from 'services/residentLife/RD_OnCall';
 import SimpleSnackbar from 'components/Snackbar';
-import { useAuthGroups } from 'hooks';
-import { AuthGroup } from 'services/auth';
 
 const RDOnCallForm = () => {
   const { mode } = useColorScheme();
@@ -172,193 +170,187 @@ const RDOnCallForm = () => {
     return found ? found.RD_Name : 'Unknown RD';
   };
 
-  const housingadmin = useAuthGroups(AuthGroup.HousingAdmin);
-  const RD = useAuthGroups(AuthGroup.ResidentDirector);
-  const developer = useAuthGroups(AuthGroup.HousingDeveloper);
-
-  if (housingadmin || RD || developer) {
-    return (
-      <>
-        <Grid container spacing={3} justifyContent="center">
-          <Grid item xs={12}>
-            <Typography
-              variant="h3"
-              align="center"
-              style={{
-                color: mode === 'dark' ? '#f8b619' : '#36b9ed',
-              }}
-            >
-              RD On-Call Scheduler
-            </Typography>
-          </Grid>
-
-          {/* Form Scheduler */}
-          <Grid item xs={12} md={5}>
-            <Card elevation={3}>
-              <CardContent>
-                <Typography
-                  variant="h5"
-                  fontWeight="bold"
-                  gutterBottom
-                  style={{
-                    color: mode === 'dark' ? '#f8b619' : '#36b9ed',
-                  }}
-                >
-                  {editing ? 'Edit On-Call Entry' : 'Create On-Call Entry'}
-                </Typography>
-
-                <form onSubmit={editing ? handleEdit : handleSubmit}>
-                  <FormControl fullWidth sx={{ mb: 2 }}>
-                    <InputLabel>RD Name</InputLabel>
-                    <Select
-                      name="RD_ID"
-                      value={currentOnCall.RD_ID}
-                      onChange={handleInputChange}
-                      required
-                      label="RD Name"
-                    >
-                      {rdNames.map((rd) => (
-                        <MenuItem key={rd.RD_ID} value={rd.RD_ID}>
-                          {rd.RD_Name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-
-                  <TextField
-                    fullWidth
-                    label="Start Date"
-                    type="date"
-                    name="Start_Date"
-                    InputLabelProps={{ shrink: true }}
-                    value={currentOnCall.Start_Date}
-                    onChange={handleInputChange}
-                    required
-                    sx={{ mb: 2 }}
-                  />
-
-                  <TextField
-                    fullWidth
-                    label="End Date"
-                    type="date"
-                    name="End_Date"
-                    InputLabelProps={{ shrink: true }}
-                    value={currentOnCall.End_Date}
-                    onChange={handleInputChange}
-                    required
-                    sx={{ mb: 2 }}
-                  />
-
-                  <Grid container spacing={2}>
-                    {editing && (
-                      <Grid item xs={6}>
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          onClick={resetOnCallForm}
-                          fullWidth
-                        >
-                          Cancel Edit
-                        </Button>
-                      </Grid>
-                    )}
-                    <Grid item xs={editing ? 6 : 12}>
-                      <Button variant="contained" color="secondary" type="submit" fullWidth>
-                        {editing ? 'Save Changes' : 'Create Entry'}
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </form>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          {/* On Call List */}
-          <Grid item xs={12} md={5}>
-            <Card elevation={3}>
-              <CardContent>
-                <Typography
-                  variant="h5"
-                  fontWeight="bold"
-                  gutterBottom
-                  style={{
-                    color: mode === 'dark' ? '#f8b619' : '#36b9ed',
-                  }}
-                >
-                  Current On-Call List
-                </Typography>
-
-                {loading ? (
-                  <Typography color="textSecondary">Loading on-call entries...</Typography>
-                ) : onCallList.length === 0 ? (
-                  <Typography color="textSecondary">No active on-call entries</Typography>
-                ) : (
-                  <div style={{ height: '600px', overflow: 'hidden' }}>
-                    <div style={{ maxHeight: '100%', overflowY: 'auto' }}>
-                      {onCallList.map((entry) => (
-                        <Card
-                          key={entry.On_Call_ID}
-                          className="p-2 border rounded-lg bg-gray-100"
-                          style={{
-                            marginBottom: '16px',
-                            textAlign: 'center',
-                            border: `2px solid ${mode === 'dark' ? '#f8b619' : '#36b9ed'}`,
-                            backgroundColor: mode === 'dark' ? '#033948' : '#d3e4fd',
-                          }}
-                        >
-                          <div style={{ marginTop: '10px', marginBottom: '10px' }}>
-                            <Typography variant="subtitle1" fontWeight="bold">
-                              <strong>RD: {getRDNameFromID(entry.RD_ID)}</strong>
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary">
-                              <strong>Start Date:</strong> {entry.Start_Date}
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary">
-                              <strong>End Date:</strong> {entry.End_Date}
-                            </Typography>
-                          </div>
-
-                          <div style={{ marginBottom: '16px' }}>
-                            <Button
-                              variant="contained"
-                              color="secondary"
-                              size="small"
-                              onClick={() => editOnCall(entry)}
-                              style={{ marginRight: '16px' }}
-                            >
-                              Edit
-                            </Button>
-                            <Button
-                              variant="contained"
-                              color="error"
-                              size="small"
-                              onClick={async () => {
-                                await deleteOnCallEntry(entry.On_Call_ID);
-                                loadOnCallList();
-                              }}
-                            >
-                              Delete
-                            </Button>
-                          </div>
-                        </Card>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </Grid>
+  return (
+    <>
+      <Grid container spacing={3} justifyContent="center">
+        <Grid item xs={12}>
+          <Typography
+            variant="h3"
+            align="center"
+            style={{
+              color: mode === 'dark' ? '#f8b619' : '#36b9ed',
+            }}
+          >
+            RD On-Call Scheduler
+          </Typography>
         </Grid>
 
-        <SimpleSnackbar
-          open={snackbar.open}
-          text={snackbar.message}
-          severity={snackbar.severity}
-          onClose={handleSnackbarClose}
-        />
-      </>
-    );
-  }
+        {/* Form Scheduler */}
+        <Grid item xs={12} md={5}>
+          <Card elevation={3}>
+            <CardContent>
+              <Typography
+                variant="h5"
+                fontWeight="bold"
+                gutterBottom
+                style={{
+                  color: mode === 'dark' ? '#f8b619' : '#36b9ed',
+                }}
+              >
+                {editing ? 'Edit On-Call Entry' : 'Create On-Call Entry'}
+              </Typography>
+
+              <form onSubmit={editing ? handleEdit : handleSubmit}>
+                <FormControl fullWidth sx={{ mb: 2 }}>
+                  <InputLabel>RD Name</InputLabel>
+                  <Select
+                    name="RD_ID"
+                    value={currentOnCall.RD_ID}
+                    onChange={handleInputChange}
+                    required
+                    label="RD Name"
+                  >
+                    {rdNames.map((rd) => (
+                      <MenuItem key={rd.RD_ID} value={rd.RD_ID}>
+                        {rd.RD_Name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+
+                <TextField
+                  fullWidth
+                  label="Start Date"
+                  type="date"
+                  name="Start_Date"
+                  InputLabelProps={{ shrink: true }}
+                  value={currentOnCall.Start_Date}
+                  onChange={handleInputChange}
+                  required
+                  sx={{ mb: 2 }}
+                />
+
+                <TextField
+                  fullWidth
+                  label="End Date"
+                  type="date"
+                  name="End_Date"
+                  InputLabelProps={{ shrink: true }}
+                  value={currentOnCall.End_Date}
+                  onChange={handleInputChange}
+                  required
+                  sx={{ mb: 2 }}
+                />
+
+                <Grid container spacing={2}>
+                  {editing && (
+                    <Grid item xs={6}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={resetOnCallForm}
+                        fullWidth
+                      >
+                        Cancel Edit
+                      </Button>
+                    </Grid>
+                  )}
+                  <Grid item xs={editing ? 6 : 12}>
+                    <Button variant="contained" color="secondary" type="submit" fullWidth>
+                      {editing ? 'Save Changes' : 'Create Entry'}
+                    </Button>
+                  </Grid>
+                </Grid>
+              </form>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* On Call List */}
+        <Grid item xs={12} md={5}>
+          <Card elevation={3}>
+            <CardContent>
+              <Typography
+                variant="h5"
+                fontWeight="bold"
+                gutterBottom
+                style={{
+                  color: mode === 'dark' ? '#f8b619' : '#36b9ed',
+                }}
+              >
+                Current On-Call List
+              </Typography>
+
+              {loading ? (
+                <Typography color="textSecondary">Loading on-call entries...</Typography>
+              ) : onCallList.length === 0 ? (
+                <Typography color="textSecondary">No active on-call entries</Typography>
+              ) : (
+                <div style={{ height: '600px', overflow: 'hidden' }}>
+                  <div style={{ maxHeight: '100%', overflowY: 'auto' }}>
+                    {onCallList.map((entry) => (
+                      <Card
+                        key={entry.On_Call_ID}
+                        className="p-2 border rounded-lg bg-gray-100"
+                        style={{
+                          marginBottom: '16px',
+                          textAlign: 'center',
+                          border: `2px solid ${mode === 'dark' ? '#f8b619' : '#36b9ed'}`,
+                          backgroundColor: mode === 'dark' ? '#033948' : '#d3e4fd',
+                        }}
+                      >
+                        <div style={{ marginTop: '10px', marginBottom: '10px' }}>
+                          <Typography variant="subtitle1" fontWeight="bold">
+                            <strong>RD: {getRDNameFromID(entry.RD_ID)}</strong>
+                          </Typography>
+                          <Typography variant="body2" color="textSecondary">
+                            <strong>Start Date:</strong> {entry.Start_Date}
+                          </Typography>
+                          <Typography variant="body2" color="textSecondary">
+                            <strong>End Date:</strong> {entry.End_Date}
+                          </Typography>
+                        </div>
+
+                        <div style={{ marginBottom: '16px' }}>
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            size="small"
+                            onClick={() => editOnCall(entry)}
+                            style={{ marginRight: '16px' }}
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            variant="contained"
+                            color="error"
+                            size="small"
+                            onClick={async () => {
+                              await deleteOnCallEntry(entry.On_Call_ID);
+                              loadOnCallList();
+                            }}
+                          >
+                            Delete
+                          </Button>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
+      <SimpleSnackbar
+        open={snackbar.open}
+        text={snackbar.message}
+        severity={snackbar.severity}
+        onClose={handleSnackbarClose}
+      />
+    </>
+  );
 };
 
 export default RDOnCallForm;

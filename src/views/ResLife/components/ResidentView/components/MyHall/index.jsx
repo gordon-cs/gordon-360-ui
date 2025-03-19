@@ -164,7 +164,7 @@ const MyHall = () => {
               />
             </Tooltip>
           </Grid>
-          {profile.ID == '50216516' ? <CheckIn /> : <></>}
+          {isRA ? <CheckIn /> : <></>}
         </Grid>
       </CardContent>
     </Card>
