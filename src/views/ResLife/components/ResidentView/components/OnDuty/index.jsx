@@ -6,7 +6,6 @@ import {
   CardHeader,
   Grid,
   Typography,
-  Box,
   useMediaQuery,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';

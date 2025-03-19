@@ -68,7 +68,7 @@ const OnDutyMobile = () => {
             RA_Photo: villageData[0].RA_Photo,
             RA_Name: villageData[0].RA_Name,
             RA_UserName: villageData[0].RA_UserName,
-            PreferredContact: villageData[0].Preferred_Contact,
+            Preferred_Contact: villageData[0].Preferred_Contact,
             Check_In_Time: villageData[0].Check_In_Time,
             RD_Name: villageData[0].RD_Name,
             RD_UserName: villageData[0].RD_UserName,
@@ -173,7 +173,7 @@ const OnDutyMobile = () => {
 
                 <Typography>
                   <strong>Contact:</strong>{' '}
-                  {hallDetails.PreferredContact?.includes('http') ? (
+                  {hallDetails.Preferred_Contact?.includes('http') ? (
                     <StyledLink
                       href={hallDetails.Preferred_Contact}
                       underline="hover"

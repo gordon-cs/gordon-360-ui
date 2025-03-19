@@ -1,7 +1,7 @@
 import http from 'services/http';
 
 type RDOnCall = {
-  RecoRD_ID: number;
+  Record_ID: number;
   RD_ID: number;
   RD_Name: string;
   Start_Date: string;

@@ -112,7 +112,7 @@ const OnDutyTable = () => {
         const fetchedRows = [...otherHalls, ...consolidatedData].map((item) => ({
           hall: item.Hall_Name,
           onDutyPhoto: makeRAPhoto(item),
-          preferred_Contact: item.Preferred_Contact.includes('http') ? (
+          Preferred_Contact: item.Preferred_Contact.includes('http') ? (
             <StyledLink
               href={item.Preferred_Contact}
               underline="hover"
@@ -131,7 +131,7 @@ const OnDutyTable = () => {
               {formatPhoneNumber(item.Preferred_Contact)}
             </StyledLink>
           ),
-          checkInTime: new Date(item.Check_In_Time).toLocaleTimeString([], {
+          Check_In_Time: new Date(item.Check_In_Time).toLocaleTimeString([], {
             hour: '2-digit',
             minute: '2-digit',
           }),
@@ -207,8 +207,8 @@ const OnDutyTable = () => {
             <StyledTableRow key={index}>
               <StyledTableCell align="center">{row.hall}</StyledTableCell>
               <StyledTableCell align="center">{row.onDutyPhoto}</StyledTableCell>
-              <StyledTableCell align="center">{row.preferred_Contact}</StyledTableCell>
-              <StyledTableCell align="center">{row.checkInTime}</StyledTableCell>
+              <StyledTableCell align="center">{row.Preferred_Contact}</StyledTableCell>
+              <StyledTableCell align="center">{row.Check_In_Time}</StyledTableCell>
               <StyledTableCell align="center">{row.hallRD}</StyledTableCell>
             </StyledTableRow>
           ))}

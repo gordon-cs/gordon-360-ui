@@ -31,12 +31,12 @@ const TaskList = () => {
     // task_ID: null,
     name: '',
     description: '',
-    hall_Id: '',
-    is_Recurring: false,
+    Hall_ID: '',
+    Is_Recurring: false,
     frequency: '',
     interval: 0,
-    start_Date: '',
-    end_Date: '',
+    Start_Date: '',
+    End_Date: '',
   });
 
   // UseEffect - Immediately runs `loadTasks`
@@ -47,12 +47,12 @@ const TaskList = () => {
   }, [selectedHall]);
 
   // Function to get all the tasks from the selected hall
-  const loadTasks = async (hallId) => {
+  const loadTasks = async (Hall_ID) => {
     setLoading(true);
 
     try {
       // Wait until all tasks are fetched from API
-      const response = await fetchTasks(hallId);
+      const response = await fetchTasks(Hall_ID);
       console.log('fetchTasks response', response);
 
       // prevTasks - represents current state of value before any changes
@@ -74,12 +74,12 @@ const TaskList = () => {
     }
   };
 
-  const loadEditedTasks = async (hallId) => {
+  const loadEditedTasks = async (Hall_ID) => {
     setLoading(true);
 
     try {
       // Wait until all tasks are fetched from API
-      const response = await fetchTasks(hallId);
+      const response = await fetchTasks(Hall_ID);
       console.log('fetchTasks response', response);
 
       // prevTasks - represents current state of value before any changes
@@ -101,11 +101,11 @@ const TaskList = () => {
       let updatedTask = { ...prevTask, [name]: type === 'checkbox' ? checked : value };
 
       // If "Recurring Task" is unchecked, set endDate to startDate
-      if (name === 'isRecurring') {
+      if (name === 'Is_Recurring') {
         if (!checked) {
-          updatedTask.end_Date = prevTask.start_Date;
+          updatedTask.End_Date = prevTask.Start_Date;
         } else {
-          updatedTask.end_Date = ''; // Allow user to manually enter an end date when checked
+          updatedTask.End_Date = ''; // Allow user to manually enter an end date when checked
         }
       }
 
@@ -117,7 +117,7 @@ const TaskList = () => {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Stops the website from reloading
     try {
-      const newTask = { ...currentTask, hallId: selectedHall };
+      const newTask = { ...currentTask, Hall_ID: selectedHall };
       console.log('newTask', newTask);
       console.log('About to run addTask');
       await addTask(newTask);
@@ -143,7 +143,7 @@ const TaskList = () => {
         return;
       }
 
-      const updatedTask = { ...currentTask, hall_Id: selectedHall };
+      const updatedTask = { ...currentTask, Hall_ID: selectedHall };
 
       console.log('About to run updateTask');
       await updateTask(currentTask.task_ID, updatedTask);
@@ -165,12 +165,12 @@ const TaskList = () => {
       task_ID: task.Task_ID,
       name: task.Name,
       description: task.Description,
-      hall_Id: task.Hall_ID,
-      is_Recurring: task?.Is_Recurring,
+      Hall_ID: task.Hall_ID,
+      Is_Recurring: task?.Is_Recurring,
       frequency: task.Frequency,
       interval: task.Interval,
-      start_Date: task.Start_Date ? task.Start_Date.split('T')[0] : '',
-      end_Date: task.EndDate ? task.End_Date.split('T')[0] : '',
+      Start_Date: task.Start_Date ? task.Start_Date.split('T')[0] : '',
+      End_Date: task.End_Date ? task.End_Date.split('T')[0] : '',
     });
     setEditing(true);
   };
@@ -194,12 +194,12 @@ const TaskList = () => {
     setCurrentTask({
       name: '',
       description: '',
-      hall_Id: selectedHall,
-      is_Recurring: false,
+      Hall_ID: selectedHall,
+      Is_Recurring: false,
       frequency: '',
       interval: 0,
-      start_Date: '',
-      end_Date: '',
+      Start_Date: '',
+      End_Date: '',
     });
     setEditing(false);
   };
@@ -296,29 +296,29 @@ const TaskList = () => {
                 />
                 <TextField
                   fullWidth
-                  label={currentTask.isRecurring ? 'Start Date' : 'Task Date'}
+                  label={currentTask.Is_Recurring ? 'Start Date' : 'Task Date'}
                   type="date"
-                  name="startDate"
+                  name="Start_Date"
                   InputLabelProps={{ shrink: true }}
-                  value={currentTask.start_Date ? currentTask.start_Date.split('T')[0] : ''}
+                  value={currentTask.Start_Date ? currentTask.Start_Date.split('T')[0] : ''}
                   onChange={(e) => {
                     handleInputChange(e);
-                    if (!currentTask.is_Recurring) {
-                      setCurrentTask((prevTask) => ({ ...prevTask, endDate: e.target.value }));
+                    if (!currentTask.Is_Recurring) {
+                      setCurrentTask((prevTask) => ({ ...prevTask, End_Date: e.target.value }));
                     }
                   }}
                   required
                   sx={{ mb: 2 }}
                 />
 
-                {currentTask.isRecurring && (
+                {currentTask.Is_Recurring && (
                   <TextField
                     fullWidth
                     label="End Date"
                     type="date"
-                    name="endDate"
+                    name="End_Date"
                     InputLabelProps={{ shrink: true }}
-                    value={currentTask.end_Date ? currentTask.end_Date.split('T')[0] : ''}
+                    value={currentTask.End_Date ? currentTask.End_Date.split('T')[0] : ''}
                     onChange={handleInputChange}
                     required
                     sx={{ mb: 2 }}
@@ -328,15 +328,15 @@ const TaskList = () => {
                 <FormControlLabel
                   control={
                     <Checkbox
-                      name="isRecurring"
-                      checked={currentTask.is_Recurring}
+                      name="Is_Recurring"
+                      checked={currentTask.Is_Recurring}
                       onChange={handleInputChange}
                     />
                   }
                   label="Recurring Task"
                 />
 
-                {currentTask.is_Recurring && (
+                {currentTask.Is_Recurring && (
                   <>
                     <FormControl fullWidth sx={{ mb: 2 }}>
                       <InputLabel>Frequency</InputLabel>

@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, Grid, useMediaQuery, Stack } from '@mui/material';
+import { Card, CardContent, CardHeader, Grid, Stack } from '@mui/material';
 import MyHall from '../ResidentView/components/MyHall/index';
 import { useEffect, useState } from 'react';
 import { checkIfCheckedIn } from 'services/residentLife/RA_Checkin';
@@ -7,7 +7,6 @@ import { useUser } from 'hooks';
 import HousingBanner from '../ResidentView/components/HousingWelcome/Banner';
 import OnDutyMobile from '../RDView/components/OnDutyMobileView';
 import TaskList from './components/TaskList';
-import CheckIn from './components/CheckIn';
 import AssignedRooms from './components/MyAssignments';
 import OnDutyRD from './components/RD-OnCall';
 import StatusCard from './components/StatusCard';

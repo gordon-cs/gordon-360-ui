@@ -48,8 +48,8 @@ const StatusManager = () => {
     Interval: 0,
     Start_Time: '',
     End_Time: '',
-    start_Date: '',
-    end_Date: '',
+    Start_Date: '',
+    End_Date: '',
     Created_Date: '',
     Available: true,
   });
@@ -60,13 +60,13 @@ const StatusManager = () => {
   }, [RA]);
 
   // Function to get all the statuses from the selected hall
-  const loadStatusList = async (RaID) => {
+  const loadStatusList = async (RA_ID) => {
     setLoading(true);
 
     try {
       // Wait until all statuses are fetched from API
       // const response = await getDailyStatusListForRA(RaID);
-      const response = await getActiveStatusListForRA(RaID);
+      const response = await getActiveStatusListForRA(RA_ID);
       console.log('getActiveStatusListForRA response', response);
 
       // prevStatuses - represents current state of value before any changes
@@ -75,7 +75,7 @@ const StatusManager = () => {
       setStatusList((prevStatuses) => {
         if (
           prevStatuses.length !== response.length ||
-          !prevStatuses.every((status, index) => status.status_ID === response[index]?.Status_ID)
+          !prevStatuses.every((status, index) => status.Status_ID === response[index]?.Status_ID)
         ) {
           return response;
         }
@@ -88,12 +88,12 @@ const StatusManager = () => {
     }
   };
 
-  const loadEditedStatusList = async (RaID) => {
+  const loadEditedStatusList = async (RA_ID) => {
     setLoading(true);
 
     try {
       // Wait until all statuses are fetched from API
-      const response = await getActiveStatusListForRA(RaID);
+      const response = await getActiveStatusListForRA(RA_ID);
       console.log('getActiveStatusListForRA edit response', response);
       setStatusList(response);
     } catch (error) {
@@ -110,11 +110,11 @@ const StatusManager = () => {
       let updatedStatus = { ...prevStatus, [name]: type === 'checkbox' ? checked : value };
 
       // If "Recurring Status" is unchecked, set endDate to startDate
-      if (name === 'is_Recurring') {
+      if (name === 'Is_Recurring') {
         if (!checked) {
-          updatedStatus.end_Date = prevStatus.start_Date;
+          updatedStatus.End_Date = prevStatus.Start_Date;
         } else {
-          updatedStatus.end_Date = ''; // Allow user to manually enter an end date when checked
+          updatedStatus.End_Date = ''; // Allow user to manually enter an end date when checked
         }
       }
 
@@ -185,8 +185,8 @@ const StatusManager = () => {
       Is_Recurring: status?.Is_Recurring,
       Frequency: status.Frequency,
       Interval: status.Interval,
-      start_Date: status.Start_Date ? status.Start_Date.split('T')[0] : '',
-      end_Date: status.End_Date ? status.End_Date.split('T')[0] : '', // should be uppercase
+      Start_Date: status.Start_Date ? status.Start_Date.split('T')[0] : '',
+      End_Date: status.End_Date ? status.End_Date.split('T')[0] : '', // should be uppercase
       Start_Time: status.Start_Time,
       End_Time: status.End_Time,
       Available: true,
@@ -200,10 +200,10 @@ const StatusManager = () => {
   };
 
   // Function to delete a status
-  const deleteStatus = async (statusID) => {
+  const deleteStatus = async (StatusID) => {
     try {
-      await removeStatus(statusID);
-      setStatusList(statusList.filter((status) => status.status_ID !== statusID));
+      await removeStatus(StatusID);
+      setStatusList(statusList.filter((status) => status.Status_ID !== StatusID));
     } catch (error) {
       console.error('Error deleting task:', error);
     }
@@ -219,19 +219,17 @@ const StatusManager = () => {
       Interval: 0,
       Start_Time: null,
       End_Time: null,
-      start_Date: '',
-      end_Date: '',
+      Start_Date: '',
+      End_Date: '',
       Created_Date: '',
       Available: true,
     });
     setEditing(false);
   };
 
-  const housingadmin = useAuthGroups(AuthGroup.HousingAdmin);
-  const RD = useAuthGroups(AuthGroup.ResidentDirector);
-  const developer = useAuthGroups(AuthGroup.HousingDeveloper);
-
-  if (housingadmin || RD || developer) {
+  const ResAdv = useAuthGroups(AuthGroup.ResidentAdvisor);
+  const Dev = useAuthGroups(AuthGroup.HousingDeveloper);
+  if (ResAdv | Dev) {
     return (
       <Grid container spacing={3} justifyContent="center">
         <Grid item xs={12}>
@@ -257,7 +255,7 @@ const StatusManager = () => {
                 <TextField
                   fullWidth
                   label="Status Name"
-                  name="StatusName"
+                  name="Status_Name"
                   value={currentStatus.Status_Name}
                   onChange={handleInputChange}
                   required
@@ -308,15 +306,15 @@ const StatusManager = () => {
                   fullWidth
                   label={currentStatus.Is_Recurring ? 'Start Date' : 'Status Date'}
                   type="date"
-                  name="startDate"
+                  name="Start_Date"
                   InputLabelProps={{ shrink: true }}
-                  value={currentStatus.start_Date ? currentStatus.start_Date.split('T')[0] : ''}
+                  value={currentStatus.Start_Date ? currentStatus.Start_Date.split('T')[0] : ''}
                   onChange={(e) => {
                     handleInputChange(e);
                     if (!currentStatus.Is_Recurring) {
                       setCurrentStatus((prevStatus) => ({
                         ...prevStatus,
-                        endDate: e.target.value,
+                        End_Date: e.target.value,
                       }));
                     }
                   }}
@@ -324,14 +322,14 @@ const StatusManager = () => {
                   sx={{ mb: 2 }}
                 />
 
-                {currentStatus.IsRecurring && (
+                {currentStatus.Is_Recurring && (
                   <TextField
                     fullWidth
                     label="End Date"
                     type="date"
-                    name="endDate"
+                    name="End_Date"
                     InputLabelProps={{ shrink: true }}
-                    value={currentStatus.end_Date ? currentStatus.end_Date.split('T')[0] : ''}
+                    value={currentStatus.End_Date ? currentStatus.End_Date.split('T')[0] : ''}
                     onChange={handleInputChange}
                     required
                     sx={{ mb: 2 }}
@@ -352,7 +350,7 @@ const StatusManager = () => {
                 <FormControlLabel
                   control={
                     <Checkbox
-                      name="IsRecurring"
+                      name="Is_Recurring"
                       checked={currentStatus.Is_Recurring}
                       onChange={handleInputChange}
                     />

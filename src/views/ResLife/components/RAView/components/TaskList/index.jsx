@@ -3,8 +3,6 @@ import {
   CardContent,
   CardHeader,
   Checkbox,
-  Container,
-  FormControl,
   FormControlLabel,
   Grid,
   Typography,
@@ -15,7 +13,6 @@ import {
   ListSubheader,
   List,
   ListItem,
-  Link,
 } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import CommentIcon from '@mui/icons-material/Comment';
@@ -80,7 +77,7 @@ const TaskList = () => {
         const updatedTasks = [];
         for (const hall of hallList) {
           const tasks = await getTasksForHall(hall);
-          updatedTasks.push({ hallID: hall, tasks });
+          updatedTasks.push({ Hall_ID: hall, tasks });
         }
         setTaskList(updatedTasks);
       } catch (error) {
@@ -206,8 +203,8 @@ const TaskList = () => {
               {isCheckedIn ? (
                 taskList.length > 0 ? (
                   taskList.map((hallData, hallIndex) => (
-                    <React.Fragment key={hallData.hall_ID}>
-                      <ListSubheader>{hallData.hall_ID}</ListSubheader>
+                    <React.Fragment key={hallData.Hall_ID}>
+                      <ListSubheader>{hallData.Hall_ID}</ListSubheader>
                       {hallData.tasks.length > 0 ? (
                         hallData.tasks.map((task, index) => (
                           <ListItem
@@ -256,8 +253,8 @@ const TaskList = () => {
                           </ListItem>
                         ))
                       ) : (
-                        <ListItem key={`no-tasks-${hallData.hall_ID}`}>
-                          <ListItemText>No tasks available for {hallData.hall_ID}</ListItemText>
+                        <ListItem key={`no-tasks-${hallData.Hall_ID}`}>
+                          <ListItemText>No tasks available for {hallData.Hall_ID}</ListItemText>
                         </ListItem>
                       )}
                     </React.Fragment>

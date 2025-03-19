@@ -41,13 +41,13 @@ const MyRA = () => {
 
   useEffect(() => {
     if (profile) {
-      const hallID = profile.OnCampusBuilding;
-      const roomNumber = profile.OnCampusRoom.replace(/\D/g, '');
+      const Hall_ID = profile.OnCampusBuilding;
+      const Room_Number = profile.OnCampusRoom.replace(/\D/g, '');
 
       // Display either 'RA' or 'AC' depending on the resident's building
-      setStaffTypeLabel(staffType[hallID] || 'RA/AC');
+      setStaffTypeLabel(staffType[Hall_ID] || 'RA/AC');
 
-      fetchRaInfo(hallID, roomNumber)
+      fetchRaInfo(Hall_ID, Room_Number)
         .then((response) => setRaInfo(response))
         .catch((error) => console.error(`Failed to fetch ${staffTypeLabel} info:`, error));
     }
@@ -199,7 +199,7 @@ const MyRA = () => {
 
             <Typography variant="body1">
               <strong>Contact:</strong>{' '}
-              {raInfo.Preferred_Contact && raInfo.PreferredContact.includes('http') ? (
+              {raInfo.Preferred_Contact && raInfo.Preferred_Contact.includes('http') ? (
                 <StyledLink
                   href={raInfo.Preferred_Contact}
                   underline="hover"

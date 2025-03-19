@@ -1,14 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  Grid,
-  Link,
-  List,
-  ListItem,
-  ListItemText,
-  Typography,
-} from '@mui/material';
+import { Card, CardContent, CardHeader, ListItemText, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
 const StatusCard = () => (
