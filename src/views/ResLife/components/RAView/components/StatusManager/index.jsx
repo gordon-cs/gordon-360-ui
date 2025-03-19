@@ -28,36 +28,35 @@ import {
 import { useColorScheme } from '@mui/material/styles';
 import { useAuthGroups } from 'hooks';
 import { AuthGroup } from 'services/auth';
+import { useUser } from 'hooks';
 
 const StatusManager = () => {
   const { mode } = useColorScheme();
   const [statusList, setStatusList] = useState([]);
-  // REMOVE BEFORE WE ACTUALLY PUSH THIS IS JUST FOR TESTING PURPOSES
-  const [RA, setRA] = useState('50223925');
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
-  // const { profile } = useUser();
+  const { profile } = useUser();
 
   // All parameters of a status that will be filled later
   const [currentStatus, setCurrentStatus] = useState({
     // StatusID: '',
     Status_Name: '',
     RA_ID: '',
-    Is_Recurring: true,
+    Is_Recurring: false,
     Frequency: '',
     Interval: 0,
     Start_Time: '',
     End_Time: '',
     Start_Date: '',
     End_Date: '',
-    Created_Date: '',
+    //Created_Date: '',
     Available: true,
   });
 
   // UseEffect - Immediately runs `loadStatusList`
   useEffect(() => {
-    loadStatusList(RA);
-  }, [RA]);
+    loadStatusList(profile?.ID);
+  }, [profile]);
 
   // Function to get all the statuses from the selected hall
   const loadStatusList = async (RA_ID) => {
@@ -65,7 +64,6 @@ const StatusManager = () => {
 
     try {
       // Wait until all statuses are fetched from API
-      // const response = await getDailyStatusListForRA(RaID);
       const response = await getActiveStatusListForRA(RA_ID);
       console.log('getActiveStatusListForRA response', response);
 
@@ -131,15 +129,15 @@ const StatusManager = () => {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Stops the website from reloading
     try {
-      console.log('RA:', RA);
-      const newStatus = { ...currentStatus, RA_ID: RA };
+      console.log('RA:', profile.ID);
+      const newStatus = { ...currentStatus, RA_ID: profile.ID };
       console.log('newStatus', newStatus);
       console.log('About to run addStatus');
       await createStatus(newStatus);
       console.log('Ran addStatus');
 
       console.log('About to run loadStatusList');
-      loadStatusList(RA);
+      loadStatusList(profile.ID);
       console.log('Ran loadStatusList');
 
       resetStatusForm();
@@ -158,14 +156,14 @@ const StatusManager = () => {
         return;
       }
 
-      const updatedStatus = { ...currentStatus, RA_ID: RA };
+      const updatedStatus = { ...currentStatus, RA_ID: profile.ID };
       console.log('edited Status:', updatedStatus);
       console.log('About to run updateStatus');
       await updateStatus(currentStatus.Status_ID, updatedStatus);
       console.log('Ran updateStatus');
 
       console.log('About to run loadStatusList');
-      loadEditedStatusList(RA);
+      loadEditedStatusList(profile.ID);
       console.log('Ran loadStatusList');
 
       resetStatusForm();
@@ -214,14 +212,14 @@ const StatusManager = () => {
     setCurrentStatus({
       Status_Name: '',
       RA_ID: '',
-      Is_Recurring: true,
+      Is_Recurring: false,
       Frequency: '',
       Interval: 0,
       Start_Time: null,
       End_Time: null,
       Start_Date: '',
       End_Date: '',
-      Created_Date: '',
+      //Created_Date: '',
       Available: true,
     });
     setEditing(false);
@@ -497,7 +495,7 @@ const StatusManager = () => {
                             size="small"
                             onClick={async () => {
                               await deleteStatus(status.Status_ID);
-                              loadStatusList(RA);
+                              loadStatusList(profile.ID);
                             }}
                           >
                             Delete

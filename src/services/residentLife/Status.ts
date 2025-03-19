@@ -12,7 +12,7 @@ export type Status = {
   Created_Date: Date;
   Available: boolean;
 };
-type NewStatus = Omit<Status, 'StatusID' | 'Created_Date'>;
+type NewStatus = Omit<Status, 'Status_ID' | 'Created_Date'>;
 
 const createStatus = (New_Status: NewStatus): Promise<Status[]> =>
   http.post('Housing/ras/status-event', New_Status);
