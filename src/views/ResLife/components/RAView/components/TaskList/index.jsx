@@ -3,8 +3,6 @@ import {
   CardContent,
   CardHeader,
   Checkbox,
-  Container,
-  FormControl,
   FormControlLabel,
   Grid,
   Typography,
@@ -15,7 +13,6 @@ import {
   ListSubheader,
   List,
   ListItem,
-  Link,
 } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import CommentIcon from '@mui/icons-material/Comment';
@@ -79,7 +76,7 @@ const TaskList = () => {
         const updatedTasks = [];
         for (const hall of hallList) {
           const tasks = await getTasksForHall(hall);
-          updatedTasks.push({ hallID: hall, tasks });
+          updatedTasks.push({ Hall_ID: hall, tasks });
         }
         setTaskList(updatedTasks);
       } catch (error) {
@@ -172,7 +169,7 @@ const TaskList = () => {
   useEffect(() => {
     if (taskList.length > 0) {
       const newCheckedList = taskList.map((hall) =>
-        hall.tasks.map((task) => task.CompletedDate !== null),
+        hall.tasks.map((task) => task.Completed_Date !== null),
       );
       setCheckedList(newCheckedList);
       setDisabledList(newCheckedList);
@@ -205,12 +202,12 @@ const TaskList = () => {
               {isCheckedIn ? (
                 taskList.length > 0 ? (
                   taskList.map((hallData, hallIndex) => (
-                    <React.Fragment key={hallData.hallID}>
-                      <ListSubheader>{hallData.hallID}</ListSubheader>
+                    <React.Fragment key={hallData.Hall_ID}>
+                      <ListSubheader>{hallData.Hall_ID}</ListSubheader>
                       {hallData.tasks.length > 0 ? (
                         hallData.tasks.map((task, index) => (
                           <ListItem
-                            key={task.TaskID}
+                            key={task.Task_ID}
                             secondaryAction={
                               <IconButton
                                 edge="end"
@@ -226,8 +223,8 @@ const TaskList = () => {
                                 handleTaskChecked(
                                   hallIndex,
                                   index,
-                                  task.TaskID,
-                                  checkedList[hallIndex]?.[index] || task.CompletedDate !== null,
+                                  task.Task_ID,
+                                  checkedList[hallIndex]?.[index] || task.Completed_Date !== null,
                                 )
                               }
                               dense
@@ -237,15 +234,15 @@ const TaskList = () => {
                                   label={task.Name}
                                   control={
                                     <Checkbox
-                                      id={`task-checkbox-${task.TaskID}`}
+                                      id={`task-checkbox-${task.Task_ID}`}
                                       edge="start"
                                       checked={
                                         checkedList[hallIndex]?.[index] ??
-                                        task.CompletedDate !== null
+                                        task.Completed_Date !== null
                                       }
                                       disabled={
                                         disabledList[hallIndex]?.[index] ??
-                                        task.CompletedDate !== null
+                                        task.Completed_Date !== null
                                       }
                                     />
                                   }
@@ -255,8 +252,8 @@ const TaskList = () => {
                           </ListItem>
                         ))
                       ) : (
-                        <ListItem key={`no-tasks-${hallData.hallID}`}>
-                          <ListItemText>No tasks available for {hallData.hallID}</ListItemText>
+                        <ListItem key={`no-tasks-${hallData.Hall_ID}`}>
+                          <ListItemText>No tasks available for {hallData.Hall_ID}</ListItemText>
                         </ListItem>
                       )}
                     </React.Fragment>

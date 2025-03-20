@@ -1,18 +1,5 @@
-import {
-  Card,
-  CardContent,
-  Box,
-  CardHeader,
-  Grid,
-  useMediaQuery,
-  ListItemText,
-  List,
-  ListItem,
-  Link,
-  Typography,
-} from '@mui/material';
+import { Card, CardContent, Box, CardHeader, Grid, useMediaQuery } from '@mui/material';
 import CustomizedTable from './components/OnDutyTable';
-import { Link as RouterLink } from 'react-router-dom';
 import OnDutyMobile from './components/OnDutyMobileView';
 import EditDocs from './components/EditDocs';
 

@@ -24,7 +24,7 @@ const ContactMethod = () => {
       if (profile?.ID) {
         try {
           const contactPreference = await PrefContactMethod(profile.ID);
-          setSelectedContact(contactPreference?.PreferredContactMethod || '');
+          setSelectedContact(contactPreference?.Preferred_Contact_Method || '');
         } catch (error) {
           console.error('Error fetching preferred contact method:', error);
         }

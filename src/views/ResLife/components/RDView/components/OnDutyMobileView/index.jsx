@@ -68,8 +68,8 @@ const OnDutyMobile = () => {
             RA_Photo: villageData[0].RA_Photo,
             RA_Name: villageData[0].RA_Name,
             RA_UserName: villageData[0].RA_UserName,
-            PreferredContact: villageData[0].PreferredContact,
-            Check_in_time: villageData[0].Check_in_time,
+            Preferred_Contact: villageData[0].Preferred_Contact,
+            Check_In_Time: villageData[0].Check_In_Time,
             RD_Name: villageData[0].RD_Name,
             RD_UserName: villageData[0].RD_UserName,
           };
@@ -173,9 +173,9 @@ const OnDutyMobile = () => {
 
                 <Typography>
                   <strong>Contact:</strong>{' '}
-                  {hallDetails.PreferredContact?.includes('http') ? (
+                  {hallDetails.Preferred_Contact?.includes('http') ? (
                     <StyledLink
-                      href={hallDetails.PreferredContact}
+                      href={hallDetails.Preferred_Contact}
                       underline="hover"
                       className="gc360_text_link"
                       target="_self"
@@ -183,12 +183,12 @@ const OnDutyMobile = () => {
                     >
                       Teams
                     </StyledLink>
-                  ) : hallDetails.PreferredContact ? (
+                  ) : hallDetails.Preferred_Contact ? (
                     <StyledLink
-                      href={`tel:${hallDetails.PreferredContact}`}
+                      href={`tel:${hallDetails.Preferred_Contact}`}
                       className="gc360_text_link"
                     >
-                      {formatPhoneNumber(hallDetails.PreferredContact)}
+                      {formatPhoneNumber(hallDetails.Preferred_Contact)}
                     </StyledLink>
                   ) : (
                     <StyledLink className="gc360_text_link">No Contact Info</StyledLink>
@@ -197,8 +197,8 @@ const OnDutyMobile = () => {
 
                 <Typography>
                   <strong>Check-In Time:</strong>{' '}
-                  {hallDetails.Check_in_time
-                    ? new Date(hallDetails.Check_in_time).toLocaleTimeString([], {
+                  {hallDetails.Check_In_Time
+                    ? new Date(hallDetails.Check_In_Time).toLocaleTimeString([], {
                         hour: '2-digit',
                         minute: '2-digit',
                       })

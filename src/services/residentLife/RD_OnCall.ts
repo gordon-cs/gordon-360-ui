@@ -10,14 +10,14 @@ type RDOnCall = {
 };
 
 type RDOnCallCreate = {
-  rdId: number;
-  startDate: string;
-  endDate: string;
+  RD_ID: number;
+  Start_Date: string;
+  End_Date: string;
 };
 
 type RDStudentsViewModel = {
   RD_Email: string | null;
-  RD_Id: string;
+  RD_ID: string;
   RD_Name: string;
   RD_Photo: string | null;
 };
@@ -42,8 +42,10 @@ const fetchRDNames = async (): Promise<{ RD_ID: number; RD_Name: string }[]> => 
 
 const createRDOnCall = async (data: RDOnCallCreate): Promise<string> => {
   try {
-    const { rdId, startDate, endDate } = data;
-    return await http.post(`housing/rds/${rdId}/on-call?startDate=${startDate}&endDate=${endDate}`);
+    const { RD_ID, Start_Date, End_Date } = data;
+    return await http.post(
+      `housing/rds/${RD_ID}/on-call?startDate=${Start_Date}&endDate=${End_Date}`,
+    );
   } catch (error) {
     console.error('Error creating RD on-call record:', error);
     throw error;
@@ -51,20 +53,20 @@ const createRDOnCall = async (data: RDOnCallCreate): Promise<string> => {
 };
 
 const updateRDOnCall = async (
-  recordId: number,
-  updatedData: Partial<RDOnCall>,
+  Record_ID: number,
+  Updated_Data: Partial<RDOnCall>,
 ): Promise<RDOnCall> => {
   try {
-    return await http.patch(`housing/rds/oncall/${recordId}`, updatedData);
+    return await http.patch(`housing/rds/oncall/${Record_ID}`, Updated_Data);
   } catch (error) {
     console.error('Error updating RD on-call record:', error);
     throw error;
   }
 };
 
-const deleteRDOnCall = async (recordId: number): Promise<void> => {
+const deleteRDOnCall = async (Record_ID: number): Promise<void> => {
   try {
-    await http.del(`housing/rds/oncall/${recordId}`);
+    await http.del(`housing/rds/oncall/${Record_ID}`);
   } catch (error) {
     console.error('Error deleting RD on-call record:', error);
     throw error;

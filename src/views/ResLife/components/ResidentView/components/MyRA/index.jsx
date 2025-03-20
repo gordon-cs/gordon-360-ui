@@ -41,13 +41,13 @@ const MyRA = () => {
 
   useEffect(() => {
     if (profile) {
-      const hallID = profile.OnCampusBuilding;
-      const roomNumber = profile.OnCampusRoom.replace(/\D/g, '');
+      const Hall_ID = profile.OnCampusBuilding;
+      const Room_Number = profile.OnCampusRoom.replace(/\D/g, '');
 
       // Display either 'RA' or 'AC' depending on the resident's building
-      setStaffTypeLabel(staffType[hallID] || 'RA/AC');
+      setStaffTypeLabel(staffType[Hall_ID] || 'RA/AC');
 
-      fetchRaInfo(hallID, roomNumber)
+      fetchRaInfo(Hall_ID, Room_Number)
         .then((response) => setRaInfo(response))
         .catch((error) => console.error(`Failed to fetch ${staffTypeLabel} info:`, error));
     }
@@ -81,7 +81,7 @@ const MyRA = () => {
         const endTime = Number(status.End_Time.replaceAll(':', ''));
 
         if (startTime <= currentTime && endTime >= currentTime) {
-          setCurrentStatus(status.StatusName);
+          setCurrentStatus(status.Status_Name);
           setIsAvailable(status.Available);
           findNextStatus(index);
           break;
@@ -139,7 +139,7 @@ const MyRA = () => {
   const avatar = (
     <Avatar
       src={raInfo.PhotoURL || COLOR_80808026_1X1}
-      alt={`Profile of ${raInfo.FirstName} ${raInfo.LastName}`}
+      alt={`Profile of ${raInfo.First_Name} ${raInfo.Last_Name}`}
       sx={{
         width: { xs: 80, sm: 90, md: 100, lg: 130 },
         height: { xs: 80, sm: 90, md: 100, lg: 130 },
@@ -177,14 +177,14 @@ const MyRA = () => {
           <Grid item xs={8}>
             <Typography variant="body1">
               <strong>{staffTypeLabel ? staffTypeLabel : 'Loading'}: </strong>
-              {raInfo?.FirstName && raInfo?.LastName ? (
+              {raInfo?.First_Name && raInfo?.Last_Name ? (
                 <StyledLink
                   href={raProfileLink}
                   className="gc360_text_link"
                   target={isMobile ? '_self' : '_blank'}
                   rel={isMobile ? '' : 'noopener noreferrer'}
                 >
-                  {raInfo.FirstName} {raInfo.LastName}
+                  {raInfo.First_Name} {raInfo.Last_Name}
                 </StyledLink>
               ) : (
                 <StyledLink className="gc360_text_link">
@@ -194,14 +194,14 @@ const MyRA = () => {
             </Typography>
 
             <Typography variant="body1">
-              <strong>Room #:</strong> {raInfo.RoomNumber ? raInfo.RoomNumber : 'N/A'}
+              <strong>Room #:</strong> {raInfo.Room_Number ? raInfo.Room_Number : 'N/A'}
             </Typography>
 
             <Typography variant="body1">
               <strong>Contact:</strong>{' '}
-              {raInfo.PreferredContact && raInfo.PreferredContact.includes('http') ? (
+              {raInfo.Preferred_Contact && raInfo.Preferred_Contact.includes('http') ? (
                 <StyledLink
-                  href={raInfo.PreferredContact}
+                  href={raInfo.Preferred_Contact}
                   underline="hover"
                   className="gc360_text_link"
                   target={isMobile ? '_self' : '_blank'}
@@ -209,9 +209,9 @@ const MyRA = () => {
                 >
                   Teams
                 </StyledLink>
-              ) : raInfo.PreferredContact ? (
-                <StyledLink href={`tel:${raInfo.PreferredContact}`} className="gc360_text_link">
-                  {formatPhoneNumber(raInfo.PreferredContact)}
+              ) : raInfo.Preferred_Contact ? (
+                <StyledLink href={`tel:${raInfo.Preferred_Contact}`} className="gc360_text_link">
+                  {formatPhoneNumber(raInfo.Preferred_Contact)}
                 </StyledLink>
               ) : (
                 <StyledLink className="gc360_text_link">No contact available</StyledLink>

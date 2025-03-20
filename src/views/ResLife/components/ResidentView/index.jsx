@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { Box, Card, Grid, Typography, CardContent } from '@mui/material';
 import { useUser } from 'hooks';
 import HousingBanner from './components/HousingWelcome/Banner';

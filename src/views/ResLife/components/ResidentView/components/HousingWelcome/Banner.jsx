@@ -16,8 +16,8 @@ const HousingBanner = () => {
 
   useEffect(() => {
     if (profile) {
-      const hallID = profile.OnCampusBuilding;
-      setStaffTypeLabel(staffType[hallID] || 'N/A');
+      const Hall_ID = profile.OnCampusBuilding;
+      setStaffTypeLabel(staffType[Hall_ID] || 'N/A');
     }
   }, [profile]);
 
