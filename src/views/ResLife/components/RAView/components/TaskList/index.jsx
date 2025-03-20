@@ -60,8 +60,7 @@ const TaskList = () => {
   useEffect(() => {
     const fetchCheckedInHalls = async () => {
       try {
-        // CHANGE CHANGE CHANGE JUST FOR TESTING
-        const halls = await getRACurrentHalls('Daniel.Fagerland');
+        const halls = await getRACurrentHalls(profile.AD_Username);
         setHallList(halls);
         console.log(halls);
       } catch (error) {

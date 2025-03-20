@@ -41,7 +41,7 @@ const CheckIn = () => {
           setCheckedIn(isChecked);
 
           if (isChecked) {
-            const currentHalls = await getRACurrentHalls('Daniel.Fagerland');
+            const currentHalls = await getRACurrentHalls(profile.AD_Username);
             setHallState((prevState) => {
               const updatedState = { ...prevState };
               currentHalls.forEach((hall) => {
@@ -68,7 +68,7 @@ const CheckIn = () => {
     const fetchData = async () => {
       if (profile?.ID) {
         try {
-          const halls = await getRACurrentHalls('Daniel.Fagerland');
+          const halls = await getRACurrentHalls(profile.AD_Username);
           setCheckedInHalls(halls);
         } catch (error) {
           console.error('Error fetching checked-in halls:', error);
