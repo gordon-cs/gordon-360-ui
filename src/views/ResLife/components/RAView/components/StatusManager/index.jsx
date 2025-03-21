@@ -13,6 +13,7 @@ import {
   Grid,
   Box,
   FormControlLabel,
+  ListItemText,
 } from '@mui/material';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -30,6 +31,17 @@ import {
 import { useColorScheme } from '@mui/material/styles';
 import { useUser } from 'hooks';
 
+// Days options for the multi-select
+const daysOptions = [
+  { value: 'mon', label: 'Monday' },
+  { value: 'tue', label: 'Tuesday' },
+  { value: 'wed', label: 'Wednesday' },
+  { value: 'thu', label: 'Thursday' },
+  { value: 'fri', label: 'Friday' },
+  { value: 'sat', label: 'Saturday' },
+  { value: 'sun', label: 'Sunday' },
+];
+
 const StatusManager = () => {
   const { mode } = useColorScheme();
   const [statusList, setStatusList] = useState([]);
@@ -40,17 +52,14 @@ const StatusManager = () => {
 
   // All parameters of a status that will be filled later
   const [currentStatus, setCurrentStatus] = useState({
-    // StatusID: '',
     Status_Name: '',
     RA_ID: '',
     Is_Recurring: false,
-    Frequency: '',
-    Interval: 0,
+    Days_Of_Week: [],
     Start_Time: '',
     End_Time: '',
     Start_Date: '',
     End_Date: '',
-    //Created_Date: '',
     Available: true,
   });
 
@@ -62,24 +71,10 @@ const StatusManager = () => {
   // Function to get all the statuses from the selected hall
   const loadStatusList = async (RA_ID) => {
     setLoading(true);
-
     try {
-      // Wait until all statuses are fetched from API
       const response = await getActiveStatusListForRA(RA_ID);
       console.log('getActiveStatusListForRA response', response);
-
-      // prevStatuses - represents current state of value before any changes
-      // if length changes or some task IDs do not match, return new task array
-      // else nothing has changed, so return prevStatuses
-      setStatusList((prevStatuses) => {
-        if (
-          prevStatuses.length !== response.length ||
-          !prevStatuses.every((status, index) => status.Status_ID === response[index]?.Status_ID)
-        ) {
-          return response;
-        }
-        return prevStatuses;
-      });
+      setStatusList(response);
     } catch (error) {
       console.error('Error fetching hall statuses:', error);
     } finally {
@@ -89,7 +84,6 @@ const StatusManager = () => {
 
   const loadEditedStatusList = async (RA_ID) => {
     setLoading(true);
-
     try {
       // Wait until all statuses are fetched from API
       const response = await getActiveStatusListForRA(RA_ID);
@@ -108,10 +102,11 @@ const StatusManager = () => {
     setCurrentStatus((prevStatus) => {
       let updatedStatus = { ...prevStatus, [name]: type === 'checkbox' ? checked : value };
 
-      // If "Recurring Status" is unchecked, set endDate to startDate
+      // When turning off recurring, clear Days_Of_Week and set End_Date equal to Start_Date.
       if (name === 'Is_Recurring') {
         if (!checked) {
           updatedStatus.End_Date = prevStatus.Start_Date;
+          updatedStatus.Days_Of_Week = [];
         } else {
           updatedStatus.End_Date = ''; // Allow user to manually enter an end date when checked
         }
@@ -121,7 +116,6 @@ const StatusManager = () => {
       if (name === 'Start_Time' || name === 'End_Time') {
         updatedStatus[name] = dayjs(value).format('HH:mm');
       }
-
       return updatedStatus;
     });
   };
@@ -130,20 +124,21 @@ const StatusManager = () => {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Stops the website from reloading
     try {
-      console.log('RA:', profile.ID);
-      const newStatus = { ...currentStatus, RA_ID: profile.ID };
+      let newStatus = { ...currentStatus, RA_ID: profile.ID };
+      // Convert the Days_Of_Week array to a comma-separated string for the API
+      if (newStatus.Is_Recurring) {
+        if (Array.isArray(newStatus.Days_Of_Week) && newStatus.Days_Of_Week.length > 0) {
+          newStatus.Days_Of_Week = newStatus.Days_Of_Week.join(',');
+        }
+      } else {
+        newStatus.Days_Of_Week = '';
+      }
       console.log('newStatus', newStatus);
-      console.log('About to run addStatus');
       await createStatus(newStatus);
-      console.log('Ran addStatus');
-
-      console.log('About to run loadStatusList');
       loadStatusList(profile.ID);
-      console.log('Ran loadStatusList');
-
       resetStatusForm();
     } catch (error) {
-      console.error('Error adding task:', error);
+      console.error('Error adding status:', error);
     }
   };
 
@@ -156,20 +151,16 @@ const StatusManager = () => {
         console.error('Error: Status ID is missing');
         return;
       }
-
-      const updatedStatus = { ...currentStatus, RA_ID: profile.ID };
+      let updatedStatus = { ...currentStatus, RA_ID: profile.ID };
+      if (updatedStatus.Is_Recurring && Array.isArray(updatedStatus.Days_Of_Week)) {
+        updatedStatus.Days_Of_Week = updatedStatus.Days_Of_Week.join(',');
+      }
       console.log('edited Status:', updatedStatus);
-      console.log('About to run updateStatus');
       await updateStatus(currentStatus.Status_ID, updatedStatus);
-      console.log('Ran updateStatus');
-
-      console.log('About to run loadStatusList');
       loadEditedStatusList(profile.ID);
-      console.log('Ran loadStatusList');
-
       resetStatusForm();
     } catch (error) {
-      console.error('Error editing task:', error);
+      console.error('Error editing status:', error);
     }
   };
 
@@ -182,15 +173,13 @@ const StatusManager = () => {
       Status_Name: status.Status_Name,
       RA_ID: status.RA_ID,
       Is_Recurring: status?.Is_Recurring,
-      Frequency: status.Frequency,
-      Interval: status.Interval,
+      Days_Of_Week: status.Days_Of_Week ? status.Days_Of_Week.split(',') : [], //split csv into array
       Start_Date: status.Start_Date ? status.Start_Date.split('T')[0] : '',
-      End_Date: status.End_Date ? status.End_Date.split('T')[0] : '', // should be uppercase
+      End_Date: status.End_Date ? status.End_Date.split('T')[0] : '',
       Start_Time: status.Start_Time,
       End_Time: status.End_Time,
-      Available: true,
+      Available: status.Available,
     });
-    console.log('current Status:', currentStatus);
     setEditing(true);
   };
 
@@ -204,7 +193,7 @@ const StatusManager = () => {
       await removeStatus(StatusID);
       setStatusList(statusList.filter((status) => status.Status_ID !== StatusID));
     } catch (error) {
-      console.error('Error deleting task:', error);
+      console.error('Error deleting status:', error);
     }
   };
 
@@ -214,13 +203,11 @@ const StatusManager = () => {
       Status_Name: '',
       RA_ID: '',
       Is_Recurring: false,
-      Frequency: '',
-      Interval: 0,
-      Start_Time: null,
-      End_Time: null,
+      Days_Of_Week: [],
+      Start_Time: '',
+      End_Time: '',
       Start_Date: '',
       End_Date: '',
-      //Created_Date: '',
       Available: true,
     });
     setEditing(false);
@@ -266,8 +253,6 @@ const StatusManager = () => {
               Status Manager
             </Typography>
           </Grid>
-
-          {/* Right column: blank  */}
           <Grid item xs={4} />
         </Grid>
       </Grid>
@@ -278,7 +263,6 @@ const StatusManager = () => {
             <Typography variant="h5" fontWeight="bold" gutterBottom>
               {editing ? 'Edit Status' : 'Create Status'}
             </Typography>
-
             <form onSubmit={editing ? handleEdit : handleSubmit}>
               <TextField
                 fullWidth
@@ -289,7 +273,6 @@ const StatusManager = () => {
                 required
                 sx={{ mb: 2 }}
               />
-
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={5}>
@@ -309,7 +292,6 @@ const StatusManager = () => {
                       sx={{ mb: 2 }}
                     />
                   </Grid>
-
                   <Grid item xs={12} md={5}>
                     <TimePicker
                       label="End Time"
@@ -327,7 +309,6 @@ const StatusManager = () => {
                   </Grid>
                 </Grid>
               </LocalizationProvider>
-
               <TextField
                 fullWidth
                 label={currentStatus.Is_Recurring ? 'Start Date' : 'Status Date'}
@@ -347,7 +328,6 @@ const StatusManager = () => {
                 required
                 sx={{ mb: 2 }}
               />
-
               {currentStatus.Is_Recurring && (
                 <TextField
                   fullWidth
@@ -361,7 +341,39 @@ const StatusManager = () => {
                   sx={{ mb: 2 }}
                 />
               )}
-
+              {currentStatus.Is_Recurring && (
+                <FormControl fullWidth sx={{ mb: 2 }}>
+                  <InputLabel id="days-of-week-label">Days of Week</InputLabel>
+                  <Select
+                    labelId="days-of-week-label"
+                    id="days-of-week"
+                    multiple
+                    name="Days_Of_Week"
+                    value={currentStatus.Days_Of_Week || []}
+                    onChange={(e) =>
+                      setCurrentStatus((prev) => ({
+                        ...prev,
+                        Days_Of_Week: e.target.value,
+                      }))
+                    }
+                    renderValue={(selected) => selected.join(', ')}
+                    label="Days of Week"
+                    required
+                  >
+                    {daysOptions.map((day) => (
+                      <MenuItem key={day.value} value={day.value}>
+                        <Checkbox
+                          checked={
+                            currentStatus.Days_Of_Week &&
+                            currentStatus.Days_Of_Week.indexOf(day.value) > -1
+                          }
+                        />
+                        <ListItemText primary={day.label} />
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )}
               <FormControlLabel
                 control={
                   <Checkbox
@@ -372,7 +384,6 @@ const StatusManager = () => {
                 }
                 label="Available"
               />
-
               <FormControlLabel
                 control={
                   <Checkbox
@@ -383,43 +394,6 @@ const StatusManager = () => {
                 }
                 label="Recurring Status"
               />
-
-              {currentStatus.Is_Recurring && (
-                <>
-                  <FormControl fullWidth sx={{ mb: 2 }}>
-                    <InputLabel>Frequency</InputLabel>
-                    <Select
-                      name="Frequency"
-                      value={currentStatus.Frequency || ''}
-                      onChange={handleInputChange}
-                      required
-                      label="Frequency"
-                    >
-                      <MenuItem value="daily">Daily</MenuItem>
-                      <MenuItem value="weekly">Weekly</MenuItem>
-                      <MenuItem value="monthly">Monthly</MenuItem>
-                    </Select>
-                  </FormControl>
-
-                  <TextField
-                    fullWidth
-                    label="Interval"
-                    type="number"
-                    name="Interval"
-                    value={currentStatus.Interval || ''}
-                    onChange={handleInputChange}
-                    inputProps={{
-                      min: 1,
-                      placeholder: currentStatus.Interval
-                        ? `Current: ${currentStatus.Interval}`
-                        : 'How often will this status be repeated? (e.g. Weekly 2 = bi-weekly)',
-                    }}
-                    required
-                    sx={{ mb: 2 }}
-                  />
-                </>
-              )}
-
               <Grid container spacing={2}>
                 {editing && (
                   <Grid item xs={6}>
@@ -438,7 +412,6 @@ const StatusManager = () => {
           </CardContent>
         </Card>
       </Grid>
-
       <Grid item xs={12} md={5}>
         <Card>
           <CardContent>
@@ -470,7 +443,6 @@ const StatusManager = () => {
                         <Typography variant="body2" color="textSecondary">
                           <strong>Start Date: </strong>{' '}
                           {new Date(status.Start_Date).toLocaleDateString('en-US', {
-                            //change back to Start_Date
                             month: 'long',
                             day: 'numeric',
                             year: 'numeric',
@@ -485,29 +457,23 @@ const StatusManager = () => {
                           })}
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
-                          <strong>Start Time: </strong> {status.Start_Time}
+                          <strong>Start Time: </strong>{' '}
+                          {dayjs(status.Start_Time, 'HH:mm').format('hh:mm A')}
                         </Typography>
                         <Typography variant="body2" color="textSecondary">
-                          <strong>End Time: </strong> {status.End_Time}
+                          <strong>End Time: </strong>{' '}
+                          {dayjs(status.End_Time, 'HH:mm').format('hh:mm A')}
                         </Typography>
-
-                        {status.Frequency && (
-                          <>
-                            <Typography variant="body2" color="textSecondary">
-                              <strong>Frequency: </strong> {status.Frequency}
-                            </Typography>
-
-                            <Typography variant="body2" color="textSecondary">
-                              <strong>Interval: </strong> {status.Interval}
-                            </Typography>
-                          </>
+                        {status.Days_Of_Week && (
+                          <Typography variant="body2" color="textSecondary">
+                            <strong>Days: </strong> {status.Days_Of_Week}
+                          </Typography>
                         )}
-
                         <Typography variant="body2" color="textSecondary">
                           <strong>Available: </strong> {status.Available ? 'Yes' : 'No'}
                         </Typography>
                       </div>
-                      <div className="flex gap-2" style={{ marginBottom: '16px' }}>
+                      <div style={{ marginBottom: '16px' }}>
                         <Button
                           variant="contained"
                           color="secondary"
