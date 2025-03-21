@@ -311,36 +311,44 @@ const FoundItemCleanOut = () => {
                       {reports.map((report) =>
                         isMobile ? (
                           // MOBILE Card Layout
-                          <Card
-                            key={report.recordID}
-                            className={styles.clickableRow}
-                            onClick={() =>
-                              navigate(
-                                `/lostandfound/lostandfoundadmin/founditemdatabase/${report.recordID}`,
-                              )
-                            }
-                          >
+                          <Card key={report.recordID}>
                             <CardContent>
-                              <Typography variant="h6" className={styles.itemName}>
-                                Tag #: {report.recordID}
-                              </Typography>
-                              <Grid container justifyContent="space-between" alignItems="center">
-                                <Typography variant="body2">
-                                  Found: {formatDateString(report.dateFound)}
-                                </Typography>
-                                <Typography variant="body2">
-                                  Created: {formatDateString(report.dateCreated)}
-                                </Typography>
-                              </Grid>
-                              <Typography variant="body2">
-                                Location: {report.locationFound}
-                              </Typography>
-                              <Typography variant="body2">Category: {report.category}</Typography>
-                              <Grid item xs={12}>
-                                {differenceInCalendarDays(
-                                  new Date(),
-                                  Date.parse(report.dateCreated),
-                                ) < 3}
+                              <Grid container>
+                                <Grid item xs={1.5}>
+                                  <Checkbox
+                                    checked={reportsToCleanOut.includes(report)}
+                                    onChange={() => handleCheckboxClick(report)}
+                                  />
+                                </Grid>
+                                <Grid item xs={10.5}>
+                                  <Typography variant="h6" className={styles.itemName}>
+                                    Tag #: {report.recordID}
+                                  </Typography>
+                                  <Grid
+                                    container
+                                    justifyContent="space-between"
+                                    alignItems="center"
+                                  >
+                                    <Typography variant="body2">
+                                      Found: {formatDateString(report.dateFound)}
+                                    </Typography>
+                                    <Typography variant="body2">
+                                      Created: {formatDateString(report.dateCreated)}
+                                    </Typography>
+                                  </Grid>
+                                  <Typography variant="body2">
+                                    Location: {report.locationFound}
+                                  </Typography>
+                                  <Typography variant="body2">
+                                    Category: {report.category}
+                                  </Typography>
+                                  <Grid item xs={12}>
+                                    {differenceInCalendarDays(
+                                      new Date(),
+                                      Date.parse(report.dateCreated),
+                                    ) < 3}
+                                  </Grid>
+                                </Grid>
                               </Grid>
                             </CardContent>
                           </Card>

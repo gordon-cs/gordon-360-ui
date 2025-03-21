@@ -92,23 +92,23 @@ const ConfirmCleanOut: React.FC<ConfirmCleanOutProps> = ({ reportsToCleanOut, on
           <>
             {reportsToCleanOut.map((report) => (
               <Grid container key={report.recordID} className={styles.reportRow}>
-                <Grid item xs={1.5}>
+                <Grid item xs={12} md={1.5}>
                   {report.recordID}
                 </Grid>
-                <Grid item xs={1}>
+                <Grid item xs={12} md={1}>
                   <div className={styles.dataCell}>{formatDateString(report.dateFound)}</div>
                 </Grid>
-                <Grid item xs={1.5}>
+                <Grid item xs={12} md={1.5}>
                   <div className={styles.dataCell}>{report.locationFound}</div>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={12} md={2}>
                   <div className={styles.dataCell}>{report.category}</div>
                 </Grid>
-                <Grid item xs={2}>
+                <Grid item xs={12} md={2}>
                   <div className={styles.dataCell}>{report.description}</div>
                 </Grid>
-                <Grid item xs={4}>
-                  <FormControl variant="filled" sx={{ width: 1 }}>
+                <Grid item xs={12} md={4}>
+                  <FormControl variant="filled" sx={{ width: '100%', minWidth: '200px' }}>
                     <InputLabel id="item-status-label">Item Status</InputLabel>
                     <Select
                       labelId="item-status-label"
