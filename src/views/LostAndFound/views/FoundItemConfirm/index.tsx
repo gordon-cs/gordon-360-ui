@@ -412,9 +412,6 @@ const FoundItemConfirmation = () => {
                     >
                       <Grid item xs={2} className={FoundItemConfirmationStyles.tableCell}>
                         <Button
-                          variant="text"
-                          size="small"
-                          color="info"
                           onClick={(e) => {
                             e.stopPropagation();
                             navigate(
@@ -422,7 +419,7 @@ const FoundItemConfirmation = () => {
                             );
                           }}
                         >
-                          Details
+                          <Launch color="secondary" />
                         </Button>
                       </Grid>
                       <Grid item xs={2} className={FoundItemConfirmationStyles.tableCell}>
