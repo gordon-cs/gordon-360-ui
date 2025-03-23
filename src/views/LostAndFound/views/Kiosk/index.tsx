@@ -22,7 +22,7 @@ const LostAndFoundKiosk = () => {
   }, [isKiosk, isAdmin, isDev, navigate]);
 
   const handleCheckInventory = () => {
-    navigate('/lostandfound/kiosk/founditemdatabase');
+    navigate('/lostandfound/kiosk/founditemdatabase?status=active');
   };
 
   const handleReportMissing = () => {

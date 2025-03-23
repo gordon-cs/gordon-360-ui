@@ -63,6 +63,7 @@ export const CampusSafetyRoutes: CampusSafetyRoutesObject = {
   '/lostandfoundadmin/founditemdatabase': {
     element: <FoundItemList />,
     formattedName: 'Found Items Database',
+    queryString: '?status=active',
   },
   '/lostandfoundadmin/founditemform/founditemdatabase': {
     element: <FoundItemList />,
@@ -89,9 +90,7 @@ const CampusSafetyApp = () => {
   const { profile, loading: loadingProfile } = useUser();
   const isAdmin = useAuthGroups(AuthGroup.LostAndFoundAdmin);
   const isDev = useAuthGroups(AuthGroup.LostAndFoundDevelopers);
-  const isKiosk =
-
-  useEffect(() => {
+  const isKiosk = useEffect(() => {
     const updateAndFixReports = async () => {
       if (!isAdmin && !isDev) {
         return; // Only run if the user is an admin or dev
