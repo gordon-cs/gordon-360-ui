@@ -110,6 +110,7 @@ const FoundItemConfirmation = () => {
       });
       setMatchDialogOpen(false);
       setSelectedMatchReport(null);
+      //navigate('/lostandfound/lostandfoundadmin')
     } catch (err) {
       console.error(err);
       setSnackbar({
