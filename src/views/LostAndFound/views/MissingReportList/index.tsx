@@ -27,6 +27,7 @@ import { LFCategories, LFColors } from 'views/LostAndFound/components/Constants'
 import { formatDateString } from 'views/LostAndFound/components/Helpers';
 import { getUrlParam, setUrlParam, clearUrlParams } from 'views/LostAndFound/components/Helpers';
 import { StatusChip } from 'views/LostAndFound/components/StatusChip';
+import { useUser } from 'hooks';
 
 const yellowDateThreshold = 7;
 const redDateThreshold = 14;
@@ -70,6 +71,12 @@ const MissingItemList = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isMobile = useMediaQuery('(max-width:900px)');
+
+  const { profile } = useUser();
+  const username = profile?.AD_Username || '';
+
+  const [totalCount, setTotalCount] = useState<number>(0);
+  const [filteredCount, setFilteredCount] = useState<number>(0);
 
   const pageSize = 25;
 
@@ -157,6 +164,38 @@ const MissingItemList = () => {
     updateFilters();
   }, [category, color, keywords, searchParams, status]);
 
+  useEffect(() => {
+    const fetchCounts = async () => {
+      try {
+        // For total count, we send an empty status, color, category, and keywords.
+        const totalResult = await lostAndFoundService.getMissingItemsCount(
+          username,
+          '', 
+          '',
+          '',
+          ''
+        );
+        console.log("Total missing items:", totalResult);
+  
+        const filteredResult = await lostAndFoundService.getMissingItemsCount(
+          username,
+          status,
+          color,
+          category,
+          keywords
+        );
+        console.log("Filtered missing items:", filteredResult);
+  
+        setTotalCount(totalResult);
+        setFilteredCount(filteredResult);
+      } catch (error) {
+        console.error('Failed to fetch missing items counts', error);
+      }
+    };
+    fetchCounts();
+  }, [status, color, category, keywords, username]);
+
+  
   // Lazy loading helper: load more reports
   const loadMoreReports = async () => {
     if (lazyLoading || !hasMore) return;
@@ -315,6 +354,14 @@ const MissingItemList = () => {
                   </Button>
                 </Grid>
               </Grid>
+               {/* Count Display */}
+            <Typography
+              variant="body2"
+              className={styles.countText}
+              style={{ marginTop: '0.5rem', textAlign: 'right' }}
+            >
+              Showing {filteredCount} / {totalCount} missing items
+            </Typography>
             </CardContent>
           </Card>
         </Grid>
