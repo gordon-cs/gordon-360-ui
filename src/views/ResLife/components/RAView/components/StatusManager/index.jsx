@@ -7,6 +7,7 @@ import {
   TextField,
   Checkbox,
   Button,
+  Box,
   Card,
   CardContent,
   Typography,
@@ -18,7 +19,6 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
-import { useNavigate } from 'react-router-dom';
 import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
 
 import {
@@ -33,22 +33,22 @@ import { useUser } from 'hooks';
 
 // Days options for the multi-select
 const daysOptions = [
+  { value: 'sun', label: 'Sunday' },
   { value: 'mon', label: 'Monday' },
   { value: 'tue', label: 'Tuesday' },
   { value: 'wed', label: 'Wednesday' },
   { value: 'thu', label: 'Thursday' },
   { value: 'fri', label: 'Friday' },
   { value: 'sat', label: 'Saturday' },
-  { value: 'sun', label: 'Sunday' },
 ];
 
 const StatusManager = () => {
   const { mode } = useColorScheme();
+  const [selectedDay, setSelectedDay] = useState('');
   const [statusList, setStatusList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
   const { profile } = useUser();
-
   const [snackbar, setSnackbar] = useState({
     message: '',
     severity: null,
@@ -76,34 +76,51 @@ const StatusManager = () => {
     Available: true,
   });
 
-  // UseEffect - Immediately runs `loadStatusList`
   useEffect(() => {
-    loadStatusList(profile?.ID);
-  }, [profile]);
+    if (selectedDay) {
+      loadStatusListByDay(profile?.ID, selectedDay);
+    }
+  }, [profile, selectedDay]);
 
-  // Function to get all the statuses from the selected hall
-  const loadStatusList = async (RA_ID) => {
+  const loadStatusListByDay = async (RA_ID, day) => {
     setLoading(true);
     try {
       const response = await getActiveStatusListForRA(RA_ID);
-      console.log('getActiveStatusListForRA response', response);
-      setStatusList(response);
+
+      // Filter statuses that match the selected day
+      const filteredStatuses = response.filter((status) => {
+        if (status.Days_Of_Week && typeof status.Days_Of_Week === 'string') {
+          return status.Days_Of_Week.split(',').includes(day);
+        }
+        return false;
+      });
+
+      console.log('Filtered status list for the day:', filteredStatuses);
+      setStatusList(filteredStatuses);
     } catch (error) {
-      console.error('Error fetching hall statuses:', error);
+      console.error('Error fetching status by day', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const loadEditedStatusList = async (RA_ID) => {
+  const loadEditedStatusListByDay = async (RA_ID, day) => {
     setLoading(true);
     try {
-      // Wait until all statuses are fetched from API
       const response = await getActiveStatusListForRA(RA_ID);
-      console.log('getActiveStatusListForRA edit response', response);
-      setStatusList(response);
+
+      // Filter statuses that match the selected day
+      const filteredStatuses = response.filter((status) => {
+        if (status.Days_Of_Week && typeof status.Days_Of_Week === 'string') {
+          return status.Days_Of_Week.split(',').includes(day);
+        }
+        return false;
+      });
+
+      console.log('Filtered status list for the day:', filteredStatuses);
+      setStatusList(filteredStatuses);
     } catch (error) {
-      console.error('Error fetching RA statuses:', error);
+      console.error('Error fetching status by day', error);
     } finally {
       setLoading(false);
     }
@@ -149,7 +166,7 @@ const StatusManager = () => {
       console.log('newStatus', newStatus);
       await createStatus(newStatus);
       createSnackbar('Status created successfully!', 'success');
-      loadStatusList(profile.ID);
+      loadStatusListByDay(profile.ID, selectedDay);
       resetStatusForm();
     } catch (error) {
       console.error('Error adding status:', error);
@@ -178,7 +195,7 @@ const StatusManager = () => {
       }
       console.log('edited Status:', updatedStatus);
       await updateStatus(currentStatus.Status_ID, updatedStatus);
-      loadEditedStatusList(profile.ID);
+      loadEditedStatusListByDay(profile.ID, selectedDay);
       resetStatusForm();
       createSnackbar('Status updated successfully!', 'success');
     } catch (error) {
@@ -257,10 +274,13 @@ const StatusManager = () => {
                 variant="text"
                 onClick={() => window.history.back()}
                 startIcon={<ArrowBackIos />}
-                style={{
+                size="small"
+                sx={{
                   textTransform: 'none',
                   fontWeight: 'bold',
-                  fontSize: '1.25rem',
+                  fontSize: '0.85rem',
+                  mr: 3,
+                  color: mode === 'dark' ? '#f8b619' : '#36b9ed',
                 }}
               >
                 Go Back
@@ -444,8 +464,31 @@ const StatusManager = () => {
           <Card>
             <CardContent>
               <Typography variant="h5" fontWeight="bold" gutterBottom>
-                Status by Day
+                {profile?.FirstName || 'User'}'s Status List
               </Typography>
+
+              <FormControl fullWidth>
+                <InputLabel id="selected-day-label">Select A Day</InputLabel>
+                <Select
+                  label="Select a day"
+                  value={selectedDay || ''}
+                  onChange={async (event) => {
+                    setSelectedDay(event.target.value);
+                    if (selectedDay) {
+                      await loadStatusListByDay(profile?.ID, selectedDay);
+                    }
+                  }}
+                  fullWidth
+                  margin="normal"
+                >
+                  {daysOptions.map((day) => (
+                    <MenuItem key={day.value} value={day.value}>
+                      <ListItemText primary={day.label} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <Box mb="2vh" />
               {loading ? (
                 <Typography color="textSecondary">Loading status list...</Typography>
               ) : statusList.length === 0 ? (
@@ -517,7 +560,7 @@ const StatusManager = () => {
                             size="small"
                             onClick={async () => {
                               await deleteStatus(status.Status_ID);
-                              loadStatusList(profile.ID);
+                              loadEditedStatusListByDay(profile.ID, selectedDay);
                             }}
                           >
                             Delete
