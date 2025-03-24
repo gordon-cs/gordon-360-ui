@@ -493,7 +493,7 @@ const LostAndFoundAdmin = () => {
       color="secondary"
       variant="contained"
       onClick={() => {
-        navigate('founditemdatabase');
+        navigate('founditemdatabase?status=active');
       }}
     >
       <Storage />
@@ -721,6 +721,18 @@ const LostAndFoundAdmin = () => {
               </Grid>
             </Grid>
           </Grid>
+          <Grid item className={styles.detailsButton}>
+            <Button
+              color="secondary"
+              variant="contained"
+              className={styles.markButton}
+              onClick={() => {
+                navigate(`missingitemdatabase/${missingID}`);
+              }}
+            >
+              <b>See Full Details</b>
+            </Button>
+          </Grid>
           <Grid item className={styles.buttonAlign}>
             <Button
               color="success"
@@ -805,7 +817,18 @@ const LostAndFoundAdmin = () => {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item className={styles.padding} />
+          </Grid>
+          <Grid item className={styles.detailsButton}>
+            <Button
+              color="secondary"
+              variant="contained"
+              className={styles.markButton}
+              onClick={() => {
+                navigate(`founditemdatabase/${foundID}`);
+              }}
+            >
+              <b>See Full Details</b>
+            </Button>
           </Grid>
         </Grid>
       </>
