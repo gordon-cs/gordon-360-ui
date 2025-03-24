@@ -301,6 +301,62 @@ const updateFoundReportStatus = (id: string, status: string): Promise<void> =>
   http.put<void>(`lostandfound/founditems/${id}/${status}`);
 
 /**
+ * Service method to retrieve counts of found items after applying filters.
+ * @param username The username of the requesting user.
+ * @param latestDate get items created on or before this date.
+ * @param status  item status.
+ * @param color  item color.
+ * @param category  item category.
+ * @param ID  tag number/id.
+ * @param keywords  keywords to search in owner names, description, or location.
+ * @returns A Promise that resolves to an object with totalCount and filteredCount.
+ */
+const getFoundItemsCount = (
+  username: string,
+  latestDate?: string,
+  status?: string,
+  color?: string,
+  category?: string,
+  ID?: string,
+  keywords?: string
+): Promise<number> => {
+  const query: { [key: string]: string } = {};
+  if (latestDate) query.latestDate = latestDate;
+  if (status) query.status = status;
+  if (color) query.color = color;
+  if (category) query.category = category;
+  if (ID) query.ID = ID;
+  if (keywords) query.keywords = keywords;
+  return http.get<number>(
+    `lostandfound/founditems/count${http.toQueryString(query)}`
+  );
+};
+
+/**
+ * Service method to retrieve counts of missing item reports after applying filters.
+ * @param username The username of the requesting user.
+ * @param status item status.
+ * @param color item color.
+ * @param category item category.
+ * @param keywords keywords to search in owner names, description, or location.
+ * @returns A Promise that resolves to a number representing the count of missing item reports.
+ */
+const getMissingItemsCount = (
+  username: string,
+  status?: string,
+  color?: string,
+  category?: string,
+  keywords?: string,
+): Promise<number> => {
+  const query: { [key: string]: string } = { user: username };
+  if (status) query.status = status;
+  if (color) query.color = color;
+  if (category) query.category = category;
+  if (keywords) query.keywords = keywords;
+  return http.get<number>(`lostandfound/missingitems/count${http.toQueryString(query)}`);
+};
+
+/**
  * Create an admin action for a found item.
  * @param itemID the id of the item to add admin actions to
  * @param data the data for the action to be created
@@ -324,6 +380,8 @@ const lostAndFoundService = {
   updateFoundItem,
   updateFoundReportStatus,
   createFoundAdminAction,
+  getFoundItemsCount,
+  getMissingItemsCount,
 };
 
 export default lostAndFoundService;
