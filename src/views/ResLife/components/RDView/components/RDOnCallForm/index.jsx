@@ -60,7 +60,7 @@ const RDOnCallForm = () => {
       setRDNames(names);
     } catch (error) {
       console.error('Error fetching RD names:', error);
-      createSnackbar(error, 'error');
+      createSnackbar(error.message, 'error');
     }
   };
 
@@ -77,7 +77,7 @@ const RDOnCallForm = () => {
       setOnCallList(transformed);
     } catch (error) {
       console.error('Error fetching on-call list:', error);
-      createSnackbar(error, 'error');
+      createSnackbar(error.message, 'error');
     } finally {
       setLoading(false);
     }
@@ -105,7 +105,7 @@ const RDOnCallForm = () => {
       createSnackbar('Successfully created RD on-call record!', 'success');
     } catch (error) {
       console.error('Error creating RD On-Call:', error);
-      createSnackbar(error, 'error');
+      createSnackbar(error.message, 'error');
     }
   };
 
@@ -129,7 +129,7 @@ const RDOnCallForm = () => {
       createSnackbar('Successfully updated RD on-call record!', 'success');
     } catch (error) {
       console.error('Error updating on-call entry:', error);
-      createSnackbar(error, 'error');
+      createSnackbar(error.message, 'error');
     }
   };
 
@@ -150,7 +150,7 @@ const RDOnCallForm = () => {
       createSnackbar('Successfully deleted on-call entry!', 'success');
     } catch (error) {
       console.error('Error deleting on-call entry:', error);
-      createSnackbar(error, 'error');
+      createSnackbar(error.message, 'error');
     }
   };
 
