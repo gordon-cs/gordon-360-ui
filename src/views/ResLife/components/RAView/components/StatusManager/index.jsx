@@ -144,7 +144,8 @@ const StatusManager = () => {
           newStatus.Days_Of_Week = newStatus.Days_Of_Week.join(',');
         }
       } else {
-        newStatus.Days_Of_Week = '';
+        const dayOfWeek = dayjs(newStatus.Start_Date).format('ddd').toLowerCase();
+        newStatus.Days_Of_Week = dayOfWeek;
       }
       console.log('newStatus', newStatus);
       await createStatus(newStatus);
