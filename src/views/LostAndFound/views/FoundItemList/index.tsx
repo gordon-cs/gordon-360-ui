@@ -27,7 +27,7 @@ import { LFCategories, LFColors } from 'views/LostAndFound/components/Constants'
 import { formatDateString } from 'views/LostAndFound/components/Helpers';
 import { getUrlParam, setUrlParam, clearUrlParams } from 'views/LostAndFound/components/Helpers';
 import { StatusChip } from 'views/LostAndFound/components/StatusChip';
-import { useAuthGroups } from 'hooks';
+import { useAuthGroups, useUser } from 'hooks';
 import { AuthGroup } from 'services/auth';
 
 const FoundItemList = () => {
@@ -58,6 +58,10 @@ const FoundItemList = () => {
     severity: undefined as 'error' | 'success' | 'info' | 'warning' | undefined,
     open: false,
   });
+
+    //state variables for counts
+  const [totalCount, setTotalCount] = useState<number>(0);
+  const [filteredCount, setFilteredCount] = useState<number>(0);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -134,6 +138,42 @@ const FoundItemList = () => {
     }, 700);
     return () => clearTimeout(timer);
   }, [tagID, color, category, keywords, pageLoaded, status, createSnackbar]);
+
+  const { profile } = useUser();
+  const username = profile?.AD_Username || '';
+
+  useEffect(() => {
+    const fetchCounts = async () => {
+      try {
+        const totalResult = await lostAndFoundService.getFoundItemsCount(
+          username,
+          undefined,
+          '', // status empty for total count
+          '',
+          '',
+          '',
+          ''
+        );
+        console.log("Total result:", totalResult);
+        const filteredResult = await lostAndFoundService.getFoundItemsCount(
+          username,
+          undefined,
+          status,
+          color,
+          category,
+          tagID,
+          keywords
+        );
+        console.log("Filtered:", filteredResult);
+        // Extract numeric counts from the returned objects.
+        setTotalCount(totalResult);
+        setFilteredCount(filteredResult);
+      } catch (error) {
+        console.error('Failed to fetch found items counts', error);
+      }
+    };
+    fetchCounts();
+  }, [tagID, status, color, category, keywords, username]);
 
   // Currently, we set hasMore = false. But if we do implement pagination:
   // 1. Add lastId to the service
@@ -264,6 +304,14 @@ const FoundItemList = () => {
                       </Button>
                     </Grid>
                   </Grid>
+                   {/* NEW: Display counts below the filters */}
+                    <Typography
+                      variant="body2"
+                      className={styles.countText}
+                      style={{ marginTop: '0.5rem', textAlign: 'right' }}
+                    >
+                      Showing {filteredCount} / {totalCount} found items
+                    </Typography>
                 </Grid>
 
                 {/* Button: Enter New Found Item */}
@@ -283,6 +331,7 @@ const FoundItemList = () => {
             </CardContent>
           </Card>
         </Grid>
+        
       </Grid>
 
       {/* Table header for large screens */}
