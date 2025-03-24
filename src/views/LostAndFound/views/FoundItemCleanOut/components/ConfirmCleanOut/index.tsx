@@ -114,7 +114,7 @@ const ConfirmCleanOut: React.FC<ConfirmCleanOutProps> = ({ reportsToCleanOut, on
                         <Grid item xs={12}>
                           {differenceInCalendarDays(new Date(), Date.parse(report.dateCreated)) < 3}
                         </Grid>
-                        <Grid item xs={12} md={4}>
+                        <Grid item xs={12} md={4} paddingTop={1}>
                           <FormControl variant="filled" sx={{ width: '100%', minWidth: '200px' }}>
                             <InputLabel id="item-status-label">Item Status</InputLabel>
                             <Select
@@ -180,20 +180,37 @@ const ConfirmCleanOut: React.FC<ConfirmCleanOutProps> = ({ reportsToCleanOut, on
               ),
             )}
           </>
-          <Grid container justifyContent="center" marginTop={3}>
-            <Grid item xs={8}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={enableCleanOut}
-                    onChange={handleCheckboxClick}
-                    name="confirm"
-                  />
-                }
-                label="I confirm that these items are no longer in the Gordon Police inventory."
-              />
+          {isMobile ? (
+            <Grid container marginTop={3}>
+              <Grid item xs={8}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={enableCleanOut}
+                      onChange={handleCheckboxClick}
+                      name="confirm"
+                    />
+                  }
+                  label="I confirm that these items are no longer in the Gordon Police inventory."
+                />
+              </Grid>
             </Grid>
-          </Grid>
+          ) : (
+            <Grid container justifyContent="center" marginTop={3}>
+              <Grid item xs={8}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={enableCleanOut}
+                      onChange={handleCheckboxClick}
+                      name="confirm"
+                    />
+                  }
+                  label="I confirm that these items are no longer in the Gordon Police inventory."
+                />
+              </Grid>
+            </Grid>
+          )}
           <Grid container justifyContent="flex-end" padding={2}>
             <Grid item padding={2}>
               <Button variant="contained" color="primary" onClick={onCancel}>
