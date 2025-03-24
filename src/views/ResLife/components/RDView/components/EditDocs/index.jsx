@@ -1,4 +1,4 @@
-import { ListItemText, List, ListItem, Link } from '@mui/material';
+import { ListItemText, List, ListItem } from '@mui/material';
 import { Grid, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -7,13 +7,18 @@ const EditDocs = () => (
     <List>
       <ListItem></ListItem>
       <ListItem>
-        <RouterLink to="/RoomRanges" className="gc360_text_link" style={{ textDecoration: 'none' }}>
+        <RouterLink to="roomranges" className="gc360_text_link" style={{ textDecoration: 'none' }}>
           <ListItemText primary="Room Ranges" />
         </RouterLink>
       </ListItem>
       <ListItem>
-        <RouterLink to="/TaskList" className="gc360_text_link" style={{ textDecoration: 'none' }}>
+        <RouterLink to="tasklist" className="gc360_text_link" style={{ textDecoration: 'none' }}>
           <ListItemText primary="RA/AC On-Duty Task Manager" />
+        </RouterLink>
+      </ListItem>
+      <ListItem>
+        <RouterLink to="rd-oncall" className="gc360_text_link" style={{ textDecoration: 'none' }}>
+          <ListItemText primary="RD On-Call Scheduler" />
         </RouterLink>
       </ListItem>
     </List>

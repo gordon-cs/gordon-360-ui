@@ -1,5 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Avatar, Card, CardContent, CardHeader, Grid, Typography, Box } from '@mui/material';
+import {
+  Avatar,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useUser } from 'hooks';
 import { fetchOnDutyRA } from 'services/residentLife/RA_OnCall';
@@ -24,6 +32,7 @@ const OnDuty = () => {
   const [onDutyRaInfo, setOnDutyRaInfo] = useState({});
   const [staffTypeLabel, setStaffTypeLabel] = useState('');
   const { profile } = useUser();
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   useEffect(() => {
     if (profile) {
@@ -115,35 +124,35 @@ const OnDuty = () => {
               <StyledLink
                 href={DEFAULT_PROFILE_URL + onDutyRaInfo.RA_UserName}
                 className="gc360_text_link"
-                target="_blank"
-                rel="noopener noreferrer"
+                target={isMobile ? '_self' : '_blank'}
+                rel={isMobile ? '' : 'noopener noreferrer'}
               >
                 {onDutyRaInfo.RA_Name}
               </StyledLink>
             </Typography>
 
             <Typography variant="body1">
-              <strong>Room #:</strong> {onDutyRaInfo.RoomNumber}
+              <strong>Room #:</strong> {onDutyRaInfo.Room_Number}
             </Typography>
 
             <Typography variant="body1">
               <strong>Contact:</strong>{' '}
-              {onDutyRaInfo.PreferredContact && onDutyRaInfo.PreferredContact.includes('http') ? (
+              {onDutyRaInfo.Preferred_Contact && onDutyRaInfo.Preferred_Contact.includes('http') ? (
                 <StyledLink
-                  href={onDutyRaInfo.PreferredContact}
+                  href={onDutyRaInfo.Preferred_Contact}
                   underline="hover"
                   className="gc360_text_link"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target={isMobile ? '_self' : '_blank'}
+                  rel={isMobile ? '' : 'noopener noreferrer'}
                 >
                   Teams
                 </StyledLink>
-              ) : onDutyRaInfo.PreferredContact ? (
+              ) : onDutyRaInfo.Preferred_Contact ? (
                 <StyledLink
-                  href={`tel:${onDutyRaInfo.PreferredContact}`}
+                  href={`tel:${onDutyRaInfo.Preferred_Contact}`}
                   className="gc360_text_link"
                 >
-                  {formatPhoneNumber(onDutyRaInfo.PreferredContact)}
+                  {formatPhoneNumber(onDutyRaInfo.Preferred_Contact)}
                 </StyledLink>
               ) : (
                 'No contact available'
@@ -162,8 +171,8 @@ const OnDuty = () => {
             <StyledLink
               href={DEFAULT_PROFILE_URL + onDutyRaInfo.RA_UserName}
               className="gc360_text_link"
-              target="_blank"
-              rel="noopener noreferrer"
+              target={isMobile ? '_self' : '_blank'}
+              rel={isMobile ? '' : 'noopener noreferrer'}
             >
               <Avatar
                 src={onDutyRaInfo.RA_Photo || COLOR_80808026_1X1}

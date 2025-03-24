@@ -8,11 +8,10 @@ import {
   Avatar,
   Box,
   CircularProgress,
-  Paper,
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import { fetchOnDutyData } from 'services/residentLife/RA_OnCall';
 import ScottieMascot from 'views/ResLife/ScottieMascot.png';
-import OnDuty from 'views/ResLife/components/ResidentView/components/OnDuty';
 
 // Hardcoded list of all halls
 const ALL_HALLS = [
@@ -31,6 +30,15 @@ const ALL_HALLS = [
 const VILLAGE_IDS = ['GRA', 'RID', 'MCI', 'CON'];
 
 const DEFAULT_PROFILE_URL = '/profile/';
+
+// Styling for links using existing 360 colors
+const StyledLink = styled('a')(({ theme }) => ({
+  color: theme.palette.primary.main,
+  textDecoration: 'none',
+  '&:hover': {
+    color: theme.palette.warning.main,
+  },
+}));
 
 // takes phone number from api return and makes readable version
 const formatPhoneNumber = (phoneNumber) => {
@@ -60,8 +68,8 @@ const OnDutyMobile = () => {
             RA_Photo: villageData[0].RA_Photo,
             RA_Name: villageData[0].RA_Name,
             RA_UserName: villageData[0].RA_UserName,
-            PreferredContact: villageData[0].PreferredContact,
-            Check_in_time: villageData[0].Check_in_time,
+            Preferred_Contact: villageData[0].Preferred_Contact,
+            Check_In_Time: villageData[0].Check_In_Time,
             RD_Name: villageData[0].RD_Name,
             RD_UserName: villageData[0].RD_UserName,
           };
@@ -117,13 +125,21 @@ const OnDutyMobile = () => {
         </Box>
       ) : (
         value && (
-          <Box display="flex" flexDirection="column" alignItems="center">
+          <Box
+            sx={{
+              textAlign: 'center',
+              mt: '20px',
+              backgroundColor: 'transparent',
+              borderColor: 'warning.main',
+              borderRadius: 2,
+            }}
+          >
             {hallDetails?.RA_Name ? (
               <>
                 <a
                   href={DEFAULT_PROFILE_URL + hallDetails.RA_UserName || '#'}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target="_self"
+                  rel=""
                 >
                   <Avatar
                     src={hallDetails.RA_Photo || 'https://placehold.jp/150x150.png'}
@@ -140,48 +156,65 @@ const OnDutyMobile = () => {
                 <Typography variant="h6">
                   <strong>{hallDetails.Hall_Name}</strong>
                 </Typography>
+
+                {/* RA Name  */}
                 <Typography>
-                  <strong>On-Duty:</strong> {hallDetails.RA_Name}
+                  <strong>On-Duty: </strong>
+
+                  <StyledLink
+                    href={DEFAULT_PROFILE_URL + hallDetails.RA_UserName || '#'}
+                    className="gc360_text_link"
+                    target="_self"
+                    rel=""
+                  >
+                    {hallDetails.RA_Name}{' '}
+                  </StyledLink>
                 </Typography>
+
                 <Typography>
                   <strong>Contact:</strong>{' '}
-                  {hallDetails.PreferredContact?.includes('http') ? (
-                    <a
-                      href={hallDetails.PreferredContact}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                  {hallDetails.Preferred_Contact?.includes('http') ? (
+                    <StyledLink
+                      href={hallDetails.Preferred_Contact}
+                      underline="hover"
+                      className="gc360_text_link"
+                      target="_self"
+                      rel=""
                     >
                       Teams
-                    </a>
-                  ) : hallDetails.PreferredContact ? (
-                    <a
-                      href={`tel:${hallDetails.PreferredContact}`}
-                      style={{ textDecoration: 'none', color: 'inherit' }}
+                    </StyledLink>
+                  ) : hallDetails.Preferred_Contact ? (
+                    <StyledLink
+                      href={`tel:${hallDetails.Preferred_Contact}`}
+                      className="gc360_text_link"
                     >
-                      {formatPhoneNumber(hallDetails.PreferredContact)}
-                    </a>
+                      {formatPhoneNumber(hallDetails.Preferred_Contact)}
+                    </StyledLink>
                   ) : (
-                    'No Contact Info'
+                    <StyledLink className="gc360_text_link">No Contact Info</StyledLink>
                   )}
                 </Typography>
+
                 <Typography>
                   <strong>Check-In Time:</strong>{' '}
-                  {hallDetails.Check_in_time
-                    ? new Date(hallDetails.Check_in_time).toLocaleTimeString([], {
+                  {hallDetails.Check_In_Time
+                    ? new Date(hallDetails.Check_In_Time).toLocaleTimeString([], {
                         hour: '2-digit',
                         minute: '2-digit',
                       })
                     : 'No Check-In Time'}
                 </Typography>
+
                 <Typography>
                   <strong>Hall RD:</strong>{' '}
-                  <a
+                  <StyledLink
                     href={DEFAULT_PROFILE_URL + hallDetails.RD_UserName}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    className="gc360_text_link"
+                    target="_self"
+                    rel=""
                   >
-                    {hallDetails.RD_Name || 'No RD Info'}
-                  </a>
+                    {hallDetails.RD_Name || 'No RD Info'}{' '}
+                  </StyledLink>
                 </Typography>
               </>
             ) : (

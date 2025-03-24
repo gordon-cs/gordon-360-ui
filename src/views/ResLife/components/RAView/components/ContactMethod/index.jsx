@@ -24,7 +24,7 @@ const ContactMethod = () => {
       if (profile?.ID) {
         try {
           const contactPreference = await PrefContactMethod(profile.ID);
-          setSelectedContact(contactPreference?.PreferredContactMethod || '');
+          setSelectedContact(contactPreference?.Preferred_Contact_Method || '');
         } catch (error) {
           console.error('Error fetching preferred contact method:', error);
         }
@@ -66,7 +66,7 @@ const ContactMethod = () => {
 
   return (
     <Card elevation={3} sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <CardHeader title="Preferred Contact Method" className="gc360_header" />
+      <CardHeader align="center" title="Preferred Contact Method" className="gc360_header" />
       <CardContent sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
         <FormControl component="fieldset">
           <Typography>Select Contact Method</Typography>

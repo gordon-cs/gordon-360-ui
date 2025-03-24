@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   List,
   ListItem,
@@ -23,10 +23,8 @@ import {
   assignPersonToRange,
   fetchMissingRooms,
 } from 'services/residentLife/roomRanges';
-import Page404 from 'views/Page404';
-import { useAuthGroups } from 'hooks';
-import { AuthGroup } from 'services/auth';
 import { useColorScheme } from '@mui/material/styles';
+import SimpleSnackbar from 'components/Snackbar';
 
 const RoomRanges = () => {
   const { mode } = useColorScheme();
@@ -44,6 +42,20 @@ const RoomRanges = () => {
   const [filteredPeople, setFilteredPeople] = useState([]);
   const [unassignedRooms, setUnassignedRooms] = useState([]);
   const [filteredUnassigned, setFilteredUnassigned] = useState([]);
+
+  const [snackbar, setSnackbar] = useState({
+    message: '',
+    severity: null,
+    open: false,
+  });
+
+  const createSnackbar = useCallback((message, severity) => {
+    setSnackbar({ message, severity, open: true });
+  }, []);
+
+  const handleSnackbarClose = () => {
+    setSnackbar((s) => ({ ...s, open: false }));
+  };
 
   // Fetch data when the page loads
   useEffect(() => {
@@ -119,7 +131,7 @@ const RoomRanges = () => {
         })
         .catch((error) => {
           console.error('Error adding room range:', error);
-          alert('Error adding room range: ' + error);
+          createSnackbar('Error adding room range: ' + error, 'error');
         });
     }
   };
@@ -130,11 +142,15 @@ const RoomRanges = () => {
         fetchRoomRanges()
           .then((response) => setRoomRanges(response))
           .catch((error) => console.error('Error fetching room ranges:', error));
+        // Reload assignment list
+        fetchAssignmentList() //reload assignemnt list as a assignment could be removed as well by this action
+          .then((response) => setAssignments(response))
+          .catch((error) => console.error('Error fetching assignments:', error));
         setSelectedRoomRange(null);
       })
       .catch((error) => {
         console.error('Error removing room range:', error);
-        alert('Error removing room range: ' + error);
+        createSnackbar('Error removing room range: ' + error, 'error');
       });
   };
 
@@ -142,7 +158,7 @@ const RoomRanges = () => {
     if (selectedPerson && selectedRoomRange) {
       const newRange = {
         Range_ID: selectedRoomRange,
-        Ra_ID: selectedPerson,
+        RA_ID: selectedPerson,
       };
 
       assignPersonToRange(newRange)
@@ -155,7 +171,7 @@ const RoomRanges = () => {
         })
         .catch((error) => {
           console.error('Error assigning person to range:', error);
-          alert('Error assigning person to range: ' + error);
+          createSnackbar('Error assigning person to room range: ' + error, 'error');
         });
     }
   };
@@ -169,16 +185,12 @@ const RoomRanges = () => {
       })
       .catch((error) => {
         console.error('Error removing assignment:', error);
-        alert('Error removing assignment: ' + error);
+        createSnackbar('Error removing assignment: ' + error, 'error');
       });
   };
 
-  const housingadmin = useAuthGroups(AuthGroup.HousingAdmin);
-  const RD = useAuthGroups(AuthGroup.ResidentDirector);
-  const developer = useAuthGroups(AuthGroup.HousingDeveloper);
-
-  if (housingadmin || RD || developer) {
-    return (
+  return (
+    <>
       <Box p={3}>
         <Typography
           variant="h3"
@@ -280,12 +292,12 @@ const RoomRanges = () => {
                 filteredRoomRanges.length > 0 ? (
                   filteredRoomRanges.map((range) => (
                     <ListItem
-                      key={range.RangeID}
-                      onClick={() => setSelectedRoomRange(range.RangeID)}
+                      key={range.Range_ID}
+                      onClick={() => setSelectedRoomRange(range.Range_ID)}
                       sx={{
                         cursor: 'pointer',
                         backgroundColor:
-                          selectedRoomRange === range.RangeID ? 'primary.main' : 'transparent',
+                          selectedRoomRange === range.Range_ID ? 'primary.main' : 'transparent',
                         '&:hover': {
                           textDecoration: 'none',
                           backgroundColor: 'primary.main',
@@ -307,7 +319,7 @@ const RoomRanges = () => {
                         sx={{ ml: 1 }}
                         onClick={(e) => {
                           e.stopPropagation();
-                          onClickRemoveRoomRange(range.RangeID);
+                          onClickRemoveRoomRange(range.Range_ID);
                         }}
                       >
                         Remove
@@ -357,7 +369,7 @@ const RoomRanges = () => {
                         },
                       }}
                     >
-                      {person.FirstName} {person.LastName}
+                      {person.First_Name} {person.Last_Name}
                     </ListItem>
                   ))}
                 </>
@@ -385,7 +397,7 @@ const RoomRanges = () => {
                 filteredAssignments.map((assignment) => (
                   <ListItem key={assignment.Range_ID}>
                     <Box>
-                      {assignment.Fname} {assignment.Lname}: {assignment.Hall_Name}{' '}
+                      {assignment.First_Name} {assignment.Last_Name}: {assignment.Hall_Name}{' '}
                       {assignment.Room_Start} - {assignment.Room_End}
                     </Box>
 
@@ -436,10 +448,14 @@ const RoomRanges = () => {
           </CardContent>
         </Card>
       </Box>
-    );
-  } else {
-    return <Page404 />; //user has no access to page
-  }
+      <SimpleSnackbar
+        open={snackbar.open}
+        text={snackbar.message}
+        severity={snackbar.severity}
+        onClose={handleSnackbarClose}
+      />
+    </>
+  );
 };
 
 export default RoomRanges;

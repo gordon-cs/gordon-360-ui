@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, Grid, useMediaQuery, Stack } from '@mui/material';
+import { Card, CardContent, CardHeader, Grid, Stack } from '@mui/material';
 import MyHall from '../ResidentView/components/MyHall/index';
 import { useEffect, useState } from 'react';
 import { checkIfCheckedIn } from 'services/residentLife/RA_Checkin';
@@ -7,7 +7,9 @@ import { useUser } from 'hooks';
 import HousingBanner from '../ResidentView/components/HousingWelcome/Banner';
 import OnDutyMobile from '../RDView/components/OnDutyMobileView';
 import TaskList from './components/TaskList';
-import CheckIn from './components/CheckIn';
+import AssignedRooms from './components/MyAssignments';
+import OnDutyRD from './components/RD-OnCall';
+import StatusCard from './components/StatusCard';
 
 const RAView = () => {
   const { profile } = useUser();
@@ -54,18 +56,25 @@ const RAView = () => {
       <HousingBanner />
 
       <Grid item xs={12} md={4}>
-        <OnCallTable />
+        <Stack spacing={2}>
+          <OnCallTable />
+          <OnDutyRD />
+        </Stack>
       </Grid>
 
       <Grid item xs={12} md={4}>
         <Stack spacing={2}>
           <MyHall />
           <ContactMethod />
+          <AssignedRooms />
         </Stack>
       </Grid>
 
       <Grid item xs={12} md={4}>
-        <TaskList />
+        <Stack spacing={2}>
+          <StatusCard />
+          <TaskList />
+        </Stack>
       </Grid>
     </Grid>
   );
