@@ -9,6 +9,7 @@ type RA = {
   Email: string;
   Phone_Number: string;
   ID: string;
+  Photo_URL: string;
 };
 
 type Contact = {
