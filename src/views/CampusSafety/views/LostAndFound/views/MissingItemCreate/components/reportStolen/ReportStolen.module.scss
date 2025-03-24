@@ -1,0 +1,82 @@
+// Root container styles for the dialog
+.title {
+  background-color: var(--mui-palette-primary-main); // GordonBlue
+  color: var(--mui-palette-primary-contrastText); // White
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.notice {
+  margin-top: 1rem;
+  text-align: center;
+  font-weight: 500;
+  font-size: 1rem;
+  color: var(--mui-palette-info-light); // SnowDay
+
+  @media (max-width: 600px) {
+    font-size: 0.9rem; // Adjust for smaller screens
+  }
+}
+
+.subtext {
+  text-align: center;
+  margin-top: 0.5rem;
+  color: var(--mui-palette-neutral-500); // Light Gray
+  font-size: 0.9rem;
+
+  @media (max-width: 600px) {
+    font-size: 0.8rem; // Adjust for smaller screens
+  }
+}
+
+.phoneNumber {
+  color: var(--mui-palette-link-main); // GordonBlue
+  font-weight: bold;
+  text-decoration: none;
+  cursor: text;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.textField {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+
+  .MuiInputLabel-root {
+    white-space: normal;
+    word-wrap: break-word;
+  }
+
+  .MuiOutlinedInput-root {
+    background-color: var(--mui-palette-neutral-50); // Background Light Gray
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.cancelButton {
+  background-color: var(--mui-palette-error-light); // NauticalRed
+  color: var(--mui-palette-primary-contrastText); // White
+  font-weight: bold;
+
+  &:hover {
+    background-color: var(--mui-palette-error-main); // ChristmasRed
+  }
+}
+
+.submitButton {
+  background-color: var(--mui-palette-secondary-main); // ScottieCyan
+  color: var(--mui-palette-primary-contrastText); // White
+  font-weight: bold;
+
+  &:hover {
+    background-color: var(--mui-palette-secondary-dark); // ScottieCyan_opacity75
+  }
+}

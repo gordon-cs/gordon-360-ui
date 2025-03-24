@@ -8,24 +8,42 @@ const apiRequest = {
 
 const authenticate = () => msalInstance.loginRedirect(apiRequest);
 
+let willRedirectForAccessToken = false;
+
 const acquireAccessToken = async () => {
   const activeAccount = msalInstance.getActiveAccount();
   const accounts = msalInstance.getAllAccounts();
 
-  if (!activeAccount && accounts.length === 0) {
+  const request: SilentRequest = {
+    ...apiRequest,
+  };
+
+  if (activeAccount || accounts.length === 1) {
+    // Acquire token for active or only available account
+    request.account = activeAccount || accounts[0];
+  } else if (accounts.length > 1) {
     /*
+     * No active account, and multiple available accounts.
+     * Ask user which account should be used.
+     */
+    request.prompt = 'select_account';
+  } else {
+    /*
+     * No active account and list of accounts is empty.
      * User is not signed in. Throw error or wait for user to login.
      * Do not attempt to log a user in outside of the context of MsalProvider
      */
   }
-  const request: SilentRequest = {
-    ...apiRequest,
-    account: activeAccount || accounts[0],
-  };
 
   const authResult = await msalInstance.acquireTokenSilent(request).catch((error) => {
     if (error instanceof InteractionRequiredAuthError) {
-      return msalInstance.acquireTokenRedirect(apiRequest);
+      if (!willRedirectForAccessToken) {
+        willRedirectForAccessToken = true;
+        console.log('Interaction Required. Redirecting for access token.');
+        return msalInstance.acquireTokenRedirect(apiRequest);
+      } else {
+        console.log('Interaction Required but already began redirecting for access token');
+      }
     } else {
       throw error;
     }
@@ -36,7 +54,6 @@ const acquireAccessToken = async () => {
 
 /**
  * Check if current session is authenticated
- *
  * @description This is a naive check. The session is considered authenticated if
  * @returns Whether session is authenticated or not
  */
@@ -48,7 +65,6 @@ const isAuthenticated = () => {
 
 /**
  * Sign a user out
- *
  * @description Removes all data from storage and cache
  */
 const signOut = async () => {
@@ -95,6 +111,9 @@ export enum AuthGroup {
   HallInfoViewer = '360-HallInfoViewer-SG',
   ResidentDirector = '360-ResidentDirector',
   HousingDeveloper = '360-HousingDevelopers-SG', //remove before merge to develop
+  LostAndFoundAdmin = '360-LostAndFoundAdmins-SG',
+  LostAndFoundKiosk = '360-LostAndFoundAssist-SG',
+  LostAndFoundDevelopers = '360-LostAndFound-Developers-SG',
 }
 
 export {
