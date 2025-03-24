@@ -138,7 +138,7 @@ const MyRA = () => {
 
   const avatar = (
     <Avatar
-      src={raInfo.PhotoURL || COLOR_80808026_1X1}
+      src={raInfo.Photo_URL || COLOR_80808026_1X1}
       alt={`Profile of ${raInfo.First_Name} ${raInfo.Last_Name}`}
       sx={{
         width: { xs: 80, sm: 90, md: 100, lg: 130 },
