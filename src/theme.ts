@@ -18,6 +18,7 @@ declare module '@mui/material/styles' {
 declare module '@mui/material' {
   interface ButtonPropsColorOverrides {
     neutral: any;
+    link: any;
   }
 }
 
@@ -272,6 +273,33 @@ export const theme360 = extendTheme({
         root: ({ theme }) => ({
           '&.Mui-focused': {
             color: theme.vars.palette.secondary.light, // Focused label color, for better contrast in dark mode
+          },
+        }),
+      },
+    },
+    MuiFormLabel: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          '[data-mui-color-scheme="dark"] &.Mui-focused': {
+            color: theme.vars.palette.secondary.light, // Focused label color, for better contrast in dark mode
+          },
+        }),
+      },
+    },
+    MuiRadio: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          '[data-mui-color-scheme="dark"] &.Mui-checked': {
+            color: theme.vars.palette.secondary.light, // Checked input color, for better contrast in dark mode
+          },
+        }),
+      },
+    },
+    MuiCheckbox: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          '[data-mui-color-scheme="dark"] &.Mui-checked': {
+            color: theme.vars.palette.secondary.light, // Checked input color, for better contrast in dark mode
           },
         }),
       },

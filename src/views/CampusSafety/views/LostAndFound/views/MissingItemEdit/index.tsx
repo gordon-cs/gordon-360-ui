@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Card,
   CardHeader,
@@ -13,7 +13,6 @@ import {
   Typography,
   Chip,
 } from '@mui/material';
-import { DateTime } from 'luxon';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './MissingItemEdit.module.scss';
 import lostAndFoundService, { MissingItemReport } from 'services/lostAndFound';
@@ -21,16 +20,17 @@ import userService from 'services/user';
 import ConfirmReport from './components/confirmReport';
 import { useNavigate, useParams } from 'react-router';
 import GordonLoader from 'components/Loader';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 const MissingItemFormEdit = () => {
   const navigate = useNavigate();
-  const { itemid } = useParams<{ itemid: string }>();
+  const { itemId } = useParams<{ itemId: string }>();
   const [loading, setLoading] = useState<boolean>(true);
   const [isPickedUp, setIsPickedUp] = useState(false); //Added this to manage the button disable
+  const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
 
   const [originalFormData, setOriginalFormData] = useState({
     recordID: 0,
@@ -103,8 +103,8 @@ const MissingItemFormEdit = () => {
 
   useEffect(() => {
     const fetchItemData = async () => {
-      if (itemid) {
-        const item = await lostAndFoundService.getMissingItemReport(parseInt(itemid));
+      if (itemId) {
+        const item = await lostAndFoundService.getMissingItemReport(parseInt(itemId));
         setFormData({
           recordID: item?.recordID || 0,
           category: item.category,
@@ -120,7 +120,7 @@ const MissingItemFormEdit = () => {
           forGuest: item.forGuest,
           status: item.status || 'active',
         });
-        const originalReport = await lostAndFoundService.getMissingItemReport(parseInt(itemid));
+        const originalReport = await lostAndFoundService.getMissingItemReport(parseInt(itemId));
         setOriginalFormData({
           recordID: originalReport?.recordID || 0,
           category: originalReport.category,
@@ -139,7 +139,7 @@ const MissingItemFormEdit = () => {
       }
     };
     fetchItemData();
-  }, [itemid]);
+  }, [itemId]);
 
   useEffect(() => {
     if (formData.recordID > 0) {
@@ -157,8 +157,26 @@ const MissingItemFormEdit = () => {
     });
   };
 
+  const requiredFields = ['category', 'description', 'locationLost'];
+
+  const validateForm = () => {
+    const errors: { [key: string]: string } = {};
+    requiredFields.forEach((field) => {
+      if (!formData[field as keyof typeof formData]) {
+        errors[field] = 'This field is required';
+      }
+    });
+    if (dateError !== null) {
+      errors['dateLost'] = dateError;
+    }
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleFormSubmit = () => {
-    setShowConfirm(true);
+    if (validateForm()) {
+      setShowConfirm(true);
+    }
   };
 
   const handlePickup = async () => {
@@ -168,7 +186,7 @@ const MissingItemFormEdit = () => {
     };
 
     try {
-      await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemid || ''));
+      await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemId || ''));
       setIsPickedUp(true);
       //navigate('/lostandfound');
     } catch (error) {
@@ -179,7 +197,7 @@ const MissingItemFormEdit = () => {
   const handleReportSubmit = async () => {
     const requestData: MissingItemReport = {
       ...formData,
-      dateLost: new Date(formData.dateLost).toISOString() || DateTime.now().toISO(),
+      dateLost: new Date(formData.dateLost).toISOString(),
     };
     const formFields = Object.keys(formData);
     let newActionNote = '';
@@ -197,18 +215,34 @@ const MissingItemFormEdit = () => {
           ' ';
       }
     }
-    await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemid || ''));
+    await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemId || ''));
     const actionRequestData = {
-      missingID: parseInt(itemid || ''),
-      actionDate: DateTime.now().toISO(),
+      missingID: parseInt(itemId || ''),
+      actionDate: new Date().toISOString(),
       username: user.AD_Username,
       isPublic: true,
       action: 'Edited',
       actionNote: newActionNote,
     };
-    await lostAndFoundService.createAdminAction(parseInt(itemid || ''), actionRequestData);
+    await lostAndFoundService.createAdminAction(parseInt(itemId || ''), actionRequestData);
     navigate('/lostandfound');
   };
+
+  const [dateError, setDateError] = useState<DateValidationError | null>(null);
+
+  const errorMessage = useMemo(() => {
+    switch (dateError) {
+      case 'invalidDate': {
+        return 'Invalid Date';
+      }
+      case 'disableFuture': {
+        return 'Cannot lose an item in the future';
+      }
+      default: {
+        return null;
+      }
+    }
+  }, [dateError]);
 
   // Using DatePicker component from MUI/x, with custom styling to fix dark mode contrast issues
   const customDatePicker = (
@@ -217,34 +251,37 @@ const MissingItemFormEdit = () => {
         label="Date Lost"
         value={formData.dateLost === '' ? null : formData.dateLost}
         onChange={(value) => setFormData({ ...formData, dateLost: value?.toString() || '' })}
+        onError={(newError) => setDateError(newError)}
         disableFuture
-        disabled={!isEditable}
         orientation="portrait"
         name="Date Lost"
-        // Custom styling for the input field, to make it look like filled variant
-        sx={{
-          backgroundColor: 'var(--mui-palette-FilledInput-bg);',
-          paddingTop: '7px;',
-          borderRadius: '5px;',
-          width: '100%;',
-          '& .Mui-focused .MuiOutlinedInput-notchedOutline': { border: 'none' },
-          '& .MuiInputLabel-shrink': {
-            transform: 'translate(14px, 4px) scale(0.75);',
-          },
-          '& .MuiFormLabel-root.Mui-focused': {
-            color: 'var(--mui-palette-secondary-main);',
-          },
-          '& .MuiOutlinedInput-notchedOutline': {
-            borderWidth: '0;',
-            borderBottom:
-              '1px solid rgba(var(--mui-palette-common-onBackgroundChannel) / var(--mui-opacity-inputUnderline));',
-            borderRadius: '0;',
-          },
-        }}
         // Custom styling for popup box, better dark mode contrast
         // Thanks to help for understanding from
         // https://blog.openreplay.com/styling-and-customizing-material-ui-date-pickers/
         slotProps={{
+          textField: {
+            helperText: errorMessage ? errorMessage : 'Change if lost before today',
+            // Custom styling for the input field, to make it look like filled variant
+            sx: {
+              backgroundColor: 'var(--mui-palette-FilledInput-bg);',
+              paddingTop: '7px;',
+              borderRadius: '5px;',
+              width: '100%;',
+              '& .Mui-focused .MuiOutlinedInput-notchedOutline': { border: 'none' },
+              '& .MuiInputLabel-shrink': {
+                transform: 'translate(14px, 4px) scale(0.75);',
+              },
+              '& .MuiFormLabel-root.Mui-focused': {
+                color: 'var(--mui-palette-secondary-main);',
+              },
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderWidth: '0;',
+                borderBottom:
+                  '1px solid rgba(var(--mui-palette-common-onBackgroundChannel) / var(--mui-opacity-inputUnderline));',
+                borderRadius: '0;',
+              },
+            },
+          },
           layout: {
             sx: {
               '& .MuiPickersLayout-contentWrapper .Mui-selected': {
@@ -405,7 +442,10 @@ const MissingItemFormEdit = () => {
                                 category: (e.target as HTMLInputElement).value,
                               }))
                             }
-                            checked={formData.category === label.toLowerCase().replace(/ /g, '/')}
+                            checked={
+                              formData.category.toLowerCase().replace(/ /g, '/') ===
+                              label.toLowerCase().replace(/ /g, '/')
+                            }
                             className={styles.category_item}
                           />
                         ))}
@@ -484,6 +524,8 @@ const MissingItemFormEdit = () => {
                       name="description"
                       value={formData.description}
                       onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      error={Boolean(validationErrors.description)}
+                      helperText={validationErrors.description}
                       disabled={!isEditable}
                       // Custom styling on focus, better dark mode contrast
                       sx={{
@@ -502,6 +544,8 @@ const MissingItemFormEdit = () => {
                       label="Location Lost"
                       name="locationLost"
                       value={formData.locationLost}
+                      error={Boolean(validationErrors.locationLost)}
+                      helperText={validationErrors.locationLost}
                       onChange={(e) => setFormData({ ...formData, locationLost: e.target.value })}
                       disabled={!isEditable}
                       // Custom styling on focus, better dark mode contrast
@@ -531,7 +575,6 @@ const MissingItemFormEdit = () => {
                             setFormData({ ...formData, stolenDescription: e.target.value })
                           }
                           disabled={!isEditable}
-                          inputProps={{ max: DateTime.now().toISODate() }}
                           // Custom styling on focus, better dark mode contrast
                           sx={{
                             '& .MuiFormLabel-root.Mui-focused': {
@@ -559,7 +602,7 @@ const MissingItemFormEdit = () => {
                       className={styles.submit_button}
                       onClick={handleFormSubmit}
                     >
-                      Update Report
+                      Next
                     </Button>
                   </Grid>
                 </Grid>

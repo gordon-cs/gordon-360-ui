@@ -27,7 +27,7 @@ const LostAndFoundAdmin = () => {
             color="secondary"
             variant="contained"
             onClick={() => {
-              navigate('missingitemdatabase');
+              navigate('missingitemdatabase?status=active');
             }}
           >
             <Storage />

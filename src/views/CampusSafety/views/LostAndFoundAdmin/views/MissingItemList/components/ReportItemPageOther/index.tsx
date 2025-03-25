@@ -19,8 +19,7 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import { DateTime } from 'luxon';
-import { useReducer, useEffect, useState, HTMLAttributes, useCallback } from 'react';
+import { useReducer, useEffect, useState, HTMLAttributes, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './ReportItemPage.module.scss';
@@ -29,8 +28,9 @@ import quickSearchService, { SearchResult } from 'services/quickSearch';
 import ConfirmReport from 'views/CampusSafety/views/LostAndFound/views/MissingItemCreate/components/confirmReport';
 import GordonSnackbar from 'components/Snackbar';
 import ReportStolenModal from 'views/CampusSafety/views/LostAndFound/views/MissingItemCreate/components/reportStolen';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
+import { useUser } from 'hooks';
 
 const MIN_QUERY_LENGTH = 2;
 
@@ -93,6 +93,14 @@ const ReportItemPage = () => {
     setSnackbar({ message, severity, open: true });
   }, []);
 
+  const [user, setUser] = useState({
+    firstName: '',
+    lastName: '',
+    emailAddr: '',
+    phoneNumber: '',
+    AD_Username: '', // Add AD_Username to user state
+  });
+
   const [isGordonPerson, setIsGordonPerson] = useState('');
   const [formData, setFormData] = useState({
     firstName: '',
@@ -106,7 +114,7 @@ const ReportItemPage = () => {
     locationLost: '',
     stolen: false,
     stolenDescription: '',
-    dateLost: '',
+    dateLost: new Date().toISOString(),
     phoneNumber: '',
     forGuest: true,
     status: 'active',
@@ -117,11 +125,27 @@ const ReportItemPage = () => {
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
   const [state, dispatch] = useReducer(reducer, defaultState);
   const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
+  const [disableSubmit, setDisableSubmit] = useState(false);
+  const [newActionFormData, setNewActionFormData] = useState({ action: '', actionNote: '' });
+  const { profile } = useUser();
 
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
 
   const specialCharactersRegex = /[^a-zA-Z0-9'\-.\s]/gm;
+
+  useEffect(() => {
+    const setUserData = async () => {
+      setUser({
+        firstName: profile?.FirstName || '',
+        lastName: profile?.LastName || '',
+        emailAddr: profile?.Email || '',
+        phoneNumber: profile?.MobilePhone || '',
+        AD_Username: profile?.AD_Username || '', // Set AD_Username
+      });
+    };
+    setUserData();
+  }, [profile]);
 
   const handleInput = (_event: React.SyntheticEvent, value: string) => {
     const query = value.trim().replace(specialCharactersRegex, '');
@@ -207,6 +231,10 @@ const ReportItemPage = () => {
       errors['isGordonPerson'] = 'Please select if this report is for a Gordon person or not';
     }
 
+    if (dateError !== null) {
+      errors['dateLost'] = dateError;
+    }
+
     requiredFields.forEach((field) => {
       if (!formData[field as keyof typeof formData]) {
         errors[field] = 'This field is required';
@@ -240,55 +268,72 @@ const ReportItemPage = () => {
   };
 
   const handleReportSubmit = async () => {
-    try {
-      const baseData = {
-        category: formData.category,
-        colors: formData.colors,
-        brand: formData.brand,
-        description: formData.description,
-        locationLost: formData.locationLost,
-        stolen: formData.stolen,
-        stolenDescription: formData.stolenDescription,
-        submitterUsername: '',
-        dateLost: new Date(formData.dateLost).toISOString() || DateTime.now().toISO(),
-        dateCreated: DateTime.now().toISO(),
-        status: 'active',
-        phone: formData.phoneNumber, // Include phone number
-      };
-
-      // Include stolenDescription only if stolen is true
-      if (formData.stolen) {
-        baseData.stolenDescription = formData.stolenDescription;
-      } else {
-        baseData.stolenDescription = ''; // Clear stolenDescription
-      }
-
-      let requestData;
-
-      if (formData.forGuest) {
-        // For guest user
-        baseData.phone = formData.phoneNumber;
-        requestData = {
-          ...baseData,
-          forGuest: true,
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.emailAddr,
+    if (!disableSubmit) {
+      setDisableSubmit(true);
+      try {
+        const baseData = {
+          category: formData.category,
+          colors: formData.colors,
+          brand: formData.brand,
+          description: formData.description,
+          locationLost: formData.locationLost,
+          stolen: formData.stolen,
+          stolenDescription: formData.stolenDescription,
+          submitterUsername: '',
+          dateLost: formData.dateLost,
+          dateCreated: new Date().toDateString(),
+          status: 'active',
+          phone: formData.phoneNumber, // Include phone number
         };
-      } else {
-        // For Gordon person
-        requestData = {
-          ...baseData,
-          forGuest: false,
-          submitterUsername: formData.submitterUsername,
-        };
-      }
 
-      await lostAndFoundService.createMissingItemReport(requestData);
-      // Redirect to the missing item database after successful submission
-      navigate('/lostandfound/lostandfoundadmin/missingitemdatabase');
-    } catch (error) {
-      createSnackbar(`Failed to create the missing item report.`, `error`);
+        // Include stolenDescription only if stolen is true
+        if (formData.stolen) {
+          baseData.stolenDescription = formData.stolenDescription;
+        } else {
+          baseData.stolenDescription = ''; // Clear stolenDescription
+        }
+
+        let requestData;
+
+        if (formData.forGuest) {
+          // For guest user
+          baseData.phone = formData.phoneNumber;
+          requestData = {
+            ...baseData,
+            forGuest: true,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.emailAddr,
+          };
+        } else {
+          // For Gordon person
+          requestData = {
+            ...baseData,
+            forGuest: false,
+            submitterUsername: formData.submitterUsername,
+          };
+        }
+
+        await lostAndFoundService.createMissingItemReport(requestData);
+
+        const now = new Date();
+        const newReportId = await lostAndFoundService.createMissingItemReport(requestData);
+        let actionRequestData = {
+          ...newActionFormData,
+          missingID: newReportId,
+          actionDate: now.toISOString(),
+          username: user.AD_Username,
+          isPublic: true,
+          action: 'Created',
+        };
+        await lostAndFoundService.createAdminAction(newReportId, actionRequestData);
+
+        // Redirect to the missing item database after successful submission
+        navigate('/lostandfound/lostandfoundadmin/missingitemdatabase?status=active');
+      } catch (error) {
+        createSnackbar(`Failed to create the missing item report.`, `error`);
+        setDisableSubmit(false);
+      }
     }
   };
 
@@ -350,6 +395,22 @@ const ReportItemPage = () => {
     </Grid>
   );
 
+  const [dateError, setDateError] = useState<DateValidationError | null>(null);
+
+  const errorMessage = useMemo(() => {
+    switch (dateError) {
+      case 'invalidDate': {
+        return 'Invalid Date';
+      }
+      case 'disableFuture': {
+        return 'Cannot lose an item in the future';
+      }
+      default: {
+        return null;
+      }
+    }
+  }, [dateError]);
+
   // Using DatePicker component from MUI/x, with custom styling to fix dark mode contrast issues
   const customDatePicker = (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -357,33 +418,37 @@ const ReportItemPage = () => {
         label="Date Lost"
         value={formData.dateLost === '' ? null : formData.dateLost}
         onChange={(value) => setFormData({ ...formData, dateLost: value?.toString() || '' })}
+        onError={(newError) => setDateError(newError)}
         disableFuture
         orientation="portrait"
         name="Date Lost"
-        // Custom styling for the input field, to make it look like filled variant
-        sx={{
-          backgroundColor: 'var(--mui-palette-FilledInput-bg);',
-          paddingTop: '7px;',
-          borderRadius: '5px;',
-          width: '100%;',
-          '& .Mui-focused .MuiOutlinedInput-notchedOutline': { border: 'none' },
-          '& .MuiInputLabel-shrink': {
-            transform: 'translate(14px, 4px) scale(0.75);',
-          },
-          '& .MuiFormLabel-root.Mui-focused': {
-            color: 'var(--mui-palette-secondary-main);',
-          },
-          '& .MuiOutlinedInput-notchedOutline': {
-            borderWidth: '0;',
-            borderBottom:
-              '1px solid rgba(var(--mui-palette-common-onBackgroundChannel) / var(--mui-opacity-inputUnderline));',
-            borderRadius: '0;',
-          },
-        }}
         // Custom styling for popup box, better dark mode contrast
         // Thanks to help for understanding from
         // https://blog.openreplay.com/styling-and-customizing-material-ui-date-pickers/
         slotProps={{
+          textField: {
+            helperText: errorMessage ? errorMessage : 'Change if lost before today',
+            // Custom styling for the input field, to make it look like filled variant
+            sx: {
+              backgroundColor: 'var(--mui-palette-FilledInput-bg);',
+              paddingTop: '7px;',
+              borderRadius: '5px;',
+              width: '100%;',
+              '& .Mui-focused .MuiOutlinedInput-notchedOutline': { border: 'none' },
+              '& .MuiInputLabel-shrink': {
+                transform: 'translate(14px, 4px) scale(0.75);',
+              },
+              '& .MuiFormLabel-root.Mui-focused': {
+                color: 'var(--mui-palette-secondary-main);',
+              },
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderWidth: '0;',
+                borderBottom:
+                  '1px solid rgba(var(--mui-palette-common-onBackgroundChannel) / var(--mui-opacity-inputUnderline));',
+                borderRadius: '0;',
+              },
+            },
+          },
           layout: {
             sx: {
               '& .MuiPickersLayout-contentWrapper .Mui-selected': {
@@ -420,6 +485,7 @@ const ReportItemPage = () => {
             formData={formData}
             onEdit={() => setShowConfirm(false)}
             onSubmit={handleReportSubmit}
+            disableSubmit={disableSubmit}
           />
           <GordonSnackbar
             open={snackbar.open}
@@ -499,7 +565,7 @@ const ReportItemPage = () => {
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleChange}
-                      error={!!validationErrors.firstName}
+                      error={Boolean(validationErrors.firstName)}
                       helperText={validationErrors.firstName}
                     />
                   </Grid>
@@ -512,7 +578,7 @@ const ReportItemPage = () => {
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleChange}
-                      error={!!validationErrors.lastName}
+                      error={Boolean(validationErrors.lastName)}
                       helperText={validationErrors.lastName}
                     />
                   </Grid>
@@ -525,7 +591,7 @@ const ReportItemPage = () => {
                       name="phoneNumber"
                       value={formData.phoneNumber}
                       onChange={handleChange}
-                      error={!!validationErrors.phoneNumber}
+                      error={Boolean(validationErrors.phoneNumber)}
                       helperText={validationErrors.phoneNumber}
                     />
                   </Grid>
@@ -538,7 +604,7 @@ const ReportItemPage = () => {
                       name="emailAddr"
                       value={formData.emailAddr}
                       onChange={handleChange}
-                      error={!!validationErrors.emailAddr}
+                      error={Boolean(validationErrors.emailAddr)}
                       helperText={validationErrors.emailAddr}
                     />
                   </Grid>
@@ -570,14 +636,14 @@ const ReportItemPage = () => {
                         key={label}
                         control={<Radio />}
                         label={label}
-                        value={label}
+                        value={label.toLowerCase().replace(/ /g, '/')}
                         onChange={(e) =>
                           setFormData((prevData) => ({
                             ...prevData,
                             category: (e.target as HTMLInputElement).value,
                           }))
                         }
-                        checked={formData.category === label}
+                        checked={formData.category === label.toLowerCase().replace(/ /g, '/')}
                         className={styles.category_item}
                       />
                     ))}
@@ -603,7 +669,7 @@ const ReportItemPage = () => {
                   name="brand"
                   value={formData.brand}
                   onChange={handleChange}
-                  error={!!validationErrors.brand}
+                  error={Boolean(validationErrors.brand)}
                   helperText={validationErrors.brand}
                 />
               </Grid>
@@ -617,7 +683,7 @@ const ReportItemPage = () => {
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
-                  error={!!validationErrors.description}
+                  error={Boolean(validationErrors.description)}
                   helperText={validationErrors.description}
                 />
               </Grid>
@@ -633,7 +699,7 @@ const ReportItemPage = () => {
                   name="locationLost"
                   value={formData.locationLost}
                   onChange={handleChange}
-                  error={!!validationErrors.locationLost}
+                  error={Boolean(validationErrors.locationLost)}
                   helperText={validationErrors.locationLost}
                 />
               </Grid>

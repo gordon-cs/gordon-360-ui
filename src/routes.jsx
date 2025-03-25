@@ -5,7 +5,6 @@ import BannerSubmission from './views/BannerSubmission';
 import CoCurricularTranscript from './views/CoCurricularTranscript';
 import EnrollmentCheckIn from './views/EnrollmentCheckIn';
 import Events from './views/Events';
-import EventsAttended from './views/EventsAttended';
 import Feedback from './views/Feedback';
 import Help from './views/Help';
 import Home from './views/Home';
@@ -67,11 +66,6 @@ const routes = [
     name: 'Events',
     path: '/events',
     element: <Events />,
-  },
-  {
-    name: 'Attended',
-    path: '/attended',
-    element: <EventsAttended />,
   },
   {
     name: 'Feedback',
