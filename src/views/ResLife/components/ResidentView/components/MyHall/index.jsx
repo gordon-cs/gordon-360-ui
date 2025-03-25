@@ -25,6 +25,7 @@ import wilsonHallMascot from 'views/ResLife/Wilson.png';
 import { useAuthGroups } from 'hooks';
 import { AuthGroup } from 'services/auth';
 import CheckIn from 'views/ResLife/components/RAView/components/CheckIn';
+import AssignedRooms from 'views/ResLife/components/RAView/components/MyAssignments';
 
 const DEFAULT_PROFILE_URL = '/profile/';
 const COLOR_80808026_1X1 =
@@ -140,6 +141,10 @@ const MyHall = () => {
               ) : (
                 <StyledLink className="gc360_text_link">No RD Assigned</StyledLink>
               )}
+            </Typography>
+
+            <Typography variant="body1">
+              <strong>My Assigned Rooms:</strong> {isRA ? <AssignedRooms /> : <></>}
             </Typography>
           </Grid>
 
