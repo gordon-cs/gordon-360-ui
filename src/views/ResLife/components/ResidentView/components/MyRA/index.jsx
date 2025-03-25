@@ -96,6 +96,7 @@ const MyRA = () => {
     }
   }, [statusList]);
 
+  // find the next status
   const findNextStatus = (statusIndex) => {
     const nextIndex = statusIndex + 1;
     if (nextIndex >= statusList.length) {
@@ -109,6 +110,7 @@ const MyRA = () => {
     }
   };
 
+  // find the next time where they are available or busy
   const findNextTime = (currTime) => {
     for (let index = 0; index < statusList.length; index++) {
       const status = statusList[index];
@@ -121,6 +123,7 @@ const MyRA = () => {
     }
   };
 
+  // formats time to match 12 hour clock
   const convertTo12HourFormat = (time24) => {
     let [hours, minutes] = time24.split(':');
     let period = 'AM';
