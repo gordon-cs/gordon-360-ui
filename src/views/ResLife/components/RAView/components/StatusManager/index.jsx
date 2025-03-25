@@ -31,7 +31,7 @@ import {
   removeStatus,
   updateStatus,
   getActiveStatusListForRA,
-} from 'services/residentLife/Status';
+} from 'services/residentLife/RA_Statuses';
 import SimpleSnackbar from 'components/Snackbar';
 import { useColorScheme } from '@mui/material/styles';
 import { useUser } from 'hooks';
@@ -498,7 +498,7 @@ const StatusManager = () => {
               </Typography>
 
               <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
-                <span style={{ fontWeight: 'bold' }}>🟢</span> Marks days with an active status
+                Days with events are highlighted in blue.
               </Typography>
 
               <FormControl fullWidth>
@@ -516,10 +516,12 @@ const StatusManager = () => {
                   margin="normal"
                 >
                   {daysOptions.map((day) => (
-                    <MenuItem key={day.value} value={day.value}>
-                      <ListItemText
-                        primary={`${day.label}${daysWithEvents.includes(day.value) ? '  🟢' : ''}`}
-                      />
+                    <MenuItem
+                      key={day.value}
+                      value={day.value}
+                      style={daysWithEvents.includes(day.value) ? { color: '#00AEEF' } : {}}
+                    >
+                      <ListItemText primary={`${day.label}`} />
                     </MenuItem>
                   ))}
                 </Select>
