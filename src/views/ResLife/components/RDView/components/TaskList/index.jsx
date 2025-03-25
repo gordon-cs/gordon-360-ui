@@ -17,6 +17,8 @@ import {
 import { addTask, updateTask, fetchTasks, removeTask } from 'services/residentLife/RD_TaskList';
 import { useColorScheme } from '@mui/material/styles';
 import SimpleSnackbar from 'components/Snackbar';
+import { useNavigate } from 'react-router';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const TaskList = () => {
   const { mode } = useColorScheme();
@@ -24,6 +26,7 @@ const TaskList = () => {
   const [selectedHall, setSelectedHall] = useState('');
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
+  const navigate = useNavigate();
 
   const [snackbar, setSnackbar] = useState({
     message: '',
@@ -243,6 +246,14 @@ const TaskList = () => {
     <>
       <Grid container spacing={3} justifyContent="center">
         <Grid item xs={12}>
+          <Button
+            variant="outlined"
+            color="primary"
+            startIcon={<ArrowBackIcon />}
+            onClick={() => navigate(-1)}
+          >
+            Back to ResLife
+          </Button>
           <Typography
             variant="h3"
             align="center"

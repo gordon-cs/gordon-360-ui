@@ -23,7 +23,8 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
-import ArrowBackIos from '@mui/icons-material/ArrowBackIos';
+import ArrowBackIcon from '@mui/icons-material/ArrowBackIos';
+import { useNavigate } from 'react-router';
 
 import {
   createStatus,
@@ -55,6 +56,7 @@ const StatusManager = () => {
   const [editing, setEditing] = useState(false);
   const { profile } = useUser();
   const [confirmDeleteStatus, setConfirmDeleteStatus] = useState(null);
+  const navigate = useNavigate();
   const [snackbar, setSnackbar] = useState({
     message: '',
     severity: null,
@@ -306,19 +308,12 @@ const StatusManager = () => {
               }}
             >
               <Button
-                variant="text"
-                onClick={() => window.history.back()}
-                startIcon={<ArrowBackIos />}
-                size="small"
-                sx={{
-                  textTransform: 'none',
-                  fontWeight: 'bold',
-                  fontSize: '0.85rem',
-                  mr: 3,
-                  color: mode === 'dark' ? '#f8b619' : '#36b9ed',
-                }}
+                variant="outlined"
+                color="primary"
+                startIcon={<ArrowBackIcon />}
+                onClick={() => navigate(-1)}
               >
-                Go Back
+                Back to ResLife
               </Button>
             </Grid>
 
