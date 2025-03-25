@@ -14,6 +14,10 @@ import {
   Grid,
   FormControlLabel,
   ListItemText,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -45,10 +49,12 @@ const daysOptions = [
 const StatusManager = () => {
   const { mode } = useColorScheme();
   const [selectedDay, setSelectedDay] = useState('');
+  const [daysWithEvents, setDaysWithEvents] = useState([]);
   const [statusList, setStatusList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
   const { profile } = useUser();
+  const [confirmDeleteStatus, setConfirmDeleteStatus] = useState(null);
   const [snackbar, setSnackbar] = useState({
     message: '',
     severity: null,
@@ -81,6 +87,30 @@ const StatusManager = () => {
       loadStatusListByDay(profile?.ID, selectedDay);
     }
   }, [profile, selectedDay]);
+
+  useEffect(() => {
+    if (profile?.ID) {
+      loadDaysWithEvents(profile.ID);
+    }
+  }, [profile]);
+
+  const loadDaysWithEvents = async (RA_ID) => {
+    try {
+      const response = await getActiveStatusListForRA(RA_ID);
+      const activeDays = new Set();
+
+      response.forEach((status) => {
+        if (status.Days_Of_Week) {
+          const days = status.Days_Of_Week.split(',');
+          days.forEach((d) => activeDays.add(d));
+        }
+      });
+
+      setDaysWithEvents(Array.from(activeDays));
+    } catch (error) {
+      console.error('Error loading days with events', error);
+    }
+  };
 
   const loadStatusListByDay = async (RA_ID, day) => {
     setLoading(true);
@@ -162,12 +192,13 @@ const StatusManager = () => {
         }
       } else {
         const dayOfWeek = dayjs(newStatus.Start_Date).format('ddd').toLowerCase();
-        newStatus.Days_Of_Week = dayOfWeek;
+        newStatus.Days_Of_Week = dayOfWeek; // Set the status date's calculated day of the week
       }
       console.log('newStatus', newStatus);
       await createStatus(newStatus);
       createSnackbar('Status created successfully!', 'success');
       loadStatusListByDay(profile.ID, selectedDay);
+      loadDaysWithEvents(profile.ID);
       resetStatusForm();
     } catch (error) {
       console.error('Error adding status:', error);
@@ -192,11 +223,13 @@ const StatusManager = () => {
           updatedStatus.Days_Of_Week = updatedStatus.Days_Of_Week.join(',');
         }
       } else {
-        updatedStatus.Days_Of_Week = '';
+        const dayOfWeek = dayjs(updatedStatus.Start_Date).format('ddd').toLowerCase();
+        updatedStatus.Days_Of_Week = dayOfWeek; // Set the status date's calculated day of the week
       }
       console.log('edited Status:', updatedStatus);
       await updateStatus(currentStatus.Status_ID, updatedStatus);
       loadEditedStatusListByDay(profile.ID, selectedDay);
+      loadDaysWithEvents(profile.ID);
       resetStatusForm();
       createSnackbar('Status updated successfully!', 'success');
     } catch (error) {
@@ -233,6 +266,7 @@ const StatusManager = () => {
     try {
       await removeStatus(StatusID);
       setStatusList(statusList.filter((status) => status.Status_ID !== StatusID));
+      loadDaysWithEvents(profile.ID);
       createSnackbar('Status deleted successfully!', 'success');
     } catch (error) {
       console.error('Error deleting status:', error);
@@ -468,6 +502,10 @@ const StatusManager = () => {
                 {profile?.FirstName || 'User'}'s Status List
               </Typography>
 
+              <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
+                <span style={{ fontWeight: 'bold' }}>🟢</span> Marks days with an active status
+              </Typography>
+
               <FormControl fullWidth>
                 <InputLabel id="selected-day-label">Select A Day</InputLabel>
                 <Select
@@ -484,7 +522,9 @@ const StatusManager = () => {
                 >
                   {daysOptions.map((day) => (
                     <MenuItem key={day.value} value={day.value}>
-                      <ListItemText primary={day.label} />
+                      <ListItemText
+                        primary={`${day.label}${daysWithEvents.includes(day.value) ? '  🟢' : ''}`}
+                      />
                     </MenuItem>
                   ))}
                 </Select>
@@ -559,10 +599,7 @@ const StatusManager = () => {
                             variant="contained"
                             color="error"
                             size="small"
-                            onClick={async () => {
-                              await deleteStatus(status.Status_ID);
-                              loadEditedStatusListByDay(profile.ID, selectedDay);
-                            }}
+                            onClick={() => setConfirmDeleteStatus(status)}
                           >
                             Delete
                           </Button>
@@ -582,6 +619,46 @@ const StatusManager = () => {
         severity={snackbar.severity}
         onClose={handleSnackbarClose}
       />
+      <Dialog open={!!confirmDeleteStatus} onClose={() => setConfirmDeleteStatus(null)}>
+        <DialogTitle>Confirm Deletion</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to delete this status?
+            {confirmDeleteStatus?.Is_Recurring && (
+              <>
+                <br />
+                <strong>This will delete all events in the recurring series.</strong>
+              </>
+            )}
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              editStatus(confirmDeleteStatus);
+              setConfirmDeleteStatus(null);
+            }}
+            color="primary"
+          >
+            Edit Instead
+          </Button>
+          <Button onClick={() => setConfirmDeleteStatus(null)} color="inherit">
+            Cancel
+          </Button>
+          <Button
+            onClick={async () => {
+              await deleteStatus(confirmDeleteStatus.Status_ID);
+              await loadDaysWithEvents(profile.ID);
+              await loadEditedStatusListByDay(profile.ID, selectedDay);
+              setConfirmDeleteStatus(null);
+            }}
+            color="error"
+            variant="contained"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
