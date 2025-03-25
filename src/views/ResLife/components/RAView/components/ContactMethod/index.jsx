@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   Button,
-  Card,
-  CardContent,
-  CardHeader,
   FormControl,
   FormControlLabel,
   Radio,
   RadioGroup,
   Typography,
 } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { preferredContact, PrefContactMethod } from 'services/residentLife/ResidentStaff';
 import { useUser } from 'hooks';
 import SimpleSnackbar from 'components/Snackbar';
@@ -65,9 +66,11 @@ const ContactMethod = () => {
   };
 
   return (
-    <Card elevation={3} sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <CardHeader align="center" title="Preferred Contact Method" className="gc360_header" />
-      <CardContent sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <Accordion elevation={3}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <Typography variant="h6">Preferred Contact Method</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
         <FormControl component="fieldset">
           <Typography>Select Contact Method</Typography>
           <RadioGroup
@@ -92,14 +95,14 @@ const ContactMethod = () => {
         <Typography sx={{ mt: 2, color: 'text.secondary', fontStyle: 'italic' }}>
           *This is your preferred method to be contacted by your hall's residents.
         </Typography>
-      </CardContent>
+      </AccordionDetails>
       <SimpleSnackbar
         open={snackbar.open}
         text={snackbar.message}
         severity={snackbar.severity}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
       />
-    </Card>
+    </Accordion>
   );
 };
 

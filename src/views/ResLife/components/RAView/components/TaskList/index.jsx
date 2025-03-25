@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import CommentIcon from '@mui/icons-material/Comment';
-import { completeTask, incompleteTask, getTasksForHall } from 'services/residentLife/Tasks';
+import { completeTask, incompleteTask, getTasksForHall } from 'services/residentLife/RA_Tasks';
 import { getRACurrentHalls } from 'services/residentLife/RA_Checkin';
 import { useUser } from 'hooks';
 import GordonDialogBox from 'components/GordonDialogBox';
@@ -74,6 +74,7 @@ const TaskList = () => {
     const fetchTaskList = async () => {
       try {
         const updatedTasks = [];
+        // fetch tasks for each hall that RA is checked into
         for (const hall of hallList) {
           const tasks = await getTasksForHall(hall);
           updatedTasks.push({ Hall_ID: hall, tasks });
@@ -84,11 +85,13 @@ const TaskList = () => {
       }
     };
 
+    // only if RA is checked into at least one hall
     if (hallList.length > 0) {
       fetchTaskList();
     }
   }, [hallList]);
 
+  // confirmation to complete task
   const handleConfirm = async () => {
     if (!confirmTask) {
       console.error('No task selected for confirmation.');
@@ -126,6 +129,7 @@ const TaskList = () => {
     }
   };
 
+  // mark task as incomplete
   const handleMarkIncompleteConfirm = async () => {
     if (!confirmIncompleteTask) {
       console.error('No task selected for incomplete confirmation.');
@@ -176,6 +180,7 @@ const TaskList = () => {
     }
   }, [taskList]);
 
+  // when a task is clicked on
   const handleTaskChecked = (hallIndex, taskIndex, taskID, taskCompleted) => {
     if (taskCompleted) {
       setConfirmIncompleteTask({ hallIndex, taskIndex, taskID });
@@ -186,6 +191,7 @@ const TaskList = () => {
     }
   };
 
+  // handles clicking on the description of a task
   const handleClickDescription = (hallIndex, taskIndex) => {
     const selectedTask = taskList[hallIndex]?.tasks[taskIndex];
     setSelectedDescription(selectedTask?.Description || 'No description provided');

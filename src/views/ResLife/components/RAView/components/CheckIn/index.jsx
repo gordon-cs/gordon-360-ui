@@ -40,6 +40,7 @@ const CheckIn = () => {
           const isChecked = await checkIfCheckedIn(profile.ID);
           setCheckedIn(isChecked);
 
+          // if RA is checked in
           if (isChecked) {
             const currentHalls = await getRACurrentHalls(profile.AD_Username);
             setHallState((prevState) => {
@@ -147,6 +148,7 @@ const CheckIn = () => {
     village: false,
   });
 
+  // set halls that are checked in to be checked off
   useEffect(() => {
     var check = false;
     for (let hall in hallState) {
