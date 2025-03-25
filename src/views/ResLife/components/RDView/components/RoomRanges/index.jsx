@@ -25,6 +25,8 @@ import {
 } from 'services/residentLife/roomRanges';
 import { useColorScheme } from '@mui/material/styles';
 import SimpleSnackbar from 'components/Snackbar';
+import { useNavigate } from 'react-router';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const RoomRanges = () => {
   const { mode } = useColorScheme();
@@ -42,6 +44,7 @@ const RoomRanges = () => {
   const [filteredPeople, setFilteredPeople] = useState([]);
   const [unassignedRooms, setUnassignedRooms] = useState([]);
   const [filteredUnassigned, setFilteredUnassigned] = useState([]);
+  const navigate = useNavigate();
 
   const [snackbar, setSnackbar] = useState({
     message: '',
@@ -192,6 +195,14 @@ const RoomRanges = () => {
   return (
     <>
       <Box p={3}>
+        <Button
+          variant="outlined"
+          color="primary"
+          startIcon={<ArrowBackIcon />}
+          onClick={() => navigate(-1)}
+        >
+          Back to ResLife
+        </Button>
         <Typography
           variant="h3"
           align="center"

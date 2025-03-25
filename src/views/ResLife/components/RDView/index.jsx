@@ -2,6 +2,7 @@ import { Card, CardContent, Box, CardHeader, Grid, useMediaQuery } from '@mui/ma
 import CustomizedTable from './components/OnDutyTable';
 import OnDutyMobile from './components/OnDutyMobileView';
 import EditDocs from './components/EditDocs';
+import OnDutyRD from '../RAView/components/RD-OnCall';
 
 const RDView = () => {
   const isMobile = useMediaQuery('(max-width:600px)');
@@ -50,22 +51,32 @@ const RDView = () => {
         </>
       )}
       <Box mt={5} />
-      <Grid item xs={12} md={20} padding={1}>
-        <Card xs={{ width: '100%' }}>
-          <CardHeader
-            title={
-              <Grid container direction="row" alignItems="center">
-                <Grid item xs={12} align="center">
-                  Editable Documents
-                </Grid>
-              </Grid>
-            }
-            className="gc360_header"
-          />
-          <CardContent>
-            <EditDocs />
-          </CardContent>
-        </Card>
+      <Grid item xs={12} md={12} padding={1}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={6}>
+            <Card sx={{ width: '100%' }}>
+              <CardHeader
+                title={
+                  <Grid container direction="row" alignItems="center">
+                    <Grid item xs={12} align="center">
+                      Editable Documents
+                    </Grid>
+                  </Grid>
+                }
+                className="gc360_header"
+              />
+              <CardContent>
+                <EditDocs />
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <Card sx={{ width: '100%' }}>
+              <OnDutyRD />
+            </Card>
+          </Grid>
+        </Grid>
       </Grid>
     </Grid>
   );

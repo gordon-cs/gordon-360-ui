@@ -20,6 +20,8 @@ import {
   deleteRDOnCall,
 } from 'services/residentLife/RD_OnCall';
 import SimpleSnackbar from 'components/Snackbar';
+import { useNavigate } from 'react-router';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const RDOnCallForm = () => {
   const { mode } = useColorScheme();
@@ -27,6 +29,7 @@ const RDOnCallForm = () => {
   const [rdNames, setRDNames] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
+  const navigate = useNavigate();
 
   const [currentOnCall, setCurrentOnCall] = useState({
     On_Call_ID: null,
@@ -172,6 +175,14 @@ const RDOnCallForm = () => {
 
   return (
     <>
+      <Button
+        variant="outlined"
+        color="primary"
+        startIcon={<ArrowBackIcon />}
+        onClick={() => navigate(-1)}
+      >
+        Back to ResLife
+      </Button>
       <Grid container spacing={3} justifyContent="center">
         <Grid item xs={12}>
           <Typography
