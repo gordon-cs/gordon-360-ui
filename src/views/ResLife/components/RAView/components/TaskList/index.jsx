@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import CommentIcon from '@mui/icons-material/Comment';
-import { completeTask, incompleteTask, getTasksForHall } from 'services/residentLife/Tasks';
+import { completeTask, incompleteTask, getTasksForHall } from 'services/residentLife/RA_Tasks';
 import { getRACurrentHalls } from 'services/residentLife/RA_Checkin';
 import { useUser } from 'hooks';
 import GordonDialogBox from 'components/GordonDialogBox';
