@@ -31,36 +31,23 @@ const AssignedRooms = () => {
   }
 
   return (
-    <Card sx={{ mt: 2, boxShadow: 3, transition: '0.3s', '&:hover': { boxShadow: 6 } }}>
-      <CardHeader
-        title={
-          <Grid container direction="row" alignItems="center">
-            <Grid item xs={12} align="center">
-              My Assigned Rooms
+    <>
+      {assignedRooms.length === 0 ? (
+        // <Typography align="center" color="textSecondary">
+        <Typography color="textSecondary">No assigned rooms.</Typography>
+      ) : (
+        <Grid container spacing={2}>
+          {assignedRooms.map((assignment) => (
+            <Grid item xs={12} key={assignment.Range_ID}>
+              <Typography variant="body1" color="textSecondary">
+                <strong>{assignment.Hall_Name}: </strong>
+                {assignment.Room_Start} - {assignment.Room_End}
+              </Typography>
             </Grid>
-          </Grid>
-        }
-        className="gc360_header"
-      />
-      <CardContent>
-        {assignedRooms.length === 0 ? (
-          <Typography align="center" color="textSecondary">
-            No assigned rooms.
-          </Typography>
-        ) : (
-          <Grid container spacing={2}>
-            {assignedRooms.map((assignment) => (
-              <Grid item xs={12} key={assignment.Range_ID}>
-                <Typography variant="body1">
-                  <strong>{assignment.Hall_Name}: </strong>
-                  {assignment.Room_Start} - {assignment.Room_End}
-                </Typography>
-              </Grid>
-            ))}
-          </Grid>
-        )}
-      </CardContent>
-    </Card>
+          ))}
+        </Grid>
+      )}
+    </>
   );
 };
 
