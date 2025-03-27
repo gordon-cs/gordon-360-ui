@@ -179,6 +179,7 @@ const OnDutyRD = () => {
                   />
                 </ListItem>
               )}
+              {/*
               <ListItem>
                 <ListItemText
                   primary={
@@ -188,6 +189,7 @@ const OnDutyRD = () => {
                   }
                 />
               </ListItem>
+              */}
             </List>
           </Grid>
 
