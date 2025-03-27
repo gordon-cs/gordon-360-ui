@@ -21,8 +21,6 @@ import ProfileNotFound from './views/ProfileNotFound';
 import PublicProfile from './views/PublicProfile';
 import Timesheets from './views/Timesheets';
 import RecIM from './views/RecIM';
-import { element } from 'prop-types';
-import { Room } from '@mui/icons-material';
 import CampusSafety from './views/CampusSafety';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
