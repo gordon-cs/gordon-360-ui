@@ -204,7 +204,7 @@ const StatusManager = () => {
       resetStatusForm();
     } catch (error) {
       console.error('Error adding status:', error);
-      createSnackbar('Error creating status: ' + error.Details, 'error');
+      createSnackbar('Error creating status: ' + error.error, 'error');
     }
   };
 
@@ -236,7 +236,7 @@ const StatusManager = () => {
       createSnackbar('Status updated successfully!', 'success');
     } catch (error) {
       console.error('Error editing status:', error);
-      createSnackbar('Error updating status: ' + error.Details, 'error');
+      createSnackbar('Error updating status: ' + error.error, 'error');
     }
   };
 
@@ -272,7 +272,7 @@ const StatusManager = () => {
       createSnackbar('Status deleted successfully!', 'success');
     } catch (error) {
       console.error('Error deleting status:', error);
-      createSnackbar('Error deleting status: ' + error.Details, 'error');
+      createSnackbar('Error deleting status: ' + error.error, 'error');
     }
   };
 
