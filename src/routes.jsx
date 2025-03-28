@@ -21,7 +21,6 @@ import ProfileNotFound from './views/ProfileNotFound';
 import PublicProfile from './views/PublicProfile';
 import Timesheets from './views/Timesheets';
 import RecIM from './views/RecIM';
-import RoomRanges from 'views/ResLife/components/RDView/components/RoomRanges';
 import CampusSafety from './views/CampusSafety';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
@@ -128,7 +127,7 @@ const routes = [
   },
   {
     name: 'Res-Life',
-    path: '/reslife',
+    path: '/reslife/*',
     element: <Housing />,
   },
   {
@@ -145,11 +144,6 @@ const routes = [
     name: 'Page Not Found',
     path: '*',
     element: <Page404 />,
-  },
-  {
-    name: 'RoomRanges',
-    path: '/RoomRanges',
-    element: <RoomRanges />,
   },
 ];
 
