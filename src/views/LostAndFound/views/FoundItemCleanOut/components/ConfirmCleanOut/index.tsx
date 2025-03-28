@@ -180,41 +180,24 @@ const ConfirmCleanOut: React.FC<ConfirmCleanOutProps> = ({ reportsToCleanOut, on
               ),
             )}
           </>
-          {isMobile ? (
-            <Grid container marginTop={3}>
-              <Grid item xs={8}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={enableCleanOut}
-                      onChange={handleCheckboxClick}
-                      name="confirm"
-                    />
-                  }
-                  label="I confirm that these items are no longer in the Gordon Police inventory."
-                />
-              </Grid>
+          <Grid container justifyContent="center" marginTop={3}>
+            <Grid item>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={enableCleanOut}
+                    onChange={handleCheckboxClick}
+                    name="confirm"
+                  />
+                }
+                label="I confirm that these items are no longer in the Gordon Police inventory."
+              />
             </Grid>
-          ) : (
-            <Grid container justifyContent="center" marginTop={3}>
-              <Grid item xs={8}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={enableCleanOut}
-                      onChange={handleCheckboxClick}
-                      name="confirm"
-                    />
-                  }
-                  label="I confirm that these items are no longer in the Gordon Police inventory."
-                />
-              </Grid>
-            </Grid>
-          )}
-          <Grid container justifyContent="flex-end" padding={2}>
+          </Grid>
+          <Grid container justifyContent="center" padding={2}>
             <Grid item padding={2}>
               <Button variant="contained" color="primary" onClick={onCancel}>
-                Go Back and Edit
+                Edit
               </Button>
             </Grid>
             <Grid item padding={2}>
@@ -224,7 +207,7 @@ const ConfirmCleanOut: React.FC<ConfirmCleanOutProps> = ({ reportsToCleanOut, on
                 onClick={() => handleCleanOut(reportsToCleanOut)}
                 disabled={!enableCleanOut}
               >
-                Clean Out Items
+                Clean Out
               </Button>
             </Grid>
           </Grid>
