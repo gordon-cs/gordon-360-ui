@@ -165,7 +165,7 @@ const FoundItemFormEdit = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!foundItem) return;
     const { name, value, type, checked } = e.target;
-    if(readOnly) return;
+    if (readOnly) return;
     setFoundItem((prev) => {
       if (!prev) return null;
       return { ...prev, [name]: type === 'checkbox' ? checked : value };
@@ -193,18 +193,16 @@ const FoundItemFormEdit = () => {
   /** 5) Save */
   const handleSave = async () => {
     if (!foundItem) return;
-    if(readOnly) return;
+    if (readOnly) return;
     if (!validateForm()) return;
 
     try {
       await lostAndFoundService.updateFoundItem(foundItem, foundItem.recordID);
       if (location.state && (location.state as any).fromConfirmation) {
-        navigate(
-          `/lostandfound/lostandfoundadmin/founditemform/${foundItem?.recordID}`,
-        );
-      }else{
-        navigate('/lostandfound/lostandfoundadmin/founditemdatabase');
-        }
+        navigate(`/lostandfound/lostandfoundadmin/founditemform/${foundItem?.recordID}`);
+      } else {
+        navigate('/lostandfound/lostandfoundadmin/founditemdatabase?status=active');
+      }
     } catch (err) {
       console.error(err);
       createSnackbar('Failed to save changes.', 'error');
@@ -294,7 +292,12 @@ const FoundItemFormEdit = () => {
               <Typography variant="h5">Admin Actions</Typography>
             </Grid>
             <Grid container item xs={5} justifyContent="flex-end">
-              <Button variant="contained" color="secondary" onClick={openNewActionModal}  disabled = {readOnly}>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={openNewActionModal}
+                disabled={readOnly}
+              >
                 <Add />
                 New Action
               </Button>
@@ -302,7 +305,7 @@ const FoundItemFormEdit = () => {
           </Grid>
         }
         className={`gc360_header ${styles.actionsHeader}`}
-        disabled = {readOnly}
+        disabled={readOnly}
       />
       <CardContent className={styles.actionsCard}>
         {actionsLoading ? (
@@ -469,11 +472,12 @@ const FoundItemFormEdit = () => {
                           navigate(
                             `/lostandfound/lostandfoundadmin/founditemform/${foundItem?.recordID}`,
                           );
-                        } else if (!isKiosk){
-                          navigate('/lostandfound/lostandfoundadmin/founditemdatabase');
-                        }
-                        else if(isKiosk){
-                          navigate('/lostandfound/kiosk/founditemdatabase');
+                        } else if (!isKiosk) {
+                          navigate(
+                            '/lostandfound/lostandfoundadmin/founditemdatabase?status=active',
+                          );
+                        } else if (isKiosk) {
+                          navigate('/lostandfound/kiosk/founditemdatabase?status=active');
                         }
                       }}
                     >
@@ -497,18 +501,18 @@ const FoundItemFormEdit = () => {
                     </Typography>
                   </Grid>
                   {!readOnly && (
-                  <Grid container item xs={12} md={2}>
-                    <Button
-                      variant="contained"
-                      className={styles.submit_button}
-                      color="secondary"
-                      onClick={handleSave}
-                      fullWidth
-                      disabled={foundItem === originalItemData || readOnly}
-                    >
-                      Save Changes
-                    </Button>
-                  </Grid>
+                    <Grid container item xs={12} md={2}>
+                      <Button
+                        variant="contained"
+                        className={styles.submit_button}
+                        color="secondary"
+                        onClick={handleSave}
+                        fullWidth
+                        disabled={foundItem === originalItemData || readOnly}
+                      >
+                        Save Changes
+                      </Button>
+                    </Grid>
                   )}
                 </Grid>
               </>
@@ -548,7 +552,7 @@ const FoundItemFormEdit = () => {
                               value={val}
                               checked={foundItem.category === val}
                               onChange={handleChange}
-                              disabled ={readOnly}
+                              disabled={readOnly}
                             />
                           }
                         />
@@ -584,7 +588,7 @@ const FoundItemFormEdit = () => {
                           <Checkbox
                             checked={foundItem.colors.includes(color)}
                             onChange={() => handleColorChange(color)}
-                            disabled ={readOnly}
+                            disabled={readOnly}
                           />
                         }
                       />
@@ -602,7 +606,7 @@ const FoundItemFormEdit = () => {
                 value={foundItem.brand || ''}
                 onChange={handleChange}
                 sx={{ marginTop: '1rem' }}
-                disabled ={readOnly}
+                disabled={readOnly}
               />
 
               {/* Description */}
@@ -618,7 +622,7 @@ const FoundItemFormEdit = () => {
                 sx={{ marginTop: '1rem' }}
                 error={!!validationErrors['description']}
                 helperText={validationErrors['description'] || ''}
-                disabled = {readOnly}
+                disabled={readOnly}
               />
             </Grid>
 
@@ -637,7 +641,7 @@ const FoundItemFormEdit = () => {
                 sx={{ marginBottom: '1rem' }}
                 error={!!validationErrors['locationFound']}
                 helperText={validationErrors['locationFound'] || ''}
-                disabled ={readOnly}
+                disabled={readOnly}
               />
               <CustomDatePicker
                 value={foundItem.dateFound ? foundItem.dateFound : null}
@@ -650,7 +654,7 @@ const FoundItemFormEdit = () => {
                     checked={foundItem.finderWants || false}
                     onChange={handleChange}
                     name="finderWants"
-                    disabled ={readOnly}
+                    disabled={readOnly}
                   />
                 }
                 label="Finder Wants Item if not claimed"
@@ -669,7 +673,7 @@ const FoundItemFormEdit = () => {
                     )
                   }
                   fullWidth
-                  disabled ={readOnly}
+                  disabled={readOnly}
                 >
                   <MenuItem value="">(None)</MenuItem>
                   <MenuItem value="Office Desk">Office Desk</MenuItem>
@@ -681,12 +685,13 @@ const FoundItemFormEdit = () => {
               {/* Mark as picked up / disposed */}
               <Grid container spacing={2}>
                 <Grid item xs={6}>
-                  <Button 
-                  variant="contained" 
-                  color="info" 
-                  fullWidth 
-                  onClick={handleMarkAsPickedUp} 
-                  disabled ={readOnly}>
+                  <Button
+                    variant="contained"
+                    color="info"
+                    fullWidth
+                    onClick={handleMarkAsPickedUp}
+                    disabled={readOnly}
+                  >
                     Mark as Picked Up
                   </Button>
                 </Grid>
@@ -696,7 +701,7 @@ const FoundItemFormEdit = () => {
                     color="warning"
                     fullWidth
                     onClick={handleMarkAsDisposed}
-                    disabled ={readOnly}
+                    disabled={readOnly}
                   >
                     Mark as Disposed
                   </Button>
