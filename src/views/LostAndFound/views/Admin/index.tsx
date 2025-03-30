@@ -11,7 +11,15 @@ import {
   Select,
   TextField,
 } from '@mui/material';
-import { Grid, Button } from '@mui/material';
+import {
+  Grid,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Typography,
+} from '@mui/material';
 import Header from 'views/LostAndFound/components/Header';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useLocation, useNavigate } from 'react-router';
@@ -25,7 +33,6 @@ import {
   clearUrlParams,
   formatDateString,
 } from 'views/LostAndFound/components/Helpers';
-import userService from 'services/user';
 import { Delete, Person, Storage } from '@mui/icons-material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import SimpleSnackbar from 'components/Snackbar';
@@ -73,6 +80,7 @@ const LostAndFoundAdmin = () => {
   const matchButtonRef = useRef<HTMLButtonElement | null>(null);
   const [noMatchIsClicked, setNoMatchIsClicked] = useState(false);
   const [matchFoundIsClicked, setMatchFoundIsClicked] = useState(false);
+  const [isMatchModalOpen, setMatchModalOpen] = useState(false);
 
   useEffect(() => {
     setPageLoaded(true);
@@ -139,6 +147,16 @@ const LostAndFoundAdmin = () => {
     }
   };
 
+  const handleMatchClick = () => {
+    setNoMatchIsClicked(true);
+    handleMatchFoundSubmit(missingID, foundID);
+    setMatchModalOpen(false);
+  };
+
+  const handleMatchModalClose = () => {
+    setMatchModalOpen(false);
+  };
+
   const handleMatchFoundSubmit = async (missingID: string, foundID: string) => {
     if (!foundItem) return;
     if (!matchFoundIsClicked) setMatchFoundIsClicked(true);
@@ -156,6 +174,7 @@ const LostAndFoundAdmin = () => {
       setShowMissingPopUp(false);
       setShowFoundPopUp(false);
       setMatchFoundIsClicked(false);
+      setNoMatchIsClicked(false);
       const fetchedMissingReports = await lostAndFoundService.getMissingItemReports(
         status,
         category,
@@ -493,7 +512,7 @@ const LostAndFoundAdmin = () => {
       color="secondary"
       variant="contained"
       onClick={() => {
-        navigate('founditemdatabase?status=active');
+        navigate('founditemdatabase');
       }}
     >
       <Storage />
@@ -835,6 +854,37 @@ const LostAndFoundAdmin = () => {
     );
   };
 
+  type MatchConfirmationModalProps = {
+    open: boolean;
+    onClose: () => void;
+    onSubmit: () => void;
+  };
+
+  const MatchConfirmationModal: React.FC<MatchConfirmationModalProps> = ({
+    open,
+    onClose,
+    onSubmit,
+  }) => {
+    return (
+      <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+        <DialogTitle className={styles.modalTitle}>Confirm Match?</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" align="center" className={styles.notice}>
+            Do you want to match missing report {missingID} with found item {foundID}?
+          </Typography>
+        </DialogContent>
+        <DialogActions className={styles.actions}>
+          <Button onClick={onClose} className={styles.cancelButton}>
+            Cancel
+          </Button>
+          <Button onClick={onSubmit} className={styles.submitButton}>
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
+
   return (
     <>
       <Header />
@@ -1114,7 +1164,7 @@ const LostAndFoundAdmin = () => {
                 ref={matchButtonRef}
                 className={styles.matchButton}
                 onClick={() => {
-                  handleMatchFoundSubmit(missingID, foundID);
+                  setMatchModalOpen(true);
                 }}
                 disabled={matchFoundIsClicked}
                 variant="contained"
@@ -1129,6 +1179,11 @@ const LostAndFoundAdmin = () => {
       ) : (
         <div></div>
       )}
+      <MatchConfirmationModal
+        open={isMatchModalOpen}
+        onClose={handleMatchModalClose}
+        onSubmit={handleMatchClick}
+      />
       <SimpleSnackbar
         open={errorSnackbarOpen}
         onClose={() => {
@@ -1137,6 +1192,7 @@ const LostAndFoundAdmin = () => {
         severity="error"
         text="No Match Submit Failed."
       />
+      ``{' '}
     </>
   );
 };
