@@ -408,11 +408,12 @@ const LostAndFoundAdmin = () => {
   // Lazy loading helper: load more reports
   const loadMoreFoundItems = async () => {
     if (foundLazyLoading || !hasMoreFound) return;
-    setFoundLazyLoading(true);
+    //setFoundLazyLoading(true);
     // Use the last report's recordID as the lastId; if none, it remains undefined.
+    const lastId = foundItems.length > 0 ? foundItems[foundItems.length - 1].recordID : undefined;
     try {
       const moreReports = await lostAndFoundService.getFoundItems(
-        '',
+        lastId,
         '',
         status || '',
         color || '',
