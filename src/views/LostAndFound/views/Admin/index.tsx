@@ -33,7 +33,7 @@ import {
   clearUrlParams,
   formatDateString,
 } from 'views/LostAndFound/components/Helpers';
-import { Delete, Person, Storage } from '@mui/icons-material';
+import { Delete, JoinFull, Person, Storage } from '@mui/icons-material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import SimpleSnackbar from 'components/Snackbar';
 import CircleIcon from '@mui/icons-material/Circle';
@@ -143,6 +143,29 @@ const LostAndFoundAdmin = () => {
       setErrorSnackbarOpen(true);
       console.error('No Match Submit Failed');
     } finally {
+      try {
+        if (
+          status === getUrlParam('status', location, searchParams) &&
+          category === getUrlParam('category', location, searchParams) &&
+          color === getUrlParam('color', location, searchParams) &&
+          keywords === getUrlParam('keywords', location, searchParams)
+        ) {
+          const fetchedMissingReports = await lostAndFoundService.getMissingItemReports(
+            status,
+            category,
+            color,
+            keywords,
+            undefined,
+            pageSize,
+          );
+          setMissingReports(fetchedMissingReports);
+          setLoading(false);
+          setLazyLoading(false);
+        }
+      } catch (error) {
+        console.error('Error fetching missing or found items', error);
+        createSnackbar(`Failed to load missing or found items`, error);
+      }
       setLazyLoading(false);
     }
   };
