@@ -59,7 +59,7 @@ const FoundItemList = () => {
     open: false,
   });
 
-    //state variables for counts
+  //state variables for counts
   const [totalCount, setTotalCount] = useState<number>(0);
   const [filteredCount, setFilteredCount] = useState<number>(0);
 
@@ -152,9 +152,8 @@ const FoundItemList = () => {
           '',
           '',
           '',
-          ''
+          '',
         );
-        console.log("Total result:", totalResult);
         const filteredResult = await lostAndFoundService.getFoundItemsCount(
           username,
           undefined,
@@ -162,9 +161,8 @@ const FoundItemList = () => {
           color,
           category,
           tagID,
-          keywords
+          keywords,
         );
-        console.log("Filtered:", filteredResult);
         // Extract numeric counts from the returned objects.
         setTotalCount(totalResult);
         setFilteredCount(filteredResult);
@@ -304,34 +302,36 @@ const FoundItemList = () => {
                       </Button>
                     </Grid>
                   </Grid>
-                   {/* NEW: Display counts below the filters */}
-                    <Typography
-                      variant="body2"
-                      className={styles.countText}
-                      style={{ marginTop: '0.5rem', textAlign: 'right' }}
-                    >
-                      Showing {filteredCount} / {totalCount} found items
-                    </Typography>
+                  {/* NEW: Display counts below the filters */}
+                  <Typography
+                    variant="body2"
+                    className={styles.countText}
+                    style={{ marginTop: '0.5rem', textAlign: 'right' }}
+                  >
+                    Showing {filteredCount} / {totalCount} found items
+                  </Typography>
                 </Grid>
 
                 {/* Button: Enter New Found Item */}
-                <Grid item xs={12} sm={3} style={{ textAlign: isMobile ? 'center' : 'right' }}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => navigate('/lostandfound/lostandfoundadmin/founditemform')}
-                    fullWidth={isMobile}
-                    className={styles.reportButton}
-                    disabled ={readOnly}
-                  >
-                    Enter New Found Item
-                  </Button>
-                </Grid>
+                {!readOnly && (
+                  <>
+                    <Grid item xs={12} sm={3} style={{ textAlign: isMobile ? 'center' : 'right' }}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => navigate('/lostandfound/lostandfoundadmin/founditemform')}
+                        fullWidth={isMobile}
+                        className={styles.reportButton}
+                      >
+                        Enter New Found Item
+                      </Button>
+                    </Grid>
+                  </>
+                )}
               </Grid>
             </CardContent>
           </Card>
         </Grid>
-        
       </Grid>
 
       {/* Table header for large screens */}
@@ -381,9 +381,9 @@ const FoundItemList = () => {
                         className={styles.clickableRow}
                         onClick={() =>
                           navigate(
-                            isKiosk
+                            readOnly
                               ? `/lostandfound/kiosk/founditemdatabase/${report.recordID}`
-                              : `/lostandfound/lostandfoundadmin/founditemdatabase/${report.recordID}`
+                              : `/lostandfound/lostandfoundadmin/founditemdatabase/${report.recordID}`,
                           )
                         }
                       >
@@ -416,9 +416,9 @@ const FoundItemList = () => {
                         className={`${styles.reportRow} ${styles.clickableRow}`}
                         onClick={() =>
                           navigate(
-                            isKiosk
+                            readOnly
                               ? `/lostandfound/kiosk/founditemdatabase/${report.recordID}`
-                              : `/lostandfound/lostandfoundadmin/founditemdatabase/${report.recordID}`
+                              : `/lostandfound/lostandfoundadmin/founditemdatabase/${report.recordID}`,
                           )
                         }
                       >

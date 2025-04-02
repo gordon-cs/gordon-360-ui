@@ -13,7 +13,6 @@ import {
   FormLabel,
   RadioGroup,
   MenuItem,
-  Typography,
   InputLabel,
   Select,
   FormControl,
@@ -26,7 +25,6 @@ import styles from './FoundItemFormCreate.module.scss';
 import lostAndFoundService from 'services/lostAndFound';
 import GordonSnackbar from 'components/Snackbar';
 import { useNavigate } from 'react-router';
-import { InfoOutlined } from '@mui/icons-material';
 import { useUser } from 'hooks';
 import {
   LFCategories,
@@ -55,6 +53,8 @@ const FoundItemFormCreate = () => {
   const navigate = useNavigate();
   const [dateError, setDateError] = useState<DateValidationError | null>(null);
   const { profile } = useUser();
+  const [hasFinder, setHasFinder] = useState<boolean>(false);
+  const [hasOwner, setHasOwner] = useState<boolean>(false);
 
   const createSnackbar = useCallback((message: string, severity: ISnackbarState['severity']) => {
     setSnackbar({ message, severity, open: true });
@@ -116,7 +116,7 @@ const FoundItemFormCreate = () => {
     dateFound: '',
     finderWantsItem: false,
     initialAction: '',
-    storageLocation: '',
+    storageLocation: LFStorageLocations[0],
     status: 'active',
   });
 
@@ -187,6 +187,10 @@ const FoundItemFormCreate = () => {
         errors[field] = 'This field is required';
       }
     });
+
+    if (formData.colors.length === 0) {
+      errors['color'] = 'This field is required';
+    }
 
     if (formData.finderWantsItem && !formData.finderPhoneNumber) {
       errors.finderPhoneNumber = 'Required if you want to claim the item later';
@@ -354,19 +358,7 @@ const FoundItemFormCreate = () => {
           className="gc360_header"
         />
 
-        <div className={styles.disclaimer}>
-          <InfoOutlined />
-          <Grid container item rowGap={1}>
-            <Grid item xs={12}>
-              <Typography variant="body1">Gordon Police manages campus Lost &amp; Found</Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography variant="body2">
-                Police staff will view this Found Item report, and help if the owner is identified.
-              </Typography>
-            </Grid>
-          </Grid>
-        </div>
+        <br />
 
         {/* Two-column layout */}
         <Grid container spacing={2} paddingX={3}>
@@ -431,6 +423,13 @@ const FoundItemFormCreate = () => {
                   ))}
                 </FormGroup>
               </div>
+              <TextField
+                variant="standard"
+                error={!!validationErrors.color}
+                helperText={validationErrors.color || ' '}
+                fullWidth
+                InputProps={{ style: { display: 'none' } }}
+              />
             </div>
 
             {/* Brand */}
@@ -493,164 +492,207 @@ const FoundItemFormCreate = () => {
               />
             </div>
 
-            {/* Found By */}
-            <Grid item margin={2}>
-              <FormLabel component="legend" required>
-                Was the Finder a Gordon Person?
-              </FormLabel>
-              <RadioGroup
-                row
-                name="isGordonFinder"
-                value={formData.isGordonFinder}
-                onChange={(e) => {
-                  setFormData({ ...formData, isGordonFinder: e.target.value });
-                }}
-              >
-                <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                <FormControlLabel value="no" control={<Radio />} label="No" />
-              </RadioGroup>
-            </Grid>
-
-            {formData.isGordonFinder === 'yes' && (
-              <Grid item margin={2}>
-                <GordonPersonAutocomplete onChange={handleFinderSelect} />
-              </Grid>
-            )}
-
-            {formData.isGordonFinder === 'no' && (
-              <>
-                <Grid container direction="column" rowSpacing={1}>
-                  <Grid item>
-                    <div className={styles.name_field}>
-                      <TextField
-                        label="Finder First Name"
-                        sx={{ width: '49%' }}
-                        name="finderFirstName"
-                        value={formData.finderFirstName}
-                        onChange={handleChange}
-                      />
-                      <TextField
-                        label="Finder Last Name"
-                        sx={{ width: '49%' }}
-                        name="finderLastName"
-                        value={formData.finderLastName}
-                        onChange={handleChange}
-                      />
-                    </div>
-                  </Grid>
-                  <Grid item>
-                    <TextField
-                      label="Finder Phone"
-                      fullWidth
-                      name="finderPhoneNumber"
-                      value={formData.finderPhoneNumber}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <TextField
-                      label="Finder Email"
-                      fullWidth
-                      name="finderEmail"
-                      value={formData.finderEmail}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                </Grid>
-              </>
-            )}
-
             {/* Finder wants item */}
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={formData.finderWantsItem}
-                  onChange={handleChange}
-                  name="finderWantsItem"
-                />
-              }
-              label="Finder Wants the Item if it’s not Claimed"
-              sx={{ marginBottom: '0.5rem' }}
-            />
-
-            {formData.finderWantsItem && (
-              <TextField
-                fullWidth
-                variant="filled"
-                label="Finder Phone Number (required if claiming later)"
-                name="finderPhoneNumber"
-                value={formData.finderPhoneNumber}
-                onChange={handleChange}
-                error={!!validationErrors.finderPhoneNumber}
-                helperText={validationErrors.finderPhoneNumber || ' '}
-                sx={{ marginBottom: '1rem' }}
+            <Grid item margin={1}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={hasFinder}
+                    onChange={(e) => {
+                      setHasFinder(!hasFinder);
+                      setFormData({ ...formData, isGordonFinder: '', finderWantsItem: false });
+                    }}
+                    name="hasFinder"
+                  />
+                }
+                label="Do you know the name of the person who found the item?"
+                sx={{ marginBottom: '0.5rem' }}
               />
-            )}
+              {/* Found By */}
+              {hasFinder && (
+                <>
+                  <Grid item margin={1}>
+                    <FormLabel component="legend" required>
+                      Is the Finder a Gordon Person?
+                    </FormLabel>
+                    <RadioGroup
+                      row
+                      name="isGordonFinder"
+                      value={formData.isGordonFinder}
+                      onChange={(e) => {
+                        setFormData({ ...formData, isGordonFinder: e.target.value });
+                      }}
+                    >
+                      <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+                      <FormControlLabel value="no" control={<Radio />} label="No" />
+                    </RadioGroup>
+                  </Grid>
+
+                  {formData.isGordonFinder === 'yes' && (
+                    <Grid item margin={1}>
+                      <GordonPersonAutocomplete onChange={handleFinderSelect} />
+                    </Grid>
+                  )}
+
+                  {formData.isGordonFinder === 'no' && (
+                    <>
+                      <Grid container direction="column" rowSpacing={1}>
+                        <Grid item>
+                          <div className={styles.name_field}>
+                            <TextField
+                              label="Finder First Name"
+                              sx={{ width: '49%' }}
+                              name="finderFirstName"
+                              value={formData.finderFirstName}
+                              onChange={handleChange}
+                            />
+                            <TextField
+                              label="Finder Last Name"
+                              sx={{ width: '49%' }}
+                              name="finderLastName"
+                              value={formData.finderLastName}
+                              onChange={handleChange}
+                            />
+                          </div>
+                        </Grid>
+                        <Grid item>
+                          <TextField
+                            label="Finder Phone"
+                            fullWidth
+                            name="finderPhoneNumber"
+                            value={formData.finderPhoneNumber}
+                            onChange={handleChange}
+                          />
+                        </Grid>
+                        <Grid item>
+                          <TextField
+                            label="Finder Email"
+                            fullWidth
+                            name="finderEmail"
+                            value={formData.finderEmail}
+                            onChange={handleChange}
+                          />
+                        </Grid>
+                      </Grid>
+                    </>
+                  )}
+
+                  {/* Finder wants item */}
+                  <Grid item margin={1}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          checked={formData.finderWantsItem}
+                          onChange={handleChange}
+                          name="finderWantsItem"
+                        />
+                      }
+                      label="Finder Wants the Item if it’s not Claimed"
+                      sx={{ marginBottom: '0.5rem' }}
+                    />
+
+                    {formData.finderWantsItem && (
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        label="Finder Phone Number (required if claiming later)"
+                        name="finderPhoneNumber"
+                        value={formData.finderPhoneNumber}
+                        onChange={handleChange}
+                        error={!!validationErrors.finderPhoneNumber}
+                        helperText={validationErrors.finderPhoneNumber || ' '}
+                        sx={{ marginBottom: '1rem' }}
+                      />
+                    )}
+                  </Grid>
+                </>
+              )}
+            </Grid>
 
             {/* Owner's Name */}
-            <Grid item margin={2}>
-              <FormLabel component="legend">Was the Owner a Gordon Person (if known)?</FormLabel>
-              <RadioGroup
-                row
-                name="isGordonOwner"
-                value={formData.isGordonOwner}
-                onChange={(e) => {
-                  setFormData({ ...formData, isGordonOwner: e.target.value });
-                }}
-              >
-                <FormControlLabel value="yes" control={<Radio />} label="Yes" />
-                <FormControlLabel value="no" control={<Radio />} label="No" />
-              </RadioGroup>
+            <Grid item margin={1}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={hasOwner}
+                    onChange={(e) => {
+                      setHasOwner(!hasOwner);
+                      setFormData({ ...formData, isGordonOwner: '' });
+                    }}
+                    name="hasFinder"
+                  />
+                }
+                label="Do you know the name of the item's owner?"
+                sx={{ marginBottom: '0.5rem' }}
+              />
+              {hasOwner && (
+                <>
+                  <Grid item margin={2}>
+                    <FormLabel component="legend">Is the Owner a Gordon Person?*</FormLabel>
+                    <RadioGroup
+                      row
+                      name="isGordonOwner"
+                      value={formData.isGordonOwner}
+                      onChange={(e) => {
+                        setFormData({ ...formData, isGordonOwner: e.target.value });
+                      }}
+                    >
+                      <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+                      <FormControlLabel value="no" control={<Radio />} label="No" />
+                    </RadioGroup>
+                  </Grid>
+
+                  {formData.isGordonOwner === 'yes' && (
+                    <Grid item margin={2}>
+                      <GordonPersonAutocomplete onChange={handleOwnerSelect} />
+                    </Grid>
+                  )}
+
+                  {formData.isGordonOwner === 'no' && (
+                    <>
+                      <Grid container direction="column" rowSpacing={1}>
+                        <Grid item>
+                          <div className={styles.name_field}>
+                            <TextField
+                              label="Owner First Name"
+                              sx={{ width: '49%' }}
+                              name="ownerFirstName"
+                              value={formData.ownerFirstName}
+                              onChange={handleChange}
+                            />
+                            <TextField
+                              label="Owner Last Name"
+                              sx={{ width: '49%' }}
+                              name="ownerLastName"
+                              value={formData.ownerLastName}
+                              onChange={handleChange}
+                            />
+                          </div>
+                        </Grid>
+                        <Grid item>
+                          <TextField
+                            label="Owner Phone"
+                            fullWidth
+                            name="ownerPhoneNumber"
+                            value={formData.ownerPhoneNumber}
+                            onChange={handleChange}
+                          />
+                        </Grid>
+                        <Grid item>
+                          <TextField
+                            label="Owner Email"
+                            fullWidth
+                            name="ownerEmail"
+                            value={formData.ownerEmail}
+                            onChange={handleChange}
+                          />
+                        </Grid>
+                      </Grid>
+                    </>
+                  )}
+                </>
+              )}
             </Grid>
-
-            {formData.isGordonOwner === 'yes' && (
-              <Grid item margin={2}>
-                <GordonPersonAutocomplete onChange={handleOwnerSelect} />
-              </Grid>
-            )}
-
-            {formData.isGordonOwner === 'no' && (
-              <>
-                <Grid container direction="column" rowSpacing={1}>
-                  <Grid item>
-                    <div className={styles.name_field}>
-                      <TextField
-                        label="Owner First Name"
-                        sx={{ width: '49%' }}
-                        name="ownerFirstName"
-                        value={formData.ownerFirstName}
-                        onChange={handleChange}
-                      />
-                      <TextField
-                        label="Owner Last Name"
-                        sx={{ width: '49%' }}
-                        name="ownerLastName"
-                        value={formData.ownerLastName}
-                        onChange={handleChange}
-                      />
-                    </div>
-                  </Grid>
-                  <Grid item>
-                    <TextField
-                      label="Owner Phone"
-                      fullWidth
-                      name="ownerPhoneNumber"
-                      value={formData.ownerPhoneNumber}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <TextField
-                      label="Owner Email"
-                      fullWidth
-                      name="ownerEmail"
-                      value={formData.ownerEmail}
-                      onChange={handleChange}
-                    />
-                  </Grid>
-                </Grid>
-              </>
-            )}
 
             {/* Initial Action - use typed SelectChangeEvent */}
             {/* <div style={{ marginBottom: '1rem', marginTop: '1rem' }}>
@@ -692,11 +734,6 @@ const FoundItemFormCreate = () => {
                   fullWidth
                   sx={{ backgroundColor: 'transparent' }}
                 >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
-                  {/* <MenuItem value="Office Safe">Office Safe</MenuItem>
-                  <MenuItem value="Closet A">Closet A</MenuItem> */}
                   {LFStorageLocations.map((loc) => (
                     <MenuItem value={loc}>{loc}</MenuItem>
                   ))}
