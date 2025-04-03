@@ -2,9 +2,13 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
-  Grid,
+  FormLabel,
   Input,
   InputLabel,
+  Link,
+  Radio,
+  RadioGroup,
+  Stack,
   Typography,
 } from '@mui/material';
 import { forwardRef } from 'react';
@@ -12,61 +16,96 @@ import { IMaskInput } from 'react-imask';
 
 const UpdatePhone = ({ phoneInfo, handleChangePhoneInfo, handleCheckPhoneInfo }) => {
   return (
-    <Grid container justifyContent="center" alignItems="center" direction="column" spacing={1}>
-      <Grid item>
-        <Typography variant="h5" color="secondary" gutterBottom>
-          Step 2: Enter your Cell Phone Number
-        </Typography>
-      </Grid>
-      <Grid item>
-        <Typography gutterBottom variant="body2">
-          Note: This information will be used to contact you with information in the event of issues
-          with registration etc, not for emergencies. Your number to contact you in emergencies is
-          handled by our 3rd-party company, RAVE. This number will also be visible to current
-          students, faculty, and staff unless you choose to make your number private on People
-          Search with the box below.
-        </Typography>
-      </Grid>
-      <Grid item>
-        <FormControl>
-          <InputLabel htmlFor="formatted-text-mask-input"> Phone Number </InputLabel>
-          <Input
-            id="formatted-text-mask-input"
-            name="PersonalPhone"
-            value={phoneInfo.PersonalPhone}
-            onChange={handleChangePhoneInfo}
+    <Stack spacing={4}>
+      <Typography variant="h5" color="secondary">
+        Step 2: Enter your Cell Phone Number
+      </Typography>
+      <Typography>
+        Note: This information will be used to contact you with information in the event of issues
+        with registration etc, not for emergencies.
+        <br />
+        <br />
+        To update the number we will use to contact you in case of emergency, please use{' '}
+        <Link
+          href="https://www.getrave.com/login/gordon"
+          className="gc360_text_link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Rave
+        </Link>
+        .
+        <br />
+        <br />
+        This number will also be visible to current students, faculty, and staff unless you choose
+        to make your number private on People Search with the box below.
+      </Typography>
+
+      <FormControl>
+        <InputLabel htmlFor="formatted-text-mask-input">Phone Number</InputLabel>
+        <Input
+          id="formatted-text-mask-input"
+          name="PersonalPhone"
+          value={phoneInfo.NoPhone ? '' : phoneInfo.PersonalPhone}
+          onChange={handleChangePhoneInfo}
+          disabled={phoneInfo.NoPhone}
+          inputComponent={phoneMaskUS}
+          autoFocus
+        />
+      </FormControl>
+
+      <FormControl>
+        <FormLabel>Do you give permission for Gordon College to text you?</FormLabel>
+        <RadioGroup value={phoneInfo.SMSOptedIn} onChange={handleChangePhoneInfo} name="SMSOptedIn">
+          <FormControlLabel
             disabled={phoneInfo.NoPhone}
-            inputComponent={phoneMaskUS}
-            autoFocus
-          />
-        </FormControl>
-      </Grid>
-      <Grid item>
-        <FormControl>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={phoneInfo.MakePrivate}
-                disabled={phoneInfo.NoPhone}
-                name={'MakePrivate'}
-                onChange={handleCheckPhoneInfo}
-              />
-            }
-            label="Make my number private on People Search"
+            value={true}
+            control={<Radio />}
+            label="Yes"
           />
           <FormControlLabel
-            control={
-              <Checkbox
-                checked={phoneInfo.NoPhone}
-                name={'NoPhone'}
-                onChange={handleCheckPhoneInfo}
-              />
-            }
-            label="I don't have a cell-phone"
+            disabled={phoneInfo.NoPhone}
+            value={false}
+            control={<Radio />}
+            label="No"
           />
-        </FormControl>
-      </Grid>
-    </Grid>
+        </RadioGroup>
+        <Typography variant="body2">
+          By checking yes, you agree to receive text messages from Gordon College. Message & data
+          rates may apply. Message frequency varies. Reply HELP for help or STOP to cancel. View
+          Terms of Service and Privacy Policy:{' '}
+          <Link
+            href="https://www.gordon.edu/webprivacy.cfm"
+            className="gc360_text_link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            https://www.gordon.edu/webprivacy.cfm
+          </Link>
+          .
+        </Typography>
+      </FormControl>
+
+      <FormControl>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={phoneInfo.MakePrivate}
+              disabled={phoneInfo.NoPhone}
+              name="MakePrivate"
+              onChange={handleCheckPhoneInfo}
+            />
+          }
+          label="Make my number private on People Search"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox checked={phoneInfo.NoPhone} name="NoPhone" onChange={handleCheckPhoneInfo} />
+          }
+          label="I don't have a cell-phone"
+        />
+      </FormControl>
+    </Stack>
   );
 };
 

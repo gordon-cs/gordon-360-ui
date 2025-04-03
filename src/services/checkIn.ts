@@ -1,12 +1,11 @@
-import { AuthError, NotFoundError } from "./error";
-import http from "./http";
+import http from './http';
 
 /**
  * these holds prevent a student from checking in
  */
 type MajorHolds = {
   RegistrarHold: boolean;
-  HighSchoolTranscriptHold: boolean;
+  HighSchoolHold: boolean;
   FinancialHold: boolean;
   MedicalHold: boolean;
   MustRegisterForClasses: boolean;
@@ -19,6 +18,8 @@ type MinorHolds = {
   LaVidaHold: boolean;
   MajorHold: boolean;
 };
+
+type Holds = MajorHolds & MinorHolds;
 
 type EmergencyContact = {
   /** the sequence number of the contact, (1, 2, or 3) */
@@ -34,54 +35,49 @@ type EmergencyContact = {
   MobilePhoneIN: boolean;
 };
 
-type PersonalPhone = {
+type PhoneInfo = {
   PersonalPhone: number;
   MakePrivate: boolean;
-  NoPhone: boolean;
+  SMSOptedIn: boolean;
 };
 
-type Demographic = {
-  /** whether or not a student is Hispanic/Latino or prefers not to say */
-  Ethnicity: number;
-  Race: Race;
-};
+// type Demographic = {
+//   /** whether or not a student is Hispanic/Latino or prefers not to say */
+//   Ethnicity: number;
+//   Race: Race;
+// };
 
 export enum Race {
-  NativeAmerican = "Native American or Alaskan Native",
-  Asian = "Asian",
-  Black = "Black or African American",
-  Hawaiian = "Native Hawaiian or Other Pacific Islander",
-  White = "White",
+  NativeAmerican = 'Native American or Alaskan Native',
+  Asian = 'Asian',
+  Black = 'Black or African American',
+  Hawaiian = 'Native Hawaiian or Other Pacific Islander',
+  White = 'White',
 }
 
-type EnrollmentCheckin = {
-  Holds: string;
-  NewStudent: number;
-} & PersonalPhone &
-  MajorHolds &
-  MinorHolds &
-  Demographic;
+// type EnrollmentCheckin = {
+//   Holds: string;
+//   NewStudent: number;
+// } & MajorHolds &
+//   MinorHolds &
+//   Demographic;
 
 const getStatus = (): Promise<boolean> => http.get<boolean>(`checkIn/status`);
 
 const markCompleted = (): Promise<void> => http.put(`checkIn/status`);
 
-const getHolds = (): Promise<EnrollmentCheckin> => http.get(`checkIn/holds`);
+const getHolds = (): Promise<Holds> => http.get(`checkIn/holds`);
 
-const getEmergencyContacts = (
-  username: string
-): Promise<EmergencyContact[] | void> =>
+const getEmergencyContacts = (username: string): Promise<EmergencyContact[] | void> =>
   http.get(`profiles/emergency-contact/${username}/`);
 
-const submitPhone = (data: EnrollmentCheckin): Promise<EnrollmentCheckin> =>
-  http.put(`checkIn/cellphone`, data);
+const submitPhone = (data: PhoneInfo): Promise<void> => http.put(`checkIn/cellphone`, data);
 
 const submitContact = (data: EmergencyContact): Promise<EmergencyContact> =>
   http.post(`checkIn/emergencycontact`, data);
 
-const submitDemographic = (
-  data: EnrollmentCheckin
-): Promise<EnrollmentCheckin> => http.put(`checkIn/demographic`, data);
+// const submitDemographic = (data: EnrollmentCheckin): Promise<EnrollmentCheckin> =>
+//   http.put(`checkIn/demographic`, data);
 
 const checkInService = {
   getStatus,
@@ -90,7 +86,7 @@ const checkInService = {
   getEmergencyContacts,
   submitPhone,
   submitContact,
-  submitDemographic,
+  // submitDemographic,
 };
 
 export default checkInService;
