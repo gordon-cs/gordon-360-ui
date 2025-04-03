@@ -13,7 +13,7 @@ const EditDocs = () => (
       </ListItem>
       <ListItem>
         <RouterLink to="tasklist" className="gc360_text_link" style={{ textDecoration: 'none' }}>
-          <ListItemText primary="RA/AC On-Duty Task Manager" />
+          <ListItemText primary="RA On-Duty Task Manager" />
         </RouterLink>
       </ListItem>
       <ListItem>

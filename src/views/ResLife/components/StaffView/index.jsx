@@ -11,10 +11,22 @@ import {
   Link,
   useMediaQuery,
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import CustomizedTable from '../RDView/components/OnDutyTable';
 import OnDutyMobile from '../RDView/components/OnDutyMobileView';
 import OnDutyRD from '../RAView/components/RD-OnCall';
 import HousingBanner from '../ResidentView/components/HousingWelcome/Banner';
+
+// Styling for links using existing 360 colors
+const StyledLink = styled('a')(({ theme }) => ({
+  color: theme.palette.primary.main,
+  textDecoration: 'none',
+  '&:hover': {
+    color: theme.palette.warning.main,
+  },
+}));
+
+const STU_LIFE_PHONE_NUMBER = '(978)-867-4263';
 
 const StaffView = () => {
   const isMobile = useMediaQuery('(max-width:600px)');
@@ -31,7 +43,7 @@ const StaffView = () => {
               title={
                 <Grid container direction="row" alignItems="center">
                   <Grid item xs={12} align="center">
-                    RA/AC on Duty by Hall
+                    RA on Duty by Hall
                   </Grid>
                 </Grid>
               }
@@ -69,9 +81,15 @@ const StaffView = () => {
                       <ListItem>
                         <ListItemText
                           primary={
-                            <>
-                              <strong>Phone:</strong> (978) 867-4263
-                            </>
+                            <Typography variant="body1">
+                              <strong>RD On-Call Phone: </strong>
+                              <StyledLink
+                                href={`tel:${STU_LIFE_PHONE_NUMBER}`}
+                                className="gc360_text_link"
+                              >
+                                {STU_LIFE_PHONE_NUMBER}
+                              </StyledLink>
+                            </Typography>
                           }
                         />
                       </ListItem>
@@ -95,7 +113,7 @@ const StaffView = () => {
                         <ListItemText
                           primary={
                             <>
-                              <strong>Emergency:</strong> Gordon Police (978) 867-4444
+                              <strong>Gordon Police Non-Emergency:</strong> (978) 867-4444
                             </>
                           }
                         />
@@ -118,7 +136,7 @@ const StaffView = () => {
                 title={
                   <Grid container direction="row" alignItems="center">
                     <Grid item xs={12} align="center">
-                      RA/AC on Duty by Hall
+                      RA on Duty by Hall
                     </Grid>
                   </Grid>
                 }

@@ -144,7 +144,13 @@ const MyHall = () => {
             </Typography>
 
             <Typography variant="body1">
-              <strong>My Assigned Rooms:</strong> {isRA ? <AssignedRooms /> : <></>}
+              {isRA ? (
+                <strong>
+                  My Assigned Rooms: <AssignedRooms />{' '}
+                </strong>
+              ) : (
+                <></>
+              )}
             </Typography>
           </Grid>
 
