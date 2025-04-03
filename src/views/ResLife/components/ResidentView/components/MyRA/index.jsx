@@ -13,7 +13,6 @@ import { useUser } from 'hooks';
 import { fetchRaInfo } from 'services/residentLife/ResidentStaff';
 import { fetchRAStatuses } from 'services/residentLife/RA_Statuses';
 import { formatPhoneNumber } from '../../../../utils/formatPhoneNumber/formatPhoneNumber';
-import { staffType } from '../../../../utils/staffType/staffType';
 
 const DEFAULT_PROFILE_URL = '/profile/';
 const COLOR_80808026_1X1 =
@@ -31,7 +30,6 @@ const StyledLink = styled('a')(({ theme }) => ({
 const MyRA = () => {
   const [raInfo, setRaInfo] = useState({});
   const [raProfileLink, setRaProfileLink] = useState('');
-  const [staffTypeLabel, setStaffTypeLabel] = useState('');
   const [statusList, setStatusList] = useState([]);
   const { profile } = useUser();
   const [currentStatus, setCurrentStatus] = useState('No current status');
@@ -44,12 +42,9 @@ const MyRA = () => {
       const Hall_ID = profile.OnCampusBuilding;
       const Room_Number = profile.OnCampusRoom.replace(/\D/g, '');
 
-      // Display either 'RA' or 'AC' depending on the resident's building
-      setStaffTypeLabel(staffType[Hall_ID] || 'RA/AC');
-
       fetchRaInfo(Hall_ID, Room_Number)
         .then((response) => setRaInfo(response))
-        .catch((error) => console.error(`Failed to fetch ${staffTypeLabel} info:`, error));
+        .catch((error) => console.error(`Failed to fetch RA info:`, error));
     }
   }, [profile]);
 
@@ -167,7 +162,7 @@ const MyRA = () => {
         title={
           <Grid container direction="row" alignItems="center">
             <Grid item xs={12} align="center">
-              {`My ${staffTypeLabel || 'RA/AC'}`}
+              {`My RA`}
             </Grid>
           </Grid>
         }
@@ -179,7 +174,7 @@ const MyRA = () => {
           {/* Text Section */}
           <Grid item xs={8}>
             <Typography variant="body1">
-              <strong>{staffTypeLabel ? staffTypeLabel : 'Loading'}: </strong>
+              <strong>RA: </strong>
               {raInfo?.First_Name && raInfo?.Last_Name ? (
                 <StyledLink
                   href={raProfileLink}
@@ -190,9 +185,7 @@ const MyRA = () => {
                   {raInfo.First_Name} {raInfo.Last_Name}
                 </StyledLink>
               ) : (
-                <StyledLink className="gc360_text_link">
-                  {`No ${staffTypeLabel || 'Staff'} Assigned`}
-                </StyledLink>
+                <StyledLink className="gc360_text_link">{`No RA Assigned`}</StyledLink>
               )}
             </Typography>
 

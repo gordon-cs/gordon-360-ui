@@ -9,6 +9,7 @@ import {
   Radio,
   RadioGroup,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { preferredContact, PrefContactMethod } from 'services/residentLife/ResidentStaff';
@@ -19,6 +20,7 @@ const ContactMethod = () => {
   const { profile } = useUser();
   const [selectedContact, setSelectedContact] = useState('');
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   useEffect(() => {
     const fetchPreferredContact = async () => {
@@ -68,11 +70,14 @@ const ContactMethod = () => {
   return (
     <Accordion elevation={3}>
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography variant="h6">Preferred Contact Method</Typography>
+        {isMobile ? (
+          <Typography variant="subtitle2">Preferred Contact Method</Typography>
+        ) : (
+          <Typography variant="body1">Preferred Contact Method</Typography>
+        )}
       </AccordionSummary>
       <AccordionDetails>
         <FormControl component="fieldset">
-          <Typography>Select Contact Method</Typography>
           <RadioGroup
             aria-label="preferred-contact"
             name="preferred-contact"

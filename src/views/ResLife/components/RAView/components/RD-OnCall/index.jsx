@@ -14,12 +14,14 @@ import {
 import { styled } from '@mui/material/styles';
 import ScottieMascot from 'views/ResLife/ScottieMascot.png';
 import { getRDOnCall } from 'services/residentLife/RD_OnCall';
+import { formatPhoneNumber } from 'views/ResLife/utils/formatPhoneNumber/formatPhoneNumber';
 
 const COLOR_80808026_1X1 =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNsUAMAASwAqHb28sMAAAAASUVORK5CYII=';
 
-const RD_PHONE_NUMBER = 'RD Phone number here';
+const RD_PHONE_NUMBER = '(978)-500-7259';
 
+// Styling for links using existing 360 colors
 const StyledLink = styled('a')(({ theme }) => ({
   color: theme.palette.primary.main,
   textDecoration: 'none',
@@ -94,7 +96,10 @@ const OnDutyRD = () => {
                   <ListItemText
                     primary={
                       <Typography variant="body1">
-                        <strong>RD On-Call Phone:</strong> {RD_PHONE_NUMBER}
+                        <strong>RD On-Call Phone: </strong>
+                        <StyledLink href={`tel:${RD_PHONE_NUMBER}`} className="gc360_text_link">
+                          {formatPhoneNumber(RD_PHONE_NUMBER)}
+                        </StyledLink>
                       </Typography>
                     }
                   />
@@ -183,7 +188,8 @@ const OnDutyRD = () => {
                 <ListItemText
                   primary={
                     <Typography variant="body1">
-                      <strong>On-Call Contact:</strong> {RD_PHONE_NUMBER}
+                      <strong>On-Call Contact: </strong>
+                      {RD_PHONE_NUMBER}
                     </Typography>
                   }
                 />
