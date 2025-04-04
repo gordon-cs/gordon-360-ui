@@ -580,7 +580,7 @@ const LostAndFoundAdmin = () => {
         <Grid item xs={2}>
           Date Found
         </Grid>
-        <Grid item xs={2.5}>
+        <Grid item xs={2}>
           Location
         </Grid>
         <Grid item xs={2.5}>
@@ -952,7 +952,7 @@ const LostAndFoundAdmin = () => {
         </Grid>
       </Grid>
       <Grid container className={styles.itemsList} spacing={6}>
-        <Grid item>
+        <Grid item xs={12} md={6}>
           <CardHeader
             className={styles.titleSecondary}
             title={
@@ -983,44 +983,76 @@ const LostAndFoundAdmin = () => {
                 <span>&nbsp;</span>
                 <span>Click on a report to view details</span>
               </CardContent>
-              {MissingItemsListHeader}
+              {!isMobile && MissingItemsListHeader}
               <div className={styles.scrollBox}>
                 {/*Show a loader when lazy loading */}
                 {lazyLoading ? (
                   <GordonLoader />
                 ) : (
                   <>
-                    {missingReports.map((missingReport) => (
-                      <Grid
-                        container
-                        justifyContent={'space-between'}
-                        key={missingReport.recordID}
-                        className={`${styles.reportRow} ${styles.clickableRow}`}
-                        onClick={() => handleMissingItemClick(String(missingReport.recordID))}
-                        tabIndex={0}
-                      >
-                        <Grid item xs={2}>
-                          {formatDateString(missingReport.dateLost)}
+                    {missingReports.map((missingReport) =>
+                      isMobile ? (
+                        <Grid
+                          container
+                          justifyContent={'space-between'}
+                          key={missingReport.recordID}
+                          className={`${styles.reportRow} ${styles.clickableRow}`}
+                          onClick={() => handleMissingItemClick(String(missingReport.recordID))}
+                          tabIndex={0}
+                        >
+                          <Grid item md={2}>
+                            Date Lost: {formatDateString(missingReport.dateLost)}
+                          </Grid>
+                          <Grid item md={2.5}>
+                            Location Lost: {missingReport.locationLost}
+                          </Grid>
+                          <Grid item md={2.5}>
+                            Category: {missingReport.category}
+                          </Grid>
+                          <Grid item md={3}>
+                            Description: {missingReport.description}
+                          </Grid>
+                          <Grid item md={0.5}>
+                            <CircleIcon
+                              sx={{
+                                color: dateAgeColor(displayLastCheckedDate(missingReport)),
+                                fontSize: 10,
+                              }}
+                            />
+                          </Grid>
                         </Grid>
-                        <Grid item xs={2.5}>
-                          <div className={styles.dataCell}>{missingReport.locationLost}</div>
+                      ) : (
+                        <Grid
+                          container
+                          justifyContent={'space-between'}
+                          key={missingReport.recordID}
+                          className={`${styles.reportRow} ${styles.clickableRow}`}
+                          onClick={() => handleMissingItemClick(String(missingReport.recordID))}
+                          tabIndex={0}
+                        >
+                          <Grid item xs={2}>
+                            {formatDateString(missingReport.dateLost)}
+                          </Grid>
+                          <Grid item xs={2.5}>
+                            <div className={styles.dataCell}>{missingReport.locationLost}</div>
+                          </Grid>
+                          <Grid item xs={2.5}>
+                            <div className={styles.dataCell}>{missingReport.category}</div>
+                          </Grid>
+                          <Grid item xs={3}>
+                            <div className={styles.dataCell}>{missingReport.description}</div>
+                          </Grid>
+                          <Grid item xs={0.5} className={styles.dataCell}>
+                            <CircleIcon
+                              sx={{
+                                color: dateAgeColor(displayLastCheckedDate(missingReport)),
+                                fontSize: 10,
+                              }}
+                            />
+                          </Grid>
                         </Grid>
-                        <Grid item xs={2.5}>
-                          <div className={styles.dataCell}>{missingReport.category}</div>
-                        </Grid>
-                        <Grid item xs={3}>
-                          <div className={styles.dataCell}>{missingReport.description}</div>
-                        </Grid>
-                        <Grid item xs={0.5} className={styles.dataCell}>
-                          <CircleIcon
-                            sx={{
-                              color: dateAgeColor(displayLastCheckedDate(missingReport)),
-                              fontSize: 10,
-                            }}
-                          />
-                        </Grid>
-                      </Grid>
-                    ))}
+                      ),
+                    )}
 
                     {/* Sentinel element for lazy loading */}
                     <div ref={loadMoreRef} />
@@ -1031,7 +1063,7 @@ const LostAndFoundAdmin = () => {
           )}
         </Grid>
 
-        <Grid item>
+        <Grid item xs={12} md={6}>
           <CardHeader
             className={styles.titleSecondary}
             title={
@@ -1058,7 +1090,7 @@ const LostAndFoundAdmin = () => {
                 <span>&nbsp;</span>
                 <span>Click on an item to view details</span>
               </CardContent>
-              {FoundItemsListHeader}
+              {!isMobile && FoundItemsListHeader}
               <div className={styles.scrollBox}>
                 {foundLazyLoading ? (
                   <GordonLoader />
@@ -1079,7 +1111,7 @@ const LostAndFoundAdmin = () => {
                         <Grid item xs={2}>
                           {formatDateString(foundItem.dateFound)}
                         </Grid>
-                        <Grid item xs={2.5}>
+                        <Grid item xs={2}>
                           <div className={styles.dataCell}>{foundItem.locationFound}</div>
                         </Grid>
                         <Grid item xs={2.5}>
