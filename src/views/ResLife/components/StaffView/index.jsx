@@ -16,6 +16,9 @@ import CustomizedTable from '../RDView/components/OnDutyTable';
 import OnDutyMobile from '../RDView/components/OnDutyMobileView';
 import OnDutyRD from '../RAView/components/RD-OnCall';
 import HousingBanner from '../ResidentView/components/HousingWelcome/Banner';
+import { getPhoneNumberByName } from 'services/residentLife/RD_OnCall';
+import { useEffect, useState } from 'react';
+import { formatPhoneNumber } from 'views/ResLife/utils/formatPhoneNumber/formatPhoneNumber';
 
 // Styling for links using existing 360 colors
 const StyledLink = styled('a')(({ theme }) => ({
@@ -26,10 +29,23 @@ const StyledLink = styled('a')(({ theme }) => ({
   },
 }));
 
-const STU_LIFE_PHONE_NUMBER = '(978)-867-4263';
-
 const StaffView = () => {
   const isMobile = useMediaQuery('(max-width:600px)');
+  const [STU_LIFE_PHONE_NUMBER, setStuLifePhoneNumber] = useState('');
+
+  useEffect(() => {
+    const fetchPhoneNumber = async () => {
+      try {
+        const result = await getPhoneNumberByName('stulife');
+        setStuLifePhoneNumber(result);
+      } catch (err) {
+        console.error('Failed to fetch Student Life phone number:', err);
+        setStuLifePhoneNumber('Unavailable');
+      }
+    };
+
+    fetchPhoneNumber();
+  }, []);
 
   return (
     <Grid container justifyContent="center">
@@ -82,12 +98,12 @@ const StaffView = () => {
                         <ListItemText
                           primary={
                             <Typography variant="body1">
-                              <strong>RD On-Call Phone: </strong>
+                              <strong>Student Life Phone: </strong>
                               <StyledLink
                                 href={`tel:${STU_LIFE_PHONE_NUMBER}`}
                                 className="gc360_text_link"
                               >
-                                {STU_LIFE_PHONE_NUMBER}
+                                {formatPhoneNumber(STU_LIFE_PHONE_NUMBER)}
                               </StyledLink>
                             </Typography>
                           }
@@ -173,7 +189,7 @@ const StaffView = () => {
                       <ListItemText
                         primary={
                           <>
-                            <strong>Phone:</strong> (978) 867-4263
+                            <strong>Phone:</strong> {STU_LIFE_PHONE_NUMBER}
                           </>
                         }
                       />
