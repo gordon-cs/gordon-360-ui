@@ -31,7 +31,7 @@ const StyledLink = styled('a')(({ theme }) => ({
 
 const StaffView = () => {
   const isMobile = useMediaQuery('(max-width:600px)');
-  const [STU_LIFE_PHONE_NUMBER, setStuLifePhoneNumber] = useState('');
+  const [StuLife_PhoneNumber, setStuLifePhoneNumber] = useState('');
 
   useEffect(() => {
     const fetchPhoneNumber = async () => {
@@ -100,10 +100,10 @@ const StaffView = () => {
                             <Typography variant="body1">
                               <strong>Student Life Phone: </strong>
                               <StyledLink
-                                href={`tel:${STU_LIFE_PHONE_NUMBER}`}
+                                href={`tel:${StuLife_PhoneNumber}`}
                                 className="gc360_text_link"
                               >
-                                {formatPhoneNumber(STU_LIFE_PHONE_NUMBER)}
+                                {formatPhoneNumber(StuLife_PhoneNumber)}
                               </StyledLink>
                             </Typography>
                           }
@@ -189,7 +189,7 @@ const StaffView = () => {
                       <ListItemText
                         primary={
                           <>
-                            <strong>Phone:</strong> {STU_LIFE_PHONE_NUMBER}
+                            <strong>Phone:</strong> {StuLife_PhoneNumber}
                           </>
                         }
                       />

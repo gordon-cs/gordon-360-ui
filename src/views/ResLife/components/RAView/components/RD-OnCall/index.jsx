@@ -37,7 +37,7 @@ const OnDutyRD = () => {
   const [onDutyRdInfo, setOnDutyRdInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const isMobile = useMediaQuery('(max-width:600px)');
-  const [RD_PHONE_NUMBER, setRDPhoneNumber] = useState('');
+  const [RD_phonenumber, setRDPhoneNumber] = useState('');
 
   useEffect(() => {
     const fetchPhoneNumber = async () => {
@@ -110,8 +110,8 @@ const OnDutyRD = () => {
                     primary={
                       <Typography variant="body1">
                         <strong>RD On-Call Phone: </strong>
-                        <StyledLink href={`tel:${RD_PHONE_NUMBER}`} className="gc360_text_link">
-                          {formatPhoneNumber(RD_PHONE_NUMBER)}
+                        <StyledLink href={`tel:${RD_phonenumber}`} className="gc360_text_link">
+                          {formatPhoneNumber(RD_phonenumber)}
                         </StyledLink>
                       </Typography>
                     }
@@ -202,7 +202,7 @@ const OnDutyRD = () => {
                   primary={
                     <Typography variant="body1">
                       <strong>On-Call Contact: </strong>
-                      {RD_PHONE_NUMBER}
+                      {RD_phonenumber}
                     </Typography>
                   }
                 />
