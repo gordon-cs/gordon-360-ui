@@ -784,7 +784,7 @@ const LostAndFoundAdmin = () => {
                 navigate(`missingitemdatabase/${missingID}`);
               }}
             >
-              <b>See Full Details</b>
+              <b>Go to Full Details</b>
             </Button>
           </Grid>
           <Grid item className={styles.buttonAlign}>
@@ -881,7 +881,7 @@ const LostAndFoundAdmin = () => {
                 navigate(`founditemdatabase/${foundID}`);
               }}
             >
-              <b>See Full Details</b>
+              <b>Go to Full Details</b>
             </Button>
           </Grid>
         </Grid>
@@ -936,7 +936,7 @@ const LostAndFoundAdmin = () => {
       <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
         <DialogTitle className={styles.modalTitle}>Confirm Match?</DialogTitle>
         <DialogContent>
-          <Typography variant="body2" align="center" className={styles.notice}>
+          <Typography variant="body1" align="center">
             Do you want to match missing report {missingID} with found item {foundID}?
           </Typography>
         </DialogContent>
