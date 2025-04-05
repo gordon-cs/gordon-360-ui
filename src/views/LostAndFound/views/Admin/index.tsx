@@ -83,12 +83,7 @@ const LostAndFoundAdmin = () => {
   const [isNoMatchModalOpen, setNoMatchModalOpen] = useState(false);
   const [matchFoundIsClicked, setMatchFoundIsClicked] = useState(false);
   const [isMatchModalOpen, setMatchModalOpen] = useState(false);
-  const contactedActionTypes = [
-    'Email Sent',
-    'Phone - Left Voicemail',
-    'Phone - Owner Will Pick Up',
-    'Phone - Owner Does Not Want',
-  ];
+  const contactedActionTypes = ['Email', 'PhoneVoicemail', 'PhonePickUp', 'PhoneNotWant'];
 
   useEffect(() => {
     setPageLoaded(true);
@@ -966,13 +961,15 @@ const LostAndFoundAdmin = () => {
                     <Select fullWidth variant="filled" label="Contact Action Type" name="action">
                       {contactedActionTypes.map((actionType) => (
                         <MenuItem value={actionType}>
-                          {actionType === 'Checked'
-                            ? 'Check if Item was Found'
-                            : actionType === 'NotifiedOfficer'
-                              ? 'Contact Officer'
-                              : actionType === 'OwnerContact'
-                                ? 'Contact Owner'
-                                : actionType}
+                          {actionType === 'Email'
+                            ? 'Email Sent'
+                            : actionType === 'PhoneVoicemail'
+                              ? 'Phone - Left Voicemail'
+                              : actionType === 'PhonePickUp'
+                                ? 'Phone - Owner Will Pick Up'
+                                : actionType === 'PhoneNotWant'
+                                  ? 'Phone - Owner Does Not Want'
+                                  : actionType}
                         </MenuItem>
                       ))}
                     </Select>
