@@ -79,6 +79,7 @@ const LostAndFoundAdmin = () => {
   const user = useUser();
   const matchButtonRef = useRef<HTMLButtonElement | null>(null);
   const [noMatchIsClicked, setNoMatchIsClicked] = useState(false);
+  const [isNoMatchModalOpen, setNoMatchModalOpen] = useState(false);
   const [matchFoundIsClicked, setMatchFoundIsClicked] = useState(false);
   const [isMatchModalOpen, setMatchModalOpen] = useState(false);
 
@@ -113,6 +114,16 @@ const LostAndFoundAdmin = () => {
     } catch (error) {
       console.error('Error fetching item:', error);
     }
+  };
+
+  const handleNoMatchClick = () => {
+    setNoMatchIsClicked(true);
+    handleNoMatchSubmit(missingID);
+    setNoMatchModalOpen(false);
+  };
+
+  const handleNoMatchModalClose = () => {
+    setNoMatchModalOpen(false);
   };
 
   const handleNoMatchSubmit = async (itemId: string) => {
@@ -783,7 +794,7 @@ const LostAndFoundAdmin = () => {
               className={styles.markButton}
               disabled={noMatchIsClicked}
               onClick={() => {
-                handleNoMatchSubmit(missingID);
+                setNoMatchModalOpen(true);
               }}
             >
               <b>Mark No Match Found</b>
@@ -875,6 +886,38 @@ const LostAndFoundAdmin = () => {
           </Grid>
         </Grid>
       </>
+    );
+  };
+
+  type NoMatchConfirmationModalProps = {
+    open: boolean;
+    onClose: () => void;
+    onSubmit: () => void;
+  };
+
+  const NoMatchConfirmationModal: React.FC<NoMatchConfirmationModalProps> = ({
+    open,
+    onClose,
+    onSubmit,
+  }) => {
+    return (
+      <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+        <DialogTitle className={styles.modalTitle}>Mark as Checked</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1" align="center">
+            Confirm you could not find any <u>in-stock</u> items matching this one, and mark this
+            report as checked on this date.
+          </Typography>
+        </DialogContent>
+        <DialogActions className={styles.actions}>
+          <Button onClick={onClose} className={styles.cancelButton}>
+            Keep Looking
+          </Button>
+          <Button onClick={onSubmit} className={styles.submitButton}>
+            Confirmed, I didn't find any matching items
+          </Button>
+        </DialogActions>
+      </Dialog>
     );
   };
 
@@ -1207,6 +1250,11 @@ const LostAndFoundAdmin = () => {
         open={isMatchModalOpen}
         onClose={handleMatchModalClose}
         onSubmit={handleMatchClick}
+      />
+      <NoMatchConfirmationModal
+        open={isNoMatchModalOpen}
+        onClose={handleNoMatchModalClose}
+        onSubmit={handleNoMatchClick}
       />
       <SimpleSnackbar
         open={errorSnackbarOpen}
