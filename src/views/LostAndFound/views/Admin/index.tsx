@@ -18,6 +18,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Link,
   Typography,
 } from '@mui/material';
 import Header from 'views/LostAndFound/components/Header';
@@ -33,7 +34,7 @@ import {
   clearUrlParams,
   formatDateString,
 } from 'views/LostAndFound/components/Helpers';
-import { Delete, JoinFull, Person, Storage } from '@mui/icons-material';
+import { Delete, JoinFull, Launch, Person, Storage } from '@mui/icons-material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import SimpleSnackbar from 'components/Snackbar';
 import CircleIcon from '@mui/icons-material/Circle';
@@ -775,17 +776,10 @@ const LostAndFoundAdmin = () => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item className={styles.detailsButton}>
-            <Button
-              color="secondary"
-              variant="contained"
-              className={styles.markButton}
-              onClick={() => {
-                navigate(`missingitemdatabase/${missingID}`);
-              }}
-            >
-              <b>Go to Full Details</b>
-            </Button>
+          <Grid item margin={'2rem'}>
+            <Link href={`missingitemdatabase/${missingID}`} className={`gc360_text_link`}>
+              Go to Full Details <Launch />
+            </Link>
           </Grid>
           <Grid item className={styles.buttonAlign}>
             <Button
@@ -872,17 +866,10 @@ const LostAndFoundAdmin = () => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item className={styles.detailsButton}>
-            <Button
-              color="secondary"
-              variant="contained"
-              className={styles.markButton}
-              onClick={() => {
-                navigate(`founditemdatabase/${foundID}`);
-              }}
-            >
-              <b>Go to Full Details</b>
-            </Button>
+          <Grid item margin={'2rem'}>
+            <Link href={`founditemdatabase/${foundID}`} className={`gc360_text_link`}>
+              Go to Full Details <Launch />
+            </Link>
           </Grid>
         </Grid>
       </>
