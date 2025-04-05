@@ -1004,7 +1004,7 @@ const LostAndFoundAdmin = () => {
                           onClick={() => handleMissingItemClick(String(missingReport.recordID))}
                           tabIndex={0}
                         >
-                          <Grid item>
+                          <Grid item xs={11.5}>
                             <Stack spacing={0.5}>
                               <div>Date Lost: {formatDateString(missingReport.dateLost)}</div>
                               <div>Location Lost: {missingReport.locationLost}</div>
@@ -1108,7 +1108,7 @@ const LostAndFoundAdmin = () => {
                           onClick={() => handleFoundItemClick(String(foundItem.recordID))}
                           tabIndex={0}
                         >
-                          <Grid item>
+                          <Grid item xs={11.5}>
                             <Stack spacing={0.5}>
                               <div>Tag #: {foundItem.recordID}</div>
                               <div>Date Found: {formatDateString(foundItem.dateFound)}</div>
