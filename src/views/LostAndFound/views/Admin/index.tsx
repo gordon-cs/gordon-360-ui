@@ -10,6 +10,8 @@ import {
   MenuItem,
   Select,
   TextField,
+  Stack,
+  Typography,
 } from '@mui/material';
 import { Grid, Button } from '@mui/material';
 import Header from 'views/LostAndFound/components/Header';
@@ -994,16 +996,22 @@ const LostAndFoundAdmin = () => {
                       isMobile ? (
                         <Grid
                           container
+                          direction="row"
                           justifyContent={'space-between'}
+                          alignItems="center"
                           key={missingReport.recordID}
                           className={`${styles.reportRow} ${styles.clickableRow}`}
                           onClick={() => handleMissingItemClick(String(missingReport.recordID))}
                           tabIndex={0}
                         >
-                          <Grid item>Date Lost: {formatDateString(missingReport.dateLost)}</Grid>
-                          <Grid item>Location Lost: {missingReport.locationLost}</Grid>
-                          <Grid item>Category: {missingReport.category}</Grid>
-                          <Grid item>Description: {missingReport.description}</Grid>
+                          <Grid item>
+                            <Stack spacing={0.5}>
+                              <div>Date Lost: {formatDateString(missingReport.dateLost)}</div>
+                              <div>Location Lost: {missingReport.locationLost}</div>
+                              <div>Category: {missingReport.category}</div>
+                              <div>Description: {missingReport.description}</div>
+                            </Stack>
+                          </Grid>
                           <Grid item>
                             <CircleIcon
                               sx={{
@@ -1092,17 +1100,23 @@ const LostAndFoundAdmin = () => {
                       isMobile ? (
                         <Grid
                           container
+                          direction="row"
                           justifyContent={'space-between'}
+                          alignItems="center"
                           key={foundItem.recordID}
                           className={`${styles.reportRow} ${styles.clickableRow}`}
                           onClick={() => handleFoundItemClick(String(foundItem.recordID))}
                           tabIndex={0}
                         >
-                          <Grid item>Tag #: {foundItem.recordID}</Grid>
-                          <Grid item>Date Found: {formatDateString(foundItem.dateFound)}</Grid>
-                          <Grid item>Location Found: {foundItem.locationFound}</Grid>
-                          <Grid item>Category: {foundItem.category}</Grid>
-                          <Grid item>Description: {foundItem.description}</Grid>
+                          <Grid item>
+                            <Stack spacing={0.5}>
+                              <div>Tag #: {foundItem.recordID}</div>
+                              <div>Date Found: {formatDateString(foundItem.dateFound)}</div>
+                              <div>Location Found: {foundItem.locationFound}</div>
+                              <div>Category: {foundItem.category}</div>
+                              <div>Description: {foundItem.description}</div>
+                            </Stack>
+                          </Grid>
                           <Grid item>
                             <CircleIcon sx={{ color: foundItemColor(foundItem), fontSize: 10 }} />
                           </Grid>

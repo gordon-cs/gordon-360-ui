@@ -73,15 +73,12 @@
 }
 
 .reportRow {
-  display: flex;
-  align-items: center;
   height: 3rem;
   min-height: fit-content;
   padding: 1rem;
   border-bottom: 1px solid var(--mui-palette-neutral-400);
   color: var(--mui-palette-neutral-contrastText);
   width: 100%;
-  flex-wrap: nowrap;
   box-sizing: border-box;
 
   &:nth-child(even) {
@@ -89,8 +86,6 @@
   }
 
   @media (max-width: 900px) {
-    flex-direction: column;
-    align-items: flex-start;
     width: 100%;
   }
 }
