@@ -83,6 +83,12 @@ const LostAndFoundAdmin = () => {
   const [isNoMatchModalOpen, setNoMatchModalOpen] = useState(false);
   const [matchFoundIsClicked, setMatchFoundIsClicked] = useState(false);
   const [isMatchModalOpen, setMatchModalOpen] = useState(false);
+  const contactedActionTypes = [
+    'Email Sent',
+    'Phone - Left Voicemail',
+    'Phone - Owner Will Pick Up',
+    'Phone - Owner Does Not Want',
+  ];
 
   useEffect(() => {
     setPageLoaded(true);
@@ -919,20 +925,66 @@ const LostAndFoundAdmin = () => {
     onClose,
     onSubmit,
   }) => {
+    if (!missingItem) return null;
+
     return (
       <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-        <DialogTitle className={styles.modalTitle}>Confirm Match?</DialogTitle>
-        <DialogContent>
-          <Typography variant="body1" align="center">
-            Do you want to match missing report {missingID} with found item {foundID}?
-          </Typography>
-        </DialogContent>
-        <DialogActions className={styles.actions}>
+        <DialogTitle className={styles.modalTitle}>
           <Button onClick={onClose} className={styles.cancelButton}>
             Cancel
           </Button>
-          <Button onClick={onSubmit} className={styles.submitButton}>
-            Confirm
+          Confirm Match?
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="body1" align="center">
+            Confirm the details of these items match, and you’d like to mark them both as found.
+          </Typography>
+          <br />
+          <Typography variant="body1" align="center">
+            Contact the reporting party and inform them their item has been found.
+          </Typography>
+          <Grid container direction={'row'}>
+            <Grid container direction={'column'} className={styles.popUpBodyLeft} margin={'0.5rem'}>
+              <Grid item>
+                <span className={styles.smallText}>Owner's Name</span>
+                <div className={styles.bolderText}>
+                  {missingItem.firstName} {missingItem.lastName}
+                </div>
+              </Grid>
+              <Grid item>
+                <span className={styles.smallText}>Owner's Contact Info:</span>
+                <div className={styles.bolderText}>Email: {missingItem.email}</div>
+                <div className={styles.bolderText}>Email: {missingItem.phone}</div>
+              </Grid>
+            </Grid>
+            <Grid container direction={'column'} className={styles.popUpBodyRight}>
+              <Grid item xs={6.5}>
+                <Grid item>
+                  <span className={styles.smallText}>Owner Contacted:</span>
+                  <FormControl fullWidth>
+                    <InputLabel>Action Type</InputLabel>
+                    <Select fullWidth variant="filled" label="Contact Action Type" name="action">
+                      {contactedActionTypes.map((actionType) => (
+                        <MenuItem value={actionType}>
+                          {actionType === 'Checked'
+                            ? 'Check if Item was Found'
+                            : actionType === 'NotifiedOfficer'
+                              ? 'Contact Officer'
+                              : actionType === 'OwnerContact'
+                                ? 'Contact Owner'
+                                : actionType}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions className={styles.actions}>
+          <Button onClick={onSubmit} className={styles.submitButton} color="secondary">
+            Link Reports As Found
           </Button>
         </DialogActions>
       </Dialog>
