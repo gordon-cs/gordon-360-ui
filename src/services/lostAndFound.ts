@@ -366,6 +366,12 @@ const getMissingItemsCount = (
 const createFoundAdminAction = (itemID: string, data: InitFoundAdminAction): Promise<string> =>
   http.post<string>(`lostandfound/founditems/${itemID}/actionstaken`, data);
 
+/**
+ *
+ * @param missingID
+ * @param foundID
+ * @param action
+ */
 const linkReports = (missingID: number, foundID: string, action: AdminAction) => {
   http.put<void>(`lostandfound/missingitems/${missingID}/linkItem/${foundID}`);
   http.put<void>(`founditems/${foundID}/linkReport/${missingID}`);
@@ -385,7 +391,30 @@ const linkReports = (missingID: number, foundID: string, action: AdminAction) =>
   createFoundAdminAction(foundID, foundAdminAction);
 };
 
-const unlinkReports = (missingID: number, foundID: string, action: AdminAction) => {};
+/**
+ *
+ * @param missingID
+ * @param foundID
+ * @param action
+ */
+const unlinkReports = (missingID: number, foundID: string, action: AdminAction) => {
+  http.put<void>(`lostandfound/missingitems/${missingID}/linkItem/`);
+  http.put<void>(`founditems/${foundID}/linkReport/`);
+  updateFoundReportStatus(foundID, 'active');
+  updateReportStatus(missingID, 'active');
+  const missingAdminAction: InitAdminAction = {
+    ...action,
+    missingID: missingID,
+    isPublic: true,
+    username: action.submitterUsername,
+  };
+  const foundAdminAction: InitFoundAdminAction = {
+    ...action,
+    foundID: foundID,
+  };
+  createAdminAction(missingID, missingAdminAction);
+  createFoundAdminAction(foundID, foundAdminAction);
+};
 
 const lostAndFoundService = {
   getMissingItemReports,
