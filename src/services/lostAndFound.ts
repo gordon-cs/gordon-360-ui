@@ -6,6 +6,7 @@ import http from './http';
  */
 export type MissingItemReport = {
   recordID: number;
+  matchingFoundID?: string;
   firstName?: string;
   lastName?: string;
   category: string;
@@ -318,7 +319,7 @@ const getFoundItemsCount = (
   color?: string,
   category?: string,
   ID?: string,
-  keywords?: string
+  keywords?: string,
 ): Promise<number> => {
   const query: { [key: string]: string } = {};
   if (latestDate) query.latestDate = latestDate;
@@ -327,9 +328,7 @@ const getFoundItemsCount = (
   if (category) query.category = category;
   if (ID) query.ID = ID;
   if (keywords) query.keywords = keywords;
-  return http.get<number>(
-    `lostandfound/founditems/count${http.toQueryString(query)}`
-  );
+  return http.get<number>(`lostandfound/founditems/count${http.toQueryString(query)}`);
 };
 
 /**
