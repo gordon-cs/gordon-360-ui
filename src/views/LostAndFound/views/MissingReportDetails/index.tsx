@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { Add, Key, Launch } from '@mui/icons-material';
 import styles from './MissingItemReportData.module.scss';
-import { useEffect, useRef, useState , useCallback} from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import lostAndFoundService from 'services/lostAndFound';
 import type { MissingItemReport, MissingAdminAction } from 'services/lostAndFound';
 import Header from 'views/LostAndFound/components/Header';
@@ -46,13 +46,13 @@ const MissingItemReportData = () => {
     open: boolean;
   }
   const [snackbar, setSnackbar] = useState<ISnackbarState>({
-      message: '',
-      severity: undefined,
-      open: false,
-    });
-    const createSnackbar = useCallback((message: string, severity: ISnackbarState['severity']) => {
-      setSnackbar({ message, severity, open: true });
-    }, []);
+    message: '',
+    severity: undefined,
+    open: false,
+  });
+  const createSnackbar = useCallback((message: string, severity: ISnackbarState['severity']) => {
+    setSnackbar({ message, severity, open: true });
+  }, []);
 
   // Page State
   const [loading, setLoading] = useState<boolean>(true);
@@ -333,7 +333,7 @@ const MissingItemReportData = () => {
 
   const handleNewActionSubmit = async () => {
     if (!checkedItemNotFound && newActionFormData.action === 'Checked') {
-      await lostAndFoundService.updateReportStatus(parseInt(itemId ? itemId : ''), 'Found');
+      await lostAndFoundService.updateReportStatus(parseInt(itemId ? itemId : ''), 'found');
       setReportUpdated(reportUpdated + 1);
     }
 
@@ -766,11 +766,11 @@ const MissingItemReportData = () => {
     const oldCategory = item.category;
     // If the category hasn’t changed, do nothing.
     if (newCategory === oldCategory) return;
-  
+
     // Update the item state with the new category.
     const updatedItem = { ...item, category: newCategory };
     setItem(updatedItem);
-  
+
     // Update the missing item report in the backend.
     try {
       await lostAndFoundService.updateMissingItemReport(updatedItem, item.recordID);
@@ -778,14 +778,14 @@ const MissingItemReportData = () => {
       createSnackbar('Failed to update category.', 'error');
       return;
     }
-    
+
     // Create an admin action to record the category change.
     const actionData = {
       missingID: item.recordID,
       action: 'Custom',
       actionNote: `Category change from "${oldCategory}" to "${newCategory}"`,
       actionDate: new Date().toISOString(),
-      username: username.AD_Username, 
+      username: username.AD_Username,
       isPublic: true,
     };
     try {
