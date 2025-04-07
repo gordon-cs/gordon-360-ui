@@ -682,6 +682,24 @@ const FoundItemFormEdit = () => {
                 </Select>
               </div>
 
+              <div style={{ marginBottom: '1rem' }}>
+                {console.log(foundItem.matchingMissingID)}
+                {foundItem.matchingMissingID != null ? (
+                  <Grid item xs={12}>
+                    <TextField
+                      label="Matching Missing Item"
+                      variant="filled"
+                      disabled
+                      fullWidth
+                      value={foundItem.matchingMissingID}
+                      InputProps={{ readOnly: true }}
+                    />
+                  </Grid>
+                ) : (
+                  <></>
+                )}
+              </div>
+
               {/* Mark as picked up / disposed */}
               <Grid container spacing={2}>
                 <Grid item xs={6}>

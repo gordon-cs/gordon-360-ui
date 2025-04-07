@@ -956,6 +956,20 @@ const MissingItemReportData = () => {
                           InputProps={{ readOnly: true }}
                         />
                       </Grid>
+                      {item.matchingFoundID !== null ? (
+                        <Grid item xs={12}>
+                          <TextField
+                            label="Matching Found Item"
+                            variant="filled"
+                            disabled
+                            fullWidth
+                            value={item.matchingFoundID}
+                            InputProps={{ readOnly: true }}
+                          />
+                        </Grid>
+                      ) : (
+                        <></>
+                      )}
 
                       {/* Stolen information (if marked stolen) */}
                       {item.stolen ? (
