@@ -22,12 +22,12 @@ import styles from './MissingItemReportData.module.scss';
 import { useEffect, useRef, useState } from 'react';
 import lostAndFoundService from 'services/lostAndFound';
 import type { MissingItemReport, MissingAdminAction } from 'services/lostAndFound';
-import { DateTime } from 'luxon';
 import Header from 'views/CampusSafety/components/Header';
 import GordonLoader from 'components/Loader';
 import GordonDialogBox from 'components/GordonDialogBox';
 import userService from 'services/user';
 import SimpleSnackbar from 'components/Snackbar';
+import { format } from 'date-fns';
 
 const MissingItemReportData = () => {
   const navigate = useNavigate();
@@ -327,7 +327,7 @@ const MissingItemReportData = () => {
       let requestData = {
         ...newActionFormData,
         missingID: parseInt(itemId || ''),
-        actionDate: DateTime.now().toISO(),
+        actionDate: new Date().toISOString(),
         username: username.AD_Username,
         isPublic: newActionFormData.action === 'Checked' && !checkedItemNotFound ? true : false,
       };
@@ -348,11 +348,11 @@ const MissingItemReportData = () => {
   }, [checkedActionFormData]);
 
   // Format date strings for display
-  const formatDate = (date: string) => DateTime.fromISO(date).toFormat('M/d/yy');
+  const formatDate = (date: string) => format(date, 'M/d/yy');
 
   if (!item) return null;
 
-  const formattedDateLost = DateTime.fromISO(item.dateLost).toFormat('MM-dd-yy');
+  const formattedDateLost = format(new Date(item.dateLost), 'MM-dd-yy');
 
   const statusChip = (
     <Chip
@@ -786,12 +786,7 @@ const MissingItemReportData = () => {
                   <>
                     <Grid container rowGap={1}>
                       <Grid container item xs={12} md={1}>
-                        <Button
-                          className={styles.backButton}
-                          onClick={() =>
-                            navigate('/lostandfound/lostandfoundadmin/missingitemdatabase')
-                          }
-                        >
+                        <Button className={styles.backButton} onClick={() => navigate(-1)}>
                           Back
                         </Button>
                       </Grid>
@@ -899,6 +894,7 @@ const MissingItemReportData = () => {
                           variant="filled"
                           disabled
                           fullWidth
+                          multiline
                           value={item.locationLost}
                           InputProps={{ readOnly: true }}
                         />

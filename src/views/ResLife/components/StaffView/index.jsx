@@ -11,13 +11,41 @@ import {
   Link,
   useMediaQuery,
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import CustomizedTable from '../RDView/components/OnDutyTable';
 import OnDutyMobile from '../RDView/components/OnDutyMobileView';
 import OnDutyRD from '../RAView/components/RD-OnCall';
 import HousingBanner from '../ResidentView/components/HousingWelcome/Banner';
+import { getPhoneNumberByName } from 'services/residentLife/RD_OnCall';
+import { useEffect, useState } from 'react';
+import { formatPhoneNumber } from 'views/ResLife/utils/formatPhoneNumber/formatPhoneNumber';
+
+// Styling for links using existing 360 colors
+const StyledLink = styled('a')(({ theme }) => ({
+  color: theme.palette.primary.main,
+  textDecoration: 'none',
+  '&:hover': {
+    color: theme.palette.warning.main,
+  },
+}));
 
 const StaffView = () => {
   const isMobile = useMediaQuery('(max-width:600px)');
+  const [StuLife_PhoneNumber, setStuLifePhoneNumber] = useState('');
+
+  useEffect(() => {
+    const fetchPhoneNumber = async () => {
+      try {
+        const result = await getPhoneNumberByName('stulife');
+        setStuLifePhoneNumber(result);
+      } catch (err) {
+        console.error('Failed to fetch Student Life phone number:', err);
+        setStuLifePhoneNumber('Unavailable');
+      }
+    };
+
+    fetchPhoneNumber();
+  }, []);
 
   return (
     <Grid container justifyContent="center">
@@ -31,7 +59,7 @@ const StaffView = () => {
               title={
                 <Grid container direction="row" alignItems="center">
                   <Grid item xs={12} align="center">
-                    RA/AC on Duty by Hall
+                    RA on Duty by Hall
                   </Grid>
                 </Grid>
               }
@@ -69,9 +97,15 @@ const StaffView = () => {
                       <ListItem>
                         <ListItemText
                           primary={
-                            <>
-                              <strong>Phone:</strong> (978) 867-4263
-                            </>
+                            <Typography variant="body1">
+                              <strong>Student Life Phone: </strong>
+                              <StyledLink
+                                href={`tel:${StuLife_PhoneNumber}`}
+                                className="gc360_text_link"
+                              >
+                                {formatPhoneNumber(StuLife_PhoneNumber)}
+                              </StyledLink>
+                            </Typography>
                           }
                         />
                       </ListItem>
@@ -95,7 +129,7 @@ const StaffView = () => {
                         <ListItemText
                           primary={
                             <>
-                              <strong>Emergency:</strong> Gordon Police (978) 867-4444
+                              <strong>Gordon Police Non-Emergency:</strong> (978) 867-4444
                             </>
                           }
                         />
@@ -118,7 +152,7 @@ const StaffView = () => {
                 title={
                   <Grid container direction="row" alignItems="center">
                     <Grid item xs={12} align="center">
-                      RA/AC on Duty by Hall
+                      RA on Duty by Hall
                     </Grid>
                   </Grid>
                 }
@@ -155,7 +189,7 @@ const StaffView = () => {
                       <ListItemText
                         primary={
                           <>
-                            <strong>Phone:</strong> (978) 867-4263
+                            <strong>Phone:</strong> {StuLife_PhoneNumber}
                           </>
                         }
                       />

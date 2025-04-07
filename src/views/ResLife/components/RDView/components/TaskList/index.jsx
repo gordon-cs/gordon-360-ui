@@ -84,7 +84,7 @@ const TaskList = () => {
         return prevTasks;
       });
     } catch (error) {
-      console.error('Error fetching hall tasks:', error);
+      console.error('Error fetching hall tasks:', error.error);
     } finally {
       setLoading(false);
     }
@@ -103,7 +103,7 @@ const TaskList = () => {
       // else nothing has changed, so return prevTasks
       setTasks(response);
     } catch (error) {
-      console.error('Error fetching hall tasks:', error);
+      console.error('Error fetching hall tasks:', error.error);
     } finally {
       setLoading(false);
     }
@@ -147,8 +147,8 @@ const TaskList = () => {
 
       resetTaskForm();
     } catch (error) {
-      console.error('Error adding task:', error);
-      createSnackbar('Error adding task: ' + error.Details, 'error');
+      console.error('Error adding task:', error.error);
+      createSnackbar('Error adding task: ' + error.error, 'error');
     }
   };
 
@@ -175,8 +175,8 @@ const TaskList = () => {
 
       resetTaskForm();
     } catch (error) {
-      console.error('Error editing task:', error);
-      createSnackbar('Error adding task: ' + error.Details, 'error');
+      console.error('Error editing task:', error.error);
+      createSnackbar('Error adding task: ' + error.error, 'error');
     }
   };
 
@@ -207,8 +207,8 @@ const TaskList = () => {
       createSnackbar('Task deleted successfully!', 'success');
       setTasks(tasks.filter((task) => task.task_ID !== taskID));
     } catch (error) {
-      console.error('Error deleting task:', error);
-      createSnackbar('Error deleting task: ' + error.Details, 'error');
+      console.error('Error deleting task:', error.error);
+      createSnackbar('Error deleting task: ' + error.error, 'error');
     }
   };
 

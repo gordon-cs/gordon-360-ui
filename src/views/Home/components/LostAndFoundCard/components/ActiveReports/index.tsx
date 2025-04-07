@@ -19,7 +19,7 @@ const noReports = (
     <br />
     <Typography variant="body1" align="center">
       No active lost item reports.{' '}
-      <Link to="/lostandfound/missingitemreport" className="gc360_text_link">
+      <Link to="/lostandfound/missingitemform" className="gc360_text_link">
         Report a lost item <Launch />
       </Link>
     </Typography>

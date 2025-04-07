@@ -82,4 +82,30 @@ export async function getRDOnCall(): Promise<RDStudentsViewModel> {
   }
 }
 
-export { fetchActiveRDOnCalls, fetchRDNames, createRDOnCall, updateRDOnCall, deleteRDOnCall };
+const getPhoneNumberByName = async (PhoneName: string): Promise<string> => {
+  try {
+    return await http.get(`housing/rds/contact/${PhoneName}`);
+  } catch (error) {
+    console.error('Error fetching contact:', error);
+    throw error;
+  }
+};
+
+const setPhoneNumberByName = async (PhoneName: string, PhoneNumber: string): Promise<void> => {
+  try {
+    await http.patch(`housing/rds/contact/${PhoneName}/${PhoneNumber}`);
+  } catch (error) {
+    console.error('Error setting contact:', error);
+    throw error;
+  }
+};
+
+export {
+  fetchActiveRDOnCalls,
+  fetchRDNames,
+  createRDOnCall,
+  updateRDOnCall,
+  deleteRDOnCall,
+  getPhoneNumberByName,
+  setPhoneNumberByName,
+};

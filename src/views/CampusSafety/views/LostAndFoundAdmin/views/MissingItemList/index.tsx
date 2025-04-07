@@ -13,14 +13,16 @@ import {
   CardHeader,
   AppBar,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import lostAndFoundService, { MissingItemReport } from 'services/lostAndFound';
 import GordonLoader from 'components/Loader';
 import Header from 'views/CampusSafety/components/Header';
 import styles from './MissingItemList.module.scss';
-import { DateTime } from 'luxon';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useSearchParams } from 'react-router-dom';
+import GordonSnackbar from 'components/Snackbar';
+import { differenceInCalendarDays, format } from 'date-fns';
 
 const categories = [
   'Clothing/Shoes',
@@ -55,117 +57,235 @@ const colors = [
   'Yellow',
 ];
 
+const dateFormat = 'MM/dd/yy';
+
+const yellowDateThreshold = 7;
+const redDateThreshold = 14;
+
+// Return a color based on how long ago a date was.
+const dateAgeColor = (date: string) => {
+  let dateGiven = Date.parse(date);
+  let today = new Date();
+  let dayDiff = differenceInCalendarDays(today, dateGiven);
+  // Return the color corresponding to the age of the date
+  if (dayDiff < yellowDateThreshold) {
+    return 'var(--mui-palette-success-main)';
+  } else if (dayDiff < redDateThreshold) {
+    return 'var(--mui-palette-warning-main)';
+  } else {
+    return 'var(--mui-palette-error-main)';
+  }
+};
+
+const formatDate = (date: string) => format(Date.parse(date), dateFormat);
+
+// Find and format the last checked date based on the list of admin actions for a given report.
+const displayLastCheckedDate = (report: MissingItemReport) => {
+  let dateString = report.adminActions?.findLast((action) => {
+    return action.action === 'Checked';
+  })?.actionDate;
+  if (dateString !== '' && dateString !== undefined) {
+    return formatDate(dateString);
+  }
+  return 'Never';
+};
+
+const statusChip = (report: MissingItemReport) => {
+  return (
+    <Chip
+      label={report.status[0].toUpperCase() + report.status.slice(1)}
+      //@ts-ignore
+      color={
+        report.status.toLowerCase() === 'active'
+          ? 'secondary'
+          : report.status.toLowerCase() === 'found'
+            ? 'success'
+            : 'primary'
+      }
+      className={styles.chip}
+    />
+  );
+};
+
 const MissingItemList = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
+  const [pageLoaded, setPageLoaded] = useState(false);
   const [reports, setReports] = useState<MissingItemReport[]>([]);
-  const [filteredReports, setFilteredReports] = useState<MissingItemReport[]>([]);
   const [status, setStatus] = useState(''); // Default value active
   const [category, setCategory] = useState('');
   const [color, setColor] = useState('');
   const [keywords, setKeywords] = useState('');
+  const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
   const navigate = useNavigate();
+  const location = useLocation();
   const isMobile = useMediaQuery('(max-width:900px)');
 
-  useEffect(() => {
-    const fetchMissingItems = async () => {
-      setLoading(true);
-      try {
-        const fetchedReports = await lostAndFoundService.getMissingItemReports();
-        const sortedReports = fetchedReports.sort(
-          (a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime(),
-        );
-        setReports(sortedReports);
-        setStatus('active'); // Set initial filter
-        setFilteredReports(sortedReports);
-      } catch (error) {
-        console.error('Error fetching missing items:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchMissingItems();
+  const pageSize = 25;
+
+  // Lazy loading state and ref
+  const [lazyLoading, setLazyLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+
+  const createSnackbar = useCallback((message, severity) => {
+    setSnackbar({ message, severity, open: true });
   }, []);
 
-  const handleFilter = () => {
-    let filtered = reports;
-
-    if (status) {
-      filtered = filtered.filter((report) => report.status.toLowerCase() === status.toLowerCase());
-    }
-    if (category) {
-      filtered = filtered.filter(
-        (report) => report.category.toLowerCase() === category.toLowerCase(),
-      );
-    }
-    if (color) {
-      filtered = filtered.filter((report) =>
-        report.colors?.some((col) => col.toLowerCase() === color.toLowerCase()),
-      );
-    }
-    if (keywords) {
-      const keywordLower = keywords.toLowerCase();
-      filtered = filtered.filter(
-        (report) =>
-          `${report.firstName} ${report.lastName}`.toLowerCase().includes(keywordLower) ||
-          report.description.toLowerCase().includes(keywordLower) ||
-          report.locationLost.toLowerCase().includes(keywordLower),
-      );
-    }
-
-    setFilteredReports(filtered);
-  };
-
   useEffect(() => {
-    handleFilter();
+    setPageLoaded(true);
+  }, []);
+
+  // Reset lazy-loading when filters change
+  useEffect(() => {
+    setHasMore(true);
   }, [status, category, color, keywords]);
 
-  const dateFormat = 'MM/dd/yy';
-  const formatDate = (date: string) => DateTime.fromISO(date).toFormat(dateFormat);
-
-  // Find and format the last checked date based on the list of admin actions for a given report.
-  const displayLastCheckedDate = (report: MissingItemReport) => {
-    var dateString = report.adminActions?.findLast((action) => {
-      return action.action === 'Checked';
-    })?.actionDate;
-    if (dateString !== '' && dateString !== undefined) {
-      return formatDate(dateString);
-    }
-    return 'Never';
-  };
-
-  // Return a color based on how long ago a date was.
-  // Green < 3 days, Yellow < 7 days, Red > 7 days.
-  const dateAgeColor = (date: string) => {
-    // Convert dates into milliseconds since 1/1/1970
-    var dateGiven = Date.parse(DateTime.fromFormat(date, dateFormat).toString());
-    var today = Date.parse(DateTime.now().toString());
-    // Subtract the dates, and convert milliseconds to days.
-    var dayDiff = (today - dateGiven) / (1000 * 3600 * 24);
-    if (dayDiff < 3) {
-      return 'var(--mui-palette-success-main)';
-    } else if (dayDiff < 7) {
-      return 'var(--mui-palette-warning-main)';
-    } else {
-      return 'var(--mui-palette-error-main)';
-    }
-  };
-
-  const statusChip = (report: MissingItemReport) => {
-    return (
-      <Chip
-        label={report.status[0].toUpperCase() + report.status.slice(1)}
-        //@ts-ignore
-        color={
-          report.status.toLowerCase() === 'active'
-            ? 'secondary'
-            : report.status.toLowerCase() === 'found'
-              ? 'success'
-              : 'primary'
+  // Fetch initial reports when filters change
+  useEffect(() => {
+    const updateFilters = async () => {
+      try {
+        if (
+          status === getUrlParam('status') &&
+          category === getUrlParam('category') &&
+          color === getUrlParam('color') &&
+          keywords === getUrlParam('keywords')
+        ) {
+          const fetchedReports = await lostAndFoundService.getMissingItemReports(
+            status,
+            category,
+            color,
+            keywords,
+            undefined,
+            pageSize,
+          );
+          setReports(fetchedReports);
+          setLoading(false);
         }
-        className={styles.chip}
-      />
-    );
+      } catch (error) {
+        console.error('Error fetching missing items', error);
+        createSnackbar(`Failed to load missing item reports`, error);
+      }
+    };
+    // Check if the keywords have changed, and make the API request only if they have been stable
+    // to avoid making excessive API requests when users are typing keywords
+    const checkForChanges = () => {
+      if (currKeywords === keywords) {
+        updateFilters();
+      }
+    };
+
+    let currKeywords = keywords;
+    if (pageLoaded) {
+      setLoading(true);
+      setTimeout(() => {
+        checkForChanges();
+      }, 700);
+    }
+  }, [status, category, color, keywords, pageLoaded]);
+
+  useEffect(() => {
+    const updateFilters = () => {
+      // Set the filter values based on the url query params
+      let queryValue = getUrlParam('status');
+      if (status !== queryValue) {
+        setStatus(queryValue);
+      }
+      queryValue = getUrlParam('color');
+      if (color !== queryValue) {
+        setColor(queryValue);
+      }
+      queryValue = getUrlParam('category');
+      if (category !== queryValue) {
+        setCategory(queryValue);
+      }
+      queryValue = getUrlParam('keywords');
+      if (keywords !== queryValue) {
+        setKeywords(queryValue);
+      }
+    };
+    updateFilters();
+  }, [category, color, keywords, searchParams, status]);
+
+  // Set the search url params, used for filtering
+  const setUrlParam = (paramName: string, paramValue: string) => {
+    if (paramValue === '') {
+      // Delete the parameter if it's value is empty
+      setSearchParams((params) => {
+        params.delete(paramName);
+        return params;
+      });
+    } else {
+      setSearchParams((params) => {
+        params.set(paramName, paramValue);
+        return params;
+      });
+    }
   };
+
+  // Get the value of the url param
+  const getUrlParam = (paramName: string) => {
+    if (location.search.includes(paramName)) {
+      return searchParams.get(paramName) || '';
+    }
+    return '';
+  };
+
+  // Delete the four filtering url params
+  const clearUrlParams = () => {
+    setSearchParams((params) => {
+      params.delete('status');
+      params.delete('category');
+      params.delete('keywords');
+      params.delete('color');
+      return params;
+    });
+  };
+
+  // Lazy loading helper: load more reports
+  const loadMoreReports = async () => {
+    if (lazyLoading || !hasMore) return;
+    setLazyLoading(true);
+    // Use the last report's recordID as the lastId; if none, it remains undefined.
+    const lastId = reports.length > 0 ? reports[reports.length - 1].recordID : undefined;
+    try {
+      const moreReports = await lostAndFoundService.getMissingItemReports(
+        status,
+        category,
+        color,
+        keywords,
+        lastId,
+        pageSize,
+      );
+      if (moreReports.length < pageSize) {
+        setHasMore(false);
+      } else {
+        setReports((prev) => [...prev, ...moreReports]);
+      }
+    } catch (error) {
+      console.error('Error loading more reports', error);
+      createSnackbar(`Failed to load more missing item reports`, error);
+    } finally {
+      setLazyLoading(false);
+    }
+  };
+
+  // Intersection Observer to trigger lazy loading
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        loadMoreReports();
+      }
+    });
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+    return () => {
+      if (loadMoreRef.current) {
+        observer.unobserve(loadMoreRef.current);
+      }
+    };
+  }, [loadMoreRef, lazyLoading, hasMore, status, category, color, keywords, reports]);
 
   return (
     <>
@@ -178,7 +298,6 @@ const MissingItemList = () => {
               title={
                 <span className={styles.filterTitleText}>
                   <b>Filters: </b>
-                  {filteredReports.length} / {reports.length} reports
                 </span>
               }
               className={styles.filterTitle}
@@ -199,7 +318,7 @@ const MissingItemList = () => {
                         variant="outlined"
                         size="small"
                         value={keywords}
-                        onChange={(e) => setKeywords(e.target.value)}
+                        onChange={(e) => setUrlParam('keywords', e.target.value)}
                         className={styles.textField}
                         fullWidth
                       />
@@ -209,7 +328,10 @@ const MissingItemList = () => {
                     <Grid item xs={isMobile}>
                       <FormControl size="small" className={styles.formControl} fullWidth>
                         <InputLabel>Status</InputLabel>
-                        <Select value={status} onChange={(e) => setStatus(e.target.value)}>
+                        <Select
+                          value={status}
+                          onChange={(e) => setUrlParam('status', e.target.value)}
+                        >
                           <MenuItem value="">All</MenuItem>
                           <MenuItem value="active">Active</MenuItem>
                           <MenuItem value="expired">Expired</MenuItem>
@@ -222,7 +344,10 @@ const MissingItemList = () => {
                     <Grid item xs={isMobile}>
                       <FormControl size="small" className={styles.formControl} fullWidth>
                         <InputLabel>Color</InputLabel>
-                        <Select value={color} onChange={(e) => setColor(e.target.value)}>
+                        <Select
+                          value={color}
+                          onChange={(e) => setUrlParam('color', e.target.value)}
+                        >
                           <MenuItem value="">All</MenuItem>
                           {colors.map((colorOption) => (
                             <MenuItem key={colorOption} value={colorOption}>
@@ -235,7 +360,10 @@ const MissingItemList = () => {
                     <Grid item xs={isMobile}>
                       <FormControl size="small" className={styles.formControl} fullWidth>
                         <InputLabel>Category</InputLabel>
-                        <Select value={category} onChange={(e) => setCategory(e.target.value)}>
+                        <Select
+                          value={category}
+                          onChange={(e) => setUrlParam('category', e.target.value)}
+                        >
                           <MenuItem value="">All</MenuItem>
                           {categories.map((categoryOption) => (
                             <MenuItem key={categoryOption} value={categoryOption}>
@@ -248,11 +376,7 @@ const MissingItemList = () => {
                     <Grid item xs={isMobile}>
                       <Button
                         onClick={() => {
-                          setStatus('');
-                          setCategory('');
-                          setColor('');
-                          setKeywords('');
-                          handleFilter();
+                          clearUrlParams();
                         }}
                         variant="contained"
                         color="error"
@@ -324,7 +448,7 @@ const MissingItemList = () => {
                 <GordonLoader />
               ) : (
                 <>
-                  {filteredReports.map((report, index) =>
+                  {reports.map((report) =>
                     isMobile ? (
                       // Mobile Layout
                       <Card
@@ -365,6 +489,9 @@ const MissingItemList = () => {
                             {report.stolen && (
                               <Chip label="Stolen" color="error" className={styles.chip} />
                             )}
+                            {Math.abs(Date.now() - new Date(report.dateCreated).getTime()) /
+                              (1000 * 60 * 60 * 24) <
+                              6 && <Chip label="NEW" color="success" className={styles.chip} />}
                           </Grid>
                         </CardContent>
                       </Card>
@@ -384,9 +511,9 @@ const MissingItemList = () => {
                           {formatDate(report.dateLost)}
                         </Grid>
                         <Grid item xs={2}>
-                          <div
-                            className={styles.dataCell}
-                          >{`${report.firstName} ${report.lastName}`}</div>
+                          <div className={styles.dataCell}>
+                            {`${report.firstName} ${report.lastName}`}
+                          </div>
                         </Grid>
                         <Grid item xs={2}>
                           <div className={styles.dataCell}>{report.locationLost}</div>
@@ -407,16 +534,30 @@ const MissingItemList = () => {
                           {report.stolen && (
                             <Chip label="Stolen" color="error" className={styles.chip} />
                           )}
+                          {Math.abs(Date.now() - new Date(report.dateCreated).getTime()) /
+                            (1000 * 60 * 60 * 24) <
+                            6 && <Chip label="NEW" color="success" className={styles.chip} />}
                         </Grid>
                       </Grid>
                     ),
                   )}
+                  {/* Sentinel element for lazy loading */}
+                  <div ref={loadMoreRef} />
+
+                  {/*Show a loader when lazy loading */}
+                  {lazyLoading && <GordonLoader />}
                 </>
               )}
             </CardContent>
           </Card>
         </Grid>
       </Grid>
+      <GordonSnackbar
+        open={snackbar.open}
+        text={snackbar.message}
+        severity={snackbar.severity}
+        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+      />
     </>
   );
 };

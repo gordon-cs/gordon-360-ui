@@ -38,7 +38,7 @@ const fetchRaInfo = (hallId: string, roomNumber: number): Promise<RA[]> =>
 // Fetches the information of an RD from the API endpoint "Housing/rds"
 const fetchRdInfo = (Hall_ID: string): Promise<RD[]> => http.get(`Housing/rds?hallId=${Hall_ID}`);
 
-// Adds the information of which method of contact the RA/AC prefers to the database
+// Adds the information of which method of contact the RA prefers to the database
 const preferredContact = (RA_ID: string, PreferredContactMethod: string): Promise<Contact> =>
   http.post(`Housing/ras/${RA_ID}/contact?preferredContactMethod=${PreferredContactMethod}`);
 

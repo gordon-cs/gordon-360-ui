@@ -12,7 +12,6 @@ import { styled } from '@mui/material/styles';
 import { useUser } from 'hooks';
 import { fetchOnDutyRA } from 'services/residentLife/RA_OnCall';
 import { formatPhoneNumber } from '../../../../utils/formatPhoneNumber/formatPhoneNumber';
-import { staffType } from '../../../../utils/staffType/staffType';
 import ScottieMascot from 'views/ResLife/ScottieMascot.png';
 
 const COLOR_80808026_1X1 =
@@ -30,18 +29,16 @@ const StyledLink = styled('a')(({ theme }) => ({
 
 const OnDuty = () => {
   const [onDutyRaInfo, setOnDutyRaInfo] = useState({});
-  const [staffTypeLabel, setStaffTypeLabel] = useState('');
   const { profile } = useUser();
   const isMobile = useMediaQuery('(max-width:600px)');
 
   useEffect(() => {
     if (profile) {
       const hallID = profile.OnCampusBuilding;
-      setStaffTypeLabel(staffType[hallID] || 'RA/AC');
 
       fetchOnDutyRA(hallID)
         .then((response) => setOnDutyRaInfo(response))
-        .catch((error) => console.error(`Failed to fetch On Duty ${staffTypeLabel} info:`, error));
+        .catch((error) => console.error(`Failed to fetch On Duty RA info:`, error));
     }
   }, [profile]);
 
@@ -60,7 +57,7 @@ const OnDuty = () => {
           title={
             <Grid container justifyContent="center" alignItems="center">
               <Grid item xs={12} align="center">
-                On Duty {staffTypeLabel}
+                On Duty RA
               </Grid>
             </Grid>
           }
@@ -71,7 +68,7 @@ const OnDuty = () => {
             {/* Text Section */}
             <Grid item xs={8}>
               <Typography variant="subtitle1" color="warning.main">
-                No {staffTypeLabel ? staffTypeLabel : 'one'} is on duty right now! 🐾
+                No RA is on duty right now! 🐾
               </Typography>
               <Typography variant="body1" color="text.secondary">
                 Scottie’s keeping an eye on things.
@@ -109,7 +106,7 @@ const OnDuty = () => {
         title={
           <Grid container justifyContent="center" alignItems="center">
             <Grid item xs={12} align="center">
-              On Duty {staffTypeLabel}
+              On Duty RA
             </Grid>
           </Grid>
         }

@@ -13,13 +13,13 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import ScottieMascot from 'views/ResLife/ScottieMascot.png';
-import { getRDOnCall } from 'services/residentLife/RD_OnCall';
+import { getRDOnCall, getPhoneNumberByName } from 'services/residentLife/RD_OnCall';
+import { formatPhoneNumber } from 'views/ResLife/utils/formatPhoneNumber/formatPhoneNumber';
 
 const COLOR_80808026_1X1 =
   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNsUAMAASwAqHb28sMAAAAASUVORK5CYII=';
 
-const RD_PHONE_NUMBER = 'RD Phone number here';
-
+// Styling for links using existing 360 colors
 const StyledLink = styled('a')(({ theme }) => ({
   color: theme.palette.primary.main,
   textDecoration: 'none',
@@ -37,6 +37,21 @@ const OnDutyRD = () => {
   const [onDutyRdInfo, setOnDutyRdInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const isMobile = useMediaQuery('(max-width:600px)');
+  const [RD_phonenumber, setRDPhoneNumber] = useState('');
+
+  useEffect(() => {
+    const fetchPhoneNumber = async () => {
+      try {
+        const result = await getPhoneNumberByName('rd');
+        setRDPhoneNumber(result);
+      } catch (err) {
+        console.error('Failed to fetch RD phone number:', err);
+        setRDPhoneNumber('Unavailable');
+      }
+    };
+
+    fetchPhoneNumber();
+  }, []);
 
   useEffect(() => {
     async function fetchRD() {
@@ -94,7 +109,10 @@ const OnDutyRD = () => {
                   <ListItemText
                     primary={
                       <Typography variant="body1">
-                        <strong>RD On-Call Phone:</strong> {RD_PHONE_NUMBER}
+                        <strong>RD On-Call Phone: </strong>
+                        <StyledLink href={`tel:${RD_phonenumber}`} className="gc360_text_link">
+                          {formatPhoneNumber(RD_phonenumber)}
+                        </StyledLink>
                       </Typography>
                     }
                   />
@@ -179,15 +197,18 @@ const OnDutyRD = () => {
                   />
                 </ListItem>
               )}
+              {/*
               <ListItem>
                 <ListItemText
                   primary={
                     <Typography variant="body1">
-                      <strong>On-Call Contact:</strong> {RD_PHONE_NUMBER}
+                      <strong>On-Call Contact: </strong>
+                      {RD_phonenumber}
                     </Typography>
                   }
                 />
               </ListItem>
+              */}
             </List>
           </Grid>
 
