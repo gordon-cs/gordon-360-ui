@@ -10,6 +10,8 @@ import {
   MenuItem,
   Select,
   TextField,
+  Stack,
+  Typography,
 } from '@mui/material';
 import {
   Grid,
@@ -641,7 +643,7 @@ const LostAndFoundAdmin = () => {
         <Grid item xs={2}>
           Date Found
         </Grid>
-        <Grid item xs={2.5}>
+        <Grid item xs={2}>
           Location
         </Grid>
         <Grid item xs={2.5}>
@@ -1117,7 +1119,7 @@ const LostAndFoundAdmin = () => {
         </Grid>
       </Grid>
       <Grid container className={styles.itemsList} spacing={6}>
-        <Grid item>
+        <Grid item xs={12} md={6}>
           <CardHeader
             className={styles.titleSecondary}
             title={
@@ -1148,44 +1150,74 @@ const LostAndFoundAdmin = () => {
                 <span>&nbsp;</span>
                 <span>Click on a report to view details</span>
               </CardContent>
-              {MissingItemsListHeader}
+              {!isMobile && MissingItemsListHeader}
               <div className={styles.scrollBox}>
                 {/*Show a loader when lazy loading */}
                 {lazyLoading ? (
                   <GordonLoader />
                 ) : (
                   <>
-                    {missingReports.map((missingReport) => (
-                      <Grid
-                        container
-                        justifyContent={'space-between'}
-                        key={missingReport.recordID}
-                        className={`${styles.reportRow} ${styles.clickableRow}`}
-                        onClick={() => handleMissingItemClick(String(missingReport.recordID))}
-                        tabIndex={0}
-                      >
-                        <Grid item xs={2}>
-                          {formatDateString(missingReport.dateLost)}
+                    {missingReports.map((missingReport) =>
+                      isMobile ? (
+                        <Grid
+                          container
+                          direction="row"
+                          justifyContent={'space-between'}
+                          alignItems="center"
+                          key={missingReport.recordID}
+                          className={`${styles.reportRow} ${styles.clickableRow}`}
+                          onClick={() => handleMissingItemClick(String(missingReport.recordID))}
+                          tabIndex={0}
+                        >
+                          <Grid item xs={11.5}>
+                            <Stack spacing={0.5}>
+                              <div>Date Lost: {formatDateString(missingReport.dateLost)}</div>
+                              <div>Location Lost: {missingReport.locationLost}</div>
+                              <div>Category: {missingReport.category}</div>
+                              <div>Description: {missingReport.description}</div>
+                            </Stack>
+                          </Grid>
+                          <Grid item>
+                            <CircleIcon
+                              sx={{
+                                color: dateAgeColor(displayLastCheckedDate(missingReport)),
+                                fontSize: 10,
+                              }}
+                            />
+                          </Grid>
                         </Grid>
-                        <Grid item xs={2.5}>
-                          <div className={styles.dataCell}>{missingReport.locationLost}</div>
+                      ) : (
+                        <Grid
+                          container
+                          justifyContent={'space-between'}
+                          key={missingReport.recordID}
+                          className={`${styles.reportRow} ${styles.clickableRow}`}
+                          onClick={() => handleMissingItemClick(String(missingReport.recordID))}
+                          tabIndex={0}
+                        >
+                          <Grid item md={2}>
+                            {formatDateString(missingReport.dateLost)}
+                          </Grid>
+                          <Grid item md={2.5}>
+                            <div className={styles.dataCell}>{missingReport.locationLost}</div>
+                          </Grid>
+                          <Grid item md={2.5}>
+                            <div className={styles.dataCell}>{missingReport.category}</div>
+                          </Grid>
+                          <Grid item md={3}>
+                            <div className={styles.dataCell}>{missingReport.description}</div>
+                          </Grid>
+                          <Grid item md={0.5} className={styles.dataCell}>
+                            <CircleIcon
+                              sx={{
+                                color: dateAgeColor(displayLastCheckedDate(missingReport)),
+                                fontSize: 10,
+                              }}
+                            />
+                          </Grid>
                         </Grid>
-                        <Grid item xs={2.5}>
-                          <div className={styles.dataCell}>{missingReport.category}</div>
-                        </Grid>
-                        <Grid item xs={3}>
-                          <div className={styles.dataCell}>{missingReport.description}</div>
-                        </Grid>
-                        <Grid item xs={0.5} className={styles.dataCell}>
-                          <CircleIcon
-                            sx={{
-                              color: dateAgeColor(displayLastCheckedDate(missingReport)),
-                              fontSize: 10,
-                            }}
-                          />
-                        </Grid>
-                      </Grid>
-                    ))}
+                      ),
+                    )}
 
                     {/* Sentinel element for lazy loading */}
                     <div ref={loadMoreRef} />
@@ -1196,7 +1228,7 @@ const LostAndFoundAdmin = () => {
           )}
         </Grid>
 
-        <Grid item>
+        <Grid item xs={12} md={6}>
           <CardHeader
             className={styles.titleSecondary}
             title={
@@ -1223,45 +1255,73 @@ const LostAndFoundAdmin = () => {
                 <span>&nbsp;</span>
                 <span>Click on an item to view details</span>
               </CardContent>
-              {FoundItemsListHeader}
+              {!isMobile && FoundItemsListHeader}
               <div className={styles.scrollBox}>
                 {foundLazyLoading ? (
                   <GordonLoader />
                 ) : (
                   <>
-                    {foundItems.map((foundItem) => (
-                      <Grid
-                        container
-                        justifyContent={'space-between'}
-                        key={foundItem.recordID}
-                        className={`${styles.reportRow} ${styles.clickableRow}`}
-                        onClick={() => handleFoundItemClick(String(foundItem.recordID))}
-                        tabIndex={0}
-                      >
-                        <Grid item xs={2}>
-                          <div className={styles.dataCell}>{foundItem.recordID}</div>
+                    {foundItems.map((foundItem) =>
+                      isMobile ? (
+                        <Grid
+                          container
+                          direction="row"
+                          justifyContent={'space-between'}
+                          alignItems="center"
+                          key={foundItem.recordID}
+                          className={`${styles.reportRow} ${styles.clickableRow}`}
+                          onClick={() => handleFoundItemClick(String(foundItem.recordID))}
+                          tabIndex={0}
+                        >
+                          <Grid item xs={11.5}>
+                            <Stack spacing={0.5}>
+                              <div>Tag #: {foundItem.recordID}</div>
+                              <div>Date Found: {formatDateString(foundItem.dateFound)}</div>
+                              <div>Location Found: {foundItem.locationFound}</div>
+                              <div>Category: {foundItem.category}</div>
+                              <div>Description: {foundItem.description}</div>
+                            </Stack>
+                          </Grid>
+                          <Grid item>
+                            <CircleIcon sx={{ color: foundItemColor(foundItem), fontSize: 10 }} />
+                          </Grid>
                         </Grid>
-                        <Grid item xs={2}>
-                          {formatDateString(foundItem.dateFound)}
+                      ) : (
+                        <Grid
+                          container
+                          justifyContent={'space-between'}
+                          key={foundItem.recordID}
+                          className={`${styles.reportRow} ${styles.clickableRow}`}
+                          onClick={() => handleFoundItemClick(String(foundItem.recordID))}
+                          tabIndex={0}
+                        >
+                          <Grid item xs={2}>
+                            <div className={styles.dataCell}>{foundItem.recordID}</div>
+                          </Grid>
+                          <Grid item xs={2}>
+                            {formatDateString(foundItem.dateFound)}
+                          </Grid>
+                          <Grid item xs={2}>
+                            <div className={styles.dataCell}>{foundItem.locationFound}</div>
+                          </Grid>
+                          <Grid item xs={2.5}>
+                            <div className={styles.dataCell}>{foundItem.category}</div>
+                          </Grid>
+                          <Grid item xs={3}>
+                            <div className={styles.dataCell}>{foundItem.description}</div>
+                          </Grid>
+                          <Grid item xs={0.5} className={styles.dataCell}>
+                            <div>
+                              <>
+                                <CircleIcon
+                                  sx={{ color: foundItemColor(foundItem), fontSize: 10 }}
+                                />
+                              </>
+                            </div>
+                          </Grid>
                         </Grid>
-                        <Grid item xs={2.5}>
-                          <div className={styles.dataCell}>{foundItem.locationFound}</div>
-                        </Grid>
-                        <Grid item xs={2.5}>
-                          <div className={styles.dataCell}>{foundItem.category}</div>
-                        </Grid>
-                        <Grid item xs={3}>
-                          <div className={styles.dataCell}>{foundItem.description}</div>
-                        </Grid>
-                        <Grid item xs={0.5} className={styles.dataCell}>
-                          <div>
-                            <>
-                              <CircleIcon sx={{ color: foundItemColor(foundItem), fontSize: 10 }} />
-                            </>
-                          </div>
-                        </Grid>
-                      </Grid>
-                    ))}
+                      ),
+                    )}
                     {/* Sentinel element for lazy loading */}
                     <div ref={loadMoreFoundRef} />
                   </>
