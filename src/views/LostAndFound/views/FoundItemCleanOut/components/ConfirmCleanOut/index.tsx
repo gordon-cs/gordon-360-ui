@@ -20,6 +20,7 @@ import { useState } from 'react';
 import { useUser } from 'hooks';
 import { useNavigate } from 'react-router';
 import GordonSnackbar from 'components/Snackbar';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 interface ConfirmCleanOutProps {
   reportsToCleanOut: FoundItem[];
@@ -42,6 +43,7 @@ const ConfirmCleanOut: React.FC<ConfirmCleanOutProps> = ({ reportsToCleanOut, on
   });
   const { profile } = useUser();
   const navigate = useNavigate();
+  const isMobile = useMediaQuery('(max-width:900px)');
 
   const handleCheckboxClick = () => {
     setEnableCleanOut(!enableCleanOut);
@@ -90,50 +92,96 @@ const ConfirmCleanOut: React.FC<ConfirmCleanOutProps> = ({ reportsToCleanOut, on
         <CardContent>
           <Typography>Input the final status of the following items.</Typography>
           <>
-            {reportsToCleanOut.map((report) => (
-              <Grid container key={report.recordID} className={styles.reportRow}>
-                <Grid item xs={1.5}>
-                  {report.recordID}
+            {reportsToCleanOut.map((report) =>
+              isMobile ? (
+                <Card key={report.recordID}>
+                  <CardContent>
+                    <Grid container>
+                      <Grid item xs={10.5}>
+                        <Typography variant="h6" className={styles.itemName}>
+                          Tag #: {report.recordID}
+                        </Typography>
+                        <Grid container justifyContent="space-between" alignItems="center">
+                          <Typography variant="body2">
+                            Found: {formatDateString(report.dateFound)}
+                          </Typography>
+                          <Typography variant="body2">
+                            Created: {formatDateString(report.dateCreated)}
+                          </Typography>
+                        </Grid>
+                        <Typography variant="body2">Location: {report.locationFound}</Typography>
+                        <Typography variant="body2">Category: {report.category}</Typography>
+                        <Grid item xs={12}>
+                          {differenceInCalendarDays(new Date(), Date.parse(report.dateCreated)) < 3}
+                        </Grid>
+                        <Grid item xs={12} md={4} paddingTop={1}>
+                          <FormControl variant="filled" sx={{ width: '100%', minWidth: '200px' }}>
+                            <InputLabel id="item-status-label">Item Status</InputLabel>
+                            <Select
+                              labelId="item-status-label"
+                              name="itemStatus"
+                              value={reportStatuses.get(report.recordID)}
+                              onChange={(e) => handleStatusChange(report.recordID, e.target.value)}
+                              fullWidth
+                            >
+                              <MenuItem value="">
+                                <em>None</em>
+                              </MenuItem>
+                              <MenuItem value="disposed">Disposed</MenuItem>
+                              <MenuItem value="donated">Donated</MenuItem>
+                              <MenuItem value="given">Given to Non-Owner</MenuItem>
+                            </Select>
+                          </FormControl>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                </Card>
+              ) : (
+                <Grid container key={report.recordID} className={styles.reportRow}>
+                  <Grid item xs={12} md={1.5}>
+                    {report.recordID}
+                  </Grid>
+                  <Grid item xs={12} md={1}>
+                    <div className={styles.dataCell}>{formatDateString(report.dateFound)}</div>
+                  </Grid>
+                  <Grid item xs={12} md={1.5}>
+                    <div className={styles.dataCell}>{report.locationFound}</div>
+                  </Grid>
+                  <Grid item xs={12} md={2}>
+                    <div className={styles.dataCell}>{report.category}</div>
+                  </Grid>
+                  <Grid item xs={12} md={2}>
+                    <div className={styles.dataCell}>{report.description}</div>
+                  </Grid>
+                  <Grid item xs={12} md={4}>
+                    <FormControl variant="filled" sx={{ width: '100%', minWidth: '200px' }}>
+                      <InputLabel id="item-status-label">Item Status</InputLabel>
+                      <Select
+                        labelId="item-status-label"
+                        name="itemStatus"
+                        value={reportStatuses.get(report.recordID)}
+                        onChange={(e) => handleStatusChange(report.recordID, e.target.value)}
+                        fullWidth
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        <MenuItem value="disposed">Disposed</MenuItem>
+                        <MenuItem value="donated">Donated</MenuItem>
+                        <MenuItem value="given">Given to Non-Owner</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12}>
+                    {differenceInCalendarDays(new Date(), Date.parse(report.dateCreated)) < 3}
+                  </Grid>
                 </Grid>
-                <Grid item xs={1}>
-                  <div className={styles.dataCell}>{formatDateString(report.dateFound)}</div>
-                </Grid>
-                <Grid item xs={1.5}>
-                  <div className={styles.dataCell}>{report.locationFound}</div>
-                </Grid>
-                <Grid item xs={2}>
-                  <div className={styles.dataCell}>{report.category}</div>
-                </Grid>
-                <Grid item xs={2}>
-                  <div className={styles.dataCell}>{report.description}</div>
-                </Grid>
-                <Grid item xs={4}>
-                  <FormControl variant="filled" sx={{ width: 1 }}>
-                    <InputLabel id="item-status-label">Item Status</InputLabel>
-                    <Select
-                      labelId="item-status-label"
-                      name="itemStatus"
-                      value={reportStatuses.get(report.recordID)}
-                      onChange={(e) => handleStatusChange(report.recordID, e.target.value)}
-                      fullWidth
-                    >
-                      <MenuItem value="">
-                        <em>None</em>
-                      </MenuItem>
-                      <MenuItem value="disposed">Disposed</MenuItem>
-                      <MenuItem value="donated">Donated</MenuItem>
-                      <MenuItem value="given">Given to Non-Owner</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12}>
-                  {differenceInCalendarDays(new Date(), Date.parse(report.dateCreated)) < 3}
-                </Grid>
-              </Grid>
-            ))}
+              ),
+            )}
           </>
           <Grid container justifyContent="center" marginTop={3}>
-            <Grid item xs={8}>
+            <Grid item>
               <FormControlLabel
                 control={
                   <Checkbox
@@ -146,10 +194,10 @@ const ConfirmCleanOut: React.FC<ConfirmCleanOutProps> = ({ reportsToCleanOut, on
               />
             </Grid>
           </Grid>
-          <Grid container justifyContent="flex-end" padding={2}>
+          <Grid container justifyContent="center" padding={2}>
             <Grid item padding={2}>
               <Button variant="contained" color="primary" onClick={onCancel}>
-                Go Back and Edit
+                Edit
               </Button>
             </Grid>
             <Grid item padding={2}>
@@ -159,7 +207,7 @@ const ConfirmCleanOut: React.FC<ConfirmCleanOutProps> = ({ reportsToCleanOut, on
                 onClick={() => handleCleanOut(reportsToCleanOut)}
                 disabled={!enableCleanOut}
               >
-                Clean Out Items
+                Clean Out
               </Button>
             </Grid>
           </Grid>
