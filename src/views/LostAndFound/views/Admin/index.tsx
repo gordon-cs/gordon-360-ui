@@ -83,7 +83,7 @@ const LostAndFoundAdmin = () => {
   const [isNoMatchModalOpen, setNoMatchModalOpen] = useState(false);
   const [matchFoundIsClicked, setMatchFoundIsClicked] = useState(false);
   const [isMatchModalOpen, setMatchModalOpen] = useState(false);
-  const contactedActionTypes = ['Email', 'PhoneVoicemail', 'PhonePickUp', 'PhoneNotWant'];
+  const contactedResponseTypes = ['Email', 'PhoneVoicemail', 'PhonePickUp', 'PhoneNotWant'];
 
   useEffect(() => {
     setPageLoaded(true);
@@ -957,19 +957,26 @@ const LostAndFoundAdmin = () => {
                 <Grid item>
                   <span className={styles.smallText}>Owner Contacted:</span>
                   <FormControl fullWidth>
-                    <InputLabel>Action Type</InputLabel>
-                    <Select fullWidth variant="filled" label="Contact Action Type" name="action">
-                      {contactedActionTypes.map((actionType) => (
-                        <MenuItem value={actionType}>
-                          {actionType === 'Email'
-                            ? 'Email Sent'
-                            : actionType === 'PhoneVoicemail'
-                              ? 'Phone - Left Voicemail'
-                              : actionType === 'PhonePickUp'
-                                ? 'Phone - Owner Will Pick Up'
-                                : actionType === 'PhoneNotWant'
-                                  ? 'Phone - Owner Does Not Want'
-                                  : actionType}
+                    <InputLabel>Contact Method</InputLabel>
+                    <Select fullWidth variant="filled" label="Contact Method" name="contactMethod">
+                      <MenuItem value={'Email'}>Email</MenuItem>
+                      <MenuItem value={'Phone'}>Phone</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl fullWidth>
+                    <InputLabel>Response</InputLabel>
+                    <Select fullWidth variant="filled" label="Response" name="response">
+                      {contactedResponseTypes.map((responseType) => (
+                        <MenuItem value={responseType}>
+                          {responseType === 'Owner will pick up'
+                            ? 'Owner will pick up'
+                            : responseType === 'Owner does not want'
+                              ? 'Owner does not want'
+                              : responseType === 'CheckedActionCustomResponse'
+                                ? 'Enter response manually'
+                                : responseType === 'No response from owner'
+                                  ? 'No response'
+                                  : responseType}
                         </MenuItem>
                       ))}
                     </Select>
