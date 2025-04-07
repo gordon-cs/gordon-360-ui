@@ -203,6 +203,8 @@ export type FoundAdminAction = {
 
 export type InitFoundAdminAction = Omit<FoundAdminAction, 'ID'>;
 
+export type AdminAction = Omit<InitFoundAdminAction, 'foundID'>;
+
 /**
  * Fetch an array containing the full list of all found item reports, filtered by the given
  * parameters.
@@ -364,6 +366,27 @@ const getMissingItemsCount = (
 const createFoundAdminAction = (itemID: string, data: InitFoundAdminAction): Promise<string> =>
   http.post<string>(`lostandfound/founditems/${itemID}/actionstaken`, data);
 
+const linkReports = (missingID: number, foundID: string, action: AdminAction) => {
+  http.put<void>(`lostandfound/missingitems/${missingID}/linkItem/${foundID}`);
+  http.put<void>(`founditems/${foundID}/linkReport/${missingID}`);
+  updateFoundReportStatus(foundID, 'found');
+  updateReportStatus(missingID, 'found');
+  const missingAdminAction: InitAdminAction = {
+    ...action,
+    missingID: missingID,
+    isPublic: true,
+    username: action.submitterUsername,
+  };
+  const foundAdminAction: InitFoundAdminAction = {
+    ...action,
+    foundID: foundID,
+  };
+  createAdminAction(missingID, missingAdminAction);
+  createFoundAdminAction(foundID, foundAdminAction);
+};
+
+const unlinkReports = (missingID: number, foundID: string, action: AdminAction) => {};
+
 const lostAndFoundService = {
   getMissingItemReports,
   createMissingItemReport,
@@ -381,6 +404,7 @@ const lostAndFoundService = {
   createFoundAdminAction,
   getFoundItemsCount,
   getMissingItemsCount,
+  linkReports,
 };
 
 export default lostAndFoundService;
