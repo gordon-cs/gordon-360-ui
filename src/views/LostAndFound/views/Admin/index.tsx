@@ -83,7 +83,12 @@ const LostAndFoundAdmin = () => {
   const [isNoMatchModalOpen, setNoMatchModalOpen] = useState(false);
   const [matchFoundIsClicked, setMatchFoundIsClicked] = useState(false);
   const [isMatchModalOpen, setMatchModalOpen] = useState(false);
-  const contactedResponseTypes = ['Email', 'PhoneVoicemail', 'PhonePickUp', 'PhoneNotWant'];
+  const contactedResponseTypes = [
+    'Owner will pick up',
+    'Owner does not want',
+    'CheckedActionCustomResponse',
+    'No response from owner',
+  ];
 
   useEffect(() => {
     setPageLoaded(true);
