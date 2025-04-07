@@ -434,6 +434,7 @@ const lostAndFoundService = {
   getFoundItemsCount,
   getMissingItemsCount,
   linkReports,
+  unlinkReports,
 };
 
 export default lostAndFoundService;
