@@ -37,7 +37,7 @@ const RAView = () => {
             title={
               <Grid container direction="row" alignItems="center">
                 <Grid item xs={12} align="center">
-                  RA/AC On-Duty by Hall
+                  RA On-Duty by Hall
                 </Grid>
               </Grid>
             }
@@ -54,6 +54,7 @@ const RAView = () => {
   if (isMobile) {
     return (
       <Grid container spacing={2}>
+        <HousingBanner />
         <Grid item xs={12} md={4}>
           <Stack spacing={2}>
             <MyHall />

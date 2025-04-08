@@ -119,7 +119,7 @@ const RoomRanges = () => {
         setPeople(response ? buildingCodes : []);
         console.log('RA List:', response);
       })
-      .catch((error) => console.error('Error fetching RA/ACs:', error));
+      .catch((error) => console.error('Error fetching RAs:', error));
   };
 
   const onClickAddRoomRange = () => {
@@ -225,7 +225,7 @@ const RoomRanges = () => {
                 color: '#9cb0b6',
               }}
             >
-              Select a building to update the list of available RA/ACs and room ranges for that
+              Select a building to update the list of available RAs and room ranges for that
               building. This will also adjust the assignments you can view or modify.
             </Typography>
             <FormControl fullWidth>
@@ -386,7 +386,7 @@ const RoomRanges = () => {
                 </>
               ) : (
                 <ListItem style={{ color: '#9cb0b6' }}>
-                  Please select a building to see the list of RA/ACs for that building.
+                  Please select a building to see the list of RAs for that building.
                 </ListItem>
               )}
             </List>
