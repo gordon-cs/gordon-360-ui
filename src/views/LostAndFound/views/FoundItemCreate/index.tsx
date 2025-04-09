@@ -116,7 +116,7 @@ const FoundItemFormCreate = () => {
     dateFound: '',
     finderWantsItem: false,
     initialAction: '',
-    storageLocation: LFStorageLocations[0],
+    storageLocation: '',
     status: 'active',
   });
 
@@ -177,7 +177,7 @@ const FoundItemFormCreate = () => {
     clearOwnerTextFields();
   }, [formData.isGordonOwner]);
 
-  const requiredFields = ['category', 'description', 'locationFound'];
+  const requiredFields = ['category', 'description', 'locationFound', 'storageLocation'];
 
   const validateForm = () => {
     const errors: { [key: string]: string } = {};
@@ -730,6 +730,7 @@ const FoundItemFormCreate = () => {
                   labelId="storage-location-label"
                   name="storageLocation"
                   value={formData.storageLocation}
+                  error={!!validationErrors.storageLocation}
                   onChange={handleSelectChange} // Also a SelectChangeEvent
                   fullWidth
                   sx={{ backgroundColor: 'transparent' }}
@@ -738,7 +739,10 @@ const FoundItemFormCreate = () => {
                     <MenuItem value={loc}>{loc}</MenuItem>
                   ))}
                 </Select>
-                <FormHelperText>Valuable items should go in the safe</FormHelperText>
+                <FormHelperText>
+                  {!!validationErrors.storageLocation && validationErrors.storageLocation + ' '}
+                  Valuable items should go in the safe
+                </FormHelperText>
               </FormControl>
             </div>
           </Grid>
