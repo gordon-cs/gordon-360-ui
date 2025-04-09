@@ -1,4 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
+import { AuthGroup } from 'services/auth';
+import { useAuthGroups } from 'hooks';
 import {
   Card,
   CardContent,
@@ -31,6 +33,8 @@ import { StatusChip } from 'views/LostAndFound/components/StatusChip';
 import { LFCategories } from 'views/LostAndFound/components/Constants';
 
 const MissingItemReportData = () => {
+  const isAdmin = useAuthGroups(AuthGroup.LostAndFoundAdmin);
+  const isDev = useAuthGroups(AuthGroup.LostAndFoundDevelopers);
   const navigate = useNavigate();
   const [username, setUsername] = useState({ AD_Username: '' });
 
@@ -956,7 +960,7 @@ const MissingItemReportData = () => {
                           InputProps={{ readOnly: true }}
                         />
                       </Grid>
-                      {item.matchingFoundID !== null ? (
+                      {item.matchingFoundID !== null && (isAdmin || isDev) ? (
                         <Grid item xs={12}>
                           <TextField
                             label="Matching Found Item"
@@ -970,7 +974,6 @@ const MissingItemReportData = () => {
                       ) : (
                         <></>
                       )}
-
                       {/* Stolen information (if marked stolen) */}
                       {item.stolen ? (
                         <>
