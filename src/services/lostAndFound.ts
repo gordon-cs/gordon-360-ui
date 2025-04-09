@@ -6,6 +6,7 @@ import http from './http';
  */
 export type MissingItemReport = {
   recordID: number;
+  matchingFoundID?: string;
   firstName?: string;
   lastName?: string;
   category: string;
@@ -202,6 +203,8 @@ export type FoundAdminAction = {
 
 export type InitFoundAdminAction = Omit<FoundAdminAction, 'ID'>;
 
+export type AdminAction = Omit<InitFoundAdminAction, 'foundID'>;
+
 /**
  * Fetch an array containing the full list of all found item reports, filtered by the given
  * parameters.
@@ -318,7 +321,7 @@ const getFoundItemsCount = (
   color?: string,
   category?: string,
   ID?: string,
-  keywords?: string
+  keywords?: string,
 ): Promise<number> => {
   const query: { [key: string]: string } = {};
   if (latestDate) query.latestDate = latestDate;
@@ -327,9 +330,7 @@ const getFoundItemsCount = (
   if (category) query.category = category;
   if (ID) query.ID = ID;
   if (keywords) query.keywords = keywords;
-  return http.get<number>(
-    `lostandfound/founditems/count${http.toQueryString(query)}`
-  );
+  return http.get<number>(`lostandfound/founditems/count${http.toQueryString(query)}`);
 };
 
 /**
@@ -365,6 +366,56 @@ const getMissingItemsCount = (
 const createFoundAdminAction = (itemID: string, data: InitFoundAdminAction): Promise<string> =>
   http.post<string>(`lostandfound/founditems/${itemID}/actionstaken`, data);
 
+/**
+ *
+ * @param missingID
+ * @param foundID
+ * @param action
+ */
+const linkReports = (missingID: number, foundID: string, action: AdminAction) => {
+  http.put<void>(`lostandfound/missingitems/${missingID}/linkItem/${foundID}`);
+  http.put<void>(`founditems/${foundID}/linkReport/${missingID}`);
+  updateFoundReportStatus(foundID, 'found');
+  updateReportStatus(missingID, 'found');
+  const missingAdminAction: InitAdminAction = {
+    ...action,
+    missingID: missingID,
+    isPublic: true,
+    username: action.submitterUsername,
+  };
+  const foundAdminAction: InitFoundAdminAction = {
+    ...action,
+    foundID: foundID,
+  };
+  createAdminAction(missingID, missingAdminAction);
+  createFoundAdminAction(foundID, foundAdminAction);
+};
+
+/**
+ *
+ * @param missingID
+ * @param foundID
+ * @param action
+ */
+const unlinkReports = (missingID: number, foundID: string, action: AdminAction) => {
+  http.put<void>(`lostandfound/missingitems/${missingID}/linkItem/`);
+  http.put<void>(`founditems/${foundID}/linkReport/`);
+  updateFoundReportStatus(foundID, 'active');
+  updateReportStatus(missingID, 'active');
+  const missingAdminAction: InitAdminAction = {
+    ...action,
+    missingID: missingID,
+    isPublic: true,
+    username: action.submitterUsername,
+  };
+  const foundAdminAction: InitFoundAdminAction = {
+    ...action,
+    foundID: foundID,
+  };
+  createAdminAction(missingID, missingAdminAction);
+  createFoundAdminAction(foundID, foundAdminAction);
+};
+
 const lostAndFoundService = {
   getMissingItemReports,
   createMissingItemReport,
@@ -382,6 +433,8 @@ const lostAndFoundService = {
   createFoundAdminAction,
   getFoundItemsCount,
   getMissingItemsCount,
+  linkReports,
+  unlinkReports,
 };
 
 export default lostAndFoundService;
