@@ -15,9 +15,15 @@ interface Props {
     context: PickerChangeHandlerContext<DateValidationError>,
   ) => void;
   onError: (error: DateValidationError | null) => void;
+  disabled?: boolean | undefined;
 }
 
-export const CustomDatePicker: React.FC<Props> = ({ value, onChange, onError }) => {
+export const CustomDatePicker: React.FC<Props> = ({
+  value,
+  onChange,
+  onError,
+  disabled = false,
+}) => {
   const [dateError, setDateError] = useState<DateValidationError | null>(null);
 
   const minDate = subYears(new Date(), 1).toISOString();
@@ -51,6 +57,7 @@ export const CustomDatePicker: React.FC<Props> = ({ value, onChange, onError }) 
           onError(newError);
         }}
         disableFuture
+        disabled={disabled}
         minDate={minDate}
         orientation="portrait"
         name="Date Lost"

@@ -472,11 +472,11 @@ const FoundItemFormEdit = () => {
                           navigate(
                             `/lostandfound/lostandfoundadmin/founditemform/${foundItem?.recordID}`,
                           );
-                        } else if (!isKiosk) {
+                        } else if (!readOnly) {
                           navigate(
                             '/lostandfound/lostandfoundadmin/founditemdatabase?status=active',
                           );
-                        } else if (isKiosk) {
+                        } else if (readOnly) {
                           navigate('/lostandfound/kiosk/founditemdatabase?status=active');
                         }
                       }}
@@ -647,6 +647,7 @@ const FoundItemFormEdit = () => {
                 value={foundItem.dateFound ? foundItem.dateFound : null}
                 onChange={(val) => handleDateChange(new Date(val || ''))}
                 onError={(newError) => setDateError(newError)}
+                disabled={readOnly}
               />
               <FormControlLabel
                 control={
