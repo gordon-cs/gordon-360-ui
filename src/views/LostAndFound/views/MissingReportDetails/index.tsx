@@ -341,18 +341,16 @@ const MissingItemReportData = () => {
     if (!checkedItemNotFound && newActionFormData.action === 'Checked' && isValidForm()) {
       await lostAndFoundService.updateReportStatus(parseInt(itemId ? itemId : ''), 'found');
       setReportUpdated(reportUpdated + 1);
-      let requestData = {
-        ...newActionFormData,
-        missingID: parseInt(itemId || ''),
-        actionDate: new Date().toISOString(),
-        username: username.AD_Username,
-        isPublic: newActionFormData.action === 'Checked' && !checkedItemNotFound ? true : false,
-        submitterUsername: username.AD_Username,
-      };
       lostAndFoundService.linkReports(
-        requestData.missingID,
+        parseInt(itemId || ''),
         checkedActionFormData.foundID,
-        requestData,
+        item?.submitterUsername || '',
+        item?.firstName || '',
+        item?.lastName || '',
+        item?.phone || '',
+        item?.email || '',
+        contactActionFormData.contactMethod,
+        contactActionFormData.response,
       );
       setActionsUpdated(true);
       closeModal();
