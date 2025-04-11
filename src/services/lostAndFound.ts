@@ -391,7 +391,7 @@ const linkReports = (
 
   let username: string;
 
-  const fetchUserData = async () => {
+  const submitAdminAction = async () => {
     try {
       const userInfo = await userService.getProfileInfo();
       username = userInfo?.AD_Username || '';
@@ -417,7 +417,7 @@ const linkReports = (
       console.error('Error fetching user data:', error);
     }
   };
-  fetchUserData();
+  submitAdminAction();
 
   const updateFoundItemInfo = async () => {
     try {
