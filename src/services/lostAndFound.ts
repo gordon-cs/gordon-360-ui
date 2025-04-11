@@ -444,23 +444,59 @@ const linkReports = (
  * @param foundID
  * @param action
  */
-const unlinkReports = (missingID: number, foundID: string, action: AdminAction) => {
+const unlinkReports = (missingID: number, foundID: string) => {
   http.put<void>(`lostandfound/missingitems/${missingID}/linkItem/`);
   http.put<void>(`founditems/${foundID}/linkReport/`);
   updateFoundReportStatus(foundID, 'active');
   updateReportStatus(missingID, 'active');
-  const missingAdminAction: InitAdminAction = {
-    ...action,
-    missingID: missingID,
-    isPublic: true,
-    username: action.submitterUsername,
+
+  let username: string;
+
+  const submitAdminAction = async () => {
+    try {
+      const userInfo = await userService.getProfileInfo();
+      username = userInfo?.AD_Username || '';
+
+      const missingAdminAction: InitAdminAction = {
+        missingID: missingID,
+        action: 'Custom',
+        actionDate: new Date().toISOString(),
+        actionNote: `Unlinked Report`,
+        username: username,
+        isPublic: true,
+      };
+      const foundAdminAction: InitFoundAdminAction = {
+        foundID: foundID,
+        action: 'Custom',
+        actionDate: new Date().toISOString(),
+        actionNote: `Unlinked Report`,
+        submitterUsername: username,
+      };
+      createAdminAction(missingID, missingAdminAction);
+      createFoundAdminAction(foundID, foundAdminAction);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
   };
-  const foundAdminAction: InitFoundAdminAction = {
-    ...action,
-    foundID: foundID,
+  submitAdminAction();
+
+  const updateFoundItemInfo = async () => {
+    try {
+      const foundItem = await getFoundItem(foundID);
+      let updatedFoundItem: FoundItem = {
+        ...foundItem,
+        ownerUsername: '',
+        ownerFirstName: '',
+        ownerLastName: '',
+        ownerPhone: '',
+        ownerEmail: '',
+      };
+      updateFoundItem(updatedFoundItem, foundID);
+    } catch (error) {
+      console.log('Error fetching found item:', error);
+    }
   };
-  createAdminAction(missingID, missingAdminAction);
-  createFoundAdminAction(foundID, foundAdminAction);
+  updateFoundItemInfo();
 };
 
 const lostAndFoundService = {
