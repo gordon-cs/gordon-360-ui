@@ -9,6 +9,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  SelectChangeEvent,
   TextField,
   Stack,
 } from '@mui/material';
@@ -90,6 +91,11 @@ const LostAndFoundAdmin = () => {
     'CheckedActionCustomResponse',
     'No response from owner',
   ];
+  const [contactMethod, setContactMethod] = useState('');
+  const [response, setResponse] = useState('');
+  const [checkedActionCustomResponseVisible, setCheckedActionCustomResponseVisible] =
+    useState<boolean>(false);
+  const [customCheckedActionResponseValue, setCustomCheckedActionResponseValue] = useState('');
 
   useEffect(() => {
     setPageLoaded(true);
@@ -189,6 +195,21 @@ const LostAndFoundAdmin = () => {
     }
   };
 
+  const updateForm = async (name: string, newValue: string) => {
+    if (name == 'contactMethod') {
+      setContactMethod(newValue);
+    } else if (name == 'response') {
+      setResponse(newValue);
+    }
+  };
+
+  const handleMatchDetailsFormChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent,
+  ) => {
+    const { name, value } = e.target;
+    updateForm(name, value);
+  };
+
   const handleMatchClick = () => {
     setNoMatchIsClicked(true);
     handleMatchFoundSubmit(missingID, foundID);
@@ -210,9 +231,20 @@ const LostAndFoundAdmin = () => {
     setLazyLoading(true);
     setFoundLazyLoading(true);
     try {
-      await lostAndFoundService.updateFoundItem(updatedFoundItem, foundID);
-      await lostAndFoundService.updateReportStatus(parseInt(missingID || ''), 'found');
-      await lostAndFoundService.updateFoundReportStatus(foundID, 'found');
+      if (response == 'CheckedActionCustomResponse') {
+        setResponse(customCheckedActionResponseValue);
+      }
+      lostAndFoundService.linkReports(
+        missingID,
+        foundID,
+        missingItem?.submitterUsername || '',
+        missingItem?.firstName || '',
+        missingItem?.lastName || '',
+        missingItem?.phone || '',
+        missingItem?.email || '',
+        contactMethod,
+        response,
+      );
       setShowMissingPopUp(false);
       setShowFoundPopUp(false);
       setMatchFoundIsClicked(false);
@@ -385,6 +417,10 @@ const LostAndFoundAdmin = () => {
       matchButtonRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [showMissingPopUp, showFoundPopUp]);
+
+  useEffect(() => {
+    setCheckedActionCustomResponseVisible(response === 'Enter response manually');
+  }, [response]);
 
   const yellowDateThreshold = 7;
   const redDateThreshold = 14;
@@ -959,14 +995,28 @@ const LostAndFoundAdmin = () => {
                   <span className={styles.smallText}>Owner Contacted:</span>
                   <FormControl fullWidth>
                     <InputLabel>Contact Method</InputLabel>
-                    <Select fullWidth variant="filled" label="Contact Method" name="contactMethod">
+                    <Select
+                      fullWidth
+                      value={contactMethod}
+                      variant="filled"
+                      label="Contact Method"
+                      name="contactMethod"
+                      onChange={handleMatchDetailsFormChange}
+                    >
                       <MenuItem value={'Email'}>Email</MenuItem>
                       <MenuItem value={'Phone'}>Phone</MenuItem>
                     </Select>
                   </FormControl>
                   <FormControl fullWidth>
                     <InputLabel>Response</InputLabel>
-                    <Select fullWidth variant="filled" label="Response" name="response">
+                    <Select
+                      fullWidth
+                      value={response}
+                      variant="filled"
+                      label="Response"
+                      name="response"
+                      onChange={handleMatchDetailsFormChange}
+                    >
                       {contactedResponseTypes.map((responseType) => (
                         <MenuItem value={responseType}>
                           {responseType === 'Owner will pick up'
@@ -982,6 +1032,18 @@ const LostAndFoundAdmin = () => {
                       ))}
                     </Select>
                   </FormControl>
+                  {checkedActionCustomResponseVisible ? (
+                    <Grid item xs={6.5}>
+                      <TextField
+                        fullWidth
+                        variant="filled"
+                        label={"Owner's Response"}
+                        name="customOwnerResponse"
+                        value={customCheckedActionResponseValue}
+                        onChange={(ev) => setCustomCheckedActionResponseValue(ev.target.value)}
+                      />
+                    </Grid>
+                  ) : undefined}
                 </Grid>
               </Grid>
             </Grid>
