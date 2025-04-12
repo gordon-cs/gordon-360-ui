@@ -349,8 +349,8 @@ const MissingItemReportData = () => {
         item?.lastName || '',
         item?.phone || '',
         item?.email || '',
-        contactActionFormData.contactMethod,
-        contactActionFormData.response,
+        checkedActionFormData?.contactMethod || '',
+        checkedActionFormData?.response || '',
       );
       setActionsUpdated(true);
       closeModal();
