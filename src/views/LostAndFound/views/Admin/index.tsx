@@ -930,12 +930,7 @@ const LostAndFoundAdmin = () => {
 
     return (
       <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-        <DialogTitle className={styles.modalTitle}>
-          <Button onClick={onClose} className={styles.cancelButton}>
-            Cancel
-          </Button>
-          Confirm Match?
-        </DialogTitle>
+        <DialogTitle className={styles.modalTitle}>Confirm Match?</DialogTitle>
         <DialogContent>
           <Typography variant="body1" align="center">
             Confirm the details of these items match, and you’d like to mark them both as found.
@@ -955,7 +950,7 @@ const LostAndFoundAdmin = () => {
               <Grid item>
                 <span className={styles.smallText}>Owner's Contact Info:</span>
                 <div className={styles.bolderText}>Email: {missingItem.email}</div>
-                <div className={styles.bolderText}>Email: {missingItem.phone}</div>
+                <div className={styles.bolderText}>Phone: {missingItem.phone}</div>
               </Grid>
             </Grid>
             <Grid container direction={'column'} className={styles.popUpBodyRight}>
@@ -993,6 +988,9 @@ const LostAndFoundAdmin = () => {
           </Grid>
         </DialogContent>
         <DialogActions className={styles.actions}>
+          <Button onClick={onClose} className={styles.cancelButton}>
+            Cancel
+          </Button>
           <Button onClick={onSubmit} className={styles.submitButton} color="secondary">
             Link Reports As Found
           </Button>
