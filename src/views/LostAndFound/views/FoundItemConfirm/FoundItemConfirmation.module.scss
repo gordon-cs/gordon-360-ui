@@ -19,9 +19,39 @@
   font-weight: 600;
   font-size: 2rem;
 }
+/* Found Item Table for Desktop view */
+.foundItemTable {
+  margin: 0 1rem 1rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Sticky header cells for found item table */
+.stickyHeaderFound {
+  position: sticky;
+  top: 0;
+  background-color: var(--mui-palette-background-paper);
+  z-index: 2;
+  /* Optional: add padding or font adjustments as needed */
+}
+
+/* Mobile view: found item card styling */
+.mobileFoundItemCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: var(--mui-palette-background-paper);
+}
 
 .serialTag {
   font-size: 2rem;
+  border: 2px solid var(--mui-palette-secondary-main);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  display: inline-block;
 }
 
 .yellowText {
