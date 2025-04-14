@@ -144,8 +144,8 @@
   background-color: var(--mui-palette-neutral-100);
   color: var(--mui-palette-neutral-contrastText);
   border-radius: 5px;
-  height: 24rem;
-  width: 40rem;
+  min-height: 24rem;
+  max-height: 24rem;
   margin-bottom: 3rem;
 }
 
