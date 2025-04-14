@@ -395,7 +395,9 @@ const FoundItemConfirmation = () => {
         <CardHeader
           title={
             <Typography variant="h6" align="center">
-              {filterCategory ? `Missing Reports in '${filterCategory}'` : 'All Missing Reports'}
+              {filterCategory
+                ? `Check if Item has be reported in '${filterCategory}'`
+                : 'All Missing Reports'}
             </Typography>
           }
         />
