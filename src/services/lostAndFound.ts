@@ -433,6 +433,8 @@ const linkReports = (
       updateFoundItem(updatedFoundItem, foundID);
     } catch (error) {
       console.log('Error fetching found item:', error);
+      unlinkReports(missingID, foundID);
+      throw new Error('error');
     }
   };
   updateFoundItemInfo();

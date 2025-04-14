@@ -339,19 +339,23 @@ const MissingItemReportData = () => {
     if (typeof checkedActionFormData.foundID !== 'string') return;
 
     if (!checkedItemNotFound && newActionFormData.action === 'Checked' && isValidForm()) {
-      await lostAndFoundService.updateReportStatus(parseInt(itemId ? itemId : ''), 'found');
+      try {
+        await lostAndFoundService.linkReports(
+          parseInt(itemId || ''),
+          checkedActionFormData.foundID,
+          item?.submitterUsername || '',
+          item?.firstName || '',
+          item?.lastName || '',
+          item?.phone || '',
+          item?.email || '',
+          checkedActionFormData?.contactMethod || '',
+          checkedActionFormData?.response || '',
+        );
+      } catch (error: any) {
+        console.log('failed :)');
+        createSnackbar('Failed to find report with given Found ID', 'error');
+      }
       setReportUpdated(reportUpdated + 1);
-      lostAndFoundService.linkReports(
-        parseInt(itemId || ''),
-        checkedActionFormData.foundID,
-        item?.submitterUsername || '',
-        item?.firstName || '',
-        item?.lastName || '',
-        item?.phone || '',
-        item?.email || '',
-        checkedActionFormData?.contactMethod || '',
-        checkedActionFormData?.response || '',
-      );
       setActionsUpdated(true);
       closeModal();
     } else if (isValidForm()) {
