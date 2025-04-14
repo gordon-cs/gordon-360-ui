@@ -1,5 +1,15 @@
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, Grid, Tooltip, Typography, Avatar } from '@mui/material';
+import {
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Tooltip,
+  Typography,
+  Avatar,
+  useMediaQuery,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useUser } from 'hooks';
 import { fetchRdInfo } from 'services/residentLife/ResidentStaff';
@@ -12,6 +22,10 @@ import nylandHallMascot from 'views/ResLife/Nyland.png';
 import tavillaHallMascot from 'views/ResLife/Tavilla.png';
 import villageHallMascot from 'views/ResLife/Village.png';
 import wilsonHallMascot from 'views/ResLife/Wilson.png';
+import { useAuthGroups } from 'hooks';
+import { AuthGroup } from 'services/auth';
+import CheckIn from 'views/ResLife/components/RAView/components/CheckIn';
+import AssignedRooms from 'views/ResLife/components/RAView/components/MyAssignments';
 
 const DEFAULT_PROFILE_URL = '/profile/';
 const COLOR_80808026_1X1 =
@@ -32,6 +46,8 @@ const MyHall = () => {
   const [hallPhoto, setHallPhoto] = useState('');
   const [hallPhotoAlt, setHallPhotoAlt] = useState('');
   const { profile } = useUser();
+  const isRA = useAuthGroups(AuthGroup.ResidentAdvisor);
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   useEffect(() => {
     if (profile) {
@@ -117,31 +133,49 @@ const MyHall = () => {
                 <StyledLink
                   href={rdProfileLink}
                   className="gc360_text_link"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target={isMobile ? '_self' : '_blank'}
+                  rel={isMobile ? '' : 'noopener noreferrer'}
                 >
                   {rdInfo.RD_Name}
                 </StyledLink>
               ) : (
-                <Typography className="gc360_text_link">No RD Assigned</Typography>
+                <StyledLink className="gc360_text_link">No RD Assigned</StyledLink>
+              )}
+            </Typography>
+
+            <Typography variant="body1">
+              {isRA ? (
+                <strong>
+                  My Assigned Rooms: <AssignedRooms />{' '}
+                </strong>
+              ) : (
+                <></>
               )}
             </Typography>
           </Grid>
 
           {/* Avatar Section */}
-          <Grid item xs={4}>
+          <Grid
+            item
+            xs={4}
+            container
+            justifyContent="center"
+            sx={{ marginTop: { xs: 1, sm: 2, md: 2 }, marginBottom: { xs: 1, sm: 1, md: 1 } }}
+          >
             <Tooltip title={hallPhotoAlt || 'Hall Mascot'}>
               <Avatar
                 src={hallPhoto || COLOR_80808026_1X1}
                 alt={hallPhotoAlt || 'Hall Mascot'}
                 sx={{
-                  width: { xs: 80, sm: 110, md: 80, lg: 120 },
-                  height: { xs: 80, sm: 110, md: 80, lg: 120 },
+                  width: { xs: 80, sm: 90, md: 100, lg: 130 },
+                  height: { xs: 80, sm: 90, md: 100, lg: 130 },
                   borderRadius: '50%',
+                  transition: 'width 0.3s, height 0.3s',
                 }}
               />
             </Tooltip>
           </Grid>
+          {isRA ? <CheckIn /> : <></>}
         </Grid>
       </CardContent>
     </Card>

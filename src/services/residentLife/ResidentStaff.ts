@@ -1,32 +1,33 @@
 import http from '../http';
 
 type RA = {
-  FirstName: string;
-  LastName: string;
+  First_Name: string;
+  Last_Name: string;
   Dorm: string;
   BLDG_Code: string;
-  RoomNumber: string;
+  Room_Number: string;
   Email: string;
-  PhoneNumber: string;
+  Phone_Number: string;
   ID: string;
+  Photo_URL: string;
 };
 
 type Contact = {
-  raId: string;
-  preferredContactMethod: string;
+  RA_ID: string;
+  preferred_Contact_Method: string;
 };
 
 type RD = {
-  HallName: string;
-  BuildingCode: string;
+  Hall_Name: string;
+  Building_Code: string;
   RD_Email: string;
-  RD_Id: string;
+  RD_ID: string;
   RD_Name: string;
 };
 
 type method = {
-  Ra_ID: string;
-  PreferredContactMethod: string;
+  RA_ID: string;
+  Preferred_Contact_Method: string;
   Contact: string;
 };
 
@@ -35,13 +36,14 @@ const fetchRaInfo = (hallId: string, roomNumber: number): Promise<RA[]> =>
   http.get(`Housing/resident/ra${http.toQueryString({ hallId, roomNumber })}`);
 
 // Fetches the information of an RD from the API endpoint "Housing/rds"
-const fetchRdInfo = (hallId: string): Promise<RD[]> => http.get(`Housing/rds?hallId=${hallId}`);
+const fetchRdInfo = (Hall_ID: string): Promise<RD[]> => http.get(`Housing/rds?hallId=${Hall_ID}`);
 
-// Adds the information of which method of contact the RA/AC prefers to the database
-const preferredContact = (raId: string, preferredContactMethod: string): Promise<Contact> =>
-  http.post(`Housing/ras/${raId}/contact?preferredContactMethod=${preferredContactMethod}`);
+// Adds the information of which method of contact the RA prefers to the database
+const preferredContact = (RA_ID: string, PreferredContactMethod: string): Promise<Contact> =>
+  http.post(`Housing/ras/${RA_ID}/contact?preferredContactMethod=${PreferredContactMethod}`);
 
 // gets the contact prefernce for the RA
-const PrefContactMethod = (raId: string): Promise<method> => http.get(`Housing/ra/${raId}/contact`);
+const PrefContactMethod = (RA_ID: string): Promise<method> =>
+  http.get(`Housing/ra/${RA_ID}/contact`);
 
 export { fetchRaInfo, fetchRdInfo, preferredContact, PrefContactMethod };
