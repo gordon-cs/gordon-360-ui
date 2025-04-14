@@ -351,13 +351,14 @@ const MissingItemReportData = () => {
           checkedActionFormData?.contactMethod || '',
           checkedActionFormData?.response || '',
         );
+        closeModal();
       } catch (error: any) {
         console.log('failed :)');
-        createSnackbar('Failed to find report with given Found ID', 'error');
+        createSnackbar('Entered Found ID Does Not Exist', 'error');
+        setErrorSnackbarOpen(true);
       }
       setReportUpdated(reportUpdated + 1);
       setActionsUpdated(true);
-      closeModal();
     } else if (isValidForm()) {
       // Combine form data into the data format for the backend request
       let requestData = {
@@ -1021,7 +1022,7 @@ const MissingItemReportData = () => {
           setErrorSnackbarOpen(false);
         }}
         severity="error"
-        text="All fields must be filled out to create a new action!"
+        text={snackbar.message}
       />
     </>
   );

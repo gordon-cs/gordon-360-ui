@@ -373,7 +373,7 @@ const createFoundAdminAction = (itemID: string, data: InitFoundAdminAction): Pro
  * @param foundID
  * @param action
  */
-const linkReports = (
+const linkReports = async (
   missingID: number,
   foundID: string,
   ownerUsername: string,
@@ -384,60 +384,50 @@ const linkReports = (
   contactMethod: string,
   response: string,
 ) => {
-  http.put<void>(`lostandfound/missingitems/${missingID}/linkItem/${foundID}`);
+  try {
+    await http.put<void>(`lostandfound/missingitems/${missingID}/linkItem/${foundID}`);
+  } catch (error) {
+    console.log('Error linking reports:', error);
+    throw error;
+  }
   http.put<void>(`founditems/${foundID}/linkReport/${missingID}`);
+
   updateFoundReportStatus(foundID, 'found');
   updateReportStatus(missingID, 'found');
 
-  let username: string;
+  const userInfo = await userService.getProfileInfo();
+  const username = userInfo?.AD_Username || '';
 
-  const submitAdminAction = async () => {
-    try {
-      const userInfo = await userService.getProfileInfo();
-      username = userInfo?.AD_Username || '';
-
-      const missingAdminAction: InitAdminAction = {
-        missingID: missingID,
-        action: 'Checked',
-        actionDate: new Date().toISOString(),
-        actionNote: `Matching Found ID: ${foundID}, Contact Method: ${contactMethod}, Response: ${response}`,
-        username: username,
-        isPublic: true,
-      };
-      const foundAdminAction: InitFoundAdminAction = {
-        foundID: foundID,
-        action: 'Checked',
-        actionDate: new Date().toISOString(),
-        actionNote: `Matching Missing ID: ${missingID}, Contact Method: ${contactMethod}, Response: ${response}`,
-        submitterUsername: username,
-      };
-      createAdminAction(missingID, missingAdminAction);
-      createFoundAdminAction(foundID, foundAdminAction);
-    } catch (error) {
-      console.error('Error fetching user data:', error);
-    }
+  const missingAdminAction: InitAdminAction = {
+    missingID,
+    action: 'Checked',
+    actionDate: new Date().toISOString(),
+    actionNote: `Matching Found ID: ${foundID}, Contact Method: ${contactMethod}, Response: ${response}`,
+    username,
+    isPublic: true,
   };
-  submitAdminAction();
-
-  const updateFoundItemInfo = async () => {
-    try {
-      const foundItem = await getFoundItem(foundID);
-      let updatedFoundItem: FoundItem = {
-        ...foundItem,
-        ownerUsername: ownerUsername,
-        ownerFirstName: ownerFirstName,
-        ownerLastName: ownerLastName,
-        ownerPhone: ownerPhone,
-        ownerEmail: ownerEmail,
-      };
-      updateFoundItem(updatedFoundItem, foundID);
-    } catch (error) {
-      console.log('Error fetching found item:', error);
-      unlinkReports(missingID, foundID);
-      throw new Error('error');
-    }
+  const foundAdminAction: InitFoundAdminAction = {
+    foundID,
+    action: 'Checked',
+    actionDate: new Date().toISOString(),
+    actionNote: `Matching Missing ID: ${missingID}, Contact Method: ${contactMethod}, Response: ${response}`,
+    submitterUsername: username,
   };
-  updateFoundItemInfo();
+
+  createAdminAction(missingID, missingAdminAction);
+  createFoundAdminAction(foundID, foundAdminAction);
+
+  const foundItem = await getFoundItem(foundID);
+  const updatedFoundItem: FoundItem = {
+    ...foundItem,
+    ownerUsername,
+    ownerFirstName,
+    ownerLastName,
+    ownerPhone,
+    ownerEmail,
+  };
+
+  updateFoundItem(updatedFoundItem, foundID);
 };
 
 /**
