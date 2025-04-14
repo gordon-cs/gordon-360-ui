@@ -353,7 +353,6 @@ const MissingItemReportData = () => {
         );
         closeModal();
       } catch (error: any) {
-        console.log('failed :)');
         createSnackbar('Entered Found ID Does Not Exist', 'error');
         setErrorSnackbarOpen(true);
       }
