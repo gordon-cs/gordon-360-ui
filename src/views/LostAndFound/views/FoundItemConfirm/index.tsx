@@ -11,6 +11,7 @@ import {
   Divider,
   Paper,
   Table,
+  TextField,
   TableHead,
   TableRow,
   TableCell,
@@ -61,6 +62,13 @@ const FoundItemConfirmation = () => {
   });
   // Controls the confirmation dialog visibility.
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  //Controls the contact-owner dialog visibility.
+  const [contactDialogOpen, setContactDialogOpen] = useState(false);
+  //Stores the selected contact method.
+  const [contactMethod, setContactMethod] = useState('');
+  //Tracks if the admin has confirmed contact.
+  const [contactConfirmed, setContactConfirmed] = useState(false);
+  const [contactAdditionalNote, setContactAdditionalNote] = useState('');
 
   const isMobile = useMediaQuery('(max-width:1000px)');
 
@@ -147,6 +155,7 @@ const FoundItemConfirmation = () => {
         open: true,
       });
       setMatchConfirmed(true);
+      setContactDialogOpen(true);
     } catch (err) {
       console.error(err);
       setSnackbar({
@@ -160,6 +169,42 @@ const FoundItemConfirmation = () => {
   // Called when the admin cancels the confirmation dialog.
   const cancelMatch = () => {
     setConfirmDialogOpen(false);
+  };
+
+  const finishContactDialog = async () => {
+    if (!selectedMissingReport) return;
+    const actionNote = contactAdditionalNote
+      ? `Contacted owner via ${contactMethod}. Additional notes: ${contactAdditionalNote}`
+      : `Contacted owner via ${contactMethod}.`;
+    const requestData = {
+      missingID: selectedMissingReport.recordID,
+      action: 'OwnerContact',
+      actionNote,
+      actionDate: new Date().toISOString(),
+      username: foundItem?.finderUsername || 'unknown',
+      isPublic: false,
+    };
+    try {
+      await lostAndFoundService.createAdminAction(selectedMissingReport.recordID, requestData);
+      setSnackbar({
+        message: 'Contact owner action recorded successfully.',
+        severity: 'success',
+        open: true,
+      });
+    } catch (error) {
+      console.error('Failed to log contact owner action', error);
+      setSnackbar({
+        message: 'Failed to log contact owner action.',
+        severity: 'error',
+        open: true,
+      });
+    } finally {
+      setContactDialogOpen(false);
+      //reset contact method and confirmation.
+      setContactMethod('');
+      setContactAdditionalNote('');
+      setContactConfirmed(false);
+    }
   };
 
   const handleFinish = () => {
@@ -648,6 +693,76 @@ const FoundItemConfirmation = () => {
           </Button>
           <Button onClick={confirmMatch} color="primary" variant="contained">
             Yes, Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* NEW: Contact Owner Dialog */}
+      <Dialog open={contactDialogOpen} fullWidth maxWidth="sm">
+        <DialogTitle>Contact Owner</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1" sx={{ mb: 1 }}>
+            Please contact the reporting party using the details below:
+          </Typography>
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <Typography variant="body2">
+                <b>Owner's Name:</b> {selectedMissingReport?.firstName}{' '}
+                {selectedMissingReport?.lastName}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="body2">
+                <b>Email:</b> {selectedMissingReport?.email}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="body2">
+                <b>Phone:</b> {selectedMissingReport?.phone}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sx={{ mt: 2 }}>
+              <Typography variant="body2">How did you contact the owner?</Typography>
+              <Select
+                value={contactMethod}
+                onChange={(e) => setContactMethod(e.target.value)}
+                fullWidth
+              >
+                <MenuItem value="Email">Email</MenuItem>
+                <MenuItem value="Phone">Phone</MenuItem>
+              </Select>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                variant="filled"
+                label="Additional Notes (Optional)"
+                value={contactAdditionalNote}
+                onChange={(e) => setContactAdditionalNote(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={contactConfirmed}
+                    onChange={(e) => setContactConfirmed(e.target.checked)}
+                    color="primary"
+                  />
+                }
+                label="I confirm that I have contacted the owner or I'm awaiting a response."
+              />
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={finishContactDialog}
+            variant="contained"
+            color="primary"
+            disabled={!contactConfirmed}
+          >
+            Done
           </Button>
         </DialogActions>
       </Dialog>
