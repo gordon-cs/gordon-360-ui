@@ -13,10 +13,9 @@ import {
   Typography,
   Chip,
 } from '@mui/material';
-import styles from './ItemForm.module.css';
+import styles from './FoundItemForm.module.css';
 import lostAndFoundService, { FoundItem } from 'services/lostAndFound';
 import userService from 'services/user';
-import ReportStolenModal from 'views/LostAndFound/views/MissingReportCreate/components/reportStolen';
 import CreateConfirmReport from 'views/LostAndFound/views/MissingReportCreate/components/confirmReport';
 import EditConfirmReport from 'views/LostAndFound/views/MissingReportEdit/components/confirmReport';
 import GordonSnackbar from 'components/Snackbar';
@@ -51,6 +50,7 @@ interface FoundItemFormData {
   ownerPhone?: string;
   ownerEmail?: string;
   status: string;
+  isFoundItem?: boolean;
 }
 
 const pageHeader = (formType: string) => {
@@ -128,6 +128,7 @@ const FoundItemForm = ({ formType }: { formType: string }) => {
     ownerPhone: '',
     ownerEmail: '',
     status: 'active',
+    isFoundItem: false,
   });
 
   const [originalFormData, setOriginalFormData] = useState<FoundItemFormData>({ ...formData });
@@ -137,8 +138,7 @@ const FoundItemForm = ({ formType }: { formType: string }) => {
   const requiredFields = ['category', 'description', 'locationFound', 'dateFound'];
   const [disableSubmit, setDisableSubmit] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const isEditable = formData.status === 'active';
-  const [isStolenModalOpen, setStolenModalOpen] = useState(false);
+  const isEditable = formData.status.toLowerCase() === 'active' && !formData.isFoundItem;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -198,6 +198,15 @@ const FoundItemForm = ({ formType }: { formType: string }) => {
     }
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
+  };
+
+  const handlePickup = async () => {
+    try {
+      await lostAndFoundService.updateFoundReportStatus(formData.recordID, 'PickedUp');
+      setIsPickedUp(true);
+    } catch (error) {
+      console.error('Error updating found item status:', error);
+    }
   };
 
   const errorMessage = useMemo(() => {
@@ -282,11 +291,6 @@ const FoundItemForm = ({ formType }: { formType: string }) => {
     });
   };
 
-  // I dont think the FoundItemForm requires the stolen modal.
-  const handleModalClose = () => {
-    setStolenModalOpen(false);
-  };
-
   const handleFormSubmit = () => {
     if (validateForm()) {
       setShowConfirm(true);
@@ -307,7 +311,6 @@ const FoundItemForm = ({ formType }: { formType: string }) => {
             submitterUsername: user.AD_Username,
           };
           const newReportId = await lostAndFoundService.createFoundItem(requestData);
-          // Optionally log admin action
           navigate('/lostandFound');
         } catch (error) {
           createSnackbar('Failed to create the found item report.', 'error');
@@ -358,6 +361,7 @@ const FoundItemForm = ({ formType }: { formType: string }) => {
             ownerPhone: item.ownerPhone || '',
             ownerEmail: item.ownerEmail || '',
             status: item.status || 'active',
+            isFoundItem: true,
           });
           setOriginalFormData({
             recordID: item.recordID,
@@ -382,6 +386,7 @@ const FoundItemForm = ({ formType }: { formType: string }) => {
             ownerPhone: item.ownerPhone || '',
             ownerEmail: item.ownerEmail || '',
             status: item.status || 'active',
+            isFoundItem: true,
           });
         } else {
           console.error('Found item not found for this owner.');
@@ -457,7 +462,7 @@ const FoundItemForm = ({ formType }: { formType: string }) => {
           ) : (
             <>
               {/* For Found Items, display "Found" notice */}
-              {formData.status.toLowerCase() === 'found' && (
+              {(formData.status.toLowerCase() === 'found' || formData.isFoundItem === true) && (
                 <Grid container xs={9.7} className={styles.foundContainer} rowGap={2}>
                   <Grid container item xs={12} md={6} rowGap={2}>
                     <Grid item xs={12}>
@@ -660,32 +665,9 @@ const FoundItemForm = ({ formType }: { formType: string }) => {
                     {customDatePicker}
                   </Grid>
                 </Grid>
-                {/* No stolen checkbox needed for found items */}
-                <Grid container justifyContent="center" marginTop={3}>
-                  {isEditable && (
-                    <Grid container justifyContent="flex-end" className={styles.submit_container}>
-                      <Grid item xs={2}>
-                        <Button
-                          variant="contained"
-                          fullWidth
-                          className={styles.submit_button}
-                          onClick={handleFormSubmit}
-                        >
-                          NEXT
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  )}
-                </Grid>
               </Grid>
             </>
           )}
-          <ReportStolenModal
-            open={isStolenModalOpen}
-            onClose={handleModalClose}
-            onSubmit={handleModalSubmit}
-            stolenDescription={formData.stolenDescription}
-          />
         </Card>
       )}
     </>

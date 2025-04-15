@@ -11,6 +11,7 @@ import ReportFound from './views/ReportFound';
 import FoundItemFormCreate from './views/FoundItemCreate';
 import FoundItemList from './views/FoundItemList';
 import FoundItemFormEdit from './views/FoundItemEdit';
+import FoundItemForm from './components/ItemForm/FoundItemForm';
 import FoundItemConfirmation from './views/FoundItemConfirm';
 import KioskRoutes from './views/Kiosk/KioskRoutes';
 import GordonLoader from 'components/Loader';
@@ -76,6 +77,10 @@ export const CampusSafetyRoutes: CampusSafetyRoutesObject = {
   '/lostandfoundadmin/founditemform/founditemdatabase/:itemId': {
     element: <FoundItemFormEdit />,
     formattedName: 'View Found #~',
+  },
+  '/founditemform/:id': {
+    element: <FoundItemForm formType="edit" />,
+    formattedName: 'View Found Item',
   },
   '/lostandfoundadmin': {
     element: <LostAndFoundAdmin />,

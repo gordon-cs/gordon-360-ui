@@ -122,7 +122,6 @@ const LostAndFound = () => {
         const foundByOwnerRaw = await lostAndFoundService.getFoundItemsByOwner(
           user.profile?.ID || '',
         );
-        console.log('this is the owner', user.profile?.ID);
         // Map the FoundItem objects into the MissingItemReport shape.
         const foundByOwner = foundByOwnerRaw.map(mapFoundToMissing);
 
@@ -193,6 +192,11 @@ const LostAndFound = () => {
       console.error('Error updating item:', error);
     }
   };
+
+  const foundDisplayCount = foundReports.filter((report) => {
+    const status = report.status.toLowerCase();
+    return status === 'found' || (status === 'active' && (report as any).isFoundItem === true);
+  }).length;
 
   /*
    *
@@ -320,7 +324,7 @@ const LostAndFound = () => {
 
   // Component defining each row of the report grid
   const reportRow = (
-    report: MissingItemReport,
+    report: MissingItemReport & { isFoundItem?: boolean; originalRecordID?: string },
     isFoundSection: boolean = false,
     isPastReport: boolean = false,
   ) => (
@@ -351,7 +355,9 @@ const LostAndFound = () => {
                   xs={11.5}
                   columnGap={1}
                   onClick={
-                    (!isPastReport && report.status.toLowerCase() === 'active') ||
+                    (!isPastReport &&
+                      report.status.toLowerCase() === 'active' &&
+                      !(report as any).isFoundItem) ||
                     report.status.toLowerCase() === 'found'
                       ? () => handleEdit(report)
                       : () => {}
@@ -375,14 +381,16 @@ const LostAndFound = () => {
                   </Grid>
                 </Grid>
                 {/* Show notification for "found" status */}
-                {report.status.toLowerCase() === 'found' && (
+                {(report.status.toLowerCase() === 'found' ||
+                  (report.status.toLowerCase() === 'active' &&
+                    (report as any).isFoundItem === true)) && (
                   <Grid item xs={0.2}>
                     <Typography>
                       <NotificationsIcon color="info" />
                     </Typography>
                   </Grid>
                 )}
-                {report.status.toLowerCase() === 'active' ? (
+                {report.status.toLowerCase() === 'active' && !(report as any).isFoundItem ? (
                   <>
                     <Grid container item xs={0.5} justifyContent="flex-end">
                       <Grid item xs={12} className={styles.alignData}>
@@ -412,8 +420,11 @@ const LostAndFound = () => {
                 xs={11.5}
                 className={styles.rowPadding}
                 onClick={
-                  (!isPastReport && report.status.toLowerCase() === 'active') ||
-                  report.status.toLowerCase() === 'found'
+                  (!isPastReport &&
+                    report.status.toLowerCase() === 'active' &&
+                    !(report as any).isFoundItem) ||
+                  report.status.toLowerCase() === 'found' ||
+                  (report as any).isFoundItem
                     ? () => handleEdit(report)
                     : () => {}
                 }
@@ -432,14 +443,16 @@ const LostAndFound = () => {
                 </Grid>
               </Grid>
               {/* Show notification for "found" status */}
-              {report.status.toLowerCase() === 'found' && (
+              {(report.status.toLowerCase() === 'found' ||
+                (report.status.toLowerCase() === 'active' &&
+                  (report as any).isFoundItem === true)) && (
                 <Grid container item xs={0.5} justifyContent="flex-end" columnGap={1}>
                   <Grid item xs={4} className={styles.alignData}>
                     <NotificationsIcon color="info" />
                   </Grid>
                 </Grid>
               )}
-              {report.status.toLowerCase() === 'active' ? (
+              {report.status.toLowerCase() === 'active' && !(report as any).isFoundItem ? (
                 <>
                   <Grid container item xs={0.5} justifyContent="flex-end" columnGap={1}>
                     <Grid item xs={4} className={styles.alignData}>
@@ -492,7 +505,7 @@ const LostAndFound = () => {
                       >
                         {/* Badge positioned on the top-left corner */}
                         <Badge
-                          badgeContent={foundReports.length}
+                          badgeContent={foundDisplayCount}
                           color="error"
                           className={styles.badgeposition}
                         />
@@ -511,7 +524,12 @@ const LostAndFound = () => {
                 {reportHeader(false)}
                 {/* Filter and display found items */}
                 {foundReports
-                  .filter((report) => report.status.toLowerCase() === 'found')
+                  .filter((report) => {
+                    const status = report.status.toLowerCase();
+                    if (status === 'found') return true;
+                    if (status === 'active' && (report as any).isFoundItem === true) return true;
+                    return false;
+                  })
                   .map((report) => reportRow(report, true))}
               </Grid>
             </Grid>
