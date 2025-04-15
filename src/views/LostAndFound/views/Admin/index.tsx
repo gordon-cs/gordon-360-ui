@@ -11,7 +11,6 @@ import {
   Select,
   TextField,
   Stack,
-  Typography,
 } from '@mui/material';
 import { Grid, Button } from '@mui/material';
 import Header from 'views/LostAndFound/components/Header';
@@ -27,7 +26,6 @@ import {
   clearUrlParams,
   formatDateString,
 } from 'views/LostAndFound/components/Helpers';
-import userService from 'services/user';
 import { Delete, Person, Storage } from '@mui/icons-material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import SimpleSnackbar from 'components/Snackbar';
