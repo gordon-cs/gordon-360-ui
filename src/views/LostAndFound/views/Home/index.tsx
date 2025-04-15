@@ -28,6 +28,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import GordonLoader from 'components/Loader';
 import Badge from '@mui/material/Badge';
 import { formatDateString } from 'views/LostAndFound/components/Helpers';
+import { FoundItem } from 'services/lostAndFound';
 
 const LostAndFound = () => {
   const [activeReports, setActiveReports] = useState<MissingItemReport[]>([]);
@@ -41,6 +42,49 @@ const LostAndFound = () => {
   const isMobile = useMediaQuery('(max-width:900px)');
   const user = useUser();
 
+  // Helper function to map a FoundItem into the MissingItemReport shape.
+  const mapFoundToMissing = (
+    item: FoundItem,
+  ): MissingItemReport & { isFoundItem?: boolean; originalRecordID?: string } => ({
+    // Convert recordID from string to number for general sorting but save the original string too.
+    recordID: parseInt(item.recordID),
+    originalRecordID: item.recordID,
+    matchingFoundID: item.matchingMissingID,
+    firstName: item.ownerFirstName,
+    lastName: item.ownerLastName,
+    category: item.category,
+    colors: item.colors,
+    brand: item.brand,
+    description: item.description,
+    // Map found location to missing location
+    locationLost: item.locationFound,
+    // Found items aren’t stolen.
+    stolen: false,
+    stolenDescription: '',
+    // For found items, using dateFound as dateLost.
+    dateLost: item.dateFound,
+    dateCreated: item.dateCreated,
+    phone: '',
+    email: '',
+    status: item.status,
+    submitterUsername: item.submitterUsername,
+    submitterID: null,
+    forGuest: false,
+    adminActions: item.adminActions
+      ? item.adminActions.map((a) => ({
+          ID: a.ID,
+          missingID: 0, // Not applicable for found items.
+          action: a.action,
+          actionDate: a.actionDate,
+          actionNote: a.actionNote,
+          username: a.submitterUsername,
+          isPublic: undefined,
+        }))
+      : [],
+    // Flag this record as coming from the found items API.
+    isFoundItem: true,
+  });
+
   useEffect(() => {
     const fetchMissingItems = async () => {
       try {
@@ -49,33 +93,46 @@ const LostAndFound = () => {
           user.profile?.AD_Username || '',
         );
 
-        // Map the reports into active and past reports
+        // Process missing item reports
         const active = reports
-          .filter((report) => report.status === 'active') // Filter for non-found items
+          .filter((report) => report.status === 'active')
           .sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime())
           .map((report) => ({
             ...report,
-            colors: report.colors || [], // Ensure colors is an array
+            colors: report.colors || [],
           }));
 
-        const found = reports
-          .filter((report) => report.status.toLowerCase() === 'found') // Only found items
+        const foundFromMissing = reports
+          .filter((report) => report.status.toLowerCase() === 'found')
           .sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime())
           .map((report) => ({
             ...report,
-            colors: report.colors || [], // Ensure colors is an array
+            colors: report.colors || [],
           }));
 
         const past = reports
-          .filter((report) => report.status !== 'active' && report.status.toLowerCase() !== 'found') // Filter for found items
+          .filter((report) => report.status !== 'active' && report.status.toLowerCase() !== 'found')
           .sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime())
           .map((report) => ({
             ...report,
-            colors: report.colors || [], // Ensure colors is an array
+            colors: report.colors || [],
           }));
 
+        // Fetch found items that have been assigned to you using the new API.
+        const foundByOwnerRaw = await lostAndFoundService.getFoundItemsByOwner(
+          user.profile?.ID || '',
+        );
+        console.log('this is the owner', user.profile?.ID);
+        // Map the FoundItem objects into the MissingItemReport shape.
+        const foundByOwner = foundByOwnerRaw.map(mapFoundToMissing);
+
+        // Merge the found items from missing reports and foundByOwner
+        const mergedFound = [...foundFromMissing, ...foundByOwner].sort(
+          (a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime(),
+        );
+
         setActiveReports(active);
-        setFoundReports(found);
+        setFoundReports(mergedFound);
         setPastReports(past);
       } catch (error) {
         console.error('Error fetching missing items:', error);
@@ -84,11 +141,19 @@ const LostAndFound = () => {
       }
     };
     fetchMissingItems();
-  }, [pageUpdates, user.profile?.AD_Username]);
+  }, [pageUpdates, user.profile?.ID]);
 
   // Move to the edit page
-  const handleEdit = (reportId: string) => {
-    navigate('/lostandfound/' + reportId);
+  const handleEdit = (
+    report: MissingItemReport & { isFoundItem?: boolean; originalRecordID?: string },
+  ) => {
+    // If the report came from the found items API (flag is true), navigate to a different route.
+    if (report.isFoundItem) {
+      // Use the originalRecordID (which is still in string format) to load the found item form.
+      navigate('/lostandfound/founditemform/' + report.originalRecordID);
+    } else {
+      navigate('/lostandfound/' + report.recordID);
+    }
   };
 
   // Given the report that was clicked on, open the delete modal for that report.
@@ -274,7 +339,7 @@ const LostAndFound = () => {
               paddingBottom: '0px', // Remove the bottom padding on the row card
             },
           }}
-          onClick={isPastReport ? () => handleEdit(report.recordID?.toString() || '') : undefined}
+          onClick={isPastReport ? () => handleEdit(report) : undefined}
         >
           {isMobile ? (
             <>
@@ -288,7 +353,7 @@ const LostAndFound = () => {
                   onClick={
                     (!isPastReport && report.status.toLowerCase() === 'active') ||
                     report.status.toLowerCase() === 'found'
-                      ? () => handleEdit(report.recordID?.toString() || '')
+                      ? () => handleEdit(report)
                       : () => {}
                   }
                 >
@@ -321,10 +386,7 @@ const LostAndFound = () => {
                   <>
                     <Grid container item xs={0.5} justifyContent="flex-end">
                       <Grid item xs={12} className={styles.alignData}>
-                        <IconButton
-                          onClick={() => handleEdit(report.recordID?.toString() || '')}
-                          size="small"
-                        >
+                        <IconButton onClick={() => handleEdit(report)} size="small">
                           <Edit />
                         </IconButton>
                       </Grid>
@@ -352,7 +414,7 @@ const LostAndFound = () => {
                 onClick={
                   (!isPastReport && report.status.toLowerCase() === 'active') ||
                   report.status.toLowerCase() === 'found'
-                    ? () => handleEdit(report.recordID?.toString() || '')
+                    ? () => handleEdit(report)
                     : () => {}
                 }
               >
@@ -381,10 +443,7 @@ const LostAndFound = () => {
                 <>
                   <Grid container item xs={0.5} justifyContent="flex-end" columnGap={1}>
                     <Grid item xs={4} className={styles.alignData}>
-                      <IconButton
-                        onClick={() => handleEdit(report.recordID?.toString() || '')}
-                        size="small"
-                      >
+                      <IconButton onClick={() => handleEdit(report)} size="small">
                         <Edit />
                       </IconButton>
                     </Grid>
