@@ -235,7 +235,7 @@ const LostAndFoundAdmin = () => {
         setResponse(customCheckedActionResponseValue);
       }
       lostAndFoundService.linkReports(
-        missingID,
+        parseInt(missingID || ''),
         foundID,
         missingItem?.submitterUsername || '',
         missingItem?.firstName || '',
