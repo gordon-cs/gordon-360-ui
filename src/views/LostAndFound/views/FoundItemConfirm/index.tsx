@@ -245,6 +245,7 @@ const FoundItemConfirmation = () => {
       <Card className={FoundItemConfirmationStyles.confirmCard}>
         {/* Found Item Header & Edit Button */}
         <CardHeader
+          className={FoundItemConfirmationStyles.title}
           title={
             <div className={FoundItemConfirmationStyles.titleBar}>
               <Typography
@@ -257,7 +258,7 @@ const FoundItemConfirmation = () => {
               </Typography>
               <Button
                 variant="contained"
-                color="info"
+                color="secondary"
                 className={FoundItemConfirmationStyles.editButton}
                 onClick={handleEditEntry}
               >
@@ -266,163 +267,179 @@ const FoundItemConfirmation = () => {
             </div>
           }
         />
-        <div className={FoundItemConfirmationStyles.disclaimer}>
-          <InfoOutlined />
-          <Typography variant="body1">
-            <b className={FoundItemConfirmationStyles.serialTag}>{foundItem.recordID}</b>{' '}
-            <em style={{ fontSize: '0.9rem' }}>Serial # for Tag</em> – please write this number on
-            the item tag before proceeding.
-          </Typography>
-        </div>
-
         {/* Found Item Details */}
-        <CardHeader
-          title={
-            <Typography variant="h6" align="center">
-              Found Item Details
-            </Typography>
-          }
-        />
         <CardContent>
-          {isMobile ? (
-            // Mobile view: render all details in a vertical card.
-            <Box className={FoundItemConfirmationStyles.mobileFoundItemCard}>
-              <Typography variant="body2">
-                <b>Date Found:</b> {new Date(foundItem.dateFound).toLocaleDateString()}
-              </Typography>
-              <Typography variant="body2">
-                <b>Location:</b> {foundItem.locationFound}
-              </Typography>
-              <Typography variant="body2">
-                <b>Category:</b> {foundItem.category}
-              </Typography>
-              <Typography variant="body2">
-                <b>Description:</b> {foundItem.description}
-              </Typography>
-              {foundItem.colors && foundItem.colors.length > 0 && (
-                <Typography variant="body2">
-                  <b>Color:</b> {foundItem.colors.join(', ')}
+          <div className={FoundItemConfirmationStyles.disclaimer}>
+            <InfoOutlined />
+            <Typography variant="body1">
+              <b className={FoundItemConfirmationStyles.serialTag}>{foundItem.recordID}</b>{' '}
+              <em style={{ fontSize: '0.9rem' }}>Serial # for Tag</em> – please write this number on
+              the item tag before proceeding.
+            </Typography>
+          </div>
+          {/* Additional details below in a two-row grid layout */}
+          <Box sx={{ mt: 2, px: 2 }}>
+            <Grid container spacing={2} alignItems="center">
+              <Grid item xs={12} sm={4} className={FoundItemConfirmationStyles.textWrap}>
+                <Typography variant="h6">
+                  <b>Basic Info</b>
                 </Typography>
-              )}
-              <Typography variant="body2">
-                <b>Brand/Make:</b> {foundItem.brand || 'N/A'}
-              </Typography>
-              {(foundItem.finderFirstName || foundItem.finderLastName) && (
-                <Typography variant="body2">
-                  <b>Finder:</b> {foundItem.finderFirstName || ''} {foundItem.finderLastName || ''}
+                {foundItem.colors && foundItem.colors.length > 0 && (
+                  <Typography variant="body1" gutterBottom>
+                    <b>Color:</b> {foundItem.colors.join(', ')}
+                  </Typography>
+                )}
+                <Typography variant="body1">
+                  <b>Brand/Make:</b> {foundItem.brand || 'N/A'}
                 </Typography>
-              )}
-              {(foundItem.ownerFirstName || foundItem.ownerLastName) && (
-                <Typography variant="body2">
-                  <b>Owner:</b> {foundItem.ownerFirstName || ''} {foundItem.ownerLastName || ''}
+                <Typography variant="body1">
+                  <b>Storage Location:</b> {foundItem.storageLocation}
                 </Typography>
-              )}
-              <Typography variant="body2">
-                <b>Storage Location:</b> {foundItem.storageLocation}
-              </Typography>
-            </Box>
-          ) : (
-            // Desktop view:
-            <>
-              {/* Table row displaying the basic details */}
-              <Box className={FoundItemConfirmationStyles.foundItemTable}>
-                <Paper>
-                  <Table size="small">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell className={FoundItemConfirmationStyles.stickyHeaderFound}>
-                          Date Found
-                        </TableCell>
-                        <TableCell className={FoundItemConfirmationStyles.stickyHeaderFound}>
-                          Location
-                        </TableCell>
-                        <TableCell className={FoundItemConfirmationStyles.stickyHeaderFound}>
-                          Category
-                        </TableCell>
-                        <TableCell className={FoundItemConfirmationStyles.stickyHeaderFound}>
-                          Description
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableRow className={FoundItemConfirmationStyles.clickableRow}>
-                        <TableCell>{new Date(foundItem.dateFound).toLocaleDateString()}</TableCell>
-                        <TableCell>{foundItem.locationFound}</TableCell>
-                        <TableCell>{foundItem.category}</TableCell>
-                        <TableCell>{foundItem.description}</TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </Paper>
-              </Box>
-              {/* Additional details below in a two-row grid layout */}
-              <Box sx={{ mt: 2, px: 2 }}>
-                <Grid container spacing={2} alignItems="center">
+              </Grid>
+              <Grid item xs={12} sm={4} className={FoundItemConfirmationStyles.textWrap}>
+                {(foundItem.finderFirstName || foundItem.finderLastName) && (
+                  <>
+                    <Typography variant="h6">
+                      <b>Item Finder</b>
+                    </Typography>
+                    <Typography variant="body1" gutterBottom>
+                      <b>Name:</b> {foundItem.finderFirstName || ''}{' '}
+                      {foundItem.finderLastName || ''}
+                    </Typography>
+                    <Typography variant="body1" gutterBottom>
+                      <b>Phone:</b> {foundItem.finderPhone || 'N/A'}
+                    </Typography>
+                    <Typography variant="body1" gutterBottom>
+                      <b>Email:</b> {foundItem.finderEmail || 'N/A'}
+                    </Typography>
+                  </>
+                )}
+              </Grid>
+              <Grid item xs={12} sm={4} className={FoundItemConfirmationStyles.textWrap}>
+                {(foundItem.ownerFirstName || foundItem.ownerLastName) && (
+                  <>
+                    <Typography variant="h6">
+                      <b>Item Owner</b>
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      <i>(Contact them! Click "edit" to record contact action)</i>
+                    </Typography>
+                    <Typography variant="body1">
+                      <b>Owner Name:</b> {foundItem.ownerFirstName || ''}{' '}
+                      {foundItem.ownerLastName || ''}
+                    </Typography>
+                    <Typography variant="body1">
+                      <b>Owner Phone:</b> {foundItem.ownerPhone || 'N/A'}
+                    </Typography>
+                    <Typography variant="body1">
+                      <b>Owner Email:</b> {foundItem.ownerEmail || 'N/A'}
+                    </Typography>
+                  </>
+                )}
+              </Grid>
+              {isMobile ? (
+                <>
                   <Grid item xs={12} sm={4}>
-                    {foundItem.colors && foundItem.colors.length > 0 && (
-                      <Typography variant="body2" gutterBottom>
-                        <b>Color:</b> {foundItem.colors.join(', ')}
-                      </Typography>
-                    )}
-                    <Typography variant="body2">
-                      <b>Brand/Make:</b> {foundItem.brand || 'N/A'}
+                    <Typography variant="body1">
+                      <b>Date Found:</b> {new Date(foundItem.dateFound).toLocaleDateString()}
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm={4}>
-                    {(foundItem.finderFirstName || foundItem.finderLastName) && (
-                      <Typography variant="body2" gutterBottom>
-                        <b>Finder:</b> {foundItem.finderFirstName || ''}{' '}
-                        {foundItem.finderLastName || ''}
-                      </Typography>
-                    )}
-                    {(foundItem.ownerFirstName || foundItem.ownerLastName) && (
-                      <Typography variant="body2">
-                        <b>Owner:</b> {foundItem.ownerFirstName || ''}{' '}
-                        {foundItem.ownerLastName || ''}
-                      </Typography>
-                    )}
-                  </Grid>
-                  <Grid item xs={12} sm={4}>
-                    <Typography variant="body2">
-                      <b>Storage Location:</b> {foundItem.storageLocation}
+                    <Typography variant="body1">
+                      <b>Location Found:</b> {foundItem.locationFound}
                     </Typography>
                   </Grid>
-                </Grid>
-              </Box>
-            </>
-          )}
+                  <Grid item xs={12} sm={4}>
+                    <Typography variant="body1">
+                      <b>Category:</b> {foundItem.category}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={4}>
+                    <Typography variant="body1">
+                      <b>Description:</b> {foundItem.description}
+                    </Typography>
+                  </Grid>
+                </>
+              ) : (
+                // Desktop view:
+                <>
+                  {/* Table row displaying the basic details */}
+                  <Box className={FoundItemConfirmationStyles.foundItemTable}>
+                    <Paper>
+                      <Table size="small">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell className={FoundItemConfirmationStyles.stickyHeaderFound}>
+                              Date Found
+                            </TableCell>
+                            <TableCell className={FoundItemConfirmationStyles.stickyHeaderFound}>
+                              Location
+                            </TableCell>
+                            <TableCell className={FoundItemConfirmationStyles.stickyHeaderFound}>
+                              Category
+                            </TableCell>
+                            <TableCell className={FoundItemConfirmationStyles.stickyHeaderFound}>
+                              Description
+                            </TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          <TableRow className={FoundItemConfirmationStyles.clickableRow}>
+                            <TableCell>
+                              {new Date(foundItem.dateFound).toLocaleDateString()}
+                            </TableCell>
+                            <TableCell>{foundItem.locationFound}</TableCell>
+                            <TableCell>{foundItem.category}</TableCell>
+                            <TableCell>{foundItem.description}</TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </Paper>
+                  </Box>
+                </>
+              )}
+            </Grid>
+          </Box>
         </CardContent>
 
         <Divider className={FoundItemConfirmationStyles.sectionDivider} />
         {/* Filter Options */}
-        <CardContent className={FoundItemConfirmationStyles.filterContainer}>
-          <Grid container spacing={2} alignItems="center">
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle1">Filter Missing Reports by Category:</Typography>
+        <CardHeader
+          className={FoundItemConfirmationStyles.title}
+          title={
+            <Grid container spacing={2} alignItems="center">
+              <Grid item xs={12} sm={6}>
+                <Typography variant="h5">Missing Item Reports</Typography>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Grid container item xs={12} sx={{ justifyContent: 'flex-end' }}>
+                  <Grid item sx={{ mt: 1, px: 1 }}>
+                    Filter by:
+                  </Grid>
+                  <Grid item>
+                    <Select
+                      value={filterCategory}
+                      onChange={(e) => setFilterCategory(e.target.value)}
+                      fullWidth
+                    >
+                      <MenuItem value={''}>All Categories</MenuItem>
+                      {LFCategories.map((cat) => (
+                        <MenuItem key={cat} value={cat.toLowerCase()}>
+                          {cat}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </Grid>
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <Select
-                value={filterCategory}
-                onChange={(e) => setFilterCategory(e.target.value)}
-                fullWidth
-              >
-                <MenuItem value={''}>All Categories</MenuItem>
-                {LFCategories.map((cat) => (
-                  <MenuItem key={cat} value={cat.toLowerCase()}>
-                    {cat}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Grid>
-          </Grid>
-        </CardContent>
+          }
+        />
         {/* Missing Reports Listing */}
         <CardHeader
           title={
             <Typography variant="h6" align="center">
-              {filterCategory
-                ? `Check if Item has be reported in '${filterCategory}'`
-                : 'All Missing Reports'}
+              Check if item has been reported missing
             </Typography>
           }
         />
@@ -557,8 +574,8 @@ const FoundItemConfirmation = () => {
             }
             label={
               <Typography>
-                I confirm that I have <b>checked</b> or <b>matched</b> these missing reports
-                ,contacted the owner to verify it is not reported missing or pending confirmation.
+                I confirm that I have <b>checked</b> or <b>matched</b> the missing reports in the
+                list, and contacted the owner of this found item if applicable.
               </Typography>
             }
           />

@@ -15,13 +15,17 @@
   justify-content: space-between;
 }
 
+.title {
+  background-color: var(--mui-palette-primary-main);
+}
+
 .pageTitle {
   font-weight: 600;
   font-size: 2rem;
 }
 /* Found Item Table for Desktop view */
 .foundItemTable {
-  margin: 0 1rem 1rem 1rem;
+  margin: 1rem;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
@@ -79,8 +83,9 @@
   margin: 1rem 0;
 }
 
-.filterContainer {
-  margin: 0 1rem 1rem 1rem;
+.textWrap {
+  overflow-wrap: break-word;
+  // overflow: hidden;
 }
 
 /* Scroll box for desktop view */
@@ -90,6 +95,7 @@
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+
 /* Sticky header for table cells */
 .stickyHeader {
   position: sticky;
@@ -120,12 +126,6 @@
 .clickableRow {
   cursor: pointer;
   transition: background-color 0.2s;
-  &:nth-child(even) {
-    background-color: var(--mui-palette-neutral-100);
-  }
-  &:hover {
-    background-color: var(--mui-palette-primary-light);
-  }
 }
 
 /* Highlight the selected card in mobile view */
