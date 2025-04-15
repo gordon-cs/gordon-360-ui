@@ -684,8 +684,6 @@ const FoundItemFormEdit = () => {
               </div>
 
               <div style={{ marginBottom: '1rem' }}>
-                {/* Delete line below before merging */}
-                {console.log(foundItem.matchingMissingID)}
                 {foundItem.matchingMissingID !== null ? (
                   <Grid item xs={12}>
                     <TextField
