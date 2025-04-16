@@ -419,7 +419,7 @@ const LostAndFoundAdmin = () => {
   }, [showMissingPopUp, showFoundPopUp]);
 
   useEffect(() => {
-    setCheckedActionCustomResponseVisible(response === 'Enter response manually');
+    setCheckedActionCustomResponseVisible(response === 'CheckedActionCustomResponse');
   }, [response]);
 
   const yellowDateThreshold = 7;
@@ -1007,33 +1007,35 @@ const LostAndFoundAdmin = () => {
                       <MenuItem value={'Phone'}>Phone</MenuItem>
                     </Select>
                   </FormControl>
-                  <FormControl fullWidth>
-                    <InputLabel>Response</InputLabel>
-                    <Select
-                      fullWidth
-                      value={response}
-                      variant="filled"
-                      label="Response"
-                      name="response"
-                      onChange={handleMatchDetailsFormChange}
-                    >
-                      {contactedResponseTypes.map((responseType) => (
-                        <MenuItem value={responseType}>
-                          {responseType === 'Owner will pick up'
-                            ? 'Owner will pick up'
-                            : responseType === 'Owner does not want'
-                              ? 'Owner does not want'
-                              : responseType === 'CheckedActionCustomResponse'
-                                ? 'Enter response manually'
-                                : responseType === 'No response from owner'
-                                  ? 'No response'
-                                  : responseType}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
+                  <Grid item marginTop={2}>
+                    <FormControl fullWidth>
+                      <InputLabel>Response</InputLabel>
+                      <Select
+                        fullWidth
+                        value={response}
+                        variant="filled"
+                        label="Response"
+                        name="response"
+                        onChange={handleMatchDetailsFormChange}
+                      >
+                        {contactedResponseTypes.map((responseType) => (
+                          <MenuItem value={responseType}>
+                            {responseType === 'Owner will pick up'
+                              ? 'Owner will pick up'
+                              : responseType === 'Owner does not want'
+                                ? 'Owner does not want'
+                                : responseType === 'CheckedActionCustomResponse'
+                                  ? 'Enter response manually'
+                                  : responseType === 'No response from owner'
+                                    ? 'No response'
+                                    : responseType}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
                   {checkedActionCustomResponseVisible ? (
-                    <Grid item xs={6.5}>
+                    <Grid item xs={6.5} marginTop={2}>
                       <TextField
                         fullWidth
                         variant="filled"
