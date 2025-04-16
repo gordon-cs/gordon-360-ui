@@ -325,14 +325,13 @@ const FoundItemConfirmation = () => {
                       <i>(Contact them! Click "edit" to record contact action)</i>
                     </Typography>
                     <Typography variant="body1">
-                      <b>Owner Name:</b> {foundItem.ownerFirstName || ''}{' '}
-                      {foundItem.ownerLastName || ''}
+                      <b>Name:</b> {foundItem.ownerFirstName || ''} {foundItem.ownerLastName || ''}
                     </Typography>
                     <Typography variant="body1">
-                      <b>Owner Phone:</b> {foundItem.ownerPhone || 'N/A'}
+                      <b>Phone:</b> {foundItem.ownerPhone || 'N/A'}
                     </Typography>
                     <Typography variant="body1">
-                      <b>Owner Email:</b> {foundItem.ownerEmail || 'N/A'}
+                      <b>Email:</b> {foundItem.ownerEmail || 'N/A'}
                     </Typography>
                   </>
                 )}
