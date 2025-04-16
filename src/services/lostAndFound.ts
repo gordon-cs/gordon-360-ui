@@ -421,7 +421,7 @@ const unlinkReports = (missingID: number, foundID: string, action: AdminAction) 
  * When the "owner" parameter is not provided by the caller (or passed as undefined),
  * the back-end defaults to returning found items for the currently authenticated user.
  *
- * @param owner The owner’s unique identifier (GordonID).
+ * @param owner The owner’s unique identifier (Username).
  * @returns A Promise resolving to an array of FoundItem objects.
  */
 const getFoundItemsByOwner = (owner?: string): Promise<FoundItem[]> => {

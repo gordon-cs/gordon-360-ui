@@ -74,7 +74,7 @@ const FoundReports = () => {
         // Now get the API found items using the owner ID.
         // Fetch found items from the API
         const foundByOwnerRaw = await lostAndFoundService.getFoundItemsByOwner(
-          user.profile?.ID || '',
+          user.profile?.AD_Username || '',
         );
 
         // Map the FoundItem objects into MissingItemReport shape using the mapping function

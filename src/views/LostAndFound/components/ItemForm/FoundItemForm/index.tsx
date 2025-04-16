@@ -291,12 +291,6 @@ const FoundItemForm = ({ formType }: { formType: string }) => {
     });
   };
 
-  const handleFormSubmit = () => {
-    if (validateForm()) {
-      setShowConfirm(true);
-    }
-  };
-
   const handleReportSubmit = async () => {
     if (formType === 'create') {
       if (!disableSubmit) {
@@ -333,8 +327,8 @@ const FoundItemForm = ({ formType }: { formType: string }) => {
     const fetchItemData = async () => {
       if (id) {
         // Use the current user's ID (owner) for lookup.
-        const ownerID = user.ID || '';
-        const items = await lostAndFoundService.getFoundItemsByOwner(ownerID);
+        const ownerUsername = user.AD_Username || '';
+        const items = await lostAndFoundService.getFoundItemsByOwner(ownerUsername);
         const item = items.find((itm) => itm.recordID === id);
         if (item) {
           setFormData({
@@ -395,7 +389,7 @@ const FoundItemForm = ({ formType }: { formType: string }) => {
       }
     };
     fetchItemData();
-  }, [id, user.ID]);
+  }, [id, user.AD_Username]);
 
   useEffect(() => {
     const fetchUserData = async () => {

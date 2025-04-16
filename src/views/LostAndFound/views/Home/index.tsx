@@ -120,7 +120,7 @@ const LostAndFound = () => {
 
         // Fetch found items that have been assigned to you using the new API.
         const foundByOwnerRaw = await lostAndFoundService.getFoundItemsByOwner(
-          user.profile?.ID || '',
+          user.profile?.AD_Username || '',
         );
         // Map the FoundItem objects into the MissingItemReport shape.
         const foundByOwner = foundByOwnerRaw.map(mapFoundToMissing);
@@ -140,7 +140,7 @@ const LostAndFound = () => {
       }
     };
     fetchMissingItems();
-  }, [pageUpdates, user.profile?.ID]);
+  }, [pageUpdates, user.profile?.AD_Username]);
 
   // Move to the edit page
   const handleEdit = (
