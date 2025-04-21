@@ -197,18 +197,18 @@ const OnDutyRD = () => {
                   />
                 </ListItem>
               )}
-              {/*
               <ListItem>
                 <ListItemText
                   primary={
                     <Typography variant="body1">
-                      <strong>On-Call Contact: </strong>
-                      {RD_phonenumber}
+                      <strong>RD On-Call Phone: </strong>
+                      <StyledLink href={`tel:${RD_phonenumber}`} className="gc360_text_link">
+                        {formatPhoneNumber(RD_phonenumber)}
+                      </StyledLink>
                     </Typography>
                   }
                 />
               </ListItem>
-              */}
             </List>
           </Grid>
 
