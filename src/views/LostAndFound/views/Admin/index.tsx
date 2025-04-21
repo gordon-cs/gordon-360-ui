@@ -196,9 +196,9 @@ const LostAndFoundAdmin = () => {
   };
 
   const updateForm = async (name: string, newValue: string) => {
-    if (name == 'contactMethod') {
+    if (name === 'contactMethod') {
       setContactMethod(newValue);
-    } else if (name == 'response') {
+    } else if (name === 'response') {
       setResponse(newValue);
     }
   };
@@ -231,7 +231,7 @@ const LostAndFoundAdmin = () => {
     setLazyLoading(true);
     setFoundLazyLoading(true);
     try {
-      if (response == 'CheckedActionCustomResponse') {
+      if (response === 'CheckedActionCustomResponse') {
         setResponse(customCheckedActionResponseValue);
       }
       lostAndFoundService.linkReports(
@@ -445,7 +445,7 @@ const LostAndFoundAdmin = () => {
     let today = new Date();
     let twoMonths = new Date(today.setMonth(today.getMonth() - 2));
     console.log(report.status);
-    if (report.status == 'found') {
+    if (report.status === 'found') {
       return 'var(--mui-palette-success-main)';
     } else if (dateCreated < twoMonths) {
       return 'var(--mui-palette-error-main)';
