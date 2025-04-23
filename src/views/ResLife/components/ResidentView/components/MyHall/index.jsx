@@ -87,11 +87,15 @@ const MyHall = () => {
     }
   }, [profile]);
 
+  // Refactored to follow the Single Responsibility Principle
+  const generateRDProfileLink = (email) => {
+    if (!email) return DEFAULT_PROFILE_URL;
+    const [firstName, lastName] = rdInfo.RD_Email.split('@')[0].split('.');
+    return DEFAULT_PROFILE_URL + `${firstName}.${lastName}`;
+  };
+
   useEffect(() => {
-    if (rdInfo?.RD_Email) {
-      const [firstName, lastName] = rdInfo.RD_Email.split('@')[0].split('.');
-      setRdProfileLink(DEFAULT_PROFILE_URL + `${firstName}.${lastName}`);
-    }
+    setRdProfileLink(generateRDProfileLink(rdInfo?.RD_Email));
   }, [rdInfo]);
 
   // Show loading state if profile is not yet loaded
