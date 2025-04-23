@@ -36,7 +36,7 @@ import {
   clearUrlParams,
   formatDateString,
 } from 'views/LostAndFound/components/Helpers';
-import { Delete, JoinFull, Launch, Person, Storage } from '@mui/icons-material';
+import { Delete, Launch, Person, Storage } from '@mui/icons-material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import SimpleSnackbar from 'components/Snackbar';
 import CircleIcon from '@mui/icons-material/Circle';
@@ -45,6 +45,7 @@ import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
 import { differenceInCalendarDays } from 'date-fns';
 import lostAndFoundService, { MissingItemReport, FoundItem } from 'services/lostAndFound';
 import { useUser } from 'hooks';
+import GordonDialogBox from 'components/GordonDialogBox';
 
 const LostAndFoundAdmin = () => {
   const isAdmin = useAuthGroups(AuthGroup.LostAndFoundAdmin);
@@ -820,7 +821,10 @@ const LostAndFoundAdmin = () => {
             </Grid>
           </Grid>
           <Grid item margin={'2rem'}>
-            <Link href={`missingitemdatabase/${missingID}`} className={`gc360_text_link`}>
+            <Link
+              href={`lostandfound/lostandfoundadmin/missingitemdatabase/${missingID}`}
+              className={`gc360_text_link`}
+            >
               Go to Full Details <Launch />
             </Link>
           </Grid>
@@ -910,7 +914,10 @@ const LostAndFoundAdmin = () => {
             </Grid>
           </Grid>
           <Grid item margin={'2rem'}>
-            <Link href={`founditemdatabase/${foundID}`} className={`gc360_text_link`}>
+            <Link
+              href={`lostandfound/lostandfoundadmin/founditemdatabase/${foundID}`}
+              className={`gc360_text_link`}
+            >
               Go to Full Details <Launch />
             </Link>
           </Grid>
@@ -965,101 +972,97 @@ const LostAndFoundAdmin = () => {
     if (!missingItem) return null;
 
     return (
-      <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-        <DialogTitle className={styles.modalTitle}>Confirm Match?</DialogTitle>
-        <DialogContent>
-          <Typography variant="body1" align="center">
-            Confirm the details of these items match, and you’d like to mark them both as found.
-          </Typography>
-          <br />
-          <Typography variant="body1" align="center">
-            Contact the reporting party and inform them their item has been found.
-          </Typography>
-          <Grid container direction={'row'}>
-            <Grid container direction={'column'} className={styles.popUpBodyLeft} margin={'0.5rem'}>
-              <Grid item>
-                <span className={styles.smallText}>Owner's Name</span>
-                <div className={styles.bolderText}>
-                  {missingItem.firstName} {missingItem.lastName}
-                </div>
-              </Grid>
-              <Grid item>
-                <span className={styles.smallText}>Owner's Contact Info:</span>
-                <div className={styles.bolderText}>Email: {missingItem.email}</div>
-                <div className={styles.bolderText}>Phone: {missingItem.phone}</div>
-              </Grid>
+      <GordonDialogBox
+        open={open}
+        title="Confirm Match?"
+        buttonName="Link Reports As Found"
+        buttonClicked={onSubmit}
+        cancelButtonName="Cancel"
+        cancelButtonClicked={onClose}
+      >
+        <Typography variant="body1" align="center">
+          Confirm the details of these items match, and you’d like to mark them both as found.
+        </Typography>
+        <br />
+        <Typography variant="body1" align="center">
+          Contact the reporting party and inform them their item has been found.
+        </Typography>
+        <Grid container direction={'row'}>
+          <Grid container direction={'column'} className={styles.popUpBodyLeft} margin={'0.5rem'}>
+            <Grid item>
+              <span className={styles.smallText}>Owner's Name</span>
+              <div className={styles.bolderText}>
+                {missingItem.firstName} {missingItem.lastName}
+              </div>
             </Grid>
-            <Grid container direction={'column'} className={styles.popUpBodyRight}>
-              <Grid item xs={6.5}>
-                <Grid item>
-                  <span className={styles.smallText}>Owner Contacted:</span>
+            <Grid item>
+              <span className={styles.smallText}>Owner's Contact Info:</span>
+              <div className={styles.bolderText}>Email: {missingItem.email}</div>
+              <div className={styles.bolderText}>Phone: {missingItem.phone}</div>
+            </Grid>
+          </Grid>
+          <Grid container direction={'column'} className={styles.popUpBodyRight}>
+            <Grid item xs={6.5}>
+              <Grid item>
+                <span className={styles.smallText}>Owner Contacted:</span>
+                <FormControl fullWidth>
+                  <InputLabel>Contact Method</InputLabel>
+                  <Select
+                    fullWidth
+                    value={contactMethod}
+                    variant="filled"
+                    label="Contact Method"
+                    name="contactMethod"
+                    onChange={handleMatchDetailsFormChange}
+                  >
+                    <MenuItem value={'Email'}>Email</MenuItem>
+                    <MenuItem value={'Phone'}>Phone</MenuItem>
+                  </Select>
+                </FormControl>
+                <Grid item marginTop={2}>
                   <FormControl fullWidth>
-                    <InputLabel>Contact Method</InputLabel>
+                    <InputLabel>Response</InputLabel>
                     <Select
                       fullWidth
-                      value={contactMethod}
+                      value={response}
                       variant="filled"
-                      label="Contact Method"
-                      name="contactMethod"
+                      label="Response"
+                      name="response"
                       onChange={handleMatchDetailsFormChange}
                     >
-                      <MenuItem value={'Email'}>Email</MenuItem>
-                      <MenuItem value={'Phone'}>Phone</MenuItem>
+                      {contactedResponseTypes.map((responseType) => (
+                        <MenuItem value={responseType}>
+                          {responseType === 'Owner will pick up'
+                            ? 'Owner will pick up'
+                            : responseType === 'Owner does not want'
+                              ? 'Owner does not want'
+                              : responseType === 'CheckedActionCustomResponse'
+                                ? 'Enter response manually'
+                                : responseType === 'No response from owner'
+                                  ? 'No response'
+                                  : responseType}
+                        </MenuItem>
+                      ))}
                     </Select>
                   </FormControl>
-                  <Grid item marginTop={2}>
-                    <FormControl fullWidth>
-                      <InputLabel>Response</InputLabel>
-                      <Select
-                        fullWidth
-                        value={response}
-                        variant="filled"
-                        label="Response"
-                        name="response"
-                        onChange={handleMatchDetailsFormChange}
-                      >
-                        {contactedResponseTypes.map((responseType) => (
-                          <MenuItem value={responseType}>
-                            {responseType === 'Owner will pick up'
-                              ? 'Owner will pick up'
-                              : responseType === 'Owner does not want'
-                                ? 'Owner does not want'
-                                : responseType === 'CheckedActionCustomResponse'
-                                  ? 'Enter response manually'
-                                  : responseType === 'No response from owner'
-                                    ? 'No response'
-                                    : responseType}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  {checkedActionCustomResponseVisible ? (
-                    <Grid item xs={6.5} marginTop={2}>
-                      <TextField
-                        fullWidth
-                        variant="filled"
-                        label={"Owner's Response"}
-                        name="customOwnerResponse"
-                        value={customCheckedActionResponseValue}
-                        onChange={(ev) => setCustomCheckedActionResponseValue(ev.target.value)}
-                      />
-                    </Grid>
-                  ) : undefined}
                 </Grid>
+                {checkedActionCustomResponseVisible ? (
+                  <Grid item xs={6.5} marginTop={2}>
+                    <TextField
+                      fullWidth
+                      variant="filled"
+                      label={"Owner's Response"}
+                      name="customOwnerResponse"
+                      value={customCheckedActionResponseValue}
+                      onChange={(ev) => setCustomCheckedActionResponseValue(ev.target.value)}
+                    />
+                  </Grid>
+                ) : undefined}
               </Grid>
             </Grid>
           </Grid>
-        </DialogContent>
-        <DialogActions className={styles.actions}>
-          <Button onClick={onClose} className={styles.cancelButton}>
-            Cancel
-          </Button>
-          <Button onClick={onSubmit} className={styles.submitButton} color="secondary">
-            Link Reports As Found
-          </Button>
-        </DialogActions>
-      </Dialog>
+        </Grid>
+      </GordonDialogBox>
     );
   };
 
@@ -1113,22 +1116,6 @@ const LostAndFoundAdmin = () => {
                     className={styles.textField}
                     fullWidth
                   />
-                </Grid>
-                <Grid item xs={isMobile}>
-                  <FormControl size="small" className={styles.formControl} fullWidth>
-                    <InputLabel>Status</InputLabel>
-                    <Select
-                      value={status}
-                      onChange={(e) => setUrlParam('status', e.target.value, setSearchParams)}
-                    >
-                      <MenuItem value="">All</MenuItem>
-                      <MenuItem value="active">Active</MenuItem>
-                      <MenuItem value="expired">Expired</MenuItem>
-                      <MenuItem value="found">Found</MenuItem>
-                      <MenuItem value="deleted">Deleted</MenuItem>
-                      <MenuItem value="PickedUp">PickedUp</MenuItem>
-                    </Select>
-                  </FormControl>
                 </Grid>
                 <Grid item xs={isMobile}>
                   <FormControl size="small" className={styles.formControl} fullWidth>
@@ -1294,11 +1281,11 @@ const LostAndFoundAdmin = () => {
             className={styles.titleSecondary}
             title={
               <span>
-                Active{' '}
+                In-Stock{' '}
                 <b>
                   <u>Found</u>
                 </b>{' '}
-                Item Reports
+                Items
               </span>
             }
           >
