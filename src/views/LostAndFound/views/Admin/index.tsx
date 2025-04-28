@@ -5,13 +5,13 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Checkbox,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
   TextField,
   Stack,
-  Typography,
 } from '@mui/material';
 import { Grid, Button } from '@mui/material';
 import Header from 'views/LostAndFound/components/Header';
@@ -27,7 +27,6 @@ import {
   clearUrlParams,
   formatDateString,
 } from 'views/LostAndFound/components/Helpers';
-import userService from 'services/user';
 import { Delete, Person, Storage } from '@mui/icons-material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import SimpleSnackbar from 'components/Snackbar';
@@ -75,6 +74,7 @@ const LostAndFoundAdmin = () => {
   const matchButtonRef = useRef<HTMLButtonElement | null>(null);
   const [noMatchIsClicked, setNoMatchIsClicked] = useState(false);
   const [matchFoundIsClicked, setMatchFoundIsClicked] = useState(false);
+  const [recentlyChecked, setRecentlyChecked] = useState(false);
 
   useEffect(() => {
     setPageLoaded(true);
@@ -190,6 +190,8 @@ const LostAndFoundAdmin = () => {
     const updateFilters = async () => {
       setLazyLoading(true);
       setFoundLazyLoading(true);
+      let today = new Date();
+      let sevenDays = new Date(today.setDate(today.getDate() - 7));
       try {
         if (
           status === getUrlParam('status', location, searchParams) &&
@@ -204,6 +206,7 @@ const LostAndFoundAdmin = () => {
             keywords,
             undefined,
             pageSize,
+            recentlyChecked ? undefined : sevenDays,
           );
           const fetchedFoundReports = await lostAndFoundService.getFoundItems(
             '',
@@ -241,7 +244,7 @@ const LostAndFoundAdmin = () => {
         checkForChanges();
       }, 700);
     }
-  }, [status, category, color, keywords, pageLoaded]);
+  }, [status, category, color, keywords, pageLoaded, recentlyChecked]);
 
   useEffect(() => {
     const updateFilters = () => {
@@ -357,6 +360,10 @@ const LostAndFoundAdmin = () => {
     } else {
       return '#00AEEF';
     }
+  };
+
+  const handleRecentCheckboxClick = () => {
+    recentlyChecked ? setRecentlyChecked(false) : setRecentlyChecked(true);
   };
 
   // Lazy loading helper: load more reports
@@ -949,6 +956,8 @@ const LostAndFoundAdmin = () => {
                   </Button>
                 </Grid>
               </Grid>
+              <Checkbox checked={recentlyChecked} onChange={() => handleRecentCheckboxClick()} />
+              See Recently Checked Items
             </CardContent>
           </Card>
         </Grid>
