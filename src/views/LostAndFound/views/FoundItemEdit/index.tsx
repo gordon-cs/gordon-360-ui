@@ -61,11 +61,10 @@ const FoundItemFormEdit = () => {
   /** The found item object we are editing. */
   const [foundItem, setFoundItem] = useState<FoundItem | null>(null);
   const [originalItemData, setOriginalItemData] = useState<FoundItem | null>(null);
-  const [hasFinder, setHasFinder] = useState<boolean>(false);
-  const [hasOwner, setHasOwner] = useState<boolean>(false);
+  const [displayFinderChange, setDisplayFinderChange] = useState<boolean>(false);
+  const [displayOwnerChange, setdisplayOwnerChange] = useState<boolean>(false);
   const [isGordonFinder, setIsGordonFinder] = useState<string>('');
   const [isGordonOwner, setIsGordonOwner] = useState<string>('');
-  const [selectedFinder, setSelectedFinder] = useState<SearchResult | null>(null);
 
   const [snackbar, setSnackbar] = useState<ISnackbarState>({
     message: '',
@@ -119,38 +118,20 @@ const FoundItemFormEdit = () => {
         setAdminActions(itemResponse.adminActions || []);
 
         // If the response has a username but no first name, the finder is from Gordon
-        if (itemResponse.finderUsername !== null) {
-          setIsGordonFinder('yes');
-          setHasFinder(true);
-          // If the response has a first name but no username, the finder is a guest
-        } else if (itemResponse.finderUsername === null && itemResponse.finderFirstName !== null) {
+        if (itemResponse.finderUsername !== null) setIsGordonFinder('yes');
+        // If the response has a first name but no username, the finder is a guest
+        else if (itemResponse.finderUsername === null && itemResponse.finderFirstName !== null)
           setIsGordonFinder('no');
-          setHasFinder(true);
-          // If the response has neither, no finder was identified
-        } else {
-          setIsGordonFinder('');
-          setHasFinder(false);
-        }
-        console.log('Is Gordon Finder: ', isGordonFinder);
-        console.log('Finder Username: ', itemResponse.finderUsername);
-        console.log('Finder First Name: ', itemResponse.finderFirstName);
+        // If the response has neither, no finder was identified
+        else setIsGordonFinder('');
 
         // If the response has a username but no first name, the owner is from Gordon
-        if (itemResponse.ownerUsername !== null) {
-          setIsGordonOwner('yes');
-          setHasOwner(true);
-          // If the response has a first name but no username, the owner is a guest
-        } else if (itemResponse.ownerUsername === null && itemResponse.ownerFirstName !== null) {
+        if (itemResponse.ownerUsername !== null) setIsGordonOwner('yes');
+        // If the response has a first name but no username, the owner is a guest
+        else if (itemResponse.ownerUsername === null && itemResponse.ownerFirstName !== null)
           setIsGordonOwner('no');
-          setHasOwner(true);
-          // If the response has neither, no owner was identified
-        } else {
-          setIsGordonOwner('');
-          setHasOwner(false);
-        }
-        console.log('Is Gordon Owner: ', isGordonOwner);
-        console.log('Owner Username: ', itemResponse.ownerUsername);
-        console.log('Owner First Name: ', itemResponse.ownerFirstName);
+        // If the response has neither, no owner was identified
+        else setIsGordonOwner('');
 
         setActionsLoading(false);
       } catch (err) {
@@ -163,22 +144,6 @@ const FoundItemFormEdit = () => {
 
     fetchData();
   }, [itemId, createSnackbar]);
-
-  useEffect(() => {
-    const loadPerson = async () => {
-      if (foundItem?.finderUsername) {
-        try {
-          const [_, results] = await quickSearchService.search(foundItem.finderUsername);
-          const match = results.find((r) => r.UserName === foundItem.finderUsername);
-          setSelectedFinder(match || null);
-        } catch (error) {
-          console.error('Failed to load finder:', error);
-        }
-      }
-    };
-
-    loadPerson();
-  }, [foundItem?.finderUsername]);
 
   /** 2) On mount or whenever `actionsUpdated` is set, fetch admin actions. */
   useEffect(() => {
@@ -257,13 +222,14 @@ const FoundItemFormEdit = () => {
         ownerFirstName: selectedPerson.FirstName,
         ownerLastName: selectedPerson.LastName,
         ownerUsername: selectedPerson.UserName,
-        ownerPhoneNumber: '',
+        ownerPhone: '',
         ownerEmail: '',
         forOwnerGuest: false,
       }));
     }
   };
 
+  // Finder Gordon Person Select
   const handleFinderSelect = (_event: any, selectedPerson: SearchResult | null) => {
     if (selectedPerson && foundItem) {
       setFoundItem((prevData) => ({
@@ -271,12 +237,52 @@ const FoundItemFormEdit = () => {
         finderFirstName: selectedPerson.FirstName,
         finderLastName: selectedPerson.LastName,
         finderUsername: selectedPerson.UserName,
-        finderPhoneNumber: '',
+        finderPhone: '',
         finderEmail: '',
         forFinderGuest: false,
       }));
     }
   };
+
+  const handleFinderChange = () => {
+    setDisplayFinderChange(true);
+  };
+
+  const handleFinderClear = () => {
+    // foundItem.finderFirstName = '';
+    // foundItem.finderLastName = '';
+    // foundItem.finderPhone = '';
+    // foundItem.finderEmail = '';
+    // foundItem.finderUsername = '';
+  };
+
+  const handleOwnerChange = () => {
+    setdisplayOwnerChange(true);
+  };
+
+  const handleOwnerClear = () => {};
+
+  // useEffect(() => {
+  //   const clearFinderTextFields = () => {
+  //     foundItem.finderFirstName = '';
+  //     foundItem.finderLastName = '';
+  //     foundItem.finderPhone = '';
+  //     foundItem.finderEmail = '';
+  //     foundItem.finderUsername = '';
+  //   };
+  //   clearFinderTextFields();
+  // }, [isGordonFinder]);
+
+  // useEffect(() => {
+  //   const clearOwnerTextFields = () => {
+  //     foundItem.ownerFirstName = '';
+  //     foundItem.ownerLastName = '';
+  //     foundItem.ownerPhone = '';
+  //     foundItem.ownerEmail = '';
+  //     foundItem.ownerUsername = '';
+  //   };
+  //   clearOwnerTextFields();
+  // }, [isGordonOwner]);
 
   /** 5) Save */
   const handleSave = async () => {
@@ -738,25 +744,31 @@ const FoundItemFormEdit = () => {
                 disabled={readOnly}
               />
 
-              {/* Finder wants item */}
+              {/* Finder Info */}
               <Grid item margin={1}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={hasFinder}
-                      onChange={(e) => {
-                        setHasFinder(!hasFinder);
-                        setFoundItem({ ...foundItem, finderWants: false });
-                        setIsGordonFinder('');
-                      }}
-                      name="hasFinder"
-                    />
-                  }
-                  label="Do you know the name of the person who found the item?"
-                  sx={{ marginBottom: '0.5rem' }}
-                />
-                {/* Found By */}
-                {hasFinder && (
+                <Typography variant="h4">Finder</Typography>
+
+                {!displayFinderChange && (
+                  <>
+                    <Typography>
+                      <strong>Username:</strong> {foundItem.finderUsername}
+                    </Typography>
+                    <Typography>
+                      <strong>First Name:</strong> {foundItem.finderFirstName}
+                    </Typography>
+                    <Typography>
+                      <strong>Last Name:</strong> {foundItem.finderLastName}
+                    </Typography>
+                    <Typography>
+                      <strong>Phone Number:</strong> {foundItem.finderPhone}
+                    </Typography>
+                    <Typography>
+                      <strong>Email:</strong> {foundItem.finderEmail}
+                    </Typography>
+                  </>
+                )}
+
+                {displayFinderChange && (
                   <>
                     <Grid item margin={1}>
                       <FormLabel component="legend" required>
@@ -777,60 +789,51 @@ const FoundItemFormEdit = () => {
 
                     {isGordonFinder === 'yes' && (
                       <Grid item margin={1}>
-                        <GordonPersonAutocomplete
-                          value={selectedFinder}
-                          onChange={(_e, val) => {
-                            setSelectedFinder(val);
-                            handleFinderSelect(_e, val);
-                          }}
-                        />
+                        <GordonPersonAutocomplete onChange={handleFinderSelect} />
                       </Grid>
                     )}
 
                     {isGordonFinder === 'no' && (
-                      <>
-                        <Grid container direction="column" rowSpacing={1}>
-                          <Grid item>
-                            <div className={styles.name_field}>
-                              <TextField
-                                label="Finder First Name"
-                                sx={{ width: '49%' }}
-                                name="finderFirstName"
-                                value={foundItem.finderFirstName}
-                                onChange={handleChange}
-                              />
-                              <TextField
-                                label="Finder Last Name"
-                                sx={{ width: '49%' }}
-                                name="finderLastName"
-                                value={foundItem.finderLastName}
-                                onChange={handleChange}
-                              />
-                            </div>
-                          </Grid>
-                          <Grid item>
+                      <Grid container direction="column" rowSpacing={1}>
+                        <Grid item>
+                          <div className={styles.name_field}>
                             <TextField
-                              label="Finder Phone"
-                              fullWidth
-                              name="finderPhoneNumber"
-                              value={foundItem.finderPhone}
+                              label="Finder First Name"
+                              sx={{ width: '49%' }}
+                              name="finderFirstName"
+                              value={foundItem.finderFirstName}
                               onChange={handleChange}
                             />
-                          </Grid>
-                          <Grid item>
                             <TextField
-                              label="Finder Email"
-                              fullWidth
-                              name="finderEmail"
-                              value={foundItem.finderEmail}
+                              label="Finder Last Name"
+                              sx={{ width: '49%' }}
+                              name="finderLastName"
+                              value={foundItem.finderLastName}
                               onChange={handleChange}
                             />
-                          </Grid>
+                          </div>
                         </Grid>
-                      </>
+                        <Grid item>
+                          <TextField
+                            label="Finder Phone"
+                            fullWidth
+                            name="finderPhoneNumber"
+                            value={foundItem.finderPhone}
+                            onChange={handleChange}
+                          />
+                        </Grid>
+                        <Grid item>
+                          <TextField
+                            label="Finder Email"
+                            fullWidth
+                            name="finderEmail"
+                            value={foundItem.finderEmail}
+                            onChange={handleChange}
+                          />
+                        </Grid>
+                      </Grid>
                     )}
 
-                    {/* Finder wants item */}
                     <Grid item margin={1}>
                       <FormControlLabel
                         control={
@@ -861,25 +864,56 @@ const FoundItemFormEdit = () => {
                     </Grid>
                   </>
                 )}
+
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <Button
+                      variant="contained"
+                      color="info"
+                      onClick={handleFinderChange}
+                      disabled={readOnly}
+                    >
+                      Change
+                    </Button>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Button
+                      variant="contained"
+                      color="error"
+                      onClick={handleFinderClear}
+                      disabled={readOnly}
+                    >
+                      Clear
+                    </Button>
+                  </Grid>
+                </Grid>
               </Grid>
 
               {/* Owner's Name */}
               <Grid item margin={1}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={hasOwner}
-                      onChange={(e) => {
-                        setHasOwner(!hasOwner);
-                        setIsGordonOwner('');
-                      }}
-                      name="hasFinder"
-                    />
-                  }
-                  label="Do you know the name of the item's owner?"
-                  sx={{ marginBottom: '0.5rem' }}
-                />
-                {hasOwner && (
+                <Typography variant="h4">Owner</Typography>
+
+                {!displayOwnerChange && (
+                  <>
+                    <Typography>
+                      <strong>Username:</strong> {foundItem.ownerUsername}
+                    </Typography>
+                    <Typography>
+                      <strong>First Name:</strong> {foundItem.ownerFirstName}
+                    </Typography>
+                    <Typography>
+                      <strong>Last Name:</strong> {foundItem.ownerLastName}
+                    </Typography>
+                    <Typography>
+                      <strong>Phone Number:</strong> {foundItem.ownerPhone}
+                    </Typography>
+                    <Typography>
+                      <strong>Email:</strong> {foundItem.ownerEmail}
+                    </Typography>
+                  </>
+                )}
+
+                {displayOwnerChange && (
                   <>
                     <Grid item margin={2}>
                       <FormLabel component="legend">Is the Owner a Gordon Person?*</FormLabel>
@@ -903,49 +937,70 @@ const FoundItemFormEdit = () => {
                     )}
 
                     {isGordonOwner === 'no' && (
-                      <>
-                        <Grid container direction="column" rowSpacing={1}>
-                          <Grid item>
-                            <div className={styles.name_field}>
-                              <TextField
-                                label="Owner First Name"
-                                sx={{ width: '49%' }}
-                                name="ownerFirstName"
-                                value={foundItem.ownerFirstName}
-                                onChange={handleChange}
-                              />
-                              <TextField
-                                label="Owner Last Name"
-                                sx={{ width: '49%' }}
-                                name="ownerLastName"
-                                value={foundItem.ownerLastName}
-                                onChange={handleChange}
-                              />
-                            </div>
-                          </Grid>
-                          <Grid item>
+                      <Grid container direction="column" rowSpacing={1}>
+                        <Grid item>
+                          <div className={styles.name_field}>
                             <TextField
-                              label="Owner Phone"
-                              fullWidth
-                              name="ownerPhoneNumber"
-                              value={foundItem.ownerPhone}
+                              label="Owner First Name"
+                              sx={{ width: '49%' }}
+                              name="ownerFirstName"
+                              value={foundItem.ownerFirstName}
                               onChange={handleChange}
                             />
-                          </Grid>
-                          <Grid item>
                             <TextField
-                              label="Owner Email"
-                              fullWidth
-                              name="ownerEmail"
-                              value={foundItem.ownerEmail}
+                              label="Owner Last Name"
+                              sx={{ width: '49%' }}
+                              name="ownerLastName"
+                              value={foundItem.ownerLastName}
                               onChange={handleChange}
                             />
-                          </Grid>
+                          </div>
                         </Grid>
-                      </>
+                        <Grid item>
+                          <TextField
+                            label="Owner Phone"
+                            fullWidth
+                            name="ownerPhoneNumber"
+                            value={foundItem.ownerPhone}
+                            onChange={handleChange}
+                          />
+                        </Grid>
+                        <Grid item>
+                          <TextField
+                            label="Owner Email"
+                            fullWidth
+                            name="ownerEmail"
+                            value={foundItem.ownerEmail}
+                            onChange={handleChange}
+                          />
+                        </Grid>
+                      </Grid>
                     )}
                   </>
                 )}
+
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <Button
+                      variant="contained"
+                      color="info"
+                      onClick={handleOwnerChange}
+                      disabled={readOnly}
+                    >
+                      Change
+                    </Button>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Button
+                      variant="contained"
+                      color="error"
+                      onClick={handleOwnerClear}
+                      disabled={readOnly}
+                    >
+                      Clear
+                    </Button>
+                  </Grid>
+                </Grid>
               </Grid>
 
               <div style={{ marginBottom: '1rem' }}>
