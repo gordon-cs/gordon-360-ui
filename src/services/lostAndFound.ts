@@ -390,44 +390,48 @@ const linkReports = async (
     console.log('Error linking reports:', error);
     throw error;
   }
-  http.put<void>(`founditems/${foundID}/linkReport/${missingID}`);
+  try {
+    http.put<void>(`founditems/${foundID}/linkReport/${missingID}`);
 
-  updateFoundReportStatus(foundID, 'found');
-  updateReportStatus(missingID, 'found');
+    updateFoundReportStatus(foundID, 'found');
+    updateReportStatus(missingID, 'found');
 
-  const userInfo = await userService.getProfileInfo();
-  const username = userInfo?.AD_Username || '';
+    const userInfo = await userService.getProfileInfo();
+    const username = userInfo?.AD_Username || '';
 
-  const missingAdminAction: InitAdminAction = {
-    missingID,
-    action: 'Checked',
-    actionDate: new Date().toISOString(),
-    actionNote: `Matching Found ID: ${foundID}, Contact Method: ${contactMethod}, Response: ${response}`,
-    username,
-    isPublic: true,
-  };
-  const foundAdminAction: InitFoundAdminAction = {
-    foundID,
-    action: 'Checked',
-    actionDate: new Date().toISOString(),
-    actionNote: `Matching Missing ID: ${missingID}, Contact Method: ${contactMethod}, Response: ${response}`,
-    submitterUsername: username,
-  };
+    const missingAdminAction: InitAdminAction = {
+      missingID,
+      action: 'Checked',
+      actionDate: new Date().toISOString(),
+      actionNote: `Matching Found ID: ${foundID}, Contact Method: ${contactMethod}, Response: ${response}`,
+      username,
+      isPublic: true,
+    };
+    const foundAdminAction: InitFoundAdminAction = {
+      foundID,
+      action: 'Checked',
+      actionDate: new Date().toISOString(),
+      actionNote: `Matching Missing ID: ${missingID}, Contact Method: ${contactMethod}, Response: ${response}`,
+      submitterUsername: username,
+    };
 
-  createAdminAction(missingID, missingAdminAction);
-  createFoundAdminAction(foundID, foundAdminAction);
+    createAdminAction(missingID, missingAdminAction);
+    createFoundAdminAction(foundID, foundAdminAction);
 
-  const foundItem = await getFoundItem(foundID);
-  const updatedFoundItem: FoundItem = {
-    ...foundItem,
-    ownerUsername,
-    ownerFirstName,
-    ownerLastName,
-    ownerPhone,
-    ownerEmail,
-  };
+    const foundItem = await getFoundItem(foundID);
+    const updatedFoundItem: FoundItem = {
+      ...foundItem,
+      ownerUsername,
+      ownerFirstName,
+      ownerLastName,
+      ownerPhone,
+      ownerEmail,
+    };
 
-  updateFoundItem(updatedFoundItem, foundID);
+    updateFoundItem(updatedFoundItem, foundID);
+  } catch {
+    unlinkReports(missingID, foundID);
+  }
 };
 
 /**
@@ -491,6 +495,18 @@ const unlinkReports = (missingID: number, foundID: string) => {
   updateFoundItemInfo();
 };
 
+/**
+ * Fetch an array of found items for a specified owner.
+ * When the "owner" parameter is not provided by the caller (or passed as undefined),
+ * the back-end defaults to returning found items for the currently authenticated user.
+ *
+ * @param owner The owner’s unique identifier (Username).
+ * @returns A Promise resolving to an array of FoundItem objects.
+ */
+const getFoundItemsByOwner = (owner?: string): Promise<FoundItem[]> => {
+  return http.get<FoundItem[]>(`lostandfound/founditems/owner${http.toQueryString({ owner })}`);
+};
+
 const lostAndFoundService = {
   getMissingItemReports,
   createMissingItemReport,
@@ -510,6 +526,7 @@ const lostAndFoundService = {
   getMissingItemsCount,
   linkReports,
   unlinkReports,
+  getFoundItemsByOwner,
 };
 
 export default lostAndFoundService;
