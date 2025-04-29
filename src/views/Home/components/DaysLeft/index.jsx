@@ -102,10 +102,17 @@ const DaysLeft = () => {
           name: 'Post-Summer',
           label: 'Fall',
           type: 'Break',
-          start: addDays(termDates.summer?.end, 1),
-          end: addDays(termDates.fall?.start, -1),
+          start:
+            (termDates.fall?.start - termDates.summer?.end) * msToDays > 1
+              ? addDays(termDates.summer?.end, 1)
+              : termDates.summer?.end,
+          end:
+            (termDates.fall?.start - termDates.summer?.end) * msToDays > 1
+              ? addDays(termDates.fall?.start, -1)
+              : termDates.fall?.start,
         },
       };
+
       const termLoop = [
         termValues.fall,
         termValues.winter,
@@ -115,8 +122,8 @@ const DaysLeft = () => {
         termValues.postSummer,
       ];
 
-      let currentTerm = 'Fall';
-      let currentLabel = 'Fall';
+      let currentTerm = '';
+      let currentLabel = '';
       let currentDaysLeft = '';
       let currentProgress = '';
       let currentType = '';
@@ -142,8 +149,8 @@ const DaysLeft = () => {
       a condition to make days singular if there is only 1 day left*/
       const termDialogue =
         currentType === 'Academic'
-          ? `${currentDaysLeft} Day${currentDaysLeft > 1 ? 's' : ''} Remaining in ${currentTerm} Term`
-          : `${currentDaysLeft} Day${currentDaysLeft > 1 ? 's' : ''} Until ${currentLabel} Term`;
+          ? `${currentDaysLeft} Day${currentDaysLeft == 1 ? '' : 's'} Remaining in ${currentTerm} Term`
+          : `${currentDaysLeft} Day${currentDaysLeft == 1 ? '' : 's'} Until ${currentLabel} Term`;
       setTermDialogue(termDialogue);
       setTermProgress(currentProgress);
     }
