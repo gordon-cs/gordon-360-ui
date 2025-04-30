@@ -7,6 +7,8 @@ import {
   Button,
   Typography,
   FormControlLabel,
+  FormControl,
+  InputLabel,
   Checkbox,
   Divider,
   Paper,
@@ -68,9 +70,21 @@ const FoundItemConfirmation = () => {
   const [contactMethod, setContactMethod] = useState('');
   //Tracks if the admin has confirmed contact.
   const [contactConfirmed, setContactConfirmed] = useState(false);
-  const [contactAdditionalNote, setContactAdditionalNote] = useState('');
+  //const [contactAdditionalNote, setContactAdditionalNote] = useState('');
 
   const isMobile = useMediaQuery('(max-width:1000px)');
+
+  // add alongside your other state hooks:
+  const checkedActionResponseTypes = [
+    'Owner will pick up',
+    'Owner does not want',
+    'CheckedActionCustomResponse',
+    'No response from owner',
+  ];
+
+  const [responseType, setResponseType] = useState<string>('');
+  const [customResponseValue, setCustomResponseValue] = useState<string>('');
+  const checkedActionCustomResponseVisible = responseType === 'CheckedActionCustomResponse';
 
   // Load found item details and missing reports.
   useEffect(() => {
@@ -159,10 +173,14 @@ const FoundItemConfirmation = () => {
     const foundID = foundItem.recordID.toString();
 
     // build your contact “response” string
-    const response = contactAdditionalNote
-      ? `Contacted owner via ${contactMethod}. Additional notes: ${contactAdditionalNote}`
-      : `Contacted owner via ${contactMethod}.`;
-
+    let response: string;
+    if (responseType === 'CheckedActionCustomResponse') {
+      response = customResponseValue;
+    } else if (responseType === 'No response from owner') {
+      response = 'No response';
+    } else {
+      response = responseType; // “Owner will pick up” or “Owner does not want”
+    }
     try {
       await lostAndFoundService.linkReports(
         missingID,
@@ -193,7 +211,6 @@ const FoundItemConfirmation = () => {
     } finally {
       // reset your contact form
       setContactMethod('');
-      setContactAdditionalNote('');
     }
   };
 
@@ -750,14 +767,39 @@ const FoundItemConfirmation = () => {
               </Select>
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                fullWidth
-                variant="filled"
-                label="Additional Notes (Optional)"
-                value={contactAdditionalNote}
-                onChange={(e) => setContactAdditionalNote(e.target.value)}
-              />
+              <FormControl fullWidth>
+                <InputLabel>Response</InputLabel>
+                <Select
+                  fullWidth
+                  variant="filled"
+                  label="Response"
+                  value={responseType}
+                  onChange={(e) => setResponseType(e.target.value as string)}
+                >
+                  {checkedActionResponseTypes.map((type) => (
+                    <MenuItem key={type} value={type}>
+                      {type === 'CheckedActionCustomResponse'
+                        ? 'Enter response manually'
+                        : type === 'No response from owner'
+                          ? 'No response'
+                          : type}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Grid>
+            {checkedActionCustomResponseVisible && (
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  variant="filled"
+                  label="Owner’s Response"
+                  name="customOwnerResponse"
+                  value={customResponseValue}
+                  onChange={(ev) => setCustomResponseValue(ev.target.value)}
+                />
+              </Grid>
+            )}
             <Grid item xs={12}>
               <FormControlLabel
                 control={
