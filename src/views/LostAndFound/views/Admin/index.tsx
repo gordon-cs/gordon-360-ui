@@ -5,15 +5,25 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Checkbox,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
+  SelectChangeEvent,
   TextField,
   Stack,
+} from '@mui/material';
+import {
+  Grid,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Link,
   Typography,
 } from '@mui/material';
-import { Grid, Button } from '@mui/material';
 import Header from 'views/LostAndFound/components/Header';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useLocation, useNavigate } from 'react-router';
@@ -27,8 +37,7 @@ import {
   clearUrlParams,
   formatDateString,
 } from 'views/LostAndFound/components/Helpers';
-import userService from 'services/user';
-import { Delete, Person, Storage } from '@mui/icons-material';
+import { Delete, Launch, Person, Storage } from '@mui/icons-material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import SimpleSnackbar from 'components/Snackbar';
 import CircleIcon from '@mui/icons-material/Circle';
@@ -37,6 +46,7 @@ import ContentCopyRoundedIcon from '@mui/icons-material/ContentCopyRounded';
 import { differenceInCalendarDays } from 'date-fns';
 import lostAndFoundService, { MissingItemReport, FoundItem } from 'services/lostAndFound';
 import { useUser } from 'hooks';
+import GordonDialogBox from 'components/GordonDialogBox';
 
 const LostAndFoundAdmin = () => {
   const isAdmin = useAuthGroups(AuthGroup.LostAndFoundAdmin);
@@ -74,7 +84,21 @@ const LostAndFoundAdmin = () => {
   const user = useUser();
   const matchButtonRef = useRef<HTMLButtonElement | null>(null);
   const [noMatchIsClicked, setNoMatchIsClicked] = useState(false);
+  const [isNoMatchModalOpen, setNoMatchModalOpen] = useState(false);
   const [matchFoundIsClicked, setMatchFoundIsClicked] = useState(false);
+  const [recentlyChecked, setRecentlyChecked] = useState(false);
+  const [isMatchModalOpen, setMatchModalOpen] = useState(false);
+  const contactedResponseTypes = [
+    'Owner will pick up',
+    'Owner does not want',
+    'CheckedActionCustomResponse',
+    'No response from owner',
+  ];
+  const [contactMethod, setContactMethod] = useState('');
+  const [response, setResponse] = useState('');
+  const [checkedActionCustomResponseVisible, setCheckedActionCustomResponseVisible] =
+    useState<boolean>(false);
+  const [customCheckedActionResponseValue, setCustomCheckedActionResponseValue] = useState('');
 
   useEffect(() => {
     setPageLoaded(true);
@@ -109,6 +133,16 @@ const LostAndFoundAdmin = () => {
     }
   };
 
+  const handleNoMatchClick = () => {
+    setNoMatchIsClicked(true);
+    handleNoMatchSubmit(missingID);
+    setNoMatchModalOpen(false);
+  };
+
+  const handleNoMatchModalClose = () => {
+    setNoMatchModalOpen(false);
+  };
+
   const handleNoMatchSubmit = async (itemId: string) => {
     if (!noMatchIsClicked) setNoMatchIsClicked(true);
     let requestData = {
@@ -137,8 +171,56 @@ const LostAndFoundAdmin = () => {
       setErrorSnackbarOpen(true);
       console.error('No Match Submit Failed');
     } finally {
+      try {
+        if (
+          status === getUrlParam('status', location, searchParams) &&
+          category === getUrlParam('category', location, searchParams) &&
+          color === getUrlParam('color', location, searchParams) &&
+          keywords === getUrlParam('keywords', location, searchParams)
+        ) {
+          const fetchedMissingReports = await lostAndFoundService.getMissingItemReports(
+            status,
+            category,
+            color,
+            keywords,
+            undefined,
+            pageSize,
+          );
+          setMissingReports(fetchedMissingReports);
+          setLoading(false);
+          setLazyLoading(false);
+        }
+      } catch (error) {
+        console.error('Error fetching missing or found items', error);
+        createSnackbar(`Failed to load missing or found items`, error);
+      }
       setLazyLoading(false);
     }
+  };
+
+  const updateForm = async (name: string, newValue: string) => {
+    if (name === 'contactMethod') {
+      setContactMethod(newValue);
+    } else if (name === 'response') {
+      setResponse(newValue);
+    }
+  };
+
+  const handleMatchDetailsFormChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent,
+  ) => {
+    const { name, value } = e.target;
+    updateForm(name, value);
+  };
+
+  const handleMatchClick = () => {
+    setNoMatchIsClicked(true);
+    handleMatchFoundSubmit(missingID, foundID);
+    setMatchModalOpen(false);
+  };
+
+  const handleMatchModalClose = () => {
+    setMatchModalOpen(false);
   };
 
   const handleMatchFoundSubmit = async (missingID: string, foundID: string) => {
@@ -152,12 +234,24 @@ const LostAndFoundAdmin = () => {
     setLazyLoading(true);
     setFoundLazyLoading(true);
     try {
-      await lostAndFoundService.updateFoundItem(updatedFoundItem, foundID);
-      await lostAndFoundService.updateReportStatus(parseInt(missingID || ''), 'found');
-      await lostAndFoundService.updateFoundReportStatus(foundID, 'found');
+      if (response === 'CheckedActionCustomResponse') {
+        setResponse(customCheckedActionResponseValue);
+      }
+      lostAndFoundService.linkReports(
+        parseInt(missingID || ''),
+        foundID,
+        missingItem?.submitterUsername || '',
+        missingItem?.firstName || '',
+        missingItem?.lastName || '',
+        missingItem?.phone || '',
+        missingItem?.email || '',
+        contactMethod,
+        response,
+      );
       setShowMissingPopUp(false);
       setShowFoundPopUp(false);
       setMatchFoundIsClicked(false);
+      setNoMatchIsClicked(false);
       const fetchedMissingReports = await lostAndFoundService.getMissingItemReports(
         status,
         category,
@@ -190,6 +284,8 @@ const LostAndFoundAdmin = () => {
     const updateFilters = async () => {
       setLazyLoading(true);
       setFoundLazyLoading(true);
+      let today = new Date();
+      let sevenDays = new Date(today.setDate(today.getDate() - 7));
       try {
         if (
           status === getUrlParam('status', location, searchParams) &&
@@ -204,6 +300,7 @@ const LostAndFoundAdmin = () => {
             keywords,
             undefined,
             pageSize,
+            recentlyChecked ? undefined : sevenDays,
           );
           const fetchedFoundReports = await lostAndFoundService.getFoundItems(
             '',
@@ -241,7 +338,7 @@ const LostAndFoundAdmin = () => {
         checkForChanges();
       }, 700);
     }
-  }, [status, category, color, keywords, pageLoaded]);
+  }, [status, category, color, keywords, pageLoaded, recentlyChecked]);
 
   useEffect(() => {
     const updateFilters = () => {
@@ -327,6 +424,10 @@ const LostAndFoundAdmin = () => {
     }
   }, [showMissingPopUp, showFoundPopUp]);
 
+  useEffect(() => {
+    setCheckedActionCustomResponseVisible(response === 'CheckedActionCustomResponse');
+  }, [response]);
+
   const yellowDateThreshold = 7;
   const redDateThreshold = 14;
 
@@ -350,13 +451,17 @@ const LostAndFoundAdmin = () => {
     let today = new Date();
     let twoMonths = new Date(today.setMonth(today.getMonth() - 2));
     console.log(report.status);
-    if (report.status == 'found') {
+    if (report.status === 'found') {
       return 'var(--mui-palette-success-main)';
     } else if (dateCreated < twoMonths) {
       return 'var(--mui-palette-error-main)';
     } else {
       return '#00AEEF';
     }
+  };
+
+  const handleRecentCheckboxClick = () => {
+    recentlyChecked ? setRecentlyChecked(false) : setRecentlyChecked(true);
   };
 
   // Lazy loading helper: load more reports
@@ -391,11 +496,12 @@ const LostAndFoundAdmin = () => {
   // Lazy loading helper: load more reports
   const loadMoreFoundItems = async () => {
     if (foundLazyLoading || !hasMoreFound) return;
-    setFoundLazyLoading(true);
+    //setFoundLazyLoading(true);
     // Use the last report's recordID as the lastId; if none, it remains undefined.
+    const lastId = foundItems.length > 0 ? foundItems[foundItems.length - 1].recordID : undefined;
     try {
       const moreReports = await lostAndFoundService.getFoundItems(
-        '',
+        lastId,
         '',
         status || '',
         color || '',
@@ -495,7 +601,7 @@ const LostAndFoundAdmin = () => {
       color="secondary"
       variant="contained"
       onClick={() => {
-        navigate('founditemdatabase?status=active');
+        navigate('founditemdatabase');
       }}
     >
       <Storage />
@@ -723,17 +829,13 @@ const LostAndFoundAdmin = () => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item className={styles.detailsButton}>
-            <Button
-              color="secondary"
-              variant="contained"
-              className={styles.markButton}
-              onClick={() => {
-                navigate(`missingitemdatabase/${missingID}`);
-              }}
+          <Grid item margin={'2rem'}>
+            <Link
+              href={`lostandfound/lostandfoundadmin/missingitemdatabase/${missingID}`}
+              className={`gc360_text_link`}
             >
-              <b>See Full Details</b>
-            </Button>
+              Go to Full Details <Launch />
+            </Link>
           </Grid>
           <Grid item className={styles.buttonAlign}>
             <Button
@@ -742,7 +844,7 @@ const LostAndFoundAdmin = () => {
               className={styles.markButton}
               disabled={noMatchIsClicked}
               onClick={() => {
-                handleNoMatchSubmit(missingID);
+                setNoMatchModalOpen(true);
               }}
             >
               <b>Mark No Match Found</b>
@@ -820,20 +922,156 @@ const LostAndFoundAdmin = () => {
               </Grid>
             </Grid>
           </Grid>
-          <Grid item className={styles.detailsButton}>
-            <Button
-              color="secondary"
-              variant="contained"
-              className={styles.markButton}
-              onClick={() => {
-                navigate(`founditemdatabase/${foundID}`);
-              }}
+          <Grid item margin={'2rem'}>
+            <Link
+              href={`lostandfound/lostandfoundadmin/founditemdatabase/${foundID}`}
+              className={`gc360_text_link`}
             >
-              <b>See Full Details</b>
-            </Button>
+              Go to Full Details <Launch />
+            </Link>
           </Grid>
         </Grid>
       </>
+    );
+  };
+
+  type NoMatchConfirmationModalProps = {
+    open: boolean;
+    onClose: () => void;
+    onSubmit: () => void;
+  };
+
+  const NoMatchConfirmationModal: React.FC<NoMatchConfirmationModalProps> = ({
+    open,
+    onClose,
+    onSubmit,
+  }) => {
+    return (
+      <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+        <DialogTitle className={styles.modalTitle}>Mark as Checked</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1" align="center">
+            Confirm you could not find any <u>in-stock</u> items matching this one, and mark this
+            report as checked on this date.
+          </Typography>
+        </DialogContent>
+        <DialogActions className={styles.actions}>
+          <Button onClick={onClose} className={styles.cancelButton}>
+            Keep Looking
+          </Button>
+          <Button onClick={onSubmit} className={styles.submitButton}>
+            Confirmed, I didn't find any matching items
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
+
+  type MatchConfirmationModalProps = {
+    open: boolean;
+    onClose: () => void;
+    onSubmit: () => void;
+  };
+
+  const MatchConfirmationModal: React.FC<MatchConfirmationModalProps> = ({
+    open,
+    onClose,
+    onSubmit,
+  }) => {
+    if (!missingItem) return null;
+
+    return (
+      <GordonDialogBox
+        open={open}
+        title="Confirm Match?"
+        buttonName="Link Reports As Found"
+        buttonClicked={onSubmit}
+        cancelButtonName="Cancel"
+        cancelButtonClicked={onClose}
+      >
+        <Typography variant="body1" align="center">
+          Confirm the details of these items match, and you’d like to mark them both as found.
+        </Typography>
+        <br />
+        <Typography variant="body1" align="center">
+          Contact the reporting party and inform them their item has been found.
+        </Typography>
+        <Grid container direction={'row'}>
+          <Grid container direction={'column'} className={styles.popUpBodyLeft} margin={'0.5rem'}>
+            <Grid item>
+              <span className={styles.smallText}>Owner's Name</span>
+              <div className={styles.bolderText}>
+                {missingItem.firstName} {missingItem.lastName}
+              </div>
+            </Grid>
+            <Grid item>
+              <span className={styles.smallText}>Owner's Contact Info:</span>
+              <div className={styles.bolderText}>Email: {missingItem.email}</div>
+              <div className={styles.bolderText}>Phone: {missingItem.phone}</div>
+            </Grid>
+          </Grid>
+          <Grid container direction={'column'} className={styles.popUpBodyRight}>
+            <Grid item xs={6.5}>
+              <Grid item>
+                <span className={styles.smallText}>Owner Contacted:</span>
+                <FormControl fullWidth>
+                  <InputLabel>Contact Method</InputLabel>
+                  <Select
+                    fullWidth
+                    value={contactMethod}
+                    variant="filled"
+                    label="Contact Method"
+                    name="contactMethod"
+                    onChange={handleMatchDetailsFormChange}
+                  >
+                    <MenuItem value={'Email'}>Email</MenuItem>
+                    <MenuItem value={'Phone'}>Phone</MenuItem>
+                  </Select>
+                </FormControl>
+                <Grid item marginTop={2}>
+                  <FormControl fullWidth>
+                    <InputLabel>Response</InputLabel>
+                    <Select
+                      fullWidth
+                      value={response}
+                      variant="filled"
+                      label="Response"
+                      name="response"
+                      onChange={handleMatchDetailsFormChange}
+                    >
+                      {contactedResponseTypes.map((responseType) => (
+                        <MenuItem value={responseType}>
+                          {responseType === 'Owner will pick up'
+                            ? 'Owner will pick up'
+                            : responseType === 'Owner does not want'
+                              ? 'Owner does not want'
+                              : responseType === 'CheckedActionCustomResponse'
+                                ? 'Enter response manually'
+                                : responseType === 'No response from owner'
+                                  ? 'No response'
+                                  : responseType}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                {checkedActionCustomResponseVisible ? (
+                  <Grid item xs={6.5} marginTop={2}>
+                    <TextField
+                      fullWidth
+                      variant="filled"
+                      label={"Owner's Response"}
+                      name="customOwnerResponse"
+                      value={customCheckedActionResponseValue}
+                      onChange={(ev) => setCustomCheckedActionResponseValue(ev.target.value)}
+                    />
+                  </Grid>
+                ) : undefined}
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </GordonDialogBox>
     );
   };
 
@@ -890,22 +1128,6 @@ const LostAndFoundAdmin = () => {
                 </Grid>
                 <Grid item xs={isMobile}>
                   <FormControl size="small" className={styles.formControl} fullWidth>
-                    <InputLabel>Status</InputLabel>
-                    <Select
-                      value={status}
-                      onChange={(e) => setUrlParam('status', e.target.value, setSearchParams)}
-                    >
-                      <MenuItem value="">All</MenuItem>
-                      <MenuItem value="active">Active</MenuItem>
-                      <MenuItem value="expired">Expired</MenuItem>
-                      <MenuItem value="found">Found</MenuItem>
-                      <MenuItem value="deleted">Deleted</MenuItem>
-                      <MenuItem value="PickedUp">PickedUp</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={isMobile}>
-                  <FormControl size="small" className={styles.formControl} fullWidth>
                     <InputLabel>Color</InputLabel>
                     <Select
                       value={color}
@@ -949,6 +1171,8 @@ const LostAndFoundAdmin = () => {
                   </Button>
                 </Grid>
               </Grid>
+              <Checkbox checked={recentlyChecked} onChange={() => handleRecentCheckboxClick()} />
+              See Recently Checked Items
             </CardContent>
           </Card>
         </Grid>
@@ -1068,11 +1292,11 @@ const LostAndFoundAdmin = () => {
             className={styles.titleSecondary}
             title={
               <span>
-                Active{' '}
+                In-Stock{' '}
                 <b>
                   <u>Found</u>
                 </b>{' '}
-                Item Reports
+                Items
               </span>
             }
           >
@@ -1174,7 +1398,7 @@ const LostAndFoundAdmin = () => {
                 ref={matchButtonRef}
                 className={styles.matchButton}
                 onClick={() => {
-                  handleMatchFoundSubmit(missingID, foundID);
+                  setMatchModalOpen(true);
                 }}
                 disabled={matchFoundIsClicked}
                 variant="contained"
@@ -1189,6 +1413,16 @@ const LostAndFoundAdmin = () => {
       ) : (
         <div></div>
       )}
+      <MatchConfirmationModal
+        open={isMatchModalOpen}
+        onClose={handleMatchModalClose}
+        onSubmit={handleMatchClick}
+      />
+      <NoMatchConfirmationModal
+        open={isNoMatchModalOpen}
+        onClose={handleNoMatchModalClose}
+        onSubmit={handleNoMatchClick}
+      />
       <SimpleSnackbar
         open={errorSnackbarOpen}
         onClose={() => {
@@ -1197,6 +1431,7 @@ const LostAndFoundAdmin = () => {
         severity="error"
         text="No Match Submit Failed."
       />
+      ``{' '}
     </>
   );
 };
