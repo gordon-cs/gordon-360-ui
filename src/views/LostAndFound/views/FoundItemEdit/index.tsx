@@ -249,40 +249,34 @@ const FoundItemFormEdit = () => {
   };
 
   const handleFinderClear = () => {
-    // foundItem.finderFirstName = '';
-    // foundItem.finderLastName = '';
-    // foundItem.finderPhone = '';
-    // foundItem.finderEmail = '';
-    // foundItem.finderUsername = '';
+    if (foundItem) {
+      setFoundItem((prevData) => ({
+        ...prevData!,
+        finderFirstName: '',
+        finderLastName: '',
+        finderPhone: '',
+        finderEmail: '',
+        finderUsername: '',
+      }));
+    }
   };
 
   const handleOwnerChange = () => {
     setdisplayOwnerChange(true);
   };
 
-  const handleOwnerClear = () => {};
-
-  // useEffect(() => {
-  //   const clearFinderTextFields = () => {
-  //     foundItem.finderFirstName = '';
-  //     foundItem.finderLastName = '';
-  //     foundItem.finderPhone = '';
-  //     foundItem.finderEmail = '';
-  //     foundItem.finderUsername = '';
-  //   };
-  //   clearFinderTextFields();
-  // }, [isGordonFinder]);
-
-  // useEffect(() => {
-  //   const clearOwnerTextFields = () => {
-  //     foundItem.ownerFirstName = '';
-  //     foundItem.ownerLastName = '';
-  //     foundItem.ownerPhone = '';
-  //     foundItem.ownerEmail = '';
-  //     foundItem.ownerUsername = '';
-  //   };
-  //   clearOwnerTextFields();
-  // }, [isGordonOwner]);
+  const handleOwnerClear = () => {
+    if (foundItem) {
+      setFoundItem((prevData) => ({
+        ...prevData!,
+        ownerFirstName: '',
+        ownerLastName: '',
+        ownerPhone: '',
+        ownerEmail: '',
+        ownerUsername: '',
+      }));
+    }
+  };
 
   /** 5) Save */
   const handleSave = async () => {
