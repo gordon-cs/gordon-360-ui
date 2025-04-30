@@ -46,6 +46,7 @@ const FoundItemConfirmation = () => {
   const [foundItem, setFoundItem] = useState<FoundItem | null>(null);
   const [missingReports, setMissingReports] = useState<MissingItemReport[]>([]);
   const [loading, setLoading] = useState(true);
+  const [missingItem, setItem] = useState<MissingItemReport | null>(null);
 
   // Default filter: show missing reports matching the found item's category.
   const [filterCategory, setFilterCategory] = useState<string>('');
@@ -167,12 +168,12 @@ const FoundItemConfirmation = () => {
       await lostAndFoundService.linkReports(
         missingID,
         foundID,
-        // owner info comes from your foundItem
-        foundItem.finderUsername || 'unknown',
-        foundItem.ownerFirstName || '',
-        foundItem.ownerLastName || '',
-        foundItem.ownerPhone || '',
-        foundItem.ownerEmail || '',
+        // owner info comes from your missingitem
+        missingItem?.submitterUsername || '',
+        missingItem?.firstName || '',
+        missingItem?.lastName || '',
+        missingItem?.phone || '',
+        missingItem?.email || '',
         contactMethod,
         response,
       );
