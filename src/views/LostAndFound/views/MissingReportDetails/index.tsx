@@ -1,4 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
+import { AuthGroup } from 'services/auth';
+import { useAuthGroups } from 'hooks';
 import {
   Card,
   CardContent,
@@ -31,6 +33,8 @@ import { StatusChip } from 'views/LostAndFound/components/StatusChip';
 import { LFCategories } from 'views/LostAndFound/components/Constants';
 
 const MissingItemReportData = () => {
+  const isAdmin = useAuthGroups(AuthGroup.LostAndFoundAdmin);
+  const isDev = useAuthGroups(AuthGroup.LostAndFoundDevelopers);
   const navigate = useNavigate();
   const [username, setUsername] = useState({ AD_Username: '' });
 
@@ -332,12 +336,29 @@ const MissingItemReportData = () => {
   };
 
   const handleNewActionSubmit = async () => {
-    if (!checkedItemNotFound && newActionFormData.action === 'Checked') {
-      await lostAndFoundService.updateReportStatus(parseInt(itemId ? itemId : ''), 'found');
-      setReportUpdated(reportUpdated + 1);
-    }
+    if (typeof checkedActionFormData.foundID !== 'string') return;
 
-    if (isValidForm()) {
+    if (!checkedItemNotFound && newActionFormData.action === 'Checked' && isValidForm()) {
+      try {
+        await lostAndFoundService.linkReports(
+          parseInt(itemId || ''),
+          checkedActionFormData.foundID,
+          item?.submitterUsername || '',
+          item?.firstName || '',
+          item?.lastName || '',
+          item?.phone || '',
+          item?.email || '',
+          checkedActionFormData?.contactMethod || '',
+          checkedActionFormData?.response || '',
+        );
+        closeModal();
+      } catch (error: any) {
+        createSnackbar('Entered Found ID Does Not Exist', 'error');
+        setErrorSnackbarOpen(true);
+      }
+      setReportUpdated(reportUpdated + 1);
+      setActionsUpdated(true);
+    } else if (isValidForm()) {
       // Combine form data into the data format for the backend request
       let requestData = {
         ...newActionFormData,
@@ -941,7 +962,20 @@ const MissingItemReportData = () => {
                           InputProps={{ readOnly: true }}
                         />
                       </Grid>
-
+                      {item.matchingFoundID !== null && (isAdmin || isDev) ? (
+                        <Grid item xs={12}>
+                          <TextField
+                            label="Matching Found Item"
+                            variant="filled"
+                            disabled
+                            fullWidth
+                            value={item.matchingFoundID}
+                            InputProps={{ readOnly: true }}
+                          />
+                        </Grid>
+                      ) : (
+                        <></>
+                      )}
                       {/* Stolen information (if marked stolen) */}
                       {item.stolen ? (
                         <>
@@ -987,7 +1021,7 @@ const MissingItemReportData = () => {
           setErrorSnackbarOpen(false);
         }}
         severity="error"
-        text="All fields must be filled out to create a new action!"
+        text={snackbar.message}
       />
     </>
   );
