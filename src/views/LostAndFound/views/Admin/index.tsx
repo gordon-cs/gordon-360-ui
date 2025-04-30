@@ -1168,6 +1168,37 @@ const LostAndFoundAdmin = () => {
       </Grid>
       <Grid container className={styles.itemsList} spacing={6}>
         <Grid item xs={12} md={6}>
+          <Grid display="flex" alignItems="center">
+            <CircleIcon
+              sx={{
+                color: 'var(--mui-palette-success-main)',
+                fontSize: 10,
+                marginRight: 1,
+              }}
+            />
+            <Typography className={styles.colorKey}>Less than 1 Week</Typography>
+          </Grid>
+          <Grid display="flex" alignItems="center">
+            <CircleIcon
+              sx={{
+                color: 'var(--mui-palette-warning-main)',
+                fontSize: 10,
+                marginRight: 1,
+              }}
+            />
+            <Typography className={styles.colorKey}>1-2 Weeks</Typography>
+          </Grid>
+          <Grid display="flex" alignItems="center">
+            <CircleIcon
+              sx={{
+                color: 'var(--mui-palette-error-main)',
+                fontSize: 10,
+                marginRight: 1,
+              }}
+            />
+            <Typography className={styles.colorKey}>2+ Weeks</Typography>
+          </Grid>
+          {/* "var(--mui-palette-success-main)" | "var(--mui-palette-warning-main)" | "var(--mui-palette-error-main)" */}
           <CardHeader
             className={styles.titleSecondary}
             title={
@@ -1277,6 +1308,36 @@ const LostAndFoundAdmin = () => {
         </Grid>
 
         <Grid item xs={12} md={6}>
+          <Grid display="flex" alignItems="center">
+            <CircleIcon
+              sx={{
+                color: 'var(--mui-palette-success-main)',
+                fontSize: 10,
+                marginRight: 1,
+              }}
+            />
+            <Typography className={styles.colorKey}>Pending Pickup</Typography>
+          </Grid>
+          <Grid display="flex" alignItems="center">
+            <CircleIcon
+              sx={{
+                color: 'var(--mui-palette-error-main)',
+                fontSize: 10,
+                marginRight: 1,
+              }}
+            />
+            <Typography className={styles.colorKey}>Pending Cleanout</Typography>
+          </Grid>
+          <Grid display="flex" alignItems="center">
+            <CircleIcon
+              sx={{
+                color: '#00AEEF',
+                fontSize: 10,
+                marginRight: 1,
+              }}
+            />
+            <Typography className={styles.colorKey}>Other In-stock</Typography>
+          </Grid>
           <CardHeader
             className={styles.titleSecondary}
             title={
