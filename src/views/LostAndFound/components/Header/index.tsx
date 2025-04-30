@@ -80,7 +80,6 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
   const isKiosk = useAuthGroups(AuthGroup.LostAndFoundKiosk);
   const isDev = useAuthGroups(AuthGroup.LostAndFoundDevelopers);
 
-  console.log('iskiosktrue', isKiosk);
   // For the dropdown menu
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -118,7 +117,8 @@ const Header: React.FC<HeaderProps> = ({ children }) => {
 
         {/* If user is kiosk, admin, or dev, and not currently on an admin path, show button */}
         {(isAdmin || isDev || isKiosk) &&
-          !pathnames.find((x) => x.toLowerCase() === 'lostandfoundadmin') && (
+          !pathnames.find((x) => x.toLowerCase() === 'lostandfoundadmin') &&
+          !pathnames.find((x) => x.toLowerCase() === 'kiosk') && (
             <Grid item xs={5} className={styles.buttonContainer}>
               {isKiosk && !isAdmin && !isDev ? (
                 // If kiosk-only, navigate directly to kiosk page
