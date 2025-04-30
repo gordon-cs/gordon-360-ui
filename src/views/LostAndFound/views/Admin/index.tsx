@@ -1088,6 +1088,108 @@ const LostAndFoundAdmin = () => {
         <Grid item xs={12} md={11} marginTop={5}>
           <CardHeader title={'Comparison View'} className={styles.title}></CardHeader>
         </Grid>
+        <Grid container xs={12} md={12} justifyContent={'center'}>
+          <Card style={{ width: '91.8%' }}>
+            <Grid container direction={'row'}>
+              <Grid item xs={12} md={6} marginTop={2} marginBottom={2} className={styles.keyBox}>
+                <Typography className={styles.colorKeyTitle}>Reports Last Checked Date</Typography>
+                <Grid
+                  container
+                  justifyContent={'flex-end'}
+                  alignItems="center"
+                  marginRight={'10rem'}
+                >
+                  <Typography className={styles.colorKey}>Less than 1 Week</Typography>
+                  <CircleIcon
+                    sx={{
+                      color: 'var(--mui-palette-success-main)',
+                      fontSize: 10,
+                      marginLeft: 1,
+                    }}
+                  />
+                </Grid>
+                <Grid
+                  container
+                  justifyContent={'flex-end'}
+                  alignItems="center"
+                  marginRight={'10rem'}
+                >
+                  <Typography className={styles.colorKey}>1-2 Weeks</Typography>
+                  <CircleIcon
+                    sx={{
+                      color: 'var(--mui-palette-warning-main)',
+                      fontSize: 10,
+                      marginLeft: 1,
+                    }}
+                  />
+                </Grid>
+                <Grid
+                  container
+                  justifyContent={'flex-end'}
+                  alignItems="center"
+                  marginRight={'10rem'}
+                >
+                  <Typography className={styles.colorKey}>2+ Weeks</Typography>
+                  <CircleIcon
+                    sx={{
+                      color: 'var(--mui-palette-error-main)',
+                      fontSize: 10,
+                      marginLeft: 1,
+                    }}
+                  />
+                </Grid>
+              </Grid>
+              <Grid item xs={12} md={6} marginTop={2} marginBottom={2} className={styles.keyBox}>
+                <Typography className={styles.colorKeyTitle}>In-stock Items Status</Typography>
+                <Grid
+                  container
+                  justifyContent={'flex-end'}
+                  alignItems="center"
+                  marginRight={'10rem'}
+                >
+                  <Typography className={styles.colorKey}>Pending Pickup</Typography>
+                  <CircleIcon
+                    sx={{
+                      color: 'var(--mui-palette-success-main)',
+                      fontSize: 10,
+                      marginLeft: 1,
+                    }}
+                  />
+                </Grid>
+                <Grid
+                  container
+                  justifyContent={'flex-end'}
+                  alignItems="center"
+                  marginRight={'10rem'}
+                >
+                  <Typography className={styles.colorKey}>Pending Cleanout</Typography>
+                  <CircleIcon
+                    sx={{
+                      color: 'var(--mui-palette-error-main)',
+                      fontSize: 10,
+                      marginLeft: 1,
+                    }}
+                  />
+                </Grid>
+                <Grid
+                  container
+                  justifyContent={'flex-end'}
+                  alignItems="center"
+                  marginRight={'10rem'}
+                >
+                  <Typography className={styles.colorKey}>Other In-stock</Typography>
+                  <CircleIcon
+                    sx={{
+                      color: '#00AEEF',
+                      fontSize: 10,
+                      marginLeft: 1,
+                    }}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+          </Card>
+        </Grid>
         <Grid item xs={11} marginTop={3}>
           <Card className={styles.filterCardPosition}>
             <CardHeader
@@ -1168,37 +1270,6 @@ const LostAndFoundAdmin = () => {
       </Grid>
       <Grid container className={styles.itemsList} spacing={6}>
         <Grid item xs={12} md={6}>
-          <Grid display="flex" alignItems="center">
-            <CircleIcon
-              sx={{
-                color: 'var(--mui-palette-success-main)',
-                fontSize: 10,
-                marginRight: 1,
-              }}
-            />
-            <Typography className={styles.colorKey}>Less than 1 Week</Typography>
-          </Grid>
-          <Grid display="flex" alignItems="center">
-            <CircleIcon
-              sx={{
-                color: 'var(--mui-palette-warning-main)',
-                fontSize: 10,
-                marginRight: 1,
-              }}
-            />
-            <Typography className={styles.colorKey}>1-2 Weeks</Typography>
-          </Grid>
-          <Grid display="flex" alignItems="center">
-            <CircleIcon
-              sx={{
-                color: 'var(--mui-palette-error-main)',
-                fontSize: 10,
-                marginRight: 1,
-              }}
-            />
-            <Typography className={styles.colorKey}>2+ Weeks</Typography>
-          </Grid>
-          {/* "var(--mui-palette-success-main)" | "var(--mui-palette-warning-main)" | "var(--mui-palette-error-main)" */}
           <CardHeader
             className={styles.titleSecondary}
             title={
@@ -1308,36 +1379,6 @@ const LostAndFoundAdmin = () => {
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <Grid display="flex" alignItems="center">
-            <CircleIcon
-              sx={{
-                color: 'var(--mui-palette-success-main)',
-                fontSize: 10,
-                marginRight: 1,
-              }}
-            />
-            <Typography className={styles.colorKey}>Pending Pickup</Typography>
-          </Grid>
-          <Grid display="flex" alignItems="center">
-            <CircleIcon
-              sx={{
-                color: 'var(--mui-palette-error-main)',
-                fontSize: 10,
-                marginRight: 1,
-              }}
-            />
-            <Typography className={styles.colorKey}>Pending Cleanout</Typography>
-          </Grid>
-          <Grid display="flex" alignItems="center">
-            <CircleIcon
-              sx={{
-                color: '#00AEEF',
-                fontSize: 10,
-                marginRight: 1,
-              }}
-            />
-            <Typography className={styles.colorKey}>Other In-stock</Typography>
-          </Grid>
           <CardHeader
             className={styles.titleSecondary}
             title={
