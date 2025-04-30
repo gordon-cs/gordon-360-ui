@@ -54,6 +54,7 @@ export type InitAdminAction = Omit<MissingAdminAction, 'ID'>;
  * @param keywords keywords to filter by
  * @param lastId the ID of the last fetched report (for pagination)
  * @param pageSize number of items to fetch (defaults to 25)
+ * @param lastCheckedDate the date to filter checked admin actions by
  * @returns MissingItemReport[] array of missing item reports.
  */
 const getMissingItemReports = (
@@ -63,6 +64,7 @@ const getMissingItemReports = (
   keywords?: string,
   lastId?: number,
   pageSize?: number,
+  lastCheckedDate?: Date,
 ): Promise<MissingItemReport[]> => {
   const query = {
     status: reportStatus,
@@ -71,6 +73,7 @@ const getMissingItemReports = (
     keywords,
     lastId,
     pageSize,
+    lastCheckedDate: lastCheckedDate ? lastCheckedDate.toISOString() : undefined,
   };
 
   return http.get<MissingItemReport[]>(`lostandfound/missingitems${http.toQueryString(query)}`);
