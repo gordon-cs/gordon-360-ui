@@ -219,11 +219,11 @@ const FoundItemFormEdit = () => {
     if (selectedPerson && foundItem) {
       setFoundItem((prevData) => ({
         ...prevData!,
-        ownerFirstName: selectedPerson.FirstName,
-        ownerLastName: selectedPerson.LastName,
+        ownerFirstName: undefined,
+        ownerLastName: undefined,
         ownerUsername: selectedPerson.UserName,
-        ownerPhone: '',
-        ownerEmail: '',
+        ownerPhone: undefined,
+        ownerEmail: undefined,
         forOwnerGuest: false,
       }));
     }
@@ -234,11 +234,11 @@ const FoundItemFormEdit = () => {
     if (selectedPerson && foundItem) {
       setFoundItem((prevData) => ({
         ...prevData!,
-        finderFirstName: selectedPerson.FirstName,
-        finderLastName: selectedPerson.LastName,
+        finderFirstName: undefined,
+        finderLastName: undefined,
         finderUsername: selectedPerson.UserName,
-        finderPhone: '',
-        finderEmail: '',
+        finderPhone: undefined,
+        finderEmail: undefined,
         forFinderGuest: false,
       }));
     }
@@ -246,34 +246,42 @@ const FoundItemFormEdit = () => {
 
   const handleFinderChange = () => {
     setDisplayFinderChange(true);
+    setFoundItem((prevData) => ({
+      ...prevData!,
+      finderUsername: undefined,
+    }));
   };
 
   const handleFinderClear = () => {
     if (foundItem) {
       setFoundItem((prevData) => ({
         ...prevData!,
-        finderFirstName: '',
-        finderLastName: '',
-        finderPhone: '',
-        finderEmail: '',
-        finderUsername: '',
+        finderFirstName: undefined,
+        finderLastName: undefined,
+        finderPhone: undefined,
+        finderEmail: undefined,
+        finderUsername: undefined,
       }));
     }
   };
 
   const handleOwnerChange = () => {
     setdisplayOwnerChange(true);
+    setFoundItem((prevData) => ({
+      ...prevData!,
+      ownerUsername: undefined,
+    }));
   };
 
   const handleOwnerClear = () => {
     if (foundItem) {
       setFoundItem((prevData) => ({
         ...prevData!,
-        ownerFirstName: '',
-        ownerLastName: '',
-        ownerPhone: '',
-        ownerEmail: '',
-        ownerUsername: '',
+        ownerFirstName: undefined,
+        ownerLastName: undefined,
+        ownerPhone: undefined,
+        ownerEmail: undefined,
+        ownerUsername: undefined,
       }));
     }
   };
@@ -285,6 +293,7 @@ const FoundItemFormEdit = () => {
     if (!validateForm()) return;
 
     try {
+      console.log(foundItem);
       await lostAndFoundService.updateFoundItem(foundItem, foundItem.recordID);
       if (location.state && (location.state as any).fromConfirmation) {
         navigate(`/lostandfound/lostandfoundadmin/founditemform/${foundItem?.recordID}`);
@@ -744,21 +753,31 @@ const FoundItemFormEdit = () => {
 
                 {!displayFinderChange && (
                   <>
-                    <Typography>
-                      <strong>Username:</strong> {foundItem.finderUsername}
-                    </Typography>
-                    <Typography>
-                      <strong>First Name:</strong> {foundItem.finderFirstName}
-                    </Typography>
-                    <Typography>
-                      <strong>Last Name:</strong> {foundItem.finderLastName}
-                    </Typography>
-                    <Typography>
-                      <strong>Phone Number:</strong> {foundItem.finderPhone}
-                    </Typography>
-                    <Typography>
-                      <strong>Email:</strong> {foundItem.finderEmail}
-                    </Typography>
+                    {foundItem.finderUsername ? (
+                      <Typography>
+                        <strong>Username:</strong> {foundItem.finderUsername}
+                      </Typography>
+                    ) : undefined}
+                    {foundItem.finderFirstName ? (
+                      <Typography>
+                        <strong>First Name:</strong> {foundItem.finderFirstName}
+                      </Typography>
+                    ) : undefined}
+                    {foundItem.finderLastName ? (
+                      <Typography>
+                        <strong>Last Name:</strong> {foundItem.finderLastName}
+                      </Typography>
+                    ) : undefined}
+                    {foundItem.finderPhone ? (
+                      <Typography>
+                        <strong>Phone Number:</strong> {foundItem.finderPhone}
+                      </Typography>
+                    ) : undefined}
+                    {foundItem.finderEmail ? (
+                      <Typography>
+                        <strong>Email:</strong> {foundItem.finderEmail}
+                      </Typography>
+                    ) : undefined}
                   </>
                 )}
 
@@ -811,7 +830,7 @@ const FoundItemFormEdit = () => {
                           <TextField
                             label="Finder Phone"
                             fullWidth
-                            name="finderPhoneNumber"
+                            name="finderPhone"
                             value={foundItem.finderPhone}
                             onChange={handleChange}
                           />
@@ -861,14 +880,34 @@ const FoundItemFormEdit = () => {
 
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
-                    <Button
-                      variant="contained"
-                      color="info"
-                      onClick={handleFinderChange}
-                      disabled={readOnly}
-                    >
-                      Change
-                    </Button>
+                    <>
+                      {(foundItem.finderUsername === null ||
+                        foundItem.finderUsername === undefined) &&
+                      (foundItem.finderFirstName === null ||
+                        foundItem.finderFirstName === undefined) &&
+                      (foundItem.finderLastName === null ||
+                        foundItem.finderLastName === undefined) &&
+                      (foundItem.finderPhone === null || foundItem.finderPhone === undefined) &&
+                      (foundItem.finderEmail === null || foundItem.finderEmail === undefined) ? (
+                        <Button
+                          variant="contained"
+                          color="info"
+                          onClick={handleFinderChange}
+                          disabled={readOnly}
+                        >
+                          Add Finder
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="contained"
+                          color="info"
+                          onClick={handleFinderChange}
+                          disabled={readOnly}
+                        >
+                          Change
+                        </Button>
+                      )}
+                    </>
                   </Grid>
                   <Grid item xs={6}>
                     <Button
@@ -889,21 +928,31 @@ const FoundItemFormEdit = () => {
 
                 {!displayOwnerChange && (
                   <>
-                    <Typography>
-                      <strong>Username:</strong> {foundItem.ownerUsername}
-                    </Typography>
-                    <Typography>
-                      <strong>First Name:</strong> {foundItem.ownerFirstName}
-                    </Typography>
-                    <Typography>
-                      <strong>Last Name:</strong> {foundItem.ownerLastName}
-                    </Typography>
-                    <Typography>
-                      <strong>Phone Number:</strong> {foundItem.ownerPhone}
-                    </Typography>
-                    <Typography>
-                      <strong>Email:</strong> {foundItem.ownerEmail}
-                    </Typography>
+                    {foundItem.ownerUsername ? (
+                      <Typography>
+                        <strong>Username:</strong> {foundItem.ownerUsername}
+                      </Typography>
+                    ) : undefined}
+                    {foundItem.ownerFirstName ? (
+                      <Typography>
+                        <strong>First Name:</strong> {foundItem.ownerFirstName}
+                      </Typography>
+                    ) : undefined}
+                    {foundItem.ownerLastName ? (
+                      <Typography>
+                        <strong>Last Name:</strong> {foundItem.ownerLastName}
+                      </Typography>
+                    ) : undefined}
+                    {foundItem.ownerPhone ? (
+                      <Typography>
+                        <strong>Phone Number:</strong> {foundItem.ownerPhone}
+                      </Typography>
+                    ) : undefined}
+                    {foundItem.ownerEmail ? (
+                      <Typography>
+                        <strong>Email:</strong> {foundItem.ownerEmail}
+                      </Typography>
+                    ) : undefined}
                   </>
                 )}
 
@@ -954,7 +1003,7 @@ const FoundItemFormEdit = () => {
                           <TextField
                             label="Owner Phone"
                             fullWidth
-                            name="ownerPhoneNumber"
+                            name="ownerPhone"
                             value={foundItem.ownerPhone}
                             onChange={handleChange}
                           />
@@ -975,14 +1024,33 @@ const FoundItemFormEdit = () => {
 
                 <Grid container spacing={2}>
                   <Grid item xs={6}>
-                    <Button
-                      variant="contained"
-                      color="info"
-                      onClick={handleOwnerChange}
-                      disabled={readOnly}
-                    >
-                      Change
-                    </Button>
+                    <>
+                      {(foundItem.ownerUsername === null ||
+                        foundItem.ownerUsername === undefined) &&
+                      (foundItem.ownerFirstName === null ||
+                        foundItem.ownerFirstName === undefined) &&
+                      (foundItem.ownerLastName === null || foundItem.ownerLastName === undefined) &&
+                      (foundItem.ownerPhone === null || foundItem.ownerPhone === undefined) &&
+                      (foundItem.ownerEmail === null || foundItem.ownerEmail === undefined) ? (
+                        <Button
+                          variant="contained"
+                          color="info"
+                          onClick={handleOwnerChange}
+                          disabled={readOnly}
+                        >
+                          Add Owner
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="contained"
+                          color="info"
+                          onClick={handleOwnerChange}
+                          disabled={readOnly}
+                        >
+                          Change
+                        </Button>
+                      )}
+                    </>
                   </Grid>
                   <Grid item xs={6}>
                     <Button
