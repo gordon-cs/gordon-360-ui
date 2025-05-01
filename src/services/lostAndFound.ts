@@ -394,7 +394,7 @@ const linkReports = async (
     throw error;
   }
   try {
-    http.put<void>(`founditems/${foundID}/linkReport/${missingID}`);
+    http.put<void>(`lostandfound/founditems/${foundID}/linkReport/${missingID}`);
 
     updateFoundReportStatus(foundID, 'found');
     updateReportStatus(missingID, 'found');
@@ -445,7 +445,7 @@ const linkReports = async (
  */
 const unlinkReports = (missingID: number, foundID: string) => {
   http.put<void>(`lostandfound/missingitems/${missingID}/linkItem/`);
-  http.put<void>(`founditems/${foundID}/linkReport/`);
+  http.put<void>(`lostandfound/founditems/${foundID}/linkReport/`);
   updateFoundReportStatus(foundID, 'active');
   updateReportStatus(missingID, 'active');
 
