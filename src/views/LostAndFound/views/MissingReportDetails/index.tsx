@@ -303,6 +303,20 @@ const MissingItemReportData = () => {
     updateForm(name, value);
   };
 
+  // call the service and then refresh both the item and its admin‐actions
+  const handleUnlink = async () => {
+    if (!item?.matchingFoundID) return;
+    try {
+      await lostAndFoundService.unlinkReports(item.recordID, item.matchingFoundID);
+      createSnackbar('Report unlinked successfully', 'success');
+      setReportUpdated(reportUpdated + 1);
+      setActionsUpdated(true);
+    } catch (error) {
+      console.error('Error unlinking reports:', error);
+      createSnackbar('Failed to unlink report', 'error');
+    }
+  };
+
   // Check if the form fields are valid.
   const isValidForm = () => {
     if (newActionFormData.action === 'Checked') {
@@ -962,6 +976,28 @@ const MissingItemReportData = () => {
                           InputProps={{ readOnly: true }}
                         />
                       </Grid>
+                      {item.matchingFoundID !== null && (isAdmin || isDev) && (
+                        <Grid item xs={12} container spacing={2}>
+                          <Grid item>
+                            <Button variant="outlined" color="warning" onClick={handleUnlink}>
+                              Unlink Report
+                            </Button>
+                          </Grid>
+                          <Grid item>
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              onClick={() =>
+                                navigate(
+                                  `/lostandfound/lostandfoundadmin/founditemdatabase/${item.matchingFoundID}`,
+                                )
+                              }
+                            >
+                              View Matched Report
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      )}
                       {item.matchingFoundID !== null && (isAdmin || isDev) ? (
                         <Grid item xs={12}>
                           <TextField
