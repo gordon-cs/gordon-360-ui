@@ -374,7 +374,7 @@ const LostAndFoundAdmin = () => {
       };
     };
 
-    const centerX = 150;
+    const centerX = 200;
     const centerY = 50;
     const radius = 80;
 
@@ -396,49 +396,52 @@ const LostAndFoundAdmin = () => {
     };
 
     return (
-      <div style={{ textAlign: 'center' }}>
-        <svg transform="rotate(180)">
-          <path
-            d={describeArc(centerX, centerY, radius, start1, start2)}
-            fill="none"
-            stroke="var(--mui-palette-success-main)"
-            strokeWidth="30"
-          />
-          <path
-            d={describeArc(centerX, centerY, radius, start2, start3)}
-            fill="none"
-            stroke="var(--mui-palette-warning-main)"
-            strokeWidth="30"
-          />
-          <path
-            d={describeArc(centerX, centerY, radius, start3, 0)}
-            fill="none"
-            stroke="var(--mui-palette-error-main)"
-            strokeWidth="30"
-          />
-        </svg>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <div style={{ textAlign: 'center' }}>
+          <svg transform="rotate(180)">
+            <path
+              d={describeArc(centerX, centerY, radius, start1, start2)}
+              fill="none"
+              stroke="var(--mui-palette-success-main)"
+              strokeWidth="30"
+            />
+            <path
+              d={describeArc(centerX, centerY, radius, start2, start3)}
+              fill="none"
+              stroke="var(--mui-palette-warning-main)"
+              strokeWidth="30"
+            />
+            <path
+              d={describeArc(centerX, centerY, radius, start3, 0)}
+              fill="none"
+              stroke="var(--mui-palette-error-main)"
+              strokeWidth="30"
+            />
+          </svg>
 
-        <div style={{ marginTop: '-5rem' }}>
-          <div>
-            <span>Total: {totalReportsCount}</span>
+          <div style={{ marginTop: '-5rem', marginRight: '6rem' }}>
+            <div>
+              <span style={{ fontWeight: 'bold' }}>Total: {totalReportsCount}</span>
+            </div>
           </div>
-          <br></br>
-          <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <div style={{ textAlign: 'left', marginBottom: '0.5rem' }}>
             <div style={{ alignItems: 'flex-start' }}>
               <span style={{ color: 'var(--mui-palette-success-main)' }}>●</span> &lt; 1 Week:{' '}
-              {lessThanWeekCount}
+              <span style={{ color: 'var(--mui-palette-success-main)' }}>{lessThanWeekCount}</span>
             </div>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+          <div style={{ textAlign: 'left', marginBottom: '0.5rem' }}>
             <div style={{ alignItems: 'flex-start' }}>
               <span style={{ color: 'var(--mui-palette-warning-main)' }}>●</span> 1–2 Weeks:{' '}
-              {oneToTwoWeeksCount}
+              <span style={{ color: 'var(--mui-palette-warning-main)' }}>{oneToTwoWeeksCount}</span>
             </div>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+          <div style={{ textAlign: 'left' }}>
             <div style={{ alignItems: 'flex-start' }}>
               <span style={{ color: 'var(--mui-palette-error-main)' }}>●</span> 2+ Weeks:{' '}
-              {twoPlusWeeksCount}
+              <span style={{ color: 'var(--mui-palette-error-main)' }}>{twoPlusWeeksCount}</span>
             </div>
           </div>
         </div>
