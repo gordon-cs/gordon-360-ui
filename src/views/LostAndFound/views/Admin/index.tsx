@@ -415,7 +415,6 @@ const LostAndFoundAdmin = () => {
 
     const angle1 = (lessThanWeekCount / totalReportsCount) * 180;
     const angle2 = (oneToTwoWeeksCount / totalReportsCount) * 180;
-    const angle3 = 180 - angle1 - angle2;
 
     const start1 = 180;
     const start2 = start1 - angle1;
@@ -457,7 +456,6 @@ const LostAndFoundAdmin = () => {
 
     const angleR1 = (pendingPickupCount / totalFoundItemsCount) * 180;
     const angleR2 = (pendingCleanOutCount / totalFoundItemsCount) * 180;
-    const angleR3 = 180 - angleR1 - angleR2;
 
     const startR1 = 180;
     const startR2 = startR1 - angleR1;
@@ -475,7 +473,7 @@ const LostAndFoundAdmin = () => {
             width: '100%',
           }}
         >
-          <div style={{ textAlign: 'center' }}>
+          <div style={{ textAlign: 'center', marginRight: '-15rem' }}>
             <svg transform="rotate(180)">
               <path
                 d={describeArc(centerX, centerY, radius, start1, start2)}
@@ -528,7 +526,7 @@ const LostAndFoundAdmin = () => {
             </div>
           </div>
 
-          <div style={{ textAlign: 'center' }}>
+          <div style={{ textAlign: 'center', marginRight: '-15rem' }}>
             <svg transform="rotate(180)">
               <path
                 d={describeArc(centerX, centerY, radius, startR1, startR2)}
