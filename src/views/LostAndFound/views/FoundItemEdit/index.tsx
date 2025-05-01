@@ -352,6 +352,28 @@ const FoundItemFormEdit = () => {
     setActionDetailsModalOpen(false);
   };
 
+  // Unlink handler for Found side
+  const handleUnlinkFound = async () => {
+    if (!foundItem?.matchingMissingID) return;
+
+    const missingID = parseInt(foundItem.matchingMissingID, 10);
+    const foundID = foundItem.recordID.toString();
+
+    try {
+      await lostAndFoundService.unlinkReports(missingID, foundID);
+      createSnackbar('Report unlinked successfully', 'success');
+
+      // refresh
+      const refreshed = await lostAndFoundService.getFoundItem(itemId!);
+      setFoundItem(refreshed);
+      setOriginalItemData(refreshed);
+      setActionsUpdated(true);
+    } catch (err) {
+      console.error('Error unlinking reports:', err);
+      createSnackbar('Failed to unlink report', 'error');
+    }
+  };
+
   const handleNewActionSubmit = async () => {
     if (!foundItem) return;
     if (readOnly) return;
@@ -742,7 +764,7 @@ const FoundItemFormEdit = () => {
                 onError={(newError) => setDateError(newError)}
                 disabled={readOnly}
               />
-
+              
               {/* Finder Info */}
               <Grid item margin={1}>
                 <Typography variant="h4">Finder</Typography>
@@ -1061,6 +1083,39 @@ const FoundItemFormEdit = () => {
                 </Grid>
               </Grid>
 
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={foundItem.finderWants || false}
+                    onChange={handleChange}
+                    name="finderWants"
+                    disabled={readOnly}
+                  />
+                }
+                label="Finder Wants Item if not claimed"
+                sx={{ marginBottom: '0.5rem' }}
+              />
+              {foundItem.matchingMissingID !== null && !readOnly && (
+                <Grid item xs={12} container spacing={2} sx={{ mb: 2 }}>
+                  <Grid item>
+                    <Button variant="outlined" color="warning" onClick={handleUnlinkFound}>
+                      Unlink Report
+                    </Button>
+                  </Grid>
+                  <Grid item>
+                    <Button
+                      variant="contained"
+                      onClick={() =>
+                        navigate(
+                          `/lostandfound/lostandfoundadmin/missingitemdatabase/${foundItem.matchingMissingID}`,
+                        )
+                      }
+                    >
+                      View Matched Report
+                    </Button>
+                  </Grid>
+                </Grid>
+              )}
               <div style={{ marginBottom: '1rem' }}>
                 <InputLabel>Storage Location</InputLabel>
                 <Select
