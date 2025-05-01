@@ -764,7 +764,7 @@ const FoundItemFormEdit = () => {
                 onError={(newError) => setDateError(newError)}
                 disabled={readOnly}
               />
-              
+
               {/* Finder Info */}
               <Grid item margin={1}>
                 <Typography variant="h4">Finder</Typography>
@@ -1095,6 +1095,26 @@ const FoundItemFormEdit = () => {
                 label="Finder Wants Item if not claimed"
                 sx={{ marginBottom: '0.5rem' }}
               />
+              <div style={{ marginBottom: '1rem' }}>
+                <InputLabel>Storage Location</InputLabel>
+                <Select
+                  variant="filled"
+                  name="storageLocation"
+                  value={foundItem.storageLocation || ''}
+                  onChange={(e) =>
+                    setFoundItem((prev) =>
+                      prev ? { ...prev, storageLocation: e.target.value as string } : null,
+                    )
+                  }
+                  fullWidth
+                  disabled={readOnly}
+                >
+                  <MenuItem value="">(None)</MenuItem>
+                  <MenuItem value="Office Desk">Office Desk</MenuItem>
+                  <MenuItem value="Police Office">Police Office</MenuItem>
+                  <MenuItem value="Closet A">Closet A</MenuItem>
+                </Select>
+              </div>
               {foundItem.matchingMissingID !== null && !readOnly && (
                 <Grid item xs={12} container spacing={2} sx={{ mb: 2 }}>
                   <Grid item>
@@ -1116,26 +1136,6 @@ const FoundItemFormEdit = () => {
                   </Grid>
                 </Grid>
               )}
-              <div style={{ marginBottom: '1rem' }}>
-                <InputLabel>Storage Location</InputLabel>
-                <Select
-                  variant="filled"
-                  name="storageLocation"
-                  value={foundItem.storageLocation || ''}
-                  onChange={(e) =>
-                    setFoundItem((prev) =>
-                      prev ? { ...prev, storageLocation: e.target.value as string } : null,
-                    )
-                  }
-                  fullWidth
-                  disabled={readOnly}
-                >
-                  <MenuItem value="">(None)</MenuItem>
-                  <MenuItem value="Office Desk">Office Desk</MenuItem>
-                  <MenuItem value="Police Office">Police Office</MenuItem>
-                  <MenuItem value="Closet A">Closet A</MenuItem>
-                </Select>
-              </div>
 
               <div style={{ marginBottom: '1rem' }}>
                 {foundItem.matchingMissingID !== null ? (
