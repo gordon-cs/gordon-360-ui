@@ -1425,60 +1425,6 @@ const LostAndFoundAdmin = () => {
         <Grid container xs={12} md={12} justifyContent={'center'}>
           <Card style={{ width: '91.8%' }}>
             <SemiCircleDashboard />
-            {/* <Grid container direction={'row'}>
-              <Grid item xs={12} md={6} marginTop={2} marginBottom={2} className={styles.keyBox}>
-                <Typography className={styles.colorKeyTitle}>Reports Last Checked Date</Typography>
-                <SemiCircleDashboard />
-              </Grid>
-              <Grid item xs={12} md={6} marginTop={2} marginBottom={2} className={styles.keyBox}>
-                <Typography className={styles.colorKeyTitle}>In-stock Items Status</Typography>
-                <Grid
-                  container
-                  justifyContent={'flex-end'}
-                  alignItems="center"
-                  marginRight={'10rem'}
-                >
-                  <Typography className={styles.colorKey}>Pending Pickup</Typography>
-                  <CircleIcon
-                    sx={{
-                      color: 'var(--mui-palette-success-main)',
-                      fontSize: 10,
-                      marginLeft: 1,
-                    }}
-                  />
-                </Grid>
-                <Grid
-                  container
-                  justifyContent={'flex-end'}
-                  alignItems="center"
-                  marginRight={'10rem'}
-                >
-                  <Typography className={styles.colorKey}>Pending Cleanout</Typography>
-                  <CircleIcon
-                    sx={{
-                      color: 'var(--mui-palette-error-main)',
-                      fontSize: 10,
-                      marginLeft: 1,
-                    }}
-                  />
-                </Grid>
-                <Grid
-                  container
-                  justifyContent={'flex-end'}
-                  alignItems="center"
-                  marginRight={'10rem'}
-                >
-                  <Typography className={styles.colorKey}>Other In-stock</Typography>
-                  <CircleIcon
-                    sx={{
-                      color: '#00AEEF',
-                      fontSize: 10,
-                      marginLeft: 1,
-                    }}
-                  />
-                </Grid>
-              </Grid>
-            </Grid> */}
           </Card>
         </Grid>
         <Grid item xs={11} marginTop={3}>
