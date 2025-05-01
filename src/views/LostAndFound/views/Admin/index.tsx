@@ -284,6 +284,9 @@ const LostAndFoundAdmin = () => {
     let today = new Date();
     let sevenDays = new Date(today.setDate(today.getDate() - 7));
     let fourteenDays = new Date(today.setDate(today.getDate() - 14));
+    let twoMonths = new Date(today.setMonth(today.getMonth() - 2));
+    let foundString = 'found';
+
     try {
       const greaterThanWeekReports = await lostAndFoundService.getMissingItemReports(
         undefined,
@@ -318,11 +321,40 @@ const LostAndFoundAdmin = () => {
       const oneToTwoWeeksCount = greaterThanWeekReports.length - twoPlusWeeksCount;
       const lessThanWeekCount = totalReportsCount - oneToTwoWeeksCount - twoPlusWeeksCount;
 
+      const totalFoundItems = await lostAndFoundService.getFoundItems('', '', '', '', '', '');
+
+      const foundPendingPickupItems = await lostAndFoundService.getFoundItems(
+        '',
+        '',
+        foundString,
+        '',
+        '',
+        '',
+      );
+
+      const foundPendingCleanOutItems = await lostAndFoundService.getFoundItems(
+        '',
+        twoMonths.toDateString(),
+        '',
+        '',
+        '',
+        '',
+      );
+
+      const totalFoundItemsCount = totalFoundItems.length;
+      const pendingPickupCount = foundPendingPickupItems.length;
+      const pendingCleanOutCount = foundPendingCleanOutItems.length;
+      const otherInStockCount = totalFoundItemsCount - pendingCleanOutCount - pendingPickupCount;
+
       return {
         totalReportsCount,
         lessThanWeekCount,
         oneToTwoWeeksCount,
         twoPlusWeeksCount,
+        totalFoundItemsCount,
+        pendingPickupCount,
+        pendingCleanOutCount,
+        otherInStockCount,
       };
     } catch (error) {
       console.error('Error fetching missing or found items', error);
@@ -336,6 +368,10 @@ const LostAndFoundAdmin = () => {
     lessThanWeekCount: number;
     oneToTwoWeeksCount: number;
     twoPlusWeeksCount: number;
+    totalFoundItemsCount: number;
+    pendingPickupCount: number;
+    pendingCleanOutCount: number;
+    otherInStockCount: number;
   };
 
   // Generates a semi-circle dashboard component for checked dates
@@ -351,7 +387,16 @@ const LostAndFoundAdmin = () => {
 
     if (!data) return <div>Loading...</div>;
 
-    const { totalReportsCount, lessThanWeekCount, oneToTwoWeeksCount, twoPlusWeeksCount } = data;
+    const {
+      totalReportsCount,
+      lessThanWeekCount,
+      oneToTwoWeeksCount,
+      twoPlusWeeksCount,
+      totalFoundItemsCount,
+      pendingPickupCount,
+      pendingCleanOutCount,
+      otherInStockCount,
+    } = data;
 
     const angle1 = (lessThanWeekCount / totalReportsCount) * 180;
     const angle2 = (oneToTwoWeeksCount / totalReportsCount) * 180;
@@ -395,53 +440,163 @@ const LostAndFoundAdmin = () => {
       );
     };
 
-    return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <div style={{ textAlign: 'center' }}>
-          <svg transform="rotate(180)">
-            <path
-              d={describeArc(centerX, centerY, radius, start1, start2)}
-              fill="none"
-              stroke="var(--mui-palette-success-main)"
-              strokeWidth="30"
-            />
-            <path
-              d={describeArc(centerX, centerY, radius, start2, start3)}
-              fill="none"
-              stroke="var(--mui-palette-warning-main)"
-              strokeWidth="30"
-            />
-            <path
-              d={describeArc(centerX, centerY, radius, start3, 0)}
-              fill="none"
-              stroke="var(--mui-palette-error-main)"
-              strokeWidth="30"
-            />
-          </svg>
+    const angleR1 = (pendingPickupCount / totalFoundItemsCount) * 180;
+    const angleR2 = (pendingCleanOutCount / totalFoundItemsCount) * 180;
+    const angleR3 = 180 - angleR1 - angleR2;
 
-          <div style={{ marginTop: '-5rem', marginRight: '6rem' }}>
-            <div>
-              <span style={{ fontWeight: 'bold' }}>Total: {totalReportsCount}</span>
+    const startR1 = 180;
+    const startR2 = startR1 - angleR1;
+    const startR3 = startR2 - angleR2;
+
+    const polarToCartesianR = (
+      centerX: number,
+      centerY: number,
+      radius: number,
+      angleInDegrees: number,
+    ) => {
+      const angleInRadians = (angleInDegrees * Math.PI) / 180.0;
+      return {
+        x: centerX + radius * Math.cos(angleInRadians),
+        y: centerY + radius * Math.sin(angleInRadians),
+      };
+    };
+
+    const centerXR = 200;
+    const centerYR = 50;
+    const radiusR = 80;
+
+    const describeArcR = (
+      x: number,
+      y: number,
+      radius: number,
+      startAngle: number,
+      endAngle: number,
+    ) => {
+      const start = polarToCartesianR(x, y, radius, startAngle);
+      const end = polarToCartesianR(x, y, radius, endAngle);
+
+      const largeArcFlag = Math.abs(endAngle - startAngle) > 180 ? '1' : '0';
+
+      return ['M', start.x, start.y, 'A', radius, radius, 0, largeArcFlag, 0, end.x, end.y].join(
+        ' ',
+      );
+    };
+
+    return (
+      <div
+        style={{ marginRight: '5rem', marginLeft: '5rem', marginTop: '2rem', marginBottom: '2rem' }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            width: '100%',
+          }}
+        >
+          <div style={{ textAlign: 'center' }}>
+            <svg transform="rotate(180)">
+              <path
+                d={describeArc(centerX, centerY, radius, start1, start2)}
+                fill="none"
+                stroke="var(--mui-palette-success-main)"
+                strokeWidth="30"
+              />
+              <path
+                d={describeArc(centerX, centerY, radius, start2, start3)}
+                fill="none"
+                stroke="var(--mui-palette-warning-main)"
+                strokeWidth="30"
+              />
+              <path
+                d={describeArc(centerX, centerY, radius, start3, 0)}
+                fill="none"
+                stroke="var(--mui-palette-error-main)"
+                strokeWidth="30"
+              />
+            </svg>
+
+            <div style={{ marginTop: '-5rem', marginRight: '6rem' }}>
+              <div>
+                <span style={{ fontWeight: 'bold' }}>Total: {totalReportsCount}</span>
+              </div>
             </div>
           </div>
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <div style={{ textAlign: 'left', marginBottom: '0.5rem' }}>
-            <div style={{ alignItems: 'flex-start' }}>
-              <span style={{ color: 'var(--mui-palette-success-main)' }}>●</span> &lt; 1 Week:{' '}
-              <span style={{ color: 'var(--mui-palette-success-main)' }}>{lessThanWeekCount}</span>
+          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'start' }}>
+            <div style={{ textAlign: 'left', marginBottom: '0.5rem' }}>
+              <div style={{ alignItems: 'flex-start' }}>
+                <span style={{ color: 'var(--mui-palette-success-main)' }}>●</span> &lt; 1 Week:{' '}
+                <span style={{ color: 'var(--mui-palette-success-main)' }}>
+                  {lessThanWeekCount}
+                </span>
+              </div>
+            </div>
+            <div style={{ textAlign: 'left', marginBottom: '0.5rem' }}>
+              <div style={{ alignItems: 'flex-start' }}>
+                <span style={{ color: 'var(--mui-palette-warning-main)' }}>●</span> 1–2 Weeks:{' '}
+                <span style={{ color: 'var(--mui-palette-warning-main)' }}>
+                  {oneToTwoWeeksCount}
+                </span>
+              </div>
+            </div>
+            <div style={{ textAlign: 'left' }}>
+              <div style={{ alignItems: 'flex-start' }}>
+                <span style={{ color: 'var(--mui-palette-error-main)' }}>●</span> 2+ Weeks:{' '}
+                <span style={{ color: 'var(--mui-palette-error-main)' }}>{twoPlusWeeksCount}</span>
+              </div>
             </div>
           </div>
-          <div style={{ textAlign: 'left', marginBottom: '0.5rem' }}>
-            <div style={{ alignItems: 'flex-start' }}>
-              <span style={{ color: 'var(--mui-palette-warning-main)' }}>●</span> 1–2 Weeks:{' '}
-              <span style={{ color: 'var(--mui-palette-warning-main)' }}>{oneToTwoWeeksCount}</span>
+
+          <div style={{ textAlign: 'center' }}>
+            <svg transform="rotate(180)">
+              <path
+                d={describeArcR(centerXR, centerYR, radiusR, startR1, startR2)}
+                fill="none"
+                stroke="var(--mui-palette-success-main)"
+                strokeWidth="30"
+              />
+              <path
+                d={describeArcR(centerXR, centerYR, radiusR, startR2, startR3)}
+                fill="none"
+                stroke="var(--mui-palette-error-main)"
+                strokeWidth="30"
+              />
+              <path
+                d={describeArc(centerXR, centerYR, radiusR, startR3, 0)}
+                fill="none"
+                stroke="#00AEEF"
+                strokeWidth="30"
+              />
+            </svg>
+
+            <div style={{ marginTop: '-5rem', marginRight: '6rem' }}>
+              <div>
+                <span style={{ fontWeight: 'bold' }}>Total: {totalFoundItemsCount}</span>
+              </div>
             </div>
           </div>
-          <div style={{ textAlign: 'left' }}>
-            <div style={{ alignItems: 'flex-start' }}>
-              <span style={{ color: 'var(--mui-palette-error-main)' }}>●</span> 2+ Weeks:{' '}
-              <span style={{ color: 'var(--mui-palette-error-main)' }}>{twoPlusWeeksCount}</span>
+          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'start' }}>
+            <div style={{ textAlign: 'left', marginBottom: '0.5rem' }}>
+              <div style={{ alignItems: 'flex-start' }}>
+                <span style={{ color: 'var(--mui-palette-success-main)' }}>●</span> Pending Pickup:{' '}
+                <span style={{ color: 'var(--mui-palette-success-main)' }}>
+                  {pendingPickupCount}
+                </span>
+              </div>
+            </div>
+            <div style={{ textAlign: 'left', marginBottom: '0.5rem' }}>
+              <div style={{ alignItems: 'flex-start' }}>
+                <span style={{ color: 'var(--mui-palette-error-main)' }}>●</span> Pending Cleanout:{' '}
+                <span style={{ color: 'var(--mui-palette-error-main)' }}>
+                  {pendingCleanOutCount}
+                </span>
+              </div>
+            </div>
+            <div style={{ textAlign: 'left' }}>
+              <div style={{ alignItems: 'flex-start' }}>
+                <span style={{ color: '#00AEEF' }}>●</span> Other In-stock:{' '}
+                <span style={{ color: '#00AEEF' }}>{otherInStockCount}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -1269,7 +1424,8 @@ const LostAndFoundAdmin = () => {
         </Grid>
         <Grid container xs={12} md={12} justifyContent={'center'}>
           <Card style={{ width: '91.8%' }}>
-            <Grid container direction={'row'}>
+            <SemiCircleDashboard />
+            {/* <Grid container direction={'row'}>
               <Grid item xs={12} md={6} marginTop={2} marginBottom={2} className={styles.keyBox}>
                 <Typography className={styles.colorKeyTitle}>Reports Last Checked Date</Typography>
                 <SemiCircleDashboard />
@@ -1322,7 +1478,7 @@ const LostAndFoundAdmin = () => {
                   />
                 </Grid>
               </Grid>
-            </Grid>
+            </Grid> */}
           </Card>
         </Grid>
         <Grid item xs={11} marginTop={3}>
