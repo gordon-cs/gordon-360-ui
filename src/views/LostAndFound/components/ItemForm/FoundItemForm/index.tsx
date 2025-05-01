@@ -202,7 +202,14 @@ const FoundItemForm = ({ formType }: { formType: string }) => {
 
   const handlePickup = async () => {
     try {
-      await lostAndFoundService.updateFoundReportStatus(formData.recordID, 'PickedUp');
+      await lostAndFoundService.updateFoundReportStatus(formData.recordID, 'pickedUp');
+      const foundItem = await lostAndFoundService.getFoundItem(formData.recordID);
+      if (foundItem.matchingMissingID !== undefined) {
+        await lostAndFoundService.updateReportStatus(
+          parseInt(foundItem.matchingMissingID || ''),
+          'pickedup',
+        );
+      }
       setIsPickedUp(true);
     } catch (error) {
       console.error('Error updating found item status:', error);

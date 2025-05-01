@@ -271,13 +271,12 @@ const ItemForm = ({ formType }: { formType: string }) => {
   };
 
   const handlePickup = async () => {
-    const requestData = {
-      ...formData,
-      status: 'PickedUp', // Change status to 'pickup'
-    };
-
     try {
-      await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemId || ''));
+      await lostAndFoundService.updateReportStatus(parseInt(itemId || ''), 'pickedup');
+      const missingItem = await lostAndFoundService.getMissingItemReport(parseInt(itemId || ''));
+      if (missingItem.matchingFoundID !== undefined) {
+        await lostAndFoundService.updateFoundReportStatus(missingItem.matchingFoundID, 'pickedup');
+      }
       setIsPickedUp(true);
       //navigate('/lostandfound');
     } catch (error) {
