@@ -307,6 +307,12 @@ const FoundItemFormEdit = () => {
     if (!foundItem) return;
     try {
       await lostAndFoundService.updateFoundReportStatus(foundItem.recordID, 'pickedup');
+      if (foundItem.matchingMissingID !== undefined) {
+        await lostAndFoundService.updateReportStatus(
+          parseInt(foundItem.matchingMissingID),
+          'pickedup',
+        );
+      }
       navigate('/lostandfound');
     } catch (err) {
       console.error(err);
