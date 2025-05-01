@@ -2,6 +2,7 @@ import styles from './LostAndFoundAdmin.module.css';
 import { AuthGroup } from 'services/auth';
 import { useAuthGroups } from 'hooks';
 import {
+  Box,
   Card,
   CardContent,
   CardHeader,
@@ -1480,8 +1481,6 @@ const LostAndFoundAdmin = () => {
                   </Button>
                 </Grid>
               </Grid>
-              <Checkbox checked={recentlyChecked} onChange={() => handleRecentCheckboxClick()} />
-              See Recently Checked Items
             </CardContent>
           </Card>
         </Grid>
@@ -1498,6 +1497,18 @@ const LostAndFoundAdmin = () => {
                 </b>{' '}
                 Item Reports
               </span>
+            }
+            action={
+              <>
+                <Checkbox
+                  checked={recentlyChecked}
+                  onChange={handleRecentCheckboxClick}
+                  size="small"
+                />
+                <span>
+                  Show <b className={styles.recentlyChecked}> Recently </b> Checked
+                </span>
+              </>
             }
           ></CardHeader>
           {showMissingPopUp ? (
