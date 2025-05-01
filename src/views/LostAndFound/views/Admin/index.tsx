@@ -1172,8 +1172,6 @@ const LostAndFoundAdmin = () => {
                   </Button>
                 </Grid>
               </Grid>
-              <Checkbox checked={recentlyChecked} onChange={() => handleRecentCheckboxClick()} />
-              See Recently Checked Items
             </CardContent>
           </Card>
         </Grid>
