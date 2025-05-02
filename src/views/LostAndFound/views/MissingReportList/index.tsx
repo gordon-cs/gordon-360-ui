@@ -176,7 +176,6 @@ const MissingItemList = () => {
             '',
             '',
           );
-          console.log('Total missing items:', totalResult);
 
           const filteredResult = await lostAndFoundService.getMissingItemsCount(
             username,
