@@ -2,7 +2,6 @@ import styles from './LostAndFoundAdmin.module.css';
 import { AuthGroup } from 'services/auth';
 import { useAuthGroups } from 'hooks';
 import {
-  Box,
   Card,
   CardContent,
   CardHeader,
@@ -11,7 +10,6 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  SelectChangeEvent,
   TextField,
   Stack,
 } from '@mui/material';
@@ -202,21 +200,6 @@ const LostAndFoundAdmin = () => {
     }
   };
 
-  const updateForm = async (name: string, newValue: string) => {
-    if (name === 'contactMethod') {
-      setContactMethod(newValue);
-    } else if (name === 'response') {
-      setResponse(newValue);
-    }
-  };
-
-  const handleMatchDetailsFormChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent,
-  ) => {
-    const { name, value } = e.target;
-    updateForm(name, value);
-  };
-
   const handleMatchClick = () => {
     setNoMatchIsClicked(true);
     handleMatchFoundSubmit(missingID, foundID);
@@ -230,11 +213,6 @@ const LostAndFoundAdmin = () => {
   const handleMatchFoundSubmit = async (missingID: string, foundID: string) => {
     if (!foundItem) return;
     if (!matchFoundIsClicked) setMatchFoundIsClicked(true);
-    const updatedFoundItem = {
-      ...foundItem,
-      matchingMissingID: missingID,
-      status: 'found',
-    };
     setLazyLoading(true);
     setFoundLazyLoading(true);
     try {
@@ -1272,114 +1250,6 @@ const LostAndFoundAdmin = () => {
     );
   };
 
-  type MatchConfirmationModalProps = {
-    open: boolean;
-    onClose: () => void;
-    onSubmit: () => void;
-  };
-
-  const MatchConfirmationModal: React.FC<MatchConfirmationModalProps> = ({
-    open,
-    onClose,
-    onSubmit,
-  }) => {
-    if (!missingItem) return null;
-
-    return (
-      <GordonDialogBox
-        open={open}
-        title="Confirm Match?"
-        buttonName="Link Reports As Found"
-        buttonClicked={onSubmit}
-        cancelButtonName="Cancel"
-        cancelButtonClicked={onClose}
-      >
-        <Typography variant="body1" align="center">
-          Confirm the details of these items match, and you’d like to mark them both as found.
-        </Typography>
-        <br />
-        <Typography variant="body1" align="center">
-          Contact the reporting party and inform them their item has been found.
-        </Typography>
-        <Grid container direction={'row'}>
-          <Grid container direction={'column'} className={styles.popUpBodyLeft} margin={'0.5rem'}>
-            <Grid item>
-              <span className={styles.smallText}>Owner's Name</span>
-              <div className={styles.bolderText}>
-                {missingItem.firstName} {missingItem.lastName}
-              </div>
-            </Grid>
-            <Grid item>
-              <span className={styles.smallText}>Owner's Contact Info:</span>
-              <div className={styles.bolderText}>Email: {missingItem.email}</div>
-              <div className={styles.bolderText}>Phone: {missingItem.phone}</div>
-            </Grid>
-          </Grid>
-          <Grid container direction={'column'} className={styles.popUpBodyRight}>
-            <Grid item xs={6.5}>
-              <Grid item>
-                <span className={styles.smallText}>Owner Contacted:</span>
-                <FormControl fullWidth>
-                  <InputLabel>Contact Method</InputLabel>
-                  <Select
-                    fullWidth
-                    value={contactMethod}
-                    variant="filled"
-                    label="Contact Method"
-                    name="contactMethod"
-                    onChange={handleMatchDetailsFormChange}
-                  >
-                    <MenuItem value={'Email'}>Email</MenuItem>
-                    <MenuItem value={'Phone'}>Phone</MenuItem>
-                  </Select>
-                </FormControl>
-                <Grid item marginTop={2}>
-                  <FormControl fullWidth>
-                    <InputLabel>Response</InputLabel>
-                    <Select
-                      fullWidth
-                      value={response}
-                      variant="filled"
-                      label="Response"
-                      name="response"
-                      onChange={handleMatchDetailsFormChange}
-                    >
-                      {contactedResponseTypes.map((responseType) => (
-                        <MenuItem value={responseType}>
-                          {responseType === 'Owner will pick up'
-                            ? 'Owner will pick up'
-                            : responseType === 'Owner does not want'
-                              ? 'Owner does not want'
-                              : responseType === 'CheckedActionCustomResponse'
-                                ? 'Enter response manually'
-                                : responseType === 'No response from owner'
-                                  ? 'No response'
-                                  : responseType}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                {checkedActionCustomResponseVisible ? (
-                  <Grid item xs={6.5} marginTop={2}>
-                    <TextField
-                      fullWidth
-                      variant="filled"
-                      label={"Owner's Response"}
-                      name="customOwnerResponse"
-                      value={customCheckedActionResponseValue}
-                      onChange={(ev) => setCustomCheckedActionResponseValue(ev.target.value)}
-                    />
-                  </Grid>
-                ) : undefined}
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </GordonDialogBox>
-    );
-  };
-
   return (
     <>
       <Header />
@@ -1733,11 +1603,92 @@ const LostAndFoundAdmin = () => {
       ) : (
         <div></div>
       )}
-      <MatchConfirmationModal
+      {/* Dialog based off of FoundItemConfirm Mtatch Modal */}
+      <GordonDialogBox
         open={isMatchModalOpen}
-        onClose={handleMatchModalClose}
-        onSubmit={handleMatchClick}
-      />
+        title="Confirm Match?"
+        buttonName="Link Reports As Found"
+        buttonClicked={handleMatchClick}
+        cancelButtonName="Cancel"
+        cancelButtonClicked={handleMatchModalClose}
+        fullWidth
+        maxWidth="sm"
+      >
+        <Typography variant="body1" align="center">
+          Confirm the details of these items match, and you’d like to mark them both as found.
+        </Typography>
+        <br />
+        <Typography variant="body1" align="center">
+          Contact the reporting party and inform them their item has been found.
+        </Typography>
+        <Grid container direction={'row'}>
+          <Grid container direction={'column'} className={styles.popUpBodyLeft} margin={'0.5rem'}>
+            <Grid item>
+              <span className={styles.smallText}>Owner's Name</span>
+              <div className={styles.bolderText}>
+                {missingItem?.firstName} {missingItem?.lastName}
+              </div>
+            </Grid>
+            <Grid item>
+              <span className={styles.smallText}>Owner's Contact Info:</span>
+              <div className={styles.bolderText}>Email: {missingItem?.email}</div>
+              <div className={styles.bolderText}>Phone: {missingItem?.phone}</div>
+            </Grid>
+          </Grid>
+          <Grid item xs={12} sx={{ mt: 2 }} marginBottom={'0.5rem'}>
+            <Typography variant="body2" marginBottom={'0.5rem'}>
+              How did you contact the owner?
+            </Typography>
+            <FormControl fullWidth>
+              <InputLabel>Contact Method</InputLabel>
+              <Select
+                fullWidth
+                value={contactMethod}
+                variant="filled"
+                label="Contact Method"
+                onChange={(e) => setContactMethod(e.target.value)}
+              >
+                <MenuItem value="Email">Email</MenuItem>
+                <MenuItem value="Phone">Phone</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl fullWidth>
+              <InputLabel>Response</InputLabel>
+              <Select
+                fullWidth
+                variant="filled"
+                label="Response"
+                value={response}
+                onChange={(e) => setResponse(e.target.value as string)}
+              >
+                {contactedResponseTypes.map((type) => (
+                  <MenuItem key={type} value={type}>
+                    {type === 'CheckedActionCustomResponse'
+                      ? 'Enter response manually'
+                      : type === 'No response from owner'
+                        ? 'No response'
+                        : type}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          {checkedActionCustomResponseVisible && (
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                variant="filled"
+                label="Owner’s Response"
+                name="customOwnerResponse"
+                value={customCheckedActionResponseValue}
+                onChange={(ev) => setCustomCheckedActionResponseValue(ev.target.value)}
+              />
+            </Grid>
+          )}
+        </Grid>
+      </GordonDialogBox>
       <NoMatchConfirmationModal
         open={isNoMatchModalOpen}
         onClose={handleNoMatchModalClose}
