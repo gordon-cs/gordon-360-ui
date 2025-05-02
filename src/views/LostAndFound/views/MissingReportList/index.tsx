@@ -184,7 +184,6 @@ const MissingItemList = () => {
             category,
             keywords,
           );
-          console.log('Filtered missing items:', filteredResult);
 
           setTotalCount(totalResult);
           setFilteredCount(filteredResult);
