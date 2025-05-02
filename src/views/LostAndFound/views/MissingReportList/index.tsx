@@ -167,35 +167,36 @@ const MissingItemList = () => {
   useEffect(() => {
     const fetchCounts = async () => {
       try {
-        // For total count, we send an empty status, color, category, and keywords.
-        const totalResult = await lostAndFoundService.getMissingItemsCount(
-          username,
-          '', 
-          '',
-          '',
-          ''
-        );
-        console.log("Total missing items:", totalResult);
-  
-        const filteredResult = await lostAndFoundService.getMissingItemsCount(
-          username,
-          status,
-          color,
-          category,
-          keywords
-        );
-        console.log("Filtered missing items:", filteredResult);
-  
-        setTotalCount(totalResult);
-        setFilteredCount(filteredResult);
+        if (reports) {
+          // For total count, we send an empty status, color, category, and keywords.
+          const totalResult = await lostAndFoundService.getMissingItemsCount(
+            username,
+            '',
+            '',
+            '',
+            '',
+          );
+          console.log('Total missing items:', totalResult);
+
+          const filteredResult = await lostAndFoundService.getMissingItemsCount(
+            username,
+            status,
+            color,
+            category,
+            keywords,
+          );
+          console.log('Filtered missing items:', filteredResult);
+
+          setTotalCount(totalResult);
+          setFilteredCount(filteredResult);
+        }
       } catch (error) {
         console.error('Failed to fetch missing items counts', error);
       }
     };
     fetchCounts();
-  }, [status, color, category, keywords, username]);
+  }, [status, color, category, keywords, username, reports]);
 
-  
   // Lazy loading helper: load more reports
   const loadMoreReports = async () => {
     if (lazyLoading || !hasMore) return;
@@ -354,14 +355,14 @@ const MissingItemList = () => {
                   </Button>
                 </Grid>
               </Grid>
-               {/* Count Display */}
-            <Typography
-              variant="body2"
-              className={styles.countText}
-              style={{ marginTop: '0.5rem', textAlign: 'right' }}
-            >
-              Showing {filteredCount} / {totalCount} missing items
-            </Typography>
+              {/* Count Display */}
+              <Typography
+                variant="body2"
+                className={styles.countText}
+                style={{ marginTop: '0.5rem', textAlign: 'right' }}
+              >
+                Showing {filteredCount} / {totalCount} missing items
+              </Typography>
             </CardContent>
           </Card>
         </Grid>
