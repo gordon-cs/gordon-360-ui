@@ -298,7 +298,7 @@ const LostAndFoundAdmin = () => {
 
     try {
       const greaterThanWeekReports = await lostAndFoundService.getMissingItemReports(
-        undefined,
+        'active',
         undefined,
         undefined,
         undefined,
@@ -307,7 +307,7 @@ const LostAndFoundAdmin = () => {
         sevenDays,
       );
       const greaterThanTwoWeeksReports = await lostAndFoundService.getMissingItemReports(
-        undefined,
+        'active',
         undefined,
         undefined,
         undefined,
@@ -317,7 +317,7 @@ const LostAndFoundAdmin = () => {
       );
       const totalReports = await lostAndFoundService.getMissingItemsCount(
         username,
-        undefined,
+        'active',
         undefined,
         undefined,
         undefined,
@@ -1491,7 +1491,7 @@ const LostAndFoundAdmin = () => {
             className={styles.titleSecondary}
             title={
               <span>
-                Pending{' '}
+                Active{' '}
                 <b>
                   <u>Lost</u>
                 </b>{' '}
