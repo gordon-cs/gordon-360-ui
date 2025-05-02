@@ -305,3 +305,20 @@
 .recentlyChecked {
   color: var(--mui-palette-success-main);
 }
+
+.colorKeyTitle {
+  color: var(--mui-palette-secondary-main);
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+
+.colorKey {
+  color: var(--mui-palette-neutral-contrastText);
+  justify-content: flex-start;
+}
+
+.keyBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
