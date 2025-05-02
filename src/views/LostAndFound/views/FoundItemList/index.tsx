@@ -164,7 +164,6 @@ const FoundItemList = () => {
             tagID,
             keywords,
           );
-          console.log('counts fetched, setting', status);
           // Extract numeric counts from the returned objects.
           setTotalCount(totalResult);
           setFilteredCount(filteredResult);
