@@ -144,8 +144,8 @@
   background-color: var(--mui-palette-neutral-100);
   color: var(--mui-palette-neutral-contrastText);
   border-radius: 5px;
-  height: 24rem;
-  width: 40rem;
+  min-height: 24rem;
+  max-height: 24rem;
   margin-bottom: 3rem;
 }
 
@@ -255,4 +255,70 @@
   100% {
     background-position: 0%;
   }
+}
+
+.modalTitle {
+  background-color: var(--mui-palette-primary-main);
+  color: var(--mui-palette-primary-contrastText);
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.notice {
+  margin-top: 1rem;
+  text-align: center;
+  font-weight: 500;
+  font-size: 1rem;
+  color: var(--mui-palette-secondary-main);
+  @media (max-width: 600px) {
+    font-size: 0.9rem; // Adjust for smaller screens
+  }
+}
+
+.cancelButton {
+  background-color: var(--mui-palette-error-light);
+  color: var(--mui-palette-primary-contrastText);
+  font-weight: bold;
+
+  &:hover {
+    background-color: var(--mui-palette-error-main);
+  }
+}
+
+.submitButton {
+  background-color: var(--mui-palette-secondary-main);
+  color: var(--mui-palette-primary-contrastText);
+  font-weight: bold;
+
+  &:hover {
+    background-color: var(--mui-palette-secondary-dark);
+  }
+}
+
+.recentlyChecked {
+  color: var(--mui-palette-success-main);
+}
+
+.colorKeyTitle {
+  color: var(--mui-palette-secondary-main);
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+
+.colorKey {
+  color: var(--mui-palette-neutral-contrastText);
+  justify-content: flex-start;
+}
+
+.keyBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

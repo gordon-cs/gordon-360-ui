@@ -13,10 +13,9 @@ import {
   Typography,
   Chip,
 } from '@mui/material';
-import styles from './ItemForm.module.css';
-import lostAndFoundService, { MissingItemReport } from 'services/lostAndFound';
+import styles from './FoundItemForm.module.css';
+import lostAndFoundService, { FoundItem } from 'services/lostAndFound';
 import userService from 'services/user';
-import ReportStolenModal from 'views/LostAndFound/views/MissingReportCreate/components/reportStolen';
 import CreateConfirmReport from 'views/LostAndFound/views/MissingReportCreate/components/confirmReport';
 import EditConfirmReport from 'views/LostAndFound/views/MissingReportEdit/components/confirmReport';
 import GordonSnackbar from 'components/Snackbar';
@@ -28,14 +27,40 @@ import { DatePicker, DateValidationError, LocalizationProvider } from '@mui/x-da
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 
+interface FoundItemFormData {
+  recordID: string;
+  category: string;
+  colors: string[];
+  brand: string;
+  description: string;
+  locationFound: string;
+  dateFound: string;
+  dateCreated: string;
+  submitterUsername: string;
+  storageLocation: string;
+  finderWants: boolean;
+  finderUsername?: string;
+  finderFirstName?: string;
+  finderLastName?: string;
+  finderPhone?: string;
+  finderEmail?: string;
+  ownerUsername?: string;
+  ownerFirstName?: string;
+  ownerLastName?: string;
+  ownerPhone?: string;
+  ownerEmail?: string;
+  status: string;
+  isFoundItem?: boolean;
+}
+
 const pageHeader = (formType: string) => {
-  if (formType == 'create') {
+  if (formType === 'create') {
     return (
       <>
         <CardHeader
           title={
             <b>
-              Report a <u>Lost</u> Item
+              Report a <u>Found</u> Item
             </b>
           }
           titleTypographyProps={{ align: 'center' }}
@@ -45,30 +70,27 @@ const pageHeader = (formType: string) => {
           <InfoOutlined />
           <Grid container item rowGap={1}>
             <Grid item xs={12}>
-              <Typography variant="body1">Gordon Police manages campus Lost & Found</Typography>
+              <Typography variant="body1">Gordon Police manages campus Lost &amp; Found</Typography>
             </Grid>
             <Grid item xs={12}>
               <Typography variant="body2">
-                Police staff will view reports, and you will be notified if your item is found.
+                This page is for creating a Found Item report.
               </Typography>
             </Grid>
           </Grid>
         </div>
       </>
     );
-  } else if (formType == 'edit') {
-    return (
-      <>
-        <CardHeader title="Edit Missing Item" className="gc360_header" />
-      </>
-    );
+  } else if (formType === 'edit') {
+    return <CardHeader title="Edit Found Item" className="gc360_header" />;
   }
 };
 
-const ItemForm = ({ formType }: { formType: string }) => {
+const FoundItemForm = ({ formType }: { formType: string }) => {
   const navigate = useNavigate();
-  const { itemId } = useParams<{ itemId: string }>();
+  const { id } = useParams<{ id: string }>(); // Found item ID from URL
   const [loading, setLoading] = useState<boolean>(true);
+  const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
 
   const createSnackbar = useCallback((message, severity) => {
     setSnackbar({ message, severity, open: true });
@@ -79,163 +101,186 @@ const ItemForm = ({ formType }: { formType: string }) => {
     lastName: '',
     emailAddr: '',
     phoneNumber: '',
-    AD_Username: '', // Include AD_Username for submitterUsername
+    AD_Username: '',
+    ID: '',
   });
 
-  const [formData, setFormData] = useState({
-    recordID: 0,
+  const [formData, setFormData] = useState<FoundItemFormData>({
+    recordID: '',
     category: '',
-    colors: [] as string[],
+    colors: [],
     brand: '',
     description: '',
-    locationLost: '',
-    stolen: false,
-    stolenDescription: '',
-    dateLost: '',
+    locationFound: '',
+    dateFound: '',
     dateCreated: '',
     submitterUsername: '',
-    forGuest: false,
+    storageLocation: '',
+    finderWants: false,
+    finderUsername: '',
+    finderFirstName: '',
+    finderLastName: '',
+    finderPhone: '',
+    finderEmail: '',
+    ownerUsername: '',
+    ownerFirstName: '',
+    ownerLastName: '',
+    ownerPhone: '',
+    ownerEmail: '',
     status: 'active',
+    isFoundItem: false,
   });
 
-  const [originalFormData, setOriginalFormData] = useState({
-    recordID: 0,
-    category: '',
-    colors: [] as string[],
-    brand: '',
-    description: '',
-    locationLost: '',
-    stolen: false,
-    stolenDescription: '',
-    dateLost: '',
-    dateCreated: '',
-    submitterUsername: '',
-    forGuest: false,
-    status: 'active',
-  });
-
-  const [isStolenModalOpen, setStolenModalOpen] = useState(false);
+  const [originalFormData, setOriginalFormData] = useState<FoundItemFormData>({ ...formData });
   const [isPickedUp, setIsPickedUp] = useState(false);
   const [validationErrors, setValidationErrors] = useState<{ [key: string]: string }>({});
   const [dateError, setDateError] = useState<DateValidationError | null>(null);
-  const requiredFields = ['category', 'description', 'locationLost'];
-  const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
-  const [newActionFormData] = useState({ action: '', actionNote: '' });
+  const requiredFields = ['category', 'description', 'locationFound', 'dateFound'];
   const [disableSubmit, setDisableSubmit] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const isEditable = formData.status === 'active';
+  const isEditable = formData.status.toLowerCase() === 'active' && !formData.isFoundItem;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
-
-    if (name === 'stolen') {
-      if (checked) {
-        // If the stolen checkbox is checked, open the modal
-        setStolenModalOpen(true);
-        setFormData((prevData) => ({
-          ...prevData,
-          [name]: checked,
-        }));
-      } else {
-        // If the stolen checkbox is unchecked, set stolen to false but do not clear stolenDescription
-        setFormData((prevData) => ({
-          ...prevData,
-          stolen: false,
-        }));
-      }
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: type === 'checkbox' ? checked : value,
-      }));
-    }
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
   };
+
+  // Conversion function: maps FoundItemFormData and user data into the MissingItemReport shape
+  // required by the ConfirmReport components.
+  const convertFoundDataForConfirmReport = (
+    data: FoundItemFormData,
+    userData: { firstName: string; lastName: string; emailAddr: string; phoneNumber: string },
+  ): {
+    firstName: string;
+    lastName: string;
+    category: string;
+    colors: string[];
+    brand: string;
+    description: string;
+    locationLost: string;
+    dateLost: string;
+    phoneNumber: string;
+    emailAddr: string;
+    stolenDescription?: string;
+    stolen: boolean;
+    forGuest: boolean;
+  } => ({
+    firstName: userData.firstName,
+    lastName: userData.lastName,
+    category: data.category,
+    colors: data.colors,
+    brand: data.brand,
+    description: data.description,
+    // Map the found item values to the missing item report shape:
+    locationLost: data.locationFound,
+    dateLost: data.dateFound,
+    // Use the user’s contact info:
+    phoneNumber: userData.phoneNumber,
+    emailAddr: userData.emailAddr,
+    // For found items, these values are not applicable:
+    stolen: false,
+    stolenDescription: '',
+    forGuest: false,
+  });
 
   const validateForm = () => {
     const errors: { [key: string]: string } = {};
     requiredFields.forEach((field) => {
-      if (!formData[field as keyof typeof formData]) {
+      if (!formData[field as keyof FoundItemFormData]) {
         errors[field] = 'This field is required';
       }
     });
     if (dateError !== null) {
-      errors['dateLost'] = dateError;
+      errors['dateFound'] = dateError;
     }
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
+  const handlePickup = async () => {
+    try {
+      await lostAndFoundService.updateFoundReportStatus(formData.recordID, 'PickedUp');
+      await lostAndFoundService.updateFoundReportStatus(formData.recordID, 'pickedUp');
+      const foundItem = await lostAndFoundService.getFoundItem(formData.recordID);
+      if (foundItem.matchingMissingID !== undefined) {
+        await lostAndFoundService.updateReportStatus(
+          parseInt(foundItem.matchingMissingID || ''),
+          'pickedup',
+        );
+      }
+      setIsPickedUp(true);
+    } catch (error) {
+      console.error('Error updating found item status:', error);
+    }
+  };
+
   const errorMessage = useMemo(() => {
     switch (dateError) {
-      case 'invalidDate': {
+      case 'invalidDate':
         return 'Invalid Date';
-      }
-      case 'disableFuture': {
-        return 'Cannot lose an item in the future';
-      }
-      default: {
+      case 'disableFuture':
+        return 'Cannot set a date in the future';
+      default:
         return null;
-      }
     }
   }, [dateError]);
 
-  // Using DatePicker component from MUI/x, with custom styling to fix dark mode contrast issues
+  // DatePicker adjusted for found items (using dateFound)
   const customDatePicker = (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <DatePicker
-        label="Date Lost"
-        value={formData.dateLost === '' ? null : formData.dateLost}
-        onChange={(value) => setFormData({ ...formData, dateLost: value?.toString() || '' })}
+        label="Date Found"
+        value={formData.dateFound === '' ? null : formData.dateFound}
+        onChange={(value) =>
+          setFormData((prev) => ({ ...prev, dateFound: value?.toString() || '' }))
+        }
         onError={(newError) => setDateError(newError)}
         disableFuture
         orientation="portrait"
-        name="Date Lost"
-        // Custom styling for popup box, better dark mode contrast
-        // Thanks to help for understanding from
-        // https://blog.openreplay.com/styling-and-customizing-material-ui-date-pickers/
+        name="dateFound"
         slotProps={{
           textField: {
-            helperText: errorMessage ? errorMessage : 'Change if lost before today',
-            // Custom styling for the input field, to make it look like filled variant
+            helperText: errorMessage ? errorMessage : 'Select the date the item was found',
             sx: {
-              backgroundColor: 'var(--mui-palette-FilledInput-bg);',
-              paddingTop: '7px;',
-              borderRadius: '5px;',
-              width: '100%;',
+              backgroundColor: 'var(--mui-palette-FilledInput-bg)',
+              paddingTop: '7px',
+              borderRadius: '5px',
+              width: '100%',
               '& .Mui-focused .MuiOutlinedInput-notchedOutline': { border: 'none' },
               '& .MuiInputLabel-shrink': {
-                transform: 'translate(14px, 4px) scale(0.75);',
+                transform: 'translate(14px, 4px) scale(0.75)',
               },
               '& .MuiFormLabel-root.Mui-focused': {
-                color: 'var(--mui-palette-secondary-main);',
+                color: 'var(--mui-palette-secondary-main)',
               },
               '& .MuiOutlinedInput-notchedOutline': {
-                borderWidth: '0;',
+                borderWidth: '0',
                 borderBottom:
-                  '1px solid rgba(var(--mui-palette-common-onBackgroundChannel) / var(--mui-opacity-inputUnderline));',
-                borderRadius: '0;',
+                  '1px solid rgba(var(--mui-palette-common-onBackgroundChannel) / var(--mui-opacity-inputUnderline))',
+                borderRadius: '0',
               },
             },
           },
           layout: {
             sx: {
               '& .MuiPickersLayout-contentWrapper .Mui-selected': {
-                backgroundColor: 'var(--mui-palette-secondary-400);',
+                backgroundColor: 'var(--mui-palette-secondary-400)',
               },
               '.MuiPickersLayout-contentWrapper .MuiPickersDay-root:focus.Mui-selected': {
-                backgroundColor: 'var(--mui-palette-secondary-400);',
+                backgroundColor: 'var(--mui-palette-secondary-400)',
               },
               '.MuiPickersLayout-contentWrapper .MuiPickersDay-root.Mui-selected': {
-                backgroundColor: 'var(--mui-palette-secondary-400);',
+                backgroundColor: 'var(--mui-palette-secondary-400)',
               },
             },
           },
           actionBar: {
             sx: {
-              ...{
-                '& .MuiButtonBase-root': {
-                  color: 'var(--mui-palette-secondary-400);',
-                },
+              '& .MuiButtonBase-root': {
+                color: 'var(--mui-palette-secondary-400)',
               },
             },
           },
@@ -254,125 +299,105 @@ const ItemForm = ({ formType }: { formType: string }) => {
     });
   };
 
-  const handleModalClose = () => {
-    setStolenModalOpen(false);
-    setFormData((prevData) => ({
-      ...prevData,
-      stolen: false,
-    }));
-  };
-
-  const handleModalSubmit = (stolenDescription: string) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      stolenDescription, // Capture stolen description from modal
-    }));
-    setStolenModalOpen(false);
-  };
-
-  const handlePickup = async () => {
-    try {
-      await lostAndFoundService.updateReportStatus(parseInt(itemId || ''), 'pickedup');
-      const missingItem = await lostAndFoundService.getMissingItemReport(parseInt(itemId || ''));
-      if (missingItem.matchingFoundID !== undefined) {
-        await lostAndFoundService.updateFoundReportStatus(missingItem.matchingFoundID, 'pickedup');
-      }
-      //navigate('/lostandfound');
-    } catch (error) {
-      console.error('Error updating report status:', error);
-    }
-  };
-
-  const handleFormSubmit = () => {
-    if (validateForm()) {
-      if (!formData.stolen) {
-        setFormData((prevData) => ({
-          ...prevData,
-          stolenDescription: '',
-        }));
-      }
-      if (!formData.dateLost) {
-        const now = new Date();
-        setFormData((prevData) => ({
-          ...prevData,
-          dateLost: now.toISOString(),
-        }));
-      }
-      setShowConfirm(true);
-    }
-  };
-
   const handleReportSubmit = async () => {
-    if (formType == 'create') {
+    if (formType === 'create') {
       if (!disableSubmit) {
         setDisableSubmit(true);
         try {
           const now = new Date();
           const requestData = {
             ...formData,
-            ...user,
-            dateLost: new Date(formData.dateLost).toISOString() || now.toISOString(),
+            dateFound: new Date(formData.dateFound).toISOString() || now.toISOString(),
             dateCreated: now.toISOString(),
             colors: formData.colors || [],
             submitterUsername: user.AD_Username,
-            forGuest: false,
           };
-          const newReportId = await lostAndFoundService.createMissingItemReport(requestData);
-          let actionRequestData = {
-            ...newActionFormData,
-            missingID: newReportId,
-            actionDate: now.toISOString(),
-            username: user.AD_Username,
-            isPublic: true,
-            action: 'Created',
-          };
-          await lostAndFoundService.createAdminAction(newReportId, actionRequestData);
-          navigate('/lostandfound');
+          const newReportId = await lostAndFoundService.createFoundItem(requestData);
+          navigate('/lostandFound');
         } catch (error) {
-          createSnackbar(`Failed to create the missing item report.`, `error`);
+          createSnackbar('Failed to create the found item report.', 'error');
           setDisableSubmit(false);
         }
       }
-    } else if (formType == 'edit') {
-      const requestData: MissingItemReport = {
+    } else if (formType === 'edit') {
+      const requestData = {
         ...formData,
-        dateLost: new Date(formData.dateLost).toISOString(),
+        dateFound: new Date(formData.dateFound).toISOString(),
       };
-      const formFields = Object.keys(formData);
-      let newActionNote = '';
-      for (let i = 0; i < formFields.length; i++) {
-        if (
-          JSON.stringify(originalFormData[formFields[i] as keyof typeof originalFormData]) !==
-          JSON.stringify(formData[formFields[i] as keyof typeof formData])
-        ) {
-          newActionNote +=
-            formFields[i] +
-            ': OLD: ' +
-            originalFormData[formFields[i] as keyof typeof originalFormData] +
-            ', NEW: ' +
-            formData[formFields[i] as keyof typeof formData] +
-            ' ';
-        }
-      }
-      await lostAndFoundService.updateMissingItemReport(requestData, parseInt(itemId || ''));
-      const actionRequestData = {
-        missingID: parseInt(itemId || ''),
-        actionDate: new Date().toISOString(),
-        username: user.AD_Username,
-        isPublic: true,
-        action: 'Edited',
-        actionNote: newActionNote,
-      };
-      await lostAndFoundService.createAdminAction(parseInt(itemId || ''), actionRequestData);
-      navigate('/lostandfound');
+      await lostAndFoundService.updateFoundItem(requestData, formData.recordID);
+      navigate('/lostandFound');
     }
   };
 
+  // Instead of using getMissingItemReport, use getFoundItemsByOwner to fetch this found item.
+  // We get the list of found items that belong to the user and then filter by the id from the URL.
   useEffect(() => {
-    if (formData.recordID > 0 || formType == 'create') {
-      setLoading(false);
-    }
-  }, [formData.recordID]);
+    const fetchItemData = async () => {
+      if (id) {
+        // Use the current user's ID (owner) for lookup.
+        const ownerUsername = user.AD_Username || '';
+        const items = await lostAndFoundService.getFoundItemsByOwner(ownerUsername);
+        const item = items.find((itm) => itm.recordID === id);
+        if (item) {
+          setFormData({
+            recordID: item.recordID,
+            category: item.category,
+            colors: item.colors || [],
+            brand: item.brand || '',
+            description: item.description,
+            // For found items, we use locationFound.
+            locationFound: item.locationFound,
+            dateFound: item.dateFound,
+            dateCreated: item.dateCreated,
+            submitterUsername: item.submitterUsername,
+            storageLocation: item.storageLocation,
+            finderWants: item.finderWants,
+            finderUsername: item.finderUsername || '',
+            finderFirstName: item.finderFirstName || '',
+            finderLastName: item.finderLastName || '',
+            finderPhone: item.finderPhone || '',
+            finderEmail: item.finderEmail || '',
+            ownerUsername: item.ownerUsername || '',
+            ownerFirstName: item.ownerFirstName || '',
+            ownerLastName: item.ownerLastName || '',
+            ownerPhone: item.ownerPhone || '',
+            ownerEmail: item.ownerEmail || '',
+            status: item.status || 'active',
+            isFoundItem: true,
+          });
+          setOriginalFormData({
+            recordID: item.recordID,
+            category: item.category,
+            colors: item.colors || [],
+            brand: item.brand || '',
+            description: item.description,
+            locationFound: item.locationFound,
+            dateFound: item.dateFound,
+            dateCreated: item.dateCreated,
+            submitterUsername: item.submitterUsername,
+            storageLocation: item.storageLocation,
+            finderWants: item.finderWants,
+            finderUsername: item.finderUsername || '',
+            finderFirstName: item.finderFirstName || '',
+            finderLastName: item.finderLastName || '',
+            finderPhone: item.finderPhone || '',
+            finderEmail: item.finderEmail || '',
+            ownerUsername: item.ownerUsername || '',
+            ownerFirstName: item.ownerFirstName || '',
+            ownerLastName: item.ownerLastName || '',
+            ownerPhone: item.ownerPhone || '',
+            ownerEmail: item.ownerEmail || '',
+            status: item.status || 'active',
+            isFoundItem: true,
+          });
+        } else {
+          console.error('Found item not found for this owner.');
+        }
+        setLoading(false);
+      }
+    };
+    fetchItemData();
+  }, [id, user.AD_Username]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -383,76 +408,35 @@ const ItemForm = ({ formType }: { formType: string }) => {
           lastName: userInfo?.LastName || '',
           emailAddr: userInfo?.Email || '',
           phoneNumber: userInfo?.MobilePhone || '',
-          AD_Username: userInfo?.AD_Username || '', // Set AD_Username
+          AD_Username: userInfo?.AD_Username || '',
+          ID: userInfo?.ID || '',
         });
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
     };
-
     fetchUserData();
   }, []);
 
-  // Catch browser reloads, and show warning message about unsaved changes.
   useEffect(() => {
-    function handleBeforeUnload(event: BeforeUnloadEvent) {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
       event.preventDefault();
-      return (event.returnValue = '');
-    }
+      event.returnValue = '';
+    };
     window.addEventListener('beforeunload', handleBeforeUnload, { capture: true });
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload, { capture: true });
     };
   }, []);
 
-  useEffect(() => {
-    const fetchItemData = async () => {
-      if (itemId) {
-        const item = await lostAndFoundService.getMissingItemReport(parseInt(itemId));
-        setFormData({
-          recordID: item?.recordID || 0,
-          category: item.category,
-          colors: item.colors || [],
-          brand: item.brand || '',
-          description: item.description,
-          locationLost: item.locationLost,
-          stolen: item.stolen,
-          stolenDescription: item.stolenDescription || '',
-          dateLost: item.dateLost,
-          dateCreated: item.dateCreated,
-          submitterUsername: item.submitterUsername,
-          forGuest: item.forGuest,
-          status: item.status || 'active',
-        });
-        const originalReport = await lostAndFoundService.getMissingItemReport(parseInt(itemId));
-        setOriginalFormData({
-          recordID: originalReport?.recordID || 0,
-          category: originalReport.category,
-          colors: originalReport.colors || [],
-          brand: originalReport.brand || '',
-          description: originalReport.description,
-          locationLost: originalReport.locationLost,
-          stolen: originalReport.stolen,
-          stolenDescription: originalReport.stolenDescription || '',
-          dateLost: originalReport.dateLost,
-          dateCreated: originalReport.dateCreated,
-          submitterUsername: originalReport.submitterUsername,
-          forGuest: originalReport.forGuest,
-          status: originalReport.status || 'active',
-        });
-      }
-    };
-    fetchItemData();
-  }, [itemId]);
-
   return (
     <>
       {showConfirm ? (
         <>
-          {formType == 'create' ? (
+          {formType === 'create' ? (
             <>
               <CreateConfirmReport
-                formData={{ ...formData, ...user }}
+                formData={{ ...convertFoundDataForConfirmReport(formData, user) }}
                 onEdit={() => setShowConfirm(false)}
                 onSubmit={handleReportSubmit}
                 disableSubmit={disableSubmit}
@@ -466,7 +450,7 @@ const ItemForm = ({ formType }: { formType: string }) => {
             </>
           ) : (
             <EditConfirmReport
-              formData={{ ...formData, ...user }}
+              formData={{ ...convertFoundDataForConfirmReport(formData, user) }}
               onEdit={() => setShowConfirm(false)}
               onSubmit={handleReportSubmit}
             />
@@ -479,20 +463,16 @@ const ItemForm = ({ formType }: { formType: string }) => {
             <GordonLoader />
           ) : (
             <>
-              {/* Display the "Found" notice only if the status is "found" */}
-              {formData.status.toLowerCase() === 'found' && (
+              {/* For Found Items, display "Found" notice */}
+              {(formData.status.toLowerCase() === 'found' || formData.isFoundItem === true) && (
                 <Grid container xs={9.7} className={styles.foundContainer} rowGap={2}>
                   <Grid container item xs={12} md={6} rowGap={2}>
                     <Grid item xs={12}>
                       <Chip
                         className={styles.largeChip}
-                        // Wrap chip text if needed
                         sx={{
                           height: 'auto',
-                          '& .MuiChip-label': {
-                            display: 'block',
-                            whiteSpace: 'normal',
-                          },
+                          '& .MuiChip-label': { display: 'block', whiteSpace: 'normal' },
                         }}
                         label={
                           <>
@@ -511,7 +491,7 @@ const ItemForm = ({ formType }: { formType: string }) => {
                       <Grid container columnGap={1} height="100%" alignItems="center">
                         <Typography>
                           <InfoOutlinedIcon color="inherit" /> Check your email for pickup
-                          instructions.{' '}
+                          instructions.
                         </Typography>
                       </Grid>
                     </Grid>
@@ -523,45 +503,13 @@ const ItemForm = ({ formType }: { formType: string }) => {
                       startIcon={<CheckCircleOutlineIcon />}
                       onClick={handlePickup}
                       className={styles.pickupButton}
-                      disabled={isPickedUp} // Disable the button if the item is picked up
+                      disabled={isPickedUp}
                     >
-                      {/* Update text based on if the item is picked up */}
-                      {isPickedUp ? 'Item Picked Up' : 'Mark as Picked Up'}{' '}
+                      {isPickedUp ? 'Item Picked Up' : 'Mark as Picked Up'}
                     </Button>
                   </Grid>
                 </Grid>
               )}
-              {/* Display a chip for items with statuses other than "active" */}
-              {formData.status.toLowerCase() !== 'active' &&
-                formData.status.toLowerCase() !== 'found' && (
-                  <Grid container xs={9.7} className={styles.foundContainer} rowGap={2}>
-                    <Grid container item xs={12} md={6} rowGap={2}>
-                      <Grid item xs={12}>
-                        <Chip
-                          className={styles.largeChip}
-                          sx={{
-                            '& .MuiChip-label': {
-                              display: 'block',
-                              whiteSpace: 'normal',
-                            },
-                          }}
-                          label={
-                            <>
-                              <Typography>
-                                This item was marked as{' '}
-                                <Typography component="span" className={styles.foundText}>
-                                  {formData.status.charAt(0).toUpperCase() +
-                                    formData.status.slice(1)}
-                                </Typography>
-                              </Typography>
-                            </>
-                          }
-                          color="default"
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                )}
               <Grid container justifyContent="center">
                 <Grid item sm={5} xs={12}>
                   {/* Item Category */}
@@ -602,14 +550,13 @@ const ItemForm = ({ formType }: { formType: string }) => {
                         ))}
                       </FormGroup>
                     </Grid>
-                    {/* Error Message */}
                     <Grid item>
                       <TextField
                         variant="standard"
                         error={Boolean(validationErrors.category)}
-                        helperText={validationErrors.category || ' '} // Show error message or keep space consistent
+                        helperText={validationErrors.category || ' '}
                         fullWidth
-                        InputProps={{ style: { display: 'none' } }} // Hide the actual TextField input
+                        InputProps={{ style: { display: 'none' } }}
                       />
                     </Grid>
                   </Grid>
@@ -661,7 +608,7 @@ const ItemForm = ({ formType }: { formType: string }) => {
                     <TextField
                       fullWidth
                       variant="filled"
-                      label={'Item Brand or Make'}
+                      label="Item Brand or Make"
                       name="brand"
                       value={formData.brand}
                       onChange={handleChange}
@@ -670,7 +617,7 @@ const ItemForm = ({ formType }: { formType: string }) => {
                       helperText={validationErrors.brand}
                       sx={{
                         '& .MuiFormLabel-root.Mui-focused': {
-                          color: 'var(--mui-palette-secondary-400);',
+                          color: 'var(--mui-palette-secondary-400)',
                         },
                       }}
                     />
@@ -681,7 +628,7 @@ const ItemForm = ({ formType }: { formType: string }) => {
                       multiline
                       minRows={5}
                       variant="filled"
-                      label={'Item Description: Be as detailed as possible'}
+                      label="Item Description: Be as detailed as possible"
                       name="description"
                       value={formData.description}
                       onChange={handleChange}
@@ -690,29 +637,28 @@ const ItemForm = ({ formType }: { formType: string }) => {
                       disabled={!isEditable}
                       sx={{
                         '& .MuiFormLabel-root.Mui-focused': {
-                          color: 'var(--mui-palette-secondary-400);',
+                          color: 'var(--mui-palette-secondary-400)',
                         },
                       }}
                     />
                   </Grid>
-
-                  {/* Location Lost and Date Lost */}
+                  {/* Location Found and Date Found */}
                   <Grid item margin={2}>
                     <TextField
                       fullWidth
                       multiline
                       minRows={4}
                       variant="filled"
-                      label={'Location Lost: Be as detailed as possible'}
-                      name="locationLost"
-                      value={formData.locationLost}
+                      label="Location Found: Be as detailed as possible"
+                      name="locationFound"
+                      value={formData.locationFound}
                       onChange={handleChange}
-                      error={Boolean(validationErrors.locationLost)}
-                      helperText={validationErrors.locationLost}
+                      error={Boolean(validationErrors.locationFound)}
+                      helperText={validationErrors.locationFound}
                       disabled={!isEditable}
                       sx={{
                         '& .MuiFormLabel-root.Mui-focused': {
-                          color: 'var(--mui-palette-secondary-400);',
+                          color: 'var(--mui-palette-secondary-400)',
                         },
                       }}
                     />
@@ -721,47 +667,13 @@ const ItemForm = ({ formType }: { formType: string }) => {
                     {customDatePicker}
                   </Grid>
                 </Grid>
-                {/* Stolen Checkbox */}
-                <Grid container justifyContent="center" marginTop={3}>
-                  <Grid item xs={9.5}>
-                    <FormControlLabel
-                      className={styles.stolen_container}
-                      control={
-                        <Checkbox checked={formData.stolen} onChange={handleChange} name="stolen" />
-                      }
-                      label="Was this item stolen? (Police staff will follow up)"
-                      disabled={!isEditable}
-                    />
-                  </Grid>
-                  {isEditable && (
-                    <Grid container justifyContent="flex-end" className={styles.submit_container}>
-                      <Grid item xs={2}>
-                        <Button
-                          variant="contained"
-                          fullWidth
-                          className={styles.submit_button}
-                          onClick={handleFormSubmit}
-                        >
-                          NEXT
-                        </Button>
-                      </Grid>
-                    </Grid>
-                  )}
-                </Grid>
               </Grid>
             </>
           )}
-
-          <ReportStolenModal
-            open={isStolenModalOpen}
-            onClose={handleModalClose}
-            onSubmit={handleModalSubmit}
-            stolenDescription={formData.stolenDescription}
-          />
         </Card>
       )}
     </>
   );
 };
 
-export default ItemForm;
+export default FoundItemForm;

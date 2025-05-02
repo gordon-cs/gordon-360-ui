@@ -5,6 +5,7 @@ import { HTMLAttributes, useEffect, useReducer } from 'react';
 import quickSearchService, { SearchResult } from 'services/quickSearch';
 
 interface Props {
+  value?: SearchResult | null;
   onChange: (_event: any, selectedPerson: SearchResult | null) => void;
 }
 
@@ -81,7 +82,7 @@ const reducer = (state: State, action: Action): State => {
 };
 
 /* Functional component for the autocomplete */
-export const GordonPersonAutocomplete: React.FC<Props> = ({ onChange }) => {
+export const GordonPersonAutocomplete: React.FC<Props> = ({ value, onChange }) => {
   const [state, dispatch] = useReducer(reducer, defaultState);
 
   useEffect(() => {
@@ -111,6 +112,7 @@ export const GordonPersonAutocomplete: React.FC<Props> = ({ onChange }) => {
       renderInput={(params) => (
         <TextField
           {...params}
+          value={value}
           label="Search Gordon Person"
           variant="filled"
           fullWidth
