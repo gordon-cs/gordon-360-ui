@@ -146,8 +146,6 @@ const FoundItemList = () => {
     const fetchCounts = async () => {
       try {
         if (reports) {
-          console.log('In counts');
-          console.log('fetching counts', status);
           const totalResult = await lostAndFoundService.getFoundItemsCount(
             username,
             undefined,
