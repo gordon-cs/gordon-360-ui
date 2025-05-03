@@ -22,7 +22,7 @@ import { useSearchParams } from 'react-router-dom';
 import { LFCategories, LFColors } from 'views/LostAndFound/components/Constants';
 import GordonLoader from 'components/Loader';
 import lostAndFoundService, { FoundItem } from 'services/lostAndFound';
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation } from 'react-router';
 import { formatDateString } from 'views/LostAndFound/components/Helpers';
 import { differenceInCalendarDays } from 'date-fns';
 import GordonSnackbar from 'components/Snackbar';
@@ -50,9 +50,10 @@ const FoundItemCleanOut = () => {
     open: false,
   });
 
-  const navigate = useNavigate();
   const location = useLocation();
   const isMobile = useMediaQuery('(max-width:900px)');
+
+  const monthsToExpire = 2;
 
   const handleCheckboxClick = (report: FoundItem) => {
     setReportsToCleanOut((reportsToCleanOut) => {
@@ -107,10 +108,8 @@ const FoundItemCleanOut = () => {
         if (!pageLoaded) return;
         setLoading(true);
 
-        // Date set to May 31 for testing - uncomment next line once testing is completed
-        // const d = new Date();
-        const d = new Date(2025, 4, 31);
-        d.setMonth(d.getMonth() - 2);
+        const d = new Date();
+        d.setMonth(d.getMonth() - monthsToExpire);
 
         const fetched = await lostAndFoundService.getFoundItems(
           tagID || '',
@@ -399,7 +398,7 @@ const FoundItemCleanOut = () => {
               variant="contained"
               color="error"
               onClick={handleSubmit}
-              disabled={reportsToCleanOut.length == 0}
+              disabled={reportsToCleanOut.length === 0}
             >
               Clean Out All
             </Button>
