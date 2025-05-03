@@ -81,7 +81,16 @@ const ResidentView = () => {
           {/* CONTACTS SECTION */}
           <Grid item xs={12} md={6}>
             <Card>
-              <CardHeader title="Contacts" className="gc360_header" />
+              <CardHeader
+                title={
+                  <Grid container direction="row" alignItems="center">
+                    <Grid item xs={12} align="center">
+                      Email Contacts
+                    </Grid>
+                  </Grid>
+                }
+                className="gc360_header"
+              />
               <CardContent>
                 <Typography>
                   <List>

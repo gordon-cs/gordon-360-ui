@@ -1,20 +1,21 @@
 import { useEffect, useState } from 'react';
-import { staffType } from 'views/ResLife/utils/staffType/staffType';
 import { useUser } from 'hooks';
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Grid, Typography, useMediaQuery } from '@mui/material';
 import { useAuthGroups } from 'hooks';
 import { AuthGroup } from 'services/auth';
 
 const HousingBanner = () => {
-  const [staffTypeLabel, setStaffTypeLabel] = useState('');
   const { profile } = useUser();
   const [roleMessage, setRoleMessage] = useState('');
   const isRA = useAuthGroups(AuthGroup.ResidentAdvisor);
+  const isPolice = useAuthGroups(AuthGroup.Police);
+  const isHallInfoViewer = useAuthGroups(AuthGroup.HallInfoViewer);
+  const hasStandardAccess = isPolice || isHallInfoViewer;
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   useEffect(() => {
     if (profile) {
-      const hallID = profile.OnCampusBuilding;
-      setStaffTypeLabel(staffType[hallID] || 'N/A');
+      const Hall_ID = profile.OnCampusBuilding;
     }
   }, [profile]);
 
@@ -24,13 +25,37 @@ const HousingBanner = () => {
         setRoleMessage(
           'Check in to your shift, set your preferred contact method, and view available resources',
         );
+      }
+      if (hasStandardAccess) {
+        setRoleMessage('View On-Call RDs and RAs by hall. This information is updated regularly');
       } else {
-        setRoleMessage(
-          `View your ${staffTypeLabel} details, on-duty schedules, and available housing resources.`,
-        );
+        setRoleMessage(`View your RA details, on-duty schedules, and available housing resources.`);
       }
     }
-  }, [profile, staffTypeLabel, isRA]);
+  }, [profile, isRA]);
+
+  if (isMobile) {
+    return (
+      <Grid item xs={12}>
+        <Box
+          sx={{
+            border: '2px solid',
+            borderColor: 'secondary.main',
+            borderRadius: 2,
+            padding: 3,
+            backgroundColor: 'background.paper',
+          }}
+        >
+          <Typography variant="h6" align="center" color="secondary" gutterBottom>
+            Welcome to the ResLife Dashboard
+          </Typography>
+          <Typography variant="subtitle2" align="center" color="textSecondary">
+            {roleMessage}
+          </Typography>
+        </Box>
+      </Grid>
+    );
+  }
 
   return (
     <Grid item xs={12}>

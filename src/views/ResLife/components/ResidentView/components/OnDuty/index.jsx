@@ -1,10 +1,17 @@
 import { useState, useEffect } from 'react';
-import { Avatar, Card, CardContent, CardHeader, Grid, Typography, Box } from '@mui/material';
+import {
+  Avatar,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Typography,
+  useMediaQuery,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useUser } from 'hooks';
 import { fetchOnDutyRA } from 'services/residentLife/RA_OnCall';
 import { formatPhoneNumber } from '../../../../utils/formatPhoneNumber/formatPhoneNumber';
-import { staffType } from '../../../../utils/staffType/staffType';
 import ScottieMascot from 'views/ResLife/ScottieMascot.png';
 
 const COLOR_80808026_1X1 =
@@ -22,26 +29,19 @@ const StyledLink = styled('a')(({ theme }) => ({
 
 const OnDuty = () => {
   const [onDutyRaInfo, setOnDutyRaInfo] = useState({});
-  const [staffTypeLabel, setStaffTypeLabel] = useState('');
   const { profile } = useUser();
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   useEffect(() => {
-    // console.log(mobileDevice ? 'Mobile device detected' : 'Desktop device detected');
-    console.log('On duty info', onDutyRaInfo);
-
     if (profile) {
       const hallID = profile.OnCampusBuilding;
 
-      // Display either 'RA' or 'AC' depending on the resident's building
-      setStaffTypeLabel(staffType[hallID] || 'RA/AC');
-
       fetchOnDutyRA(hallID)
         .then((response) => setOnDutyRaInfo(response))
-        .catch((error) => console.error(`Failed to fetch On Duty ${staffTypeLabel} info:`, error));
+        .catch((error) => console.error(`Failed to fetch On Duty RA info:`, error));
     }
   }, [profile]);
 
-  // Show loading state if profile is not yet loaded
   if (!profile) {
     return (
       <Typography align="center" color="textSecondary">
@@ -57,7 +57,7 @@ const OnDuty = () => {
           title={
             <Grid container justifyContent="center" alignItems="center">
               <Grid item xs={12} align="center">
-                On Duty {staffTypeLabel}
+                On Duty RA
               </Grid>
             </Grid>
           }
@@ -67,23 +67,30 @@ const OnDuty = () => {
           <Grid container spacing={2} alignItems="center">
             {/* Text Section */}
             <Grid item xs={8}>
-              <Typography variant="h5" color="warning.main">
-                No one is on duty right now!
+              <Typography variant="subtitle1" color="warning.main">
+                No RA is on duty right now! 🐾
               </Typography>
               <Typography variant="body1" color="text.secondary">
-                Scottie’s keeping an eye on things. 🐾
+                Scottie’s keeping an eye on things.
               </Typography>
             </Grid>
 
             {/* Avatar Section */}
-            <Grid item xs={4} container justifyContent="center">
+            <Grid
+              item
+              xs={4}
+              container
+              justifyContent="center"
+              sx={{ marginTop: { xs: 1, sm: 2, md: 2 } }}
+            >
               <Avatar
                 src={ScottieMascot}
                 alt="Scottie"
                 sx={{
-                  width: { xs: 80, sm: 110, md: 80, lg: 120 },
-                  height: { xs: 80, sm: 110, md: 80, lg: 120 },
+                  width: { xs: 80, sm: 90, md: 100, lg: 130 },
+                  height: { xs: 80, sm: 90, md: 100, lg: 130 },
                   borderRadius: '50%',
+                  transition: 'width 0.3s, height 0.3s',
                 }}
               />
             </Grid>
@@ -99,7 +106,7 @@ const OnDuty = () => {
         title={
           <Grid container justifyContent="center" alignItems="center">
             <Grid item xs={12} align="center">
-              On Duty {staffTypeLabel}
+              On Duty RA
             </Grid>
           </Grid>
         }
@@ -114,35 +121,35 @@ const OnDuty = () => {
               <StyledLink
                 href={DEFAULT_PROFILE_URL + onDutyRaInfo.RA_UserName}
                 className="gc360_text_link"
-                target="_blank"
-                rel="noopener noreferrer"
+                target={isMobile ? '_self' : '_blank'}
+                rel={isMobile ? '' : 'noopener noreferrer'}
               >
                 {onDutyRaInfo.RA_Name}
               </StyledLink>
             </Typography>
 
             <Typography variant="body1">
-              <strong>Room #:</strong> {onDutyRaInfo.RoomNumber}
+              <strong>Room #:</strong> {onDutyRaInfo.Room_Number}
             </Typography>
 
             <Typography variant="body1">
               <strong>Contact:</strong>{' '}
-              {onDutyRaInfo.PreferredContact && onDutyRaInfo.PreferredContact.includes('http') ? (
+              {onDutyRaInfo.Preferred_Contact && onDutyRaInfo.Preferred_Contact.includes('http') ? (
                 <StyledLink
-                  href={onDutyRaInfo.PreferredContact}
+                  href={onDutyRaInfo.Preferred_Contact}
                   underline="hover"
                   className="gc360_text_link"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  target={isMobile ? '_self' : '_blank'}
+                  rel={isMobile ? '' : 'noopener noreferrer'}
                 >
                   Teams
                 </StyledLink>
-              ) : onDutyRaInfo.PreferredContact ? (
+              ) : onDutyRaInfo.Preferred_Contact ? (
                 <StyledLink
-                  href={`tel:${onDutyRaInfo.PreferredContact}`}
+                  href={`tel:${onDutyRaInfo.Preferred_Contact}`}
                   className="gc360_text_link"
                 >
-                  {formatPhoneNumber(onDutyRaInfo.PreferredContact)}
+                  {formatPhoneNumber(onDutyRaInfo.Preferred_Contact)}
                 </StyledLink>
               ) : (
                 'No contact available'
@@ -151,20 +158,27 @@ const OnDuty = () => {
           </Grid>
 
           {/* Avatar Section */}
-          <Grid item xs={4}>
+          <Grid
+            item
+            xs={4}
+            container
+            justifyContent="center"
+            sx={{ marginTop: { xs: 1, sm: 2, md: 2 } }}
+          >
             <StyledLink
               href={DEFAULT_PROFILE_URL + onDutyRaInfo.RA_UserName}
               className="gc360_text_link"
-              target="_blank"
-              rel="noopener noreferrer"
+              target={isMobile ? '_self' : '_blank'}
+              rel={isMobile ? '' : 'noopener noreferrer'}
             >
               <Avatar
                 src={onDutyRaInfo.RA_Photo || COLOR_80808026_1X1}
                 alt={`Profile of ${onDutyRaInfo.RA_Name}`}
                 sx={{
-                  width: { xs: 80, sm: 110, md: 80, lg: 120 },
-                  height: { xs: 80, sm: 110, md: 80, lg: 120 },
+                  width: { xs: 80, sm: 90, md: 100, lg: 130 },
+                  height: { xs: 80, sm: 90, md: 100, lg: 130 },
                   borderRadius: '50%',
+                  transition: 'width 0.3s, height 0.3s',
                 }}
               />
             </StyledLink>

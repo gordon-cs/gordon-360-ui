@@ -24,6 +24,7 @@ import RecIM from './views/RecIM';
 import RoomRanges from 'views/ResLife/components/RDView/components/RoomRanges';
 import CampusSafety from './views/LostAndFound';
 
+
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
 const routes = [
   {
@@ -128,7 +129,7 @@ const routes = [
   },
   {
     name: 'Res-Life',
-    path: '/reslife',
+    path: '/reslife/*',
     element: <Housing />,
   },
   {
@@ -145,11 +146,6 @@ const routes = [
     name: 'Page Not Found',
     path: '*',
     element: <Page404 />,
-  },
-  {
-    name: 'RoomRanges',
-    path: '/RoomRanges',
-    element: <RoomRanges />,
   },
 ];
 
