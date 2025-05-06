@@ -1,0 +1,38 @@
+.confirmCard {
+  max-width: 1000px;
+  margin: auto;
+  padding: 20px;
+  background-color: var(--mui-palette-background-paper); // For card background color
+  color: var(--mui-palette-text-primary); // For text color
+}
+
+.header {
+  background-color: var(--mui-palette-primary-main); // GordonBlue theme color
+  color: var(--mui-palette-primary-contrastText); // Text color from primary theme
+}
+
+.reportRow {
+  display: flex;
+  align-items: center;
+  height: 6rem;
+  padding: 1rem;
+  border-bottom: 1px solid var(--mui-palette-neutral-400);
+  color: var(--mui-palette-neutral-contrastText);
+
+  &:nth-child(even) {
+    background-color: var(--mui-palette-neutral-100);
+  }
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+  }
+}
+
+.dataCell {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-right: 0.5rem;
+}
