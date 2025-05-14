@@ -122,6 +122,7 @@ Sometimes, you would like to connect the frontend on your local computer to the 
 
 - MacOS: The SSH server should already be installed but you may have to enable the SSH server in System Preferences. Follow [these instructions](https://support.apple.com/guide/mac-help/allow-a-remote-computer-to-access-your-mac-mchlp1066/mac) to do so.
 
+
 2. Create the SSH tunnel
 
    After setting up the SSH server on your local machine, find your machine's DNS name or IP number:
