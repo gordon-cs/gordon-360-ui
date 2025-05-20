@@ -226,8 +226,6 @@ const ReportItemPage = () => {
           };
         }
 
-        await lostAndFoundService.createMissingItemReport(requestData);
-
         const now = new Date();
         const newReportId = await lostAndFoundService.createMissingItemReport(requestData);
         let actionRequestData = {
@@ -473,11 +471,14 @@ const ReportItemPage = () => {
               </Grid>
               <Grid item margin={2}>
                 <CustomDatePicker
-                  value={formData.dateLost === '' ? null : formData.dateLost}
-                  onChange={(value) =>
-                    setFormData({ ...formData, dateLost: value?.toString() || '' })
+                  value={formData.dateLost ? new Date(formData.dateLost) : null}
+                  onChange={(newDate) =>
+                    setFormData((d) => ({
+                      ...d,
+                      dateLost: newDate ? newDate.toISOString() : '',
+                    }))
                   }
-                  onError={(newError) => setDateError(newError)}
+                  onError={(err) => setDateError(err)}
                 />
               </Grid>
             </Grid>
