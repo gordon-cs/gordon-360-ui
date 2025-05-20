@@ -481,14 +481,14 @@ const FoundItemFormCreate = () => {
             {/* Date Found */}
             <div style={{ marginBottom: '1rem' }}>
               <CustomDatePicker
-                value={formData.dateFound ? formData.dateFound : null}
-                onChange={(value) => {
-                  setFormData((prevData) => ({
-                    ...prevData,
-                    dateFound: value ? value.toString() : '',
-                  }));
-                }}
-                onError={(newError) => setDateError(newError)}
+                value={formData.dateFound ? new Date(formData.dateFound) : null}
+                onChange={(newDate) =>
+                  setFormData((d) => ({
+                    ...d,
+                    dateLost: newDate ? newDate.toISOString() : '',
+                  }))
+                }
+                onError={(err) => setDateError(err)}
               />
             </div>
 
