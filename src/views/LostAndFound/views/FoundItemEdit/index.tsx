@@ -765,9 +765,9 @@ const FoundItemFormEdit = () => {
                 disabled={readOnly}
               />
               <CustomDatePicker
-                value={foundItem.dateFound ? foundItem.dateFound : null}
-                onChange={(val) => handleDateChange(new Date(val || ''))}
-                onError={(newError) => setDateError(newError)}
+                value={foundItem.dateFound ? new Date(foundItem.dateFound) : null}
+                onChange={(newDate) => handleDateChange(newDate)}
+                onError={setDateError}
                 disabled={readOnly}
               />
 
