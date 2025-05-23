@@ -9,13 +9,10 @@ import { subYears } from 'date-fns';
 import { useMemo, useState } from 'react';
 
 interface Props {
-  value: string | null;
-  onChange: (
-    value: string | null,
-    context: PickerChangeHandlerContext<DateValidationError>,
-  ) => void;
+  value: Date | null;
+  onChange: (date: Date | null, context: PickerChangeHandlerContext<DateValidationError>) => void;
   onError: (error: DateValidationError | null) => void;
-  disabled?: boolean | undefined;
+  disabled?: boolean;
 }
 
 export const CustomDatePicker: React.FC<Props> = ({
@@ -25,8 +22,6 @@ export const CustomDatePicker: React.FC<Props> = ({
   disabled = false,
 }) => {
   const [dateError, setDateError] = useState<DateValidationError | null>(null);
-
-  const minDate = subYears(new Date(), 1).toISOString();
 
   const errorMessage = useMemo(() => {
     switch (dateError) {
@@ -51,14 +46,16 @@ export const CustomDatePicker: React.FC<Props> = ({
       <DatePicker
         label="Date Lost"
         value={value}
-        onChange={onChange}
-        onError={(newError) => {
-          setDateError(newError);
-          onError(newError);
+        onChange={(newDate, ctx) => {
+          setDateError(null);
+          onChange(newDate, ctx);
+        }}
+        onError={(err) => {
+          setDateError(err);
+          onError(err);
         }}
         disableFuture
         disabled={disabled}
-        minDate={minDate}
         orientation="portrait"
         name="Date Lost"
         // Custom styling, better dark mode contrast and conformity with filled style form fields
