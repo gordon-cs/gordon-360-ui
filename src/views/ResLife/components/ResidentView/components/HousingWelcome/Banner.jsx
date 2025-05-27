@@ -1,0 +1,82 @@
+import { useEffect, useState } from 'react';
+import { useUser } from 'hooks';
+import { Box, Grid, Typography, useMediaQuery } from '@mui/material';
+import { useAuthGroups } from 'hooks';
+import { AuthGroup } from 'services/auth';
+
+const HousingBanner = () => {
+  const { profile } = useUser();
+  const [roleMessage, setRoleMessage] = useState('');
+  const isRA = useAuthGroups(AuthGroup.ResidentAdvisor);
+  const isPolice = useAuthGroups(AuthGroup.Police);
+  const isHallInfoViewer = useAuthGroups(AuthGroup.HallInfoViewer);
+  const hasStandardAccess = isPolice || isHallInfoViewer;
+  const isMobile = useMediaQuery('(max-width:600px)');
+
+  useEffect(() => {
+    if (profile) {
+      const Hall_ID = profile.OnCampusBuilding;
+    }
+  }, [profile]);
+
+  useEffect(() => {
+    if (profile) {
+      if (isRA) {
+        setRoleMessage(
+          'Check in to your shift, set your preferred contact method, and view available resources',
+        );
+      }
+      if (hasStandardAccess) {
+        setRoleMessage('View On-Call RDs and RAs by hall. This information is updated regularly');
+      } else {
+        setRoleMessage(`View your RA details, on-duty schedules, and available housing resources.`);
+      }
+    }
+  }, [profile, isRA]);
+
+  if (isMobile) {
+    return (
+      <Grid item xs={12}>
+        <Box
+          sx={{
+            border: '2px solid',
+            borderColor: 'secondary.main',
+            borderRadius: 2,
+            padding: 3,
+            backgroundColor: 'background.paper',
+          }}
+        >
+          <Typography variant="h6" align="center" color="secondary" gutterBottom>
+            Welcome to the ResLife Dashboard
+          </Typography>
+          <Typography variant="subtitle2" align="center" color="textSecondary">
+            {roleMessage}
+          </Typography>
+        </Box>
+      </Grid>
+    );
+  }
+
+  return (
+    <Grid item xs={12}>
+      <Box
+        sx={{
+          border: '2px solid',
+          borderColor: 'secondary.main',
+          borderRadius: 2,
+          padding: 3,
+          backgroundColor: 'background.paper',
+        }}
+      >
+        <Typography variant="h4" align="center" color="secondary" gutterBottom>
+          Welcome to the Resident Life Dashboard
+        </Typography>
+        <Typography variant="subtitle1" align="center" color="textSecondary">
+          {roleMessage}
+        </Typography>
+      </Box>
+    </Grid>
+  );
+};
+
+export default HousingBanner;

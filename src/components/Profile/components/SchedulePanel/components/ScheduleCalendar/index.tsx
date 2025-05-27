@@ -1,9 +1,19 @@
-import { Calendar, luxonLocalizer } from 'react-big-calendar';
+import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import { CourseEvent, Schedule, scheduleCalendarResources } from 'services/schedule';
 import './ScheduleCalendar.css';
-import { DateTime } from 'luxon';
+import { format, getDay, startOfWeek } from 'date-fns';
+import { enUS } from 'date-fns/locale';
 
-const localizer = luxonLocalizer(DateTime, { firstDayOfWeek: 1 });
+const locales = {
+  'en-US': enUS,
+};
+
+const localizer = dateFnsLocalizer({
+  format,
+  startOfWeek,
+  getDay,
+  locales,
+});
 
 type Props = {
   schedule: Schedule;

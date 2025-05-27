@@ -1,0 +1,95 @@
+.form_card {
+  margin: 0.7rem;
+}
+
+/* The "Back" button in the header, top-left */
+.backButton {
+  align-self: start;
+  background-color: var(--mui-palette-error-light);
+  color: var(--mui-palette-primary-contrastText);
+  &:hover {
+    background-color: var(--mui-palette-error-main);
+  }
+  margin-bottom: 1rem;
+}
+
+/* Reuse the same approach for radio & checkbox groups */
+.radio_group {
+  display: contents;
+}
+.color_group {
+  display: contents;
+}
+
+/* The grouping backgrounds */
+.box_background {
+  background-color: var(--mui-palette-neutral-100);
+  border-radius: 5px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.category_group {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.category_item {
+  width: 100%;
+}
+
+.checkbox_group {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background-color: var(--mui-palette-neutral-100);
+}
+
+/* Submit button container */
+.submit_container {
+  margin: 1rem 0;
+  padding-right: 5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.submit_button {
+  font-size: 1.2rem;
+  padding: 0.7rem;
+}
+
+.icon {
+  color: var(--mui-palette-neutral-400);
+  height: 1.5em;
+  width: 1.5em;
+}
+
+.name_field {
+  display: flex;
+  justify-content: space-between;
+}
+
+@media (max-width: 1000px) {
+  .form_card {
+    margin: 0.5rem;
+  }
+
+  .category_group {
+    grid-template-columns: 1fr;
+    padding: 0.8rem;
+  }
+
+  .checkbox_group {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .submit_container {
+    justify-content: center;
+    padding-right: 0rem;
+  }
+
+  .submit_button {
+    font-size: 1rem;
+    padding: 1rem;
+    min-width: fit-content;
+  }
+}

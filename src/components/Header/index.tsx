@@ -4,8 +4,8 @@ import {
   LocalActivity as LocalActivityIcon,
   Menu as MenuIcon,
   People as PeopleIcon,
-  Work as WorkIcon,
   Link as LinkIcon,
+  HolidayVillage,
 } from '@mui/icons-material';
 import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Link } from '@mui/material';
 import RecIMIcon from '@mui/icons-material/SportsFootball';
@@ -17,6 +17,8 @@ import { authenticate } from 'services/auth';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
 import GordonQuickSearch from './components/QuickSearch';
 import styles from './Header.module.css';
+import { fetchHousingAccessInfo } from 'services/residentLife/HousingAccess';
+import { useUser } from 'hooks';
 
 // Define header logo image - special image for Pi Day
 const todaysDate = new Date(); // Months: 0 = Jan, 1 = Feb, 2 = Mar, etc.
@@ -35,6 +37,7 @@ const TabUrlPatterns = [
   /^\/people$|^\/myprofile|^\/profile/,
   /^\/links$/,
   /^\/recim$/,
+  /^\/reslife$/,
 ];
 
 /**
@@ -81,6 +84,22 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
   const isAuthenticated = useIsAuthenticated();
   const tabIndex = useTabHighlight();
   const altText = useAltText();
+  const [HousingAccess, setCanAccessHousing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const { profile } = useUser();
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      setLoading(true);
+      if (isAuthenticated) {
+        const { canAccessHousing } = await fetchHousingAccessInfo(profile);
+        setCanAccessHousing(canAccessHousing);
+      }
+      setLoading(false);
+    };
+
+    fetchUserInfo();
+  }, [isAuthenticated, profile]);
 
   const handleOpenProfile = () => {
     navigate('/myprofile');
@@ -205,6 +224,16 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
             tabIndex={0}
           />
           {requiresAuthTab('Rec-IM', <RecIMIcon />)}
+          {!loading &&
+            HousingAccess && ( //check if the user should have housing access
+              <Tab
+                className={styles.tab}
+                icon={<HolidayVillage />}
+                label="Res-Life"
+                component={NavLink}
+                to="/reslife"
+              />
+            )}
         </Tabs>
         <div className={styles.side_container}>
           <div className={styles.people_search_container}>

@@ -1,0 +1,118 @@
+@import '../../../../vars';
+
+.headerMain {
+  margin-left: -0.5rem;
+  width: calc(100% + 1rem);
+  padding: 1rem 1rem;
+  // clip-path removes box shadow above this nav bar
+  clip-path: inset(0px -10px -10px -10px);
+  background-color: var(--mui-palette-neutral-light);
+  margin-top: -1rem;
+  border-bottom: 1px solid var(--mui-palette-neutral-main);
+}
+
+.title {
+  font-weight: bold;
+  font-size: 1.5em;
+  color: var(--mui-palette-neutral-contrastText);
+}
+
+.subtitle {
+  color: var(--mui-palette-neutral-contrastText);
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.button {
+  font-size: small;
+}
+
+.stickyNav {
+  margin-left: -0.5rem;
+  background-color: var(--mui-palette-neutral-light);
+  position: sticky;
+  top: -1rem;
+  margin-bottom: 1rem;
+  z-index: 10; // this component defaults to a higher z-index that overlays quick search
+  width: calc(100% + 1rem);
+  padding: 0.5rem 0.5rem;
+  // clip-path removes box shadow above this nav bar
+  clip-path: inset(0px -10px -10px -10px);
+}
+
+.breadcrumbContainer {
+  padding: 0.5rem;
+  color: var(--mui-palette-neutral-contrastText);
+}
+
+.breadcrumb-separator {
+  color: var(--mui-palette-neutral-contrastText);
+}
+
+.breadcrumbText {
+  font-size: 0.8em;
+  color: var(--mui-palette-neutral-contrastText);
+
+  @media (max-width: $break-sm) {
+    font-size: 0.7em;
+  }
+
+  @media (min-width: $break-sm) {
+    font-size: 0.9em;
+  }
+}
+
+.breadcrumbLink {
+  text-decoration: none;
+  color: var(--mui-palette-link-main);
+  &:hover {
+    color: var(--mui-palette-warning-main);
+    transition: color 0.1s;
+    text-decoration: underline;
+  }
+
+  // Dark mode-specific adjustments
+  @media (prefers-color-scheme: dark) {
+    color: var(--mui-palette-link-main);
+    &:hover {
+      color: var(--mui-palette-link-light);
+    }
+  }
+}
+
+/* Medium screens */
+@media (max-width: $break-md) {
+  .headerMain {
+    padding: 1rem 2rem;
+  }
+  .title {
+    font-size: 1.3em;
+  }
+  .subtitle {
+    font-size: 0.9em;
+  }
+  .button {
+    font-size: x-small;
+  }
+}
+
+/* Small screens */
+@media (max-width: $break-sm) {
+  .headerMain {
+    padding: 0.5rem 1rem;
+  }
+  .title {
+    font-size: 1.1em;
+  }
+  .subtitle {
+    font-size: 0.8em;
+  }
+
+  .breadcrumbText {
+    font-size: 0.7em;
+  }
+}

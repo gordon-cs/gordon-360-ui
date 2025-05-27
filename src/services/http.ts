@@ -78,6 +78,7 @@ const makeRequest = async <TResponse>(
   body?: HttpRequestBody,
   headers?: Headers,
 ): Promise<TResponse> => {
+  console.log(`${method} request to endpoint ${endpoint}`);
   const response = await fetch(`${apiBaseURL}api/${endpoint}`, {
     method,
     body,
@@ -112,12 +113,9 @@ export const parseResponse = async <TResponse>(res: Response): Promise<TResponse
 
 const handleAuthHeader = async (headers: Headers): Promise<Headers> => {
   if (isAuthenticated()) {
-    try {
-      const token = await getToken();
-      headers.append('Authorization', `Bearer ${token}`);
-    } catch (err) {
-      throw new Error('Token is not available');
-    }
+    console.log('Getting token');
+    const token = await getToken();
+    headers.append('Authorization', `Bearer ${token}`);
   }
   return headers;
 };
@@ -147,7 +145,7 @@ const dataURItoBlob = (dataURI: string) => {
 };
 
 type QueryStringPrimitive = string | number | boolean;
-type QueryStringSerializable = QueryStringPrimitive | Array<QueryStringPrimitive>;
+type QueryStringSerializable = QueryStringPrimitive | Array<QueryStringPrimitive> | undefined;
 
 /**
  * Convert an object into a URL query string.
@@ -167,6 +165,11 @@ const toQueryString = (
 
   // Add each property of `queryParams` object to the `urlSearchParams`
   Object.entries(queryParams).forEach(([key, value]) => {
+    // Do not serialize `undefined` values
+    if (value === undefined) {
+      return;
+    }
+
     if (Array.isArray(value)) {
       // If `value` is an array, append each element of the array to the searchParams
       // This is *most* standard way of encoding arrays in a query string, and the only way
