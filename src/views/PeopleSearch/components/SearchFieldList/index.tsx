@@ -186,14 +186,22 @@ const SearchFieldList = ({ onSearch }: Props) => {
     return includesSomeone && anySearchCriteria;
   };
 
+  const removePunctuation = (str: string) => str.replace(/[^\w\s]|_/g, '').replace(/\s+/g, ' ');
+
   const search = useCallback(
     async (params: PeopleSearchQuery) => {
       if (canSearch(params)) {
         setLoadingSearch(true);
 
-        await peopleSearchService.search(params).then(onSearch);
+        // Remove punctuation from last_name before searching
+        const sanitizedParams = {
+          ...params,
+          last_name: removePunctuation(params.last_name),
+        };
 
-        const newQueryString = serializeSearchParams(params);
+        await peopleSearchService.search(sanitizedParams).then(onSearch);
+
+        const newQueryString = serializeSearchParams(sanitizedParams);
         // If search params are new since last search, add search to history
         if (window.location.search !== newQueryString) {
           navigate(newQueryString);
