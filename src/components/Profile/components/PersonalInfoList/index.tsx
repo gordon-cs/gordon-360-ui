@@ -114,21 +114,22 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
   const isSpousePrivate =
     checkIsFacStaff(profile) && keepPrivate && profile.SpouseName !== PRIVATE_INFO;
 
-  // Get a student's mailbox combination and advisor using information in their profile
+  // Get the user's mailbox combination when they are viewing their own profile
+  useEffect(() => {
+    if (myProf) {
+      userService.getMailboxInformation().then((mailbox) => setMailCombo(mailbox.Combination));
+    }
+  }, [myProf]);
+
+  // Get a student's advisor using information in their profile
   useEffect(() => {
     async function loadPersonalInfo() {
-      if (isStudent) {
-        if (myProf) {
-          const info = await userService.getMailboxInformation();
-          setMailCombo(info.Combination);
-        }
-        if (canViewAcademicInfo || myProf) {
-          userService.getAdvisors(profile.AD_Username).then(setAdvisorsList);
-        }
+      if (isStudent && (canViewAcademicInfo || myProf)) {
+        userService.getAdvisors(profile.AD_Username).then(setAdvisorsList);
       }
     }
     loadPersonalInfo();
-  }, [myProf, profile.Mail_Location, isStudent]);
+  }, [myProf, isStudent, canViewAcademicInfo, profile.AD_Username]);
 
   const handleChangeMobilePhonePrivacy = async () => {
     try {
@@ -416,7 +417,9 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     ) : null;
 
   const mail =
-    isStudent && profile.Mail_Location ? (
+    // Show mailbox info if user is a student,
+    // or if this is my profile and the user has an assigned mailbox combination
+    (isStudent && profile.Mail_Location) || (myProf && mailCombo) ? (
       <>
         <ListItem className={styles.profile_info_list_item}>
           <Grid container alignItems="center">
