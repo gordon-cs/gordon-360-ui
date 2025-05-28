@@ -186,7 +186,8 @@ const SearchFieldList = ({ onSearch }: Props) => {
     return includesSomeone && anySearchCriteria;
   };
 
-  const removePunctuation = (str: string) => str.replace(/[^\w\s]|_/g, '').replace(/\s+/g, ' ');
+  // Extracts all the periods from the string, which helps out for searches of people like St. ***
+  const removePunctuation = (str: string) => str.replace(/[.]/g, '').replace(/\s+/g, ' ');
 
   const search = useCallback(
     async (params: PeopleSearchQuery) => {
