@@ -7,8 +7,11 @@ import Carousel from './components/Carousel';
 import DiningBalance from './components/DiningBalance';
 import GuestWelcome from './components/GuestWelcome';
 import NewsCard from './components/NewsCard';
+import LostAndFoundCard from './components/LostAndFoundCard';
 import DaysLeft from './components/DaysLeft';
 import PosterSwiper from './components/PosterSwiper';
+import Stack from '@mui/material/Stack';
+
 
 const Home = () => {
   const { profile, loading } = useUser();
@@ -30,7 +33,10 @@ const Home = () => {
           <DiningBalance />
         </Grid>
         <Grid item xs={12} md={5}>
-          <NewsCard />
+          <Stack spacing={2}>
+            <LostAndFoundCard />
+            <NewsCard />
+          </Stack>
         </Grid>
       </Grid>
     );

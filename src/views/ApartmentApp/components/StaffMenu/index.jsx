@@ -1,14 +1,14 @@
-import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@mui/material/';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@mui/material/';
 import GordonLoader from 'components/Loader';
 import { sortBy } from 'lodash';
-import { DateTime } from 'luxon';
 import { forwardRef, useCallback, useEffect, useState } from 'react';
 import { CSVLink } from 'react-csv';
 import { NotFoundError } from 'services/error';
 import housing from 'services/housing';
 // @TODO CSSMODULES - outside directory
+import { format } from 'date-fns';
 import styles from '../../ApartmentApp.module.css';
 import ApplicationsTable from './components/ApplicationTable';
 
@@ -81,7 +81,7 @@ const StaffMenu = ({ userProfile }) => {
     loadAllCurrentApplications();
 
     // Generate string of today's date in ISO format for use in CSV filename
-    setDateStr(DateTime.now().toISODate({ includeOffset: false }));
+    setDateStr(format(new Date(), 'yyyy-MM-dd'));
   }, [userProfile, loadAllCurrentApplications]);
 
   useEffect(() => {

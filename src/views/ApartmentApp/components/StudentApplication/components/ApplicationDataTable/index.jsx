@@ -10,7 +10,6 @@ import {
   Typography,
 } from '@mui/material/';
 import EmailIcon from '@mui/icons-material/Email';
-import { DateTime } from 'luxon';
 // @TODO CSSMODULES - outside directory
 import styles from '../../../../ApartmentApp.module.css';
 
@@ -35,11 +34,11 @@ const ApplicationDataTable = ({ applicationDetails }) => {
   let rows = [
     createData(
       'Last Submitted: ',
-      dateSubmitted ? DateTime.fromISO(dateSubmitted).toLocaleString() : 'Not yet submitted',
+      dateSubmitted ? new Date(dateSubmitted).toLocaleString() : 'Not yet submitted',
     ),
     createData(
       'Last Modified: ',
-      dateModified ? DateTime.fromISO(dateModified).toLocaleString() : 'Not yet saved',
+      dateModified ? new Date(dateModified).toLocaleString() : 'Not yet saved',
     ),
     createData('Application Editor: ', editorUsername ?? 'None'),
   ];

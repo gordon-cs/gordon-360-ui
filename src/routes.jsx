@@ -5,10 +5,10 @@ import BannerSubmission from './views/BannerSubmission';
 import CoCurricularTranscript from './views/CoCurricularTranscript';
 import EnrollmentCheckIn from './views/EnrollmentCheckIn';
 import Events from './views/Events';
-import EventsAttended from './views/EventsAttended';
 import Feedback from './views/Feedback';
 import Help from './views/Help';
 import Home from './views/Home';
+import Housing from './views/ResLife';
 import IDUploader from './views/IDUploader';
 import InvolvementProfile from './views/InvolvementProfile';
 import InvolvementsAll from './views/InvolvementsAll';
@@ -22,6 +22,9 @@ import PublicProfile from './views/PublicProfile';
 import Timesheets from './views/Timesheets';
 import RecIM from './views/RecIM';
 import Posters from './views/Posters';
+import RoomRanges from 'views/ResLife/components/RDView/components/RoomRanges';
+import CampusSafety from './views/LostAndFound';
+
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
 const routes = [
@@ -64,11 +67,6 @@ const routes = [
     name: 'Events',
     path: '/events',
     element: <Events />,
-  },
-  {
-    name: 'Attended',
-    path: '/attended',
-    element: <EventsAttended />,
   },
   {
     name: 'Feedback',
@@ -131,6 +129,11 @@ const routes = [
     element: <Links />,
   },
   {
+    name: 'Res-Life',
+    path: '/reslife/*',
+    element: <Housing />,
+  },
+  {
     name: 'Rec-IM',
     path: '/recim/*',
     element: <RecIM />,
@@ -139,6 +142,12 @@ const routes = [
     name: 'Posters',
     path: '/posters',
     element: <Posters />,
+  },
+  {
+    name: 'LostAndFound',
+    path: '/lostandfound/*',
+    element: <CampusSafety />,
+
   },
   {
     name: 'Page Not Found',

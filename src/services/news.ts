@@ -1,4 +1,3 @@
-import { DateTime } from 'luxon';
 import http from './http';
 import { filter, map } from './utils';
 
@@ -35,8 +34,6 @@ const getPostingByID = (id: number): Promise<NewsObject> => http.get(`news/${id}
 
 type FormattedNewsObject = NewsObject & {
   dayPosted: string;
-  yearPosted: number;
-  datePosted: string;
   author: string;
 };
 
@@ -47,17 +44,16 @@ type StudentNewsUpload = {
   image: string;
 };
 
-function formatPosting(posting: NewsObject): FormattedNewsObject {
-  const timestamp = DateTime.fromISO(posting.Entered);
-  const dayPosted = timestamp.weekdayShort + ', ' + timestamp.monthLong + ' ' + timestamp.day;
-  const yearPosted = timestamp.year;
-  const datePosted = timestamp.month + '/' + timestamp.day;
+const dayPostedFormatter = new Intl.DateTimeFormat('en-US', {
+  weekday: 'short',
+  month: 'long',
+  day: 'numeric',
+});
 
+function formatPosting(posting: NewsObject): FormattedNewsObject {
   return {
     ...posting,
-    dayPosted,
-    yearPosted,
-    datePosted,
+    dayPosted: dayPostedFormatter.format(new Date(posting.Entered)),
     author: posting.ADUN.replace('.', ' '),
   };
 }
