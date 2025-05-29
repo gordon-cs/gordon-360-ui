@@ -27,7 +27,7 @@ const Profile = ({ profile, myProf }: Props) => {
   const viewerIsPolice = useAuthGroups(AuthGroup.Police);
   const [canReadStudentSchedules, setCanReadStudentSchedules] = useState<boolean>();
   const profileIsStudent = profile.PersonType?.includes('stu');
-  const profileIsStaff = profile.Type == 'Staff';
+  const profileIsStaff = profile.Type == 'Staff'; // should we create an dict enum of the possible values?
 
   const createSnackbar = useCallback((message: string, severity: AlertColor) => {
     setSnackbar({ message, severity, open: true });
@@ -69,7 +69,7 @@ const Profile = ({ profile, myProf }: Props) => {
         </Grid>
       )}
 
-      {(myProf || !profileIsStudent || canReadStudentSchedules) && (
+      {(myProf || (!profileIsStudent && !profileIsStaff) || canReadStudentSchedules) && ( // is it only faculty that have schedule? could we say if faculty instead here?
         <Grid item xs={12} lg={10}>
           <SchedulePanel profile={profile} myProf={myProf} />
         </Grid>
