@@ -40,28 +40,29 @@ const PosterSwiper = (userName) => {
 
   useEffect(() => {
     getCurrentPosters().then(setCurrentPosters);
-    //getPostersByUser().then(setMyPosters);
+    // getPostersByUser().then(setMyPosters);
   }, []);
 
+  // Determine swiper height based on window size
+  const getSwiperHeight = () => {
+    if (size.width < 450) return '10vh'; // mobile
+    if (size.width < 1500) return '15vh'; // tablet
+    return '40vh'; // desktop
+  };
+
   return (
-    <Grid style={{ transform: 'scale(0.8)', transformOrigin: 'top left', width: '125%' }}>
-      <Card>
-        {/* <CardHeader
-          title={
-            <Grid container direction="row" alignItems="center">
-              <Grid item xs={7} align="left">
-                Upcoming Events
-              </Grid>
-              <Grid item xs={5} align="right">
-                <Button variant="contained" color="secondary" component={Link} to="/posters">
-                  More
-                </Button>
-              </Grid>
-            </Grid>
-          }
-          className="gc360_header"
-        /> */}
-        <CardContent>
+    <Grid
+      style={{
+        width: '100%',
+        maxWidth: 900,
+        margin: 'auto',
+        height: getSwiperHeight(),
+        maxHeight: '100%',
+        padding: 0,
+      }}
+    >
+      <Card style={{ height: '100%', boxShadow: 'none' }}>
+        <CardContent style={{ height: '100%', padding: 0 }}>
           <Swiper
             effect={'coverflow'}
             spaceBetween={30}
@@ -73,23 +74,24 @@ const PosterSwiper = (userName) => {
               clickable: true,
             }}
             loop={true}
-            navigation={window.innerWidth >= 600 ? true : false}
+            navigation={size.width >= 600}
             grabCursor={true}
             centeredSlides={true}
             keyboard={true}
-            slidesPerView={'auto'}
+            slidesPerView={'2.5'}
             coverflowEffect={{
               rotate: 50,
               stretch: 0,
               depth: 100,
               modifier: 1,
-              slideShadows: true,
+              slideShadows: false,
             }}
             modules={[EffectCoverflow, Keyboard, Navigation, Pagination, Autoplay]}
             className="mySwiper"
+            style={{ height: '100%' }}
           >
             {pizzaSlice.map((item) => (
-              <SwiperSlide>
+              <SwiperSlide key={item.id}>
                 <Card variant="outlined">
                   <CardActionArea component={Link} to={'/posters'}>
                     <CardMedia loading="lazy" component="img" src={item.image} title={item.title} />
@@ -98,11 +100,6 @@ const PosterSwiper = (userName) => {
               </SwiperSlide>
             ))}
           </Swiper>
-          {/* <Grid item align="center">
-            <Button variant="contained" color="secondary" component={Link} to="/posters">
-              More
-            </Button>
-          </Grid> */}
         </CardContent>
       </Card>
     </Grid>
