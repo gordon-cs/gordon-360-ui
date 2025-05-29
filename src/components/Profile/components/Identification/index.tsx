@@ -38,11 +38,11 @@ type Props = {
   myProf: boolean;
   isOnline: boolean;
   createSnackbar: (message: string, severity: AlertColor) => void;
+  fetchProfile: () => Promise<void>;
 };
 
-const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) => {
+const Identification = ({ profile, myProf, isOnline, createSnackbar, fetchProfile }: Props) => {
   const CROP_DIM = 200; // pixels
-  const [isImagePublic, setIsImagePublic] = useState<boolean>(false);
   const [defaultUserImage, setDefaultUserImage] = useState<string | null>();
   const [preferredUserImage, setPreferredUserImage] = useState<string | null>();
   const [hasPreferredImage, setHasPreferredImage] = useState(false);
@@ -56,7 +56,6 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
     cropBoxDim: number | undefined;
     aspectRatio: number;
   }>({ cropBoxDim: undefined, aspectRatio: 1 });
-  const [userProfile, setUserProfile] = useState<profileType>();
   const [currentWidth, setCurrentWidth] = useState<string>();
   const [cliftonColor, setCliftonColor] = useState<string>();
   const { updateImage } = useUserActions();
@@ -98,7 +97,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
         // then this could mean that the currently signed-in user is not allowed to see the preferred image or
         // a preferred image wasn't set
         setPreferredUserImage(preferredImage);
-        setHasPreferredImage(preferredImage ? true : false);
+        setHasPreferredImage(!!preferredImage);
         // Sets the given user's default image. If a preferred image is given but the default is undefined,
         // then this, means that the currently signed-in user is not allowed to see the default picture.
         setDefaultUserImage(defaultImage);
@@ -124,9 +123,6 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
       } catch (error) {
         // Do nothing
       }
-      setUserProfile(profile);
-
-      setIsImagePublic(profile.show_pic === 1);
 
       setHasNickname(profile?.NickName && profile.NickName !== profile.FirstName);
       setHasMaidenName(profile?.MaidenName && profile?.LastName !== profile.MaidenName);
@@ -245,7 +241,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
       .then(async () => {
         // Attempts to get the user's image since it has been reset
         try {
-          const { def: defaultImage } = await user.getImage(userProfile!.AD_Username);
+          const { def: defaultImage } = await user.getImage(profile.AD_Username);
           setDefaultUserImage(defaultImage);
           // Displays to the user that their photo has been restored
           createSnackbar('Original Photo Restored', 'success');
@@ -272,27 +268,24 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
    * Handles when the user chooses to hide or show their public profile picture
    */
   async function toggleImagePrivacy() {
-    const willBePublic = !isImagePublic;
-    // Attempts to change the user's privacy
+    const makePrivate = profile.show_pic === 1;
     let changedPrivacy = await user
-      .setImagePrivacy(willBePublic)
+      .setImagePrivacy(makePrivate)
       .then(async () => {
-        // Closes out of Photo Updater and removes any error messages
         clearPhotoDialogErrorTimeout();
         setOpenPhotoDialog(false);
         setShowCropper(null);
-        setIsImagePublic(willBePublic);
+        // refetch profile from backend
         return true;
       })
-      .catch(() => {
-        return false;
-      });
-    // User's image privacy successfully changed
+      .catch(() => false);
+    await fetchProfile();
     if (changedPrivacy) {
-      createSnackbar(isImagePublic ? 'Public Photo Hidden' : ' Public Photo Visible', 'success');
-    }
-    // User's image privacy failed to change
-    else {
+      createSnackbar(
+        profile.show_pic === 1 ? 'Public Photo Hidden' : 'Public Photo Visible',
+        'success',
+      );
+    } else {
       createSnackbar('Privacy Change Failed', 'error');
     }
   }
@@ -497,13 +490,13 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
                 classes={{ tooltip: 'tooltip' }}
                 id="tooltip-hide"
                 title={
-                  isImagePublic
+                  profile.show_pic === 1
                     ? 'Only faculty and police will see your photo'
                     : 'Make photo visible to other students'
                 }
               >
                 <Button variant="contained" onClick={toggleImagePrivacy} color="primary">
-                  {isImagePublic ? 'Hide' : 'Show'}
+                  {profile.show_pic === 1 ? 'Hide' : 'Show'}
                 </Button>
               </Tooltip>
               <Tooltip
@@ -546,40 +539,40 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
 
   const todaysDate = new Date();
   const isAprilFools = todaysDate.getMonth() === 3 && todaysDate.getDate() === 1;
-  const profileTitleAprilFools = userProfile?.Title
-    ? userProfile.Title.charAt(0).toUpperCase() +
-      userProfile.Title.slice(1).toLowerCase() +
+  const profileTitleAprilFools = profile?.Title
+    ? profile.Title.charAt(0).toUpperCase() +
+      profile.Title.slice(1).toLowerCase() +
       '. ' +
-      userProfile.LastName
+      profile.LastName
     : '';
 
   return (
     <div className={styles.identification_card}>
       <Grid container className={styles.identification_card_header}>
-        {userProfile &&
+        {profile &&
           (isStudent ? (
             <CardHeader
               title={`${
                 isAprilFools
                   ? profileTitleAprilFools
-                  : userProfile.NickName
-                    ? userProfile.NickName
-                    : userProfile.FirstName
+                  : profile.NickName
+                    ? profile.NickName
+                    : profile.FirstName
               }'s Profile`}
             />
           ) : (
             <CardHeader
-              title={`${userProfile.NickName ? userProfile.NickName : userProfile.FirstName} ${
-                userProfile.LastName
+              title={`${profile.NickName ? profile.NickName : profile.FirstName} ${
+                profile.LastName
               }'s Profile`}
             />
           ))}
-        {!userProfile && <CardHeader title="My Personal Profile" />}
+        {!profile && <CardHeader title="My Personal Profile" />}
       </Grid>
 
       <div className={styles.identification_card_content}>
         {/* SHOWS THE CARD'S CONTENT IF THE GIVEN USER'S INFORMATION IS AVAILABLE. OTHERWISE A LOADER */}
-        {userProfile ? (
+        {profile ? (
           <Grid
             container
             className={styles.identification_card_content_card}
@@ -688,8 +681,8 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
                   xs={12}
                   className={styles.identification_card_content_card_container_info_class}
                 >
-                  {checkIsStudent(userProfile) && userProfile.Class && (
-                    <Typography>{Class[userProfile.Class]}</Typography>
+                  {checkIsStudent(profile) && profile.Class && (
+                    <Typography>{Class[profile.Class]}</Typography>
                   )}
                 </Grid>
 
@@ -700,34 +693,30 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
                 >
                   <Typography variant="h6" paragraph>
                     {`${
-                      userProfile.Title && userProfile.PersonType === 'fac'
-                        ? `${userProfile.Title} `
-                        : ''
-                    }${userProfile.FirstName}${hasNickname ? ` (${userProfile.NickName})` : ''} ${
-                      userProfile.LastName
-                    }${hasMaidenName ? ` (${userProfile.MaidenName})` : ''}`}
+                      profile.Title && profile.PersonType === 'fac' ? `${profile.Title} ` : ''
+                    }${profile.FirstName}${hasNickname ? ` (${profile.NickName})` : ''} ${
+                      profile.LastName
+                    }${hasMaidenName ? ` (${profile.MaidenName})` : ''}`}
                   </Typography>
                 </Grid>
-                {checkIsFacStaff(userProfile) &&
-                  userProfile.JobTitle &&
-                  userProfile.JobTitle !== '' && (
-                    <Grid
-                      item
-                      xs={12}
-                      className={styles.identification_card_content_card_container_info_job_title}
-                    >
-                      <Typography variant="h6" paragraph>
-                        {userProfile.JobTitle}
-                      </Typography>
-                    </Grid>
-                  )}
-                {userProfile.Email ? (
+                {checkIsFacStaff(profile) && profile.JobTitle && profile.JobTitle !== '' && (
+                  <Grid
+                    item
+                    xs={12}
+                    className={styles.identification_card_content_card_container_info_job_title}
+                  >
+                    <Typography variant="h6" paragraph>
+                      {profile.JobTitle}
+                    </Typography>
+                  </Grid>
+                )}
+                {profile.Email ? (
                   <Grid
                     item
                     xs={12}
                     className={styles.identification_card_content_card_container_info_email}
                   >
-                    <a href={`mailto:${userProfile.Email}`}>
+                    <a href={`mailto:${profile.Email}`}>
                       <div
                         className={
                           styles.identification_card_content_card_container_info_email_container
@@ -738,7 +727,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
                             styles.identification_card_content_card_container_info_email_container_icon
                           }
                         />
-                        <Typography paragraph>{userProfile.Email}</Typography>
+                        <Typography paragraph>{profile.Email}</Typography>
                       </div>
                     </a>
                   </Grid>
@@ -752,9 +741,9 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
           <GordonLoader />
         )}
 
-        {userProfile && isOnline && myProf && (
+        {profile && isOnline && myProf && (
           <Link
-            to={`/profile/${userProfile.AD_Username}`}
+            to={`/profile/${profile.AD_Username}`}
             className={styles.identification_card_content_public_profile_link}
           >
             <Button color="secondary" variant="contained">

@@ -102,7 +102,7 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
   }, [isAuthenticated, profile]);
 
   const handleOpenProfile = () => {
-    navigate('/myprofile');
+    navigate('/myprofile'); // Use client-side navigation
   };
 
   const createDialogBox = () => {
