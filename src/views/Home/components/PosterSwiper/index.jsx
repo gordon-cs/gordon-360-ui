@@ -58,9 +58,9 @@ const PosterSwiper = (userName) => {
         <CardContent>
           <Swiper
             effect={'coverflow'}
-            spaceBetween={100}
+            spaceBetween={20}
             autoplay={{
-              delay: 2500,
+              delay: 3000,
               disableOnInteraction: false,
             }}
             pagination={{
@@ -79,11 +79,11 @@ const PosterSwiper = (userName) => {
                 slidesPerView: 2,
               },
               800: {
-                slidesPerView: 2.7,
+                slidesPerView: 3,
               },
             }}
             coverflowEffect={{
-              rotate: 50,
+              rotate: 20,
               stretch: 0,
               depth: 100,
               modifier: 1,
