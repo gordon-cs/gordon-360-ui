@@ -27,6 +27,7 @@ const Profile = ({ profile, myProf }: Props) => {
   const viewerIsPolice = useAuthGroups(AuthGroup.Police);
   const [canReadStudentSchedules, setCanReadStudentSchedules] = useState<boolean>();
   const profileIsStudent = profile.PersonType?.includes('stu');
+  const profileIsStaff = profile.Type == 'Staff';
 
   const createSnackbar = useCallback((message: string, severity: AlertColor) => {
     setSnackbar({ message, severity, open: true });
