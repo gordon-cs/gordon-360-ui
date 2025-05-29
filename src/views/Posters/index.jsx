@@ -33,7 +33,7 @@ const Posters = () => {
   const [openCropPoster, setOpenCropPoster] = useState(false);
 
   const [allPosters, setAllPosters] = useState([]);
-  const pizzaSlice = DATA.slice(0, 2);
+  const pizzaSlice = DATA.slice(0, 6);
   const sessionFromURL = new URLSearchParams(location.search).get('session');
 
   useEffect(() => {
