@@ -14,9 +14,12 @@
 }
 
 .swiper-slide img {
-  width: 23vh;
-  height: 32vh;
+  width: 100%;
+  height: 100%;
   object-fit: fill;
+  display: block;
+  aspect-ratio: 5 / 6; // Ensures all posters have the same aspect ratio
+  background: #ffffff00; // Optional: prevents transparency gaps
 }
 
 @media (max-width: $break-sm) {

@@ -44,28 +44,21 @@ const PosterSwiper = (userName) => {
   }, []);
 
   // Determine swiper height based on window size
-  const getSwiperHeight = () => {
-    if (size.width < 450) return '10vh'; // mobile
-    if (size.width < 1500) return '15vh'; // tablet
-    return '40vh'; // desktop
-  };
+  const swiperHeight = size.width < 450 ? '10vh' : size.width < 1500 ? '15vh' : '60vh';
+  const swiperWidth =
+    size.width < 450
+      ? '100%' // mobile: full width
+      : size.width < 1500
+        ? '90%' // tablet: almost full width
+        : '81vw'; // desktop: fixed max width
 
   return (
-    <Grid
-      style={{
-        width: '100%',
-        maxWidth: 900,
-        margin: 'auto',
-        height: getSwiperHeight(),
-        maxHeight: '100%',
-        padding: 0,
-      }}
-    >
-      <Card style={{ height: '100%', boxShadow: 'none' }}>
-        <CardContent style={{ height: '100%', padding: 0 }}>
+    <Grid>
+      <Card>
+        <CardContent>
           <Swiper
             effect={'coverflow'}
-            spaceBetween={30}
+            spaceBetween={100}
             autoplay={{
               delay: 2500,
               disableOnInteraction: false,
@@ -78,20 +71,20 @@ const PosterSwiper = (userName) => {
             grabCursor={true}
             centeredSlides={true}
             keyboard={true}
-            slidesPerView={'2.5'}
+            slidesPerView={'2.7'}
             coverflowEffect={{
               rotate: 50,
               stretch: 0,
               depth: 100,
               modifier: 1,
-              slideShadows: false,
+              slideShadows: true,
             }}
             modules={[EffectCoverflow, Keyboard, Navigation, Pagination, Autoplay]}
             className="mySwiper"
-            style={{ height: '100%' }}
+            // style={{ height: '100%' }}
           >
             {pizzaSlice.map((item) => (
-              <SwiperSlide key={item.id}>
+              <SwiperSlide key={item.id} style={{ height: '100%', justifyContent: 'space-around' }}>
                 <Card variant="outlined">
                   <CardActionArea component={Link} to={'/posters'}>
                     <CardMedia loading="lazy" component="img" src={item.image} title={item.title} />

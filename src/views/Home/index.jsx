@@ -22,8 +22,8 @@ const Home = () => {
   } else {
     return (
       <Grid container justifyContent="center" spacing={2}>
-        <Grid item xs={2} md={10}>
-          <Carousel />
+        <Grid item xs={12} md={10}>
+          <PosterSwiper />
         </Grid>
         <Grid item xs={12} md={10}>
           <DaysLeft />
@@ -33,7 +33,6 @@ const Home = () => {
         </Grid>
         <Grid item xs={12} md={5}>
           <Stack spacing={2}>
-            <PosterSwiper sx={{ mt: 0 }} />
             <LostAndFoundCard />
             <NewsCard />
           </Stack>
