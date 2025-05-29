@@ -2,8 +2,8 @@
 //som sort of css problem
 .swiper {
   width: 100%;
-  padding-top: 20px;
-  padding-bottom: 50px;
+  padding-top: 0.5vh;
+  padding-bottom: 0.5vh;
 }
 
 .swiper-slide {
@@ -19,7 +19,7 @@
   object-fit: fill;
   display: block;
   aspect-ratio: 5 / 6; // Ensures all posters have the same aspect ratio
-  background: #ffffff00; // Optional: prevents transparency gaps
+  background: #ffffff00;
 }
 
 @media (max-width: $break-sm) {
@@ -33,7 +33,9 @@
   .swiper-slide {
     background-position: center;
     background-size: cover;
-    width: 350px;
-    height: 450px;
+    width: 90vw; // Make it almost full width of the viewport
+    height: 60vw; // Adjust height for a good aspect ratio
+    max-width: 98vw;
+    max-height: 80vw;
   }
 }

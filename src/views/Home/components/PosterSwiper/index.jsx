@@ -71,7 +71,17 @@ const PosterSwiper = (userName) => {
             grabCursor={true}
             centeredSlides={true}
             keyboard={true}
-            slidesPerView={'2.7'}
+            breakpoints={{
+              0: {
+                slidesPerView: 1.3,
+              },
+              600: {
+                slidesPerView: 2,
+              },
+              800: {
+                slidesPerView: 2.7,
+              },
+            }}
             coverflowEffect={{
               rotate: 50,
               stretch: 0,
@@ -81,7 +91,6 @@ const PosterSwiper = (userName) => {
             }}
             modules={[EffectCoverflow, Keyboard, Navigation, Pagination, Autoplay]}
             className="mySwiper"
-            // style={{ height: '100%' }}
           >
             {pizzaSlice.map((item) => (
               <SwiperSlide key={item.id} style={{ height: '100%', justifyContent: 'space-around' }}>
