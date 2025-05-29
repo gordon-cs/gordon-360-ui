@@ -34,6 +34,7 @@ import {
 
 const PosterSwiper = (userName) => {
   const size = useWindowSize();
+  const pizzaSlice = DummyData.slice(0, DummyData.length);
   const [currentPosters, setCurrentPosters] = useState([]);
   const [myPosters, setMyPosters] = useState([]);
 
@@ -43,9 +44,9 @@ const PosterSwiper = (userName) => {
   }, []);
 
   return (
-    <Grid>
+    <Grid style={{ transform: 'scale(0.8)', transformOrigin: 'top left', width: '125%' }}>
       <Card>
-        <CardHeader
+        {/* <CardHeader
           title={
             <Grid container direction="row" alignItems="center">
               <Grid item xs={7} align="left">
@@ -59,7 +60,7 @@ const PosterSwiper = (userName) => {
             </Grid>
           }
           className="gc360_header"
-        />
+        /> */}
         <CardContent>
           <Swiper
             effect={'coverflow'}
@@ -82,26 +83,26 @@ const PosterSwiper = (userName) => {
               stretch: 0,
               depth: 100,
               modifier: 1,
-              slideShadows: false,
+              slideShadows: true,
             }}
             modules={[EffectCoverflow, Keyboard, Navigation, Pagination, Autoplay]}
             className="mySwiper"
           >
-            {currentPosters.map((item) => (
+            {pizzaSlice.map((item) => (
               <SwiperSlide>
                 <Card variant="outlined">
                   <CardActionArea component={Link} to={'/posters'}>
-                    <CardMedia
-                      loading="lazy"
-                      component="img"
-                      src={item.ImagePath}
-                      title={item.Title}
-                    />
+                    <CardMedia loading="lazy" component="img" src={item.image} title={item.title} />
                   </CardActionArea>
                 </Card>
               </SwiperSlide>
             ))}
           </Swiper>
+          {/* <Grid item align="center">
+            <Button variant="contained" color="secondary" component={Link} to="/posters">
+              More
+            </Button>
+          </Grid> */}
         </CardContent>
       </Card>
     </Grid>

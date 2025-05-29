@@ -20,7 +20,7 @@ const Home = () => {
   } else {
     return (
       <Grid container justifyContent="center" spacing={2}>
-        <Grid item xs={12} md={10}>
+        <Grid item xs={2} md={10}>
           <PosterSwiper />
         </Grid>
         <Grid item xs={12} md={10}>
