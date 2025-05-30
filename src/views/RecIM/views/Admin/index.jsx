@@ -46,6 +46,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { getRecIMReport } from 'services/recim/recim';
 import { Print } from '@mui/icons-material';
 import { AuthGroup } from 'services/auth';
+import { isFuture } from 'date-fns';
 //consider using react-to-print or react-pdf to create downloadable admin report
 
 const TabPanel = ({ children, value, index }) => {
@@ -84,7 +85,10 @@ const Admin = () => {
   const [openRecimReportBox, setOpenRecimReportBox] = useState();
   const [recimReport, setRecimReport] = useState();
   const isSuperAdmin = useAuthGroups(AuthGroup.RecIMAdmin);
-
+  const [ongoingActivities, setOngoingActivities] = useState([]);
+  const [registrableActivities, setRegistrableActivities] = useState([]);
+  const [completedActivities, setCompletedActivities] = useState([]);
+  const [activitySort, setActivitySort] = useState('Status');
   useEffect(() => {
     const loadProfile = async () => {
       setLoading(true);
@@ -110,6 +114,25 @@ const Admin = () => {
     if (user?.IsAdmin) loadData();
     if (user) setLoading(false);
   }, [user]);
+
+  useEffect(() => {
+    if (!activities) return;
+    let open = [];
+    let ongoing = [];
+    let completed = [];
+    activities.forEach((activity) => {
+      if (activity.RegistrationOpen || isFuture(Date.parse(activity.RegistrationStart))) {
+        open.push(activity);
+      } else if (isFuture(Date.parse(activity.EndDate))) {
+        ongoing.push(activity);
+      } else {
+        completed.push(activity);
+      }
+    });
+    setOngoingActivities(ongoing);
+    setRegistrableActivities(open);
+    setCompletedActivities(completed);
+  }, [activities]);
 
   const handleAdminMenuOpen = (e) => {
     setAdminMenuAnchorEl(e.currentTarget);
@@ -368,7 +391,54 @@ const Admin = () => {
             <Tab label="Sports" />
           </Tabs>
           <TabPanel value={tab} index={0}>
-            {activities ? <ActivityList activities={activities} /> : <GordonLoader />}
+            {activities ? (
+              <>
+                <Box display="flex" justifyContent="flex-end" mb={2}>
+                  <TextField
+                    select
+                    label="Sort By"
+                    value={activitySort}
+                    onChange={(e) => setActivitySort(e.target.value)}
+                    size="small"
+                    sx={{ minWidth: 160 }}
+                  >
+                    <MenuItem value="Status">Status</MenuItem>
+                    <MenuItem value="Name">Name</MenuItem>
+                    <MenuItem value="StartDate">Start Date</MenuItem>
+                  </TextField>
+                </Box>
+                {activitySort === 'Status' ? (
+                  <>
+                    <Typography variant="h5" sx={{ mt: 2, fontWeight: 'bold' }}>
+                      Ongoing
+                    </Typography>
+                    <ActivityList activities={ongoingActivities} />
+                    <Typography variant="h5" sx={{ mt: 2, fontWeight: 'bold' }}>
+                      Registrable
+                    </Typography>
+                    <ActivityList activities={registrableActivities} />
+                    <Typography variant="h5" sx={{ mt: 2, fontWeight: 'bold' }}>
+                      Completed
+                    </Typography>
+                    <ActivityList activities={completedActivities} />
+                  </>
+                ) : (
+                  <ActivityList
+                    activities={[...activities].sort((a, b) => {
+                      if (activitySort === 'Name') {
+                        return (a.Name || '').localeCompare(b.Name || '');
+                      }
+                      if (activitySort === 'StartDate') {
+                        return new Date(a.StartDate) - new Date(b.StartDate);
+                      }
+                      return 0;
+                    })}
+                  />
+                )}
+              </>
+            ) : (
+              <GordonLoader />
+            )}
           </TabPanel>
           <TabPanel value={tab} index={1}>
             {teams ? <TeamList teams={teams} /> : <GordonLoader />}
