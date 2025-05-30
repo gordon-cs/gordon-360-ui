@@ -89,6 +89,7 @@ const Admin = () => {
   const [registrableActivities, setRegistrableActivities] = useState([]);
   const [completedActivities, setCompletedActivities] = useState([]);
   const [activitySort, setActivitySort] = useState('Status');
+  const [sortedActivities, setSortedActivities] = useState([]);
   useEffect(() => {
     const loadProfile = async () => {
       setLoading(true);
@@ -133,6 +134,17 @@ const Admin = () => {
     setRegistrableActivities(open);
     setCompletedActivities(completed);
   }, [activities]);
+
+  useEffect(() => {
+    if (!activities) return;
+    let sorted = [...activities];
+    if (activitySort === 'Name') {
+      sorted.sort((a, b) => (a.Name || '').localeCompare(b.Name || ''));
+    } else if (activitySort === 'StartDate') {
+      sorted.sort((a, b) => new Date(a.StartDate) - new Date(b.StartDate));
+    }
+    setSortedActivities(sorted);
+  }, [activities, activitySort]);
 
   const handleAdminMenuOpen = (e) => {
     setAdminMenuAnchorEl(e.currentTarget);
@@ -398,7 +410,7 @@ const Admin = () => {
                     select
                     label="Sort By"
                     value={activitySort}
-                    onChange={(e) => setActivitySort(e.target.value)}
+                    onChange={(sort) => setActivitySort(sort.target.value)}
                     size="small"
                     sx={{ minWidth: 160 }}
                   >
@@ -423,17 +435,7 @@ const Admin = () => {
                     <ActivityList activities={completedActivities} />
                   </>
                 ) : (
-                  <ActivityList
-                    activities={[...activities].sort((a, b) => {
-                      if (activitySort === 'Name') {
-                        return (a.Name || '').localeCompare(b.Name || '');
-                      }
-                      if (activitySort === 'StartDate') {
-                        return new Date(a.StartDate) - new Date(b.StartDate);
-                      }
-                      return 0;
-                    })}
-                  />
+                  <ActivityList activities={sortedActivities} />
                 )}
               </>
             ) : (
