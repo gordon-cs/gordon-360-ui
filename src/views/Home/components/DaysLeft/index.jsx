@@ -16,138 +16,115 @@ date in the today const to test. e.g. '2023-12-05'*/
 
 const DaysLeft = () => {
   const [loading, setLoading] = useState(true);
-  const [termDates, setTermDates] = useState({});
+  const [periodDialog, setPeriodDialog] = useState({});
   const [termDialogue, setTermDialogue] = useState('');
   const [termProgress, setTermProgress] = useState(0);
   const currentYear = new Date().getFullYear();
-  const today = new Date();
+  const now = new Date('2025-01-13 13:59:59.000 EST');
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()); //`${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}`)
+  const msPerDay = 24 * 3600 * 1000; // milliseconds per day (time diffs are in milliseconds)
 
-  // Gathers all the academic term start and end dates that are used to find the term breaks values.
-  const fetchTermDates = async () => {
-    const termDates = {
-      fall: {
-        start: new Date((await session.get(`${currentYear}09`)).SessionBeginDate),
-        end: new Date((await session.get(`${currentYear}09`)).SessionEndDate),
-      },
-      spring: {
-        start: new Date((await session.get(`${currentYear}01`)).SessionBeginDate),
-        end: new Date((await session.get(`${currentYear}01`)).SessionEndDate),
-      },
-      summer: {
-        start: new Date((await session.get(`${currentYear}05`)).SessionBeginDate),
-        end: new Date((await session.get(`${currentYear}05`)).SessionEndDate),
-      },
+  const getCurrentPeriod = async () => {
+    let currentPeriod = {
+      type: null,
+      name: null,
+      start: null,
+      end: null,
     };
-    return termDates;
+
+    const sessionList = await session.getAll();
+
+    let previousPeriod = null;
+    /*
+    for (let s of sessionList) {
+      console.log(s.SessionCode, s.SessionDescription)
+      console.log(s.SessionBeginDate, s.SessionEndDate)
+    }
+    */
+    for (let s of sessionList) {
+      console.log(s.SessionCode, s.SessionBeginDate, s.SessionEndDate);
+      currentPeriod.start = new Date(s.SessionBeginDate);
+      currentPeriod.end = new Date(s.SessionEndDate);
+      switch (s.SessionCode.substring(4)) {
+        case '01':
+          currentPeriod.name = 'Spring';
+          break;
+        case '05':
+          currentPeriod.name = 'Summer';
+          break;
+        case '09':
+          currentPeriod.name = 'Fall';
+        default:
+          break;
+      }
+
+      console.log('  ', today);
+      console.log('  ', currentPeriod.start);
+      console.log('  ', currentPeriod.end);
+      if (previousPeriod == null && today > currentPeriod.end) {
+        // today is after the end of the most recent session, so we can't compute how many
+        // days until the next session starts
+        console.log('After session', s.SessionCode);
+        currentPeriod.type = 'break';
+        break;
+      } else if (today >= currentPeriod.start && today <= currentPeriod.end) {
+        // we are in a defined session (fall, spring, or summer)
+        console.log('In session', s.SessionCode);
+        currentPeriod.type = 'term';
+        break;
+      } else if (today > currentPeriod.end && today < previousPeriod.start) {
+        // we are between two defined sessions
+        console.log('Between sessions; after session', s.SessionCode);
+        currentPeriod.name = previousPeriod.name;
+        currentPeriod.start = addDays(currentPeriod.end, 1);
+        currentPeriod.end = addDays(previousPeriod.start, -1);
+        currentPeriod.type = 'break';
+        break;
+      }
+      previousPeriod = Object.assign({}, currentPeriod);
+    }
+
+    return currentPeriod;
   };
+
   useEffect(() => {
     const load = async () => {
       setLoading(true);
-
-      const [[daysInSemester], currentSession, termDates] = await Promise.all([
-        session.getDaysLeft(),
-        session.getCurrent(),
-        fetchTermDates(),
-      ]);
-
+      const [periodDialog] = await Promise.all([getCurrentPeriod()]);
+      setPeriodDialog(periodDialog);
       setLoading(false);
-      setTermDates(termDates);
     };
 
     load();
   }, [currentYear]);
 
-  // When performing math on dates multiply the answer by this to convert from ms to days
-  const msToDays = 1.1574074074074e-8;
-  // Stores the needed values to compute and display the progress bar properly
   useEffect(() => {
     if (!loading) {
-      const termValues = {
-        fall: {
-          name: 'Fall',
-          label: 'Fall',
-          type: 'Academic',
-          start: termDates.fall?.start,
-          end: termDates.fall?.end,
-        },
-        spring: {
-          name: 'Spring',
-          label: 'Spring',
-          type: 'Academic',
-          start: termDates.spring?.start,
-          end: termDates.spring?.end,
-        },
-        summer: {
-          name: 'Summer',
-          label: 'Summer',
-          type: 'Academic',
-          start: termDates.summer?.start,
-          end: termDates.summer?.end,
-        },
-        winter: {
-          name: 'Winter',
-          label: 'Spring',
-          type: 'Break',
-          start: addDays(termDates.fall?.end, 1),
-          end: addDays(termDates.spring?.start, -1),
-        },
-        preSummer: {
-          name: 'Pre-Summer',
-          label: 'Summer',
-          type: 'Break',
-          start: addDays(termDates.spring?.end, 1),
-          end: addDays(termDates.summer?.start, -1),
-        },
-        postSummer: {
-          name: 'Post-Summer',
-          label: 'Fall',
-          type: 'Break',
-          start: addDays(termDates.summer?.end, 1),
-          end: addDays(termDates.fall?.start, -1),
-        },
-      };
-      const termLoop = [
-        termValues.fall,
-        termValues.winter,
-        termValues.spring,
-        termValues.preSummer,
-        termValues.summer,
-        termValues.postSummer,
-      ];
+      let currentDaysLeft = Math.round((periodDialog.end - today) / msPerDay);
+      //      console.log("currentDaysLeft =", currentDaysLeft);
+      let currentProgress = Math.round(
+        (((today - periodDialog.start) / msPerDay + 1) /
+          (Math.round((periodDialog.end - periodDialog.start) / msPerDay) + 1)) *
+          100,
+      );
 
-      let currentTerm = 'Fall';
-      let currentLabel = 'Fall';
-      let currentDaysLeft = '';
-      let currentProgress = '';
-      let currentType = '';
-
-      // Iterate through all term start and end dates to find what term the current date is in
-      for (let term of termLoop) {
-        if (today >= term.start && today <= term.end) {
-          currentTerm = term.name;
-          currentLabel = term.label;
-          currentDaysLeft = Math.round((term.end - today) * msToDays) + 1;
-          currentProgress = Math.round(
-            (((today - term.start) * msToDays + 1) /
-              (Math.round((term.end - term.start) * msToDays) + 1)) *
-              100,
-          );
-          currentType = term.type;
-
-          break;
-        }
+      let termDialogue = null;
+      if (currentDaysLeft > 0) {
+        /* Applies the proper dialogue based on if we are in an academic term or a term break with 
+        a condition to make days singular if there is only 1 day left*/
+        termDialogue =
+          periodDialog.type === 'term'
+            ? `${currentDaysLeft} day${currentDaysLeft > 1 ? 's' : ''} remaining in ${periodDialog.name} Term`
+            : `${currentDaysLeft} day${currentDaysLeft > 1 ? 's' : ''} until ${periodDialog.name} Term`;
+      } else {
+        currentDaysLeft = -currentDaysLeft;
+        termDialogue = `${currentDaysLeft} day${currentDaysLeft != 1 ? 's' : ''} since the end of ${periodDialog.name} Term`;
+        currentProgress = 100;
       }
-
-      /* Applys the proper dialogue based on if we are in an academic term or a term break with 
-      a condition to make days singular if there is only 1 day left*/
-      const termDialogue =
-        currentType === 'Academic'
-          ? `${currentDaysLeft} Day${currentDaysLeft > 1 ? 's' : ''} Remaining in ${currentTerm} Term`
-          : `${currentDaysLeft} Day${currentDaysLeft > 1 ? 's' : ''} Until ${currentLabel} Term`;
       setTermDialogue(termDialogue);
       setTermProgress(currentProgress);
     }
-  }, [loading, termDates]);
+  }, [loading, periodDialog]);
 
   /* This won't display if termDialogue is empty, specifically when on train because it doesn't 
   access the correct dates.The width of the front container is 10,000 / termProgress to correctly 

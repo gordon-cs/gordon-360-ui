@@ -32,8 +32,8 @@ const terms = {
  * @returns List of sessions
  */
 const decodeSessionCode = (sessionCode: string): string => {
-  let sessionCodeYear = sessionCode.substr(0, 4);
-  let sessionCodeSeason = sessionCode.substr(4);
+  let sessionCodeYear = sessionCode.substring(0, 4);
+  let sessionCodeSeason = sessionCode.substring(4);
   switch (sessionCodeSeason) {
     case '01':
       return sessionCodeYear + 'spring';
@@ -55,8 +55,8 @@ const decodeSessionCode = (sessionCode: string): string => {
  * @returns List of sessions
  */
 const encodeSessionCode = (readableSessionCode: string): string => {
-  let sessionCodeYear = readableSessionCode.substr(0, 4);
-  let sessionCodeSeason = readableSessionCode.substr(4);
+  let sessionCodeYear = readableSessionCode.substring(0, 4);
+  let sessionCodeSeason = readableSessionCode.substring(4);
   switch (sessionCodeSeason) {
     case 'spring':
       return sessionCodeYear + '01';
@@ -77,12 +77,13 @@ const getTermCode = (): string => {
   let term = terms.fall;
   let year = now.getFullYear();
   if (now.getMonth() <= 6) {
+    // month is in range of January through July
     term = terms.spring;
-    // If spring term, decrement current year to get current academic year
+    // If spring or summer term, decrement current year to get current academic year
     year -= 1;
   }
 
-  return `${year.toString().substr(-2)}${term}`;
+  return `${year.toString()}${term}`;
 };
 
 const parseSessionCode = (sessionCode: string) => parse(sessionCode, 'yyyyMM', new Date());
