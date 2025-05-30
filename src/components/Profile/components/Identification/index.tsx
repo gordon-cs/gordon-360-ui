@@ -32,6 +32,8 @@ import { windowBreakWidths } from 'theme';
 import SocialMediaLinks from './components/SocialMediaLinks';
 import defaultGordonImage from './defaultGordonImage';
 import styles from './Identification.module.css';
+import { update } from 'lodash';
+import { tr } from 'date-fns/locale';
 
 type Props = {
   profile: profileType;
@@ -268,33 +270,38 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
       });
   }
 
-  /**
-   * Handles when the user chooses to hide or show their public profile picture
-   */
-  async function toggleImagePrivacy() {
-    const willBePublic = !isImagePublic;
-    // Attempts to change the user's privacy
-    let changedPrivacy = await user
-      .setImagePrivacy(willBePublic)
+  async function handleSetGordonDefaultImage() {
+    // Creates a promise to allow async to force for the user's image to update before fetching it
+    let response = user.postImage(`data:image/jpeg;base64,${defaultGordonImage}`);
+
+    // Promised Resolved - Fetch for user's preferred image (now set to Gordon default)
+    await response
       .then(async () => {
-        // Closes out of Photo Updater and removes any error messages
+        try {
+          const { def: defaultImage } = await user.getImage(userProfile!.AD_Username);
+          // Optionally, fetch the updated preferred image from the server
+          const { pref: preferredImage } = await user.getImage(userProfile!.AD_Username);
+          setPreferredUserImage(preferredImage ?? defaultGordonImage);
+          setHasPreferredImage(true);
+          setDefaultUserImage(defaultImage);
+          createSnackbar('Gordon image set as preferred', 'info');
+        } catch {
+          setPreferredUserImage(defaultGordonImage);
+          setHasPreferredImage(true);
+          createSnackbar(
+            'Gordon image set as preferred, but failed to verify from server',
+            'warning',
+          );
+        }
         clearPhotoDialogErrorTimeout();
         setOpenPhotoDialog(false);
-        setShowCropper(null);
-        setIsImagePublic(willBePublic);
-        return true;
+        setisPhotosSwitched(false);
+        updateImage();
       })
+      // Promised Rejected - Display error to the user
       .catch(() => {
-        return false;
+        createSnackbar('Failed to set default Gordon image', 'error');
       });
-    // User's image privacy successfully changed
-    if (changedPrivacy) {
-      createSnackbar(isImagePublic ? 'Public Photo Hidden' : ' Public Photo Visible', 'success');
-    }
-    // User's image privacy failed to change
-    else {
-      createSnackbar('Privacy Change Failed', 'error');
-    }
   }
 
   /**
@@ -484,39 +491,37 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
               </div>
             )}
           </DialogContent>
-          <DialogActions className="gc360_photo_dialog_box_actions_top">
+          <DialogActions className="gc360_photo_dialog_box_actions_middle">
+            {!showCropper && !hasPreferredImage && (
+              <Tooltip
+                classes={{ tooltip: 'tooltip' }}
+                id="tooltip-default"
+                title="Set your preferred image to the default Gordon image"
+              >
+                <Button variant="contained" color="secondary" onClick={handleSetGordonDefaultImage}>
+                  Default
+                </Button>
+              </Tooltip>
+            )}
             {showCropper && (
               <Button variant="contained" onClick={() => setShowCropper(null)} color="primary">
                 Go Back
               </Button>
             )}
           </DialogActions>
-          {!showCropper && (
-            <DialogActions className="gc360_photo_dialog_box_actions_middle">
+          <DialogActions className="gc360_photo_dialog_box_actions_middle">
+            {!showCropper && hasPreferredImage && (
               <Tooltip
                 classes={{ tooltip: 'tooltip' }}
-                id="tooltip-hide"
-                title={
-                  isImagePublic
-                    ? 'Only faculty and police will see your photo'
-                    : 'Make photo visible to other students'
-                }
-              >
-                <Button variant="contained" onClick={toggleImagePrivacy} color="primary">
-                  {isImagePublic ? 'Hide' : 'Show'}
-                </Button>
-              </Tooltip>
-              <Tooltip
-                classes={{ tooltip: 'tooltip' }}
-                id="tooltip-reset"
-                title="Restore your original ID photo"
+                id="tooltip-delete"
+                title="Delete your preferred image"
               >
                 <Button variant="contained" onClick={handleResetImage} color="error">
-                  Reset
+                  Delete
                 </Button>
               </Tooltip>
-            </DialogActions>
-          )}
+            )}
+          </DialogActions>
           <DialogActions className="gc360_photo_dialog_box_actions_bottom">
             <Button variant="outlined" onClick={handleCloseCancel} color="primary">
               Cancel
