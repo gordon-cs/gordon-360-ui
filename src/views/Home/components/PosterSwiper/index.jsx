@@ -106,24 +106,6 @@ const PosterSwiper = (userName) => {
                   <CardActionArea component={Link} to={'/posters'}>
                     <CardMedia loading="lazy" component="img" src={item.image} title={item.title} />
                   </CardActionArea>
-                  <Typography
-                    variant="h6"
-                    className="poster-title"
-                    align="center"
-                    sx={{
-                      mt: 1,
-                      fontWeight: 700,
-                      letterSpacing: '0.15em',
-                      marginTop: '10px',
-                      marginBottom: '10px',
-                      textShadow: '2px 2px 6px rgba(0,0,0,0.3)',
-                      fontFamily: "'Montserrat', 'Arial', sans-serif",
-                      textTransform: 'uppercase',
-                      background: 'info.main', // subtle gradient color
-                    }}
-                  >
-                    {item.title}
-                  </Typography>
                 </Card>
               </SwiperSlide>
             ))}
