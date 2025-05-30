@@ -6,6 +6,7 @@ import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useCallback, useEffect, useState } from 'react';
 import { AuthGroup } from 'services/auth';
 import scheduleService from 'services/schedule';
+import user from 'services/user';
 import {
   EmergencyInfoList,
   Identification,
@@ -15,18 +16,21 @@ import {
   SchedulePanel,
   VictoryPromise,
 } from './components';
+import { useLocation } from 'react-router-dom';
 
 type Props = {
   profile: profileType;
   myProf: boolean;
 };
 
-const Profile = ({ profile, myProf }: Props) => {
+const Profile = ({ profile: initialProfile, myProf }: Props) => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
+  const [profile, setProfile] = useState(initialProfile);
   const isOnline = useNetworkStatus();
   const viewerIsPolice = useAuthGroups(AuthGroup.Police);
   const [canReadStudentSchedules, setCanReadStudentSchedules] = useState<boolean>();
   const profileIsStudent = profile.PersonType?.includes('stu');
+  const location = useLocation();
 
   const createSnackbar = useCallback((message: string, severity: AlertColor) => {
     setSnackbar({ message, severity, open: true });
@@ -35,6 +39,17 @@ const Profile = ({ profile, myProf }: Props) => {
   useEffect(() => {
     scheduleService.getCanReadStudentSchedules().then(setCanReadStudentSchedules);
   }, []);
+
+  const fetchProfile = async () => {
+    const updatedProfile = await user.getProfileInfo(profile.AD_Username);
+    if (updatedProfile) setProfile(updatedProfile);
+  };
+
+  useEffect(() => {
+    // Refetch profile whenever the location changes (i.e., user navigates back)
+    fetchProfile();
+    // eslint-disable-next-line
+  }, [location.pathname]);
 
   return (
     <Grid container justifyContent="center" spacing={2}>
@@ -49,6 +64,7 @@ const Profile = ({ profile, myProf }: Props) => {
           isOnline={isOnline}
           myProf={myProf}
           createSnackbar={createSnackbar}
+          fetchProfile={fetchProfile}
         />
       </Grid>
 
