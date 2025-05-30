@@ -215,7 +215,7 @@ const Posters = () => {
             <Grid container direction="row" spacing={4}>
               {/* {allPosters.map((item) => ( */}
               {DATA.map((item) => (
-                <Grid item xs={6} sm={4} md={3} lg={2} key={item.key}>
+                <Grid item xs={6} sm={4} md={3} lg={2.5} key={item.key}>
                   <Card variant="outlined">
                     <CardActionArea
                       onClick={() => {
