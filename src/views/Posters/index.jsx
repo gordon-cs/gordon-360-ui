@@ -35,12 +35,15 @@ const Posters = () => {
   const [openCropPoster, setOpenCropPoster] = useState(false);
 
   const [allPosters, setAllPosters] = useState([]);
-  const pizzaSlice = DATA.filter((item) =>
-    myInvolvements.some((inv) =>
-      // inv.InvolvementCode === item.InvolvementCode &&
-      ['MEMBR', 'LEAD', 'ADV', 'GUEST'].includes(inv.Participation),
-    ),
-  );
+  const isMyClub = (org) =>
+    myInvolvements.some(
+      (inv) =>
+        inv.ActivityCode === org && ['MEMBR', 'LEAD', 'ADV', 'GUEST'].includes(inv.Participation),
+    );
+
+  const pizzaSlice = DATA.filter((item) => isMyClub(item.org));
+  const otherPosters = DATA.filter((item) => !pizzaSlice.includes(item));
+
   const sessionFromURL = new URLSearchParams(location.search).get('session');
 
   useEffect(() => {
@@ -83,7 +86,7 @@ const Posters = () => {
           await membershipService.get({
             username: profile.AD_Username,
             sessionCode: selectedSession,
-            participationTypes: Participation.GroupAdmin,
+            participationTypes: ['MEMBR', 'LEAD', 'ADV', 'GUEST'],
           }),
         );
       }
@@ -93,6 +96,10 @@ const Posters = () => {
       updateInvolvements();
     }
   }, [selectedSession, profile]);
+
+  useEffect(() => {
+    console.log('myInvolvements:', myInvolvements);
+  }, [myInvolvements]);
 
   useEffect(() => {}, [allInvolvements]);
 
@@ -106,6 +113,12 @@ const Posters = () => {
 
   const isOnline = useNetworkStatus();
   const navigate = useNavigate();
+  // Helper to get club name from involvement code
+  const getClubName = (involvementCode) => {
+    const involvement = allInvolvements.find((inv) => inv.InvolvementCode === involvementCode);
+    return involvement ? involvement.Name : involvementCode;
+  };
+
   return (
     <Grid container justifyContent="center" spacing={4}>
       <Dialog
@@ -160,6 +173,33 @@ const Posters = () => {
         </Grid>
       </Dialog>
 
+      <style>
+        {`
+          .poster-card {
+            transition: transform 0.4s cubic-bezier(.4,2,.6,1), box-shadow 0.4s;
+            box-shadow: none;
+            z-index: 1;
+            position: relative;
+          }
+          .poster-card:hover {
+            transform: scale(1.07) translateY(-8px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+            z-index: 10;
+          }
+          .poster-club {
+            opacity: 0;
+            max-height: 0;
+            transition: opacity 0.4s, max-height 0.4s;
+            overflow: hidden;
+          }
+          .poster-card:hover .poster-club {
+            transition: transform 0.7s cubic-bezier(.4,2,.6,1), opacity 0.7s;
+            opacity: 1;
+
+          }
+        `}
+      </style>
+
       <Grid item xs={12} lg={8}>
         <Card>
           <CardHeader
@@ -168,7 +208,11 @@ const Posters = () => {
                 <Grid item xs={7} align="left">
                   My Upcoming Club Events
                 </Grid>
-                {myInvolvements.length > 0 && (
+                {myInvolvements.some(
+                  (inv) =>
+                    inv.Participation === Participation.Advisor ||
+                    inv.Participation === Participation.Leader,
+                ) && (
                   <Grid item xs={5} align="right">
                     <Button
                       variant="contained"
@@ -186,37 +230,8 @@ const Posters = () => {
           <CardContent>
             <Grid container direction="row" spacing={4} className={'test1'}>
               {pizzaSlice.map((item) => (
-                <Grid item xs={6} sm={4} md={3} lg={3} key={item.key}>
-                  <Card variant="outlined">
-                    <CardActionArea component="div">
-                      <CardMedia
-                        loading="lazy"
-                        component="img"
-                        alt={item.alt}
-                        src={item.image}
-                        title={item.title}
-                      />
-                      <CardContent>
-                        <Typography className={'Poster Title'}>{item.title}</Typography>
-                      </CardContent>
-                    </CardActionArea>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          </CardContent>
-        </Card>
-      </Grid>
-
-      <Grid item xs={12} lg={8}>
-        <Card>
-          <CardHeader title="All Posters" className="gc360_header" />
-          <CardContent>
-            <Grid container direction="row" spacing={4}>
-              {/* {allPosters.map((item) => ( */}
-              {DATA.map((item) => (
-                <Grid item xs={6} sm={4} md={3} lg={2.5} key={item.key}>
-                  <Card variant="outlined">
+                <Grid item xs={6} sm={4} md={3} lg={2.4} key={item.key}>
+                  <Card variant="outlined" className="poster-card">
                     <CardActionArea
                       onClick={() => {
                         if (isOnline) {
@@ -235,6 +250,48 @@ const Posters = () => {
                       />
                       <CardContent>
                         <Typography className={'Poster Title'}>{item.title}</Typography>
+                        <Typography variant="body2" color="textSecondary" className="poster-club">
+                          {getClubName(item.org)}
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          </CardContent>
+        </Card>
+      </Grid>
+
+      <Grid item xs={12} lg={8}>
+        <Card>
+          <CardHeader title="Other Posters" className="gc360_header" />
+          <CardContent>
+            <Grid container direction="row" spacing={4}>
+              {otherPosters.map((item) => (
+                <Grid item xs={6} sm={4} md={3} lg={2.4} key={item.key}>
+                  <Card variant="outlined" className="poster-card">
+                    <CardActionArea
+                      onClick={() => {
+                        if (isOnline) {
+                          const currentSessionCode =
+                            sessionService.encodeSessionCode(selectedSession);
+                          navigate(`/activity/${currentSessionCode}/${item.org}`);
+                        }
+                      }}
+                    >
+                      <CardMedia
+                        loading="lazy"
+                        component="img"
+                        alt={item.alt}
+                        src={item.image}
+                        title={item.title}
+                      />
+                      <CardContent>
+                        <Typography className={'Poster Title'}>{item.title}</Typography>
+                        <Typography variant="body2" color="textSecondary" className="poster-club">
+                          {getClubName(item.org)}
+                        </Typography>
                       </CardContent>
                     </CardActionArea>
                   </Card>

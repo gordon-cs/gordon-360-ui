@@ -44,7 +44,7 @@ const PosterSwiper = (userName) => {
   }, []);
 
   // Determine swiper height based on window size
-  const swiperHeight = size.width < 450 ? '10vh' : size.width < 1500 ? '15vh' : '60vh';
+  const swiperHeight = size.width < 450 ? '10vh' : size.width < 1500 ? '15vh' : '65vh';
   const swiperWidth =
     size.width < 450
       ? '100%' // mobile: full width
@@ -53,7 +53,7 @@ const PosterSwiper = (userName) => {
         : '81vw'; // desktop: fixed max width
 
   return (
-    <Grid>
+    <Grid sx={{ mb: 4 }}>
       <Card>
         <CardContent>
           <Swiper
@@ -73,7 +73,7 @@ const PosterSwiper = (userName) => {
             keyboard={true}
             breakpoints={{
               0: {
-                slidesPerView: 1.3,
+                slidesPerView: 1.6,
               },
               600: {
                 slidesPerView: 2,
@@ -94,11 +94,36 @@ const PosterSwiper = (userName) => {
           >
             {/* {currentPosters.map((item) => ( */}
             {DummyData.map((item) => (
-              <SwiperSlide key={item.id} style={{ height: '100%', justifyContent: 'space-around' }}>
+              <SwiperSlide
+                key={item.id}
+                style={{
+                  height: '100%',
+
+                  justifyContent: 'space-around',
+                }}
+              >
                 <Card variant="outlined">
                   <CardActionArea component={Link} to={'/posters'}>
                     <CardMedia loading="lazy" component="img" src={item.image} title={item.title} />
                   </CardActionArea>
+                  <Typography
+                    variant="h6"
+                    className="poster-title"
+                    align="center"
+                    sx={{
+                      mt: 1,
+                      fontWeight: 700,
+                      letterSpacing: '0.15em',
+                      marginTop: '10px',
+                      marginBottom: '10px',
+                      textShadow: '2px 2px 6px rgba(0,0,0,0.3)',
+                      fontFamily: "'Montserrat', 'Arial', sans-serif",
+                      textTransform: 'uppercase',
+                      background: 'info.main', // subtle gradient color
+                    }}
+                  >
+                    {item.title}
+                  </Typography>
                 </Card>
               </SwiperSlide>
             ))}

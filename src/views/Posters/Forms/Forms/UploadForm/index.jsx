@@ -78,13 +78,12 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
   useEffect(() => {
     const updateInvolvements = async () => {
       if (profile) {
-        setMyInvolvements(
-          await membershipService.get({
-            username: profile.AD_Username,
-            sessionCode: selectedSession,
-            participationTypes: Participation.GroupAdmin,
-          }),
-        );
+        const involvements = await membershipService.get({
+          username: profile.AD_Username,
+          sessionCode: selectedSession,
+          participationTypes: [Participation.Advisor, Participation.Leader],
+        });
+        setMyInvolvements(involvements);
       }
     };
 
@@ -102,7 +101,7 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
         description &&
         selectedClub &&
         croppedImage &&
-        priorityStatus
+        (selectedClub !== 'CEC' || priorityStatus)
       ) {
         setIsSubmitDisabled(false);
       } else {

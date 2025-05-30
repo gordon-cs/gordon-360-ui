@@ -96,6 +96,14 @@ export const DATA = [
     org: 'COMPS',
   },
   {
+    key: '11',
+    title: 'Woah, Test',
+    image: SportPoster,
+    alt: 'alt text for poster 11',
+    desc: "Imagine playing Sports as a Computer Science Major.... Couldn't be me.",
+    org: 'COMPS',
+  },
+  {
     key: '9',
     title: 'Poster 6 Title',
     image: TestPoster,
