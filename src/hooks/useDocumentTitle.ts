@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 
 /**
  * Update the document (i.e. browser tab) title.
- *
  * @description
  * Can be passed an initial value to change it once,
  * and/or can be used to set the title declaratively via the returned `setTitle` function

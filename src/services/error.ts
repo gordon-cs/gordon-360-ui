@@ -27,7 +27,6 @@ class ConflictError implements Error {
 
 /**
  * Create an error object based on an HTTP error from the backend
- *
  * @param  err Error caught from HTTP request
  * @param res HTTP response
  * @returns An error

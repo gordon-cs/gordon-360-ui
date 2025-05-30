@@ -7,7 +7,6 @@
 
 /**
  * This file handles the caching of all local files for 360 and remote files for guest mode offline
- *
  * @author Jahnuel Dorelus
  */
 
@@ -242,9 +241,9 @@ async function cacheGuestFiles() {
 
 /**
  * Does a fetch of a link and attempts to cache it.
- * @param {String} link The URL of the fetch
- * @param {Number} attemptsLeft Determines how many times a fetch should retry if it fails
- * @returns {Boolean} Determines if the fetch was successful
+ * @param {string} link The URL of the fetch
+ * @param {number} attemptsLeft Determines how many times a fetch should retry if it fails
+ * @returns {boolean} Determines if the fetch was successful
  */
 async function fetchGuestFile(link, attemptsLeft = 2) {
   // Attempts to do a fetch with the given link
@@ -288,8 +287,8 @@ async function fetchGuestFile(link, attemptsLeft = 2) {
 /**
  * Saves the response's link by status number in order to have a list of links per
  * HTTP Status Code
- * @param {String} badLink The url of the bad response
- * @param {Number} statusNum The status number of the response
+ * @param {string} badLink The url of the bad response
+ * @param {number} statusNum The status number of the response
  */
 function saveBadResponseGuestLink(badLink, statusNum) {
   // If the list for the response's status number is non-existent, the list is created
@@ -314,7 +313,7 @@ function saveBadResponseGuestLink(badLink, statusNum) {
 
 /**
  * Saves the link of a canceled fetch
- * @param {String} link The url of the canceled fetch
+ * @param {string} link The url of the canceled fetch
  */
 function saveCanceledGuestLink(link) {
   // Checks to make sure the link is not already in the list to prevent duplicates
@@ -323,7 +322,7 @@ function saveCanceledGuestLink(link) {
 
 /**
  * Saves the link of a failed fetch
- * @param {String} link The url of the failed fetch
+ * @param {string} link The url of the failed fetch
  */
 function saveFailedGuestLink(link) {
   // Checks to make sure the link is not already in the list to prevent duplicates
@@ -332,7 +331,7 @@ function saveFailedGuestLink(link) {
 
 /**
  * Saves the link of a successful fetch
- * @param {String} link The url of the sucessful fetch
+ * @param {string} link The url of the sucessful fetch
  */
 function saveSuccessfulGuestLink(link) {
   // Checks to make sure the link is not already in the list to prevent duplicates

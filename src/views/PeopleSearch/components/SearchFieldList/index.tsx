@@ -173,6 +173,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
   /**
    * Whether the user can search for the current params.
    * This prevents a search with empty params, which freezes the client by trying to render thousands of results
+   * @param params
    */
   const canSearch = (params: PeopleSearchQuery) => {
     const { includeStudent, includeFacStaff, includeAlumni, ...criteria } = params;

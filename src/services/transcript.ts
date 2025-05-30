@@ -35,14 +35,13 @@ const getItems = (username: string) =>
 
 /**
  * Sorts transcript items into one of these categories:
- *  1. Honors, Leadership, and Research
- *  2. Experience
- *  3. Service and Service Learning
- *  4. Activities (the catch-all)
+ * 1. Honors, Leadership, and Research
+ * 2. Experience
+ * 3. Service and Service Learning
+ * 4. Activities (the catch-all)
  *
  * Memberships ars sorted based on their Activity Code, although this is not a perfect indicator
  * of which category a membership should belong to.
- *
  * @param memberships An array of membership objects retrieved from the database.
  * @param jobs Student jobs
  * @returns Transcript items categorized into the above categories

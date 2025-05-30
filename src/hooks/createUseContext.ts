@@ -2,7 +2,6 @@ import { Context, useContext } from 'react';
 
 /**
  * Create a hook that uses the specified context
- *
  * @template T
  * @param name The name of the context
  * @param context The context object

@@ -13,8 +13,7 @@ type GordonNavButtonProps = {
 
 /**
  * A Navigation Button for the Right Corner Menu
- *
- * @param {Object} props the component props
+ * @param {object} props the component props
  * @param {string} props.unavailable why the page linked to is unavailable. Either 'offline', 'unauthorized', or null
  * @param {Function} props.onLinkClick function called when link is clicked
  * @param {Function}  props.openUnavailableDialog function to open the dialog box when the linked page is unavailable

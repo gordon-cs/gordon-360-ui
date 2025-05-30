@@ -67,7 +67,6 @@ const getCurrentApplicationID = (username: string = ''): Promise<number> =>
 
 /**
  * Save the current state of the application to the database
- *
  * @param applicationDetails the ApplicationDetails object representing the state of this application
  * @returns Application's ID number //TODO: Update these API endpoints to return the ApplicationDetails rather than just the ApplicationID (Suggested by Dr. Tuck)
  */
@@ -127,7 +126,6 @@ function formatApplicantInfo(applicant: ApartmentApplicant): ApartmentApplicant 
 }
 /**
  * Helper function to fill in any missing or implied properties of an ApplicationDetails object, including properties required for the data table on the staff page
- *
  * @param applicationDetails an object representing all of the details of a given apartment applications
  * @returns Application details after formatting
  */

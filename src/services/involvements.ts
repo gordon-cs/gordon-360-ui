@@ -56,7 +56,6 @@ const getClosed = (): Promise<Activity[]> => http.get(`activities/closed`);
 
 /**
  * Filter a list of activities by type and description
- *
  * @param activities List of activities
  * @param typeDescription Activity type description to match exactly against
  * @param search Search value to fuzzy match description against
