@@ -89,10 +89,10 @@ export const DATA = [
   },
   {
     key: '10',
-    title: 'test Poster',
+    title: 'Computer Science Disco Night',
     image: DiscoPoster,
     alt: 'alt text for poster 10',
-    desc: 'this is a short descirption',
+    desc: 'Come one come all to the Computer Science Disco Night! Join us for a night of fun, dancing, and networking with fellow CS enthusiasts.',
     org: 'COMPS',
   },
   {

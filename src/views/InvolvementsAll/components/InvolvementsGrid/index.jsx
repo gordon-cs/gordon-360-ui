@@ -56,7 +56,7 @@ const InvolvementsGrid = ({
                       {activity.ActivityDescription}
                     </Typography>
                     {role && (
-                      <Typography variant="subtitle2" color="primary">
+                      <Typography variant="subtitle2" color="warning" sx={{ fontStyle: 'italic' }}>
                         {role}
                       </Typography>
                     )}
