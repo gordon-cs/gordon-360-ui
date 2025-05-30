@@ -92,7 +92,8 @@ const PosterSwiper = (userName) => {
             modules={[EffectCoverflow, Keyboard, Navigation, Pagination, Autoplay]}
             className="mySwiper"
           >
-            {pizzaSlice.map((item) => (
+            {/* {currentPosters.map((item) => ( */}
+            {DummyData.map((item) => (
               <SwiperSlide key={item.id} style={{ height: '100%', justifyContent: 'space-around' }}>
                 <Card variant="outlined">
                   <CardActionArea component={Link} to={'/posters'}>

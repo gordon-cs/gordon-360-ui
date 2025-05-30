@@ -17,6 +17,8 @@ import membershipService from 'services/membership';
 import { useUser } from 'hooks';
 import involvementService from 'services/involvements';
 import sessionService from 'services/session';
+import useNetworkStatus from 'hooks/useNetworkStatus';
+import { useNavigate } from 'react-router-dom';
 import { getCurrentPosters } from 'services/poster';
 import DATA from './dummy-posters/dummyposters';
 import { useLocation } from 'react-router-dom';
@@ -102,6 +104,8 @@ const Posters = () => {
     setCroppedImage(null);
   };
 
+  const isOnline = useNetworkStatus();
+  const navigate = useNavigate();
   return (
     <Grid container justifyContent="center" spacing={4}>
       <Dialog
@@ -209,10 +213,19 @@ const Posters = () => {
           <CardHeader title="All Posters" className="gc360_header" />
           <CardContent>
             <Grid container direction="row" spacing={4}>
-              {allPosters.map((item) => (
+              {/* {allPosters.map((item) => ( */}
+              {DATA.map((item) => (
                 <Grid item xs={6} sm={4} md={3} lg={2} key={item.key}>
                   <Card variant="outlined">
-                    <CardActionArea component="div">
+                    <CardActionArea
+                      onClick={() => {
+                        if (isOnline) {
+                          const currentSessionCode =
+                            sessionService.encodeSessionCode(selectedSession);
+                          navigate(`/activity/${currentSessionCode}/${item.org}`);
+                        }
+                      }}
+                    >
                       <CardMedia
                         loading="lazy"
                         component="img"
