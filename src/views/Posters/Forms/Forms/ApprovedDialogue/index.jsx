@@ -1,5 +1,13 @@
-import { Button, Dialog, DialogActions, DialogContentText, CardHeader, Grid } from '@mui/material';
-import { Link } from 'react-router-dom';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContentText,
+  CardHeader,
+  Grid,
+  Link as MuiLink,
+} from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 import { createPoster } from 'services/poster';
 
 const PosterCheck = ({ open, onClose, posterInfo }) => {
@@ -21,19 +29,26 @@ const PosterCheck = ({ open, onClose, posterInfo }) => {
       <CardHeader
         title={
           <Grid container direction="row" alignItems="center">
-            <Grid item xs={7} align="left"></Grid>
+            <Grid item xs={7} align="left">
+              <DialogContentText fontWeight="bold" color="warning" paddingTop={2} align="center">
+                {'Has your poster been approved? '}
+              </DialogContentText>
+            </Grid>
           </Grid>
         }
         className="gc360_header"
       />
-      <DialogContentText fontWeight={'bold'} color={'primary'} paddingTop={2} align="center">
-        {'Has your poster been approved?'}
-      </DialogContentText>
-      <DialogContentText color={'secondary'} padding={(5, 5)} align="left">
+      <DialogContentText color="warning" padding={2} align="left">
         {'For more information on advertising click here: '}
-        <Link color={'primary'} to="https://www.gordon.edu/studenthandbook/collegeevents">
+        <MuiLink
+          component={RouterLink}
+          to="https://www.gordon.edu/studenthandbook/collegeevents"
+          target="_blank"
+          rel="noopener noreferrer"
+          sx={{ color: 'secondary.main', fontWeight: 'bold' }}
+        >
           Advertising Guidelines
-        </Link>
+        </MuiLink>
       </DialogContentText>
       <DialogActions>
         <Button onClick={onClose} variant="contained" color="primary">
