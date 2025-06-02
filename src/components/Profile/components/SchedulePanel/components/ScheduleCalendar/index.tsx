@@ -1,9 +1,9 @@
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
-import EventCell from 'react-big-calendar';
 import { CourseEvent, Schedule, scheduleCalendarResources } from 'services/schedule';
 import './ScheduleCalendar.css';
 import { format, getDay, startOfWeek } from 'date-fns';
 import { enUS } from 'date-fns/locale';
+import EventWrapper from 'react-big-calendar/lib/addons/dragAndDrop';
 
 const locales = {
   'en-US': enUS,
@@ -21,13 +21,8 @@ type Props = {
   onSelectEvent: (event: CourseEvent) => void;
 };
 
-const EventComponent = () => {
-  return (
-    <div className={'customview'} style={{ width: '10%', backgroundColor: 'pink' }}>
-      test
-      <strong>test</strong>
-    </div>
-  );
+const EventWrapperCustom = ({ label }: { label: CourseEvent }) => {
+  return <strong>test {label.title}</strong>;
 };
 
 const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
@@ -45,13 +40,31 @@ const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
       : course.location.includes('null')
         ? (title = tempTitle)
         : (title = tempTitle + `\n${course.location}`);
+
     return { ...course, title };
   });
 
+  console.log(courseFormat);
+
   return (
     <Calendar
-      //components={{event: EventCell}}
+      //components={{event: EventWrapperCustom}}
       style={{ whiteSpace: 'pre-wrap' }}
+      eventPropGetter={(event: CourseEvent) => {
+        const firstQuadOfSemester = ['Fall 1', 'Spring 1', 'Summer 1'];
+        const secondQuadOfSemester = ['Fall 2', 'Spring 2', 'Summer 2'];
+        let subtermClassNames = ['subterm'];
+        console.log(event.subtermCode);
+        console.log(secondQuadOfSemester.includes(event.subtermCode));
+        if (firstQuadOfSemester.includes(event.subtermCode)) {
+          subtermClassNames.push('subterm1');
+        } else if (secondQuadOfSemester.includes(event.subtermCode)) {
+          subtermClassNames.push('subterm2');
+        } else {
+          return {};
+        }
+        return { className: subtermClassNames.join(' ') };
+      }}
       events={courseFormat}
       localizer={localizer}
       min={dayStart}
