@@ -14,14 +14,25 @@ import { IMaskInput } from 'react-imask';
 import userService from 'services/user';
 import styles from './UpdatePhone.module.css';
 
+interface SnackbarState {
+  message: string;
+  severity: AlertColor;
+  open: boolean;
+}
+
 const UpdatePhone = () => {
   const [open, setOpen] = useState(false);
   const [mobilePhoneNumber, setMobilePhoneNumber] = useState('');
-  const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
+  const [snackbar, setSnackbar] = useState<SnackbarState>({
+    message: '',
+    severity: 'info',
+    open: false,
+  });
 
   const handleSubmit = async () => {
     try {
       await userService.setMobilePhoneNumber(mobilePhoneNumber);
+      const updatedProfile = await userService.getProfileInfo();
       createSnackbar('Your phone number will update within a couple hours.', 'success');
     } catch {
       createSnackbar('Phone number failed to update. Please contact CTS.', 'error');
@@ -31,6 +42,10 @@ const UpdatePhone = () => {
 
   const createSnackbar = (message: string, severity: AlertColor) => {
     setSnackbar({ message, severity, open: true });
+  };
+
+  const handleInputChange = (_: string | undefined, value: string) => {
+    setMobilePhoneNumber(value);
   };
 
   return (
@@ -43,13 +58,14 @@ const UpdatePhone = () => {
       >
         <EditIcon fontSize="small" />
       </IconButton>
+
       <GordonDialogBox
         open={open}
         onClose={() => setOpen(false)}
         title="Update Phone Number"
         buttonName="UPDATE"
         buttonClicked={handleSubmit}
-        isButtonDisabled={mobilePhoneNumber.replace(/[-()\s\D]/g, '').length !== 10}
+        isButtonDisabled={mobilePhoneNumber.replace(/\D/g, '').length !== 10}
         cancelButtonName="CANCEL"
         cancelButtonClicked={() => setOpen(false)}
       >
@@ -60,47 +76,35 @@ const UpdatePhone = () => {
             id="mobile-phone-number-input"
             name="mobilePhoneNumber"
             value={mobilePhoneNumber}
-            onChange={(event) => setMobilePhoneNumber(event.target.value)}
-            inputComponent={phoneMaskUS}
+            onChange={() => {}} // required to suppress React warning
+            inputComponent={forwardRef(function MaskedPhoneInput(props, ref) {
+              const { name, ...rest } = props as InputBaseComponentProps & {
+                onChange: (name: string | undefined, value: string) => void;
+              };
+              return (
+                <IMaskInput
+                  {...rest}
+                  mask="(000) 000-0000"
+                  unmask={true}
+                  onAccept={(value: string) => handleInputChange(name, value)}
+                  overwrite
+                />
+              );
+            })}
             required
             autoFocus
           />
         </FormControl>
       </GordonDialogBox>
+
       <GordonSnackbar
         open={snackbar.open}
-        severity={snackbar.severity as AlertColor}
+        severity={snackbar.severity}
         text={snackbar.message}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
       />
     </div>
   );
 };
-
-// From material ui website
-// https://material-ui.com/components/text-fields/#integration-with-3rd-party-input-libraries
-const phoneMaskUS = forwardRef(
-  (
-    props: {
-      onChange: (name: string | undefined, value: string) => void;
-      name?: string;
-    } & InputBaseComponentProps,
-    ref,
-  ) => {
-    const { onChange, ...other } = props;
-
-    return (
-      <IMaskInput
-        {...other}
-        ref={ref}
-        mask="(000) 000-0000"
-        placeholderChar={'\u2000'}
-        unmask={true}
-        onAccept={(value) => onChange(props.name, value)}
-        overwrite
-      />
-    );
-  },
-);
 
 export default UpdatePhone;
