@@ -17,7 +17,7 @@ import styles from './ScheduleHeader.module.css';
 import scheduleService, { CourseEvent, Schedule } from 'services/schedule';
 import sessionService from 'services/session';
 import { Profile } from 'services/user';
-import { AuthError } from '@azure/msal-browser';
+import { AuthError } from 'services/error';
 
 type Props = {
   profile: Profile;
@@ -49,11 +49,8 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
           allSessionSchedules[0];
         setSelectedSchedule(defaultSchedule);
         setLoading(false);
-        console.log(profile);
       })
       .catch((reason: AuthError) => {
-        console.log('this is the type');
-        console.log(profile.Type);
         setLoading(false);
       });
   }, [profile.AD_Username]);

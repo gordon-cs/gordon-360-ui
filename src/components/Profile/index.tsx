@@ -69,11 +69,12 @@ const Profile = ({ profile, myProf }: Props) => {
         </Grid>
       )}
 
-      {(myProf || (!profileIsStudent && !profileIsStaff) || canReadStudentSchedules) && ( // is it only faculty that have schedule? could we say if faculty instead here?
+      {
+        // is it only faculty that have schedule? could we say if faculty instead here?
         <Grid item xs={12} lg={10}>
           <SchedulePanel profile={profile} myProf={myProf} />
         </Grid>
-      )}
+      }
 
       <Grid item xs={12} lg={5}>
         <Grid container spacing={2}>

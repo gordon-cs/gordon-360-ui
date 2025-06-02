@@ -1,4 +1,5 @@
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
+import EventCell from 'react-big-calendar';
 import { CourseEvent, Schedule, scheduleCalendarResources } from 'services/schedule';
 import './ScheduleCalendar.css';
 import { format, getDay, startOfWeek } from 'date-fns';
@@ -18,6 +19,15 @@ const localizer = dateFnsLocalizer({
 type Props = {
   schedule: Schedule;
   onSelectEvent: (event: CourseEvent) => void;
+};
+
+const EventComponent = () => {
+  return (
+    <div className={'customview'} style={{ width: '10%', backgroundColor: 'pink' }}>
+      test
+      <strong>test</strong>
+    </div>
+  );
 };
 
 const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
@@ -40,6 +50,7 @@ const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
 
   return (
     <Calendar
+      //components={{event: EventCell}}
       style={{ whiteSpace: 'pre-wrap' }}
       events={courseFormat}
       localizer={localizer}
