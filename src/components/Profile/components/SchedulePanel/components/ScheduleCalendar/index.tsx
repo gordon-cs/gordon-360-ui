@@ -3,7 +3,6 @@ import { CourseEvent, Schedule, scheduleCalendarResources } from 'services/sched
 import './ScheduleCalendar.css';
 import { format, getDay, startOfWeek } from 'date-fns';
 import { enUS } from 'date-fns/locale';
-import EventWrapper from 'react-big-calendar/lib/addons/dragAndDrop';
 
 const locales = {
   'en-US': enUS,
@@ -19,10 +18,6 @@ const localizer = dateFnsLocalizer({
 type Props = {
   schedule: Schedule;
   onSelectEvent: (event: CourseEvent) => void;
-};
-
-const EventWrapperCustom = ({ label }: { label: CourseEvent }) => {
-  return <strong>test {label.title}</strong>;
 };
 
 const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
@@ -44,18 +39,14 @@ const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
     return { ...course, title };
   });
 
-  console.log(courseFormat);
-
   return (
     <Calendar
-      //components={{event: EventWrapperCustom}}
       style={{ whiteSpace: 'pre-wrap' }}
       eventPropGetter={(event: CourseEvent) => {
         const firstQuadOfSemester = ['Fall 1', 'Spring 1', 'Summer 1'];
         const secondQuadOfSemester = ['Fall 2', 'Spring 2', 'Summer 2'];
         let subtermClassNames = ['subterm'];
-        console.log(event.subtermCode);
-        console.log(secondQuadOfSemester.includes(event.subtermCode));
+
         if (firstQuadOfSemester.includes(event.subtermCode)) {
           subtermClassNames.push('subterm1');
         } else if (secondQuadOfSemester.includes(event.subtermCode)) {
@@ -63,6 +54,7 @@ const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
         } else {
           return {};
         }
+
         return { className: subtermClassNames.join(' ') };
       }}
       events={courseFormat}
