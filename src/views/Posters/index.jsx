@@ -35,14 +35,22 @@ const Posters = () => {
   const [openCropPoster, setOpenCropPoster] = useState(false);
 
   const [allPosters, setAllPosters] = useState([]);
+
+  useEffect(() => {
+    const loadPosters = async () => {
+      const posters = await getCurrentPosters();
+      setAllPosters(posters);
+    };
+    loadPosters();
+  }, []);
   const isMyClub = (org) =>
     myInvolvements.some(
       (inv) =>
         inv.ActivityCode === org && ['MEMBR', 'LEAD', 'ADV', 'GUEST'].includes(inv.Participation),
     );
-
-  const pizzaSlice = DATA.filter((item) => isMyClub(item.org));
-  const otherPosters = DATA.filter((item) => !pizzaSlice.includes(item));
+  const posterGet = getCurrentPosters();
+  const pizzaSlice = allPosters.filter((item) => isMyClub(item.ClubCode));
+  const otherPosters = allPosters.filter((item) => !isMyClub(item.ClubCode));
 
   const sessionFromURL = new URLSearchParams(location.search).get('session');
 
@@ -237,22 +245,19 @@ const Posters = () => {
                         if (isOnline) {
                           const currentSessionCode =
                             sessionService.encodeSessionCode(selectedSession);
-                          navigate(`/activity/${currentSessionCode}/${item.org}`);
+                          navigate(`/activity/${currentSessionCode}/${item.ClubCode}`);
                         }
                       }}
                     >
                       <CardMedia
                         loading="lazy"
                         component="img"
-                        alt={item.alt}
-                        src={item.image}
-                        title={item.title}
+                        alt={item.Alt}
+                        src={item.ImagePath}
+                        title={item.Title}
                       />
                       <CardContent>
-                        <Typography className={'Poster Title'}>{item.title}</Typography>
-                        <Typography variant="body2" color="textSecondary" className="poster-club">
-                          {getClubName(item.org)}
-                        </Typography>
+                        <Typography className={'Poster Title'}>{item.Title}</Typography>
                       </CardContent>
                     </CardActionArea>
                   </Card>
@@ -284,8 +289,8 @@ const Posters = () => {
                         loading="lazy"
                         component="img"
                         alt={item.alt}
-                        src={item.image}
-                        title={item.title}
+                        src={item.ImagePath}
+                        title={item.Title}
                       />
                       <CardContent>
                         <Typography className={'Poster Title'}>{item.title}</Typography>

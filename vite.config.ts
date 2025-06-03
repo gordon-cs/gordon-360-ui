@@ -19,6 +19,16 @@ const config = ({ mode }) => {
           target: process.env.VITE_API_URL,
           changeOrigin: true,
         },
+        '/browseable': {
+          target: process.env.VITE_API_URL, // same as your backend URL
+          changeOrigin: true,
+          secure: false,
+        },
+        '/Posters': {
+          target: process.env.VITE_API_URL, // same as your backend URL
+          changeOrigin: true,
+          secure: false,
+        },
       },
     },
   });

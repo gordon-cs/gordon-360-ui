@@ -56,60 +56,73 @@ const PosterSwiper = (userName) => {
     <Grid sx={{ mb: 4 }}>
       <Card>
         <CardContent>
-          <Swiper
-            effect={'coverflow'}
-            spaceBetween={20}
-            autoplay={{
-              delay: 3000,
-              disableOnInteraction: false,
-            }}
-            pagination={{
-              clickable: true,
-            }}
-            loop={true}
-            navigation={size.width >= 600}
-            grabCursor={true}
-            centeredSlides={true}
-            keyboard={true}
-            breakpoints={{
-              0: {
-                slidesPerView: 1.6,
-              },
-              600: {
-                slidesPerView: 2,
-              },
-              800: {
-                slidesPerView: 3,
-              },
-            }}
-            coverflowEffect={{
-              rotate: 20,
-              stretch: 0,
-              depth: 100,
-              modifier: 1,
-              slideShadows: true,
-            }}
-            modules={[EffectCoverflow, Keyboard, Navigation, Pagination, Autoplay]}
-            className="mySwiper"
-          >
-            {/* {currentPosters.map((item) => ( */}
-            {DummyData.map((item) => (
-              <SwiperSlide
-                key={item.id}
-                style={{
-                  height: '100%',
-
-                  justifyContent: 'space-around',
-                }}
-              >
-                <Card variant="outlined">
-                  <CardActionArea component={Link} to={'/posters'}>
-                    <CardMedia loading="lazy" component="img" src={item.image} title={item.title} />
-                  </CardActionArea>
-                </Card>
-              </SwiperSlide>
-            ))}
-          </Swiper>
+          <Link to="/posters" style={{ textDecoration: 'none' }}>
+            <Swiper
+              effect={'coverflow'}
+              spaceBetween={20}
+              autoplay={{
+                delay: 3000,
+                disableOnInteraction: false,
+              }}
+              pagination={{
+                clickable: true,
+              }}
+              loop={true}
+              navigation={size.width >= 600}
+              grabCursor={true}
+              centeredSlides={true}
+              keyboard={true}
+              breakpoints={{
+                0: {
+                  slidesPerView: 1.6,
+                },
+                600: {
+                  slidesPerView: 2,
+                },
+                800: {
+                  slidesPerView: 3,
+                },
+              }}
+              coverflowEffect={{
+                rotate: 20,
+                stretch: 0,
+                depth: 100,
+                modifier: 1,
+                slideShadows: true,
+              }}
+              modules={[EffectCoverflow, Keyboard, Navigation, Pagination, Autoplay]}
+              className="mySwiper"
+            >
+              {currentPosters.length === 0 ? (
+                <Typography
+                  variant="body1"
+                  style={{ color: 'white', textAlign: 'center', width: '100%' }}
+                >
+                  No posters available.
+                </Typography>
+              ) : (
+                currentPosters.map((item) => (
+                  <SwiperSlide
+                    key={item.ID}
+                    style={{
+                      height: '100%',
+                      justifyContent: 'space-around',
+                    }}
+                  >
+                    <Card variant="outlined">
+                      <CardMedia
+                        loading="lazy"
+                        component="img"
+                        src={item.ImagePath}
+                        title={item.Title}
+                        sx={{ height: 300, objectFit: 'cover' }}
+                      />
+                    </Card>
+                  </SwiperSlide>
+                ))
+              )}
+            </Swiper>
+          </Link>
         </CardContent>
       </Card>
     </Grid>
