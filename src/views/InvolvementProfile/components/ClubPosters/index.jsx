@@ -4,28 +4,35 @@ import {
   CardContent,
   CardHeader,
   CardActionArea,
-  DialogContentText,
   CardMedia,
   Grid,
-  Link,
-  List,
-  TextField,
   Typography,
+  Dialog,
 } from '@mui/material';
-import DATA from 'views/Posters/dummy-posters/dummyposters.jsx';
-import React from 'react';
-import Dialog from '@mui/material/Dialog';
+import React, { useState, useEffect } from 'react';
+import { getCurrentPosters } from 'services/poster';
 
 const ClubPosters = ({ clubName, clubCode }) => {
-  let pizzaSlice = [];
-  for (var i = 0; i < DATA.length; i++) {
-    if (DATA[i].org == clubCode) {
-      pizzaSlice.push(DATA[i]);
-    }
-  }
+  const [posters, setPosters] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [selectedPoster, setSelectedPoster] = useState(null);
 
-  const [open, setOpen] = React.useState(false);
-  const [selectedPoster, setSelectedPoster] = React.useState(null);
+  useEffect(() => {
+    const fetchPosters = async () => {
+      try {
+        const allPosters = await getCurrentPosters();
+        const filtered = allPosters.filter((p) => p.ClubCode === clubCode);
+        setPosters(filtered);
+      } catch (error) {
+        console.error('Failed to load posters:', error);
+        setPosters([]);
+      }
+    };
+
+    if (clubCode) {
+      fetchPosters();
+    }
+  }, [clubCode]);
 
   const handleOpen = (poster) => {
     setSelectedPoster(poster);
@@ -47,8 +54,8 @@ const ClubPosters = ({ clubName, clubCode }) => {
         />
         <CardContent>
           <Grid container direction="row" spacing={4} className={'test1'}>
-            {pizzaSlice?.length > 0 ? (
-              pizzaSlice.map((item) => (
+            {posters.length > 0 ? (
+              posters.map((item) => (
                 <Grid item xs={6} sm={4} md={3} lg={3} key={item.key}>
                   <Card variant="outlined" elevation={0}>
                     <CardActionArea onClick={() => handleOpen(item)}>
@@ -56,13 +63,13 @@ const ClubPosters = ({ clubName, clubCode }) => {
                         loading="lazy"
                         component="img"
                         alt={item.alt}
-                        src={item.image}
-                        title={item.title}
-                        description={item.desc}
+                        src={item.ImagePath}
+                        title={item.Title}
+                        description={item.Description}
                       />
                       <CardContent>
                         <Typography className={'Poster Title'} variant="h6" fontWeight="bold">
-                          {item.title}
+                          {item.Title}
                         </Typography>
                         <Typography
                           className={'Poster Description'}
@@ -70,7 +77,7 @@ const ClubPosters = ({ clubName, clubCode }) => {
                           fontStyle="italic"
                           fontWeight="light"
                         >
-                          {item.desc}
+                          {item.Description}
                         </Typography>
                       </CardContent>
                     </CardActionArea>
@@ -98,16 +105,16 @@ const ClubPosters = ({ clubName, clubCode }) => {
             <CardMedia
               component="img"
               alt={selectedPoster.alt}
-              src={selectedPoster.image}
-              title={selectedPoster.title}
+              src={selectedPoster.ImagePath}
+              title={selectedPoster.Title}
               style={{ maxHeight: '80vh', objectFit: 'contain' }}
             />
             <CardContent>
               <Typography variant="h5" fontWeight="bold" textAlign={'center'}>
-                {selectedPoster.title}
+                {selectedPoster.Title}
               </Typography>
               <Typography variant="body1" fontStyle="italic" textAlign={'center'}>
-                {selectedPoster.desc}
+                {selectedPoster.Description}
               </Typography>
             </CardContent>
           </Card>

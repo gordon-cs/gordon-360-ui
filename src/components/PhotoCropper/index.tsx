@@ -14,11 +14,13 @@ import Cropper, { ReactCropperElement } from 'react-cropper';
 import Dropzone from 'react-dropzone';
 import styles from './PhotoCropper.module.css';
 import SimpleSnackbar from 'components/Snackbar';
+import { AspectRatio } from '@mui/icons-material';
 
 type PropTypes = {
   open: boolean;
   onClose: () => void;
   onSubmit: (dataUrl: string | undefined) => void;
+  aspectRatio?: number;
 };
 
 const enum UploadStep {
@@ -27,6 +29,8 @@ const enum UploadStep {
 }
 
 const CROP_DIM = 1200; // Minimum dimensions of cropped image in pixels
+
+const DEFAULT_ASPECT_RATIO = 2 / 16;
 
 const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
   const [preview, setPreview] = useState<string | null>(null);
@@ -38,7 +42,10 @@ const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
   const [cropperData, setCropperData] = useState<{
     cropBoxDim: number | undefined;
     aspectRatio: number;
-  }>({ cropBoxDim: undefined, aspectRatio: 1 });
+  }>({ cropBoxDim: undefined, aspectRatio: DEFAULT_ASPECT_RATIO });
+
+  const ratio = AspectRatio;
+
   const cropperRef = useRef<ReactCropperElement | null>(null);
   const [width, height] = useWindowSize();
 
@@ -97,7 +104,7 @@ const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
           const displayWidth = Math.min(newImage.width, maxWidth);
           const cropDim = (CROP_DIM * displayWidth) / newImage.width;
           setCropperData({
-            aspectRatio: newImage.width / newImage.height,
+            aspectRatio: DEFAULT_ASPECT_RATIO,
             cropBoxDim: cropDim,
           });
           setPreview(fileURL);
@@ -184,23 +191,32 @@ const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
             </Dropzone>
           ) : (
             <>
-              <Cropper
-                ref={cropperRef}
-                src={preview}
+              <div
                 style={{
-                  maxWidth: maxCropPreviewWidth(),
-                  maxHeight: maxCropPreviewWidth() / cropperData.aspectRatio,
+                  width: maxCropPreviewWidth(),
+                  height: maxCropPreviewWidth() / DEFAULT_ASPECT_RATIO,
+                  border: '2px dashed green', // For visual debug
+                  margin: 'auto',
                 }}
-                autoCropArea={1}
-                viewMode={3}
-                aspectRatio={1}
-                highlight={false}
-                background={false}
-                zoomable={false}
-                dragMode={'none'}
-                minCropBoxWidth={cropperData.cropBoxDim}
-                minCropBoxHeight={cropperData.cropBoxDim}
-              />
+              >
+                <Cropper
+                  aspectRatio={DEFAULT_ASPECT_RATIO}
+                  ref={cropperRef}
+                  src={preview}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                  }}
+                  autoCropArea={1}
+                  viewMode={3}
+                  highlight={false}
+                  background={false}
+                  zoomable={false}
+                  dragMode={'none'}
+                  minCropBoxWidth={cropperData.cropBoxDim}
+                  minCropBoxHeight={cropperData.cropBoxDim}
+                />
+              </div>
               <Button variant="contained" onClick={() => setPreview(null)}>
                 Choose Another Image
               </Button>

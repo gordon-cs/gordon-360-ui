@@ -15,17 +15,17 @@ const PostersGrid = ({ posters, sessionCode, noPostersText }) => {
             <Card variant="outlined">
               <CardActionArea
                 onClick={() => {
-                  alert(`${poster.title}`);
+                  alert(`${poster.Title}`);
                 }}
               >
                 <CardMedia
                   component="img"
                   alt={poster.alt}
-                  src={poster.image}
-                  title={poster.title}
+                  src={poster.ImagePath}
+                  title={poster.Title}
                 />
                 <CardContent>
-                  <Typography className={'test2'}>{poster.title}</Typography>
+                  <Typography className={'test2'}>{poster.Title}</Typography>
                 </CardContent>
               </CardActionArea>
             </Card>

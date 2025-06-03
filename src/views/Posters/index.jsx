@@ -43,10 +43,11 @@ const Posters = () => {
     };
     loadPosters();
   }, []);
-  const isMyClub = (org) =>
+  const isMyClub = (ClubCode) =>
     myInvolvements.some(
       (inv) =>
-        inv.ActivityCode === org && ['MEMBR', 'LEAD', 'ADV', 'GUEST'].includes(inv.Participation),
+        inv.ActivityCode === ClubCode &&
+        ['MEMBR', 'LEAD', 'ADV', 'GUEST'].includes(inv.Participation),
     );
   const posterGet = getCurrentPosters();
   const pizzaSlice = allPosters.filter((item) => isMyClub(item.ClubCode));
@@ -281,7 +282,7 @@ const Posters = () => {
                         if (isOnline) {
                           const currentSessionCode =
                             sessionService.encodeSessionCode(selectedSession);
-                          navigate(`/activity/${currentSessionCode}/${item.org}`);
+                          navigate(`/activity/${currentSessionCode}/${item.ClubCode}`);
                         }
                       }}
                     >
@@ -293,9 +294,9 @@ const Posters = () => {
                         title={item.Title}
                       />
                       <CardContent>
-                        <Typography className={'Poster Title'}>{item.title}</Typography>
+                        <Typography className={'Poster Title'}>{item.Title}</Typography>
                         <Typography variant="body2" color="textSecondary" className="poster-club">
-                          {getClubName(item.org)}
+                          {getClubName(item.ClubCode)}
                         </Typography>
                       </CardContent>
                     </CardActionArea>
