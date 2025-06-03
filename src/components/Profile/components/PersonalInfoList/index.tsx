@@ -20,8 +20,8 @@ import GordonTooltip from 'components/GordonTooltip';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { useAuthGroups } from 'hooks';
 import { useEffect, useState } from 'react';
+import userService, { Graduation } from 'services/user';
 import { AuthGroup } from 'services/auth';
-import userService from 'services/user';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import {
   Profile as profileType,
@@ -38,6 +38,7 @@ import CliftonStrengthsService from 'services/cliftonStrengths';
 import SLock from './Salsbury.png';
 import DPLock from './DandP.png';
 import DDLock from './DandD.png';
+import { differenceInYears } from 'date-fns'; // Import a date utility library like date-fns
 
 const PRIVATE_INFO = 'Private as requested.';
 
@@ -67,6 +68,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
   const [mailCombo, setMailCombo] = useState<string>();
   const [advisorsList, setAdvisorsList] = useState<AdvisorType[]>([]);
   const [showMailCombo, setShowMailCombo] = useState(false);
+  const [graduationInfo, setGraduationInfo] = useState<Graduation | null>(null);
   const isStudent = profile.PersonType?.includes('stu');
   const isFacStaff = profile.PersonType?.includes('fac');
   const isAlumni = profile.PersonType?.includes('alu');
@@ -130,6 +132,19 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     }
     loadPersonalInfo();
   }, [myProf, isStudent, canViewAcademicInfo, profile.AD_Username]);
+
+  // Get a student's graduation information
+  useEffect(() => {
+    async function loadPersonalInfo() {
+      if (isStudent && (canViewAcademicInfo || myProf)) {
+        userService
+          .getGraduation(profile.AD_Username)
+          .then(setGraduationInfo)
+          .catch(() => createSnackbar('Failed to fetch graduation information', 'error'));
+      }
+    }
+    loadPersonalInfo();
+  }, [myProf, profile, createSnackbar]);
 
   const handleChangeMobilePhonePrivacy = async () => {
     try {
@@ -704,6 +719,48 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
       </Typography>
     ) : null;
 
+  const graduationDetails =
+    myProf && checkIsStudent(profile) ? (
+      <ProfileInfoListItem
+        title="Graduation Information:"
+        contentText={
+          graduationInfo ? (
+            graduationInfo.GraduationFlag === 'Y' ? (
+              // If the intent to graduate form has been submitted
+              <>
+                <Typography>
+                  <b>Planned Graduation Year:</b> {profPlannedGradYear || 'Not Set'}
+                </Typography>
+                <Typography>
+                  <b>Flagged Graduation Date:</b> {graduationInfo.WhenGraduated || 'Not Set'}
+                </Typography>
+              </>
+            ) : (
+              // If the intent to graduate form has not been submitted
+              <>
+                <Typography>
+                  <b>Planned Graduation Year:</b> {profPlannedGradYear || 'Not Set'}
+                </Typography>
+                <Typography>
+                  <b>Warning:</b>{' '}
+                  {profPlannedGradYear
+                    ? `Please submit the intent to graduate form by the year before ${profPlannedGradYear}.`
+                    : graduationInfo.WhenGraduated
+                      ? `Please submit the intent to graduate form by the year before ${graduationInfo.WhenGraduated}.`
+                      : 'Please submit the intent to graduate form as soon as possible.'}
+                </Typography>
+              </>
+            )
+          ) : (
+            // If no graduation information is available
+            'No graduation information available.'
+          )
+        }
+        privateInfo
+        myProf={myProf}
+      />
+    ) : null;
+
   return (
     <Grid item xs={12}>
       <Card
@@ -745,7 +802,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
             {majors}
             {minors}
             {plannedGraduationYear}
-            {graduationYear}
+            {graduationDetails}
             {cliftonStrengths}
             {advisors}
             {campusDormInfo}
