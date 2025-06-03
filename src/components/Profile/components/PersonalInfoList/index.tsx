@@ -144,7 +144,33 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
       }
     }
     loadPersonalInfo();
-  }, [myProf, profile, createSnackbar]);
+  }, [myProf, isStudent, canViewAcademicInfo, profile.AD_Username, createSnackbar]);
+
+  const parseGraduationDate = (whenGraduated: string) => {
+    const [month, year] = whenGraduated.split(' '); // Split into "Month" and "Year"
+    const monthIndex = new Date(`${month} 1`).getMonth(); // Get the month index (0-11)
+    return new Date(Number(year), monthIndex, 1); // Create a new Date object (1st day of the month)
+  };
+
+  useEffect(() => {
+    if (graduationInfo && graduationInfo.GraduationFlag !== 'Y') {
+      const currentDate = new Date();
+      const plannedGradDate = profPlannedGradYear
+        ? new Date(`${profPlannedGradYear}-05-01`) // Assuming graduation is in May
+        : graduationInfo.WhenGraduated
+          ? parseGraduationDate(graduationInfo.WhenGraduated)
+          : null;
+
+      if (plannedGradDate && differenceInYears(plannedGradDate, currentDate) <= 1) {
+        createSnackbar(
+          `Please submit the intent to graduate form by the year before ${
+            profPlannedGradYear || graduationInfo.WhenGraduated
+          }.`,
+          'info',
+        );
+      }
+    }
+  }, [graduationInfo, profPlannedGradYear, createSnackbar]);
 
   const handleChangeMobilePhonePrivacy = async () => {
     try {
