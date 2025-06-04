@@ -54,7 +54,7 @@ type Props = {
   myProf: boolean;
   profile: profileType;
   isOnline: boolean;
-  createSnackbar: (message: string, severity: AlertColor) => void;
+  createSnackbar: (message: string, severity: AlertColor, link?: string) => void;
 };
 
 const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) => {
@@ -163,10 +163,11 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
 
       if (plannedGradDate && differenceInYears(plannedGradDate, currentDate) <= 1) {
         createSnackbar(
-          `Please submit the intent to graduate form by the year before ${
+          `Please submit the intent to graduate form 8-12 months months before ${
             profPlannedGradYear || graduationInfo.WhenGraduated
           }.`,
           'info',
+          'https://my.gordon.edu',
         );
       }
     }
@@ -718,6 +719,27 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
           </li>
           <li>
             <Typography>
+              It can take several weeks to process graduation applications. As a result, there may
+              be a delay of a few weeks between when a student submits the form and when this field
+              is updated.
+            </Typography>
+          </li>
+          <li>
+            <Typography>
+              <>Check the </>
+              <a
+                href="https://www.gordon.edu/academics/resources/registrar/undergraduate/degree
+              -checklist#:~:text=Apply%20for%20graduation%20(application%20on,available%20for%20
+              advice%20and%20consultation."
+                className={`gc360_text_link ${styles.note_link}`}
+              >
+                Undergraduate Degree Checklist
+              </a>
+              <> for more information</>
+            </Typography>
+          </li>
+          <li>
+            <Typography>
               For all other changes or to partially/fully prevent your data from displaying, please
               contact the{' '}
               <a
@@ -751,12 +773,9 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
         title="Graduation Information:"
         contentText={
           graduationInfo ? (
-            graduationInfo.GraduationFlag === 'Y' ? (
+            graduationInfo.GraduationFlag !== null ? (
               // If the intent to graduate form has been submitted
               <>
-                <Typography>
-                  <b>Planned Graduation Year:</b> {profPlannedGradYear || 'Not Set'}
-                </Typography>
                 <Typography>
                   <b>Flagged Graduation Date:</b> {graduationInfo.WhenGraduated || 'Not Set'}
                 </Typography>
@@ -765,15 +784,16 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
               // If the intent to graduate form has not been submitted
               <>
                 <Typography>
-                  <b>Planned Graduation Year:</b> {profPlannedGradYear || 'Not Set'}
-                </Typography>
-                <Typography>
+                  {console.log(graduationInfo.GraduationFlag)}
                   <b>Warning:</b>{' '}
                   {profPlannedGradYear
-                    ? `Please submit the intent to graduate form by the year before ${profPlannedGradYear}.`
+                    ? `Please submit the intent to graduate form 8-12 months months before ${profPlannedGradYear}.`
                     : graduationInfo.WhenGraduated
-                      ? `Please submit the intent to graduate form by the year before ${graduationInfo.WhenGraduated}.`
-                      : 'Please submit the intent to graduate form as soon as possible.'}
+                      ? `Please submit the intent to graduate form 8-12 months months before ${graduationInfo.WhenGraduated}.`
+                      : 'Please submit the intent to graduate form as soon as possible.  '}
+                  <a href="https://my.gordon.edu" className={`gc360_text_link ${styles.note_link}`}>
+                    <> Click here</>
+                  </a>
                 </Typography>
               </>
             )
