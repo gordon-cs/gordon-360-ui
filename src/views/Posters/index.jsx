@@ -19,8 +19,7 @@ import involvementService from 'services/involvements';
 import sessionService from 'services/session';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useNavigate } from 'react-router-dom';
-import { getCurrentPosters } from 'services/poster';
-import DATA from './dummy-posters/dummyposters';
+import { getCurrentPosters, deletePoster } from 'services/poster';
 import { useLocation } from 'react-router-dom';
 import CropPoster from './Forms/Forms/CropPoster';
 
@@ -33,8 +32,23 @@ const Posters = () => {
   const [croppedImage, setCroppedImage] = useState(null);
   const location = useLocation();
   const [openCropPoster, setOpenCropPoster] = useState(false);
-
   const [allPosters, setAllPosters] = useState([]);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false); // NEW
+  const [posterToDelete, setPosterToDelete] = useState(null); // NEW
+
+  const isOnline = useNetworkStatus();
+  const navigate = useNavigate();
+
+  const isMyClub = (ClubCode) =>
+    myInvolvements.some(
+      (inv) =>
+        inv.ActivityCode === ClubCode &&
+        ['MEMBR', 'LEAD', 'ADV', 'GUEST'].includes(inv.Participation),
+    );
+
+  const pizzaSlice = allPosters.filter((item) => isMyClub(item.ClubCode));
+  const otherPosters = allPosters.filter((item) => !isMyClub(item.ClubCode));
+  const sessionFromURL = new URLSearchParams(location.search).get('session');
 
   useEffect(() => {
     const loadPosters = async () => {
@@ -43,17 +57,6 @@ const Posters = () => {
     };
     loadPosters();
   }, []);
-  const isMyClub = (ClubCode) =>
-    myInvolvements.some(
-      (inv) =>
-        inv.ActivityCode === ClubCode &&
-        ['MEMBR', 'LEAD', 'ADV', 'GUEST'].includes(inv.Participation),
-    );
-  const posterGet = getCurrentPosters();
-  const pizzaSlice = allPosters.filter((item) => isMyClub(item.ClubCode));
-  const otherPosters = allPosters.filter((item) => !isMyClub(item.ClubCode));
-
-  const sessionFromURL = new URLSearchParams(location.search).get('session');
 
   useEffect(() => {
     const loadButton = async () => {
@@ -61,17 +64,14 @@ const Posters = () => {
         setSelectedSession(sessionService.encodeSessionCode(sessionFromURL));
       } else {
         const { SessionCode: currentSessionCode } = await sessionService.getCurrent();
-
         const [involvements, sessions] = await Promise.all([
           involvementService.getAll(currentSessionCode),
           sessionService.getAll(),
         ]);
-
         if (involvements.length === 0) {
           let IndexOfCurrentSession = sessions.findIndex(
             (session) => session.SessionCode === currentSessionCode,
           );
-
           for (let k = IndexOfCurrentSession + 1; k < sessions.length; k++) {
             const newInvolvements = await involvementService.getAll(sessions[k].SessionCode);
             if (newInvolvements.length !== 0) {
@@ -100,29 +100,40 @@ const Posters = () => {
         );
       }
     };
-
     if (selectedSession) {
       updateInvolvements();
     }
   }, [selectedSession, profile]);
 
-  useEffect(() => {
-    console.log('myInvolvements:', myInvolvements);
-  }, [myInvolvements]);
-
-  useEffect(() => {}, [allInvolvements]);
-
   const handleCropSubmit = (imageData) => {
     setCroppedImage(imageData);
   };
-  const clearOnClose = (e) => {
+
+  const clearOnClose = () => {
     setOpenUploadForm(false);
     setCroppedImage(null);
   };
 
-  const isOnline = useNetworkStatus();
-  const navigate = useNavigate();
-  // Helper to get club name from involvement code
+  // NEW: Delete dialog logic
+  const handleDeleteClick = (poster) => {
+    setPosterToDelete(poster);
+    setOpenDeleteDialog(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (posterToDelete) {
+      await deletePoster(posterToDelete.ID);
+      setAllPosters((prev) => prev.filter((p) => p.ID !== posterToDelete.ID));
+      setOpenDeleteDialog(false);
+      setPosterToDelete(null);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setOpenDeleteDialog(false);
+    setPosterToDelete(null);
+  };
+
   const getClubName = (involvementCode) => {
     const involvement = allInvolvements.find((inv) => inv.InvolvementCode === involvementCode);
     return involvement ? involvement.Name : involvementCode;
@@ -130,6 +141,7 @@ const Posters = () => {
 
   return (
     <Grid container justifyContent="center" spacing={4}>
+      {/* Upload Dialog */}
       <Dialog
         maxWidth="md"
         fullWidth
@@ -182,6 +194,25 @@ const Posters = () => {
         </Grid>
       </Dialog>
 
+      {/* NEW: Delete Confirmation Dialog */}
+      <Dialog open={openDeleteDialog} onClose={handleCancelDelete}>
+        <DialogContent>
+          <Typography variant="h6">Are you sure you want to delete this poster?</Typography>
+          <Grid container spacing={2} justifyContent="flex-end" marginTop={2}>
+            <Grid item>
+              <Button onClick={handleCancelDelete} color="secondary">
+                Cancel
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button onClick={handleConfirmDelete} color="error" variant="contained">
+                Delete
+              </Button>
+            </Grid>
+          </Grid>
+        </DialogContent>
+      </Dialog>
+
       <style>
         {`
           .poster-card {
@@ -204,11 +235,11 @@ const Posters = () => {
           .poster-card:hover .poster-club {
             transition: transform 0.7s cubic-bezier(.4,2,.6,1), opacity 0.7s;
             opacity: 1;
-
           }
         `}
       </style>
 
+      {/* My Posters Section */}
       <Grid item xs={12} lg={8}>
         <Card>
           <CardHeader
@@ -228,7 +259,7 @@ const Posters = () => {
                       color="secondary"
                       onClick={() => setOpenUploadForm(true)}
                     >
-                      Upload{'\u00A0'}Poster
+                      Upload&nbsp;Poster
                     </Button>
                   </Grid>
                 )}
@@ -237,7 +268,7 @@ const Posters = () => {
             className="gc360_header"
           />
           <CardContent>
-            <Grid container direction="row" spacing={4} className={'test1'}>
+            <Grid container direction="row" spacing={4}>
               {pizzaSlice.map((item) => (
                 <Grid item xs={6} sm={4} md={3} lg={2.4} key={item.key}>
                   <Card variant="outlined" className="poster-card">
@@ -280,6 +311,21 @@ const Posters = () => {
                         <Typography className={'Poster Title'}>{item.Title}</Typography>
                       </CardContent>
                     </CardActionArea>
+                    {myInvolvements.some(
+                      (inv) =>
+                        inv.Participation === Participation.Advisor ||
+                        inv.Participation === Participation.Leader,
+                    ) && (
+                      <Grid item xs={5} align="right">
+                        <Button
+                          variant="contained"
+                          color="error"
+                          onClick={() => handleDeleteClick(item)}
+                        >
+                          Delete&nbsp;Poster
+                        </Button>
+                      </Grid>
+                    )}
                   </Card>
                 </Grid>
               ))}
@@ -288,6 +334,7 @@ const Posters = () => {
         </Card>
       </Grid>
 
+      {/* Other Posters Section */}
       <Grid item xs={12} lg={8}>
         <Card>
           <CardHeader title="Other Posters" className="gc360_header" />
