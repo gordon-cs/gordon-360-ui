@@ -335,8 +335,9 @@ const Posters = () => {
                     </CardActionArea>
                     {myInvolvements.some(
                       (inv) =>
-                        inv.Participation === Participation.Advisor ||
-                        inv.Participation === Participation.Leader,
+                        inv.ActivityCode === item.ClubCode &&
+                        (inv.Participation === Participation.Advisor ||
+                          inv.Participation === Participation.Leader),
                     ) && (
                       <div className="delete-button-wrapper">
                         <Button
