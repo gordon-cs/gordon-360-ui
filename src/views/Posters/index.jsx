@@ -215,28 +215,50 @@ const Posters = () => {
 
       <style>
         {`
-          .poster-card {
-            transition: transform 0.4s cubic-bezier(.4,2,.6,1), box-shadow 0.4s;
-            box-shadow: none;
-            z-index: 1;
-            position: relative;
-          }
-          .poster-card:hover {
-            transform: scale(1.07) translateY(-8px);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-            z-index: 10;
-          }
-          .poster-club {
-            opacity: 0;
-            max-height: 0;
-            transition: opacity 0.4s, max-height 0.4s;
-            overflow: hidden;
-          }
-          .poster-card:hover .poster-club {
-            transition: transform 0.7s cubic-bezier(.4,2,.6,1), opacity 0.7s;
-            opacity: 1;
-          }
-        `}
+    .poster-card {
+      transition: transform 0.4s cubic-bezier(.4,2,.6,1), box-shadow 0.4s;
+      box-shadow: none;
+      z-index: 1;
+      position: relative;
+    }
+
+    .poster-card:hover {
+      transform: scale(1.07) translateY(-8px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      z-index: 10;
+    }
+
+    .poster-club {
+      opacity: 0;
+      max-height: 0;
+      transition: opacity 0.4s, max-height 0.4s;
+      overflow: hidden;
+    }
+
+    .poster-card:hover .poster-club {
+      transition: transform 0.7s cubic-bezier(.4,2,.6,1), opacity 0.7s;
+      opacity: 1;
+    }
+
+    .delete-button-wrapper {
+      text-align: center;
+      margin: 0px;
+      
+    }
+
+    .delete-button {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      pointer-events: none; /* Prevents hover flickering */
+    }
+
+    .poster-card:hover .delete-button {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+  `}
       </style>
 
       {/* My Posters Section */}
@@ -316,15 +338,16 @@ const Posters = () => {
                         inv.Participation === Participation.Advisor ||
                         inv.Participation === Participation.Leader,
                     ) && (
-                      <Grid item xs={5} align="right">
+                      <div className="delete-button-wrapper">
                         <Button
-                          variant="contained"
+                          variant="outlined"
                           color="error"
                           onClick={() => handleDeleteClick(item)}
+                          className="delete-button"
                         >
                           Delete&nbsp;Poster
                         </Button>
-                      </Grid>
+                      </div>
                     )}
                   </Card>
                 </Grid>
