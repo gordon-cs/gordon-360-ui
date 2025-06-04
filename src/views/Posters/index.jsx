@@ -200,7 +200,7 @@ const Posters = () => {
           <Typography variant="h6">Are you sure you want to delete this poster?</Typography>
           <Grid container spacing={2} justifyContent="flex-end" marginTop={2}>
             <Grid item>
-              <Button onClick={handleCancelDelete} color="secondary">
+              <Button onClick={handleCancelDelete} color="secondary" variant="outlined">
                 Cancel
               </Button>
             </Grid>
