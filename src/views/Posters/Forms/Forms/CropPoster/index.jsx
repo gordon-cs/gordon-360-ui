@@ -16,7 +16,7 @@ import styles from './CropPoster.module.scss';
 
 const CROPPER_WIDTH = 1056;
 const CROPPER_HEIGHT = 1632;
-const ASPECT_RATIO = 11 / 17;
+const ASPECT_RATIO = 14 / 17;
 
 const CropPoster = ({ open, onClose, onSubmit }) => {
   const [cropperImageData, setCropperImageData] = useState(null);
