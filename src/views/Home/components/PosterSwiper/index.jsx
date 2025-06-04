@@ -96,15 +96,14 @@ const PosterSwiper = (userName) => {
               {currentPosters.length === 0 ? (
                 <Typography
                   variant="body1"
+                  color="warning.main"
                   style={{
-                    color: 'white',
                     textAlign: 'center',
                     width: '100%',
                     fontFamily: '"Orbitron", "Montserrat", "Roboto", sans-serif',
                     letterSpacing: '2px',
                     fontWeight: 700,
                     fontSize: '1.3rem',
-                    textShadow: '2px 2px 8px #00000055',
                   }}
                 >
                   No posters available. Click to add yours!
