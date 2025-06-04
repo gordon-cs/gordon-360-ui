@@ -153,7 +153,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
   };
 
   useEffect(() => {
-    if (graduationInfo && graduationInfo.GraduationFlag !== 'Y') {
+    if (graduationInfo && graduationInfo.GraduationFlag === null) {
       const currentDate = new Date();
       const plannedGradDate = profPlannedGradYear
         ? new Date(`${profPlannedGradYear}-05-01`) // Assuming graduation is in May
@@ -161,9 +161,9 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
           ? parseGraduationDate(graduationInfo.WhenGraduated)
           : null;
 
-      if (plannedGradDate && differenceInYears(plannedGradDate, currentDate) <= 1) {
+      if (plannedGradDate && differenceInYears(plannedGradDate, currentDate) < 1) {
         createSnackbar(
-          `Please submit the intent to graduate form 8-12 months months before ${
+          `Please submit the Graduation Application form 8-12 months months before ${
             profPlannedGradYear || graduationInfo.WhenGraduated
           }.`,
           'info',
@@ -773,27 +773,46 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
           graduationInfo ? (
             graduationInfo.GraduationFlag !== null ? (
               // If the intent to graduate form has been submitted
-              <>
-                <Typography>
-                  <b>Flagged Graduation Date:</b> {graduationInfo.WhenGraduated || 'Not Set'}
-                </Typography>
-              </>
+              <Typography>
+                <b>Flagged Graduation Date:</b> {graduationInfo.WhenGraduated || 'Not Set'}
+              </Typography>
             ) : (
               // If the intent to graduate form has not been submitted
-              <>
-                <Typography>
-                  {console.log(graduationInfo.GraduationFlag)}
-                  <b>Warning:</b>{' '}
-                  {profPlannedGradYear
-                    ? `Please submit the intent to graduate form 8-12 months months before ${profPlannedGradYear}.`
-                    : graduationInfo.WhenGraduated
-                      ? `Please submit the intent to graduate form 8-12 months months before ${graduationInfo.WhenGraduated}.`
-                      : 'Please submit the intent to graduate form as soon as possible.  '}
-                  <a href="https://my.gordon.edu" className={`gc360_text_link ${styles.note_link}`}>
-                    <> Click here</>
-                  </a>
-                </Typography>
-              </>
+              (() => {
+                const currentDate = new Date();
+                const plannedGradDate = profPlannedGradYear
+                  ? new Date(`${profPlannedGradYear}-05-01`) // Assuming graduation is in May
+                  : graduationInfo.WhenGraduated
+                    ? parseGraduationDate(graduationInfo.WhenGraduated)
+                    : null;
+
+                if (plannedGradDate && differenceInYears(plannedGradDate, currentDate) < 1) {
+                  return (
+                    <Typography>
+                      <b>Warning:</b>{' '}
+                      {profPlannedGradYear
+                        ? `Please submit the Graduation Application form 8-12 months before ${profPlannedGradYear}.`
+                        : graduationInfo.WhenGraduated
+                          ? `Please submit the Graduation Application form 8-12 months before ${graduationInfo.WhenGraduated}.`
+                          : 'Please submit the Graduation Application form as soon as possible.'}
+                      <a
+                        href="https://my.gordon.edu"
+                        className={`gc360_text_link ${styles.note_link}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <> Click here</>
+                      </a>
+                    </Typography>
+                  );
+                } else {
+                  return (
+                    <Typography>
+                      <b>Estimated Graduation Date:</b> {graduationInfo.WhenGraduated || 'Not Set'}
+                    </Typography>
+                  );
+                }
+              })()
             )
           ) : (
             // If no graduation information is available
