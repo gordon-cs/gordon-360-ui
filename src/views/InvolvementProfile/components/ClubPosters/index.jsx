@@ -44,6 +44,8 @@ const ClubPosters = ({ clubName, clubCode }) => {
     setSelectedPoster(null);
   };
 
+  console.log('Selected Poster Priority:', selectedPoster?.Priority);
+
   return (
     <>
       <Card elevation={0}>
@@ -57,7 +59,26 @@ const ClubPosters = ({ clubName, clubCode }) => {
             {posters.length > 0 ? (
               posters.map((item) => (
                 <Grid item xs={6} sm={4} md={3} lg={3} key={item.key}>
-                  <Card variant="outlined" elevation={0}>
+                  <Card variant="outlined" elevation={0} sx={{ position: 'relative' }}>
+                    {item.Priority === 1 && (
+                      <Typography
+                        variant="h3"
+                        sx={{
+                          position: 'absolute',
+                          top: 8,
+                          right: 12,
+                          color: 'red',
+                          fontWeight: 'bold',
+                          fontSize: '3rem',
+                          zIndex: 3,
+                          userSelect: 'none',
+                          fontFamily: '"Orbitron", "Montserrat", "Roboto", sans-serif',
+                          textShadow: '2px 2px 8px #00000055',
+                        }}
+                      >
+                        !
+                      </Typography>
+                    )}
                     <CardActionArea onClick={() => handleOpen(item)}>
                       <CardMedia
                         loading="lazy"
@@ -99,7 +120,7 @@ const ClubPosters = ({ clubName, clubCode }) => {
           open={open}
           onClose={handleClose}
           maxWidth="md"
-          style={{ backgroundColor: '#ffffff00' }}
+          // style={{ backgroundColor: '#ffffff00' }}
         >
           <Card>
             <CardMedia

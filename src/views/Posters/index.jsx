@@ -241,6 +241,25 @@ const Posters = () => {
               {pizzaSlice.map((item) => (
                 <Grid item xs={6} sm={4} md={3} lg={2.4} key={item.key}>
                   <Card variant="outlined" className="poster-card">
+                    {item.Priority === 1 && (
+                      <Typography
+                        variant="h3"
+                        sx={{
+                          position: 'absolute',
+                          top: 8,
+                          right: 12,
+                          color: 'red',
+                          fontWeight: 'bold',
+                          fontSize: '3rem',
+                          zIndex: 3,
+                          userSelect: 'none',
+                          fontFamily: '"Orbitron", "Montserrat", "Roboto", sans-serif',
+                          textShadow: '2px 2px 8px #00000055',
+                        }}
+                      >
+                        !
+                      </Typography>
+                    )}
                     <CardActionArea
                       onClick={() => {
                         if (isOnline) {
@@ -277,6 +296,25 @@ const Posters = () => {
               {otherPosters.map((item) => (
                 <Grid item xs={6} sm={4} md={3} lg={2.4} key={item.key}>
                   <Card variant="outlined" className="poster-card">
+                    {item.Priority === 1 && (
+                      <Typography
+                        variant="h3"
+                        sx={{
+                          position: 'absolute',
+                          top: 8,
+                          right: 12,
+                          color: 'red',
+                          fontWeight: 'bold',
+                          fontSize: '3rem',
+                          zIndex: 3,
+                          userSelect: 'none',
+                          fontFamily: '"Orbitron", "Montserrat", "Roboto", sans-serif',
+                          textShadow: '2px 2px 8px #00000055',
+                        }}
+                      >
+                        !
+                      </Typography>
+                    )}
                     <CardActionArea
                       onClick={() => {
                         if (isOnline) {

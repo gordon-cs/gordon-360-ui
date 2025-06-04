@@ -96,9 +96,18 @@ const PosterSwiper = (userName) => {
               {currentPosters.length === 0 ? (
                 <Typography
                   variant="body1"
-                  style={{ color: 'white', textAlign: 'center', width: '100%' }}
+                  style={{
+                    color: 'white',
+                    textAlign: 'center',
+                    width: '100%',
+                    fontFamily: '"Orbitron", "Montserrat", "Roboto", sans-serif',
+                    letterSpacing: '2px',
+                    fontWeight: 700,
+                    fontSize: '1.3rem',
+                    textShadow: '2px 2px 8px #00000055',
+                  }}
                 >
-                  No posters available.
+                  No posters available. Click to add yours!
                 </Typography>
               ) : (
                 currentPosters.map((item) => (
@@ -109,13 +118,36 @@ const PosterSwiper = (userName) => {
                       justifyContent: 'space-around',
                     }}
                   >
-                    <Card variant="outlined">
+                    <Card variant="outlined" sx={{ position: 'relative' }}>
+                      {/* Priority Marker */}
+                      {item.Priority === 1 && (
+                        <Typography
+                          variant="h3"
+                          sx={{
+                            position: 'absolute',
+                            top: 8,
+                            right: 12,
+                            color: 'red',
+                            fontWeight: 'bold',
+                            fontSize: '5rem',
+                            zIndex: 3,
+                            userSelect: 'none',
+                            fontFamily: '"Orbitron", "Montserrat", "Roboto", sans-serif',
+                            textShadow: '2px 2px 8px #00000055',
+                          }}
+                        >
+                          !
+                        </Typography>
+                      )}
                       <CardMedia
                         loading="lazy"
                         component="img"
                         src={item.ImagePath}
                         title={item.Title}
-                        sx={{ height: 300, objectFit: 'cover' }}
+                        sx={{
+                          height: 300,
+                          objectFit: 'cover',
+                        }}
                       />
                     </Card>
                   </SwiperSlide>
