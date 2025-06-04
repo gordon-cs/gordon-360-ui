@@ -15,7 +15,6 @@ import {
   Profile as profileType,
   isStudent as checkIsStudent,
   isFacStaff as checkIsFacStaff,
-  isAlumni as checkIsAlumni,
 } from 'services/user';
 import EmailIcon from '@mui/icons-material/Email';
 import GordonLoader from 'components/Loader/index';
@@ -23,7 +22,6 @@ import 'cropperjs/dist/cropper.css';
 import { useUserActions } from 'hooks';
 import { useEffect, useRef, useState, ReactNode } from 'react';
 import Cropper, { ReactCropperElement } from 'react-cropper';
-import ZoomEvent from 'react-cropper';
 import Dropzone from 'react-dropzone';
 import { Link } from 'react-router-dom';
 import { Class } from 'services/peopleSearch';

@@ -12,7 +12,7 @@ import RecIMIcon from '@mui/icons-material/SportsFootball';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { useNetworkStatus } from 'hooks';
 import { useEffect, useState } from 'react';
-import { useNavigate, NavLink, useLocation, LinkProps as RouterLinkProps } from 'react-router-dom';
+import { useNavigate, NavLink, useLocation } from 'react-router-dom';
 import { authenticate } from 'services/auth';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
 import GordonQuickSearch from './components/QuickSearch';
@@ -102,7 +102,7 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
   }, [isAuthenticated, profile]);
 
   const handleOpenProfile = () => {
-    navigate('/myprofile'); // Use client-side navigation
+    navigate('/myprofile');
   };
 
   const createDialogBox = () => {
