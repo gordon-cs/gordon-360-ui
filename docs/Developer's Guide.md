@@ -56,7 +56,7 @@ Here are the steps to setup the frontend for development:
    npm install
    ```
 
-   This will install the frontend's dependencies. It may take a long time the first time you run it.
+   This will install the frontend's dependencies. **This may take a _long_ time** (e.g. tens of minutes) the first time you run it.
 
 1. Start the project
 
@@ -66,7 +66,7 @@ Here are the steps to setup the frontend for development:
    npm run start
    ```
 
-   This will build the project, start a web server, and open the frontend in a new browser tab. It may take several minutes. Once it loads, you are successfully running the frontend and are all set to begin developing.
+   This will build the project and start a server running on http://localhost:5173. It is possible that the port number may be different (e.g. 5174 or higher); this means you already have an instance of the local server running on your computer. A new browser window or tab may be opened or you may have to do this manually and then connect to http://localhost:5173. This process may take several minutes, particulary the first time you do it. Once the page is loaded you are successfully running the frontend and are all set to begin developing.
 
 # Connecting to the Backend
 
