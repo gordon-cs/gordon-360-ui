@@ -2,35 +2,35 @@ import { useEffect, useState } from 'react';
 import session from 'services/session';
 import styles from './ProgressBar.module.css';
 import { Grid } from '@mui/material';
-import { addDays } from 'date-fns';
 
 /* DaysLeft calculates the start and end date of each term and the breaks in between. 
 It uses the difference between term start and end dates to find the length of each term break. 
 The loop iterates over each start and end date to find which term the current date is in between.
 Once the current term is found the values that each term holds in termValues are used to set the 
-value of the progress bar and the text that is displayed. 
-TESTING: First change localhost to PROD. If it is currently in the fall semester add 1 to the 
-current year of the spring and summer start and end dates. If it is currently beyond the new year 
-then subtract 1 from the year for the start and end of the fall. You can then change the current 
-date in the today const to test. e.g. '2023-12-05'*/
+value of the progress bar and the text that is displayed. */
+
+/* TESTING: First modify .env.development so that VITE_API_URL=https://360Api.gordon.edu/ so we
+will use the most up-to-date sessions.  Change the value assigned to "today" to try various
+dates, focusing on those on the session start and end dates.  Be sure to try dates just before
+and after these dates too. Examples for the 2024-2025 academic year are provided below. */
 
 const DaysLeft = () => {
   const [loading, setLoading] = useState(true);
   const [sessionList, setSessionList] = useState({});
-  const [termDialog, setTermDialog] = useState('');
+  const [daysLeftDialog, setDaysLeftDialog] = useState('');
   const [termProgress, setTermProgress] = useState(0);
   const msPerDay = 24 * 3600 * 1000; // milliseconds per day (time diffs are in milliseconds)
-  const currentYear = new Date().getFullYear();
-  //const now = new Date();
-  //const now = new Date('2025-05-15 00:00:00.000 EDT'); //TESTING
-  //const now = new Date('2025-01-12 00:00:00.000 EST'); // Last day of winter break
-  //const now = new Date('2025-01-13 00:00:00.000 EST'); // First day of spring term
-  //const now = new Date('2025-05-18 00:00:00.000 EDT'); // Last day of sprint term
-  //const now = new Date('2025-05-16 00:00:00.000 EDT'); // First day of summer term
-  //const now = new Date('2025-08-10 00:00:00.000 EDT'); // Last day of summer term
-  //const now = new Date('2025-08-11 00:00:00.000 EDT'); // First day of summer break
-  const now = new Date('2025-08-12 00:00:00.000 EDT'); // Second day of summer break
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  const today = new Date().setHours(0, 0, 0, 0);
+  //const today = new Date('2025-01-12 00:00:00.000 EST').setHours(0, 0, 0, 0); // Last day of winter break
+  //const today = new Date('2025-01-13 00:00:00.000 EST').setHours(0, 0, 0, 0); // First day of spring term
+  //const today = new Date('2025-05-15 00:00:00.000 EDT').setHours(0, 0, 0, 0); // Last day of spring term before summer term
+  //const today = new Date('2025-05-18 00:00:00.000 EDT').setHours(0, 0, 0, 0); // Last day of spring term
+  //const today = new Date('2025-05-16 00:00:00.000 EDT').setHours(0, 0, 0, 0); // First day of summer term
+  //const today = new Date('2025-08-09 00:00:00.000 EDT').setHours(0, 0, 0, 0); // penultimate day of summer term
+  //const today = new Date('2025-08-10 00:00:00.000 EDT').setHours(0, 0, 0, 0); // Last day of summer term
+  //const today = new Date('2025-08-11 00:00:00.000 EDT').setHours(0, 0, 0, 0); // First day of post summer break
+  //const today = new Date('2025-08-12 00:00:00.000 EDT').setHours(0, 0, 0, 0); // Second day of post summer break
 
   const getSessionList = async () => {
     const sessList = await session.getAll();
@@ -45,100 +45,93 @@ const DaysLeft = () => {
       setLoading(false);
     };
     load();
-  }, [currentYear]);
+  }, [today]);
 
   useEffect(() => {
     if (!loading) {
-      let termStart = null;
-      let termEnd = null;
-      let termName = null;
-      let nextStart = null;
-      let nextName = null;
+      let sessionStart = null;
+      let sessionEnd = null;
+      let sessionName = null;
+      let nextSessionStart = null;
+      let nextSessionName = null;
+      let termProgress = null;
+      let daysLeftDialog = null;
 
-      // placeholder for object holding data for the session after the current session
-      // (which is the previous entry in the sessionList since we're working through sessions
-      // in reverse chronological order)
-      let progress = 100;
-      let termDialog = null;
-
-      // determine which session today's date belongs to or, if it is not in any session,
-      // determine the sessions that it lies between
+      // The session list is in reverse chronological order with the most recent session first.
+      // In the main loop we search for the session we are currently in, or determine if we are
+      // between sessions.  There are three cases: (1) we're past the end of the most recent
+      // session, (2) we're in a regular session, or (3) we're between two existing sessions.
+      // Once we've found our place we construct the dialog to display and determine the fraction
+      // (as a percentage) of the session or break we've already completed.
       for (let s of sessionList) {
-        //console.log(s.SessionCode, s.SessionBeginDate, s.SessionEndDate);
-        termStart = new Date(s.SessionBeginDate);
-        termEnd = new Date(s.SessionEndDate);
+        sessionStart = new Date(s.SessionBeginDate).setHours(0, 0, 0, 0);
+        sessionEnd = new Date(s.SessionEndDate).setHours(0, 0, 0, 0);
         switch (s.SessionCode.substring(4)) {
           case '01':
-            termName = 'Spring';
+            sessionName = 'Spring';
             break;
           case '05':
-            termName = 'Summer';
+            sessionName = 'Summer';
             break;
           case '09':
-            termName = 'Fall';
+            sessionName = 'Fall';
           default:
             break;
         }
 
-        console.log('today:  ', today);
-        console.log('start:  ', termStart);
-        console.log('end:    ', termEnd);
-        if (nextStart == null && today > termEnd) {
-          // today is after the end of the most recent session; can't compute how many days
-          // until the next session starts so just show number days since last term ended
-          let days = Math.round((today - termEnd) / msPerDay);
-          termDialog = `${days} day${days != 1 ? 's' : ''} since the end of ${termName} Term`;
-          progress = 100;
+        if (nextSessionStart == null && today > sessionEnd) {
+          // Case 1: today is after the end of the most recent session; can't compute how many
+          // days until the next session starts so just show number days since last term ended
+          let days = Math.round((today - sessionEnd) / msPerDay);
+          daysLeftDialog = `${days} day${days != 1 ? 's' : ''} since the end of ${sessionName} Term`;
+          termProgress = 100;
           break;
-        } else if (today >= termStart && today <= termEnd) {
-          // we are in a defined session (fall, spring, or summer)
-          let days = Math.round((termEnd - today) / msPerDay) + 1;
-          termDialog = `${days} day${days != 1 ? 's' : ''} remaining in ${termName} Term`;
-          progress = Math.round(
-            (((today - termStart) / msPerDay + 1) /
-              (Math.round((termEnd - termStart) / msPerDay) + 1)) *
+        } else if (today >= sessionStart && today <= sessionEnd) {
+          // Case 2: we are in a defined session (fall, spring, or summer)
+          let days = Math.round((sessionEnd - today) / msPerDay) + 1;
+          daysLeftDialog = `${days} day${days != 1 ? 's' : ''} remaining in ${sessionName} Term`;
+          termProgress = Math.round(
+            (((today - sessionStart) / msPerDay + 1) /
+              (Math.round((sessionEnd - sessionStart) / msPerDay) + 1)) *
               100,
           );
           break;
-        } else if (today > termEnd && today < nextStart) {
-          // we are between two defined sessions
-          let days = Math.round((nextStart - today) / msPerDay);
-          termDialog = `${days} day${days != 1 ? 's' : ''} until ${nextName} Term`;
-          progress = Math.round(
-            (((today - termStart) / msPerDay + 1) /
-              (Math.round((termEnd - termStart) / msPerDay) + 1)) *
+        } else if (today > sessionEnd && today < nextSessionStart) {
+          // Case 3: we are between two defined sessions
+          let days = Math.round((nextSessionStart - today) / msPerDay);
+          daysLeftDialog = `${days} day${days != 1 ? 's' : ''} until ${nextSessionName} Term`;
+          termProgress = Math.round(
+            ((today - sessionEnd) /
+              msPerDay /
+              (Math.round((nextSessionStart - sessionEnd) / msPerDay) - 1)) *
               100,
           );
-          termStart = addDays(termEnd, 1);
-          termEnd = addDays(nextStart, -1);
           break;
         }
 
         // since we're working backward in time, the session we've just process chronologically
         // follows the one we're about to consider
-        nextStart = termStart;
-        nextName = termName;
+        nextSessionStart = sessionStart;
+        nextSessionName = sessionName;
       }
 
-      console.log('termDialog:', termDialog);
-      console.log('progress:', progress);
-      setTermDialog(termDialog);
-      setTermProgress(progress);
+      setDaysLeftDialog(daysLeftDialog);
+      setTermProgress(termProgress);
     }
   }, [loading, sessionList]);
 
-  /* This won't display if termDialog is empty, specifically when on train because it doesn't 
-  access the correct dates.The width of the front container is 10,000 / termProgress to correctly 
+  /* This won't display if daysLeftDialog is empty, specifically when on train because it doesn't 
+  access the correct dates. The width of the front container is 10,000 / termProgress to correctly 
   overlap with the  backContainer and make it seem like the color changes as the backContainer
-  gets covered*/
+  gets covered. */
   return (
     <Grid align="center">
-      {termDialog !== '' ? (
+      {daysLeftDialog !== '' ? (
         <div className={styles.backContainer}>
-          {termDialog}
+          {daysLeftDialog}
           <div className={styles.boundBox} style={{ width: termProgress + '%' }}>
             <div className={styles.frontContainer} style={{ width: 10000 / termProgress + '%' }}>
-              {termDialog}
+              {daysLeftDialog}
             </div>
           </div>
         </div>
