@@ -136,7 +136,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
   // Get a student's graduation information
   useEffect(() => {
     async function loadPersonalInfo() {
-      if (isStudent && (canViewAcademicInfo || myProf)) {
+      if (isStudent && myProf) {
         userService
           .getGraduation(profile.AD_Username)
           .then(setGraduationInfo)
@@ -153,22 +153,24 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
   };
 
   useEffect(() => {
-    if (graduationInfo && graduationInfo.GraduationFlag === null) {
-      const currentDate = new Date();
-      const plannedGradDate = profPlannedGradYear
-        ? new Date(`${profPlannedGradYear}-05-01`) // Assuming graduation is in May
-        : graduationInfo.WhenGraduated
-          ? parseGraduationDate(graduationInfo.WhenGraduated)
-          : null;
+    if (isStudent && myProf) {
+      if (graduationInfo && graduationInfo.GraduationFlag === null) {
+        const currentDate = new Date();
+        const plannedGradDate = profPlannedGradYear
+          ? new Date(`${profPlannedGradYear}-05-01`) // Assuming graduation is in May
+          : graduationInfo.WhenGraduated
+            ? parseGraduationDate(graduationInfo.WhenGraduated)
+            : null;
 
-      if (plannedGradDate && differenceInYears(plannedGradDate, currentDate) < 1) {
-        createSnackbar(
-          `Please submit the Graduation Application 8-12 months before ${
-            profPlannedGradYear || graduationInfo.WhenGraduated
-          }.`,
-          'info',
-          'https://my.gordon.edu',
-        );
+        if (plannedGradDate && differenceInYears(plannedGradDate, currentDate) < 1) {
+          createSnackbar(
+            `Please submit the Graduation Application 8-12 months before ${
+              profPlannedGradYear || graduationInfo.WhenGraduated
+            }.`,
+            'info',
+            'https://my.gordon.edu',
+          );
+        }
       }
     }
   }, [graduationInfo, profPlannedGradYear, createSnackbar]);
