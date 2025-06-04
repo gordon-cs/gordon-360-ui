@@ -728,9 +728,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
             <Typography>
               <>Check the </>
               <a
-                href="https://www.gordon.edu/academics/resources/registrar/undergraduate/degree
-              -checklist#:~:text=Apply%20for%20graduation%20(application%20on,available%20for%20
-              advice%20and%20consultation."
+                href="https://www.gordon.edu/academics/resources/registrar/undergraduate/degree-checklist#:~:text=Apply%20for%20graduation%20(application%20on,available%20for%20advice%20and%20consultation."
                 className={`gc360_text_link ${styles.note_link}`}
               >
                 Undergraduate Degree Checklist
