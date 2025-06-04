@@ -19,6 +19,7 @@ const PosterCheck = ({ open, onClose, posterInfo }) => {
       console.log(posterInfo);
       console.log('Poster created:', createdPoster);
       onClose();
+      window.location.reload(); // Reload the page to reflect changes
     } catch (error) {
       console.error('Error creating poster:', error);
     }
