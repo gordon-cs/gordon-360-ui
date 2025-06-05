@@ -83,7 +83,7 @@ const getTermCode = (): string => {
     year -= 1;
   }
 
-  return `${year.toString()}${term}`;
+  return `${year.toString().substring(2)}${term}`;
 };
 
 const parseSessionCode = (sessionCode: string) => parse(sessionCode, 'yyyyMM', new Date());
