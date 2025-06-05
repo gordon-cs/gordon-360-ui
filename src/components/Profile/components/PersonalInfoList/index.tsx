@@ -136,7 +136,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
   // Get a student's graduation information
   useEffect(() => {
     async function loadPersonalInfo() {
-      if (isStudent && myProf) {
+      if (isStudent && (myProf || canViewAcademicInfo)) {
         userService
           .getGraduation(profile.AD_Username)
           .then(setGraduationInfo)
@@ -768,7 +768,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     ) : null;
 
   const graduationDetails =
-    myProf && checkIsStudent(profile) ? (
+    (myProf || canViewAcademicInfo) && checkIsStudent(profile) ? (
       <ProfileInfoListItem
         title="Graduation Information:"
         contentText={
