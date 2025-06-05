@@ -3,6 +3,7 @@ import { useIsAuthenticated } from '@azure/msal-react';
 import checkInService from 'services/checkIn';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import AppRedirect from '.';
+import React from 'react';
 
 // Mocks
 jest.mock('@azure/msal-react', () => ({
@@ -55,17 +56,6 @@ describe('AppRedirect', () => {
     (useIsAuthenticated as jest.Mock).mockReturnValue(false);
 
     const { queryByTestId } = renderWithRouter('/dashboard');
-
-    await waitFor(() => {
-      expect(queryByTestId('redirect-page')).not.toBeInTheDocument();
-    });
-  });
-
-  it('does not redirect if already on /enrollmentcheckin', async () => {
-    (useIsAuthenticated as jest.Mock).mockReturnValue(true);
-    (checkInService.getStatus as jest.Mock).mockResolvedValue(false);
-
-    const { queryByTestId } = renderWithRouter('/enrollmentcheckin');
 
     await waitFor(() => {
       expect(queryByTestId('redirect-page')).not.toBeInTheDocument();

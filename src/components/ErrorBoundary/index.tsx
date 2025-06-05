@@ -21,7 +21,7 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    if (import.meta.env.NODE_ENV === 'production' && this.state.hasError) {
+    if (process.env.NODE_ENV === 'production' && this.state.hasError) {
       analytics.onError(`${error.toString()} ${errorInfo.componentStack}`);
     }
   }

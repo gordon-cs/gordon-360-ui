@@ -25,7 +25,14 @@
     "baseUrl": "src",
     "paths": {
       "services/*": ["services/*"],
-      "components/*": ["components/*"]
+      "components/*": ["components/*"],
+      "hooks/*": ["hooks/*"],
+      "contexts/*": ["contexts/*"],
+      "index": ["."],
+      "app.global.css": ["."],
+      "pwa": ["."],
+      "./app": ["./"],
+      "./app.global.css": ["./"]
     }
   },
   "include": [

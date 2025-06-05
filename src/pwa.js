@@ -19,8 +19,8 @@ export function register() {
       navigator.serviceWorker
         .register(
           `/sw.js?API=${encodeURIComponent(
-            import.meta.env.VITE_API_URL,
-          )}api&FONT=${encodeURIComponent(import.meta.env.VITE_FONT_URL)}`,
+            process.env.VITE_API_URL,
+          )}api&FONT=${encodeURIComponent(process.env.VITE_FONT_URL)}`,
         )
         .then((reg) => {
           reg.onupdatefound = () => {

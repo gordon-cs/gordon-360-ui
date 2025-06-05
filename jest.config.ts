@@ -199,13 +199,29 @@ const config: Config = {
   // Whether to use watchman for file crawling
   // watchman: true,
   
-  moduleNameMapper: compilerOptions.paths
-  ? pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/src/' })
-  : {},
-  transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest',
+  moduleNameMapper: {
+    // TypeScript path aliases
+    ...(compilerOptions.paths
+      ? pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/src/' })
+      : {}),
+
+    // CSS module mocking
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+
+    // Image and other static file mocking
+    '\\.(png|jpg|jpeg|gif|svg)$': 'jest-transform-stub'
   },
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+
+  transform: {
+    // ✅ Use only one transformer — pick ts-jest *or* babel-jest, not both
+    '^.+\\.(ts|tsx)$': 'ts-jest',
+    '^.+\\.(js|jsx)$': 'babel-jest',
+
+    // Transform images for test environments
+    '^.+\\.(png|jpg|jpeg|gif|svg)$': 'jest-transform-stub'
+  },
+
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts']
 
 };
 
