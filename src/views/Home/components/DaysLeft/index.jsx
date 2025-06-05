@@ -2,56 +2,38 @@ import { useEffect, useState } from 'react';
 import session from 'services/session';
 import styles from './ProgressBar.module.css';
 import { Grid } from '@mui/material';
+import { differenceInCalendarDays } from 'date-fns';
 
-/* DaysLeft calculates the start and end date of each term and the breaks in between. 
-It uses the difference between term start and end dates to find the length of each term break. 
+/* DaysLeft calculates the start and end date of each term and the breaks in between.
+It uses the difference between term start and end dates to find the length of each term break.
 The loop iterates over each start and end date to find which term the current date is in between.
-Once the current term is found the values that each term holds in termValues are used to set the 
+Once the current term is found the values that each term holds in termValues are used to set the
 value of the progress bar and the text that is displayed. */
 
-/* TESTING: First modify .env.development so that VITE_API_URL=https://360Api.gordon.edu/ so we
-will use the most up-to-date sessions.  Change the value assigned to "today" to try various
-dates, focusing on those on the session start and end dates.  Be sure to try dates just before
-and after these dates too. Examples for the 2024-2025 academic year are provided below. */
-
 const DaysLeft = () => {
-  const [loading, setLoading] = useState(true);
-  const [sessionList, setSessionList] = useState({});
   const [daysLeftDialog, setDaysLeftDialog] = useState('');
   const [termProgress, setTermProgress] = useState(0);
-  const msPerDay = 24 * 3600 * 1000; // milliseconds per day (time diffs are in milliseconds)
-
-  const today = new Date().setHours(0, 0, 0, 0);
-  //const today = new Date('2025-01-12 00:00:00.000 EST').setHours(0, 0, 0, 0); // Last day of winter break
-  //const today = new Date('2025-01-13 00:00:00.000 EST').setHours(0, 0, 0, 0); // First day of spring term
-  //const today = new Date('2025-05-15 00:00:00.000 EDT').setHours(0, 0, 0, 0); // Last day of spring term before summer term
-  //const today = new Date('2025-05-18 00:00:00.000 EDT').setHours(0, 0, 0, 0); // Last day of spring term
-  //const today = new Date('2025-05-16 00:00:00.000 EDT').setHours(0, 0, 0, 0); // First day of summer term
-  //const today = new Date('2025-08-09 00:00:00.000 EDT').setHours(0, 0, 0, 0); // penultimate day of summer term
-  //const today = new Date('2025-08-10 00:00:00.000 EDT').setHours(0, 0, 0, 0); // Last day of summer term
-  //const today = new Date('2025-08-11 00:00:00.000 EDT').setHours(0, 0, 0, 0); // First day of post summer break
-  //const today = new Date('2025-08-12 00:00:00.000 EDT').setHours(0, 0, 0, 0); // Second day of post summer break
-
-  const getSessionList = async () => {
-    const sessList = await session.getAll();
-    return sessList;
-  };
 
   useEffect(() => {
     const load = async () => {
-      setLoading(true);
-      const [sessionList] = await Promise.all([getSessionList()]);
-      setSessionList(sessionList);
-      setLoading(false);
-    };
-    load();
-  }, [today]);
+      const today = new Date();
+      /* TESTING: First modify .env.development so that VITE_API_URL=https://360Api.gordon.edu/ so we
+         will use the most up-to-date sessions.  Change the value assigned to "today" to try various
+         dates, focusing on those on the session start and end dates.  Be sure to try dates just before
+         and after these dates too. Examples for the 2024-2025 academic year are provided below. */
+      // const today = new Date('2025-01-12 00:00:00.000 EST') // Last day of winter break
+      // const today = new Date('2025-01-13 00:00:00.000 EST') // First day of spring term
+      // const today = new Date('2025-05-15 00:00:00.000 EDT') // Last day of spring term before summer term
+      // const today = new Date('2025-05-18 00:00:00.000 EDT') // Last day of spring term
+      // const today = new Date('2025-05-16 00:00:00.000 EDT') // First day of summer term
+      // const today = new Date('2025-08-09 00:00:00.000 EDT'); // penultimate day of summer term
+      // const today = new Date('2025-08-10 00:00:00.000 EDT'); // Last day of summer term
+      // const today = new Date('2025-08-11 00:00:00.000 EDT'); // First day of post summer break
+      // const today = new Date('2025-08-12 00:00:00.000 EDT'); // Second day of post summer break
+      today.setHours(0, 0, 0, 0);
 
-  useEffect(() => {
-    if (!loading) {
-      let sessionStart = null;
-      let sessionEnd = null;
-      let sessionName = null;
+      const sessionList = await session.getAll();
+
       let nextSessionStart = null;
       let nextSessionName = null;
       let termProgress = null;
@@ -59,53 +41,48 @@ const DaysLeft = () => {
 
       // The session list is in reverse chronological order with the most recent session first.
       // In the main loop we search for the session we are currently in, or determine if we are
-      // between sessions.  There are three cases: (1) we're past the end of the most recent
-      // session, (2) we're in a regular session, or (3) we're between two existing sessions.
+      // between sessions.
+      //
+      // There are three cases:
+      //   (1) we're past the end of the most recent session
+      //   (2) we're in a regular session
+      //   (3) we're between two existing sessions.
       // Once we've found our place we construct the dialog to display and determine the fraction
       // (as a percentage) of the session or break we've already completed.
       for (let s of sessionList) {
-        sessionStart = new Date(s.SessionBeginDate).setHours(0, 0, 0, 0);
-        sessionEnd = new Date(s.SessionEndDate).setHours(0, 0, 0, 0);
-        switch (s.SessionCode.substring(4)) {
-          case '01':
-            sessionName = 'Spring';
-            break;
-          case '05':
-            sessionName = 'Summer';
-            break;
-          case '09':
-            sessionName = 'Fall';
-          default:
-            break;
-        }
+        const sessionStart = new Date(s.SessionBeginDate);
+        const sessionEnd = new Date(s.SessionEndDate);
+
+        const sessionName = s.SessionDescription.split(' ', 1)[0];
 
         if (nextSessionStart == null && today > sessionEnd) {
           // Case 1: today is after the end of the most recent session; can't compute how many
           // days until the next session starts so just show number days since last term ended
-          let days = Math.round((today - sessionEnd) / msPerDay);
-          daysLeftDialog = `${days} day${days != 1 ? 's' : ''} since the end of ${sessionName} Term`;
+          const daysSinceEndOfSession = differenceInCalendarDays(today, sessionEnd);
+          daysLeftDialog = `${daysSinceEndOfSession} day${daysSinceEndOfSession !== 1 ? 's' : ''} since the end of ${sessionName} Term`;
+
           termProgress = 100;
+
           break;
         } else if (today >= sessionStart && today <= sessionEnd) {
-          // Case 2: we are in a defined session (fall, spring, or summer)
-          let days = Math.round((sessionEnd - today) / msPerDay) + 1;
-          daysLeftDialog = `${days} day${days != 1 ? 's' : ''} remaining in ${sessionName} Term`;
-          termProgress = Math.round(
-            (((today - sessionStart) / msPerDay + 1) /
-              (Math.round((sessionEnd - sessionStart) / msPerDay) + 1)) *
-              100,
-          );
+          // Case 2: we are within a defined session (fall, spring, or summer)
+          const daysUntilEndOfSession = differenceInCalendarDays(sessionEnd, today);
+          daysLeftDialog = `${daysUntilEndOfSession} day${daysUntilEndOfSession !== 1 ? 's' : ''} remaining in ${sessionName} Term`;
+
+          const daysSinceStartOfSession = differenceInCalendarDays(today, sessionStart);
+          const daysInSession = differenceInCalendarDays(sessionEnd, sessionStart);
+          termProgress = Math.round((daysSinceStartOfSession / daysInSession) * 100);
+
           break;
         } else if (today > sessionEnd && today < nextSessionStart) {
           // Case 3: we are between two defined sessions
-          let days = Math.round((nextSessionStart - today) / msPerDay);
-          daysLeftDialog = `${days} day${days != 1 ? 's' : ''} until ${nextSessionName} Term`;
-          termProgress = Math.round(
-            ((today - sessionEnd) /
-              msPerDay /
-              (Math.round((nextSessionStart - sessionEnd) / msPerDay) - 1)) *
-              100,
-          );
+          const daysUntilStartOfNextSession = differenceInCalendarDays(nextSessionStart, today);
+          daysLeftDialog = `${daysUntilStartOfNextSession} day${daysUntilStartOfNextSession !== 1 ? 's' : ''} until ${nextSessionName} Term`;
+
+          const daysSinceEndOfSession = differenceInCalendarDays(today, sessionEnd);
+          const daysBetweenSessions = differenceInCalendarDays(nextSessionStart, sessionEnd);
+          termProgress = Math.round((daysSinceEndOfSession / daysBetweenSessions) * 100);
+
           break;
         }
 
@@ -117,11 +94,12 @@ const DaysLeft = () => {
 
       setDaysLeftDialog(daysLeftDialog);
       setTermProgress(termProgress);
-    }
-  }, [loading, sessionList]);
+    };
+    load();
+  }, []);
 
-  /* This won't display if daysLeftDialog is empty, specifically when on train because it doesn't 
-  access the correct dates. The width of the front container is 10,000 / termProgress to correctly 
+  /* This won't display if daysLeftDialog is empty, specifically when on train because it doesn't
+  access the correct dates. The width of the front container is 10,000 / termProgress to correctly
   overlap with the  backContainer and make it seem like the color changes as the backContainer
   gets covered. */
   return (
@@ -135,9 +113,7 @@ const DaysLeft = () => {
             </div>
           </div>
         </div>
-      ) : (
-        ''
-      )}
+      ) : null}
     </Grid>
   );
 };
