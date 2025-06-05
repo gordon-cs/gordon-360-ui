@@ -67,7 +67,7 @@ const PosterSwiper = (userName) => {
               pagination={{
                 clickable: true,
               }}
-              loop={true}
+              loop={currentPosters.length > 3}
               navigation={size.width >= 600}
               grabCursor={true}
               centeredSlides={true}
