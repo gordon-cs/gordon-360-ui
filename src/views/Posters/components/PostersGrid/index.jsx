@@ -1,12 +1,6 @@
 import { Grid, Typography, Card, CardActionArea, CardMedia, CardContent } from '@mui/material';
-import useNetworkStatus from 'hooks/useNetworkStatus';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 
 const PostersGrid = ({ posters, sessionCode, noPostersText }) => {
-  const isOnline = useNetworkStatus();
-  const navigate = useNavigate();
-
   return (
     <Grid container direction="row" spacing={4} className={'test1'}>
       {posters?.length > 0 ? (

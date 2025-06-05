@@ -16,7 +16,7 @@ import styles from './CropPoster.module.scss';
 
 const CROPPER_WIDTH = 1056;
 const CROPPER_HEIGHT = 1632;
-const ASPECT_RATIO = 14 / 17;
+const ASPECT_RATIO = 5 / 6;
 
 const CropPoster = ({ open, onClose, onSubmit }) => {
   const [cropperImageData, setCropperImageData] = useState(null);
@@ -25,11 +25,13 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
   const [showCropper, setShowCropper] = useState(false);
   const cropperRef = useRef(null);
 
+  // Cancels the cropper and closes the dialog
   const handleCloseCancel = () => {
     onClose();
     setShowCropper(false);
   };
 
+  // Submits the cropped image and closes the dialog
   const handleCloseSubmit = () => {
     if (cropperRef.current) {
       const croppedImage = cropperRef.current.cropper
@@ -39,6 +41,7 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
       handleCloseCancel();
     }
   };
+
   const imageOnLoadHelper = (reader) => {
     const dataURL = reader.result.toString();
     const i = new Image();
@@ -55,6 +58,7 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
     setPhotoDialogError(null);
   };
 
+  // Accepts the dropped file
   const onDropAccepted = (fileList) => {
     const previewImageFile = fileList[0];
     const reader = new FileReader();
@@ -81,6 +85,7 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
     setPhotoDialogError('Sorry, invalid image file! Only PNG, JPEG, and PDF posters are accepted.');
   };
 
+  // Creates the message for the dialog box based on the state
   const createPhotoDialogBoxMessage = () => {
     if (photoDialogError != null) {
       return <span className={styles.photoDialogError}>{photoDialogError}</span>;

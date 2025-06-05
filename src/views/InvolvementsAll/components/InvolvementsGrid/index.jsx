@@ -6,7 +6,9 @@ import styles from './InvolvementsGrid.module.css';
 const getRole = (activity, myInvolvements) => {
   const match = myInvolvements?.find((inv) => inv.ActivityCode === activity.ActivityCode);
   if (!match) return null;
-  switch (match.Participation) {
+  switch (
+    match.Participation // Adds status of involvements
+  ) {
     case 'LEAD':
       return 'Leader';
     case 'ADV':

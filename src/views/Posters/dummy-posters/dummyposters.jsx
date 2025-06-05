@@ -1,7 +1,4 @@
-//import HunterImage from "/users/collin.williams/s24-williams/gordon-360-ui/src/views/Posters/images/hunter.jpg";
 import TestPoster from 'views/Posters/images/TestPoster.jpg';
-//i/mport IsaiahPoster from 'views/Posters/images/isaiah.jpg';
-//import LukePoster from 'views/Posters/images/lukehart.jpg';
 import DiscoPoster from 'views/Posters/images/DiscoPoster.jpg';
 import HamburgerPoster from 'views/Posters/images/HamburgerPoster.jpg';
 import MoviePoster from 'views/Posters/images/MoviePoster.jpg';

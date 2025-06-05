@@ -2,9 +2,7 @@ import { Button, Card, CardContent, CardHeader, Grid, Typography, CardMedia } fr
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import involvementService from 'services/activity';
-import InvolvementsGrid from 'views/InvolvementsAll/components/InvolvementsGrid';
 
-//const [myInvolvements, setMyInvolvements] = useState([]);
 const PostersCard = () => {
   const [event, setEvents] = useState([]);
 

@@ -1,56 +1,24 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import 'swiper/css';
-import DummyData from '/src/views/Posters/dummy-posters/dummyposters.jsx';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import 'swiper/css/effect-coverflow';
-import { Navigate } from 'react-router-dom';
 import { useWindowSize } from 'hooks';
 import { getCurrentPosters, getPosters } from 'services/poster';
-
-//could import window
 import { Autoplay, Pagination, Navigation, Keyboard, EffectCoverflow } from 'swiper/modules';
-//https://swiperjs.com/demos
-//https://codesandbox.io/p/devbox/swiper-react-css-mode-jxgdn9?file=%2Fsrc%2Fstyles.css
-
 import './PosterSwiper.scss';
 import { Link } from 'react-router-dom';
+import { Card, CardContent, CardMedia, Grid, Typography } from '@mui/material';
 
-import {
-  Button,
-  Card,
-  CardActionArea,
-  CardContent,
-  CardHeader,
-  CardMedia,
-  Grid,
-  Typography,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-} from '@mui/material';
-
-const PosterSwiper = (userName) => {
+const PosterSwiper = () => {
   const size = useWindowSize();
-  const pizzaSlice = DummyData.slice(0, DummyData.length);
   const [currentPosters, setCurrentPosters] = useState([]);
-  const [myPosters, setMyPosters] = useState([]);
 
   useEffect(() => {
     getCurrentPosters().then(setCurrentPosters);
-    // getPostersByUser().then(setMyPosters);
   }, []);
-
-  // Determine swiper height based on window size
-  const swiperHeight = size.width < 450 ? '10vh' : size.width < 1500 ? '15vh' : '65vh';
-  const swiperWidth =
-    size.width < 450
-      ? '100%' // mobile: full width
-      : size.width < 1500
-        ? '90%' // tablet: almost full width
-        : '81vw'; // desktop: fixed max width
 
   return (
     <Grid sx={{ mb: 4 }}>
@@ -58,31 +26,33 @@ const PosterSwiper = (userName) => {
         <CardContent>
           <Link to="/posters" style={{ textDecoration: 'none' }}>
             <Swiper
-              effect={'coverflow'}
-              spaceBetween={20}
+              effect={'coverflow'} // animation effect
+              spaceBetween={20} // space between slides
               autoplay={{
-                delay: 3000,
+                delay: 3000, // switch every 3 seconds
+                pauseOnMouseEnter: true, // pause on hover
                 disableOnInteraction: false,
               }}
               pagination={{
                 clickable: true,
               }}
-              loop={currentPosters.length > 3}
+              loop={currentPosters.length > 3} // loop if more than 3 posters
               navigation={size.width >= 600}
               grabCursor={true}
               centeredSlides={true}
-              keyboard={true}
+              keyboard={true} // takes keyboard input
               breakpoints={{
                 0: {
-                  slidesPerView: 1.6,
+                  slidesPerView: 1.6, // 1.6 posters in view for phones
                 },
                 600: {
-                  slidesPerView: 2,
+                  slidesPerView: 2, // 2 posters in view for tablets
                 },
                 800: {
-                  slidesPerView: 3,
+                  slidesPerView: 3, // 3 posters in view for small desktops
                 },
               }}
+              // Adds the effect of the posters "hiding" behind the center poster
               coverflowEffect={{
                 rotate: 20,
                 stretch: 0,
@@ -93,7 +63,7 @@ const PosterSwiper = (userName) => {
               modules={[EffectCoverflow, Keyboard, Navigation, Pagination, Autoplay]}
               className="mySwiper"
             >
-              {currentPosters.length === 0 ? (
+              {currentPosters.length === 0 ? ( // If no posters are available, show a message
                 <Typography
                   variant="body1"
                   color="warning.main"
@@ -109,48 +79,52 @@ const PosterSwiper = (userName) => {
                   No posters available. Click to add yours!
                 </Typography>
               ) : (
-                currentPosters.map((item) => (
-                  <SwiperSlide
-                    key={item.ID}
-                    style={{
-                      height: '100%',
-                      justifyContent: 'space-around',
-                    }}
-                  >
-                    <Card variant="outlined" sx={{ position: 'relative' }}>
-                      {/* Priority Marker */}
-                      {item.Priority === 1 && (
-                        <Typography
-                          variant="h3"
+                currentPosters.map(
+                  (
+                    item, // Map through the posters and create a slide for each
+                  ) => (
+                    <SwiperSlide
+                      key={item.ID}
+                      style={{
+                        height: '100%',
+                        justifyContent: 'space-around',
+                      }}
+                    >
+                      <Card variant="outlined" sx={{ position: 'relative' }}>
+                        {/* Priority Marker */}
+                        {item.Priority === 1 && ( // Add the exclamation mark if the poster is a priority
+                          <Typography
+                            variant="h3"
+                            sx={{
+                              position: 'absolute',
+                              top: 8,
+                              right: 12,
+                              color: 'red',
+                              fontWeight: 'bold',
+                              fontSize: '5rem',
+                              zIndex: 3,
+                              userSelect: 'none',
+                              fontFamily: '"Orbitron", "Montserrat", "Roboto", sans-serif',
+                              textShadow: '2px 2px 8px #00000055',
+                            }}
+                          >
+                            !
+                          </Typography>
+                        )}
+                        <CardMedia
+                          loading="lazy"
+                          component="img"
+                          src={item.ImagePath} // Image path for the poster
+                          title={item.Title} // Title for the poster
                           sx={{
-                            position: 'absolute',
-                            top: 8,
-                            right: 12,
-                            color: 'red',
-                            fontWeight: 'bold',
-                            fontSize: '5rem',
-                            zIndex: 3,
-                            userSelect: 'none',
-                            fontFamily: '"Orbitron", "Montserrat", "Roboto", sans-serif',
-                            textShadow: '2px 2px 8px #00000055',
+                            height: 300,
+                            objectFit: 'cover',
                           }}
-                        >
-                          !
-                        </Typography>
-                      )}
-                      <CardMedia
-                        loading="lazy"
-                        component="img"
-                        src={item.ImagePath}
-                        title={item.Title}
-                        sx={{
-                          height: 300,
-                          objectFit: 'cover',
-                        }}
-                      />
-                    </Card>
-                  </SwiperSlide>
-                ))
+                        />
+                      </Card>
+                    </SwiperSlide>
+                  ),
+                )
               )}
             </Swiper>
           </Link>

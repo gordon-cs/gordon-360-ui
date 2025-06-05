@@ -1,5 +1,4 @@
 import {
-  Button,
   Card,
   CardContent,
   CardHeader,
@@ -9,7 +8,7 @@ import {
   Typography,
   Dialog,
 } from '@mui/material';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { getCurrentPosters } from 'services/poster';
 
 const ClubPosters = ({ clubName, clubCode }) => {
@@ -60,7 +59,7 @@ const ClubPosters = ({ clubName, clubCode }) => {
               posters.map((item) => (
                 <Grid item xs={6} sm={4} md={3} lg={3} key={item.key}>
                   <Card variant="outlined" elevation={0} sx={{ position: 'relative' }}>
-                    {item.Priority === 1 && (
+                    {item.Priority === 1 && ( // Add red exclamation mark for priority posters
                       <Typography
                         variant="h3"
                         sx={{
@@ -80,7 +79,7 @@ const ClubPosters = ({ clubName, clubCode }) => {
                       </Typography>
                     )}
                     <CardActionArea onClick={() => handleOpen(item)}>
-                      <CardMedia
+                      <CardMedia // Makes the poster bigger when clicked
                         loading="lazy"
                         component="img"
                         alt={item.alt}
@@ -108,7 +107,7 @@ const ClubPosters = ({ clubName, clubCode }) => {
             ) : (
               <Grid item>
                 <Typography variant="h5" align="center">
-                  {'No Posters to Show for this involvement'}
+                  No posters available. Check back later!
                 </Typography>
               </Grid>
             )}
@@ -116,14 +115,9 @@ const ClubPosters = ({ clubName, clubCode }) => {
         </CardContent>
       </Card>
       {selectedPoster && (
-        <Dialog
-          open={open}
-          onClose={handleClose}
-          maxWidth="md"
-          // style={{ backgroundColor: '#ffffff00' }}
-        >
+        <Dialog open={open} onClose={handleClose} maxWidth="md">
           <Card>
-            <CardMedia
+            <CardMedia // Makes the poster bigger when clicked
               component="img"
               alt={selectedPoster.alt}
               src={selectedPoster.ImagePath}
