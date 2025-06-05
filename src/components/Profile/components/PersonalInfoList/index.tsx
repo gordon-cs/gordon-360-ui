@@ -209,7 +209,6 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
                 currentPhone={mobilePhone}
                 onUpdateSuccess={(newPhone) => {
                   setMobilePhoneNumber(newPhone);
-                  createSnackbar('Phone number updated successfully.', 'success');
                 }}
               />
             )}
