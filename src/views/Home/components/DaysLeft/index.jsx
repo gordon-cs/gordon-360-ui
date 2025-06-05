@@ -17,15 +17,19 @@ const DaysLeft = () => {
   useEffect(() => {
     const load = async () => {
       const today = new Date();
-      /* TESTING: First modify .env.development so that VITE_API_URL=https://360Api.gordon.edu/ so we
-         will use the most up-to-date sessions.  Change the value assigned to "today" to try various
-         dates, focusing on those on the session start and end dates.  Be sure to try dates just before
-         and after these dates too. Examples for the 2024-2025 academic year are provided below. */
-      // const today = new Date('2025-01-12 00:00:00.000 EST') // Last day of winter break
-      // const today = new Date('2025-01-13 00:00:00.000 EST') // First day of spring term
-      // const today = new Date('2025-05-15 00:00:00.000 EDT') // Last day of spring term before summer term
-      // const today = new Date('2025-05-18 00:00:00.000 EDT') // Last day of spring term
-      // const today = new Date('2025-05-16 00:00:00.000 EDT') // First day of summer term
+      /* TESTING: First modify .env.development so that VITE_API_URL=https://360Api.gordon.edu/;
+         this means we use the production API server to get the most up-to-date sessions.
+         Change the value assigned to "today" to try various dates, focusing on those on the
+         session start and end dates.  Be sure to try dates just before and after these dates too.
+         Examples for the 2024-2025 academic year are provided below. */
+      // const today = new Date('2024-12-20 00:00:00.000 EST'); // Last day of Fall semester
+      // const today = new Date('2024-12-21 00:00:00.000 EST'); // First day of winter break
+      // const today = new Date('2025-01-12 00:00:00.000 EST'); // Last day of winter break
+      // const today = new Date('2025-01-13 00:00:00.000 EST'); // First day of spring term
+      // const today = new Date('2025-03-15 00:00:00.000 EDT'); // Approximate middle day of spring term
+      // const today = new Date('2025-05-15 00:00:00.000 EDT'); // Last day of spring term before summer term
+      // const today = new Date('2025-05-18 00:00:00.000 EDT'); // Last day of spring term
+      // const today = new Date('2025-05-16 00:00:00.000 EDT'); // First day of summer term
       // const today = new Date('2025-08-09 00:00:00.000 EDT'); // penultimate day of summer term
       // const today = new Date('2025-08-10 00:00:00.000 EDT'); // Last day of summer term
       // const today = new Date('2025-08-11 00:00:00.000 EDT'); // First day of post summer break
@@ -66,11 +70,11 @@ const DaysLeft = () => {
           break;
         } else if (today >= sessionStart && today <= sessionEnd) {
           // Case 2: we are within a defined session (fall, spring, or summer)
-          const daysUntilEndOfSession = differenceInCalendarDays(sessionEnd, today);
+          const daysUntilEndOfSession = differenceInCalendarDays(sessionEnd, today) + 1;
           daysLeftDialog = `${daysUntilEndOfSession} day${daysUntilEndOfSession !== 1 ? 's' : ''} remaining in ${sessionName} Term`;
 
           const daysSinceStartOfSession = differenceInCalendarDays(today, sessionStart);
-          const daysInSession = differenceInCalendarDays(sessionEnd, sessionStart);
+          const daysInSession = differenceInCalendarDays(sessionEnd, sessionStart) + 1;
           termProgress = Math.round((daysSinceStartOfSession / daysInSession) * 100);
 
           break;
@@ -79,9 +83,9 @@ const DaysLeft = () => {
           const daysUntilStartOfNextSession = differenceInCalendarDays(nextSessionStart, today);
           daysLeftDialog = `${daysUntilStartOfNextSession} day${daysUntilStartOfNextSession !== 1 ? 's' : ''} until ${nextSessionName} Term`;
 
-          const daysSinceEndOfSession = differenceInCalendarDays(today, sessionEnd);
-          const daysBetweenSessions = differenceInCalendarDays(nextSessionStart, sessionEnd);
-          termProgress = Math.round((daysSinceEndOfSession / daysBetweenSessions) * 100);
+          const daysSinceStartOfBreak = differenceInCalendarDays(today, sessionEnd) - 1;
+          const daysBetweenSessions = differenceInCalendarDays(nextSessionStart, sessionEnd) - 1;
+          termProgress = Math.round((daysSinceStartOfBreak / daysBetweenSessions) * 100);
 
           break;
         }
