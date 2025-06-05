@@ -148,7 +148,7 @@ const Posters = () => {
         open={openUploadForm}
         onClose={() => setOpenUploadForm(false)}
       >
-        <Grid bgcolor={'var(--mui-palette-neutral-light)'} container spacing={4}>
+        <Grid bgcolor={'var(--mui-palette-neutral-light)'} container spacing={0}>
           <Grid item xs={12} md={croppedImage ? 6 : 12}>
             <Card variant="outlined">
               <CardHeader title="Upload Poster" className="gc360_header" />

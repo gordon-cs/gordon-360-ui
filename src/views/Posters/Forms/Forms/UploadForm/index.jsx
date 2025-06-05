@@ -181,7 +181,7 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
           />
         </DialogContent>
       </Dialog>
-      <Grid container spacing={1}>
+      <Grid container spacing={0.75}>
         <Grid item xs={12} className={styles.gridItem}>
           Display After
           <TextField
@@ -250,8 +250,8 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
         <Grid item xs={12} className={styles.gridItem}>
           <TextField
             multiline
-            minRows={5}
-            maxRows={5}
+            minRows={2}
+            maxRows={2}
             label="Description"
             variant="outlined"
             fullWidth
@@ -332,16 +332,18 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
             </TextField>
           </Grid>
         )}
-        <Grid item xs={12} className={styles.gridItem}>
-          <Button
-            variant="contained"
-            className={styles.uploadPosterButton}
-            onClick={() => setOpenCropPoster(true)}
-          >
-            <AddCircleRoundedIcon />
-            Upload Poster
-          </Button>
-        </Grid>
+        {!croppedImage && (
+          <Grid item xs={12} className={styles.gridItem}>
+            <Button
+              variant="contained"
+              className={styles.uploadPosterButton}
+              onClick={() => setOpenCropPoster(true)}
+            >
+              <AddCircleRoundedIcon />
+              Upload Poster
+            </Button>
+          </Grid>
+        )}
         <Grid item xs={6} className={styles.gridItem}>
           <Button
             onClick={() => setOpenPosterCheck(true)}
