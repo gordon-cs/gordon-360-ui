@@ -14,14 +14,15 @@ import {
 import UploadForm from './Forms/Forms/UploadForm';
 import { Participation } from 'services/membership';
 import membershipService from 'services/membership';
-import { useUser } from 'hooks';
 import involvementService from 'services/involvements';
 import sessionService from 'services/session';
-import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentPosters, deletePoster } from 'services/poster';
 import { useLocation } from 'react-router-dom';
 import CropPoster from './Forms/Forms/CropPoster';
+import { AuthGroup, signOut } from 'services/auth';
+import { useAuthGroups, useNetworkStatus, useUser } from 'hooks';
+// import MemberListItem from './components/MemberListItem';
 
 const Posters = () => {
   const [openUploadForm, setOpenUploadForm] = useState(false);
@@ -35,6 +36,7 @@ const Posters = () => {
   const [allPosters, setAllPosters] = useState([]);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false); // NEW
   const [posterToDelete, setPosterToDelete] = useState(null); // NEW
+  const isSiteAdmin = useAuthGroups(AuthGroup.SiteAdmin);
 
   const isOnline = useNetworkStatus();
   const navigate = useNavigate();
@@ -335,9 +337,10 @@ const Posters = () => {
                     </CardActionArea>
                     {myInvolvements.some(
                       (inv) =>
-                        inv.ActivityCode === item.ClubCode &&
-                        (inv.Participation === Participation.Advisor ||
-                          inv.Participation === Participation.Leader),
+                        (inv.ActivityCode === item.ClubCode &&
+                          (inv.Participation === Participation.Advisor ||
+                            inv.Participation === Participation.Leader)) ||
+                        isSiteAdmin,
                     ) && (
                       <div className="delete-button-wrapper">
                         <Button
@@ -409,6 +412,18 @@ const Posters = () => {
                         </Typography>
                       </CardContent>
                     </CardActionArea>
+                    {myInvolvements.some((inv) => isSiteAdmin) && (
+                      <div className="delete-button-wrapper">
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          onClick={() => handleDeleteClick(item)}
+                          className="delete-button"
+                        >
+                          Delete&nbsp;Poster
+                        </Button>
+                      </div>
+                    )}
                   </Card>
                 </Grid>
               ))}
