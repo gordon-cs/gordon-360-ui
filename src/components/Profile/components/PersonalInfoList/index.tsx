@@ -164,7 +164,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
 
         if (plannedGradDate && differenceInYears(plannedGradDate, currentDate) < 1) {
           createSnackbar(
-            `Please submit the Graduation Application 8-12 months before ${
+            `Please submit the Graduation Application 8-12 months before May ${
               profPlannedGradYear || graduationInfo.WhenGraduated
             }.`,
             'info',
@@ -793,7 +793,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
                     <Typography>
                       <b>Warning:</b>{' '}
                       {profPlannedGradYear
-                        ? `Please submit the Graduation Application 8-12 months before ${profPlannedGradYear}.`
+                        ? `Please submit the Graduation Application 8-12 months before May ${profPlannedGradYear}.`
                         : graduationInfo.WhenGraduated
                           ? `Please submit the Graduation Application 8-12 months before ${graduationInfo.WhenGraduated}.`
                           : 'Please submit the Graduation Application as soon as possible.'}
