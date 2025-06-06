@@ -22,6 +22,7 @@ type SearchResultBase = {
   Country: string;
   Email: string;
   AD_Username: string;
+  Gender: string;
 };
 
 export type SearchResult = SearchResultBase &
@@ -77,6 +78,7 @@ export type PeopleSearchQuery = {
   initial_year: string;
   final_year: string;
   involvement: string;
+  gender: string;
 };
 
 /**
@@ -111,6 +113,7 @@ const search = (searchFields: PeopleSearchQuery): Promise<SearchResult[]> => {
     department: searchFields.department,
     building: searchFields.building,
     involvement: searchFields.involvement,
+    gender: searchFields.gender,
   })
     .filter(([_key, value]) => value !== '')
     .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
@@ -147,6 +150,8 @@ const getBuildings = (): Promise<Building[]> => http.get(`advancedsearch/buildin
 
 const getInvolvements = (): Promise<string[]> => http.get(`advancedsearch/involvements`);
 
+const getGender = (): Promise<string[]> => http.get('advancedsearch/gender');
+
 const peopleSearchService = {
   search,
   getDepartmentDropdownOptions,
@@ -156,6 +161,7 @@ const peopleSearchService = {
   getHalls,
   getBuildings,
   getInvolvements,
+  getGender,
 };
 
 export default peopleSearchService;
