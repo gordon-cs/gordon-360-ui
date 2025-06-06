@@ -50,7 +50,7 @@ const PosterCheck = ({ open, onClose, posterInfo }) => {
           rel="noopener noreferrer"
           sx={{ color: 'secondary.main', fontWeight: 'bold' }} //TODO: Change this to reflect whatever Chris Carlson tells me about
         >
-          Advertising Guidelines
+          &nbsp;Advertising Guidelines
         </MuiLink>
       </DialogContentText>
       <DialogActions>
