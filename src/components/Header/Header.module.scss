@@ -16,6 +16,24 @@
   min-width: 55px;
   max-width: 125px;
   flex-grow: 1;
+  position: relative;
+  transition:
+    transform 0.2s ease,
+    z-index 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    z-index: 10;
+  }
+
+  :global(svg) {
+    transition: transform 0.2s ease;
+  }
+
+  &:hover :global(svg) {
+    transform: translateY(-2px);
+  }
 
   &.disabled_tab {
     color: var(--mui-palette-neutral-400);
