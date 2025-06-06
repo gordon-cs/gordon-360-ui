@@ -1,13 +1,27 @@
 .gordon_nav_links {
   padding: 0;
 
+  // Animate and shadow all nav buttons on hover
+  :global(.MuiButtonBase-root) {
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+    will-change: transform, box-shadow;
+
+    &:hover {
+      transform: translateX(6px);
+      z-index: 2;
+      box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.12);
+    }
+  }
+
   .active > li {
     background: var(--mui-palette-neutral-dark);
   }
+}
 
-  .gordon_nav_links_bottom {
-    padding: 0;
-    position: fixed;
-    bottom: 0;
-  }
+.gordon_nav_links_bottom {
+  padding: 0;
+  // position: fixed;
+  bottom: 0;
 }
