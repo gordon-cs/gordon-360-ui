@@ -810,7 +810,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
                 } else {
                   return (
                     <Typography>
-                      <b>Estimated Graduation Date:</b> {graduationInfo.WhenGraduated || 'Not Set'}
+                      <b>Expected Graduation Date:</b> {graduationInfo.WhenGraduated || 'Not Set'}
                     </Typography>
                   );
                 }
