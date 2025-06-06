@@ -9,14 +9,7 @@
 
 import GordonDialogBox from 'components/GordonDialogBox';
 import React, { useEffect, useState } from 'react';
-import {
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  RadioGroup,
-  Radio,
-  Divider,
-} from '@mui/material';
+import { FormControl, FormControlLabel, RadioGroup, Radio, Divider } from '@mui/material';
 import { ColorMode, ColorSetting, STORAGE_COLOR_PREFERENCE_KEY } from 'theme';
 import { useColorScheme } from '@mui/material/styles';
 
