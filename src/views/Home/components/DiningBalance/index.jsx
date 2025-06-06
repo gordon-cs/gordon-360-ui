@@ -231,6 +231,7 @@ const DiningBalance = () => {
                 href="https://www.gordonmetz.com/"
                 target="_blank"
                 rel="noopener noreferrer"
+                align="center"
               >
                 TODAY'S MENU
               </Button>
