@@ -83,6 +83,15 @@
 
 .hamburger_menu_button {
   margin-left: -12px;
+
+  :global(svg) {
+    transition: transform 0.2s ease;
+  }
+
+  &:hover :global(svg) {
+    transform: translateY(-2px);
+    z-index: 10;
+  }
 }
 
 .hamburger_menu_button_icon {
@@ -92,4 +101,26 @@
 .header_button {
   margin-left: -12px;
   margin-right: -12px;
+}
+
+.logo_link {
+  display: inline-block;
+  transition:
+    transform 0.2s ease,
+    z-index 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    z-index: 10;
+    text-decoration: none;
+  }
+
+  img {
+    display: block;
+    transition: transform 0.2s ease;
+  }
+
+  &:hover img {
+    transform: translateY(-2px);
+  }
 }

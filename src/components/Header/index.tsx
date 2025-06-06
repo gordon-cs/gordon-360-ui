@@ -181,9 +181,9 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
           >
             <MenuIcon className={styles.hamburger_menu_button_icon} />
           </IconButton>
-          <Link to="/" component={NavLink}>
+          <Link to="/" component={NavLink} className={styles.logo_link}>
+            {/* pick a different image as the screen gets smaller.*/}
             <picture>
-              {/* pick a different image as the screen gets smaller.*/}
               <source srcSet={headerLogo72dpi} media="(min-width: 900px)" />
               <source srcSet={headerLogo64dpi} media="(min-width: 600px)" />
               <source srcSet={headerLogo56dpiNoText} media="(max-width: 375px)" />
