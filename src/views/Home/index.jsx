@@ -9,6 +9,7 @@ import GuestWelcome from './components/GuestWelcome';
 import NewsCard from './components/NewsCard';
 import LostAndFoundCard from './components/LostAndFoundCard';
 import DaysLeft from './components/DaysLeft';
+import PosterSwiper from './components/PosterSwiper';
 import Stack from '@mui/material/Stack';
 
 const Home = () => {
@@ -22,7 +23,7 @@ const Home = () => {
     return (
       <Grid container justifyContent="center" spacing={2}>
         <Grid item xs={12} md={10}>
-          <Carousel />
+          <PosterSwiper />
         </Grid>
         <Grid item xs={12} md={10}>
           <DaysLeft />
