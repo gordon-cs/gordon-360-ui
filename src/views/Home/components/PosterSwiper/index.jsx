@@ -38,7 +38,7 @@ const PosterSwiper = () => {
               pagination={{
                 clickable: true,
               }}
-              loop={currentPosters.length > 6} // loop if more than 3 posters
+              loop={false} // loop if more than 3 posters
               grabCursor={true}
               centeredSlides={true}
               keyboard={true} // takes keyboard input
