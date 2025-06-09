@@ -42,13 +42,15 @@ const About = () => {
                     <li>Events search on the master calendar (integrating with 25Live),</li>
                     <li>People search, which is now the sole campus directory,</li>
                     <li>
-                      individual profiles to allow people to update their data and control its
+                      Individual profiles to allow people to update their data and control its
                       visiblity to the campus community,
                     </li>
                     <li>Timesheets for student jobs on campus,</li>
-                    <li>dark mode,</li>
+                    <li>Dark mode,</li>
                     <li>RecIM to manage fun and competitive recreational activities,</li>
-                    <li>and more.</li>
+                    <li>Lost and Found to allow a convenient method to find lost items,</li>
+                    <li>Residence Life tab to check on RA on duty and other key features,</li>
+                    <li>And more...</li>
                   </ul>
                   They also maintained the code, revising and sometimes rewriting it to use new
                   tools and adapt to changes in existing tools.
