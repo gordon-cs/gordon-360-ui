@@ -16,6 +16,10 @@
 
 input[type='datetime-local']::-webkit-calendar-picker-indicator {
   filter: invert(62%) sepia(82%) saturate(500%) hue-rotate(355deg) brightness(90%) contrast(92%);
+  width: 1.3em;
+  height: 1.3em;
+  font-size: 1.3em;
+  cursor: pointer;
 }
 
 .submitButton {

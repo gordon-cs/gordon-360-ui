@@ -182,7 +182,7 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
         </DialogContent>
       </Dialog>
       <Grid container spacing={0.75}>
-        <Grid item xs={12} className={styles.gridItem}>
+        <Grid item xs={12} md={6} className={styles.gridItem}>
           Display After
           <TextField
             type="datetime-local"
@@ -204,7 +204,7 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
             sx={getTextFieldSX('var(--mui-palette-secondary-main)')}
           />
         </Grid>
-        <Grid item xs={12} className={styles.gridItem}>
+        <Grid item xs={12} md={6} className={styles.gridItem}>
           Display Until
           <TextField
             type="datetime-local"
