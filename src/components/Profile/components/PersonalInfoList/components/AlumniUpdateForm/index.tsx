@@ -64,7 +64,7 @@ const AlumniUpdateForm = ({
 
     personalEmail: false,
     workEmail: false,
-    aEmail: false,
+    altEmail: false,
   });
 
   const personalInfoFields: ProfileUpdateFieldType[] = [
@@ -110,9 +110,9 @@ const AlumniUpdateForm = ({
     },
     {
       label: 'Alternate Email',
-      name: 'aEmail',
+      name: 'altEmail',
       type: INPUT_TYPES.Text,
-      error: errorStatus.aEmail,
+      error: errorStatus.altEmail,
       helperText: '*Invalid Email',
     },
     {
@@ -189,7 +189,7 @@ const AlumniUpdateForm = ({
     suffix?: string;
     personalEmail?: string;
     workEmail?: string;
-    aEmail?: string;
+    altEmail?: string;
     preferredEmail?: string;
     doNotContact?: boolean;
     doNotMail?: boolean;
@@ -211,28 +211,29 @@ const AlumniUpdateForm = ({
       salutation: profile.Title
         ? profile.Title.charAt(0).toUpperCase() + profile.Title.slice(1).toLowerCase()
         : '',
-      firstName: profile.FirstName ?? '',
-      lastName: profile.LastName ?? '',
-      middleName: profile.MiddleName ?? '',
-      nickName: profile.NickName ?? '',
-      suffix: profile.Suffix ?? '',
+      firstName: profile.FirstName?.value ?? '',
+      lastName: profile.LastName?.value ?? '',
+      middleName: profile.MiddleName?.value ?? '',
+      nickName: profile.NickName?.value ?? '',
+      suffix: profile.Suffix?.value ?? '',
       personalEmail: profile.PersonalEmail ?? '',
       workEmail: profile.WorkEmail ?? '',
-      aEmail: profile.aEmail ?? '',
+      altEmail: profile.altEmail ?? '',
       preferredEmail: profile.PreferredEmail ?? '',
       doNotContact: profile.doNotContact ?? false,
       doNotMail: profile.doNotMail ?? false,
-      homePhone: profile.HomePhone ?? '',
+      homePhone: profile.HomePhone?.value ?? '',
       workPhone: profile.WorkPhone ?? '',
-      mobilePhone: profile.MobilePhone ?? '',
+      mobilePhone: profile.MobilePhone?.value ?? '',
       preferredPhone: profile.PreferredPhone ?? '',
       //Homestreet lines are inverted in alumni SQL
-      address1: profile.HomeStreet2 ?? profile.HomeStreet1 ?? '',
-      address2: profile.HomeStreet2 && profile.HomeStreet1 ? profile.HomeStreet2 : '',
-      city: profile.HomeCity ?? '',
-      state: profile.HomeState ?? '',
-      zip: profile.HomePostalCode ?? '',
-      country: profile.HomeCountry ?? '',
+      address1: profile.HomeStreet2?.value ?? profile.HomeStreet1?.value ?? '',
+      address2:
+        profile.HomeStreet2?.value && profile.HomeStreet1?.value ? profile.HomeStreet2.value : '',
+      city: profile.HomeCity?.value ?? '',
+      state: profile.HomeState?.value ?? '',
+      zip: profile.HomePostalCode?.value ?? '',
+      country: profile.HomeCountry?.value ?? '',
       married: profile.Married === 'Y' ? true : false,
     };
   }, [profile]);
@@ -286,7 +287,7 @@ const AlumniUpdateForm = ({
           break;
         case 'personalEmail':
         case 'workEmail':
-        case 'aEmail':
+        case 'altEmail':
           setErrorStatus((currentValue) => ({
             ...currentValue,
             [field]: !isEmailValid(updatedInfo[field]),

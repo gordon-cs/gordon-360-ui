@@ -38,12 +38,13 @@ import CliftonStrengthsService from 'services/cliftonStrengths';
 import SLock from './Salsbury.png';
 import DPLock from './DandP.png';
 import DDLock from './DandD.png';
-
-const PRIVATE_INFO = 'Private as requested.';
+import UpdateUserPrivacy from './UpdateUserPrivacyDropDownMenu';
 
 const formatPhone = (phone: string) => {
   if (phone?.length === 10) {
     return `(${phone?.slice(0, 3)}) ${phone?.slice(3, 6)}-${phone?.slice(6)}`;
+  } else if (phone?.length === 11 && phone[0] === '1') {
+    return `(${phone?.slice(1, 4)}) ${phone?.slice(4, 7)}-${phone?.slice(7)}`;
   } else {
     return phone;
   }
@@ -57,9 +58,6 @@ type Props = {
 };
 
 const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) => {
-  const [isMobilePhonePrivate, setIsMobilePhonePrivate] = useState(
-    Boolean(profile.IsMobilePhonePrivate && profile.MobilePhone !== PRIVATE_INFO),
-  );
   const [isCliftonStrengthsPrivate, setIsCliftonStrengthsPrivate] = useState(
     profile.CliftonStrengths?.Private,
   );
@@ -67,9 +65,9 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
   const [mailCombo, setMailCombo] = useState<string>();
   const [advisorsList, setAdvisorsList] = useState<AdvisorType[]>([]);
   const [showMailCombo, setShowMailCombo] = useState(false);
-  const isStudent = profile.PersonType?.includes('stu');
-  const isFacStaff = profile.PersonType?.includes('fac');
-  const isAlumni = profile.PersonType?.includes('alu');
+  const isStudent = checkIsStudent(profile); //profile.PersonType.includes('stu');
+  const isFacStaff = checkIsFacStaff(profile); //profile.PersonType.includes('fac');
+  const isAlumni = checkIsAlumni(profile); //profile.PersonType.includes('alu');
   const [isViewerPolice, canViewSensitiveInfo, canViewAcademicInfo] = useAuthGroups(
     AuthGroup.Police,
     AuthGroup.SensitiveInfoView,
@@ -77,42 +75,38 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
   );
   const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false);
   const [profPlannedGradYear, setProfPlannedGradYear] = useState(
-    checkIsStudent(profile) ? profile.PlannedGradYear : null,
+    isStudent ? profile.PlannedGradYear : null,
   );
 
-  // KeepPrivate has different values for Students and FacStaff.
-  // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
-  //    or 'P' for Private (not visible to other students)
-  // FacStaff: '0' for public, '1' for private.
-  const keepPrivate = Boolean(
-    profile.KeepPrivate === '1' || profile.KeepPrivate === 'S' || profile.KeepPrivate === 'P',
-  );
-
-  /**
-   * The following 'is[info]Private' variables represent whether info shown to the user is private
-   * and will be hidden from students.
-   *
-   * FacStaff have a privileged view and will see private info for students and FacStaff.
-   * Students can only see their own private info.
-   *
-   * Some info is private by default and only shown on the personal profile
-   * Additionally, some info is private only for "private users", designated by the KeepPrivate flag
-   */
+  // KeepPrivate is either 'Y' or 'P' to indicated student information should be kept private
+  // from other students but still available for faculty and staff.  The use of 'S' (for semi-
+  // private) used to cause address information to be suppressed, but it is no longer used.
+  // Use of KeepPrivate for FacStaff is deprecated.
+  const keepPrivate = Boolean(profile.KeepPrivate === 'Y' || profile.KeepPrivate === 'P');
 
   // Students' on-campus location is public unless the student is marked as private
-  const isCampusLocationPrivate =
-    checkIsStudent(profile) && keepPrivate && profile.OnOffCampus !== PRIVATE_INFO;
+  const isCampusLocationPrivate = keepPrivate;
 
-  // Students' home phone is always private. FacStaffs' home phone is private for private users
-  const [isHomePhonePrivate, setIsHomePhonePrivate] = useState(isStudent || keepPrivate);
+  // Students' home phone is always private. FacStaff can choose to restrict their home phone
+  const isHomePhonePrivate =
+    keepPrivate || isStudent || (isFacStaff && profile.HomePhone?.isPrivate);
 
-  // Street address info is always private, and City/State/Country info is private for private users
+  // Student and FacStaff can restrict access to mobile phone
+  const isMobilePhonePrivate = keepPrivate || profile.MobilePhone?.isPrivate;
+
+  // Street address info is always private, and City/State/Country may be restricted
   const isAddressPrivate =
-    (keepPrivate && profile.HomeCity !== PRIVATE_INFO) || profile.HomeStreet2;
+    keepPrivate ||
+    profile.HomeCity?.isPrivate ||
+    profile.HomeState?.isPrivate ||
+    profile.HomeCountry?.isPrivate ||
+    profile.Country?.isPrivate;
 
-  // FacStaff spouses are private for private users
-  const isSpousePrivate =
-    checkIsFacStaff(profile) && keepPrivate && profile.SpouseName !== PRIVATE_INFO;
+  // Users may restrict name of spouse
+  const isSpousePrivate = keepPrivate || (isFacStaff && profile.SpouseName?.isPrivate);
+
+  // Students should not have the 'FacStaff' visibility option in privacy settings
+  const excludedVisibilityList = isStudent ? ['FacStaff'] : [];
 
   // Get the user's mailbox combination when they are viewing their own profile
   useEffect(() => {
@@ -130,37 +124,6 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     }
     loadPersonalInfo();
   }, [myProf, isStudent, canViewAcademicInfo, profile.AD_Username]);
-
-  const handleChangeMobilePhonePrivacy = async () => {
-    try {
-      await userService.setMobilePhonePrivacy(!isMobilePhonePrivate);
-      setIsMobilePhonePrivate(!isMobilePhonePrivate);
-
-      createSnackbar(
-        isMobilePhonePrivate ? 'Mobile Phone Visible' : 'Mobile Phone Hidden',
-        'success',
-      );
-    } catch {
-      createSnackbar('Privacy Change Failed', 'error');
-    }
-  };
-
-  const handleChangeHomePhonePrivacy = async () => {
-    try {
-      // this user service currently sets mobile_privacy to true or false - same as setMobilePhonePrivacy, which is NOT optimal or sensical. See user.ts
-      await userService.setHomePhonePrivacy(!isHomePhonePrivate);
-      setIsHomePhonePrivate(!isHomePhonePrivate);
-
-      createSnackbar(
-        isHomePhonePrivate
-          ? 'Personal Info Visible (This change may take several minutes)'
-          : 'Personal Info Hidden (This change may take several minutes)',
-        'success',
-      );
-    } catch {
-      createSnackbar('Privacy Change Failed', 'error');
-    }
-  };
 
   const handleChangeCliftonStrengthsPrivacy = async () => {
     try {
@@ -181,12 +144,17 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
       title="Home Phone:"
       contentText={
         myProf ? (
-          formatPhone(profile.HomePhone)
+          <Grid className={styles.not_private}>{formatPhone(profile.HomePhone.value)}</Grid>
         ) : (
-          <a href={`tel:${profile.HomePhone}`} className="gc360_text_link">
-            {formatPhone(profile.HomePhone)}
+          <a href={`tel:${profile.HomePhone.value}`} className="gc360_text_link">
+            {formatPhone(profile.HomePhone.value)}
           </a>
         )
+      }
+      ContentIcon={
+        myProf &&
+        !isStudent &&
+        UpdateUserPrivacy(profile.AD_Username, ['HomePhone'], excludedVisibilityList)
       }
       privateInfo={isHomePhonePrivate}
       myProf={myProf}
@@ -198,62 +166,56 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
       title="Mobile Phone:"
       contentText={
         myProf ? (
-          <Grid container spacing={0} alignItems="center">
-            <Grid item>{formatPhone(profile.MobilePhone)}</Grid>
-            <Grid item>
-              <UpdatePhone />
-            </Grid>
+          <Grid container spacing={0} alignItems="center" className={styles.not_private}>
+            <Grid item>{formatPhone(profile.MobilePhone.value)}</Grid>
+            <Grid item>{isStudent ? <UpdatePhone /> : null}</Grid>
           </Grid>
-        ) : profile.MobilePhone === PRIVATE_INFO ? (
-          PRIVATE_INFO
         ) : (
-          <a href={`tel:${profile.MobilePhone}`} className="gc360_text_link">
-            {formatPhone(profile.MobilePhone)}
+          <a href={`tel:${profile.MobilePhone.value}`} className="gc360_text_link">
+            {formatPhone(profile.MobilePhone.value)}
           </a>
         )
       }
       ContentIcon={
-        myProf && (
-          <FormControlLabel
-            control={
-              <Switch
-                onChange={handleChangeMobilePhonePrivacy}
-                color="secondary"
-                checked={!isMobilePhonePrivate}
-              />
-            }
-            label={isMobilePhonePrivate ? 'Private' : 'Public'}
-            labelPlacement="bottom"
-            disabled={!isOnline}
-          />
-        )
+        myProf && UpdateUserPrivacy(profile.AD_Username, ['MobilePhone'], excludedVisibilityList)
       }
       privateInfo={isMobilePhonePrivate}
       myProf={myProf}
     />
   ) : null;
 
-  let streetAddr = profile.HomeStreet2 ? <span>{profile.HomeStreet2},&nbsp;</span> : null;
+  let streetAddr = profile.HomeStreet2?.value ? (
+    <span>{profile.HomeStreet2.value},&nbsp;</span>
+  ) : null;
+  //let streetAddr = profile.HomeStreet1?.value ? <span>{profile.HomeStreet1.value},&nbsp;</span> : null;
 
-  const home = (
-    <ProfileInfoListItem
-      title="Home:"
-      contentText={
-        <>
-          {streetAddr}
-          <span className={keepPrivate ? undefined : styles.not_private}>
-            {profile.HomeCity === PRIVATE_INFO
-              ? PRIVATE_INFO
-              : profile.Country === 'United States of America' || !profile.Country
-                ? `${profile.HomeCity}, ${profile.HomeState}`
-                : profile.Country}
-          </span>
-        </>
-      }
-      privateInfo={isAddressPrivate}
-      myProf={myProf}
-    />
-  );
+  // Users have the ability to restrict access to their home address information.  Since privacy
+  // is tied to individual profile items, if the user requests a change to their address privacy
+  // setting then we need to change the privacy settings on multiple profile items.  Here we
+  // construct a list of times that must be updated.
+  let hasUSAddress = profile.Country?.value === 'United States of America' || !profile.Country;
+  let homePrivacyFields = hasUSAddress ? ['HomeCity', 'HomeState'] : ['Country', 'HomeCountry'];
+
+  const home =
+    (profile.HomeCity && profile.HomeState) || profile.Country ? (
+      <ProfileInfoListItem
+        title="Home:"
+        contentText={
+          <>
+            <span className={styles.private}>{streetAddr}</span>
+            {hasUSAddress
+              ? `${profile.HomeCity?.value}, ${profile.HomeState?.value}`
+              : profile.Country?.value}
+          </>
+        }
+        ContentIcon={
+          myProf &&
+          UpdateUserPrivacy(profile.AD_Username, homePrivacyFields, excludedVisibilityList)
+        }
+        privateInfo={isAddressPrivate}
+        myProf={myProf}
+      />
+    ) : null;
 
   const minors =
     checkIsStudent(profile) && profile.Minors?.length > 0 ? (
@@ -387,7 +349,6 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
             control={
               <Switch
                 onChange={handleChangeCliftonStrengthsPrivacy}
-                color="secondary"
                 checked={!isCliftonStrengthsPrivate}
               />
             }
@@ -426,13 +387,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
             <Grid container item xs={5} alignItems="center">
               <Typography>{'Mailbox:'}</Typography>
             </Grid>
-            <Grid
-              container
-              item
-              xs={myProf && mailCombo ? 2.5 : 5}
-              lg={myProf && mailCombo ? 2.4 : 5}
-              alignItems="center"
-            >
+            <Grid container item xs={myProf && mailCombo ? 2.5 : 5} alignItems="center">
               <Typography>{`#${profile.Mail_Location}`}</Typography>
             </Grid>
             {myProf && mailCombo && (
@@ -464,7 +419,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
                 </Grid>
                 <Button
                   variant="contained"
-                  color="secondary"
+                  color="primary"
                   onClick={() => setIsJoinDialogOpen(true)}
                 >
                   Instructions
@@ -480,7 +435,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
                   <Grid container>
                     <Typography sx={{ fontSize: '0.8rem' }}>
                       <Link
-                        className={`gc360_text_link ${styles.salsbury_link}`}
+                        className={styles.salsbury_link}
                         href="https://m.youtube.com/shorts/FxE5PPS94sc"
                         underline="always"
                         target="_blank"
@@ -505,7 +460,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
                       <br />
                       <br />
                       <Link
-                        className={`gc360_text_link ${styles.dp_link}`}
+                        className={styles.dp_link}
                         href="https://m.youtube.com/shorts/47402r3FqSs"
                         underline="always"
                         target="_blank"
@@ -533,7 +488,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
                       <br />
                       <br />
                       <Link
-                        className={`gc360_text_link ${styles.dd_link}`}
+                        className={styles.dd_link}
                         href="https://m.youtube.com/shorts/0VuTFs1Iwnw"
                         underline="always"
                         target="_blank"
@@ -569,21 +524,19 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     ) : null;
 
   const campusDormInfo =
-    checkIsStudent(profile) &&
-    profile.OnOffCampus &&
-    !(profile.BuildingDescription || profile.Hall) ? (
+    isStudent && profile.OnOffCampus && !(profile.BuildingDescription || profile.Hall) ? (
       <ProfileInfoListItem
         title="Dormitory:"
         contentText={profile.OnOffCampus}
         privateInfo={isCampusLocationPrivate}
         myProf={myProf}
       />
-    ) : checkIsStudent(profile) ? (
+    ) : isStudent ? (
       <ProfileInfoListItem
         title="Dormitory:"
         contentText={
           <>
-            <span className={keepPrivate ? undefined : styles.not_private}>
+            <span className={styles.not_private}>
               {profile.BuildingDescription ?? profile.Hall}
             </span>
 
@@ -619,8 +572,14 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     checkIsFacStaff(profile) && profile.SpouseName ? (
       <ProfileInfoListItem
         title="Spouse:"
-        contentText={profile.SpouseName}
-        privateInfo={(keepPrivate && myProf) || isSpousePrivate}
+        contentText={profile.SpouseName.value}
+        ContentIcon={
+          isFacStaff &&
+          myProf &&
+          UpdateUserPrivacy(profile.AD_Username, ['SpouseName'], excludedVisibilityList)
+        }
+        privateInfo={isSpousePrivate}
+        myProf={myProf}
       />
     ) : null;
 
@@ -639,22 +598,11 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
         <Typography>NOTE:</Typography>
         <ul>
           <li>
-            <Typography>Shaded areas are visible only to you.</Typography>
+            <Typography>Private and shaded information is visible to authorized users.</Typography>
           </li>
           <li>
             <Typography>
-              To add/update your mail forwarding address, fill out this{' '}
-              <a
-                href="https://forms.office.com/r/98eR7TUXg6"
-                className={`gc360_text_link ${styles.note_link}`}
-              >
-                Forward Request Form.
-              </a>
-            </Typography>
-          </li>
-          <li>
-            <Typography>
-              To update your On-Campus Address, please contact{' '}
+              To update your On Campus Address, please contact{' '}
               <a
                 href="mailto: housing@gordon.edu"
                 className={`gc360_text_link ${styles.note_link}`}
@@ -692,17 +640,20 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
       </div>
     ) : null);
 
-  const disclaimer =
-    !myProf &&
-    (isHomePhonePrivate ||
-      isAddressPrivate ||
-      isMobilePhonePrivate ||
-      isCampusLocationPrivate ||
-      isSpousePrivate) ? (
+  const disclaimer = !myProf ? (
+    isHomePhonePrivate ||
+    isAddressPrivate ||
+    isMobilePhonePrivate ||
+    isCampusLocationPrivate ||
+    isSpousePrivate ||
+    isCliftonStrengthsPrivate ? (
       <Typography align="left" className={styles.disclaimer}>
-        Private by request, visible only to faculty and staff
+        Visible only to authorized personnel
       </Typography>
-    ) : null;
+    ) : (
+      <Typography align="center">No personal information to display</Typography>
+    )
+  ) : null;
 
   return (
     <Grid item xs={12}>
@@ -719,24 +670,6 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
         >
           <Grid container className={styles.header}>
             <CardHeader title="Personal Information" />
-          </Grid>
-          <Grid item xs={4}>
-            {/* visible only for fac/staff on their profile */}
-            {/* isHomePhonePrivate is a misleading name for determining if personal information should be shown */}
-            {isFacStaff && myProf ? (
-              <FormControlLabel
-                control={
-                  <Switch
-                    onChange={handleChangeHomePhonePrivacy}
-                    color="secondary"
-                    checked={!isHomePhonePrivate}
-                  />
-                }
-                label={isHomePhonePrivate ? 'Private' : 'Public'}
-                labelPlacement="end"
-                disabled={!isOnline}
-              />
-            ) : null}
           </Grid>
         </Grid>
         <CardContent>
