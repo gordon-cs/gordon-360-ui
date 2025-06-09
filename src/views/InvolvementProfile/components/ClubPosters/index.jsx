@@ -47,18 +47,26 @@ const ClubPosters = ({ clubName, clubCode }) => {
 
   return (
     <>
-      <Card elevation={0}>
+      <Card elevation={0} sx={{ marginBottom: 0 }}>
         <CardHeader
           title={`Posters from ${clubName}`}
           className="gc360_header"
           style={{ marginLeft: 0, width: '125%' }}
         />
         <CardContent>
-          <Grid container direction="row" spacing={4} className={'test1'}>
+          <Grid
+            container
+            direction="row"
+            spacing={4}
+            className={'test1'}
+            justifyContent="flex-start"
+            alignItems="stretch"
+            sx={{ minHeight: '30vh' }}
+          >
             {posters.length > 0 ? (
               posters.map((item) => (
-                <Grid item xs={6} sm={4} md={3} lg={3} key={item.key}>
-                  <Card variant="outlined" elevation={0} sx={{ position: 'relative' }}>
+                <Grid item xs={6} sm={4} md={3} lg={3} xl={2} key={item.key}>
+                  <Card variant="outlined" elevation={0} sx={{ position: 'auto' }}>
                     {item.Priority === 1 && ( // Add red exclamation mark for priority posters
                       <Typography
                         variant="h3"

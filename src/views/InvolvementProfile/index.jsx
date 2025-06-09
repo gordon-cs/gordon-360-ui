@@ -13,6 +13,7 @@ import {
   Typography,
   DialogContent,
   Dialog,
+  Divider,
 } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonOffline from 'components/GordonOffline';
@@ -494,17 +495,23 @@ const InvolvementProfile = () => {
               <GordonLoader />
             ) : profile ? (
               <>
-                <hr width="101.5%"></hr>
                 <Grid item>
-                  <ClubPosters clubName={ActivityDescription} clubCode={involvementCode} />
+                  <Divider sx={{ my: 0 }} />
                 </Grid>
-                {/*Not an ideal way to format the page me thinks*/}
-                <br />
-                <br />
-                <br />
-                <hr width="101.5%"></hr>
+
+                <Grid item sx={{ overflow: 'visible', my: 0 }}>
+                  <ClubPosters
+                    clubName={ActivityDescription}
+                    clubCode={involvementCode}
+                    style={{ position: 'flex', height: 'auto' }}
+                  />
+                </Grid>
 
                 <Grid item>
+                  <Divider sx={{ my: 0 }} />
+                </Grid>
+
+                <Grid item style={{ height: 'auto', position: 'relative' }}>
                   <Typography>
                     <strong>Group Contacts</strong>
                   </Typography>
