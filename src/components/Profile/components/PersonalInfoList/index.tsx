@@ -271,6 +271,23 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
       />
     );
 
+  const getYearFromDate = (dateString: Date | undefined): string => {
+    if (!dateString) return 'Unknown';
+    const date = new Date(dateString);
+    return date.getFullYear().toString();
+  };
+
+  const matriculationDate = (
+    <ProfileInfoListItem
+      title={checkIsFacStaff(profile) ? 'First Year at Gordon College:' : 'Year Enrolled:'}
+      contentText={
+        // checkIsFacStaff(profile) ? '2010' : '2020'
+        checkIsFacStaff(profile) ? getYearFromDate(profile.FirstHireDt) : '2020'
+        // : getYearFromDate(profile.EnrollmentDate)
+      }
+    />
+  );
+
   const plannedGraduationYear =
     myProf && checkIsStudent(profile) ? (
       <ProfileInfoListItem
@@ -744,6 +761,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
           <List>
             {majors}
             {minors}
+            {matriculationDate}
             {plannedGraduationYear}
             {graduationYear}
             {cliftonStrengths}

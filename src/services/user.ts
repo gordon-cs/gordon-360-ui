@@ -89,6 +89,7 @@ export type UnformattedFacStaffProfileInfo = BaseProfileInfo & {
   OnCampusDepartment: string;
   SpouseName: string;
   Type: string;
+  FirstHireDt: Date;
   office_hours: string;
   Mail_Description: string;
 };
