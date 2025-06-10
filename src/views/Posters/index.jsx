@@ -22,6 +22,7 @@ import { useLocation } from 'react-router-dom';
 import CropPoster from './Forms/Forms/CropPoster';
 import { AuthGroup, signOut } from 'services/auth';
 import { useAuthGroups, useNetworkStatus, useUser } from 'hooks';
+import FileUploadedRoundIcon from '@mui/icons-material/FileUploadRounded';
 // import MemberListItem from './components/MemberListItem';
 
 const Posters = () => {
@@ -179,17 +180,15 @@ const Posters = () => {
           {croppedImage && (
             <Grid item xs={12} md={6}>
               <Card variant="outlined">
-                <CardHeader title="Preview" className="gc360_header" />
-                <CardActionArea>
-                  <CardMedia
-                    onClick={() => setOpenCropPoster(true)}
-                    loading="lazy"
-                    component="img"
-                    alt="Cropped Image"
-                    src={croppedImage}
-                    title="Cropped Image"
-                  />
-                </CardActionArea>
+                <CardHeader title="Josh" className="gc360_header" />
+
+                <CardMedia
+                  loading="lazy"
+                  component="img"
+                  alt="Cropped Image"
+                  src={croppedImage}
+                  title="Cropped Image"
+                />
               </Card>
             </Grid>
           )}
@@ -283,7 +282,8 @@ const Posters = () => {
                       color="secondary"
                       onClick={() => setOpenUploadForm(true)}
                     >
-                      Upload&nbsp;Poster
+                      <FileUploadedRoundIcon />
+                      &nbsp; Upload&nbsp;Poster
                     </Button>
                   </Grid>
                 )}

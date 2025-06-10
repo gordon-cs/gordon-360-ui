@@ -114,8 +114,12 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
         <DialogContentText>{createPhotoDialogBoxMessage()}</DialogContentText>
         {!showCropper && (
           <Dropzone
+            accept={{
+              'image/jpeg': [],
+              'image/png': [],
+              'application/pdf': [],
+            }}
             onDropAccepted={onDropAccepted}
-            accept="image/jpeg, image/png, image.pdf"
             onDropRejected={onDropRejected}
           >
             {({ getRootProps, getInputProps }) => (

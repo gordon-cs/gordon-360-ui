@@ -16,7 +16,7 @@ const PosterCheck = ({ open, onClose, posterInfo }) => {
     event.preventDefault();
     try {
       console.log('Submitting poster...');
-      const createdPoster = await createPoster(posterInfo());
+      const createdPoster = await createPoster(posterInfo);
       console.log(posterInfo);
       console.log('Poster created:', createdPoster);
       onClose();

@@ -13,6 +13,7 @@ import { createPoster } from 'services/poster';
 import CropPoster from '../CropPoster';
 import PosterCheck from '../ApprovedDialogue';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+import ChangeCircleRoundedIcon from '@mui/icons-material/ChangeCircleRounded';
 import { useUser } from 'hooks';
 import involvementService from 'services/involvements';
 import sessionService from 'services/session';
@@ -70,6 +71,7 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
   }, [sessionFromURL]);
 
   const handleCropSubmit = (imageData) => {
+    console.log('New cropped image data:', imageData);
     setCroppedImage(imageData);
     setOpenCropPoster(false);
     onCropSubmit(imageData);
@@ -158,7 +160,7 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
           <PosterCheck
             open={openPosterCheck}
             onClose={() => setOpenPosterCheck(false)}
-            posterInfo={posterInfo}
+            posterInfo={posterInfo()}
           />
         </DialogContent>
       </Dialog>
@@ -167,7 +169,7 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
           title={
             <Grid container direction="row" alignItems="center" className={styles.gridItemHeader}>
               <Grid item xs={7} align="left">
-                Upload Poster
+                &nbsp;Upload Poster
               </Grid>
             </Grid>
           }
@@ -271,7 +273,6 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
             sx={getTextFieldSX('var(--mui-palette-secondary-main)')}
           />
         </Grid>
-
         <Grid item xs={12} className={styles.gridItem}>
           <TextField
             select
@@ -332,18 +333,29 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
             </TextField>
           </Grid>
         )}
-        {!croppedImage && (
-          <Grid item xs={12} className={styles.gridItem}>
+
+        <Grid item xs={12} className={styles.gridItem}>
+          {!croppedImage && (
             <Button
               variant="contained"
               className={styles.uploadPosterButton}
               onClick={() => setOpenCropPoster(true)}
             >
               <AddCircleRoundedIcon />
-              Upload Poster
+              &nbsp;Upload Poster
             </Button>
-          </Grid>
-        )}
+          )}
+          {croppedImage && (
+            <Button
+              variant="contained"
+              className={styles.uploadPosterButton}
+              onClick={() => setOpenCropPoster(true)}
+            >
+              <ChangeCircleRoundedIcon />
+              &nbsp;Change Poster
+            </Button>
+          )}
+        </Grid>
         <Grid item xs={6} className={styles.gridItem}>
           <Button
             onClick={() => setOpenPosterCheck(true)}
