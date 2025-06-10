@@ -12,7 +12,7 @@ import RecIMIcon from '@mui/icons-material/SportsFootball';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { useNetworkStatus } from 'hooks';
 import { useEffect, useState } from 'react';
-import { useNavigate, NavLink, useLocation, LinkProps as RouterLinkProps } from 'react-router-dom';
+import { useNavigate, NavLink, useLocation } from 'react-router-dom';
 import { authenticate } from 'services/auth';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
 import GordonQuickSearch from './components/QuickSearch';
@@ -182,8 +182,8 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
             <MenuIcon className={styles.hamburger_menu_button_icon} />
           </IconButton>
           <Link to="/" component={NavLink} className={styles.logo_link}>
-            {/* pick a different image as the screen gets smaller.*/}
             <picture>
+              {/* pick a different image as the screen gets smaller.*/}
               <source srcSet={headerLogo72dpi} media="(min-width: 900px)" />
               <source srcSet={headerLogo64dpi} media="(min-width: 600px)" />
               <source srcSet={headerLogo56dpiNoText} media="(max-width: 375px)" />
