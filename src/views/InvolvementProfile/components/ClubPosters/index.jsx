@@ -64,7 +64,7 @@ const ClubPosters = ({ clubName, clubCode }) => {
           >
             {posters.length > 0 ? (
               posters.map((item) => (
-                <Grid item xs={6} sm={4} md={3} lg={3} xl={2} key={item.key}>
+                <Grid item xs={6} sm={4} md={3} lg={4} xl={3} key={item.key}>
                   <Card variant="outlined" elevation={0} sx={{ position: 'auto' }}>
                     {item.Priority === 1 && ( // Add red exclamation mark for priority posters
                       <Typography
