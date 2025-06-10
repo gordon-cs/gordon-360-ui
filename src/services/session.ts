@@ -19,11 +19,6 @@ const getCurrent = (): Promise<Session> => http.get('sessions/current');
 
 const getDaysLeft = (): Promise<DaysLeft> => http.get('sessions/daysLeft');
 
-const terms = {
-  spring: 'SP',
-  fall: 'FA',
-};
-
 /**
  * Convert a session code to a readable session
  * e.g. '202109' -> '2021fall'
@@ -58,6 +53,8 @@ const encodeSessionCode = (readableSessionCode: string): string => {
   switch (sessionCodeSeason) {
     case 'spring':
       return sessionCodeYear + '01';
+    case 'test':
+      return sessionCodeYear + '08';
     case 'summer':
       return sessionCodeYear + '05';
     case 'fall':
@@ -68,21 +65,6 @@ const encodeSessionCode = (readableSessionCode: string): string => {
   return readableSessionCode;
 };
 
-const getTermCode = (): string => {
-  const now = new Date();
-
-  // Decide what term it is, defaulting to fall
-  let term = terms.fall;
-  let year = now.getFullYear();
-  if (now.getMonth() <= 6) {
-    term = terms.spring;
-    // If spring term, decrement current year to get current academic year
-    year -= 1;
-  }
-
-  return `${year.toString().substr(-2)}${term}`;
-};
-
 const parseSessionCode = (sessionCode: string) => parse(sessionCode, 'yyyyMM', new Date());
 
 const sessionService = {
@@ -90,7 +72,7 @@ const sessionService = {
   getAll,
   getCurrent,
   getDaysLeft,
-  getTermCode,
+  // getTermCode,
   decodeSessionCode,
   encodeSessionCode,
   parseSessionCode,
