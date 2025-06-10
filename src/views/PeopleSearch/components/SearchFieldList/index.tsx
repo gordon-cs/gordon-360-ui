@@ -41,6 +41,7 @@ import {
   FaMapMarkerAlt as LocationCity,
   FaUser as Person,
 } from 'react-icons/fa';
+import { BiMaleFemale as GenderIcon } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
 import addressService from 'services/address';
 import { AuthGroup } from 'services/auth';
@@ -99,6 +100,7 @@ const defaultSearchParams: PeopleSearchQuery = {
   initial_year: '',
   final_year: '',
   involvement: '',
+  gender: '',
 };
 
 const { serializeSearchParams, deserializeSearchParams } =
@@ -151,6 +153,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
   // 1889 is the establish date of Gordon
   const [switchYearRange, setSwitchYearRange] = useState(true);
   const [involvements, setInvolvements] = useState<string[]>([]);
+  const [gender, setGender] = useState<string[]>([]);
 
   /**
    * Default search params adjusted for the user's identity.
@@ -208,17 +211,27 @@ const SearchFieldList = ({ onSearch }: Props) => {
 
   useEffect(() => {
     const loadPage = async () => {
-      const [majors, minors, halls, states, countries, departments, buildings, involvements] =
-        await Promise.all([
-          peopleSearchService.getMajors(),
-          peopleSearchService.getMinors(),
-          peopleSearchService.getHalls(),
-          addressService.getStates(),
-          addressService.getCountries(),
-          peopleSearchService.getDepartmentDropdownOptions(),
-          peopleSearchService.getBuildings(),
-          peopleSearchService.getInvolvements(),
-        ]);
+      const [
+        majors,
+        minors,
+        halls,
+        states,
+        countries,
+        departments,
+        buildings,
+        involvements,
+        gender,
+      ] = await Promise.all([
+        peopleSearchService.getMajors(),
+        peopleSearchService.getMinors(),
+        peopleSearchService.getHalls(),
+        addressService.getStates(),
+        addressService.getCountries(),
+        peopleSearchService.getDepartmentDropdownOptions(),
+        peopleSearchService.getBuildings(),
+        peopleSearchService.getInvolvements(),
+        peopleSearchService.getGender(),
+      ]);
       setMajors(majors);
       setMinors(minors);
       setHalls(halls);
@@ -227,6 +240,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       setDepartments(departments);
       setBuildings(buildings.map((b) => b.Description));
       setInvolvements(involvements);
+      setGender(gender);
       setLoading(false);
     };
 
@@ -615,6 +629,14 @@ const SearchFieldList = ({ onSearch }: Props) => {
                   <Typography align="center" color="neutral">
                     Everyone
                   </Typography>
+                  <SearchField
+                    name="gender"
+                    value={searchParams.gender}
+                    updateValue={handleUpdate}
+                    options={gender.sort()}
+                    Icon={GenderIcon}
+                    select
+                  />
                   <SearchField
                     name="home_town"
                     value={searchParams.home_town}
