@@ -277,16 +277,17 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     return date.getFullYear().toString();
   };
 
-  const matriculationDate = (
+  const hireDate = checkIsFacStaff(profile) ? (
     <ProfileInfoListItem
-      title={checkIsFacStaff(profile) ? 'First Year at Gordon College:' : 'Year Enrolled:'}
-      contentText={
-        // checkIsFacStaff(profile) ? '2010' : '2020'
-        checkIsFacStaff(profile) ? getYearFromDate(profile.FirstHireDt) : '2020'
-        // : getYearFromDate(profile.EnrollmentDate)
-      }
+      title={'First Year at Gordon College:'}
+      contentText={getYearFromDate(profile.FirstHireDt)}
     />
-  );
+  ) : null;
+
+  const matriculationDate =
+    checkIsStudent(profile) && (myProf || canViewAcademicInfo) ? (
+      <ProfileInfoListItem title={'First Year at Gordon College:'} contentText={''} />
+    ) : null;
 
   const plannedGraduationYear =
     myProf && checkIsStudent(profile) ? (
@@ -761,6 +762,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
           <List>
             {majors}
             {minors}
+            {hireDate}
             {matriculationDate}
             {plannedGraduationYear}
             {graduationYear}
