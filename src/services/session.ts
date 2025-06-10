@@ -53,8 +53,6 @@ const encodeSessionCode = (readableSessionCode: string): string => {
   switch (sessionCodeSeason) {
     case 'spring':
       return sessionCodeYear + '01';
-    case 'test':
-      return sessionCodeYear + '08';
     case 'summer':
       return sessionCodeYear + '05';
     case 'fall':
@@ -72,7 +70,6 @@ const sessionService = {
   getAll,
   getCurrent,
   getDaysLeft,
-  // getTermCode,
   decodeSessionCode,
   encodeSessionCode,
   parseSessionCode,
