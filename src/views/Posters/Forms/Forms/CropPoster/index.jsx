@@ -13,6 +13,10 @@ import Dropzone from 'react-dropzone';
 import Cropper from 'react-cropper';
 import defaultLogo from '../../../images/DefaultPoster.png';
 import styles from './CropPoster.module.scss';
+import CheckBoxRoundedIcon from '@mui/icons-material/CheckBoxRounded';
+import ClearOutlinedIcon from '@mui/icons-material/ClearRounded';
+import IconButton from '@mui/material/IconButton';
+import UndoIcon from '@mui/icons-material/Undo';
 
 const CROPPER_WIDTH = 1056;
 const CROPPER_HEIGHT = 1632;
@@ -103,7 +107,7 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
       <CardHeader
         title={
           <Grid container direction="row" alignItems="center">
-            <Grid item xs={7} align="left">
+            <Grid item xs={12} align="center">
               Upload Poster
             </Grid>
           </Grid>
@@ -111,74 +115,106 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
         className={styles.gc360_header}
       />
       <DialogContent className={styles.dialogContent}>
-        <DialogContentText>{createPhotoDialogBoxMessage()}</DialogContentText>
-        {!showCropper && (
-          <Dropzone
-            accept={{
-              'image/jpeg': [],
-              'image/png': [],
-              'application/pdf': [],
-            }}
-            onDropAccepted={onDropAccepted}
-            onDropRejected={onDropRejected}
-          >
-            {({ getRootProps, getInputProps }) => (
-              <div {...getRootProps()} className={styles.dropzoneContainer}>
-                <input {...getInputProps()} />
-                <img src={defaultLogo} alt="Poster" className={styles.dropzoneImage} />
-              </div>
-            )}
-          </Dropzone>
-        )}
-        {showCropper && (
-          <Cropper
-            ref={cropperRef}
-            src={cropperImageData}
-            className={styles.cropperContainer}
-            autoCropArea={0.8}
-            aspectRatio={ASPECT_RATIO}
-            guides={true}
-            zoomable={false}
-            scalable
-            movable={false}
-            cropBoxMovable
-            cropBoxResizable={true}
-            minCropBoxWidth={200}
-            minCropBoxHeight={200}
-            zoom={false}
-          />
-        )}
-      </DialogContent>
-      <DialogActions className={styles.dialogActions}>
-        {showCropper && (
-          <Button
-            onClick={handleCloseSubmit}
-            variant="contained"
-            color="primary"
-            className={styles.dialogButton}
-          >
-            Submit
-          </Button>
-        )}
-        {showCropper && (
-          <Button
-            onClick={() => setShowCropper(false)}
-            variant="contained"
-            color="primary"
-            className={styles.dialogButton}
-          >
-            Go{'\u00A0'}Back
-          </Button>
-        )}
-        <Button
-          onClick={onClose}
-          variant="outlined"
-          color="primary"
-          className={styles.cancelButton}
+        <DialogContentText style={{ textAlign: 'center' }}>
+          {createPhotoDialogBoxMessage()}
+        </DialogContentText>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexDirection: 'column',
+          }}
         >
-          Cancel
-        </Button>
-      </DialogActions>
+          {!showCropper && (
+            <Dropzone
+              accept={{
+                'image/jpeg': [],
+                'image/png': [],
+                'application/pdf': [],
+              }}
+              onDropAccepted={onDropAccepted}
+              onDropRejected={onDropRejected}
+            >
+              {({ getRootProps, getInputProps }) => (
+                <div
+                  {...getRootProps()}
+                  className={styles.dropzoneContainer}
+                  style={{ display: 'flex', justifyContent: 'center' }}
+                >
+                  <input {...getInputProps()} />
+                  <img src={defaultLogo} alt="Poster" className={styles.dropzoneImage} />
+                </div>
+              )}
+            </Dropzone>
+          )}
+          {showCropper && (
+            <Cropper
+              ref={cropperRef}
+              src={cropperImageData}
+              className={styles.cropperContainer}
+              autoCropArea={0.8}
+              aspectRatio={ASPECT_RATIO}
+              guides={true}
+              zoomable={false}
+              scalable
+              movable={false}
+              cropBoxMovable
+              cropBoxResizable={true}
+              minCropBoxWidth={200}
+              minCropBoxHeight={200}
+              zoom={false}
+            />
+          )}
+        </div>
+      </DialogContent>
+      {/(iPhone|iPod)/i.test(navigator.userAgent) ? (
+        <DialogActions className={styles.dialogActions} style={{ justifyContent: 'center' }}>
+          {showCropper && (
+            <IconButton onClick={handleCloseSubmit} size="large" style={{ color: '#29e757' }}>
+              <CheckBoxRoundedIcon />
+            </IconButton>
+          )}
+          {showCropper && (
+            <IconButton onClick={() => setShowCropper(false)} variant="contained" color="link">
+              <UndoIcon />
+            </IconButton>
+          )}
+          <IconButton onClick={onClose} variant="outlined" color="error">
+            <ClearOutlinedIcon />
+          </IconButton>
+        </DialogActions>
+      ) : (
+        <DialogActions className={styles.dialogActions} style={{ justifyContent: 'center' }}>
+          {showCropper && (
+            <Button
+              onClick={handleCloseSubmit}
+              variant="contained"
+              className={styles.dialogButton}
+              style={{ backgroundColor: '#006D22' }}
+            >
+              Submit
+            </Button>
+          )}
+          {showCropper && (
+            <Button
+              onClick={() => setShowCropper(false)}
+              variant="contained"
+              className={styles.dialogButton}
+            >
+              Go{'\u00A0'}Back
+            </Button>
+          )}
+          <Button
+            onClick={onClose}
+            variant="outlined"
+            color="error"
+            className={styles.cancelButton}
+          >
+            Cancel
+          </Button>
+        </DialogActions>
+      )}
     </Dialog>
   );
 };
