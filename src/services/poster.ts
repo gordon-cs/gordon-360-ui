@@ -59,6 +59,9 @@ const getPosters = (): Promise<Poster[]> => http.get(`posters`);
 
 const getCurrentPosters = (): Promise<Poster[]> => http.get(`posters/current`);
 
+const getCurrentPostersByActivityCode = (activityCode: string): Promise<Poster[]> =>
+  http.get(`posters/current/activity/${activityCode}`);
+
 const getPostersByUser = (userName: string): Promise<Poster[]> => http.get(`posters/${userName}`);
 
 const getPostersByActivity = (activityCode: string): Promise<Poster[]> =>
@@ -76,6 +79,7 @@ export {
   createPoster,
   getPosters,
   getCurrentPosters,
+  getCurrentPostersByActivityCode,
   getPostersByActivity,
   getPostersByUser,
   lookupPoster,

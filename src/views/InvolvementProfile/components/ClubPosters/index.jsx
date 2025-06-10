@@ -9,7 +9,7 @@ import {
   Dialog,
 } from '@mui/material';
 import { useState, useEffect } from 'react';
-import { getCurrentPosters } from 'services/poster';
+import { getCurrentPostersByActivityCode } from 'services/poster';
 
 const ClubPosters = ({ clubName, clubCode }) => {
   const [posters, setPosters] = useState([]);
@@ -19,9 +19,8 @@ const ClubPosters = ({ clubName, clubCode }) => {
   useEffect(() => {
     const fetchPosters = async () => {
       try {
-        const allPosters = await getCurrentPosters();
-        const filtered = allPosters.filter((p) => p.ClubCode === clubCode);
-        setPosters(filtered);
+        const ActivityPosters = await getCurrentPostersByActivityCode(clubCode);
+        setPosters(ActivityPosters);
       } catch (error) {
         console.error('Failed to load posters:', error);
         setPosters([]);
