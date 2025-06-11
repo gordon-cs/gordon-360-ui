@@ -59,8 +59,11 @@ const PosterSwiper = () => {
                 600: {
                   slidesPerView: 2, // 2 posters in view for tablets
                 },
-                800: {
-                  slidesPerView: 4, // 3 posters in view for small desktops
+                1200: {
+                  slidesPerView: 3, // 4 posters in view for small desktops
+                },
+                1500: {
+                  slidesPerView: 4, // 4 posters in view for larger desktops
                 },
               }}
               // Adds the effect of the posters "hiding" behind the center poster

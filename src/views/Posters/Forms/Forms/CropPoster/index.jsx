@@ -149,22 +149,32 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
             </Dropzone>
           )}
           {showCropper && (
-            <Cropper
-              ref={cropperRef}
-              src={cropperImageData}
-              className={styles.cropperContainer}
-              autoCropArea={0.8}
-              aspectRatio={ASPECT_RATIO}
-              guides={true}
-              zoomable={false}
-              scalable
-              movable={false}
-              cropBoxMovable
-              cropBoxResizable={true}
-              minCropBoxWidth={200}
-              minCropBoxHeight={200}
-              zoom={false}
-            />
+            <div
+              className={styles.dropzoneContainer}
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Cropper
+                ref={cropperRef}
+                src={cropperImageData}
+                className={styles.cropperContainer}
+                style={{ width: '100%', height: '100%' }}
+                aspectRatio={ASPECT_RATIO}
+                guides={true}
+                zoomable={false}
+                scalable
+                movable={false}
+                cropBoxMovable
+                cropBoxResizable={true}
+                minCropBoxWidth={200}
+                minCropBoxHeight={200}
+                zoom={false}
+                dragMode="move"
+              />
+            </div>
           )}
         </div>
       </DialogContent>
