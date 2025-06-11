@@ -5,7 +5,7 @@ const unavailableLog = ['color: #0066ff'].join(';');
 const networkEmoji = `\u{1F4E1}`;
 const normalLogCentered = ['color: #3498db', 'margin-left: 24px'].join(';');
 
-export function register() {
+export const register = () => {
   /**
    * Checks to see if the Cache and Service Worker API is available. If so, continue with PWA
    * operations. Otherwise, PWA is unavailable.
@@ -19,8 +19,8 @@ export function register() {
       navigator.serviceWorker
         .register(
           `/sw.js?API=${encodeURIComponent(
-            process.env.VITE_API_URL,
-          )}api&FONT=${encodeURIComponent(process.env.VITE_FONT_URL)}`,
+            import.meta.env.VITE_API_URL,
+          )}api&FONT=${encodeURIComponent(import.meta.env.VITE_FONT_URL)}`,
         )
         .then((reg) => {
           reg.onupdatefound = () => {
@@ -102,4 +102,4 @@ export function register() {
       console.log('%cCACHE API IS NOT AVAILABLE: PWA NOT AVAILABLE', unavailableLog);
     }
   }
-}
+};

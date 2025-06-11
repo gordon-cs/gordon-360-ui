@@ -221,7 +221,10 @@ const config: Config = {
     '^.+\\.(png|jpg|jpeg|gif|svg)$': 'jest-transform-stub'
   },
 
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts']
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+
+  setupFiles: ['<rootDir>/jest.setup.ts']
+
 
 };
 
