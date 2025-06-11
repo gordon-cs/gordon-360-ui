@@ -307,7 +307,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
           }}
           className={styles.update_info_button}
         >
-          Update Information
+          Update Alumni Information
         </Button>
       </Grid>
     ) : null;
@@ -628,7 +628,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     myProf &&
     (isFacStaff ? (
       <Typography align="left" className={styles.note}>
-        NOTE: To update your personal info, please go to{' '}
+        Faculty/Staff: To update your personal info, please go to{' '}
         <a href="https://gordon.criterionhcm.com/" className={`gc360_text_link`}>
           Criterion
         </a>{' '}
