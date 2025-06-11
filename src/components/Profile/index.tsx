@@ -68,11 +68,9 @@ const Profile = ({ profile, myProf }: Props) => {
         </Grid>
       )}
 
-      {(myProf || !profileIsStudent || canReadStudentSchedules) && (
-        <Grid item xs={12} lg={10}>
-          <SchedulePanel profile={profile} myProf={myProf} />
-        </Grid>
-      )}
+      <Grid item xs={12} lg={10}>
+        <SchedulePanel profile={profile} myProf={myProf} />
+      </Grid>
 
       <Grid item xs={12} lg={5}>
         <Grid container spacing={2}>

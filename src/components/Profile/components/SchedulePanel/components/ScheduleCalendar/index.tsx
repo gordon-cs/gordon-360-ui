@@ -35,12 +35,28 @@ const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
       : course.location.includes('null')
         ? (title = tempTitle)
         : (title = tempTitle + `\n${course.location}`);
+
     return { ...course, title };
   });
 
   return (
     <Calendar
       style={{ whiteSpace: 'pre-wrap' }}
+      eventPropGetter={(event: CourseEvent) => {
+        const firstQuadOfSemester = ['Fall 1', 'Spring 1', 'Summer 1'];
+        const secondQuadOfSemester = ['Fall 2', 'Spring 2', 'Summer 2'];
+        let subtermClassNames = ['subterm'];
+
+        if (firstQuadOfSemester.includes(event.subtermCode || '')) {
+          subtermClassNames.push('subterm1');
+        } else if (secondQuadOfSemester.includes(event.subtermCode || '')) {
+          subtermClassNames.push('subterm2');
+        } else {
+          return {};
+        }
+
+        return { className: subtermClassNames.join(' ') };
+      }}
       events={courseFormat}
       localizer={localizer}
       min={dayStart}
