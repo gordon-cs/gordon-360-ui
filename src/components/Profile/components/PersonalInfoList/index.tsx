@@ -38,7 +38,7 @@ import CliftonStrengthsService from 'services/cliftonStrengths';
 import SLock from './Salsbury.png';
 import DPLock from './DandP.png';
 import DDLock from './DandD.png';
-import { differenceInYears } from 'date-fns'; // Import a date utility library like date-fns
+import { differenceInYears, parse } from 'date-fns'; // Import a date utility library like date-fns
 
 const PRIVATE_INFO = 'Private as requested.';
 
@@ -55,6 +55,10 @@ type Props = {
   profile: profileType;
   isOnline: boolean;
   createSnackbar: (message: string, severity: AlertColor, link?: string) => void;
+};
+
+const parseGraduationDate = (whenGraduated: string) => {
+  return parse(whenGraduated, 'LLLL yyyy', new Date());
 };
 
 const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) => {
@@ -146,23 +150,22 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     loadPersonalInfo();
   }, [myProf, isStudent, canViewAcademicInfo, profile.AD_Username, createSnackbar]);
 
-  const parseGraduationDate = (whenGraduated: string) => {
-    const [month, year] = whenGraduated.split(' '); // Split into "Month" and "Year"
-    const monthIndex = new Date(`${month} 1`).getMonth(); // Get the month index (0-11)
-    return new Date(Number(year), monthIndex, 1); // Create a new Date object (1st day of the month)
+  const setPlannedGradDate = () => {
+    if (graduationInfo) {
+      const currentDate = new Date();
+      const plannedGradDate = profPlannedGradYear
+        ? new Date(`${profPlannedGradYear}-05-01`) // Assuming graduation is in May
+        : graduationInfo.WhenGraduated
+          ? parseGraduationDate(graduationInfo.WhenGraduated)
+          : null;
+      return plannedGradDate && differenceInYears(plannedGradDate, currentDate) === 0;
+    }
   };
 
   useEffect(() => {
     if (isStudent && myProf) {
       if (graduationInfo && graduationInfo.GraduationFlag === null) {
-        const currentDate = new Date();
-        const plannedGradDate = profPlannedGradYear
-          ? new Date(`${profPlannedGradYear}-05-01`) // Assuming graduation is in May
-          : graduationInfo.WhenGraduated
-            ? parseGraduationDate(graduationInfo.WhenGraduated)
-            : null;
-
-        if (plannedGradDate && differenceInYears(plannedGradDate, currentDate) < 1) {
+        if (setPlannedGradDate()) {
           createSnackbar(
             `Please submit the Graduation Application 8-12 months before May ${
               profPlannedGradYear || graduationInfo.WhenGraduated
@@ -781,14 +784,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
             ) : (
               // If the intent to graduate form has not been submitted
               (() => {
-                const currentDate = new Date();
-                const plannedGradDate = profPlannedGradYear
-                  ? new Date(`${profPlannedGradYear}-05-01`) // Assuming graduation is in May
-                  : graduationInfo.WhenGraduated
-                    ? parseGraduationDate(graduationInfo.WhenGraduated)
-                    : null;
-
-                if (plannedGradDate && differenceInYears(plannedGradDate, currentDate) < 1) {
+                if (setPlannedGradDate()) {
                   return (
                     <Typography>
                       <b>Warning:</b>{' '}
