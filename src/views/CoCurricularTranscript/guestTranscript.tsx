@@ -178,4 +178,5 @@ export const exampleStudentProfile: StudentProfileInfo = {
   ChapelRequired: 0,
   ChapelAttended: 0,
   PlannedGradYear: '',
+  Entrance_Date: new Date(currentYear, 1, 1),
 };
