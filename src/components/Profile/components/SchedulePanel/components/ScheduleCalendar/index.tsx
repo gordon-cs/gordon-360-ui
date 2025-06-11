@@ -47,9 +47,9 @@ const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
         const secondQuadOfSemester = ['Fall 2', 'Spring 2', 'Summer 2'];
         let subtermClassNames = ['subterm'];
 
-        if (firstQuadOfSemester.includes(event.subtermCode)) {
+        if (firstQuadOfSemester.includes(event.subtermCode || '')) {
           subtermClassNames.push('subterm1');
-        } else if (secondQuadOfSemester.includes(event.subtermCode)) {
+        } else if (secondQuadOfSemester.includes(event.subtermCode || '')) {
           subtermClassNames.push('subterm2');
         } else {
           return {};

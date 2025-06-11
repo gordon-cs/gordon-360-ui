@@ -63,7 +63,7 @@ export type CourseEvent = {
   name: string;
   title: string;
   location: string;
-  subtermCode: string;
+  subtermCode?: string;
   start: Date;
   end: Date;
   allDay?: boolean;
