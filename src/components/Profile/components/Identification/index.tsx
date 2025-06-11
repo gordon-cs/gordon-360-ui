@@ -716,21 +716,24 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
                     </Typography>
 
                     {/* Profile Name Edit Request Button */}
-                    <IconButton
-                      onClick={() => setShowNameDialog(true)}
-                      size="small"
-                      aria-label="Request name change"
-                      sx={{
-                        marginBottom: '8px',
-                        padding: '4px',
-                        '&:hover': { opacity: 0.8 },
-                      }}
-                    >
-                      <EditIcon style={{ fontSize: '20px' }} />
-                    </IconButton>
+                    {checkIsStudent(profile) &&
+                      !checkIsFacStaff(profile) &&
+                      !checkIsAlumni(profile) && (
+                        <IconButton
+                          onClick={() => setShowNameDialog(true)}
+                          size="small"
+                          aria-label="Request name change"
+                          sx={{
+                            marginBottom: '8px',
+                            padding: '4px',
+                            '&:hover': { opacity: 0.8 },
+                          }}
+                        >
+                          <EditIcon style={{ fontSize: '20px' }} />
+                        </IconButton>
+                      )}
                   </div>
                 </Grid>
-
                 {checkIsFacStaff(userProfile) &&
                   userProfile.JobTitle &&
                   userProfile.JobTitle !== '' && (
@@ -750,10 +753,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
                     xs={12}
                     className={styles.identification_card_content_card_container_info_email}
                   >
-                    <a
-                      href={`mailt
-                      o:${userProfile.Email}`}
-                    >
+                    <a href={`mailto:${userProfile.Email}`}>
                       <div
                         className={
                           styles.identification_card_content_card_container_info_email_container
@@ -772,6 +772,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
 
                 {isOnline && createPhotoDialogBox()}
 
+                {/* profile Button settings */}
                 {showNameDialog && (
                   <Dialog
                     open={showNameDialog}

@@ -511,7 +511,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
                         target="_blank"
                         rel="noopener"
                       >
-                        Andrey, Andrey Belyshev Dial and Pointer Mailbox
+                        Dial and Pointer Mailbox
                       </Link>
                       <Typography className={styles.dp_typography}>
                         (Combinations that have two letters ex: H B)
