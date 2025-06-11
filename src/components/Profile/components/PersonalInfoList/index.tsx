@@ -176,7 +176,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
         }
       }
     }
-  }, [graduationInfo, profPlannedGradYear, createSnackbar]);
+  }, [isStudent, myProf, graduationInfo, profPlannedGradYear, createSnackbar]);
 
   const handleChangeMobilePhonePrivacy = async () => {
     try {
