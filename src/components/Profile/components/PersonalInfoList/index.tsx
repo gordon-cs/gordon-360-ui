@@ -787,20 +787,26 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
                 if (setPlannedGradDate()) {
                   return (
                     <Typography>
-                      <b>Warning:</b>{' '}
-                      {profPlannedGradYear
-                        ? `Please submit the Graduation Application 8-12 months before May ${profPlannedGradYear}.`
-                        : graduationInfo.WhenGraduated
-                          ? `Please submit the Graduation Application 8-12 months before ${graduationInfo.WhenGraduated}.`
-                          : 'Please submit the Graduation Application as soon as possible.'}
-                      <a
-                        href="https://my.gordon.edu"
-                        className={`gc360_text_link ${styles.note_link}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <> Click here</>
-                      </a>
+                      <b>Warning: </b>
+                      {myProf ? (
+                        <>
+                          {profPlannedGradYear
+                            ? `Please submit the Graduation Application 8-12 months before May ${profPlannedGradYear}.`
+                            : graduationInfo.WhenGraduated
+                              ? `Please submit the Graduation Application 8-12 months before ${graduationInfo.WhenGraduated}.`
+                              : 'Please submit the Graduation Application as soon as possible.'}
+                          <a
+                            href="https://my.gordon.edu"
+                            className={`gc360_text_link ${styles.note_link}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <> Click here</>
+                          </a>
+                        </>
+                      ) : (
+                        'The student has not yet submitted their Graduation Application.'
+                      )}
                     </Typography>
                   );
                 } else {
