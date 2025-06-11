@@ -1,3 +1,4 @@
+import { getEnvVar } from 'envVar';
 import ReactGA from 'react-ga4';
 
 const onError = (description: string) => {
@@ -32,7 +33,7 @@ const onPageView = (title?: string) =>
   });
 
 const initialize = () => {
-  ReactGA.initialize(import.meta.env.VITE_ANALYTICS_ID ?? 'G-2FE78G0CBN');
+  ReactGA.initialize(getEnvVar('VITE_ANALYTICS_ID') ?? 'G-2FE78G0CBN');
   // Set user role
   // TODO get user role from JWT
   ReactGA.set({ dimension1: 'god' });

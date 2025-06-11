@@ -1,6 +1,7 @@
 import GordonError from 'components/Error';
 import { Component, ErrorInfo, ReactNode } from 'react';
 import analytics from 'services/analytics';
+import { getEnvVar } from 'envVar';
 
 type Props = {
   children: ReactNode;
@@ -21,7 +22,7 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    if (import.meta.env.NODE_ENV === 'production' && this.state.hasError) {
+    if (getEnvVar('NODE_ENV') === 'production' && this.state.hasError) {
       analytics.onError(`${error.toString()} ${errorInfo.componentStack}`);
     }
   }

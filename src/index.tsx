@@ -1,5 +1,5 @@
 import Providers from 'components/Providers';
-import { register } from 'pwa';
+import register from './pwa.js';
 import { createRoot } from 'react-dom/client';
 import App from './app';
 import './app.global.css';

@@ -1,3 +1,5 @@
+import { getEnvVar } from 'envVar';
+
 // Determines if the any console logs should be made
 const showDeveloperConsoleLog = false;
 // Console log decorations
@@ -5,7 +7,7 @@ const unavailableLog = ['color: #0066ff'].join(';');
 const networkEmoji = `\u{1F4E1}`;
 const normalLogCentered = ['color: #3498db', 'margin-left: 24px'].join(';');
 
-export const register = () => {
+export default function register() {
   /**
    * Checks to see if the Cache and Service Worker API is available. If so, continue with PWA
    * operations. Otherwise, PWA is unavailable.
@@ -19,8 +21,8 @@ export const register = () => {
       navigator.serviceWorker
         .register(
           `/sw.js?API=${encodeURIComponent(
-            import.meta.env.VITE_API_URL,
-          )}api&FONT=${encodeURIComponent(import.meta.env.VITE_FONT_URL)}`,
+            getEnvVar('VITE_API_URL'),
+          )}api&FONT=${encodeURIComponent(getEnvVar('ITE_FONT_URL'))}`,
         )
         .then((reg) => {
           reg.onupdatefound = () => {
@@ -102,4 +104,4 @@ export const register = () => {
       console.log('%cCACHE API IS NOT AVAILABLE: PWA NOT AVAILABLE', unavailableLog);
     }
   }
-};
+}

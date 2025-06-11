@@ -9,6 +9,7 @@ import { MsalProvider } from '@azure/msal-react';
 import { useEffect } from 'react';
 import analytics from 'services/analytics';
 import { BrowserRouter } from 'react-router-dom';
+import { getEnvVar } from 'envVar';
 
 const Providers = ({
   msalInstance,
@@ -19,7 +20,7 @@ const Providers = ({
 }) => {
   useEffect(() => {
     // Only use analytics in production
-    if (import.meta.env.NODE_ENV === 'production') {
+    if (getEnvVar('NODE_ENV') === 'production') {
       analytics.initialize();
     }
   }, []);
