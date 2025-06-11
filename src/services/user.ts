@@ -95,6 +95,7 @@ export type UnformattedFacStaffProfileInfo = BaseProfileInfo & {
 };
 
 export type UnformattedStudentProfileInfo = BaseProfileInfo & {
+  Entrance_Date: Date;
   OnOffCampus: OnOffCampusStatus;
   OffCampusStreet1: string;
   OffCampusStreet2: string;

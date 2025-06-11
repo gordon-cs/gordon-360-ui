@@ -274,6 +274,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
   const getYearFromDate = (dateString: Date | undefined): string => {
     if (!dateString) return 'Unknown';
     const date = new Date(dateString);
+    if (date.getFullYear().toString() === '1') return 'Unknown';
     return date.getFullYear().toString();
   };
 
@@ -286,7 +287,10 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
 
   const matriculationDate =
     checkIsStudent(profile) && (myProf || canViewAcademicInfo) ? (
-      <ProfileInfoListItem title={'First Year at Gordon College:'} contentText={''} />
+      <ProfileInfoListItem
+        title={'First Year at Gordon College:'}
+        contentText={getYearFromDate(profile.Entrance_Date)}
+      />
     ) : null;
 
   const plannedGraduationYear =
