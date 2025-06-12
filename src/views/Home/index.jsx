@@ -1,6 +1,7 @@
 // @TODO CSSMODULES - moved to global styles until a better solution is found
 // import styles from './Home.module.css';
-import { Grid } from '@mui/material';
+import { Grid, Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import GordonLoader from 'components/Loader';
 import { useUser } from 'hooks';
 import Carousel from './components/Carousel';
@@ -26,6 +27,23 @@ const Home = () => {
         </Grid>
         <Grid item xs={12} md={10}>
           <DaysLeft />
+        </Grid>
+        {/* Add pull-down iframe below DaysLeft */}
+        <Grid item xs={12} md={10}>
+          <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography variant="h6">Dining Menu</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <iframe
+                src="https://www.nutritics.com/menu/ma4080"
+                width="100%"
+                height="700"
+                style={{ border: 'none' }}
+                title="Nutritics Menu"
+              ></iframe>
+            </AccordionDetails>
+          </Accordion>
         </Grid>
         <Grid item xs={12} md={5}>
           <DiningBalance />
