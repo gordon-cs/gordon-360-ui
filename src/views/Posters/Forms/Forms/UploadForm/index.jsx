@@ -218,7 +218,8 @@ const UploadForm = ({ onClose, onCropSubmit, poster }) => {
             open={openPosterCheck}
             onClose={() => setOpenPosterCheck(false)}
             posterInfo={posterInfo()}
-            onConfirm={handleSubmit}
+            isEditing={isEditing}
+            posterId={poster?.ID}
           />
         </DialogContent>
       </Dialog>

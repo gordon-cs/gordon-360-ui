@@ -8,25 +8,37 @@ import {
   Link as MuiLink,
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
-import { createPoster } from 'services/poster';
+import { createPoster, editPoster } from 'services/poster';
 
 // Moves the poster information to the database, and, depending on the timing, allows the poster to be displayed on the posters page.
-const PosterCheck = ({ open, onClose, posterInfo }) => {
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+const PosterCheck = ({ open, onClose, posterInfo, isEditing, posterId }) => {
+  const handleSubmit = async () => {
     try {
-      console.log('Submitting poster...');
-      console.log('Poster info being submitted:', posterInfo);
+      if (isEditing && posterId) {
+        console.log('Calling editPoster with ID: ', posterId);
+        // Prepare partial update data based on your UpdatePoster type
+        const updatedData = {
+          Title: posterInfo.Title,
+          Description: posterInfo.Description,
+          ImagePath: posterInfo.ImagePath,
+          VisibleDate: posterInfo.VisibleDate,
+          ExpirationDate: posterInfo.ExpirationDate,
+          Status: 1, // or whatever status you want here
+        };
+        console.log('Editing poster...', posterId, updatedData);
+        const updatedPoster = await editPoster(posterId, updatedData);
+        console.log('Poster updated:', updatedPoster);
+      } else {
+        console.log('Calling createPoster');
+        const newPoster = posterInfo();
+        console.log('Creating poster...', newPoster);
+        const createdPoster = await createPoster(newPoster);
+        console.log('Poster created:', createdPoster);
+      }
 
-      const { Priority, Status, ...cleanPosterInfo } = posterInfo;
-      const createdPoster = await createPoster(cleanPosterInfo);
-
-      console.log(posterInfo);
-      console.log('Poster created:', createdPoster);
       onClose();
-      window.location.reload(); // Reload the page to reflect changes
     } catch (error) {
-      console.error('Error creating poster:', error);
+      console.error('Error submitting poster:', error);
     }
   };
 
