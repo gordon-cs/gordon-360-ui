@@ -43,8 +43,7 @@ const PRIVATE_INFO = 'Private as requested.';
 
 const parseDateString = (dateString: string): string => {
   if (!dateString) return 'Unknown';
-  const year = dateString.substring(0, 4);
-  return year;
+  return dateString.substring(0, 4);
 };
 
 const formatPhone = (phone: string) => {
