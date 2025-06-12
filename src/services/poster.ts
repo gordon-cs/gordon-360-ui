@@ -55,19 +55,20 @@ type CreatedPoster = BasePoster & {
 const createPoster = (newPoster: UploadPoster): Promise<CreatedPoster> =>
   http.post(`posters`, newPoster);
 
-const getPosters = (): Promise<Poster[]> => http.get(`posters`);
+const getPosters = (): Promise<Poster[]> => http.get(`posters/all`);
 
-const getCurrentPosters = (): Promise<Poster[]> => http.get(`posters/current`);
+const getCurrentPosters = (): Promise<Poster[]> => http.get(`posters`);
 
 const getCurrentPostersByActivityCode = (activityCode: string): Promise<Poster[]> =>
-  http.get(`posters/current/activity/${activityCode}`);
-
-const getPostersByUser = (userName: string): Promise<Poster[]> => http.get(`posters/${userName}`);
-
-const getPostersByActivity = (activityCode: string): Promise<Poster[]> =>
   http.get(`posters/activity/${activityCode}`);
 
-const lookupPoster = (): Promise<Poster> => http.get(`posters/lookup`);
+const getPostersByUser = (userName: string): Promise<Poster[]> =>
+  http.get(`posters/all/${userName}`);
+
+const getPostersByActivity = (activityCode: string): Promise<Poster[]> =>
+  http.get(`posters/all/activity/${activityCode}`);
+
+const lookupPoster = (): Promise<Poster> => http.get(`posters/all/lookup`);
 
 const getPosterById = (posterID: number): Promise<Poster> => http.get(`posters/${posterID}`);
 
