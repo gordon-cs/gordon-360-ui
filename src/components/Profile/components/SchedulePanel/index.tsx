@@ -47,6 +47,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
   const [finalExams, setFinalExams] = useState<FinalExamEvent[]>([]);
   const [finalExamsLoading, setFinalExamsLoading] = useState(false);
   const [currentSessionCode, setCurrentSessionCode] = useState<string | null>(null);
+  const [currentFinalSessionCode, setCurrentFinalSessionCode] = useState<string | null>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -54,9 +55,11 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
     Promise.all([
       scheduleService.getAllSessionSchedules(profile.AD_Username),
       sessionService.getCurrent(),
-    ]).then(([allSessionSchedules, currentSession]) => {
+      sessionService.getCurrentForFinalExams(),
+    ]).then(([allSessionSchedules, currentSession, currentFinalSession]) => {
       setAllSchedules(allSessionSchedules);
       setCurrentSessionCode(currentSession.SessionCode);
+      setCurrentFinalSessionCode(currentFinalSession.SessionCode);
       const defaultSchedule =
         // If there is a schedule for the current session, make it d4fault
         allSessionSchedules.find((s) => s.session.SessionCode === currentSession.SessionCode) ??
@@ -68,7 +71,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
   }, [profile.AD_Username]);
 
   useEffect(() => {
-    if (!selectedSchedule || selectedSchedule.session.SessionCode !== currentSessionCode) {
+    if (!selectedSchedule || selectedSchedule.session.SessionCode !== currentFinalSessionCode) {
       setFinalExams([]);
       setFinalExamsLoading(false);
       return;
@@ -105,7 +108,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
       })
       .catch(() => setFinalExams([]))
       .finally(() => setFinalExamsLoading(false));
-  }, [selectedSchedule, profile.AD_Username, currentSessionCode]);
+  }, [selectedSchedule, profile.AD_Username, currentFinalSessionCode]);
 
   const toggleIsScheduleOpen = () => {
     setIsScheduleOpen((wasOpen) => {
@@ -166,7 +169,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
                 </TextField>
               </Grid>
               <Grid item style={{ minWidth: 180 }}>
-                {selectedSchedule?.session.SessionCode === currentSessionCode && (
+                {selectedSchedule?.session.SessionCode === currentFinalSessionCode && (
                   <Button
                     variant="contained"
                     color="primary"
