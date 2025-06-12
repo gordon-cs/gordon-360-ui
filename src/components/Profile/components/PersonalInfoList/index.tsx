@@ -41,6 +41,12 @@ import DDLock from './DandD.png';
 
 const PRIVATE_INFO = 'Private as requested.';
 
+const parseDateString = (dateString: string): string => {
+  if (!dateString) return 'Unknown';
+  const year = dateString.substring(0, 4);
+  return year;
+};
+
 const formatPhone = (phone: string) => {
   if (phone?.length === 10) {
     return `(${phone?.slice(0, 3)}) ${phone?.slice(3, 6)}-${phone?.slice(6)}`;
@@ -271,17 +277,10 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
       />
     );
 
-  const getYearFromDate = (dateString: Date | undefined): string => {
-    if (!dateString) return 'Unknown';
-    const date = new Date(dateString);
-    if (date.getFullYear().toString() === '1') return 'Unknown';
-    return date.getFullYear().toString();
-  };
-
   const hireDate = checkIsFacStaff(profile) ? (
     <ProfileInfoListItem
       title={'First Year at Gordon College:'}
-      contentText={getYearFromDate(profile.FirstHireDt)}
+      contentText={parseDateString(profile.FirstHireDt)}
     />
   ) : null;
 
@@ -289,7 +288,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     checkIsStudent(profile) && (myProf || canViewAcademicInfo) ? (
       <ProfileInfoListItem
         title={'First Year at Gordon College:'}
-        contentText={getYearFromDate(profile.Entrance_Date)}
+        contentText={parseDateString(profile.Entrance_Date)}
       />
     ) : null;
 

@@ -89,13 +89,13 @@ export type UnformattedFacStaffProfileInfo = BaseProfileInfo & {
   OnCampusDepartment: string;
   SpouseName: string;
   Type: string;
-  FirstHireDt: Date;
+  FirstHireDt: string;
   office_hours: string;
   Mail_Description: string;
 };
 
 export type UnformattedStudentProfileInfo = BaseProfileInfo & {
-  Entrance_Date: Date;
+  Entrance_Date: string;
   OnOffCampus: OnOffCampusStatus;
   OffCampusStreet1: string;
   OffCampusStreet2: string;
