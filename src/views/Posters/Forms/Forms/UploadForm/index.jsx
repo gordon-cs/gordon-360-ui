@@ -19,8 +19,11 @@ import involvementService from 'services/involvements';
 import sessionService from 'services/session';
 import { useLocation } from 'react-router-dom';
 import styles from './UploadForm.module.scss';
+import { editPoster } from 'services/poster';
 
-const UploadForm = ({ onClose, onCropSubmit }) => {
+const UploadForm = ({ onClose, onCropSubmit, poster }) => {
+  const isEditing = !!poster;
+
   const [priorityStatus, setPriorityStatus] = useState('');
   const [selectedClub, setSelectedClub] = useState('');
   const [openCropPoster, setOpenCropPoster] = useState(false);
@@ -36,6 +39,19 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
   const location = useLocation();
   const sessionFromURL = new URLSearchParams(location.search).get('session');
   const [croppedImage, setCroppedImage] = useState(null);
+
+  useEffect(() => {
+    if (poster) {
+      console.log('Initializing form with poster:', poster);
+      setPriorityStatus(poster.Priority === 1 ? 1 : 2); // based on your Priority logic
+      setSelectedClub(poster.ClubCode);
+      setStartTime(poster.VisibleDate);
+      setEndTime(poster.ExpirationDate);
+      setTitle(poster.Title);
+      setDescription(poster.Description);
+      setCroppedImage(poster.ImagePath);
+    }
+  }, [poster]);
 
   useEffect(() => {
     const loadButton = async () => {
@@ -74,7 +90,7 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
     console.log('New cropped image data:', imageData);
     setCroppedImage(imageData);
     setOpenCropPoster(false);
-    onCropSubmit(imageData);
+    onCropSubmit?.(imageData);
   };
 
   useEffect(() => {
@@ -96,23 +112,44 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
 
   useEffect(() => {
     const checkIfFormIsValid = () => {
-      if (
+      const imageIsValid = isEditing ? true : Boolean(croppedImage);
+      const isValid =
         startTime &&
         endTime &&
         title &&
         description &&
         selectedClub &&
-        croppedImage &&
-        (selectedClub !== 'CEC' || priorityStatus)
-      ) {
-        setIsSubmitDisabled(false);
-      } else {
-        setIsSubmitDisabled(true);
-      }
+        imageIsValid &&
+        (selectedClub !== 'CEC' || priorityStatus);
+
+      console.log('Form validity check:', {
+        startTime,
+        endTime,
+        title,
+        description,
+        selectedClub,
+        croppedImage,
+        imageIsValid,
+        priorityStatus,
+        isEditing,
+        isValid,
+      });
+
+      setIsSubmitDisabled(!isValid);
     };
 
     checkIfFormIsValid();
-  }, [startTime, endTime, title, description, selectedClub, croppedImage, priorityStatus]);
+  }, [
+    startTime,
+    endTime,
+    title,
+    description,
+    selectedClub,
+    croppedImage,
+    priorityStatus,
+    isEditing,
+    poster,
+  ]);
 
   const handleClubChange = (event) => {
     setSelectedClub(event.target.value);
@@ -135,15 +172,35 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
     };
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async () => {
     try {
-      console.log('Submitting poster...');
-      const createdPoster = await createPoster(posterInfo());
-      console.log('Poster created:', createdPoster);
+      if (isEditing && poster?.ID) {
+        console.log('Calling editPoster with ID: ', poster.ID);
+        // Prepare partial update data based on your UpdatePoster type
+        const updatedData = {
+          Title: title,
+          Description: description,
+          ImagePath: croppedImage,
+          VisibleDate: startTime,
+          ExpirationDate: endTime,
+          Status: 1, // or whatever status you want here
+        };
+        console.log('Editing poster...', poster.ID, updatedData);
+        const updatedPoster = await editPoster(poster.ID, updatedData);
+        console.log('Poster updated:', updatedPoster);
+      } else {
+        console.log('Calling createPoster');
+        const newPoster = posterInfo();
+        console.log('Creating poster...', newPoster);
+        const createdPoster = await createPoster(newPoster);
+        console.log('Poster created:', createdPoster);
+      }
+
+      setOpenPosterCheck(false);
+      setOpenCropPoster(false);
       onClose();
     } catch (error) {
-      console.error('Error creating poster:', error);
+      console.error('Error submitting poster:', error);
     }
   };
 
@@ -161,6 +218,7 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
             open={openPosterCheck}
             onClose={() => setOpenPosterCheck(false)}
             posterInfo={posterInfo()}
+            onConfirm={handleSubmit}
           />
         </DialogContent>
       </Dialog>
@@ -274,32 +332,34 @@ const UploadForm = ({ onClose, onCropSubmit }) => {
           />
         </Grid>
         <Grid item xs={12} className={styles.gridItem}>
-          <TextField
-            select
-            label="Select Club"
-            value={selectedClub}
-            onChange={handleClubChange}
-            variant="outlined"
-            fullWidth
-            required
-            InputLabelProps={{
-              classes: {
-                focused: styles.textFieldLabelFocused,
-              },
-            }}
-            InputProps={{
-              classes: {
-                root: styles.textFieldRootFocused,
-              },
-            }}
-            sx={getTextFieldSX('var(--mui-palette-secondary-main)')}
-          >
-            {myInvolvements.map((myInvolvements) => (
-              <MenuItem key={myInvolvements.ActivityCode} value={myInvolvements.ActivityCode}>
-                {myInvolvements.ActivityDescription}
-              </MenuItem>
-            ))}
-          </TextField>
+          {!isEditing && (
+            <TextField
+              select
+              label="Select Club"
+              value={selectedClub}
+              onChange={handleClubChange}
+              variant="outlined"
+              fullWidth
+              required
+              InputLabelProps={{
+                classes: {
+                  focused: styles.textFieldLabelFocused,
+                },
+              }}
+              InputProps={{
+                classes: {
+                  root: styles.textFieldRootFocused,
+                },
+              }}
+              sx={getTextFieldSX('var(--mui-palette-secondary-main)')}
+            >
+              {myInvolvements.map((involvement) => (
+                <MenuItem key={involvement.ActivityCode} value={involvement.ActivityCode}>
+                  {involvement.ActivityDescription}
+                </MenuItem>
+              ))}
+            </TextField>
+          )}
         </Grid>
         {/* Add a check for site admin like Chris Carlson to be have access to priority screen*/}
         {selectedClub == 'CEC' && (

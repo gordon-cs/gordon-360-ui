@@ -72,7 +72,8 @@ const lookupPoster = (): Promise<Poster> => http.get(`posters/all/lookup`);
 
 const getPosterById = (posterID: number): Promise<Poster> => http.get(`posters/${posterID}`);
 
-const editPoster = (posterID: number): Promise<CreatedPoster> => http.patch(`posters/${posterID}`);
+const editPoster = (posterID: number, updatedData: Partial<UpdatePoster>): Promise<CreatedPoster> =>
+  http.patch(`posters/${posterID}`, updatedData);
 
 const deletePoster = (posterID: number): Promise<CreatedPoster> => http.del(`posters/${posterID}`);
 

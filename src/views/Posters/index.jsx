@@ -38,6 +38,8 @@ const Posters = () => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false); // NEW
   const [posterToDelete, setPosterToDelete] = useState(null); // NEW
   const isSiteAdmin = useAuthGroups(AuthGroup.SiteAdmin);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [posterToEdit, setPosterToEdit] = useState(null);
 
   const isOnline = useNetworkStatus();
   const navigate = useNavigate();
@@ -144,6 +146,40 @@ const Posters = () => {
 
   return (
     <Grid container justifyContent="center" spacing={4}>
+      <Dialog
+        maxWidth="md"
+        fullWidth
+        open={openEditDialog}
+        onClose={() => {
+          setOpenEditDialog(false);
+          setPosterToEdit(null);
+        }}
+      >
+        <Card variant="outlined">
+          <CardHeader title="Edit Poster" className="gc360_header" />
+          <DialogContent>
+            {/* We will add the edit form here next */}
+            {posterToEdit && (
+              <UploadForm
+                poster={posterToEdit} // Pass the poster to pre-fill the form
+                onClose={() => {
+                  setOpenEditDialog(false);
+                  setPosterToEdit(null);
+                }}
+                onSubmitSuccess={(updatedPoster) => {
+                  // Update the posters list locally
+                  setAllPosters((prev) =>
+                    prev.map((p) => (p.ID === updatedPoster.ID ? updatedPoster : p)),
+                  );
+                  setOpenEditDialog(false);
+                  setPosterToEdit(null);
+                }}
+              />
+            )}
+          </DialogContent>
+        </Card>
+      </Dialog>
+
       {/* Upload Dialog */}
       <Dialog
         maxWidth="md"
@@ -348,11 +384,22 @@ const Posters = () => {
                       <div className="delete-button-wrapper">
                         <Button
                           variant="outlined"
+                          color="primary"
+                          onClick={() => {
+                            setPosterToEdit(item);
+                            setOpenEditDialog(true);
+                          }}
+                          className="delete-button"
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="outlined"
                           color="error"
                           onClick={() => handleDeleteClick(item)}
                           className="delete-button"
                         >
-                          Delete&nbsp;Poster
+                          Delete
                         </Button>
                       </div>
                     )}
