@@ -76,6 +76,9 @@ const editPoster = (posterID: number): Promise<CreatedPoster> => http.patch(`pos
 
 const deletePoster = (posterID: number): Promise<CreatedPoster> => http.del(`posters/${posterID}`);
 
+const hidePoster = (posterID: number): Promise<CreatedPoster> =>
+  http.post(`posters/hide/${posterID}`);
+
 export {
   createPoster,
   getPosters,
@@ -87,4 +90,5 @@ export {
   getPosterById,
   editPoster,
   deletePoster,
+  hidePoster,
 };

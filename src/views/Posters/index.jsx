@@ -17,7 +17,7 @@ import membershipService from 'services/membership';
 import involvementService from 'services/involvements';
 import sessionService from 'services/session';
 import { useNavigate } from 'react-router-dom';
-import { getCurrentPosters, deletePoster } from 'services/poster';
+import { getCurrentPosters, hidePoster } from 'services/poster';
 import { useLocation } from 'react-router-dom';
 import CropPoster from './Forms/Forms/CropPoster';
 import { AuthGroup, signOut } from 'services/auth';
@@ -125,7 +125,7 @@ const Posters = () => {
 
   const handleConfirmDelete = async () => {
     if (posterToDelete) {
-      await deletePoster(posterToDelete.ID);
+      await hidePoster(posterToDelete.ID);
       setAllPosters((prev) => prev.filter((p) => p.ID !== posterToDelete.ID));
       setOpenDeleteDialog(false);
       setPosterToDelete(null);
