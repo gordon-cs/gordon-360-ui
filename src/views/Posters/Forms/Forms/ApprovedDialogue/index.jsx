@@ -30,7 +30,7 @@ const PosterCheck = ({ open, onClose, posterInfo, isEditing, posterId }) => {
         console.log('Poster updated:', updatedPoster);
       } else {
         console.log('Calling createPoster');
-        const newPoster = posterInfo();
+        const newPoster = posterInfo;
         console.log('Creating poster...', newPoster);
         const createdPoster = await createPoster(newPoster);
         console.log('Poster created:', createdPoster);
@@ -74,7 +74,7 @@ const PosterCheck = ({ open, onClose, posterInfo, isEditing, posterId }) => {
           <Button onClick={onClose} variant="contained" color="primary">
             No
           </Button>
-          <Button type="submit" variant="contained" color="primary" onClick={handleSubmit}>
+          <Button type="submit" variant="contained" color="primary">
             Submit
           </Button>
         </DialogActions>
