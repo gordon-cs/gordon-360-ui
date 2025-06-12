@@ -869,6 +869,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
             {majors}
             {minors}
             {plannedGraduationYear}
+            {graduationYear}
             {graduationDetails}
             {cliftonStrengths}
             {advisors}
