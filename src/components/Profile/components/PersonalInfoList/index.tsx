@@ -54,7 +54,7 @@ type Props = {
   myProf: boolean;
   profile: profileType;
   isOnline: boolean;
-  createSnackbar: (message: string, severity: AlertColor, link?: string) => void;
+  createSnackbar: (message: string, severity: AlertColor, link?: string, linkText?: string) => void;
 };
 
 const parseGraduationDate = (whenGraduated: string) => {
@@ -172,6 +172,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
             }.`,
             'info',
             'https://my.gordon.edu',
+            'my.gordon.edu',
           );
         }
       }
@@ -801,7 +802,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            <> Click here</>
+                            <> my.gordon.edu</>
                           </a>
                         </>
                       ) : (
