@@ -278,7 +278,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
 
   const hireDate = checkIsFacStaff(profile) ? (
     <ProfileInfoListItem
-      title={'First Year at Gordon College:'}
+      title={'First Year Employed at Gordon College:'}
       contentText={parseDateString(profile.FirstHireDt)}
     />
   ) : null;
