@@ -27,7 +27,7 @@
     transition: transform 0.2s ease;
   }
 
-  &:hover :global(svg) {
+  &:hover svg {
     transform: translateY(-2px);
   }
 
