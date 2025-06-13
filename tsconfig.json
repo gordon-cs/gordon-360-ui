@@ -7,7 +7,7 @@
       "esnext"
     ],
     "types": [
-      "vite/client",
+      "vite/client"
     ],
     "allowJs": true,
     "skipLibCheck": true,
@@ -22,7 +22,21 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "paths": {
+      "services/*": ["services/*"],
+      "components/*": ["components/*"],
+      "hooks/*": ["hooks/*"],
+      "hooks": ["hooks"],
+      "contexts/*": ["contexts/*"],
+      "views/*": ["views/*"],
+      "index": ["."],
+      "app.global.css": ["."],
+      "pwa": ["."],
+      "msalInstatiation": ["msalInstatiation.ts"],
+      "./app": ["./"],
+      "./app.global.css": ["./"]
+    }
   },
   "include": [
     "src",
