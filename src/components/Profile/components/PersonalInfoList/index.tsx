@@ -42,6 +42,11 @@ import { differenceInYears, parse } from 'date-fns'; // Import a date utility li
 
 const PRIVATE_INFO = 'Private as requested.';
 
+const parseDateString = (dateString: string): string => {
+  if (!dateString) return 'Unknown';
+  return dateString.substring(0, 4);
+};
+
 const formatPhone = (phone: string) => {
   if (phone?.length === 10) {
     return `(${phone?.slice(0, 3)}) ${phone?.slice(3, 6)}-${phone?.slice(6)}`;
@@ -318,6 +323,21 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
         contentText={!profile.Majors?.length ? 'Deciding' : profile.Majors?.join(', ')}
       />
     );
+
+  const hireDate = checkIsFacStaff(profile) ? (
+    <ProfileInfoListItem
+      title={'First Year Employed at Gordon College:'}
+      contentText={parseDateString(profile.FirstHireDt)}
+    />
+  ) : null;
+
+  const matriculationDate =
+    checkIsStudent(profile) && (myProf || canViewAcademicInfo) ? (
+      <ProfileInfoListItem
+        title={'First Year at Gordon College:'}
+        contentText={parseDateString(profile.Entrance_Date)}
+      />
+    ) : null;
 
   const plannedGraduationYear =
     myProf && checkIsStudent(profile) ? (
@@ -869,6 +889,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
           <List>
             {majors}
             {minors}
+            {hireDate}
+            {matriculationDate}
             {plannedGraduationYear}
             {graduationYear}
             {graduationDetails}
