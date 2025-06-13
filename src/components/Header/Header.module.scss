@@ -23,7 +23,7 @@
     transform: translateY(-4px);
   }
 
-  :global(svg) {
+  svg {
     transition: transform 0.2s ease;
   }
 
