@@ -407,7 +407,7 @@ const UploadForm = ({ onClose, onCropSubmit, poster }) => {
               &nbsp;Upload Poster
             </Button>
           )}
-          {croppedImage && !isEditing && (
+          {croppedImage && (
             <Button
               variant="contained"
               className={styles.uploadPosterButton}
@@ -439,12 +439,6 @@ const UploadForm = ({ onClose, onCropSubmit, poster }) => {
           >
             Cancel
           </Button>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography>
-            <span style={{ fontWeight: 'bold' }}>Warning:&nbsp;</span>
-            Once submitted, the poster image cannot be changed!
-          </Typography>
         </Grid>
       </Grid>
     </form>
