@@ -1,4 +1,4 @@
-export function getEnvVar(name: string): string | undefined {
+export const getEnvVar = (name: string): string | undefined => {
   console.log('getting env variable', name);
   // Use process.env if available (Jest, Node)
   if (typeof process !== 'undefined' && process.env?.[name] !== undefined) {
@@ -18,4 +18,4 @@ export function getEnvVar(name: string): string | undefined {
   // Not found
   console.warn(`Environment variable "${name}" is not defined.`);
   return undefined;
-}
+};

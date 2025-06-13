@@ -27,10 +27,14 @@
       "services/*": ["services/*"],
       "components/*": ["components/*"],
       "hooks/*": ["hooks/*"],
+      "hooks": ["hooks"],
       "contexts/*": ["contexts/*"],
+      "views/*": ["views/*"],
+      "envVar": ["envVarJest.ts"],
       "index": ["."],
       "app.global.css": ["."],
       "pwa": ["."],
+      "msalInstatiation": ["."],
       "./app": ["./"],
       "./app.global.css": ["./"]
     }
