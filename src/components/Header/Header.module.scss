@@ -107,15 +107,16 @@
   display: inline-block;
   transition:
     transform 0.2s ease,
-
+    z-index 0.2s ease;
   &:hover {
     transform: translateY(-2px);
+    z-index: 10;
+    text-decoration: none;
   }
-
   img {
     display: block;
+    transition: transform 0.2s ease;
   }
-
   &:hover img {
     transform: translateY(-2px);
   }
