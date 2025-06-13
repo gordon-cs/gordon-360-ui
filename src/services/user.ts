@@ -393,8 +393,17 @@ export type MembershipHistorySession = {
   Participation: Participation;
 };
 
+export type Graduation = {
+  WhenGraduated: string;
+  HasGradated: boolean;
+  GraduationFlag: string;
+};
+
 const getMembershipHistory = (username: string): Promise<MembershipHistory[]> =>
   http.get(`profiles/${username}/memberships-history`);
+
+const getGraduation = (username: string): Promise<Graduation> =>
+  http.get(`profiles/${username}/graduation`);
 
 const userService = {
   setMobilePhonePrivacy,
@@ -412,6 +421,7 @@ const userService = {
   getAdvisors,
   getMailboxInformation,
   getMembershipHistory,
+  getGraduation,
   resetImage,
   postImage,
   postIDImage,
