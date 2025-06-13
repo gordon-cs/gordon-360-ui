@@ -62,7 +62,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
       setCurrentFinalSessionCode(currentFinalSession.SessionCode);
       const defaultSchedule =
         // If there is a schedule for the current session, make it d4fault
-        allSessionSchedules.find((s) => s.session.SessionCode === currentSession.SessionCode) ??
+        allSessionSchedules.find((s) => s.session.SessionCode === currentSessionCode) ??
         // Otherwise, use the most recent session
         allSessionSchedules[0];
       setSelectedSchedule(defaultSchedule);
