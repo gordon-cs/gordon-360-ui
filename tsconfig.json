@@ -30,11 +30,10 @@
       "hooks": ["hooks"],
       "contexts/*": ["contexts/*"],
       "views/*": ["views/*"],
-      "envVar": ["envVarJest.ts"],
       "index": ["."],
       "app.global.css": ["."],
       "pwa": ["."],
-      "msalInstatiation": ["."],
+      "msalInstatiation": ["msalInstatiation.ts"],
       "./app": ["./"],
       "./app.global.css": ["./"]
     }

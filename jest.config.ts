@@ -204,7 +204,7 @@ const config: Config = {
     ...(compilerOptions.paths
       ? pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/src/' })
       : {}),
-
+    "^envVar$": '<rootDir>/src/envVarJest.ts', 
     // CSS module mocking
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
 
