@@ -180,22 +180,40 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
       </DialogContent>
       {/(iPhone|iPod)/i.test(navigator.userAgent) ? (
         <DialogActions className={styles.dialogActions} style={{ justifyContent: 'center' }}>
-          {showCropper && (
-            <IconButton onClick={handleCloseSubmit} size="large" style={{ color: '#29e757' }}>
-              <CheckBoxRoundedIcon />
-            </IconButton>
-          )}
+          <IconButton onClick={onClose} variant="outlined" color="error">
+            <ClearOutlinedIcon />
+          </IconButton>
           {showCropper && (
             <IconButton onClick={() => setShowCropper(false)} variant="contained" color="link">
               <UndoIcon />
             </IconButton>
           )}
-          <IconButton onClick={onClose} variant="outlined" color="error">
-            <ClearOutlinedIcon />
-          </IconButton>
+          {showCropper && (
+            <IconButton onClick={handleCloseSubmit} size="large" style={{ color: '#29e757' }}>
+              <CheckBoxRoundedIcon />
+            </IconButton>
+          )}
         </DialogActions>
       ) : (
         <DialogActions className={styles.dialogActions} style={{ justifyContent: 'center' }}>
+          <Button
+            onClick={onClose}
+            variant="outlined"
+            color="error"
+            className={styles.cancelButton}
+          >
+            Cancel
+          </Button>
+
+          {showCropper && (
+            <Button
+              onClick={() => setShowCropper(false)}
+              variant="contained"
+              className={styles.dialogButton}
+            >
+              Go{'\u00A0'}Back
+            </Button>
+          )}
           {showCropper && (
             <Button
               onClick={handleCloseSubmit}
@@ -206,23 +224,6 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
               Submit
             </Button>
           )}
-          {showCropper && (
-            <Button
-              onClick={() => setShowCropper(false)}
-              variant="contained"
-              className={styles.dialogButton}
-            >
-              Go{'\u00A0'}Back
-            </Button>
-          )}
-          <Button
-            onClick={onClose}
-            variant="outlined"
-            color="error"
-            className={styles.cancelButton}
-          >
-            Cancel
-          </Button>
         </DialogActions>
       )}
     </Dialog>

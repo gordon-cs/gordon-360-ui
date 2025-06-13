@@ -420,6 +420,16 @@ const UploadForm = ({ onClose, onCropSubmit, poster }) => {
         </Grid>
         <Grid item xs={6} className={styles.gridItem}>
           <Button
+            variant="outlined"
+            color="primary"
+            className={styles.cancelButton}
+            onClick={onClose}
+          >
+            Cancel
+          </Button>
+        </Grid>
+        <Grid item xs={6} className={styles.gridItem}>
+          <Button
             onClick={() => setOpenPosterCheck(true)}
             type="button"
             variant="contained"
@@ -428,16 +438,6 @@ const UploadForm = ({ onClose, onCropSubmit, poster }) => {
             disabled={isSubmitDisabled}
           >
             Submit
-          </Button>
-        </Grid>
-        <Grid item xs={6} className={styles.gridItem}>
-          <Button
-            variant="outlined"
-            color="primary"
-            className={styles.cancelButton}
-            onClick={onClose}
-          >
-            Cancel
           </Button>
         </Grid>
       </Grid>
