@@ -37,6 +37,7 @@ const PosterCheck = ({ open, onClose, posterInfo, isEditing, posterId }) => {
       }
 
       onClose();
+      window.location.reload();
     } catch (error) {
       console.error('Error submitting poster:', error);
     }
