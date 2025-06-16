@@ -20,8 +20,8 @@ import GordonTooltip from 'components/GordonTooltip';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { useAuthGroups } from 'hooks';
 import { useEffect, useState } from 'react';
+import userService, { Graduation } from 'services/user';
 import { AuthGroup } from 'services/auth';
-import userService from 'services/user';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import {
   Profile as profileType,
@@ -38,8 +38,14 @@ import CliftonStrengthsService from 'services/cliftonStrengths';
 import SLock from './Salsbury.png';
 import DPLock from './DandP.png';
 import DDLock from './DandD.png';
+import { differenceInYears, parse } from 'date-fns'; // Import a date utility library like date-fns
 
 const PRIVATE_INFO = 'Private as requested.';
+
+const parseDateString = (dateString: string): string => {
+  if (!dateString) return 'Unknown';
+  return dateString.substring(0, 4);
+};
 
 const formatPhone = (phone: string) => {
   if (phone?.length === 10) {
@@ -53,7 +59,11 @@ type Props = {
   myProf: boolean;
   profile: profileType;
   isOnline: boolean;
-  createSnackbar: (message: string, severity: AlertColor) => void;
+  createSnackbar: (message: string, severity: AlertColor, link?: string, linkText?: string) => void;
+};
+
+const parseGraduationDate = (whenGraduated: string) => {
+  return parse(whenGraduated, 'LLLL yyyy', new Date());
 };
 
 const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) => {
@@ -67,6 +77,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
   const [mailCombo, setMailCombo] = useState<string>();
   const [advisorsList, setAdvisorsList] = useState<AdvisorType[]>([]);
   const [showMailCombo, setShowMailCombo] = useState(false);
+  const [graduationInfo, setGraduationInfo] = useState<Graduation | null>(null);
   const isStudent = profile.PersonType?.includes('stu');
   const isFacStaff = profile.PersonType?.includes('fac');
   const isAlumni = profile.PersonType?.includes('alu');
@@ -130,6 +141,48 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     }
     loadPersonalInfo();
   }, [myProf, isStudent, canViewAcademicInfo, profile.AD_Username]);
+
+  // Get a student's graduation information
+  useEffect(() => {
+    async function loadPersonalInfo() {
+      if (isStudent && (myProf || canViewAcademicInfo)) {
+        userService
+          .getGraduation(profile.AD_Username)
+          .then(setGraduationInfo)
+          .catch(() => createSnackbar('Failed to fetch graduation information', 'error'));
+      }
+    }
+    loadPersonalInfo();
+  }, [myProf, isStudent, canViewAcademicInfo, profile.AD_Username, createSnackbar]);
+
+  const setPlannedGradDate = () => {
+    if (graduationInfo) {
+      const currentDate = new Date();
+      const plannedGradDate = profPlannedGradYear
+        ? new Date(`${profPlannedGradYear}-05-01`) // Assuming graduation is in May
+        : graduationInfo.WhenGraduated
+          ? parseGraduationDate(graduationInfo.WhenGraduated)
+          : null;
+      return plannedGradDate && differenceInYears(plannedGradDate, currentDate) === 0;
+    }
+  };
+
+  useEffect(() => {
+    if (isStudent && myProf) {
+      if (graduationInfo && graduationInfo.GraduationFlag === null) {
+        if (setPlannedGradDate()) {
+          createSnackbar(
+            `Please submit the Graduation Application 8-12 months before May ${
+              profPlannedGradYear || graduationInfo.WhenGraduated
+            }.`,
+            'info',
+            'https://my.gordon.edu',
+            'my.gordon.edu',
+          );
+        }
+      }
+    }
+  }, [isStudent, myProf, graduationInfo, profPlannedGradYear, createSnackbar]);
 
   const handleChangeMobilePhonePrivacy = async () => {
     try {
@@ -273,6 +326,21 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
       />
     );
 
+  const hireDate = checkIsFacStaff(profile) ? (
+    <ProfileInfoListItem
+      title={'First Year Employed at Gordon College:'}
+      contentText={parseDateString(profile.FirstHireDt)}
+    />
+  ) : null;
+
+  const matriculationDate =
+    checkIsStudent(profile) && (myProf || canViewAcademicInfo) ? (
+      <ProfileInfoListItem
+        title={'First Year at Gordon College:'}
+        contentText={parseDateString(profile.Entrance_Date)}
+      />
+    ) : null;
+
   const plannedGraduationYear =
     myProf && checkIsStudent(profile) ? (
       <ProfileInfoListItem
@@ -309,7 +377,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
           }}
           className={styles.update_info_button}
         >
-          Update Information
+          Update Alumni Information
         </Button>
       </Grid>
     ) : null;
@@ -630,7 +698,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     myProf &&
     (isFacStaff ? (
       <Typography align="left" className={styles.note}>
-        NOTE: To update your personal info, please go to{' '}
+        Faculty/Staff: To update your personal info, please go to{' '}
         <a href="https://gordon.criterionhcm.com/" className={`gc360_text_link`}>
           Criterion
         </a>{' '}
@@ -679,6 +747,25 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
           </li>
           <li>
             <Typography>
+              It can take several weeks to process graduation applications. As a result, there may
+              be a delay of a few weeks between when a student submits the form and when this field
+              is updated.
+            </Typography>
+          </li>
+          <li>
+            <Typography>
+              <>Check the </>
+              <a
+                href="https://www.gordon.edu/academics/resources/registrar/undergraduate/degree-checklist#:~:text=Apply%20for%20graduation%20(application%20on,available%20for%20advice%20and%20consultation."
+                className={`gc360_text_link ${styles.note_link}`}
+              >
+                Undergraduate Degree Checklist
+              </a>
+              <> for more information</>
+            </Typography>
+          </li>
+          <li>
+            <Typography>
               For all other changes or to partially/fully prevent your data from displaying, please
               contact the{' '}
               <a
@@ -704,6 +791,64 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
       <Typography align="left" className={styles.disclaimer}>
         Private by request, visible only to faculty and staff
       </Typography>
+    ) : null;
+
+  const graduationDetails =
+    (myProf || canViewAcademicInfo) && checkIsStudent(profile) ? (
+      <ProfileInfoListItem
+        title="Graduation Information:"
+        contentText={
+          graduationInfo ? (
+            graduationInfo.GraduationFlag !== null ? (
+              // If the intent to graduate form has been submitted
+              <Typography>
+                <b>Flagged Graduation Date:</b> {graduationInfo.WhenGraduated || 'Not Set'}
+              </Typography>
+            ) : (
+              // If the intent to graduate form has not been submitted
+              (() => {
+                if (setPlannedGradDate()) {
+                  return (
+                    <Typography>
+                      <b>Warning: </b>
+                      {myProf ? (
+                        <>
+                          {profPlannedGradYear
+                            ? `Please submit the Graduation Application 8-12 months before May ${profPlannedGradYear}.`
+                            : graduationInfo.WhenGraduated
+                              ? `Please submit the Graduation Application 8-12 months before ${graduationInfo.WhenGraduated}.`
+                              : 'Please submit the Graduation Application as soon as possible.'}
+                          <a
+                            href="https://my.gordon.edu"
+                            className={`gc360_text_link ${styles.note_link}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <> my.gordon.edu</>
+                          </a>
+                        </>
+                      ) : (
+                        'The student has not yet submitted their Graduation Application.'
+                      )}
+                    </Typography>
+                  );
+                } else {
+                  return (
+                    <Typography>
+                      <b>Expected Graduation Date:</b> {graduationInfo.WhenGraduated || 'Not Set'}
+                    </Typography>
+                  );
+                }
+              })()
+            )
+          ) : (
+            // If no graduation information is available
+            'No graduation information available.'
+          )
+        }
+        privateInfo
+        myProf={myProf}
+      />
     ) : null;
 
   return (
@@ -746,8 +891,11 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
           <List>
             {majors}
             {minors}
+            {hireDate}
+            {matriculationDate}
             {plannedGraduationYear}
             {graduationYear}
+            {graduationDetails}
             {cliftonStrengths}
             {advisors}
             {campusDormInfo}
