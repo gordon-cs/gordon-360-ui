@@ -25,15 +25,10 @@ const Profile = ({ profile, myProf }: Props) => {
   const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
   const isOnline = useNetworkStatus();
   const viewerIsPolice = useAuthGroups(AuthGroup.Police);
-  const [canReadStudentSchedules, setCanReadStudentSchedules] = useState<boolean>();
   const profileIsStudent = profile.PersonType?.includes('stu');
 
   const createSnackbar = useCallback((message: string, severity: AlertColor) => {
     setSnackbar({ message, severity, open: true });
-  }, []);
-
-  useEffect(() => {
-    scheduleService.getCanReadStudentSchedules().then(setCanReadStudentSchedules);
   }, []);
 
   return (
