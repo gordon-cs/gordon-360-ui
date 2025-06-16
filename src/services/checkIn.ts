@@ -62,7 +62,7 @@ export enum Race {
 //   MinorHolds &
 //   Demographic;
 
-const getStatus = (): Promise<boolean> => Promise.resolve(false);
+const getStatus = (): Promise<boolean> => http.get<boolean>(`checkIn/status`);
 
 const markCompleted = (): Promise<void> => http.put(`checkIn/status`);
 
