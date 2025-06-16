@@ -133,8 +133,12 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
 
       setIsImagePublic(profile.show_pic === 1);
 
-      setHasNickname(profile?.NickName && profile.NickName !== profile.FirstName);
-      setHasMaidenName(profile?.MaidenName && profile?.LastName !== profile.MaidenName);
+      setHasNickname(
+        profile?.NickName?.value && profile.NickName.value !== profile.FirstName.value,
+      );
+      setHasMaidenName(
+        profile?.MaidenName?.value && profile.MaidenName.value !== profile.LastName.value,
+      );
     }
 
     loadUserProfile();
@@ -550,12 +554,13 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
   }
 
   const todaysDate = new Date();
+  // Jan=0, Feb=1, Mar=2, Apr=3, etc.
   const isAprilFools = todaysDate.getMonth() === 3 && todaysDate.getDate() === 1;
   const profileTitleAprilFools = userProfile?.Title
     ? userProfile.Title.charAt(0).toUpperCase() +
       userProfile.Title.slice(1).toLowerCase() +
       '. ' +
-      userProfile.LastName
+      userProfile.LastName.value
     : '';
 
   return (
@@ -567,15 +572,15 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
               title={`${
                 isAprilFools
                   ? profileTitleAprilFools
-                  : userProfile.NickName
-                    ? userProfile.NickName
-                    : userProfile.FirstName
+                  : userProfile.NickName?.value
+                    ? userProfile.NickName?.value
+                    : userProfile.FirstName.value
               }'s Profile`}
             />
           ) : (
             <CardHeader
-              title={`${userProfile.NickName ? userProfile.NickName : userProfile.FirstName} ${
-                userProfile.LastName
+              title={`${userProfile.NickName?.value ? userProfile.NickName.value : userProfile.FirstName.value} ${
+                userProfile.LastName.value
               }'s Profile`}
             />
           ))}
@@ -710,9 +715,9 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
                         userProfile.Title && userProfile.PersonType === 'fac'
                           ? `${userProfile.Title} `
                           : ''
-                      }${userProfile.FirstName}${hasNickname ? ` (${userProfile.NickName})` : ''} ${
-                        userProfile.LastName
-                      }${hasMaidenName ? ` (${userProfile.MaidenName})` : ''}`}
+                      }${userProfile.FirstName.value}${hasNickname ? ` (${userProfile.NickName.value})` : ''} ${
+                        userProfile.LastName.value
+                      }${hasMaidenName ? ` (${userProfile.MaidenName.value})` : ''}`}
                     </Typography>
 
                     {/* Profile Name Edit Request Button */}
