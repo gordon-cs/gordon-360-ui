@@ -698,19 +698,19 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
           </Grid>
         </Grid>
         <CardContent>
-          {updateAlumniInfoButton}
           <List>
+            {updateAlumniInfoButton}
+            {graduationYear}
+            {gordonID}
             {majors}
             {minors}
             {plannedGraduationYear}
-            {graduationYear}
             {cliftonStrengths}
             {advisors}
             {campusDormInfo}
             {mail}
             {mobilePhoneListItem}
             {homePhoneListItem}
-            {gordonID}
             {streetAddress}
             {homeCityStateCountry}
             {spouse}
