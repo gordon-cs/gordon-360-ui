@@ -95,11 +95,13 @@ export type UnformattedFacStaffProfileInfo = BaseProfileInfo & {
   OnCampusDepartment: string;
   SpouseName: ProfileStringItem;
   Type: string;
+  FirstHireDt: string;
   office_hours: string;
   Mail_Description: string;
 };
 
 export type UnformattedStudentProfileInfo = BaseProfileInfo & {
+  Entrance_Date: string;
   OnOffCampus: OnOffCampusStatus;
   OffCampusStreet1: string;
   OffCampusStreet2: string;
@@ -407,8 +409,17 @@ export type MembershipHistorySession = {
   Participation: Participation;
 };
 
+export type Graduation = {
+  WhenGraduated: string;
+  HasGradated: boolean;
+  GraduationFlag: string;
+};
+
 const getMembershipHistory = (username: string): Promise<MembershipHistory[]> =>
   http.get(`profiles/${username}/memberships-history`);
+
+const getGraduation = (username: string): Promise<Graduation> =>
+  http.get(`profiles/${username}/graduation`);
 
 const userService = {
   setMobilePhonePrivacy,
@@ -428,6 +439,7 @@ const userService = {
   getMembershipHistory,
   getVisibilityGroups,
   getPrivacySetting,
+  getGraduation,
   resetImage,
   postImage,
   postIDImage,

@@ -13,6 +13,8 @@ type Props = SnackbarProps &
     severity?: AlertColor;
     duration?: number;
     onClose: () => void;
+    link?: string; // Add a link prop
+    linkText?: string;
   };
 
 const SimpleSnackbar = ({
@@ -22,6 +24,8 @@ const SimpleSnackbar = ({
   severity,
   duration = 10000,
   onClose,
+  link,
+  linkText,
   ...otherProps
 }: Props) => {
   return (
@@ -37,7 +41,17 @@ const SimpleSnackbar = ({
           error: <ErrorOutline />,
         }}
       >
-        {text}
+        {text}{' '}
+        {link && (
+          <a
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: 'inherit', textDecoration: 'underline' }}
+          >
+            {linkText || 'Click here'}
+          </a>
+        )}
       </Alert>
     </Snackbar>
   );
