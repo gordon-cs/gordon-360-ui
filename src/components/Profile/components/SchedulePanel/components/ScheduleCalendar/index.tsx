@@ -15,6 +15,9 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
+const firstQuadOfSemester = new Set(['Fall 1', 'Spring 1', 'Summer 1']);
+const secondQuadOfSemester = new Set(['Fall 2', 'Spring 2', 'Summer 2']);
+
 type Props = {
   schedule: Schedule;
   onSelectEvent: (event: CourseEvent) => void;
@@ -43,13 +46,11 @@ const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
     <Calendar
       style={{ whiteSpace: 'pre-wrap' }}
       eventPropGetter={(event: CourseEvent) => {
-        const firstQuadOfSemester = ['Fall 1', 'Spring 1', 'Summer 1'];
-        const secondQuadOfSemester = ['Fall 2', 'Spring 2', 'Summer 2'];
         let subtermClassNames = ['subterm'];
 
-        if (firstQuadOfSemester.includes(event.subtermCode || '')) {
+        if (firstQuadOfSemester.has(event.subtermCode || '')) {
           subtermClassNames.push('subterm1');
-        } else if (secondQuadOfSemester.includes(event.subtermCode || '')) {
+        } else if (secondQuadOfSemester.has(event.subtermCode || '')) {
           subtermClassNames.push('subterm2');
         } else {
           return {};
