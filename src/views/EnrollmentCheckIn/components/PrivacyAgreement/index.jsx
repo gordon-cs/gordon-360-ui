@@ -1,5 +1,6 @@
 import { FormControl, FormControlLabel, Checkbox, Grid, Typography } from '@mui/material';
 import privacy from './privacy.json';
+import React from 'react';
 
 const PrivacyAgreement = ({ privacyAgreements, handleCheckPrivacyAgreements }) => {
   return (
