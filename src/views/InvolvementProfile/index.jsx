@@ -499,11 +499,11 @@ const InvolvementProfile = () => {
                   <Divider sx={{ my: 0 }} />
                 </Grid>
 
-                <Grid item sx={{ overflow: 'visible', my: 0 }}>
+                <Grid item sx={{ display: 'block', width: '100%' }}>
                   <ClubPosters
                     clubName={ActivityDescription}
                     clubCode={involvementCode}
-                    style={{ position: 'flex', height: 'auto' }}
+                    style={{ height: 'auto' }}
                   />
                 </Grid>
 

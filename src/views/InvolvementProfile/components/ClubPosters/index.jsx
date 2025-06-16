@@ -50,7 +50,7 @@ const ClubPosters = ({ clubName, clubCode }) => {
         <CardHeader
           title={`Posters from ${clubName}`}
           className="gc360_header"
-          style={{ marginLeft: 0, width: '125%' }}
+          style={{ marginLeft: 0, width: '100%' }}
         />
         <CardContent>
           <Grid
