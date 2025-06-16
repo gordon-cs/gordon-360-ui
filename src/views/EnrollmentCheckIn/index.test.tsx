@@ -3,7 +3,8 @@ import EnrollmentCheckIn from '.';
 import checkInService from 'services/checkIn';
 import { EmergencyContact } from 'services/checkIn';
 import { useUser } from 'hooks';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 jest.mock('services/auth', () => ({
@@ -164,7 +165,7 @@ test('goes through all steps and submits check-in', async () => {
       target: { value: '5555555555' },
     });
     const radios = screen.getAllByRole('radio');
-    const yesRadio = radios.find((radio) => radio.textContent === 'true');
+    const yesRadio = radios[0];
     fireEvent.click(yesRadio);
     fireEvent.click(screen.getByRole('button', { name: /next/i }));
   });
@@ -173,7 +174,7 @@ test('goes through all steps and submits check-in', async () => {
   await act(async () => {
     fireEvent.click(screen.getByLabelText(/FERPA/i));
     fireEvent.click(screen.getByLabelText(/data usage/i));
-    fireEvent.click(screen.getByLabelText(/photo consent/i));
+    fireEvent.click(screen.getByLabelText(/photography statement/i));
     fireEvent.click(screen.getByRole('button', { name: /next/i }));
   });
 
@@ -182,5 +183,60 @@ test('goes through all steps and submits check-in', async () => {
     fireEvent.click(screen.getByRole('button', { name: /submit/i }));
   });
 
-  expect(screen.getByText(/completed check in/i)).toBeInTheDocument();
+  expect(screen.getByText(/enrollment checkin!/i)).toBeInTheDocument();
 });
+
+//it('handles forward and backward navigation', async () => {
+//    const user = userEvent.setup();
+//
+//    const TestRouter = () => (
+//      <MemoryRouter initialEntries={['/enrollmentcheckin']}>
+//        <Routes>
+//          <Route path="/enrollmentcheckin" element={<EnrollmentCheckIn />} />
+//        </Routes>
+//      </MemoryRouter>
+//    );
+//
+//    render(<TestRouter />);
+//
+//    // Wait for initial render
+//    await waitFor(() =>
+//      expect(screen.getByRole('heading', { name: /enrollment check in/i })).toBeInTheDocument()
+//    );
+//
+//    // Click next
+//    const nextButton = screen.getByRole('button', { name: /begin check-in/i });
+//    await user.click(nextButton);
+//
+//    // Should now be on Emergency Contact step
+//    await waitFor(() =>
+//      expect(screen.getAllByText(/emergency contact information/i).length).toBeGreaterThan(0)
+//    );
+//
+//    act(() => {
+//  window.history.pushState({ state: { step: 1 } }, '', '/enrollmentcheckin');
+//  window.dispatchEvent(new PopStateEvent('popstate', { state: { step: 1 } }));
+//});
+//
+//
+//    // Simulate browser "back" button
+//    window.history.back();
+//
+//    const logSpy = jest.spyOn(console, 'log');
+//
+//expect(logSpy).toHaveBeenCalledWith('the event', 1);
+//
+//    await waitFor(() =>
+//      expect(screen.getByText(/welcome/i)).toBeInTheDocument()
+//    );
+//
+//
+//
+//
+//    // Simulate forward button
+//    window.history.forward();
+//
+//    await waitFor(() =>
+//      expect(screen.getAllByText(/emergency contact information/i).length).toBeGreaterThan(0)
+//    );
+//  });

@@ -176,8 +176,13 @@ const EnrollmentCheckIn = () => {
 
   window.onpopstate = function (event) {
     console.log('the event :::: ', event);
+    console.log(event.state.idx);
+    console.warn(event);
+    console.warn(
+      '###########################@$@$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$',
+    );
     if (event.state !== null) {
-      setActiveStep(event.state.state.step);
+      setActiveStep(event.state.idx);
     }
   };
 
