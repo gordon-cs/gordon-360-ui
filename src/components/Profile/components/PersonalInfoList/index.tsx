@@ -172,8 +172,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
       if (graduationInfo && graduationInfo.GraduationFlag === null) {
         if (setPlannedGradDate()) {
           createSnackbar(
-            `Please submit the Graduation Application 8-12 months before May ${
-              profPlannedGradYear || graduationInfo.WhenGraduated
+            `Please submit the Graduation Application 8-12 months before ${
+              'May ' + profPlannedGradYear || graduationInfo.WhenGraduated
             }.`,
             'info',
             'https://my.gordon.edu',
