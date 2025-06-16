@@ -271,8 +271,10 @@ const getMailboxInformation = (): Promise<{ Combination: string }> =>
 
 const getMailStops = (): Promise<string[]> => http.get(`profiles/mailstops`);
 
-const setMobilePhoneNumber = (value: number | string) =>
-  http.put(`profiles/mobile_phone_number/${value}/`);
+const setMobilePhoneNumber = (value: number | string) => {
+  const cleaned = value.toString().replace(/\D/g, '');
+  return http.put(`profiles/mobile_phone_number/${cleaned}/`);
+};
 
 const setPlannedGraduationYear = (value: number | string) => {
   const body = { plannedGradYear: value };
