@@ -87,13 +87,13 @@ type BaseProfileInfo = {
   fullName?: string;
   CliftonStrengths: CliftonStrengths | null;
   Married?: string;
+  SpouseName: ProfileStringItem;
 };
 
 export type UnformattedFacStaffProfileInfo = BaseProfileInfo & {
   Dept: string;
   JobTitle: string;
   OnCampusDepartment: string;
-  SpouseName: ProfileStringItem;
   Type: string;
   FirstHireDt: string;
   office_hours: string;

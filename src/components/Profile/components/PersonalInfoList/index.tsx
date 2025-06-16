@@ -313,17 +313,18 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
       />
     );
 
-  const hireDate = checkIsFacStaff(profile) ? (
-    <ProfileInfoListItem
-      title={'First Year Employed at Gordon College:'}
-      contentText={parseDateString(profile.FirstHireDt)}
-    />
-  ) : null;
+  const hireDate =
+    isFacStaff && profile.FirstHireDt ? (
+      <ProfileInfoListItem
+        title={'Employee Since:'}
+        contentText={parseDateString(profile.FirstHireDt)}
+      />
+    ) : null;
 
   const matriculationDate =
-    checkIsStudent(profile) && (myProf || canViewAcademicInfo) ? (
+    isStudent && profile.Entrance_Date && (myProf || canViewAcademicInfo) ? (
       <ProfileInfoListItem
-        title={'First Year at Gordon College:'}
+        title={'Student Since:'}
         contentText={parseDateString(profile.Entrance_Date)}
       />
     ) : null;
@@ -766,64 +767,6 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
       </Typography>
     ) : null
   ) : null;
-
-  const graduationDetails =
-    (myProf || canViewAcademicInfo) && checkIsStudent(profile) ? (
-      <ProfileInfoListItem
-        title="Graduation Information:"
-        contentText={
-          graduationInfo ? (
-            graduationInfo.GraduationFlag !== null ? (
-              // If the intent to graduate form has been submitted
-              <Typography>
-                <b>Flagged Graduation Date:</b> {graduationInfo.WhenGraduated || 'Not Set'}
-              </Typography>
-            ) : (
-              // If the intent to graduate form has not been submitted
-              (() => {
-                if (setPlannedGradDate()) {
-                  return (
-                    <Typography>
-                      <b>Warning: </b>
-                      {myProf ? (
-                        <>
-                          {profPlannedGradYear
-                            ? `Please submit the Graduation Application 8-12 months before May ${profPlannedGradYear}.`
-                            : graduationInfo.WhenGraduated
-                              ? `Please submit the Graduation Application 8-12 months before ${graduationInfo.WhenGraduated}.`
-                              : 'Please submit the Graduation Application as soon as possible.'}
-                          <a
-                            href="https://my.gordon.edu"
-                            className={`gc360_text_link ${styles.note_link}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <> my.gordon.edu</>
-                          </a>
-                        </>
-                      ) : (
-                        'The student has not yet submitted their Graduation Application.'
-                      )}
-                    </Typography>
-                  );
-                } else {
-                  return (
-                    <Typography>
-                      <b>Expected Graduation Date:</b> {graduationInfo.WhenGraduated || 'Not Set'}
-                    </Typography>
-                  );
-                }
-              })()
-            )
-          ) : (
-            // If no graduation information is available
-            'No graduation information available.'
-          )
-        }
-        privateInfo
-        myProf={myProf}
-      />
-    ) : null;
 
   const graduationDetails =
     (myProf || canViewAcademicInfo) && checkIsStudent(profile) ? (

@@ -159,6 +159,7 @@ export const exampleStudentProfile: StudentProfileInfo = {
   Major: 'U',
   AdvisorIDs: '',
   Married: 'N',
+  SpouseName: { value: '', isPrivate: false },
   Commuter: 'N',
   Major2: '',
   grad_student: 'N',
