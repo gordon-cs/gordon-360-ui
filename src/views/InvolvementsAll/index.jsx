@@ -94,7 +94,7 @@ const InvolvementsAll = () => {
           await membershipService.get({
             username: profile.AD_Username,
             sessionCode: selectedSession,
-            participationTypes: NonGuestParticipations,
+            participationTypes: ['MEMBR', 'LEAD', 'ADV', 'GUEST'],
           }),
         );
       }
@@ -193,6 +193,7 @@ const InvolvementsAll = () => {
                         involvements={myInvolvements}
                         sessionCode={selectedSession}
                         noInvolvementsText={myInvolvementsNoneText}
+                        myInvolvements={myInvolvements}
                       />
                     </Grid>
                   )
@@ -265,6 +266,7 @@ const InvolvementsAll = () => {
                             involvements={involvements}
                             sessionCode={selectedSession}
                             noInvolvementsText="There aren't any involvements for the selected session and type"
+                            myInvolvements={myInvolvements}
                           />
                         )}
                       </CardContent>

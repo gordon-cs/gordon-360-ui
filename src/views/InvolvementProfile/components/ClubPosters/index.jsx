@@ -1,0 +1,149 @@
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardActionArea,
+  CardMedia,
+  Grid,
+  Typography,
+  Dialog,
+} from '@mui/material';
+import { useState, useEffect } from 'react';
+import { getCurrentPostersByActivityCode } from 'services/poster';
+
+const ClubPosters = ({ clubName, clubCode }) => {
+  const [posters, setPosters] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [selectedPoster, setSelectedPoster] = useState(null);
+
+  useEffect(() => {
+    const fetchPosters = async () => {
+      try {
+        const ActivityPosters = await getCurrentPostersByActivityCode(clubCode);
+        setPosters(ActivityPosters);
+      } catch (error) {
+        console.error('Failed to load posters:', error);
+        setPosters([]);
+      }
+    };
+
+    if (clubCode) {
+      fetchPosters();
+    }
+  }, [clubCode]);
+
+  const handleOpen = (poster) => {
+    setSelectedPoster(poster);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedPoster(null);
+  };
+
+  console.log('Selected Poster Priority:', selectedPoster?.Priority);
+
+  return (
+    <>
+      <Card elevation={0} sx={{ marginBottom: 0 }}>
+        <CardHeader
+          title={`Posters from ${clubName}`}
+          className="gc360_header"
+          style={{ marginLeft: 0, width: '100%' }}
+        />
+        <CardContent>
+          <Grid
+            container
+            direction="row"
+            spacing={4}
+            className={'test1'}
+            justifyContent="flex-start"
+            alignItems="stretch"
+            sx={{ minHeight: '30vh' }}
+          >
+            {posters.length > 0 ? (
+              posters.map((item) => (
+                <Grid item xs={6} sm={4} md={3} lg={4} xl={3} key={item.key}>
+                  <Card variant="outlined" elevation={0} sx={{ position: 'auto' }}>
+                    {item.Priority === 1 && ( // Add red exclamation mark for priority posters
+                      <Typography
+                        variant="h3"
+                        sx={{
+                          position: 'absolute',
+                          top: 8,
+                          right: 12,
+                          color: 'red',
+                          fontWeight: 'bold',
+                          fontSize: '3rem',
+                          zIndex: 3,
+                          userSelect: 'none',
+                          fontFamily: '"Orbitron", "Montserrat", "Roboto", sans-serif',
+                          textShadow: '2px 2px 8px #00000055',
+                        }}
+                      >
+                        !
+                      </Typography>
+                    )}
+                    <CardActionArea onClick={() => handleOpen(item)}>
+                      <CardMedia // Makes the poster bigger when clicked
+                        loading="lazy"
+                        component="img"
+                        alt={item.alt}
+                        src={item.ImagePath}
+                        title={item.Title}
+                        description={item.Description}
+                      />
+                      <CardContent>
+                        <Typography className={'Poster Title'} variant="h6" fontWeight="bold">
+                          {item.Title}
+                        </Typography>
+                        <Typography
+                          className={'Poster Description'}
+                          variant="body2"
+                          fontStyle="italic"
+                          fontWeight="light"
+                        >
+                          {item.Description}
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                  </Card>
+                </Grid>
+              ))
+            ) : (
+              <Grid item>
+                <Typography variant="h5" align="center">
+                  No posters available. Check back later!
+                </Typography>
+              </Grid>
+            )}
+          </Grid>
+        </CardContent>
+      </Card>
+      {selectedPoster && (
+        <Dialog open={open} onClose={handleClose} maxWidth="md">
+          <Card>
+            <CardMedia // Makes the poster bigger when clicked
+              component="img"
+              alt={selectedPoster.alt}
+              src={selectedPoster.ImagePath}
+              title={selectedPoster.Title}
+              style={{ maxHeight: '80vh', objectFit: 'contain' }}
+            />
+            <CardContent>
+              <Typography variant="h5" fontWeight="bold" textAlign={'center'}>
+                {selectedPoster.Title}
+              </Typography>
+              <Typography variant="body1" fontStyle="italic" textAlign={'center'}>
+                {selectedPoster.Description}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Dialog>
+      )}
+    </>
+  );
+};
+
+export default ClubPosters;
