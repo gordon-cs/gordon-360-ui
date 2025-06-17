@@ -1,0 +1,255 @@
+import { useEffect, useState } from 'react';
+import {
+  Box,
+  AppBar,
+  Toolbar,
+  Typography,
+  TextField,
+  Button,
+  Grid,
+  Card,
+  CardContent,
+  CardMedia,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from '@mui/material';
+import styles from './MarketPlace.module.scss';
+import DATA from './dummyPosts/dummyPosts';
+
+const categories = ['All', 'Books', 'Clothing', 'Electronics'];
+const prices = ['All', 'Low to High', 'High to Low'];
+const sorts = ['Newest', 'Oldest'];
+
+const Marketplace = () => {
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleCardClick = (item) => {
+    setSelectedItem(item);
+    setDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+    setSelectedItem(null);
+  };
+  return (
+    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Box
+        sx={{
+          backgroundColor: 'transparent',
+          minHeight: '100vh',
+          p: 2,
+          width: '70em',
+
+          justifyContent: 'center',
+        }}
+      >
+        <Box sx={{ backgroundColor: 'neutral.light', borderRadius: '10px' }}>
+          {/* Header */}
+          <AppBar
+            position="static"
+            sx={{
+              backgroundColor: 'primary.main',
+              borderTopLeftRadius: '10px',
+              borderTopRightRadius: '10px',
+              boxShadow: 'none',
+            }}
+          >
+            <Toolbar>
+              <Typography variant="h5">
+                <Box component="span" sx={{ fontWeight: 'bold', color: 'warning.main' }}>
+                  Gordon
+                </Box>{' '}
+                Marketplace
+              </Typography>
+            </Toolbar>
+          </AppBar>
+
+          {/* Search and Filters */}
+          <Box sx={{ p: 2, mt: 2 }}>
+            <TextField variant="outlined" placeholder="Search" fullWidth sx={{ mb: 2 }} />
+
+            <Box
+              sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'space-between' }}
+            >
+              <FormControl className={`gc360_header ${styles.form}`}>
+                <InputLabel>Category</InputLabel>
+                <Select label="Category">
+                  {categories.map((cat) => (
+                    <MenuItem key={cat} value={cat}>
+                      {cat}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <FormControl className={`gc360_header ${styles.form}`}>
+                <InputLabel>Price</InputLabel>
+                <Select label="Price">
+                  {prices.map((price) => (
+                    <MenuItem key={price} value={price}>
+                      {price}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <FormControl className={`gc360_header ${styles.form}`}>
+                <InputLabel>Sort</InputLabel>
+                <Select label="Sort">
+                  {sorts.map((sort) => (
+                    <MenuItem key={sort} value={sort}>
+                      {sort}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <Button variant="contained" sx={{ borderRadius: '10px', margin: '5px' }}>
+                New Listing
+              </Button>
+            </Box>
+          </Box>
+        </Box>
+
+        {/* Listings */}
+        <Box sx={{ mt: 3, p: 2, backgroundColor: 'neutral.light', borderRadius: 1 }}>
+          <Grid container spacing={3}>
+            {DATA.map((item) => (
+              <Grid item xs={6} sm={4} lg={3} key={item}>
+                <Card
+                  variant="outlined"
+                  className={styles.card}
+                  onClick={() => handleCardClick(item)}
+                  sx={{ cursor: 'pointer' }}
+                >
+                  <CardMedia
+                    sx={{ height: 140, backgroundColor: '#ccc' }}
+                    image={item.image}
+                    title={item.title}
+                  />
+                  <CardContent>
+                    <Typography variant="subtitle1" fontWeight="bold">
+                      {item.title}
+                    </Typography>
+                    <Typography variant="subtitle2" sx={{ fontStyle: 'italic' }}>
+                      {item.condition}
+                    </Typography>
+                    <Typography variant="body2">$ {item.cost}</Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+      </Box>
+      {/** Dialog for when a card is clicked */}
+      {selectedItem && (
+        <Dialog open={dialogOpen} onClose={handleDialogClose} maxWidth="md" fullWidth>
+          <AppBar
+            position="static"
+            sx={{
+              backgroundColor: 'primary.main',
+              boxShadow: 'none',
+            }}
+          >
+            <Toolbar>
+              <Typography variant="h5">
+                <Box component="span" sx={{ fontWeight: 'bold', color: 'warning.main' }}>
+                  Gordon
+                </Box>{' '}
+                Marketplace
+              </Typography>
+            </Toolbar>
+          </AppBar>
+          <DialogContent dividers>
+            <Grid container spacing={3}>
+              {/* Left - Image and Seller */}
+              <Grid item xs={12} md={6}>
+                {/* Image box */}
+                <Box
+                  sx={{
+                    width: '100%',
+                    height: 0,
+                    paddingTop: '100%',
+                    backgroundColor: '#ccc',
+                    borderRadius: 2,
+                    position: 'relative',
+                  }}
+                >
+                  <img
+                    src={selectedItem.image}
+                    alt={selectedItem.title}
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      borderRadius: 8,
+                    }}
+                  />
+                </Box>
+
+                {/* Seller Info */}
+                <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+                  <Box
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: '50%',
+                      backgroundColor: '#ddd',
+                      mr: 1.5,
+                    }}
+                  />
+                  <Typography fontWeight="bold">{selectedItem.uploader}</Typography>
+                </Box>
+              </Grid>
+
+              {/* Right - Product Info */}
+              <Grid item xs={12} md={6}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+                  <Typography variant="h6" fontWeight="bold">
+                    {selectedItem.title}
+                  </Typography>
+                  <Typography sx={{ cursor: 'pointer' }}>⋮</Typography>
+                </Box>
+
+                <Typography variant="h6" sx={{ my: 1 }}>
+                  $ {selectedItem.cost}
+                </Typography>
+
+                <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+                  Category
+                </Typography>
+                <Typography variant="body2" sx={{ mb: 3 }}>
+                  {selectedItem.desc}
+                </Typography>
+
+                <Button variant="contained" color="info" fullWidth>
+                  Contact via Email
+                </Button>
+              </Grid>
+            </Grid>
+          </DialogContent>
+
+          <DialogActions>
+            <Button onClick={handleDialogClose} variant="outlined">
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
+    </Box>
+  );
+};
+
+export default Marketplace;

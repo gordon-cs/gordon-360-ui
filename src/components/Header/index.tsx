@@ -6,6 +6,7 @@ import {
   People as PeopleIcon,
   Link as LinkIcon,
   HolidayVillage,
+  StorefrontRounded,
 } from '@mui/icons-material';
 import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Link } from '@mui/material';
 import RecIMIcon from '@mui/icons-material/SportsFootball';
@@ -38,6 +39,7 @@ const TabUrlPatterns = [
   /^\/links$/,
   /^\/recim$/,
   /^\/reslife$/,
+  /^\/marketplace$/,
 ];
 
 /**
@@ -234,6 +236,15 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
                 to="/reslife"
               />
             )}
+          {!loading && HousingAccess && (
+            <Tab
+              className={styles.tab}
+              icon={<StorefrontRounded />}
+              label="MarketPlace"
+              component={NavLink}
+              to="/marketplace"
+            />
+          )}
         </Tabs>
         <div className={styles.side_container}>
           <div className={styles.people_search_container}>
