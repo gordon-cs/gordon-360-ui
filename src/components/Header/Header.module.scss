@@ -16,6 +16,20 @@
   min-width: 55px;
   max-width: 125px;
   flex-grow: 1;
+  position: relative;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+
+  svg {
+    transition: transform 0.2s ease;
+  }
+
+  &:hover svg {
+    transform: translateY(-2px);
+  }
 
   &.disabled_tab {
     color: var(--mui-palette-neutral-400);
@@ -65,6 +79,15 @@
 
 .hamburger_menu_button {
   margin-left: -12px;
+
+  :global(svg) {
+    transition: transform 0.2s ease;
+  }
+
+  &:hover svg {
+    transform: translateY(-2px);
+    z-index: 10;
+  }
 }
 
 .hamburger_menu_button_icon {
@@ -74,4 +97,21 @@
 .header_button {
   margin-left: -12px;
   margin-right: -12px;
+}
+
+.logo_link {
+  display: inline-block;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  img {
+    display: block;
+  }
+
+  &:hover img {
+    transform: translateY(-2px);
+  }
 }
