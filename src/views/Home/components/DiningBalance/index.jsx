@@ -228,7 +228,7 @@ const DiningBalance = () => {
                 variant="contained"
                 color="secondary"
                 component={Link}
-                href="https://www.gordonmetz.com/"
+                href="https://www.nutritics.com/menu/ma4080"
                 target="_blank"
                 rel="noopener noreferrer"
                 align="center"
