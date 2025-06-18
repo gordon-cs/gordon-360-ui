@@ -16,19 +16,26 @@ import {
   FormHelperText,
 } from '@mui/material';
 import { InputAdornment } from '@mui/material';
-
 import { useTheme } from '@mui/material/styles';
 
 const categories = [
-  'Category 1',
-  'Category 2',
-  'Category 4',
-  'Category 5',
-  'Category 7',
-  'Category 8',
+  'Clothing/Accessories',
+  'School Supplies',
+  'Electronics',
+  'Appliances',
+  'Services',
+  'Dorm Essentials',
+  'Miscellaneous',
 ];
 
-const conditions = ['Like New', 'Open Box', 'Used - Excellent', 'Used - Good', 'Used - Fair'];
+const conditions = [
+  'Like New',
+  'Open Box',
+  'Used - Excellent',
+  'Used - Good',
+  'Used - Fair',
+  'Used - Bad',
+];
 
 const ListingUploader = ({ open, onClose }) => {
   const theme = useTheme();

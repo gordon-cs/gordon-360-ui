@@ -34,8 +34,10 @@
     "react-router": "^6.22.1",
     "react-router-dom": "^6.22.1",
     "react-router-hash-link": "^2.4.3",
+    "react-slick": "^0.30.3",
     "react-to-print": "^2.15.1",
     "react-visibility-sensor": "^5.1.1",
+    "slick-carousel": "^1.8.1",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {

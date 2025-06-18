@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import React, { useEffect, useState } from 'react';
 import { getProfileImage, getProfileInfo } from 'services/marketplace';
+import Slider from 'react-slick';
 
 const MarketPlacePopup = ({ open, item, onClose }) => {
   const isOnline = useNetworkStatus();
@@ -45,6 +46,57 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
 
   if (!item) return null;
 
+  const images = [item.image1, item.image2, item.image3].filter(Boolean);
+
+  const NextArrow = ({ onClick }) => (
+    <Box
+      onClick={onClick}
+      sx={{
+        width: 20,
+        height: 20,
+        borderRadius: '50%',
+        position: 'absolute',
+        top: '50%',
+        right: -20,
+        transform: 'translateY(-50%)',
+        cursor: 'pointer',
+        zIndex: 1,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'secondary.main',
+        fontSize: 50,
+        userSelect: 'none',
+      }}
+    >
+      ›
+    </Box>
+  );
+  const PrevArrow = ({ onClick }) => (
+    <Box
+      onClick={onClick}
+      sx={{
+        width: 20,
+        height: 20,
+        borderRadius: '50%',
+        position: 'absolute',
+        top: '50%',
+        left: -20,
+        transform: 'translateY(-50%)',
+        cursor: 'pointer',
+        zIndex: 1,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'secondary.main',
+        fontSize: 50,
+        userSelect: 'none',
+      }}
+    >
+      ‹
+    </Box>
+  );
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <AppBar position="static" sx={{ backgroundColor: 'primary.main', boxShadow: 'none' }}>
@@ -61,30 +113,72 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
         <Grid container spacing={3}>
           {/* Left - Image and Seller */}
           <Grid item xs={12} md={6}>
-            <Box
-              sx={{
-                width: '100%',
-                height: 0,
-                paddingTop: '100%',
-                backgroundColor: '#000000',
-                borderRadius: 2,
-                position: 'relative',
-              }}
-            >
-              <img
-                src={item.image}
-                alt={item.title}
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
+            {images.length > 1 ? (
+              <Slider
+                nextArrow={<NextArrow />}
+                prevArrow={<PrevArrow />}
+                dots
+                infinite
+                speed={500}
+                slidesToShow={1}
+                slidesToScroll={1}
+                swipeToSlide={true}
+                accessibility={true}
+              >
+                {images.map((img, index) => (
+                  <Box
+                    key={index}
+                    sx={{
+                      width: '100%',
+                      height: 0,
+                      paddingTop: '100%',
+                      position: 'relative',
+                      borderRadius: 2,
+                      backgroundColor: '#000',
+                    }}
+                  >
+                    <img
+                      src={img}
+                      alt={`${item.title} - ${index + 1}`}
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        borderRadius: 8,
+                      }}
+                    />
+                  </Box>
+                ))}
+              </Slider>
+            ) : (
+              <Box
+                sx={{
                   width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  borderRadius: 8,
+                  height: 0,
+                  paddingTop: '100%',
+                  position: 'relative',
+                  borderRadius: 2,
+                  backgroundColor: '#000',
                 }}
-              />
-            </Box>
+              >
+                <img
+                  src={images[0]}
+                  alt={item.title}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    borderRadius: 8,
+                  }}
+                />
+              </Box>
+            )}
 
             <Box
               sx={{

@@ -10,7 +10,9 @@ export const DATA = [
     key: '0',
     title: 'Test Post',
     postdate: 'February22025',
-    image: SportPoster,
+    image1: SportPoster,
+    image2: DiscoPoster,
+    image3: MoviePoster,
     alt: 'alt text for poster 1',
     desc: 'Hello \n Come grab this thing \n Your Pal, \n Josh',
     cost: 100,
@@ -21,7 +23,9 @@ export const DATA = [
   {
     key: '1',
     title: 'Poster 2 Title',
-    image: DiscoPoster,
+    image1: DiscoPoster,
+    image2: SportPoster,
+    image3: null,
     alt: 'alt text for poster 2',
     desc: 'this is a short descirption',
     org: 'CATHSTU',
@@ -32,7 +36,9 @@ export const DATA = [
   {
     key: '2',
     title: 'Event 3',
-    image: TestPoster,
+    image1: TestPoster,
+    image2: null,
+    image3: null,
     alt: 'alt text for poster hunter',
     desc: 'this is a short descirption',
     org: 'CEC',
@@ -42,7 +48,7 @@ export const DATA = [
   {
     key: '3',
     title: 'Poster 4 Title',
-    image: HamburgerPoster,
+    image1: HamburgerPoster,
     alt: 'alt text for poster 4',
     desc: 'this is a short descirption',
     org: null,
@@ -50,7 +56,7 @@ export const DATA = [
   {
     key: '4',
     title: 'Poster 5 Title',
-    image: SportPoster,
+    image1: SportPoster,
     alt: 'alt text for poster 5',
     desc: 'this is a short descirption',
     org: null,
@@ -58,7 +64,7 @@ export const DATA = [
   {
     key: '5',
     title: 'Movie Night',
-    image: MoviePoster,
+    image1: MoviePoster,
     alt: 'alt text for poster hunter1',
     desc: 'this is a short descirption',
     org: 'I-95 Rocks',
@@ -66,7 +72,7 @@ export const DATA = [
   {
     key: '6',
     title: 'Poster 6 Title',
-    image: TestPoster,
+    image1: TestPoster,
     alt: 'alt text for poster 6',
     desc: 'this is2 a short descirption',
     org: 'I-95 Rocks',
@@ -74,7 +80,7 @@ export const DATA = [
   {
     key: '7',
     title: 'Hamburger',
-    image: HamburgerPoster,
+    image1: HamburgerPoster,
     alt: 'alt text for poster 7',
     desc: 'this is a short descirption',
     org: 'I-95 Rocks',
@@ -82,7 +88,7 @@ export const DATA = [
   {
     key: '8',
     title: 'Poster 6 Title',
-    image: SportPoster,
+    image1: SportPoster,
     alt: 'alt text for poster 6',
     desc: 'this is a short descirption',
     org: null,
@@ -90,7 +96,7 @@ export const DATA = [
   {
     key: '10',
     title: 'Computer Science Disco Night',
-    image: DiscoPoster,
+    image1: DiscoPoster,
     alt: 'alt text for poster 10',
     desc: 'Come one come all to the Computer Science Disco Night! Join us for a night of fun, dancing, and networking with fellow CS enthusiasts.',
     org: 'COMPS',
@@ -98,7 +104,7 @@ export const DATA = [
   {
     key: '11',
     title: 'Woah, Test',
-    image: SportPoster,
+    image1: SportPoster,
     alt: 'alt text for poster 11',
     desc: "Imagine playing Sports as a Computer Science Major.... Couldn't be me.",
     org: 'COMPS',
@@ -106,7 +112,7 @@ export const DATA = [
   {
     key: '9',
     title: 'Poster 6 Title',
-    image: TestPoster,
+    image1: TestPoster,
     alt: 'alt text for poster 6',
     desc: 'this is a short descirption',
     org: null,

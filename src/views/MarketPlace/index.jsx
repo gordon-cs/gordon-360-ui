@@ -140,11 +140,11 @@ const Marketplace = () => {
                   variant="outlined"
                   className={styles.card}
                   onClick={() => handleCardClick(item)}
-                  sx={{ cursor: 'pointer' }}
+                  sx={{ cursor: 'pointer', borderRadius: '10px' }}
                 >
                   <CardMedia
                     component="div"
-                    image={item.image}
+                    image={item.image1}
                     title={item.title}
                     sx={{
                       width: '100%',
