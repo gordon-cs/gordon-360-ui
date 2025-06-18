@@ -6,6 +6,7 @@ import { useUser } from 'hooks';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
+import '@testing-library/react';
 
 jest.mock('services/auth', () => ({
   msalInstance: {
