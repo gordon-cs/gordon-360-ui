@@ -239,7 +239,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       setDepartments(departments);
       setBuildings(buildings.map((b) => b.Description));
       setInvolvements(involvements);
-      setGender([...gender].sort());
+      setGender(gender.toSorted());
       setLoading(false);
     };
 
