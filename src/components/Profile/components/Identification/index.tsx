@@ -1,7 +1,7 @@
 import {
   AlertColor,
   Button,
-  IconButton, // added line
+  IconButton,
   Box,
   CardHeader,
   Dialog,
@@ -20,13 +20,12 @@ import {
   isAlumni as checkIsAlumni,
 } from 'services/user';
 import EmailIcon from '@mui/icons-material/Email';
-import EditIcon from '@mui/icons-material/Edit'; // added line
+import EditIcon from '@mui/icons-material/Edit';
 import GordonLoader from 'components/Loader/index';
 import 'cropperjs/dist/cropper.css';
 import { useUserActions } from 'hooks';
 import { useEffect, useRef, useState, ReactNode } from 'react';
 import Cropper, { ReactCropperElement } from 'react-cropper';
-import ZoomEvent from 'react-cropper';
 import Dropzone from 'react-dropzone';
 import { Link } from 'react-router-dom';
 import { Link as MuiLink } from '@mui/material';
@@ -66,7 +65,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
   const { updateImage } = useUserActions();
   const cropperRef = useRef<(ReactCropperElement & HTMLImageElement) | null>(null);
   const isStudent = profile.PersonType?.includes('stu');
-  const [showNameDialog, setShowNameDialog] = useState(false); // added line
+  const [showNameDialog, setShowNameDialog] = useState(false);
   let photoDialogErrorTimeout: string | number | NodeJS.Timeout | undefined;
 
   /**
@@ -318,7 +317,6 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
 
   /**
    * Creates the Photo Dialog message that will be displayed to the user
-   *
    * @returns {string} The message of the Photo Dialog
    */
   function createPhotoDialogBoxMessage() {
@@ -425,7 +423,6 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
 
   /**
    * Creates the Photo Updater Dialog Box
-   *
    * @returns {JSX} The JSX of the Photo Updater
    */
   function createPhotoDialogBox() {
