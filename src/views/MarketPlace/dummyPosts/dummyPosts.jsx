@@ -9,6 +9,7 @@ export const DATA = [
   {
     key: '0',
     title: 'Test Post',
+    postdate: 'February22025',
     image: SportPoster,
     alt: 'alt text for poster 1',
     desc: 'Im selling this poster',

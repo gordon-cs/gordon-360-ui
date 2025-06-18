@@ -23,6 +23,7 @@ import DATA from './dummyPosts/dummyPosts';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useNavigate } from 'react-router-dom';
 import MarketPlacePopup from './components/MarketPlacePopup';
+import ListingUploader from './components/ListingUploader';
 
 const categories = ['All', 'Books', 'Clothing', 'Electronics'];
 const prices = ['All', 'Low to High', 'High to Low'];
@@ -31,6 +32,7 @@ const sorts = ['Newest', 'Oldest'];
 const Marketplace = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [uploaderOpen, setUploaderOpen] = useState(false);
 
   const handleCardClick = (item) => {
     setSelectedItem(item);
@@ -118,7 +120,11 @@ const Marketplace = () => {
                 </Select>
               </FormControl>
 
-              <Button variant="contained" sx={{ borderRadius: '10px', margin: '5px' }}>
+              <Button
+                variant="contained"
+                sx={{ borderRadius: '10px', margin: '5px' }}
+                onClick={() => setUploaderOpen(true)}
+              >
                 New Listing
               </Button>
             </Box>
@@ -129,7 +135,7 @@ const Marketplace = () => {
         <Box sx={{ mt: 3, p: 2, backgroundColor: 'neutral.light', borderRadius: 1 }}>
           <Grid container spacing={3}>
             {DATA.map((item) => (
-              <Grid item xs={6} sm={4} lg={3} key={item}>
+              <Grid item xs={6} sm={6} md={3} lg={3} key={item}>
                 <Card
                   variant="outlined"
                   className={styles.card}
@@ -137,9 +143,15 @@ const Marketplace = () => {
                   sx={{ cursor: 'pointer' }}
                 >
                   <CardMedia
-                    sx={{ height: 140, backgroundColor: '#ccc' }}
+                    component="div"
                     image={item.image}
                     title={item.title}
+                    sx={{
+                      width: '100%',
+                      paddingTop: '90%', // 1:1 aspect ratio
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                    }}
                   />
                   <CardContent>
                     <Typography variant="subtitle1" fontWeight="bold">
@@ -158,6 +170,8 @@ const Marketplace = () => {
       </Box>
       {/** Dialog for when a card is clicked */}
       <MarketPlacePopup open={dialogOpen} item={selectedItem} onClose={handleDialogClose} />
+      {/** Dialog for uploading a post */}
+      <ListingUploader open={uploaderOpen} onClose={() => setUploaderOpen(false)} />
     </Box>
   );
 };
