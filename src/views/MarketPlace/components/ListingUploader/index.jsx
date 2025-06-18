@@ -38,6 +38,9 @@ const ListingUploader = ({ open, onClose }) => {
   const [productName, setProductName] = useState('');
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
+  const [uploadedImages, setUploadedImages] = useState([]);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
   const isSubmitDisabled =
     !selectedCategory ||
     !selectedCondition ||
@@ -45,7 +48,8 @@ const ListingUploader = ({ open, onClose }) => {
     !description.trim() ||
     !price.trim() ||
     isNaN(Number(price)) ||
-    Number(price) <= 0;
+    Number(price) <= 0 ||
+    uploadedImages.length === 0;
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
@@ -70,23 +74,20 @@ const ListingUploader = ({ open, onClose }) => {
           <Typography fontWeight="bold" gutterBottom>
             Item Category:
           </Typography>
-          <FormControl required error={!selectedCategory}>
-            <FormGroup row>
-              {categories.map((cat) => (
-                <FormControlLabel
-                  key={cat}
-                  control={
-                    <Checkbox
-                      checked={selectedCategory === cat}
-                      onChange={() => setSelectedCategory((prev) => (prev === cat ? '' : cat))}
-                    />
-                  }
-                  label={cat}
-                />
-              ))}
-            </FormGroup>
-            {!selectedCategory && <FormHelperText>Please select a category</FormHelperText>}
-          </FormControl>
+          <FormGroup row>
+            {categories.map((cat) => (
+              <FormControlLabel
+                key={cat}
+                control={
+                  <Checkbox
+                    checked={selectedCategory === cat}
+                    onChange={() => setSelectedCategory((prev) => (prev === cat ? '' : cat))}
+                  />
+                }
+                label={cat}
+              />
+            ))}
+          </FormGroup>
         </Box>
 
         {/* Condition */}
@@ -101,23 +102,20 @@ const ListingUploader = ({ open, onClose }) => {
           <Typography fontWeight="bold" gutterBottom>
             Condition:
           </Typography>
-          <FormControl required error={!selectedCondition}>
-            <FormGroup row>
-              {conditions.map((cond) => (
-                <FormControlLabel
-                  key={cond}
-                  control={
-                    <Checkbox
-                      checked={selectedCondition === cond}
-                      onChange={() => setSelectedCondition((prev) => (prev === cond ? '' : cond))}
-                    />
-                  }
-                  label={cond}
-                />
-              ))}
-            </FormGroup>
-            {!selectedCondition && <FormHelperText>Please select a condition</FormHelperText>}
-          </FormControl>
+          <FormGroup row>
+            {conditions.map((cond) => (
+              <FormControlLabel
+                key={cond}
+                control={
+                  <Checkbox
+                    checked={selectedCondition === cond}
+                    onChange={() => setSelectedCondition((prev) => (prev === cond ? '' : cond))}
+                  />
+                }
+                label={cond}
+              />
+            ))}
+          </FormGroup>
         </Box>
 
         {/* Product Info */}
@@ -140,6 +138,10 @@ const ListingUploader = ({ open, onClose }) => {
               onChange={(e) => {
                 const val = e.target.value;
                 if (val === '' || /^\d*\.?\d*$/.test(val)) {
+                  if (val.includes('.')) {
+                    const [intPart, decPart] = val.split('.');
+                    if (decPart.length > 2) return; // block input beyond 2 decimals
+                  }
                   setPrice(val);
                 }
               }}
@@ -166,19 +168,112 @@ const ListingUploader = ({ open, onClose }) => {
         />
 
         {/* Upload Images Placeholder */}
-        <Box
-          sx={{
-            mt: 3,
-            width: 200,
-            height: 200,
-            backgroundColor: theme.palette.neutral.dark,
-            borderRadius: 2,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
+        {/* Hidden file input */}
+        {/* Hidden file input */}
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          style={{ display: 'none' }}
+          id="upload-images-input"
+          onChange={(e) => {
+            const files = Array.from(e.target.files);
+            setUploadedImages((prev) => {
+              const combined = [...prev, ...files];
+              return combined.slice(0, 3); // max 3 images
+            });
           }}
-        >
-          Upload Images
+        />
+
+        {/* Image boxes */}
+        <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>
+          {/* First box always */}
+          <Box
+            sx={{
+              width: '15em',
+              height: '15em',
+              borderRadius: 2,
+              backgroundColor: theme.palette.neutral.main,
+              boxShadow: 1,
+              cursor: 'pointer',
+              overflow: 'hidden',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              position: 'relative',
+            }}
+            onClick={() => document.getElementById('upload-images-input').click()}
+          >
+            {uploadedImages[0] ? (
+              <Box
+                component="img"
+                src={URL.createObjectURL(uploadedImages[0])}
+                alt="uploaded-0"
+                sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                onLoad={(e) => URL.revokeObjectURL(e.target.src)}
+              />
+            ) : (
+              <Typography variant="body2" color="text.secondary">
+                Upload Image
+              </Typography>
+            )}
+          </Box>
+
+          {/* Second box if 2+ images */}
+          {uploadedImages.length > 1 && (
+            <Box
+              sx={{
+                width: '15em',
+                height: '15em',
+                borderRadius: 2,
+                backgroundColor: theme.palette.neutral.main,
+                boxShadow: 1,
+                cursor: 'pointer',
+                overflow: 'hidden',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                position: 'relative',
+              }}
+              onClick={() => document.getElementById('upload-images-input').click()}
+            >
+              <Box
+                component="img"
+                src={URL.createObjectURL(uploadedImages[1])}
+                alt="uploaded-1"
+                sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                onLoad={(e) => URL.revokeObjectURL(e.target.src)}
+              />
+            </Box>
+          )}
+
+          {/* Third box if 3 images */}
+          {uploadedImages.length > 2 && (
+            <Box
+              sx={{
+                width: '15em',
+                height: '15em',
+                borderRadius: 2,
+                backgroundColor: theme.palette.neutral.main,
+                boxShadow: 1,
+                cursor: 'pointer',
+                overflow: 'hidden',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                position: 'relative',
+              }}
+              onClick={() => document.getElementById('upload-images-input').click()}
+            >
+              <Box
+                component="img"
+                src={URL.createObjectURL(uploadedImages[2])}
+                alt="uploaded-2"
+                sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                onLoad={(e) => URL.revokeObjectURL(e.target.src)}
+              />
+            </Box>
+          )}
         </Box>
 
         <Button
