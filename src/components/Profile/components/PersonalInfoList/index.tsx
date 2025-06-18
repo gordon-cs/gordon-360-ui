@@ -761,12 +761,13 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     ) : null);
 
   const disclaimer = !myProf ? (
+    isCliftonStrengthsPrivate ||
     isHomePhonePrivate ||
-    isHomeCityCountryPrivate ||
     isMobilePhonePrivate ||
     isCampusLocationPrivate ||
-    isSpousePrivate ||
-    isCliftonStrengthsPrivate ? (
+    isStreetAddressPrivate ||
+    isHomeCityCountryPrivate ||
+    isSpousePrivate ? (
       <Typography align="left" className={styles.disclaimer}>
         Visible only to authorized personnel
       </Typography>
