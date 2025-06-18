@@ -632,7 +632,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     name="gender"
                     value={searchParams.gender}
                     updateValue={handleUpdate}
-                    options={gender.sort()}
+                    options={[...gender].sort()}
                     Icon={GenderIcon}
                     select
                   />
