@@ -236,7 +236,7 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
                 to="/reslife"
               />
             )}
-          {!loading && HousingAccess && (
+          {!loading && (
             <Tab
               className={styles.tab}
               icon={<StoreRounded />}
