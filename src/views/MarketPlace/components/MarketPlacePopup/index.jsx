@@ -10,10 +10,38 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import useNetworkStatus from 'hooks/useNetworkStatus';
+import React, { useEffect, useState } from 'react';
+import { getProfileImage, getProfileInfo } from 'services/marketplace';
 
 const MarketPlacePopup = ({ open, item, onClose }) => {
   const isOnline = useNetworkStatus();
   const navigate = useNavigate();
+  const [profileImg, setProfileImg] = useState(null);
+  const [profileInfo, setProfileInfo] = useState(null);
+
+  useEffect(() => {
+    if (item?.uploader) {
+      // Fetch profile image as before
+      getProfileImage(item.uploader)
+        .then((data) => {
+          const img = data.pref
+            ? `data:image/png;base64,${data.pref}`
+            : data.def
+              ? `data:image/png;base64,${data.def}`
+              : null;
+
+          setProfileImg(img);
+        })
+        .catch(() => setProfileImg(null));
+
+      // Fetch profile info
+      getProfileInfo(item.uploader)
+        .then((info) => {
+          setProfileInfo(info);
+        })
+        .catch(() => setProfileInfo(null));
+    }
+  }, [item?.uploader]);
 
   if (!item) return null;
 
@@ -73,16 +101,28 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
                 }
               }}
             >
-              <Box
-                sx={{
+              <img
+                src={profileImg}
+                alt={`${item.uploader}'s profile`}
+                style={{
                   width: 40,
                   height: 40,
                   borderRadius: '50%',
-                  backgroundColor: '#ddd',
-                  mr: 1.5,
+                  objectFit: 'cover',
+                  marginRight: 12,
+                  cursor: 'pointer',
+                }}
+                onClick={() => {
+                  if (isOnline) {
+                    navigate(`/profile/${item.uploader}`);
+                    onClose();
+                  }
                 }}
               />
-              <Typography fontWeight="bold">{item.uploader}</Typography>
+
+              <Typography fontWeight="bold">
+                {profileInfo ? `${profileInfo.NickName} ${profileInfo.LastName}` : item.uploader}
+              </Typography>
             </Box>
           </Grid>
 
@@ -102,7 +142,10 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
             <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
               Category
             </Typography>
-            <Typography variant="body2" sx={{ mb: 3 }}>
+            <Typography
+              variant="body2"
+              sx={{ mb: 3, mr: 3, whiteSpace: 'normal', wordBreak: 'break-word' }}
+            >
               {item.desc}
             </Typography>
 

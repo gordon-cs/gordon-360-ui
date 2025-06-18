@@ -134,6 +134,7 @@ const ListingUploader = ({ open, onClose }) => {
               fullWidth
               type="number"
               inputProps={{ min: 0, step: '0.01' }}
+              placeholder="Free"
               value={price}
               onChange={(e) => {
                 const val = e.target.value;

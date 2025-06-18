@@ -160,7 +160,9 @@ const Marketplace = () => {
                     <Typography variant="subtitle2" sx={{ fontStyle: 'italic' }}>
                       {item.condition}
                     </Typography>
-                    <Typography variant="body2">$ {item.cost}</Typography>
+                    <Typography variant="body2">
+                      {item.cost === 0 || item.cost === '' ? 'Free' : `$ ${item.cost}`}
+                    </Typography>
                   </CardContent>
                 </Card>
               </Grid>

@@ -12,7 +12,7 @@ export const DATA = [
     postdate: 'February22025',
     image: SportPoster,
     alt: 'alt text for poster 1',
-    desc: 'Im selling this poster',
+    desc: 'Hello \n Come grab this thing \n Your Pal, \n Josh',
     cost: 100,
     condition: 'Like New',
     uploader: 'josh.miller',
@@ -36,7 +36,7 @@ export const DATA = [
     alt: 'alt text for poster hunter',
     desc: 'this is a short descirption',
     org: 'CEC',
-    uploader: 'collin.williams',
+    uploader: 'hunter.simpson',
     status: 'unexpired',
   },
   {
