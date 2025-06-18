@@ -6,7 +6,7 @@ import {
   People as PeopleIcon,
   Link as LinkIcon,
   HolidayVillage,
-  StorefrontRounded,
+  StoreRounded,
 } from '@mui/icons-material';
 import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Link } from '@mui/material';
 import RecIMIcon from '@mui/icons-material/SportsFootball';
@@ -239,8 +239,8 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
           {!loading && HousingAccess && (
             <Tab
               className={styles.tab}
-              icon={<StorefrontRounded />}
-              label="MarketPlace"
+              icon={<StoreRounded />}
+              label="Marketplace"
               component={NavLink}
               to="/marketplace"
             />

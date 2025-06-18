@@ -9,12 +9,12 @@ export const DATA = [
   {
     key: '0',
     title: 'Test Post',
-    image: TestPoster,
+    image: SportPoster,
     alt: 'alt text for poster 1',
     desc: 'Im selling this poster',
     cost: 100,
     condition: 'Like New',
-    uploader: 'hunter.simpson',
+    uploader: 'josh.miller',
     status: 'For Sale',
   },
   {

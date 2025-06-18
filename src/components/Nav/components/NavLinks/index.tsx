@@ -4,8 +4,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import LinkIcon from '@mui/icons-material/InsertLink';
 import PeopleIcon from '@mui/icons-material/People';
-import { HolidayVillage } from '@mui/icons-material';
-import { StorefrontRounded } from '@mui/icons-material';
+import { HolidayVillage, StoreRounded } from '@mui/icons-material';
 import { Divider, List } from '@mui/material';
 import RecIMIcon from '@mui/icons-material/SportsFootball';
 import TranscriptIcon from '@mui/icons-material/Receipt';
@@ -181,7 +180,7 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
       onLinkClick={onLinkClick}
       linkName={'MarketPlace'}
       linkPath={'/marketplace'}
-      LinkIcon={StorefrontRounded}
+      LinkIcon={StoreRounded}
       divider={false}
     />
   ) : null;
