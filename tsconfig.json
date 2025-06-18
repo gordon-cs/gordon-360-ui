@@ -33,6 +33,7 @@
       "index": ["."],
       "app.global.css": ["."],
       "pwa": ["."],
+      "theme": ["theme.ts"],
       "msalInstatiation": ["msalInstatiation.ts"],
       "./app": ["./"],
       "./app.global.css": ["./"]
