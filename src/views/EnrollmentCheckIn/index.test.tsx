@@ -101,8 +101,6 @@ test('renders form if profile exists after navigating to page 1', async () => {
     fireEvent.click(beginButton);
   });
 
-  screen.debug();
-
   // Now expect the form to be there
   expect(screen.getByText(/Enrollment Check In/i)).toBeInTheDocument();
   expect(screen.getByDisplayValue(mockEmergencyContacts[0].MobilePhone)).toBeInTheDocument();

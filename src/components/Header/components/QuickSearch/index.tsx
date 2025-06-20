@@ -197,7 +197,7 @@ const GordonQuickSearch = ({
   );
 };
 
-const getHighlightedDetails = (person: SearchResult, inputPartsRegex: RegExp) => {
+export const getHighlightedDetails = (person: SearchResult, inputPartsRegex: RegExp) => {
   const usernameParts = person.UserName.split('.');
 
   const name =
@@ -221,7 +221,7 @@ const getHighlightedDetails = (person: SearchResult, inputPartsRegex: RegExp) =>
   };
 };
 
-const getHighlightedText = (text: string, inputRegex: RegExp) =>
+export const getHighlightedText = (text: string, inputRegex: RegExp) =>
   // Split the text into parts that don't match the input regex, and parts that do.
   // Even-numbered parts (0, 2, ...) will always be parts that don't match (but may be empty)
   // e.g. 'abcabc'.split(/(ab)/) => ["", "ab", "c", "ab", "c"]
