@@ -19,6 +19,7 @@ type DbCourse = {
   BEGIN_TIME?: string;
   /** A timespan of the format HH:mm:ss, stringified */
   END_TIME?: string;
+  SUB_TERM_CDE?: string;
   Role: string;
 };
 
@@ -62,6 +63,7 @@ export type CourseEvent = {
   name: string;
   title: string;
   location: string;
+  subtermCode?: string;
   start: Date;
   end: Date;
   allDay?: boolean;
@@ -89,6 +91,7 @@ function formatCoursesFromDb(courses: DbCourse[]): CourseEvent[] {
       name: course.CRS_TITLE.trim(),
       title: course.CRS_CDE.trim(),
       location: course.BLDG_CDE + '\u00A0' + course.ROOM_CDE,
+      subtermCode: course.SUB_TERM_CDE,
     };
 
     if (course.ROOM_CDE === 'ASY') {

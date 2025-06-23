@@ -395,7 +395,6 @@ export type MembershipHistorySession = {
 
 export type Graduation = {
   WhenGraduated: string;
-  HasGradated: boolean;
   GraduationFlag: string;
 };
 
