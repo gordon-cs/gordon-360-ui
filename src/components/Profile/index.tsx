@@ -52,10 +52,6 @@ const Profile = ({ profile: propsProfile, myProf }: Props) => {
     [],
   );
 
-  useEffect(() => {
-    scheduleService.getCanReadStudentSchedules().then(setCanReadStudentSchedules);
-  }, []);
-
   const fetchProfile = async () => {
     const updatedProfile = await user.getProfileInfo(profile.AD_Username);
     if (updatedProfile) setProfile(updatedProfile);
