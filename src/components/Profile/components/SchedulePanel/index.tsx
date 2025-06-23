@@ -17,6 +17,7 @@ import styles from './ScheduleHeader.module.css';
 import scheduleService, { CourseEvent, Schedule } from 'services/schedule';
 import sessionService from 'services/session';
 import { Profile } from 'services/user';
+import { AuthError } from 'services/error';
 
 type Props = {
   profile: Profile;
@@ -38,17 +39,22 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
     Promise.all([
       scheduleService.getAllSessionSchedules(profile.AD_Username),
       sessionService.getCurrent(),
-    ]).then(([allSessionSchedules, currentSession]) => {
-      setAllSchedules(allSessionSchedules);
-      const defaultSchedule =
-        // If there is a schedule for the current session, make it d4fault
-        allSessionSchedules.find((s) => s.session.SessionCode === currentSession.SessionCode) ??
-        // Otherwise, use the most recent session
-        allSessionSchedules[0];
-      setSelectedSchedule(defaultSchedule);
-      setLoading(false);
-    });
+    ])
+      .then(([allSessionSchedules, currentSession]) => {
+        setAllSchedules(allSessionSchedules);
+        const defaultSchedule =
+          // If there is a schedule for the current session, make it d4fault
+          allSessionSchedules.find((s) => s.session.SessionCode === currentSession.SessionCode) ??
+          // Otherwise, use the most recent session
+          allSessionSchedules[0];
+        setSelectedSchedule(defaultSchedule);
+        setLoading(false);
+      })
+      .catch((reason: AuthError) => {
+        setLoading(false);
+      });
   }, [profile.AD_Username]);
+
   const toggleIsScheduleOpen = () => {
     setIsScheduleOpen((wasOpen) => {
       localStorage.setItem(scheduleOpenKey, String(!wasOpen));
