@@ -17,6 +17,7 @@ import {
   Profile as profileType,
   isStudent as checkIsStudent,
   isFacStaff as checkIsFacStaff,
+  isAlumni as checkIsAlumni,
 } from 'services/user';
 import EmailIcon from '@mui/icons-material/Email';
 import EditIcon from '@mui/icons-material/Edit'; // added line
@@ -692,16 +693,13 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar, fetchProfil
                   xs={12}
                   className={styles.identification_card_content_card_container_info_name}
                 >
-
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <Typography variant="h6" paragraph style={{ marginBottom: 0 }}>
                       {`${
-                        userProfile.Title && userProfile.PersonType === 'fac'
-                          ? `${userProfile.Title} `
-                          : ''
-                      }${userProfile.FirstName}${hasNickname ? ` (${userProfile.NickName})` : ''} ${
-                        userProfile.LastName
-                      }${hasMaidenName ? ` (${userProfile.MaidenName})` : ''}`}
+                        profile.Title && profile.PersonType === 'fac' ? `${profile.Title} ` : ''
+                      }${profile.FirstName}${hasNickname ? ` (${profile.NickName})` : ''} ${
+                        profile.LastName
+                      }${hasMaidenName ? ` (${profile.MaidenName})` : ''}`}
                     </Typography>
 
                     {/* Profile Name Edit Request Button */}

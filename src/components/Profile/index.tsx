@@ -23,7 +23,6 @@ type Props = {
   myProf: boolean;
 };
 
-
 type SnackbarState = {
   message: string;
   severity: string;
@@ -32,12 +31,13 @@ type SnackbarState = {
   linkText?: string; // Add the optional link property
 };
 
-const Profile = ({ profile, myProf }: Props) => {
+const Profile = ({ profile: propsProfile, myProf }: Props) => {
   const [snackbar, setSnackbar] = useState<SnackbarState>({
     message: '',
     severity: '',
     open: false,
   });
+  const [profile, setProfile] = useState<profileType>(propsProfile);
 
   const isOnline = useNetworkStatus();
   const viewerIsPolice = useAuthGroups(AuthGroup.Police);
