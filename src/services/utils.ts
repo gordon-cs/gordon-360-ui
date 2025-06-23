@@ -13,7 +13,6 @@ export type DistributiveOmit<T, K extends keyof any> = T extends any ? Omit<T, K
 
 /**
  * Create a closure to map an array on a given predicate
- *
  * @param predicate The predicate to map on
  * @returns a function that maps a given array to a new array on `predicate`
  */
@@ -24,7 +23,6 @@ export const map =
 
 /**
  * Create a closure to filter an array by a given predicate
- *
  * @param predicate The predicate to filter by
  * @returns a function that filters a given array by `predicate`
  */
@@ -35,7 +33,6 @@ export const filter =
 
 /**
  * Create a closure to sort an array by a given predicate
- *
  * @param predicate The predicate to sort by
  * @returns a function that sorts a given array by `predicate`
  */
@@ -46,7 +43,6 @@ export const sort =
 
 /**
  * Compare two objects by a common property
- *
  * @param property The property to compare by
  * @returns the sort order of the objects compared by `property`
  */
@@ -65,7 +61,6 @@ export const compareByProperty =
 /**
  * Transform a string of any case into a title case string.
  * The string is split into words on the separator, and each word is capitalized.
- *
  * @param string a string to convert to Title Case, e.g. 'person first name'
  * @param separator the separator to split words on. defaults to a single space (`' '`)
  * @returns the string in title case, e.g. `Person First Name`
@@ -81,7 +76,6 @@ export const toTitleCase = (string: string, separator = ' ') =>
  * Create functions to serialize and deserialize an object of the given type to/from a query string.
  * Properties that haven't changed from their initial value are excluded from the query string during serialization.
  * Properties are converted to their type in `initialSearchParams` during deserialization.
- *
  * @param initialSearchParams The shape and initial state of the search params.
  * @returns Functions to:
  *  1) serialize `searchParams` into a query string containing all the properties of `searchParams` that have changed from `initialSearchParams`
@@ -94,7 +88,6 @@ export const searchParamSerializerFactory = <
 ) => {
   /**
    * Convert an object of search params into a query string.
-   *
    * @param searchParams object of search params
    * @returns search params encoded into a query string
    */
@@ -119,7 +112,6 @@ export const searchParamSerializerFactory = <
 
   /**
    * Deserialize a string value to its type in `TSearchParams` for the given key.
-   *
    * @param key The key of `TSearchParams` that the value corresponds to.
    * @param encodedValue The value as a string to deserialize
    * @returns value converted to its type in `TSearchParams`
@@ -143,7 +135,6 @@ export const searchParamSerializerFactory = <
    *
    * Any search params that aren't in `TSearchParams` are discarded.
    * If any key of `TSearchParams` is unspecified, it default to the initial value.
-   *
    * @param queryString query string to deserialize to search params
    * @returns object of search params, or null if no search params were found
    */
@@ -170,7 +161,6 @@ export const searchParamSerializerFactory = <
  * Removes the specified domain name from an email.
  *
  * If the domain is not specified, it defaults to '@gordon.edu'
- *
  * @param input the string from which to remove the domain
  * @param domain the domain to remove, default '@gordon.edu'
  * @returns the value of input with the domain stripped off the end
