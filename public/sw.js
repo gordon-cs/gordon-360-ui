@@ -15,7 +15,6 @@
  * This service worker fetches and caches necessary files to enable Gordon 360 to work offline.
  * If the network is lost, all requests will be handled by the cache. A response from the cache
  * will be served if a request was succussfully fetched and cached when the network was available.
- *
  * @file   This file defines the Service Worker for Gordon 360
  * @author Jake Moon and Jahnuel Dorelus.
  */
@@ -86,7 +85,6 @@ async function removeAllCache() {
  *
  * If the network is available, it returns a response from the fetch.
  * Otherwise, it returns a response from the cache.
- *
  * @param {Request} request The request to be fetched from the network or cache
  * @returns {Response} A response served from the network or cache
  */
