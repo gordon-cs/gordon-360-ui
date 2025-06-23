@@ -1,6 +1,8 @@
 import {
   AlertColor,
   Button,
+  IconButton, // added line
+  Box,
   CardHeader,
   Dialog,
   DialogActions,
@@ -18,6 +20,7 @@ import {
   isAlumni as checkIsAlumni,
 } from 'services/user';
 import EmailIcon from '@mui/icons-material/Email';
+import EditIcon from '@mui/icons-material/Edit'; // added line
 import GordonLoader from 'components/Loader/index';
 import 'cropperjs/dist/cropper.css';
 import { useUserActions } from 'hooks';
@@ -26,6 +29,7 @@ import Cropper, { ReactCropperElement } from 'react-cropper';
 import ZoomEvent from 'react-cropper';
 import Dropzone from 'react-dropzone';
 import { Link } from 'react-router-dom';
+import { Link as MuiLink } from '@mui/material';
 import { Class } from 'services/peopleSearch';
 import user from 'services/user';
 import { windowBreakWidths } from 'theme';
@@ -62,6 +66,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
   const { updateImage } = useUserActions();
   const cropperRef = useRef<(ReactCropperElement & HTMLImageElement) | null>(null);
   const isStudent = profile.PersonType?.includes('stu');
+  const [showNameDialog, setShowNameDialog] = useState(false); // added line
   let photoDialogErrorTimeout: string | number | NodeJS.Timeout | undefined;
 
   /**
@@ -693,20 +698,41 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
                   )}
                 </Grid>
 
+                {/* Profile Name */}
                 <Grid
                   item
                   xs={12}
                   className={styles.identification_card_content_card_container_info_name}
                 >
-                  <Typography variant="h6" paragraph>
-                    {`${
-                      userProfile.Title && userProfile.PersonType === 'fac'
-                        ? `${userProfile.Title} `
-                        : ''
-                    }${userProfile.FirstName}${hasNickname ? ` (${userProfile.NickName})` : ''} ${
-                      userProfile.LastName
-                    }${hasMaidenName ? ` (${userProfile.MaidenName})` : ''}`}
-                  </Typography>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Typography variant="h6" paragraph style={{ marginBottom: 0 }}>
+                      {`${
+                        userProfile.Title && userProfile.PersonType === 'fac'
+                          ? `${userProfile.Title} `
+                          : ''
+                      }${userProfile.FirstName}${hasNickname ? ` (${userProfile.NickName})` : ''} ${
+                        userProfile.LastName
+                      }${hasMaidenName ? ` (${userProfile.MaidenName})` : ''}`}
+                    </Typography>
+
+                    {/* Profile Name Edit Request Button */}
+                    {checkIsStudent(profile) &&
+                      !checkIsFacStaff(profile) &&
+                      !checkIsAlumni(profile) && (
+                        <IconButton
+                          onClick={() => setShowNameDialog(true)}
+                          size="small"
+                          aria-label="Request name change"
+                          sx={{
+                            marginBottom: '8px',
+                            padding: '4px',
+                            '&:hover': { opacity: 0.8 },
+                          }}
+                        >
+                          <EditIcon style={{ fontSize: '20px' }} />
+                        </IconButton>
+                      )}
+                  </div>
                 </Grid>
                 {checkIsFacStaff(userProfile) &&
                   userProfile.JobTitle &&
@@ -745,6 +771,85 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
                 ) : null}
 
                 {isOnline && createPhotoDialogBox()}
+
+                {/* profile Button settings */}
+                {showNameDialog && (
+                  <Dialog
+                    open={showNameDialog}
+                    onClose={() => setShowNameDialog(false)}
+                    className={styles.gc360_links_dialog}
+                    sx={{
+                      '& .MuiDialog-paper': {
+                        minHeight: '300px',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                      },
+                    }}
+                  >
+                    <DialogTitle
+                      sx={{
+                        backgroundColor: 'primary.main',
+                        color: 'primary.contrastText',
+                        padding: '16px 24px',
+                        textAlign: 'center',
+                      }}
+                    >
+                      Name Change Request
+                    </DialogTitle>
+                    <DialogContent
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        flex: 1,
+                        p: 3,
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          backgroundColor: 'action.hover',
+                          borderRadius: 1,
+                          p: 3,
+                          borderLeft: '4px solid',
+                          borderColor: 'secondary.main',
+                          margin: 'auto',
+                          width: '100%',
+                        }}
+                      >
+                        <Typography variant="body2">
+                          <Box component="span" fontWeight="bold">
+                            NOTE:
+                          </Box>
+                          <Box component="ul" sx={{ pl: 2, mt: 1, mb: 0 }}>
+                            <Box component="li" sx={{ mb: 1 }}>
+                              To change your official name, please contact the registrar.
+                            </Box>
+                            <Box component="li" sx={{ mb: 1 }}>
+                              You can contact the registrar via this email:{' '}
+                              <MuiLink
+                                href="mailto:registrar@gordon.edu"
+                                className={styles.gc360_text_link}
+                                underline="hover"
+                              >
+                                registrar@gordon.edu
+                              </MuiLink>
+                            </Box>
+                          </Box>
+                        </Typography>
+                      </Box>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button
+                        onClick={() => setShowNameDialog(false)}
+                        variant="contained"
+                        color="secondary"
+                      >
+                        Close
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
+                )}
               </Grid>
             </Grid>
           </Grid>
