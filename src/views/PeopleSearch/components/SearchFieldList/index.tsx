@@ -240,7 +240,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
       setDepartments(departments);
       setBuildings(buildings.map((b) => b.Description));
       setInvolvements(involvements);
-      setGender(gender);
+      setGender(gender.toSorted());
       setLoading(false);
     };
 
@@ -633,7 +633,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     name="gender"
                     value={searchParams.gender}
                     updateValue={handleUpdate}
-                    options={gender.sort()}
+                    options={gender}
                     Icon={GenderIcon}
                     select
                   />
