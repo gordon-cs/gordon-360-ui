@@ -23,18 +23,34 @@ type Props = {
   myProf: boolean;
 };
 
-const Profile = ({ profile: initialProfile, myProf }: Props) => {
-  const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
-  const [profile, setProfile] = useState(initialProfile);
+
+type SnackbarState = {
+  message: string;
+  severity: string;
+  open: boolean;
+  link?: string;
+  linkText?: string; // Add the optional link property
+};
+
+const Profile = ({ profile, myProf }: Props) => {
+  const [snackbar, setSnackbar] = useState<SnackbarState>({
+    message: '',
+    severity: '',
+    open: false,
+  });
+
   const isOnline = useNetworkStatus();
   const viewerIsPolice = useAuthGroups(AuthGroup.Police);
   const [canReadStudentSchedules, setCanReadStudentSchedules] = useState<boolean>();
   const profileIsStudent = profile.PersonType?.includes('stu');
   const location = useLocation();
 
-  const createSnackbar = useCallback((message: string, severity: AlertColor) => {
-    setSnackbar({ message, severity, open: true });
-  }, []);
+  const createSnackbar = useCallback(
+    (message: string, severity: AlertColor, link?: string, linkText?: string) => {
+      setSnackbar({ message, severity, open: true, link, linkText }); // Include the link property
+    },
+    [],
+  );
 
   useEffect(() => {
     scheduleService.getCanReadStudentSchedules().then(setCanReadStudentSchedules);
@@ -116,6 +132,8 @@ const Profile = ({ profile: initialProfile, myProf }: Props) => {
         text={snackbar.message}
         severity={snackbar.severity as AlertColor}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+        link={snackbar.link}
+        linkText={snackbar.linkText} // Pass the link property to the snackbar
       />
     </Grid>
   );
