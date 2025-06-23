@@ -41,7 +41,6 @@ const Profile = ({ profile: propsProfile, myProf }: Props) => {
 
   const isOnline = useNetworkStatus();
   const viewerIsPolice = useAuthGroups(AuthGroup.Police);
-  const [canReadStudentSchedules, setCanReadStudentSchedules] = useState<boolean>();
   const profileIsStudent = profile.PersonType?.includes('stu');
   const location = useLocation();
 
@@ -100,11 +99,9 @@ const Profile = ({ profile: propsProfile, myProf }: Props) => {
         </Grid>
       )}
 
-      {(myProf || !profileIsStudent || canReadStudentSchedules) && (
-        <Grid item xs={12} lg={10}>
-          <SchedulePanel profile={profile} myProf={myProf} />
-        </Grid>
-      )}
+      <Grid item xs={12} lg={10}>
+        <SchedulePanel profile={profile} myProf={myProf} />
+      </Grid>
 
       <Grid item xs={12} lg={5}>
         <Grid container spacing={2}>
