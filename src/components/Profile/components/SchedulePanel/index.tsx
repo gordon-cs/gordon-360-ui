@@ -41,10 +41,11 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
       academicTermService.getCurrentTerm(),
     ]).then(([allTermSchedules, currentTerm]) => {
       setAllSchedules(allTermSchedules);
+      const currentTermCode = `${currentTerm.YearCode}${currentTerm.TermCode}`;
       const defaultSchedule =
-        // If there is a schedule for the current session, make it d4fault
-        allTermSchedules.find((s) => s.term.TermCode === currentTerm.TermCode) ??
-        // Otherwise, use the most recent session
+        // If there is a schedule for the current term, make it d4fault
+        allTermSchedules.find((s) => `${s.term.YearCode}${s.term.TermCode}` === currentTermCode) ??
+        // Otherwise, use the most recent term
         allTermSchedules[0];
       setSelectedSchedule(defaultSchedule);
       setLoading(false);
@@ -86,26 +87,17 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
               <Grid item xs={12} lg={3}>
                 <TextField
                   label="Term"
-                  id="schedule-session"
-                  value={
-                    selectedSchedule?.term.TermCode
-                      ? `${selectedSchedule.term.YearCode}${selectedSchedule.term.TermCode}`
-                      : ''
-                  }
+                  id="schedule-term"
+                  value={selectedSchedule?.term.BeginDate ?? ''}
                   onChange={(e) =>
                     setSelectedSchedule(
-                      allSchedules.find(
-                        (s) => `${s.term.YearCode}${s.term.TermCode}` === e.target.value,
-                      ) ?? null,
+                      allSchedules.find((s) => s.term.BeginDate === e.target.value) ?? null,
                     )
                   }
                   select
                 >
                   {allSchedules.map(({ term }) => (
-                    <MenuItem
-                      value={`${term.YearCode}${term.TermCode}`}
-                      key={`${term.YearCode}${term.TermCode}`}
-                    >
+                    <MenuItem value={term.BeginDate} key={term.BeginDate}>
                       {term.Description}
                     </MenuItem>
                   ))}
