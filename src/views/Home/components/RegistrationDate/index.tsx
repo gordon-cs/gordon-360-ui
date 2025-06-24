@@ -1,18 +1,19 @@
 import { useEffect, useState } from 'react';
-import { Card, CardHeader, CardContent, Grid, Typography, Button, useTheme } from '@mui/material';
+import { Card, CardHeader, CardContent, Grid, Typography } from '@mui/material';
 import { Launch } from '@mui/icons-material';
 import registrationService from 'services/registration';
 import GordonLoader from 'components/Loader';
 import { Link } from 'react-router-dom';
 
 const RegistrationStart = () => {
-  const theme = useTheme();
   const [loading, setLoading] = useState(true);
   const [regInfo, setRegInfo] = useState<{
     Term: string;
     StartTime: string;
     EndTime: string;
     IsEligible: boolean;
+    IsClearedToRegister: boolean;
+    HasHolds: boolean;
   } | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
@@ -46,7 +47,11 @@ const RegistrationStart = () => {
             to="https://my.gordon.edu/ICS/Academics_UG/Academics_Home.jnz?portlet=Student_Registration"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: 'inherit', textDecoration: 'none', width: '100%' }}
+            style={{
+              color: 'inherit',
+              textDecoration: 'none',
+              width: '100%',
+            }}
           >
             <Grid container direction="row" alignItems="center">
               <Grid item xs={7} sx={{ textAlign: 'left' }}>
@@ -90,9 +95,21 @@ const RegistrationStart = () => {
                 </Typography>
               </Grid>
             </Grid>
-            {!regInfo?.IsEligible && (
+            {regInfo && !regInfo.IsEligible && (
               <Typography variant="body1" align="center" color="error" sx={{ mt: 2 }}>
                 You are currently not eligible to register.
+              </Typography>
+            )}
+            {regInfo?.HasHolds && (
+              <Typography variant="body2" align="center" color="error" sx={{ mt: 2 }}>
+                <Link
+                  to="https://my.gordon.edu/ICS/Finances/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: 'inherit', textDecoration: 'underline' }}
+                >
+                  You have one or more holds. Please contact the Registrar for assistance.
+                </Link>
               </Typography>
             )}
           </>
