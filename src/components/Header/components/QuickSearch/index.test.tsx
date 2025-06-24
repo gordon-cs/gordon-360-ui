@@ -2,11 +2,21 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import GordonQuickSearch from '.';
 import { BrowserRouter } from 'react-router-dom';
 import { getHighlightedText, getHighlightedDetails } from '.';
+import { act } from 'react';
 
 jest.mock('hooks', () => ({
   useNetworkStatus: () => true,
   useWindowSize: () => [800], // Simulate wide screen
 }));
+
+const mockSearch = jest.fn();
+
+const renderComponent = (props: any = {}) =>
+  render(
+    <BrowserRouter>
+      <GordonQuickSearch searchFunction={mockSearch} {...props} />
+    </BrowserRouter>,
+  );
 
 describe('GordonQuickSearch', () => {
   it('renders with default placeholder text', () => {
@@ -43,7 +53,7 @@ describe('GordonQuickSearch', () => {
     mockSearch.mockResolvedValue([Date.now(), []]);
     renderComponent();
 
-    const input = screen.getByRole('textbox');
+    const input = screen.getByRole('combobox');
     fireEvent.change(input, { target: { value: 'John' } });
 
     act(() => {
@@ -55,7 +65,7 @@ describe('GordonQuickSearch', () => {
 
   it('resets search if input is too short', () => {
     renderComponent();
-    const input = screen.getByRole('textbox');
+    const input = screen.getByRole('combobox');
     fireEvent.change(input, { target: { value: 'J' } });
     expect(mockSearch).not.toHaveBeenCalled();
   });
@@ -64,7 +74,7 @@ describe('GordonQuickSearch', () => {
     mockSearch.mockResolvedValue([Date.now(), []]);
     renderComponent();
 
-    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'NoResult' } });
+    fireEvent.change(screen.getByRole('combobox'), { target: { value: 'NoResult' } });
     act(() => {
       jest.advanceTimersByTime(500);
     });
@@ -92,7 +102,7 @@ describe('getHighlightedDetails', () => {
 
 describe('getHighlightedText', () => {
   it('highlights matched substrings', () => {
-    const parts = getHighlightedText('hello john smith', /john|smith/i);
+    const parts = getHighlightedText('hello john smith', /(john|smith)/i);
     const highlighted = parts.filter((part: any) => part.props?.className);
     expect(highlighted).toHaveLength(2);
   });
