@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
 import {
   Box,
   AppBar,
@@ -21,13 +22,19 @@ import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useNavigate } from 'react-router-dom';
 import MarketPlacePopup from './components/MarketPlacePopup';
 import ListingUploader from './components/ListingUploader';
+import marketplaceService from 'services/marketplace';
 
 const categories = ['All', 'Books', 'Clothing', 'Electronics'];
 const prices = ['All', 'Low to High', 'High to Low'];
 const sorts = ['Newest', 'Oldest'];
 
 const Marketplace = () => {
+  const [listings, setListings] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [error, setError] = useState(null);
+
+  const [loading, setLoading] = useState(true);
+
   const [dialogOpen, setDialogOpen] = useState(false);
   const [uploaderOpen, setUploaderOpen] = useState(false);
 
@@ -43,6 +50,20 @@ const Marketplace = () => {
 
   const isOnline = useNetworkStatus();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    marketplaceService
+      .getAllListings()
+      .then((data) => {
+        setListings(data);
+      })
+      .catch(() => {
+        setError('Failed to load marketplace listings');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -131,57 +152,61 @@ const Marketplace = () => {
         {/* Listings */}
         <Box sx={{ mt: 3, p: 2, backgroundColor: 'neutral.light', borderRadius: 1 }}>
           <Grid container spacing={3}>
-            {DATA.map((item) => (
-              <Grid item xs={6} sm={6} md={3} lg={3} key={item}>
-                <Card
-                  variant="outlined"
-                  className={styles.card}
-                  onClick={() => handleCardClick(item)}
-                  sx={{ cursor: 'pointer', borderRadius: '10px' }}
-                >
-                  <CardMedia
-                    component="div"
-                    image={item.ImagePaths?.[0]}
-                    title={item.Name}
-                    sx={{
-                      width: '100%',
-                      paddingTop: '90%', // 1:1 aspect ratio
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                    }}
-                  />
-                  <CardContent>
-                    <Box display="flex" justifyContent="space-between" alignItems="flex-start">
-                      {/* Left column */}
-                      <Box>
-                        <Typography variant="subtitle1" fontWeight="bold">
-                          {item.Name}
-                        </Typography>
-                        <Typography variant="subtitle2" sx={{ fontStyle: 'italic' }}>
-                          {item.ConditionName}
-                        </Typography>
-                        <Typography variant="body2">
-                          {item.Price === 0 || item.Price === '' ? 'Free' : `$ ${item.Price}`}
+            {loading && <Typography>Loading listings...</Typography>}
+            {error && <Typography color="error">{error}</Typography>}
+            {!loading &&
+              !error &&
+              listings.map((item) => (
+                <Grid item xs={6} sm={6} md={3} lg={3} key={item.Id}>
+                  <Card
+                    variant="outlined"
+                    className={styles.card}
+                    onClick={() => handleCardClick(item)}
+                    sx={{ cursor: 'pointer', borderRadius: '10px' }}
+                  >
+                    <CardMedia
+                      component="div"
+                      image={item.ImagePaths?.[0]}
+                      title={item.Name}
+                      sx={{
+                        width: '100%',
+                        paddingTop: '90%', // 1:1 aspect ratio
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                      }}
+                    />
+                    <CardContent>
+                      <Box display="flex" justifyContent="space-between" alignItems="flex-start">
+                        {/* Left column */}
+                        <Box>
+                          <Typography variant="subtitle1" fontWeight="bold">
+                            {item.Name}
+                          </Typography>
+                          <Typography variant="subtitle2" sx={{ fontStyle: 'italic' }}>
+                            {item.ConditionName}
+                          </Typography>
+                          <Typography variant="body2">
+                            {item.Price === 0 || item.Price === '' ? 'Free' : `$ ${item.Price}`}
+                          </Typography>
+                        </Box>
+
+                        {/* Right column */}
+                        <Typography
+                          variant="subtitle2"
+                          sx={{
+                            fontStyle: 'italic',
+                            maxWidth: '50%',
+                            textAlign: 'right',
+                            wordBreak: 'break-word',
+                          }}
+                        >
+                          {item.CategoryName}
                         </Typography>
                       </Box>
-
-                      {/* Right column */}
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          fontStyle: 'italic',
-                          maxWidth: '50%',
-                          textAlign: 'right',
-                          wordBreak: 'break-word',
-                        }}
-                      >
-                        {item.CategoryName}
-                      </Typography>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
           </Grid>
         </Box>
       </Box>
