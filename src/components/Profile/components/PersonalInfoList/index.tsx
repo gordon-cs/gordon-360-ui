@@ -38,7 +38,7 @@ import CliftonStrengthsService from 'services/cliftonStrengths';
 import SLock from './Salsbury.png';
 import DPLock from './DandP.png';
 import DDLock from './DandD.png';
-import { differenceInYears, parse } from 'date-fns'; // Import a date utility library like date-fns
+import { differenceInYears, parse } from 'date-fns'; // date utility functions
 
 const PRIVATE_INFO = 'Private as requested.';
 
@@ -172,9 +172,11 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
       if (graduationInfo && graduationInfo.GraduationFlag === null) {
         if (setPlannedGradDate()) {
           createSnackbar(
-            `Please submit the Graduation Application 8-12 months before May ${
-              profPlannedGradYear || graduationInfo.WhenGraduated
-            }.`,
+            profPlannedGradYear
+              ? `Please submit the Graduation Application 8-12 months before May ${profPlannedGradYear}.`
+              : graduationInfo.WhenGraduated
+                ? `Please submit the Graduation Application 8-12 months before ${graduationInfo.WhenGraduated}.`
+                : 'Please submit the Graduation Application as soon as possible.',
             'info',
             'https://my.gordon.edu',
             'my.gordon.edu',

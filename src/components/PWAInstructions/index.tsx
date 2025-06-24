@@ -2,7 +2,6 @@ import { useState } from 'react';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import BeforeInstallPromptEvent from '@mui/material';
 import styles from './PWAInstructions.module.css';
 
 import DesktopChromeInstall from './images/Desktop/Desktop-Chrome-Install-360.png';

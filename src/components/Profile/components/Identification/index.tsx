@@ -318,7 +318,6 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
 
   /**
    * Creates the Photo Dialog message that will be displayed to the user
-   *
    * @returns {string} The message of the Photo Dialog
    */
   function createPhotoDialogBoxMessage() {
@@ -377,7 +376,6 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
 
   /**
    * Handles the acceptance of the user dropping an image in the Photo Updater Dialog Box
-   *
    * @param {*} fileList The image dropped in the Dropzone of the Photo Updater
    */
   function onDropAccepted(fileList: any) {
@@ -425,7 +423,6 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
 
   /**
    * Creates the Photo Updater Dialog Box
-   *
    * @returns {JSX} The JSX of the Photo Updater
    */
   function createPhotoDialogBox() {
