@@ -237,7 +237,11 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
             </Typography>
 
             <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
-              Category
+              {item.CategoryName}
+            </Typography>
+
+            <Typography variant="subtitle2" fontStyle="italic" gutterBottom>
+              {item.ConditionName}
             </Typography>
             <Typography
               variant="body2"
@@ -250,7 +254,7 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
               href={`mailto:${item.PosterUsername}@gordon.edu?subject=${encodeURIComponent(
                 'Hello from the App',
               )}&body=${encodeURIComponent(
-                `Hi there,\n\nI wanted to reach out regarding ${item.title}. Is it still available for purchase?`,
+                `Hi there,\n\nI wanted to reach out regarding ${item.Name}. Is it still available for purchase?`,
               )}`}
               style={{ textDecoration: 'none', display: 'block' }}
             >

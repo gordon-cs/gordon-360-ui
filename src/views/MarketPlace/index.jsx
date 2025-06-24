@@ -154,15 +154,33 @@ const Marketplace = () => {
                     }}
                   />
                   <CardContent>
-                    <Typography variant="subtitle1" fontWeight="bold">
-                      {item.Name}
-                    </Typography>
-                    <Typography variant="subtitle2" sx={{ fontStyle: 'italic' }}>
-                      {item.ConditionName}
-                    </Typography>
-                    <Typography variant="body2">
-                      {item.Price === 0 || item.Price === '' ? 'Free' : `$ ${item.Price}`}
-                    </Typography>
+                    <Box display="flex" justifyContent="space-between" alignItems="flex-start">
+                      {/* Left column */}
+                      <Box>
+                        <Typography variant="subtitle1" fontWeight="bold">
+                          {item.Name}
+                        </Typography>
+                        <Typography variant="subtitle2" sx={{ fontStyle: 'italic' }}>
+                          {item.ConditionName}
+                        </Typography>
+                        <Typography variant="body2">
+                          {item.Price === 0 || item.Price === '' ? 'Free' : `$ ${item.Price}`}
+                        </Typography>
+                      </Box>
+
+                      {/* Right column */}
+                      <Typography
+                        variant="subtitle2"
+                        sx={{
+                          fontStyle: 'italic',
+                          maxWidth: '50%',
+                          textAlign: 'right',
+                          wordBreak: 'break-word',
+                        }}
+                      >
+                        {item.CategoryName}
+                      </Typography>
+                    </Box>
                   </CardContent>
                 </Card>
               </Grid>

@@ -89,6 +89,7 @@ const ListingUploader = ({ open, onClose }) => {
                   />
                 }
                 label={cat}
+                TypographyProps={{ fontSize: '0.875rem' }}
               />
             ))}
           </FormGroup>
