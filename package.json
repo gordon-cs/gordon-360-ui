@@ -38,6 +38,7 @@
     "react-to-print": "^2.15.1",
     "react-visibility-sensor": "^5.1.1",
     "slick-carousel": "^1.8.1",
+    "swiper": "^11.2.8",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
