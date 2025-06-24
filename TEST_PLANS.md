@@ -12,9 +12,9 @@ This document outlines a breakdown of test cases to cover features of Gordon360 
   - **Failure and recovery paths**
   - **Security implications (e.g., injection, privacy, access control)**
 
+## Home  Page
 
-
-## 🍽 Dining Balance
+### Dining Balance (done)
 
 - [ ] Test for **expected balance values** (e.g., positive numbers, decimals).
 - [ ] Test for **zero balance** and **negative values**.
@@ -22,7 +22,7 @@ This document outlines a breakdown of test cases to cover features of Gordon360 
 
 
 
-## 🔍 Quick Search
+### Quick Search (done)
 
 - [ ] Valid input returns accurate results.
 - [ ] Invalid or partial inputs return appropriate fallback.
@@ -95,5 +95,10 @@ Covering user-facing editable fields, data privacy, and UI logic:
 
 ## 🏋️‍♀️ Rec IM
 
-**A lot to be tested**
+A lot to be tested
 
+## Other 
+- [x] Enrollment check in
+- [x] App redirect
+- [x] Birthday Message
+- [x] Emergency Info
