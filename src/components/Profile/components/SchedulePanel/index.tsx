@@ -17,6 +17,7 @@ import styles from './ScheduleHeader.module.css';
 import scheduleService, { CourseEvent, Schedule } from 'services/schedule';
 import sessionService from 'services/session';
 import { Profile } from 'services/user';
+import academicTermService from 'services/academicTerm';
 
 type Props = {
   profile: Profile;
@@ -36,15 +37,15 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
     setLoading(true);
 
     Promise.all([
-      scheduleService.getAllSessionSchedules(profile.AD_Username),
-      sessionService.getCurrent(),
-    ]).then(([allSessionSchedules, currentSession]) => {
-      setAllSchedules(allSessionSchedules);
+      scheduleService.getAllTermSchedules(profile.AD_Username),
+      academicTermService.getCurrentTerm(),
+    ]).then(([allTermSchedules, currentTerm]) => {
+      setAllSchedules(allTermSchedules);
       const defaultSchedule =
         // If there is a schedule for the current session, make it d4fault
-        allSessionSchedules.find((s) => s.session.SessionCode === currentSession.SessionCode) ??
+        allTermSchedules.find((s) => s.term.TermCode === currentTerm.TermCode) ??
         // Otherwise, use the most recent session
-        allSessionSchedules[0];
+        allTermSchedules[0];
       setSelectedSchedule(defaultSchedule);
       setLoading(false);
     });
@@ -86,21 +87,28 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
                 <TextField
                   label="Term"
                   id="schedule-session"
-                  value={selectedSchedule?.session.SessionCode ?? ''}
+                  value={
+                    selectedSchedule?.term.TermCode
+                      ? `${selectedSchedule.term.YearCode}${selectedSchedule.term.TermCode}`
+                      : ''
+                  }
                   onChange={(e) =>
                     setSelectedSchedule(
-                      allSchedules.find((s) => s.session.SessionCode === e.target.value) ?? null,
+                      allSchedules.find(
+                        (s) => `${s.term.YearCode}${s.term.TermCode}` === e.target.value,
+                      ) ?? null,
                     )
                   }
                   select
                 >
-                  {allSchedules.map(
-                    ({ session: { SessionDescription: description, SessionCode: code } }) => (
-                      <MenuItem value={code} key={code}>
-                        {description}
-                      </MenuItem>
-                    ),
-                  )}
+                  {allSchedules.map(({ term }) => (
+                    <MenuItem
+                      value={`${term.YearCode}${term.TermCode}`}
+                      key={`${term.YearCode}${term.TermCode}`}
+                    >
+                      {term.Description}
+                    </MenuItem>
+                  ))}
                 </TextField>
               </Grid>
               <Grid lg={7}></Grid>
@@ -131,7 +139,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
         <ScheduleDialog
           onClose={() => setSelectedCourse(null)}
           course={selectedCourse}
-          session={selectedSchedule?.session}
+          term={selectedSchedule?.term}
         />
       )}
     </>

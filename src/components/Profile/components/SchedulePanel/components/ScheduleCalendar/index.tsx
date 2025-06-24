@@ -50,7 +50,7 @@ const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
       defaultView="day"
       resources={scheduleCalendarResources as unknown as object[]}
       formats={{
-        dayHeaderFormat: () => schedule.session.SessionDescription,
+        dayHeaderFormat: () => schedule.term.Description,
       }}
       onSelectEvent={onSelectEvent}
       onKeyPressEvent={(selectedEvent, keyPressEvent) => {
