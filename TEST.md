@@ -1,5 +1,7 @@
 # Frontend Testing Guide
 
+[Test Plans](/TEST_PLANS.md)
+
 ## Overview
 
 This project uses **Jest** with **React Testing Library** to test React components in our frontend application, which is backed by an ASP.NET backend. Tests are colocated with components for better maintainability and clearer context.
