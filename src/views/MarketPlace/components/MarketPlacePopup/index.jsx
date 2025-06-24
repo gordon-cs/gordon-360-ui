@@ -7,12 +7,15 @@ import {
   Grid,
   Box,
   Button,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getProfileImage, getProfileInfo } from 'services/marketplace';
 import Slider from 'react-slick';
+import marketplaceService from 'services/marketplace';
 
 const MarketPlacePopup = ({ open, item, onClose }) => {
   const isOnline = useNetworkStatus();
@@ -20,6 +23,56 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
   const [profileImg, setProfileImg] = useState(null);
   const [profileInfo, setProfileInfo] = useState(null);
   const backendURL = import.meta.env.VITE_API_URL;
+
+  const [menuAnchorEl, setMenuAnchorEl] = useState(null);
+
+  const handleMenuClick = (event) => {
+    setMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setMenuAnchorEl(null);
+  };
+
+  const handleMenuSelect = (option) => {
+    console.log('User selected:', option);
+    switch (option) {
+      case 'Delete':
+        handleDelete();
+        break;
+      case 'Mark as Sold':
+        handleSold();
+        break;
+    }
+    // TODO: Add your logic for each option here (Delete/Edit/Report/Mark as Sold)
+    handleMenuClose();
+  };
+
+  const handleDelete = async () => {
+    try {
+      if (!item?.Id) throw new Error('No item ID found');
+      await marketplaceService.changeListingStatus(item.Id, 'Deleted');
+      console.log('Item deleted successfully');
+      onClose(); // Close the dialog after deletion
+      // Optionally trigger a refresh or notify parent about deletion here
+    } catch (error) {
+      console.error('Failed to delete item:', error);
+      // Optionally show user feedback on error
+    }
+  };
+
+  const handleSold = async () => {
+    try {
+      if (!item?.Id) throw new Error('No item ID found');
+      await marketplaceService.changeListingStatus(item.Id, 'Sold');
+      console.log('Item marked as sold successfully');
+      onClose(); // Close the dialog after deletion
+      // Optionally trigger a refresh or notify parent about deletion here
+    } catch (error) {
+      console.error('Failed to mark item as sold:', error);
+      // Optionally show user feedback on error
+    }
+  };
 
   useEffect(() => {
     if (item?.PosterUsername) {
@@ -235,7 +288,15 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
               <Typography variant="h6" fontWeight="bold">
                 {item.Name}
               </Typography>
-              <Typography sx={{ cursor: 'pointer', fontSize: '1.5rem' }}>⋮</Typography>
+              <Typography sx={{ cursor: 'pointer', fontSize: '1.5rem' }} onClick={handleMenuClick}>
+                ⋮
+              </Typography>
+              <Menu anchorEl={menuAnchorEl} open={Boolean(menuAnchorEl)} onClose={handleMenuClose}>
+                <MenuItem onClick={() => handleMenuSelect('Delete')}>Delete</MenuItem>
+                <MenuItem onClick={() => handleMenuSelect('Edit')}>Edit</MenuItem>
+                <MenuItem onClick={() => handleMenuSelect('Report')}>Report</MenuItem>
+                <MenuItem onClick={() => handleMenuSelect('Mark as Sold')}>Mark as Sold</MenuItem>
+              </Menu>
             </Box>
 
             <Typography variant="h6" sx={{ my: 1 }}>
@@ -256,18 +317,29 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
               {item.Detail}
             </Typography>
 
-            <a
-              href={`mailto:${item.PosterUsername}@gordon.edu?subject=${encodeURIComponent(
-                'Hello from the App',
-              )}&body=${encodeURIComponent(
-                `Hi there,\n\nI wanted to reach out regarding ${item.Name}. Is it still available for purchase?`,
-              )}`}
-              style={{ textDecoration: 'none', display: 'block' }}
-            >
-              <Button variant="contained" sx={{ backgroundColor: 'primary.main' }} fullWidth>
+            {item.StatusId === 2 ? (
+              <Button
+                variant="contained"
+                sx={{ backgroundColor: 'primary.main' }}
+                fullWidth
+                disabled
+              >
                 Contact via Email
               </Button>
-            </a>
+            ) : (
+              <a
+                href={`mailto:${item.PosterUsername}@gordon.edu?subject=${encodeURIComponent(
+                  'Hello from the App',
+                )}&body=${encodeURIComponent(
+                  `Hi there,\n\nI wanted to reach out regarding ${item.Name}. Is it still available for purchase?`,
+                )}`}
+                style={{ textDecoration: 'none', display: 'block' }}
+              >
+                <Button variant="contained" sx={{ backgroundColor: 'primary.main' }} fullWidth>
+                  Contact via Email
+                </Button>
+              </a>
+            )}
           </Grid>
         </Grid>
       </DialogContent>

@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import { InputAdornment } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import marketplaceService from 'services/marketplace';
 
 const categories = [
   'Clothing/Accessories',
@@ -28,14 +29,7 @@ const categories = [
   'Miscellaneous',
 ];
 
-const conditions = [
-  'Like New',
-  'Open Box',
-  'Used - Excellent',
-  'Used - Good',
-  'Used - Fair',
-  'Used - Bad',
-];
+const conditions = ['Like New', 'Open Box', 'Used - Good', 'Used - Fair', 'Used - Poor'];
 
 const ListingUploader = ({ open, onClose }) => {
   const theme = useTheme();
@@ -54,6 +48,43 @@ const ListingUploader = ({ open, onClose }) => {
     !productName.trim() ||
     !description.trim() ||
     uploadedImages.length === 0;
+
+  const handleSubmit = async () => {
+    try {
+      const imagesBase64 = await Promise.all(uploadedImages.map((file) => fileToBase64(file)));
+
+      const listingData = {
+        Name: productName.trim(),
+        Detail: description.trim(),
+        Price: price ? parseFloat(price) : 0,
+        CategoryId: categories.indexOf(selectedCategory) + 1,
+        ConditionId: conditions.indexOf(selectedCondition) + 1,
+        ImagesBase64: imagesBase64,
+      };
+
+      console.log('Submitting listing:', listingData);
+
+      // Call the API now
+      const createdListing = await marketplaceService.createListing(listingData);
+
+      console.log('Listing created:', createdListing);
+
+      // Optionally close dialog or reset form here
+      onClose();
+    } catch (error) {
+      console.error('Error submitting listing:', error);
+    }
+  };
+
+  const fileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result); // keep full data URI
+
+      reader.onerror = (error) => reject(error);
+    });
+  };
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
@@ -260,7 +291,7 @@ const ListingUploader = ({ open, onClose }) => {
           color="secondary"
           sx={{ mt: 3 }}
           disabled={isSubmitDisabled}
-          onClick={onClose}
+          onClick={handleSubmit}
         >
           Submit
         </Button>

@@ -165,8 +165,33 @@ const Marketplace = () => {
                     variant="outlined"
                     className={styles.card}
                     onClick={() => handleCardClick(item)}
-                    sx={{ cursor: 'pointer', borderRadius: '10px' }}
+                    sx={{
+                      cursor: 'pointer',
+                      borderRadius: '10px',
+                      backgroundColor: item.StatusId === 2 ? 'neutral.dark' : 'transparent',
+                      position: 'relative',
+                    }}
                   >
+                    {item.StatusId === 2 && (
+                      <Box
+                        sx={{
+                          position: 'absolute',
+                          top: 8,
+                          right: 8,
+                          backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                          color: 'white',
+                          borderRadius: '20px',
+                          padding: '2px 12px',
+                          fontWeight: 'bold',
+                          fontSize: '1.25rem',
+                          zIndex: 10,
+                          pointerEvents: 'none',
+                          userSelect: 'none',
+                        }}
+                      >
+                        SOLD
+                      </Box>
+                    )}
                     <CardMedia
                       component="div"
                       image={`${backendURL}${item.ImagePaths?.[0]}`}
