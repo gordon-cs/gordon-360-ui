@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Box,
   AppBar,
@@ -14,9 +14,6 @@ import {
   Select,
   InputLabel,
   FormControl,
-  Dialog,
-  DialogContent,
-  DialogActions,
 } from '@mui/material';
 import styles from './MarketPlace.module.scss';
 import DATA from './dummyPosts/dummyPosts';
