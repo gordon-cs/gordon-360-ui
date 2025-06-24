@@ -32,6 +32,7 @@ const Marketplace = () => {
   const [listings, setListings] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [error, setError] = useState(null);
+  const backendURL = import.meta.env.VITE_API_URL;
 
   const [loading, setLoading] = useState(true);
 
@@ -64,6 +65,8 @@ const Marketplace = () => {
         setLoading(false);
       });
   }, []);
+
+  console.log('backendURL:', backendURL);
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -166,7 +169,7 @@ const Marketplace = () => {
                   >
                     <CardMedia
                       component="div"
-                      image={item.ImagePaths?.[0]}
+                      image={`${backendURL}${item.ImagePaths?.[0]}`}
                       title={item.Name}
                       sx={{
                         width: '100%',

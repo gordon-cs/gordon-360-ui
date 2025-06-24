@@ -19,6 +19,7 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
   const navigate = useNavigate();
   const [profileImg, setProfileImg] = useState(null);
   const [profileInfo, setProfileInfo] = useState(null);
+  const backendURL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (item?.PosterUsername) {
@@ -46,8 +47,13 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
 
   if (!item) return null;
 
-  // const images = [item.ImagePaths?.[0], item.ImagePaths?.[1], item.ImagePaths?.[2]].filter(Boolean);
-  const images = item.ImagePaths?.filter(Boolean) || [];
+  const images = (item.ImagePaths?.filter(Boolean) || []).map(
+    (imgPath) => `${backendURL}${imgPath}`,
+  );
+
+  console.log('backendURL:', backendURL);
+  console.log('raw ImagePaths:', item?.ImagePaths);
+  console.log('full image URLs:', images);
 
   const NextArrow = ({ onClick }) => (
     <Box
