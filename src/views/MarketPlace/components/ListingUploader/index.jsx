@@ -53,9 +53,6 @@ const ListingUploader = ({ open, onClose }) => {
     !selectedCondition ||
     !productName.trim() ||
     !description.trim() ||
-    !price.trim() ||
-    isNaN(Number(price)) ||
-    Number(price) <= 0 ||
     uploadedImages.length === 0;
 
   return (
@@ -120,6 +117,7 @@ const ListingUploader = ({ open, onClose }) => {
                   />
                 }
                 label={cond}
+                TypographyProps={{ fontSize: '0.875rem' }}
               />
             ))}
           </FormGroup>
@@ -188,48 +186,48 @@ const ListingUploader = ({ open, onClose }) => {
             const files = Array.from(e.target.files);
             setUploadedImages((prev) => {
               const combined = [...prev, ...files];
-              return combined.slice(0, 3); // max 3 images
+              return combined;
             });
           }}
         />
 
         {/* Image boxes */}
-        <Box sx={{ mt: 3, display: 'flex', gap: 2 }}>
-          {/* First box always */}
-          <Box
-            sx={{
-              width: '15em',
-              height: '15em',
-              borderRadius: 2,
-              backgroundColor: theme.palette.neutral.main,
-              boxShadow: 1,
-              cursor: 'pointer',
-              overflow: 'hidden',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              position: 'relative',
-            }}
-            onClick={() => document.getElementById('upload-images-input').click()}
-          >
-            {uploadedImages[0] ? (
-              <Box
-                component="img"
-                src={URL.createObjectURL(uploadedImages[0])}
-                alt="uploaded-0"
-                sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                onLoad={(e) => URL.revokeObjectURL(e.target.src)}
-              />
-            ) : (
+        <Box
+          sx={{
+            mt: 3,
+            display: 'flex',
+            gap: 2,
+            overflowX: 'auto', // Enable horizontal scrolling
+            maxWidth: 'calc(15em * 3 + 2 * 2rem)', // Width for 3 images plus gaps
+            paddingBottom: 1,
+          }}
+        >
+          {uploadedImages.length === 0 && (
+            <Box
+              sx={{
+                width: '15em',
+                height: '15em',
+                borderRadius: 2,
+                backgroundColor: theme.palette.neutral.main,
+                boxShadow: 1,
+                cursor: 'pointer',
+                overflow: 'hidden',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexShrink: 0,
+              }}
+              onClick={() => document.getElementById('upload-images-input').click()}
+            >
               <Typography variant="body2" color="text.secondary">
                 Upload Image
               </Typography>
-            )}
-          </Box>
+            </Box>
+          )}
 
-          {/* Second box if 2+ images */}
-          {uploadedImages.length > 1 && (
+          {uploadedImages.map((file, index) => (
             <Box
+              key={index}
               sx={{
                 width: '15em',
                 height: '15em',
@@ -241,47 +239,19 @@ const ListingUploader = ({ open, onClose }) => {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                position: 'relative',
+                flexShrink: 0, // Prevent shrinking so width stays fixed
               }}
               onClick={() => document.getElementById('upload-images-input').click()}
             >
               <Box
                 component="img"
-                src={URL.createObjectURL(uploadedImages[1])}
-                alt="uploaded-1"
+                src={URL.createObjectURL(file)}
+                alt={`uploaded-${index}`}
                 sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 onLoad={(e) => URL.revokeObjectURL(e.target.src)}
               />
             </Box>
-          )}
-
-          {/* Third box if 3 images */}
-          {uploadedImages.length > 2 && (
-            <Box
-              sx={{
-                width: '15em',
-                height: '15em',
-                borderRadius: 2,
-                backgroundColor: theme.palette.neutral.main,
-                boxShadow: 1,
-                cursor: 'pointer',
-                overflow: 'hidden',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                position: 'relative',
-              }}
-              onClick={() => document.getElementById('upload-images-input').click()}
-            >
-              <Box
-                component="img"
-                src={URL.createObjectURL(uploadedImages[2])}
-                alt="uploaded-2"
-                sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                onLoad={(e) => URL.revokeObjectURL(e.target.src)}
-              />
-            </Box>
-          )}
+          ))}
         </Box>
 
         <Button

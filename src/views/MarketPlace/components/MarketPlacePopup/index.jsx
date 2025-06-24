@@ -46,7 +46,8 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
 
   if (!item) return null;
 
-  const images = [item.ImagePaths?.[0], item.ImagePaths?.[1], item.ImagePaths?.[2]].filter(Boolean);
+  // const images = [item.ImagePaths?.[0], item.ImagePaths?.[1], item.ImagePaths?.[2]].filter(Boolean);
+  const images = item.ImagePaths?.filter(Boolean) || [];
 
   const NextArrow = ({ onClick }) => (
     <Box
@@ -117,7 +118,7 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
               <Slider
                 nextArrow={<NextArrow />}
                 prevArrow={<PrevArrow />}
-                dots
+                dots={images.length <= 12}
                 infinite
                 speed={500}
                 slidesToShow={1}
