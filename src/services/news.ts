@@ -128,7 +128,6 @@ async function deleteStudentNews(newsID: number): Promise<any> {
 
 /**
  * Edits a student news item
- *
  * @param newsID The id number of the news item to edit
  * @param newData The data to replace
  * @description
