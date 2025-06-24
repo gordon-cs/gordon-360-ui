@@ -20,6 +20,22 @@ export const DATA = [
     uploader: 'josh.miller',
     status: 'For Sale',
   },
+
+  {
+    Id: 1,
+    PostedAt: '2025-06-23T14:11:17.7566667',
+    Name: 'testedit',
+    Price: 80,
+    CategoryId: 1,
+    CategoryName: 'Clothing & Accessories',
+    Detail: 'testing edit',
+    ConditionId: 1,
+    ConditionName: 'Like New',
+    StatusId: 1,
+    StatusName: 'For Sale',
+    ImagePaths: [SportPoster, DiscoPoster, MoviePoster],
+    PosterUsername: 'Josh.Miller',
+  },
   {
     key: '1',
     title: 'Poster 2 Title',

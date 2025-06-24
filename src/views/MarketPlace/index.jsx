@@ -144,8 +144,8 @@ const Marketplace = () => {
                 >
                   <CardMedia
                     component="div"
-                    image={item.image1}
-                    title={item.title}
+                    image={item.ImagePaths?.[0]}
+                    title={item.Name}
                     sx={{
                       width: '100%',
                       paddingTop: '90%', // 1:1 aspect ratio
@@ -155,13 +155,13 @@ const Marketplace = () => {
                   />
                   <CardContent>
                     <Typography variant="subtitle1" fontWeight="bold">
-                      {item.title}
+                      {item.Name}
                     </Typography>
                     <Typography variant="subtitle2" sx={{ fontStyle: 'italic' }}>
-                      {item.condition}
+                      {item.ConditionName}
                     </Typography>
                     <Typography variant="body2">
-                      {item.cost === 0 || item.cost === '' ? 'Free' : `$ ${item.cost}`}
+                      {item.Price === 0 || item.Price === '' ? 'Free' : `$ ${item.Price}`}
                     </Typography>
                   </CardContent>
                 </Card>

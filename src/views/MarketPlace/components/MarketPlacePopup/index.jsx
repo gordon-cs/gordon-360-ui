@@ -21,9 +21,9 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
   const [profileInfo, setProfileInfo] = useState(null);
 
   useEffect(() => {
-    if (item?.uploader) {
+    if (item?.PosterUsername) {
       // Fetch profile image as before
-      getProfileImage(item.uploader)
+      getProfileImage(item.PosterUsername)
         .then((data) => {
           const img = data.pref
             ? `data:image/png;base64,${data.pref}`
@@ -36,17 +36,17 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
         .catch(() => setProfileImg(null));
 
       // Fetch profile info
-      getProfileInfo(item.uploader)
+      getProfileInfo(item.PosterUsername)
         .then((info) => {
           setProfileInfo(info);
         })
         .catch(() => setProfileInfo(null));
     }
-  }, [item?.uploader]);
+  }, [item?.PosterUsername]);
 
   if (!item) return null;
 
-  const images = [item.image1, item.image2, item.image3].filter(Boolean);
+  const images = [item.ImagePaths?.[0], item.ImagePaths?.[1], item.ImagePaths?.[2]].filter(Boolean);
 
   const NextArrow = ({ onClick }) => (
     <Box
@@ -139,7 +139,7 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
                   >
                     <img
                       src={img}
-                      alt={`${item.title} - ${index + 1}`}
+                      alt={`${item.Name} - ${index + 1}`}
                       style={{
                         position: 'absolute',
                         top: 0,
@@ -166,7 +166,7 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
               >
                 <img
                   src={images[0]}
-                  alt={item.title}
+                  alt={item.Name}
                   style={{
                     position: 'absolute',
                     top: 0,
@@ -190,14 +190,14 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
               }}
               onClick={() => {
                 if (isOnline) {
-                  navigate(`/profile/${item.uploader}`);
+                  navigate(`/profile/${item.PosterUsername}`);
                   onClose(); // optional: close dialog when navigating
                 }
               }}
             >
               <img
                 src={profileImg}
-                alt={`${item.uploader}'s profile`}
+                alt={`${item.PosterUsername}'s profile`}
                 style={{
                   width: 40,
                   height: 40,
@@ -208,14 +208,16 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
                 }}
                 onClick={() => {
                   if (isOnline) {
-                    navigate(`/profile/${item.uploader}`);
+                    navigate(`/profile/${item.PosterUsername}`);
                     onClose();
                   }
                 }}
               />
 
               <Typography fontWeight="bold">
-                {profileInfo ? `${profileInfo.NickName} ${profileInfo.LastName}` : item.uploader}
+                {profileInfo
+                  ? `${profileInfo.NickName} ${profileInfo.LastName}`
+                  : item.PosterUsername}
               </Typography>
             </Box>
           </Grid>
@@ -224,13 +226,13 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
           <Grid item xs={12} md={6}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
               <Typography variant="h6" fontWeight="bold">
-                {item.title}
+                {item.Name}
               </Typography>
               <Typography sx={{ cursor: 'pointer', fontSize: '1.5rem' }}>⋮</Typography>
             </Box>
 
             <Typography variant="h6" sx={{ my: 1 }}>
-              $ {item.cost}
+              ${item.Price}
             </Typography>
 
             <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
@@ -240,11 +242,11 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
               variant="body2"
               sx={{ mb: 3, mr: 3, whiteSpace: 'normal', wordBreak: 'break-word' }}
             >
-              {item.desc}
+              {item.Detail}
             </Typography>
 
             <a
-              href={`mailto:${item.uploader}@gordon.edu?subject=${encodeURIComponent(
+              href={`mailto:${item.PosterUsername}@gordon.edu?subject=${encodeURIComponent(
                 'Hello from the App',
               )}&body=${encodeURIComponent(
                 `Hi there,\n\nI wanted to reach out regarding ${item.title}. Is it still available for purchase?`,
