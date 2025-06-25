@@ -9,128 +9,98 @@ import {
 import EditIcon from '@mui/icons-material/Edit';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonSnackbar from 'components/Snackbar';
-import { forwardRef, useState, useCallback, useMemo } from 'react';
+import { forwardRef, useState } from 'react';
 import { IMaskInput } from 'react-imask';
 import userService from 'services/user';
 import styles from './UpdatePhone.module.css';
 
-type SnackbarState = {
-  message: string;
-  severity: AlertColor;
-  open: boolean;
-};
-
-interface UpdatePhoneProps {
-  currentPhone?: string;
-  onUpdateSuccess?: (newPhone: string) => void;
-}
-
-const PhoneMaskInput = forwardRef<HTMLElement, InputBaseComponentProps>((props, ref) => {
-  const { onChange, ...rest } = props;
-  return (
-    <IMaskInput
-      {...rest}
-      mask="(000) 000-0000"
-      unmask={true}
-      onAccept={(value: string) =>
-        onChange?.({ target: { value } } as React.ChangeEvent<HTMLInputElement>)
-      }
-      overwrite
-      inputRef={ref as React.Ref<HTMLInputElement>}
-    />
-  );
-});
-
-const UpdatePhone = ({ currentPhone, onUpdateSuccess }: UpdatePhoneProps) => {
+const UpdatePhone = () => {
   const [open, setOpen] = useState(false);
   const [mobilePhoneNumber, setMobilePhoneNumber] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [snackbar, setSnackbar] = useState<SnackbarState>({
-    message: '',
-    severity: 'info',
-    open: false,
-  });
-
-  const isValidPhone = useMemo(() => {
-    return /^\d{10}$/.test(mobilePhoneNumber.replace(/\D/g, ''));
-  }, [mobilePhoneNumber]);
+  const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
 
   const handleSubmit = async () => {
-    setLoading(true);
     try {
       await userService.setMobilePhoneNumber(mobilePhoneNumber);
-      if (onUpdateSuccess) onUpdateSuccess(mobilePhoneNumber);
-      showSnackbar('Your phone number will update within a couple hours.', 'success');
-    } catch (error) {
-      showSnackbar(
-        error instanceof Error
-          ? error.message
-          : 'Phone number failed to update. Please contact CTS.',
-        'error',
-      );
+      createSnackbar('Your phone number will update within a couple hours.', 'success');
+    } catch {
+      createSnackbar('Phone number failed to update. Please contact CTS.', 'error');
     }
-    setLoading(false);
     setOpen(false);
   };
 
-  const showSnackbar = useCallback((message: string, severity: AlertColor) => {
+  const createSnackbar = (message: string, severity: AlertColor) => {
     setSnackbar({ message, severity, open: true });
-  }, []);
-
-  const handleOpen = () => {
-    setMobilePhoneNumber(currentPhone ?? '');
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    setMobilePhoneNumber('');
   };
 
   return (
     <div>
       <IconButton
         className={styles.edit_button}
-        onClick={handleOpen}
+        onClick={() => setOpen(true)}
         size="large"
         aria-label="Update mobile phone number"
       >
         <EditIcon fontSize="small" />
       </IconButton>
-
       <GordonDialogBox
         open={open}
-        onClose={handleClose}
+        onClose={() => setOpen(false)}
         title="Update Phone Number"
         buttonName="UPDATE"
         buttonClicked={handleSubmit}
-        isButtonDisabled={loading || !isValidPhone}
+        isButtonDisabled={mobilePhoneNumber.replace(/[-()\s\D]/g, '').length !== 10}
         cancelButtonName="CANCEL"
-        cancelButtonClicked={handleClose}
+        cancelButtonClicked={() => setOpen(false)}
       >
-        <FormControl className={styles.form} fullWidth>
-          <InputLabel htmlFor="mobile-phone-number-input">Phone Number</InputLabel>
+        <FormControl className={styles.form}>
+          <InputLabel htmlFor="formatted-text-mask-input">Phone Number</InputLabel>
           <Input
             type="tel"
             id="mobile-phone-number-input"
+            name="mobilePhoneNumber"
             value={mobilePhoneNumber}
-            onChange={(e) => setMobilePhoneNumber(e.target.value)}
-            inputComponent={PhoneMaskInput}
+            onChange={(event) => setMobilePhoneNumber(event.target.value)}
+            inputComponent={phoneMaskUS}
             required
             autoFocus
-            aria-label="Mobile phone number"
           />
         </FormControl>
       </GordonDialogBox>
-
       <GordonSnackbar
         open={snackbar.open}
-        severity={snackbar.severity}
+        severity={snackbar.severity as AlertColor}
         text={snackbar.message}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
       />
     </div>
   );
 };
+
+// From material ui website
+// https://material-ui.com/components/text-fields/#integration-with-3rd-party-input-libraries
+const phoneMaskUS = forwardRef(
+  (
+    props: {
+      onChange: (name: string | undefined, value: string) => void;
+      name?: string;
+    } & InputBaseComponentProps,
+    ref,
+  ) => {
+    const { onChange, ...other } = props;
+
+    return (
+      <IMaskInput
+        {...other}
+        ref={ref}
+        mask="(000) 000-0000"
+        placeholderChar={'\u2000'}
+        unmask={true}
+        onAccept={(value) => onChange(props.name, value)}
+        overwrite
+      />
+    );
+  },
+);
 
 export default UpdatePhone;
