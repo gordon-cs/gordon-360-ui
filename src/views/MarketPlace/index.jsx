@@ -45,6 +45,14 @@ const Marketplace = () => {
 
   const [loading, setLoading] = useState(true);
 
+  const [search, setSearch] = useState('');
+  const [categoryId, setCategoryId] = useState(undefined); // number or undefined
+  const [statusId, setStatusId] = useState(undefined); // e.g., 2 for Sold or undefined
+  const [minPrice, setMinPrice] = useState(undefined);
+  const [maxPrice, setMaxPrice] = useState(undefined);
+  const [sortBy, setSortBy] = useState(undefined);
+  const [desc, setDesc] = useState(false);
+
   const [dialogOpen, setDialogOpen] = useState(false);
   const [uploaderOpen, setUploaderOpen] = useState(false);
 
@@ -70,10 +78,20 @@ const Marketplace = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    setLoading(true);
     marketplaceService
-      .getAllListings()
+      .getFilteredListings(
+        categoryId,
+        undefined, // statusId (if you want to filter by status, add state for it)
+        minPrice,
+        maxPrice,
+        search,
+        sortBy,
+        desc,
+      )
       .then((data) => {
         setListings(data);
+        setError(null);
       })
       .catch(() => {
         setError('Failed to load marketplace listings');
@@ -81,7 +99,7 @@ const Marketplace = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [categoryId, minPrice, maxPrice, search, sortBy, desc]);
 
   console.log('backendURL:', backendURL);
 
@@ -120,16 +138,31 @@ const Marketplace = () => {
 
           {/* Search and Filters */}
           <Box sx={{ p: 2, mt: 2 }}>
-            <TextField variant="outlined" placeholder="Search" fullWidth sx={{ mb: 2 }} />
+            <TextField
+              variant="outlined"
+              placeholder="Search"
+              fullWidth
+              sx={{ mb: 2 }}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
 
             <Box
               sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'space-between' }}
             >
               <FormControl className={`gc360_header ${styles.form}`}>
                 <InputLabel>Category</InputLabel>
-                <Select label="Category">
-                  {categories.map((cat) => (
-                    <MenuItem key={cat} value={cat}>
+                <Select
+                  label="Category"
+                  value={categoryId || ''}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setCategoryId(val === '' ? undefined : Number(val));
+                  }}
+                >
+                  <MenuItem value="">All</MenuItem>
+                  {categories.map((cat, idx) => (
+                    <MenuItem key={cat} value={idx + 1}>
                       {cat}
                     </MenuItem>
                   ))}
@@ -138,7 +171,19 @@ const Marketplace = () => {
 
               <FormControl className={`gc360_header ${styles.form}`}>
                 <InputLabel>Price</InputLabel>
-                <Select label="Price">
+                <Select
+                  label="Price"
+                  value={sortBy === 'Price' ? (desc ? 'High to Low' : 'Low to High') : 'All'}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === 'All') {
+                      setSortBy(undefined);
+                    } else {
+                      setSortBy('Price');
+                      setDesc(val === 'High to Low');
+                    }
+                  }}
+                >
                   {prices.map((price) => (
                     <MenuItem key={price} value={price}>
                       {price}
@@ -149,7 +194,15 @@ const Marketplace = () => {
 
               <FormControl className={`gc360_header ${styles.form}`}>
                 <InputLabel>Sort</InputLabel>
-                <Select label="Sort">
+                <Select
+                  label="Sort"
+                  value={sortBy || ''}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setSortBy(val === '' ? undefined : val);
+                  }}
+                >
+                  <MenuItem value="">None</MenuItem>
                   {sorts.map((sort) => (
                     <MenuItem key={sort} value={sort}>
                       {sort}
@@ -160,10 +213,16 @@ const Marketplace = () => {
 
               <FormControl className={`gc360_header ${styles.form}`}>
                 <InputLabel>Order</InputLabel>
-                <Select label="Order">
-                  {order.map((sort) => (
-                    <MenuItem key={sort} value={sort}>
-                      {sort}
+                <Select
+                  label="Order"
+                  value={desc ? 'Descending' : 'Ascending'}
+                  onChange={(e) => {
+                    setDesc(e.target.value === 'Descending');
+                  }}
+                >
+                  {order.map((o) => (
+                    <MenuItem key={o} value={o}>
+                      {o}
                     </MenuItem>
                   ))}
                 </Select>
