@@ -288,7 +288,6 @@ Thank you
                 />
               </Box>
             )}
-
             <Box
               sx={{
                 display: 'flex',

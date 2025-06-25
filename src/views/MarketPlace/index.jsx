@@ -24,9 +24,18 @@ import MarketPlacePopup from './components/MarketPlacePopup';
 import ListingUploader from './components/ListingUploader';
 import marketplaceService from 'services/marketplace';
 
-const categories = ['All', 'Books', 'Clothing', 'Electronics'];
+const categories = [
+  'Clothing/Accessories',
+  'School Supplies',
+  'Electronics',
+  'Appliances',
+  'Services',
+  'Dorm Essentials',
+  'Miscellaneous',
+];
 const prices = ['All', 'Low to High', 'High to Low'];
-const sorts = ['Newest', 'Oldest'];
+const sorts = ['Date', 'Price', 'Title'];
+const order = ['Ascending', 'Descending'];
 
 const Marketplace = () => {
   const [listings, setListings] = useState([]);
@@ -142,6 +151,17 @@ const Marketplace = () => {
                 <InputLabel>Sort</InputLabel>
                 <Select label="Sort">
                   {sorts.map((sort) => (
+                    <MenuItem key={sort} value={sort}>
+                      {sort}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <FormControl className={`gc360_header ${styles.form}`}>
+                <InputLabel>Order</InputLabel>
+                <Select label="Order">
+                  {order.map((sort) => (
                     <MenuItem key={sort} value={sort}>
                       {sort}
                     </MenuItem>
