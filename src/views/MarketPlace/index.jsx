@@ -109,7 +109,13 @@ const Marketplace = () => {
           justifyContent: 'center',
         }}
       >
-        <Box sx={{ backgroundColor: 'neutral.light', borderRadius: '10px' }}>
+        <Box
+          sx={{
+            backgroundColor: 'neutral.light',
+            borderRadius: '10px',
+            boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)', // Add this
+          }}
+        >
           {/* Header */}
           <AppBar
             position="static"
@@ -257,7 +263,15 @@ const Marketplace = () => {
         </Box>
 
         {/* Listings */}
-        <Box sx={{ mt: 3, p: 2, backgroundColor: 'neutral.light', borderRadius: 1 }}>
+        <Box
+          sx={{
+            mt: 3,
+            p: 2,
+            backgroundColor: 'neutral.light',
+            borderRadius: '10px',
+            boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
+          }}
+        >
           <Grid container spacing={3}>
             {loading && <Typography>Loading listings...</Typography>}
             {error && <Typography color="error">{error}</Typography>}
