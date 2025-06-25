@@ -16,6 +16,7 @@ import { useEffect, useState } from 'react';
 import { getProfileImage, getProfileInfo } from 'services/marketplace';
 import Slider from 'react-slick';
 import marketplaceService from 'services/marketplace';
+import { msalInstance } from 'index';
 
 const MarketPlacePopup = ({ open, item, onClose }) => {
   const isOnline = useNetworkStatus();
@@ -23,6 +24,8 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
   const [profileImg, setProfileImg] = useState(null);
   const [profileInfo, setProfileInfo] = useState(null);
   const backendURL = import.meta.env.VITE_API_URL;
+  const currentUsername = msalInstance.getActiveAccount()?.username;
+  const currentUsernameShort = currentUsername?.split('@')[0];
 
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
 
@@ -41,6 +44,9 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
         handleDelete();
         break;
       case 'Mark as Sold':
+        handleSold();
+        break;
+      case 'Unmark as Sold':
         handleSold();
         break;
     }
@@ -62,14 +68,21 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
   };
 
   const handleSold = async () => {
+    console.log('Item Status: ', item.StatusId);
     try {
       if (!item?.Id) throw new Error('No item ID found');
-      await marketplaceService.changeListingStatus(item.Id, 'Sold');
-      console.log('Item marked as sold successfully');
-      onClose(); // Close the dialog after deletion
-      // Optionally trigger a refresh or notify parent about deletion here
+
+      if (item.StatusId === 2) {
+        await marketplaceService.changeListingStatus(item.Id, 'For Sale');
+        console.log('Item marked as unsold successfully');
+      } else {
+        await marketplaceService.changeListingStatus(item.Id, 'Sold');
+        console.log('Item marked as sold successfully');
+      }
+
+      onClose(); // Close the dialog after status change
     } catch (error) {
-      console.error('Failed to mark item as sold:', error);
+      console.error('Failed to change item status:', error);
       // Optionally show user feedback on error
     }
   };
@@ -156,6 +169,9 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
       ‹
     </Box>
   );
+
+  console.log('currentUsername:', currentUsername);
+  console.log('item.PosterUsername:', item.PosterUsername);
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
@@ -291,11 +307,32 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
               <Typography sx={{ cursor: 'pointer', fontSize: '1.5rem' }} onClick={handleMenuClick}>
                 ⋮
               </Typography>
+
               <Menu anchorEl={menuAnchorEl} open={Boolean(menuAnchorEl)} onClose={handleMenuClose}>
-                <MenuItem onClick={() => handleMenuSelect('Delete')}>Delete</MenuItem>
-                <MenuItem onClick={() => handleMenuSelect('Edit')}>Edit</MenuItem>
-                <MenuItem onClick={() => handleMenuSelect('Report')}>Report</MenuItem>
-                <MenuItem onClick={() => handleMenuSelect('Mark as Sold')}>Mark as Sold</MenuItem>
+                {currentUsernameShort === item.PosterUsername ? (
+                  <>
+                    <MenuItem onClick={() => handleMenuSelect('Edit')}>Edit</MenuItem>
+                    {item.StatusId === 2 ? (
+                      <MenuItem onClick={() => handleMenuSelect('Mark as Sold')}>
+                        Unmark as Sold
+                      </MenuItem>
+                    ) : (
+                      <MenuItem onClick={() => handleMenuSelect('Mark as Sold')}>
+                        Mark as Sold
+                      </MenuItem>
+                    )}
+                    <MenuItem onClick={() => handleMenuSelect('Delete')} sx={{ color: 'red' }}>
+                      Delete
+                    </MenuItem>
+                    <MenuItem onClick={() => handleMenuSelect('Report')} sx={{ color: 'red' }}>
+                      Report
+                    </MenuItem>
+                  </>
+                ) : (
+                  <MenuItem onClick={() => handleMenuSelect('Report')} sx={{ color: 'red' }}>
+                    Report
+                  </MenuItem>
+                )}
               </Menu>
             </Box>
 

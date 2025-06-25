@@ -225,7 +225,7 @@ const Marketplace = () => {
                             fontStyle: 'italic',
                             maxWidth: '50%',
                             textAlign: 'right',
-                            wordBreak: 'break-word',
+                            wordBreak: 'normal',
                           }}
                         >
                           {item.CategoryName}

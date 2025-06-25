@@ -12,8 +12,6 @@ import {
   Checkbox,
   FormControlLabel,
   FormGroup,
-  FormControl,
-  FormHelperText,
 } from '@mui/material';
 import { InputAdornment } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -52,6 +50,7 @@ const ListingUploader = ({ open, onClose }) => {
   const handleSubmit = async () => {
     try {
       const imagesBase64 = await Promise.all(uploadedImages.map((file) => fileToBase64(file)));
+      console.log('Base64 images: ', imagesBase64);
 
       const listingData = {
         Name: productName.trim(),
@@ -163,6 +162,8 @@ const ListingUploader = ({ open, onClose }) => {
               fullWidth
               value={productName}
               onChange={(e) => setProductName(e.target.value)}
+              inputProps={{ maxLength: 50 }}
+              helperText={`${productName.length}/50`}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -252,7 +253,7 @@ const ListingUploader = ({ open, onClose }) => {
               onClick={() => document.getElementById('upload-images-input').click()}
             >
               <Typography variant="body2" color="text.secondary">
-                Upload Image
+                Upload Image (jpg, jpeg, png)
               </Typography>
             </Box>
           )}
