@@ -23,7 +23,6 @@ import PsychologyIcon from '@mui/icons-material/Psychology';
 import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import CallIcon from '@mui/icons-material/Call';
 import ReportIcon from '@mui/icons-material/Report';
-import metzIcon from '/src/views/Links/images//metz.png';
 import styles from '/src/views/Links/Links.module.scss';
 import { useUser } from 'hooks';
 
@@ -165,20 +164,6 @@ const Links = () => {
                 target="_blank"
               >
                 <ListItemText primary="iAttended" />
-              </Link>
-            </ListItem>
-            <ListItem>
-              <ListItemIcon>
-                <img src={metzIcon} alt={'MetzIcon Logo'} className={styles.icon_style} />
-              </ListItemIcon>
-              <Link
-                href="https://www.gordonmetz.com/"
-                underline="hover"
-                className={`gc360_text_link`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <ListItemText primary="Metz" />
               </Link>
             </ListItem>
           </List>
