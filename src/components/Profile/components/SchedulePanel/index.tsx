@@ -41,10 +41,12 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
       academicTermService.getCurrentTerm(),
     ]).then(([allTermSchedules, currentTerm]) => {
       setAllSchedules(allTermSchedules);
-      const currentTermCode = `${currentTerm.YearCode}${currentTerm.TermCode}`;
       const defaultSchedule =
         // If there is a schedule for the current term, make it d4fault
-        allTermSchedules.find((s) => `${s.term.YearCode}${s.term.TermCode}` === currentTermCode) ??
+        allTermSchedules.find(
+          (s) =>
+            s.term.YearCode === currentTerm.YearCode && s.term.TermCode === currentTerm.TermCode,
+        ) ??
         // Otherwise, use the most recent term
         allTermSchedules[0];
       setSelectedSchedule(defaultSchedule);
