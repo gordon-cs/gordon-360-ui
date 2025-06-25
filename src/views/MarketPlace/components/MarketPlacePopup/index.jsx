@@ -49,6 +49,9 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
       case 'Unmark as Sold':
         handleSold();
         break;
+      case 'Report':
+        handleReport();
+        break;
     }
     // TODO: Add your logic for each option here (Delete/Edit/Report/Mark as Sold)
     handleMenuClose();
@@ -85,6 +88,29 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
       console.error('Failed to change item status:', error);
       // Optionally show user feedback on error
     }
+  };
+
+  const handleReport = () => {
+    const subject = `Reported Marketplace Listing - "${item.Name}" (ID: ${item.Id})`;
+
+    const body = `
+Hello Student Life,
+
+A marketplace post has been reported by a student as potentially inappropriate or against the college guidelines.
+
+Reported Post Details:
+- Title: ${item.Name}
+- Post ID: ${item.Id}
+- Posted by: ${item.PosterUsername}
+- Reported by: ${currentUsername}
+
+Please review the post at your earliest convenience.
+
+Thank you
+`.trim();
+
+    const mailtoLink = `mailto:StudentLife@gordon.edu?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailtoLink;
   };
 
   useEffect(() => {
@@ -353,8 +379,16 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
             >
               {item.Detail}
             </Typography>
-
-            {item.StatusId === 2 ? (
+            {currentUsernameShort === item.PosterUsername ? (
+              <Button
+                variant="contained"
+                sx={{ backgroundColor: 'warning.main' }}
+                fullWidth
+                onClick={() => handleMenuSelect('Mark as Sold')}
+              >
+                {item.StatusId === 2 ? 'Unmark as Sold' : 'Mark as Sold'}
+              </Button>
+            ) : item.StatusId === 2 ? (
               <Button
                 variant="contained"
                 sx={{ backgroundColor: 'primary.main' }}
