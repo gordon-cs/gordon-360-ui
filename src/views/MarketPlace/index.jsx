@@ -11,10 +11,12 @@ import {
   Card,
   CardContent,
   CardMedia,
+  Checkbox,
   MenuItem,
   Select,
   InputLabel,
   FormControl,
+  FormControlLabel,
 } from '@mui/material';
 import styles from './MarketPlace.module.scss';
 import DATA from './dummyPosts/dummyPosts';
@@ -23,6 +25,7 @@ import { useNavigate } from 'react-router-dom';
 import MarketPlacePopup from './components/MarketPlacePopup';
 import ListingUploader from './components/ListingUploader';
 import marketplaceService from 'services/marketplace';
+import { CheckBox } from '@mui/icons-material';
 
 const categories = [
   'Clothing/Accessories',
@@ -33,7 +36,6 @@ const categories = [
   'Dorm Essentials',
   'Miscellaneous',
 ];
-const prices = ['All', 'Low to High', 'High to Low'];
 const sorts = ['Date', 'Price', 'Title'];
 const order = ['Ascending', 'Descending'];
 
@@ -50,7 +52,7 @@ const Marketplace = () => {
   const [statusId, setStatusId] = useState(undefined); // e.g., 2 for Sold or undefined
   const [minPrice, setMinPrice] = useState(undefined);
   const [maxPrice, setMaxPrice] = useState(undefined);
-  const [sortBy, setSortBy] = useState(undefined);
+  const [sortBy, setSortBy] = useState('Date');
   const [desc, setDesc] = useState(false);
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -80,15 +82,7 @@ const Marketplace = () => {
   useEffect(() => {
     setLoading(true);
     marketplaceService
-      .getFilteredListings(
-        categoryId,
-        undefined, // statusId (if you want to filter by status, add state for it)
-        minPrice,
-        maxPrice,
-        search,
-        sortBy,
-        desc,
-      )
+      .getFilteredListings(categoryId, statusId, minPrice, maxPrice, search, sortBy, desc)
       .then((data) => {
         setListings(data);
         setError(null);
@@ -99,7 +93,7 @@ const Marketplace = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [categoryId, minPrice, maxPrice, search, sortBy, desc]);
+  }, [categoryId, statusId, minPrice, maxPrice, search, sortBy, desc]);
 
   console.log('backendURL:', backendURL);
 
@@ -138,14 +132,30 @@ const Marketplace = () => {
 
           {/* Search and Filters */}
           <Box sx={{ p: 2, mt: 2 }}>
-            <TextField
-              variant="outlined"
-              placeholder="Search"
-              fullWidth
-              sx={{ mb: 2 }}
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+            <Grid container spacing={2} sx={{ mb: 2 }}>
+              <Grid item xs={9}>
+                <TextField
+                  variant="outlined"
+                  placeholder="Search"
+                  fullWidth
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={3} display="flex" alignItems="center">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={statusId === 1}
+                      onChange={(e) => {
+                        setStatusId(e.target.checked ? 1 : undefined);
+                      }}
+                    />
+                  }
+                  label="Filter Out Sold Items"
+                />
+              </Grid>
+            </Grid>
 
             <Box
               sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'space-between' }}
@@ -170,26 +180,34 @@ const Marketplace = () => {
               </FormControl>
 
               <FormControl className={`gc360_header ${styles.form}`}>
-                <InputLabel>Price</InputLabel>
-                <Select
-                  label="Price"
-                  value={sortBy === 'Price' ? (desc ? 'High to Low' : 'Low to High') : 'All'}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    if (val === 'All') {
-                      setSortBy(undefined);
-                    } else {
-                      setSortBy('Price');
-                      setDesc(val === 'High to Low');
-                    }
-                  }}
-                >
-                  {prices.map((price) => (
-                    <MenuItem key={price} value={price}>
-                      {price}
-                    </MenuItem>
-                  ))}
-                </Select>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <TextField
+                      type="number"
+                      inputProps={{ step: 1, min: 0 }}
+                      variant="outlined"
+                      placeholder="Min Price"
+                      fullWidth
+                      value={minPrice ?? ''}
+                      onChange={(e) =>
+                        setMinPrice(e.target.value === '' ? undefined : Number(e.target.value))
+                      }
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      type="number"
+                      inputProps={{ step: 1, min: 0 }}
+                      variant="outlined"
+                      placeholder="Max Price"
+                      fullWidth
+                      value={maxPrice ?? ''}
+                      onChange={(e) =>
+                        setMaxPrice(e.target.value === '' ? undefined : Number(e.target.value))
+                      }
+                    />
+                  </Grid>
+                </Grid>
               </FormControl>
 
               <FormControl className={`gc360_header ${styles.form}`}>
@@ -202,7 +220,6 @@ const Marketplace = () => {
                     setSortBy(val === '' ? undefined : val);
                   }}
                 >
-                  <MenuItem value="">None</MenuItem>
                   {sorts.map((sort) => (
                     <MenuItem key={sort} value={sort}>
                       {sort}
