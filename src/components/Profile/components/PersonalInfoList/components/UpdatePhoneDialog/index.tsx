@@ -60,7 +60,6 @@ const UpdatePhone = ({ currentPhone, onUpdateSuccess }: UpdatePhoneProps) => {
     try {
       await userService.setMobilePhoneNumber(mobilePhoneNumber);
       if (onUpdateSuccess) onUpdateSuccess(mobilePhoneNumber);
-      const updatedProfile = await userService.getProfileInfo();
       showSnackbar('Your phone number will update within a couple hours.', 'success');
     } catch (error) {
       showSnackbar(
