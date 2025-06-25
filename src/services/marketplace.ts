@@ -119,18 +119,26 @@ const changeListingStatus = (listingId: number, status: string): Promise<Marketp
 
 /**
  * Get filtered listings.
+ * Now supports search, sortBy, and desc parameters.
  */
+
 const getFilteredListings = (
   categoryId?: number,
   statusId?: number,
   minPrice?: number,
   maxPrice?: number,
+  search?: string,
+  sortBy?: string,
+  desc?: boolean,
 ): Promise<MarketplaceListing[]> => {
   const query: Record<string, string> = {};
   if (categoryId !== undefined) query.categoryId = categoryId.toString();
   if (statusId !== undefined) query.statusId = statusId.toString();
   if (minPrice !== undefined) query.minPrice = minPrice.toString();
   if (maxPrice !== undefined) query.maxPrice = maxPrice.toString();
+  if (search !== undefined) query.search = search;
+  if (sortBy !== undefined) query.sortBy = sortBy;
+  if (desc !== undefined) query.desc = desc ? 'true' : 'false';
   return http.get<MarketplaceListing[]>(`/marketplace/filter${http.toQueryString(query)}`);
 };
 

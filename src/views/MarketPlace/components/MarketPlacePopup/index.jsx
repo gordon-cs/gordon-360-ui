@@ -17,6 +17,7 @@ import { getProfileImage, getProfileInfo } from 'services/marketplace';
 import Slider from 'react-slick';
 import marketplaceService from 'services/marketplace';
 import { msalInstance } from 'index';
+import styles from '../../MarketPlace.module.scss';
 
 const MarketPlacePopup = ({ open, item, onClose, onStatusChange }) => {
   const isOnline = useNetworkStatus();
@@ -112,7 +113,8 @@ Please review the post at your earliest convenience.
 Thank you
 `.trim();
 
-    const mailtoLink = `mailto:StudentLife@gordon.edu?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const mailtoLink = `mailto:StudentLife@gordon.edu?subject=${encodeURIComponent(subject)}
+    &body=${encodeURIComponent(body)}`;
     window.location.href = mailtoLink;
   };
 
@@ -219,45 +221,47 @@ Thank you
           {/* Left - Image and Seller */}
           <Grid item xs={12} md={6}>
             {images.length > 1 ? (
-              <Slider
-                nextArrow={<NextArrow />}
-                prevArrow={<PrevArrow />}
-                dots={images.length <= 12}
-                infinite
-                speed={500}
-                slidesToShow={1}
-                slidesToScroll={1}
-                swipeToSlide={true}
-                accessibility={true}
-              >
-                {images.map((img, index) => (
-                  <Box
-                    key={index}
-                    sx={{
-                      width: '100%',
-                      height: 0,
-                      paddingTop: '100%',
-                      position: 'relative',
-                      borderRadius: 2,
-                      backgroundColor: '#000',
-                    }}
-                  >
-                    <img
-                      src={img}
-                      alt={`${item.Name} - ${index + 1}`}
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
+              <div className={styles.sliderWrapper}>
+                <Slider
+                  nextArrow={<NextArrow />}
+                  prevArrow={<PrevArrow />}
+                  dots={images.length <= 12}
+                  infinite
+                  speed={500}
+                  slidesToShow={1}
+                  slidesToScroll={1}
+                  swipeToSlide={true}
+                  accessibility={true}
+                >
+                  {images.map((img, index) => (
+                    <Box
+                      key={index}
+                      sx={{
                         width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        borderRadius: 8,
+                        height: 0,
+                        paddingTop: '100%',
+                        position: 'relative',
+                        borderRadius: 2,
+                        backgroundColor: '#000',
                       }}
-                    />
-                  </Box>
-                ))}
-              </Slider>
+                    >
+                      <img
+                        src={img}
+                        alt={`${item.Name} - ${index + 1}`}
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          borderRadius: 8,
+                        }}
+                      />
+                    </Box>
+                  ))}
+                </Slider>
+              </div>
             ) : (
               <Box
                 sx={{

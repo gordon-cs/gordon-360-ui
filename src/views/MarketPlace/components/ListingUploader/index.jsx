@@ -204,6 +204,8 @@ const ListingUploader = ({ open, onClose }) => {
           sx={{ mt: 2 }}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          inputProps={{ maxLength: 1000 }}
+          helperText={`${description.length}/1000`}
         />
 
         {/* Upload Images Placeholder */}

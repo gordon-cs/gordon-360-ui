@@ -47,3 +47,25 @@
   transform: translateY(0);
   pointer-events: auto;
 }
+
+.sliderWrapper {
+  :global {
+    // Active dot
+    .slick-dots li.slick-active button:before {
+      font-size: 12px;
+      color: var(--mui-palette-secondary-main) !important;
+    }
+
+    // Inactive but hovered
+    .slick-dots li:not(.slick-active):hover button:before {
+      font-size: 12px;
+      color: var(--mui-palette-primary-main) !important;
+    }
+
+    // Inactive, non-hovered dots
+    .slick-dots li:not(.slick-active):not(:hover) button:before {
+      font-size: 12px;
+      color: var(--mui-palette-neutral-contrastText) !important;
+    }
+  }
+}
