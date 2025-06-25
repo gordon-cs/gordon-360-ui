@@ -283,7 +283,7 @@ const getMailboxInformation = (): Promise<{ Combination: string }> =>
 const getVisibilityGroups = (): Promise<string[]> => http.get(`profiles/visibility_groups`);
 
 const getPrivacySetting = (username: string): Promise<string> =>
-  http.get(`profiles/${username}/privacy_setting/`);
+  http.get(`profiles/${username}/privacy_settings/`);
 
 const getMailStops = (): Promise<string[]> => http.get(`profiles/mailstops`);
 
