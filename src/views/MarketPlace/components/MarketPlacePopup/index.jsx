@@ -18,7 +18,7 @@ import Slider from 'react-slick';
 import marketplaceService from 'services/marketplace';
 import { msalInstance } from 'index';
 
-const MarketPlacePopup = ({ open, item, onClose }) => {
+const MarketPlacePopup = ({ open, item, onClose, onStatusChange }) => {
   const isOnline = useNetworkStatus();
   const navigate = useNavigate();
   const [profileImg, setProfileImg] = useState(null);
@@ -61,6 +61,7 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
     try {
       if (!item?.Id) throw new Error('No item ID found');
       await marketplaceService.changeListingStatus(item.Id, 'Deleted');
+      onStatusChange(item.Id, 3);
       console.log('Item deleted successfully');
       onClose(); // Close the dialog after deletion
       // Optionally trigger a refresh or notify parent about deletion here
@@ -77,9 +78,11 @@ const MarketPlacePopup = ({ open, item, onClose }) => {
 
       if (item.StatusId === 2) {
         await marketplaceService.changeListingStatus(item.Id, 'For Sale');
+        onStatusChange(item.Id, 1);
         console.log('Item marked as unsold successfully');
       } else {
         await marketplaceService.changeListingStatus(item.Id, 'Sold');
+        onStatusChange(item.Id, 2);
         console.log('Item marked as sold successfully');
       }
 

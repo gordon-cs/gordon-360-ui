@@ -39,6 +39,14 @@ const Marketplace = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [uploaderOpen, setUploaderOpen] = useState(false);
 
+  const updateListingStatus = (id, newStatusId) => {
+    setListings((prevListings) =>
+      prevListings.map((listing) =>
+        listing.Id === id ? { ...listing, StatusId: newStatusId } : listing,
+      ),
+    );
+  };
+
   const handleCardClick = (item) => {
     setSelectedItem(item);
     setDialogOpen(true);
@@ -239,7 +247,13 @@ const Marketplace = () => {
         </Box>
       </Box>
       {/** Dialog for when a card is clicked */}
-      <MarketPlacePopup open={dialogOpen} item={selectedItem} onClose={handleDialogClose} />
+      <MarketPlacePopup
+        open={dialogOpen}
+        item={selectedItem}
+        onClose={handleDialogClose}
+        onStatusChange={updateListingStatus}
+      />
+
       {/** Dialog for uploading a post */}
       <ListingUploader open={uploaderOpen} onClose={() => setUploaderOpen(false)} />
     </Box>
