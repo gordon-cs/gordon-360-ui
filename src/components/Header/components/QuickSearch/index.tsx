@@ -1,14 +1,7 @@
-import {
-  InputAdornment,
-  MenuItem,
-  TextField,
-  Typography,
-  Autocomplete,
-  Tooltip,
-} from '@mui/material';
+import { InputAdornment, MenuItem, TextField, Typography, Autocomplete } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useNetworkStatus, useWindowSize } from 'hooks';
-import { Dispatch, HTMLAttributes, useEffect, useReducer, useState } from 'react';
+import { Dispatch, HTMLAttributes, useReducer } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import quickSearchService from 'services/quickSearch';
 import styles from './QuickSearch.module.css';
@@ -80,10 +73,7 @@ const performSearch = debounce(
 
     const [searchTime, searchResults] = await resultsPromise;
 
-    dispatch({
-      type: 'LOAD',
-      payload: { searchTime, searchResults, highlightRegex },
-    });
+    dispatch({ type: 'LOAD', payload: { searchTime, searchResults, highlightRegex } });
   },
   400,
 );
@@ -109,8 +99,6 @@ const GordonQuickSearch = ({
   onSearchSubmit,
 }: Props) => {
   const [state, dispatch] = useReducer(reducer, default_state);
-  const [currentQuery, setCurrentQuery] = useState('');
-  const [arrowSimulatedForQuery, setArrowSimulatedForQuery] = useState<string | null>(null);
   const navigate = useNavigate();
   const [width] = useWindowSize();
   const isOnline = useNetworkStatus();
@@ -119,9 +107,8 @@ const GordonQuickSearch = ({
     : customPlaceholderText ?? (width < BREAKPOINT_WIDTH ? 'People' : 'People Search');
 
   const handleInput = (_event: React.SyntheticEvent, value: string) => {
+    // remove special characters
     const query = value.replace(specialCharactersRegex, '');
-    setCurrentQuery(query);
-    setArrowSimulatedForQuery(null);
 
     if (query.length >= MIN_QUERY_LENGTH) {
       dispatch({ type: 'INPUT' });
@@ -130,44 +117,9 @@ const GordonQuickSearch = ({
       dispatch({ type: 'RESET' });
     }
   };
-  // Ensures that when searching the first option is highlighted
-  useEffect(() => {
-    if (
-      state.searchResults.length > 0 &&
-      currentQuery.length >= MIN_QUERY_LENGTH &&
-      arrowSimulatedForQuery !== currentQuery
-    ) {
-      const input = document.querySelector<HTMLInputElement>('input[placeholder]');
-      if (input) {
-        const simulateKey = (key: string) => {
-          const event = new KeyboardEvent('keydown', {
-            bubbles: true,
-            cancelable: true,
-            key,
-            code: key,
-          });
-          input.dispatchEvent(event);
-        };
-        simulateKey('ArrowDown');
-        simulateKey('ArrowUp');
-        setArrowSimulatedForQuery(currentQuery);
-      }
-    }
-  }, [state.searchResults, currentQuery, arrowSimulatedForQuery]);
 
-  const handleSubmit = (
-    event: React.SyntheticEvent | KeyboardEvent,
-    person: SearchResult | null,
-  ) => {
+  const handleSubmit = (_event: React.SyntheticEvent, person: SearchResult | null) => {
     if (!person) return;
-
-    if (person.UserName === '__ADVANCED__') {
-      setCurrentQuery('');
-      dispatch({ type: 'RESET' });
-      navigate('/people');
-      return;
-    }
-
     disableLink ? onSearchSubmit!(person) : navigate(`/profile/${person.UserName}`);
   };
 
@@ -214,55 +166,14 @@ const GordonQuickSearch = ({
       loading={state.loading}
       loadingText="Loading..."
       noOptionsText="No results"
-      options={
-        currentQuery && state.searchResults.length > 0
-          ? [...state.searchResults, { UserName: '__ADVANCED__' } as SearchResult]
-          : state.searchResults
-      }
-      isOptionEqualToValue={(option, value) => option.UserName === value?.UserName}
-      autoHighlight={true}
-      autoSelect={false}
-      value={null}
-      onChange={(event, newValue) => {
-        handleSubmit(event, newValue);
-      }}
-      onInputChange={handleInput}
-      filterOptions={(options) => options}
-      blurOnSelect
-      forcePopupIcon={false}
-      getOptionLabel={(option) =>
-        option.UserName === '__ADVANCED__' ? `Advanced Search` : option.UserName
-      }
-      renderOption={(props, option) => {
-        if (option.UserName === '__ADVANCED__') {
-          return (
-            // If they hover over the Advanced Search in the quick search produces this message
-            <Tooltip title="Can't find who you're looking for? Try our Advanced Search.">
-              <MenuItem
-                {...props}
-                onClick={() => {
-                  setCurrentQuery('');
-                  dispatch({ type: 'RESET' });
-                  navigate('/people');
-                }}
-              >
-                <Typography variant="body2">Advanced Search</Typography>
-              </MenuItem>
-            </Tooltip>
-          );
-        }
-
-        return renderOption(props, option);
-      }}
-      renderInput={({ InputProps, inputProps, ...params }) => (
+      options={state.searchResults}
+      isOptionEqualToValue={(option, value) => option.UserName === value.UserName}
+      renderInput={({ InputProps, ...params }) => (
         <TextField
           type="search"
           placeholder={placeholder}
           className={styles.root}
           {...params}
-          inputProps={{
-            ...inputProps,
-          }}
           InputProps={{
             ...InputProps,
             startAdornment: (
@@ -273,6 +184,15 @@ const GordonQuickSearch = ({
           }}
         />
       )}
+      onInputChange={handleInput}
+      onChange={handleSubmit}
+      renderOption={renderOption}
+      getOptionLabel={(option) => option.UserName}
+      filterOptions={(o) => o}
+      autoComplete
+      autoHighlight
+      blurOnSelect
+      forcePopupIcon={false}
     />
   );
 };
@@ -312,7 +232,7 @@ const getHighlightedText = (text: string, inputRegex: RegExp) =>
         {part}
       </span>
     ) : (
-      <span key={index}>{part}</span>
+      <span>{part}</span>
     ),
   );
 
