@@ -261,7 +261,21 @@ const Marketplace = () => {
                   }}
                 >
                   {sorts.map((sort) => (
-                    <MenuItem key={sort} value={sort}>
+                    <MenuItem
+                      key={sort}
+                      value={sort}
+                      sx={{
+                        '&:hover': {
+                          backgroundColor: 'primary.50', // adjust color as needed
+                        },
+                        '&.Mui-selected': {
+                          backgroundColor: 'primary.50', // selected color
+                        },
+                        '&.Mui-selected:hover': {
+                          backgroundColor: 'primary.50', // selected+hover color
+                        },
+                      }}
+                    >
                       {sort}
                     </MenuItem>
                   ))}
@@ -278,7 +292,21 @@ const Marketplace = () => {
                   }}
                 >
                   {order.map((o) => (
-                    <MenuItem key={o} value={o}>
+                    <MenuItem
+                      key={o}
+                      value={o}
+                      sx={{
+                        '&:hover': {
+                          backgroundColor: 'primary.50', // adjust color as needed
+                        },
+                        '&.Mui-selected': {
+                          backgroundColor: 'primary.50', // selected color
+                        },
+                        '&.Mui-selected:hover': {
+                          backgroundColor: 'primary.50', // selected+hover color
+                        },
+                      }}
+                    >
                       {o}
                     </MenuItem>
                   ))}
