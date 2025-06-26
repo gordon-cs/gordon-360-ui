@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Dialog,
   AppBar,
@@ -17,18 +17,6 @@ import { InputAdornment } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import marketplaceService from 'services/marketplace';
 
-const categories = [
-  'Clothing/Accessories',
-  'School Supplies',
-  'Electronics',
-  'Appliances',
-  'Services',
-  'Dorm Essentials',
-  'Miscellaneous',
-];
-
-const conditions = ['Like New', 'Open Box', 'Used - Good', 'Used - Fair', 'Used - Poor'];
-
 const ListingUploader = ({ open, onClose }) => {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
@@ -39,6 +27,8 @@ const ListingUploader = ({ open, onClose }) => {
   const [description, setDescription] = useState('');
   const [uploadedImages, setUploadedImages] = useState([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [categories, setCategories] = useState([]);
+  const [conditions, setConditions] = useState([]);
 
   const isSubmitDisabled =
     !selectedCategory ||
@@ -52,12 +42,17 @@ const ListingUploader = ({ open, onClose }) => {
       const imagesBase64 = await Promise.all(uploadedImages.map((file) => fileToBase64(file)));
       console.log('Base64 images: ', imagesBase64);
 
+      const selectedCategoryObj = categories.find((cat) => cat.CategoryName === selectedCategory);
+      const selectedConditionObj = conditions.find(
+        (cond) => cond.ConditionName === selectedCondition,
+      );
+
       const listingData = {
         Name: productName.trim(),
         Detail: description.trim(),
         Price: price ? parseFloat(price) : 0,
-        CategoryId: categories.indexOf(selectedCategory) + 1,
-        ConditionId: conditions.indexOf(selectedCondition) + 1,
+        CategoryId: selectedCategoryObj ? selectedCategoryObj.Id : null,
+        ConditionId: selectedConditionObj ? selectedConditionObj.Id : null,
         ImagesBase64: imagesBase64,
       };
 
@@ -85,6 +80,23 @@ const ListingUploader = ({ open, onClose }) => {
     });
   };
 
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [fetchedCategories, fetchedConditions] = await Promise.all([
+          marketplaceService.getCategories(),
+          marketplaceService.getConditions(),
+        ]);
+        setCategories(fetchedCategories);
+        setConditions(fetchedConditions);
+      } catch (err) {
+        console.error('Failed to load categories or conditions', err);
+      }
+    };
+
+    loadData();
+  }, []);
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <AppBar position="static" sx={{ backgroundColor: 'primary.main' }}>
@@ -111,14 +123,18 @@ const ListingUploader = ({ open, onClose }) => {
           <FormGroup row>
             {categories.map((cat) => (
               <FormControlLabel
-                key={cat}
+                key={cat.Id}
                 control={
                   <Checkbox
-                    checked={selectedCategory === cat}
-                    onChange={() => setSelectedCategory((prev) => (prev === cat ? '' : cat))}
+                    checked={selectedCategory === cat.CategoryName}
+                    onChange={() =>
+                      setSelectedCategory((prev) =>
+                        prev === cat.CategoryName ? '' : cat.CategoryName,
+                      )
+                    }
                   />
                 }
-                label={cat}
+                label={cat.CategoryName}
                 TypographyProps={{ fontSize: '0.875rem' }}
               />
             ))}
@@ -140,14 +156,18 @@ const ListingUploader = ({ open, onClose }) => {
           <FormGroup row>
             {conditions.map((cond) => (
               <FormControlLabel
-                key={cond}
+                key={cond.Id}
                 control={
                   <Checkbox
-                    checked={selectedCondition === cond}
-                    onChange={() => setSelectedCondition((prev) => (prev === cond ? '' : cond))}
+                    checked={selectedCondition === cond.ConditionName}
+                    onChange={() =>
+                      setSelectedCondition((prev) =>
+                        prev === cond.ConditionName ? '' : cond.ConditionName,
+                      )
+                    }
                   />
                 }
-                label={cond}
+                label={cond.ConditionName}
                 TypographyProps={{ fontSize: '0.875rem' }}
               />
             ))}
