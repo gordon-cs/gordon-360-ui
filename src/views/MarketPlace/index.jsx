@@ -39,7 +39,7 @@ const Marketplace = () => {
 
   const [search, setSearch] = useState('');
   const [categoryId, setCategoryId] = useState(undefined); // number or undefined
-  const [statusId, setStatusId] = useState(undefined); // e.g., 2 for Sold or undefined
+  const [statusId, setStatusId] = useState(1); // e.g., 2 for Sold or undefined
   const [minPrice, setMinPrice] = useState(undefined);
   const [maxPrice, setMaxPrice] = useState(undefined);
   const [sortBy, setSortBy] = useState('Date');
