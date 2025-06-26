@@ -57,6 +57,8 @@ const Marketplace = () => {
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [uploaderOpen, setUploaderOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [conditions, setConditions] = useState([]);
 
   const updateListingStatus = (id, newStatusId) => {
     setListings((prevListings) =>
@@ -78,6 +80,18 @@ const Marketplace = () => {
 
   const isOnline = useNetworkStatus();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    marketplaceService
+      .getCategories()
+      .then(setCategories)
+      .catch(() => console.error('Failed to load categories'));
+
+    marketplaceService
+      .getConditions()
+      .then(setConditions)
+      .catch(() => console.error('Failed to load conditions'));
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -193,10 +207,10 @@ const Marketplace = () => {
                   >
                     All
                   </MenuItem>
-                  {categories.map((cat, idx) => (
+                  {categories.map((cat) => (
                     <MenuItem
-                      key={cat}
-                      value={idx + 1}
+                      key={cat.Id}
+                      value={cat.Id}
                       sx={{
                         '&:hover': {
                           backgroundColor: 'primary.50', // adjust color as needed
@@ -209,7 +223,7 @@ const Marketplace = () => {
                         },
                       }}
                     >
-                      {cat}
+                      {cat.CategoryName}
                     </MenuItem>
                   ))}
                 </Select>

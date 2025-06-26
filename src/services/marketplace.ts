@@ -2,6 +2,9 @@ import { getToken } from 'services/auth';
 import http from './http';
 import userService from 'services/user';
 
+export type MarketplaceCategory = { Id: number; Category: string };
+export type MarketplaceCondition = { Id: number; Condition: string };
+
 export const getProfileImage = async (username: string) => {
   const token = await getToken();
 
@@ -77,6 +80,12 @@ export type InitMarketplaceListing = {
   ImagesBase64?: string[];
 };
 
+const getCategories = (): Promise<MarketplaceCategory[]> =>
+  http.get<MarketplaceCategory[]>('/marketplace/categories');
+
+const getConditions = (): Promise<MarketplaceCondition[]> =>
+  http.get<MarketplaceCondition[]>('/marketplace/conditions');
+
 /**
  * Get all marketplace listings.
  */
@@ -150,6 +159,8 @@ const marketplaceService = {
   deleteListing,
   changeListingStatus,
   getFilteredListings,
+  getCategories,
+  getConditions,
 };
 
 export default marketplaceService;
