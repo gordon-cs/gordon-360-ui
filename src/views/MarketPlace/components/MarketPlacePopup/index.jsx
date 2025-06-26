@@ -11,13 +11,14 @@ import {
   MenuItem,
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useEffect, useState } from 'react';
 import { getProfileImage, getProfileInfo } from 'services/marketplace';
 import Slider from 'react-slick';
 import marketplaceService from 'services/marketplace';
 import { msalInstance } from 'index';
 import styles from '../../MarketPlace.module.scss';
+import { AuthGroup } from 'services/auth';
+import { useAuthGroups, useNetworkStatus } from 'hooks';
 
 const MarketPlacePopup = ({ open, item, onClose, onStatusChange }) => {
   const isOnline = useNetworkStatus();
@@ -27,6 +28,7 @@ const MarketPlacePopup = ({ open, item, onClose, onStatusChange }) => {
   const backendURL = import.meta.env.VITE_API_URL;
   const currentUsername = msalInstance.getActiveAccount()?.username;
   const currentUsernameShort = currentUsername?.split('@')[0];
+  const isSiteAdmin = useAuthGroups(AuthGroup.SiteAdmin);
 
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
 
@@ -358,6 +360,12 @@ Thank you
                     </MenuItem>
                     <MenuItem onClick={() => handleMenuSelect('Report')} sx={{ color: 'red' }}>
                       Report
+                    </MenuItem>
+                  </>
+                ) : isSiteAdmin ? (
+                  <>
+                    <MenuItem onClick={() => handleMenuSelect('Delete')} sx={{ color: 'red' }}>
+                      Delete
                     </MenuItem>
                   </>
                 ) : (
