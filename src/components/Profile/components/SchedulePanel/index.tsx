@@ -18,6 +18,7 @@ import scheduleService, { CourseEvent, formatTermDescription, Schedule } from 's
 import sessionService from 'services/session';
 import { Profile } from 'services/user';
 import academicTermService from 'services/academicTerm';
+import { AuthError } from 'services/error';
 
 type Props = {
   profile: Profile;
@@ -53,6 +54,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
       setLoading(false);
     });
   }, [profile.AD_Username]);
+
   const toggleIsScheduleOpen = () => {
     setIsScheduleOpen((wasOpen) => {
       localStorage.setItem(scheduleOpenKey, String(!wasOpen));
