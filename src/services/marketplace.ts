@@ -139,6 +139,8 @@ const getFilteredListings = (
   search?: string,
   sortBy?: string,
   desc?: boolean,
+  page: number = 1,
+  pageSize: number = 20,
 ): Promise<MarketplaceListing[]> => {
   const query: Record<string, string> = {};
   if (categoryId !== undefined) query.categoryId = categoryId.toString();
@@ -148,6 +150,9 @@ const getFilteredListings = (
   if (search !== undefined) query.search = search;
   if (sortBy !== undefined) query.sortBy = sortBy;
   if (desc !== undefined) query.desc = desc ? 'true' : 'false';
+  query.page = page.toString();
+  query.pageSize = pageSize.toString();
+
   return http.get<MarketplaceListing[]>(`/marketplace/filter${http.toQueryString(query)}`);
 };
 

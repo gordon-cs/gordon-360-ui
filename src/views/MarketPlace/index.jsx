@@ -17,6 +17,7 @@ import {
   InputLabel,
   FormControl,
   FormControlLabel,
+  Pagination,
 } from '@mui/material';
 import styles from './MarketPlace.module.scss';
 import DATA from './dummyPosts/dummyPosts';
@@ -44,6 +45,8 @@ const Marketplace = () => {
   const [maxPrice, setMaxPrice] = useState(undefined);
   const [sortBy, setSortBy] = useState('Date');
   const [desc, setDesc] = useState(false);
+  const [page, setPage] = useState(1);
+  const pageSize = 20;
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [uploaderOpen, setUploaderOpen] = useState(false);
@@ -86,7 +89,17 @@ const Marketplace = () => {
   useEffect(() => {
     setLoading(true);
     marketplaceService
-      .getFilteredListings(categoryId, statusId, minPrice, maxPrice, search, sortBy, desc)
+      .getFilteredListings(
+        categoryId,
+        statusId,
+        minPrice,
+        maxPrice,
+        search,
+        sortBy,
+        desc,
+        page,
+        pageSize,
+      )
       .then((data) => {
         setListings(data);
         setError(null);
@@ -97,7 +110,7 @@ const Marketplace = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [categoryId, statusId, minPrice, maxPrice, search, sortBy, desc]);
+  }, [categoryId, statusId, minPrice, maxPrice, search, sortBy, desc, page]);
 
   console.log('backendURL:', backendURL);
 
@@ -416,6 +429,16 @@ const Marketplace = () => {
                 </Grid>
               ))}
           </Grid>
+          {!loading && !error && (
+            <Box display="flex" justifyContent="center" mt={3}>
+              <Pagination
+                count={Math.ceil(100 / pageSize)}
+                page={page}
+                onChange={(_, value) => setPage(value)}
+                color="primary"
+              />
+            </Box>
+          )}
         </Box>
       </Box>
       {/** Dialog for when a card is clicked */}
