@@ -152,6 +152,22 @@ function getMeetingDays(course: DbCourse): CourseDayID[] {
   return dayArray;
 }
 
+export function formatTermDescription(term: { YearCode: string; TermCode: string }): string {
+  const year1 = term.YearCode;
+  const year2 = String(Number(term.YearCode) + 1);
+
+  const termName =
+    term.TermCode === 'FA'
+      ? 'Fall'
+      : term.TermCode === 'SP'
+        ? 'Spring'
+        : term.TermCode === 'SU'
+          ? 'Summer'
+          : term.TermCode;
+
+  return `${termName} ${year1.slice(2)}-${year2.slice(2)} Academic Year`;
+}
+
 const scheduleService = {
   getCanReadStudentSchedules,
   getAllTermSchedules,

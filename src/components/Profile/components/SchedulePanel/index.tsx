@@ -14,7 +14,7 @@ import GordonLoader from 'components/Loader';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
 import ScheduleDialog from './components/ScheduleDialog';
 import styles from './ScheduleHeader.module.css';
-import scheduleService, { CourseEvent, Schedule } from 'services/schedule';
+import scheduleService, { CourseEvent, formatTermDescription, Schedule } from 'services/schedule';
 import sessionService from 'services/session';
 import { Profile } from 'services/user';
 import academicTermService from 'services/academicTerm';
@@ -100,7 +100,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
                 >
                   {allSchedules.map(({ term }) => (
                     <MenuItem value={term.BeginDate} key={term.BeginDate}>
-                      {term.Description}
+                      {formatTermDescription(term)}
                     </MenuItem>
                   ))}
                 </TextField>

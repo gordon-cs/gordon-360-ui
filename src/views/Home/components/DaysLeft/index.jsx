@@ -62,7 +62,7 @@ const DaysLeft = () => {
         // Case 3: Today is after the term ended
         const daysSinceEnd = differenceInCalendarDays(today, termEnd);
         setDaysLeftDialog(
-          `${daysSinceEnd} day${daysSinceEnd !== 1 ? 's' : ''} since the end of ${termName} term ended`,
+          `${daysSinceEnd} day${daysSinceEnd !== 1 ? 's' : ''} since the end of ${termName} term`,
         );
         setTermProgress(100);
       }
