@@ -71,7 +71,7 @@ export type CourseEvent = {
 const getCanReadStudentSchedules = (): Promise<boolean> => http.get(`schedule/canreadstudent/`);
 
 const getAllTermSchedules = async (username: string): Promise<Schedule[]> => {
-  const dbSchedules = await http.get<DbSchedule[]>(`schedule/${username}/allcourses`);
+  const dbSchedules = await http.get<DbSchedule[]>(`schedule/${username}/allcourses-by-term`);
 
   const schedules = dbSchedules.map(
     ({ YearCode, TermCode, TermDescription, TermBeginDate, TermEndDate, AllCourses }) => ({
@@ -163,7 +163,9 @@ export function formatTermDescription(term: { YearCode: string; TermCode: string
         ? 'Spring'
         : term.TermCode === 'SU'
           ? 'Summer'
-          : term.TermCode;
+          : term.TermCode === 'JN'
+            ? 'January'
+            : term.TermCode;
 
   return `${termName} ${year1.slice(2)}-${year2.slice(2)} Academic Year`;
 }
