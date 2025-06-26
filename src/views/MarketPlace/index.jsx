@@ -25,17 +25,7 @@ import { useNavigate } from 'react-router-dom';
 import MarketPlacePopup from './components/MarketPlacePopup';
 import ListingUploader from './components/ListingUploader';
 import marketplaceService from 'services/marketplace';
-import { CheckBox } from '@mui/icons-material';
 
-const categories = [
-  'Clothing/Accessories',
-  'School Supplies',
-  'Electronics',
-  'Appliances',
-  'Services',
-  'Dorm Essentials',
-  'Miscellaneous',
-];
 const sorts = ['Date', 'Price', 'Title'];
 const order = ['Ascending', 'Descending'];
 
