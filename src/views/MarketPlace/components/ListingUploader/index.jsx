@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import heic2any from 'heic2any';
 import {
   Dialog,
   AppBar,
@@ -39,6 +40,8 @@ const ListingUploader = ({ open, onClose }) => {
 
   const handleSubmit = async () => {
     try {
+      console.log(uploadedImages.map((f) => ({ name: f.name, type: f.type })));
+
       const imagesBase64 = await Promise.all(uploadedImages.map((file) => fileToBase64(file)));
       console.log('Base64 images: ', imagesBase64);
 
@@ -233,16 +236,36 @@ const ListingUploader = ({ open, onClose }) => {
         {/* Hidden file input */}
         <input
           type="file"
-          accept="image/*"
+          accept="image/*,.heic,.heif"
           multiple
           style={{ display: 'none' }}
           id="upload-images-input"
-          onChange={(e) => {
+          onChange={async (e) => {
             const files = Array.from(e.target.files);
-            setUploadedImages((prev) => {
-              const combined = [...prev, ...files];
-              return combined;
-            });
+            const processedFiles = await Promise.all(
+              files.map(async (file) => {
+                if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) {
+                  try {
+                    const convertedBlob = await heic2any({
+                      blob: file,
+                      toType: 'image/jpeg',
+                      quality: 0.9,
+                    });
+
+                    return new File([convertedBlob], file.name.replace(/\.heic$/i, '.jpeg'), {
+                      type: 'image/jpeg',
+                    });
+                  } catch (err) {
+                    console.error('HEIC conversion failed:', err);
+                    return null;
+                  }
+                }
+                return file;
+              }),
+            );
+
+            const validFiles = processedFiles.filter(Boolean);
+            setUploadedImages((prev) => [...prev, ...validFiles]);
           }}
         />
 
@@ -274,8 +297,10 @@ const ListingUploader = ({ open, onClose }) => {
               }}
               onClick={() => document.getElementById('upload-images-input').click()}
             >
-              <Typography variant="body2" color="text.secondary">
-                Upload Image (jpg, jpeg, png)
+              <Typography variant="body" color="text.secondary" align="center">
+                Upload Image
+                <br />
+                (jpg, jpeg, png, HEIC)
               </Typography>
             </Box>
           )}
