@@ -243,7 +243,7 @@ const ListingUploader = ({ open, onClose }) => {
                 width: '15em',
                 height: '15em',
                 borderRadius: 2,
-                backgroundColor: theme.palette.neutral.main,
+                backgroundColor: theme.palette.neutral.dark,
                 boxShadow: 1,
                 cursor: 'pointer',
                 overflow: 'hidden',

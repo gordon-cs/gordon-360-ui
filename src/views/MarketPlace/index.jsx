@@ -148,7 +148,7 @@ const Marketplace = () => {
                   onChange={(e) => setSearch(e.target.value)}
                 />
               </Grid>
-              <Grid item xs={3} display="flex" alignItems="center">
+              <Grid item xs={12} md={3} display="flex" alignItems="center">
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -159,6 +159,7 @@ const Marketplace = () => {
                     />
                   }
                   label="Filter Out Sold Items"
+                  sx={{ color: 'text.secondary' }} // change 'red' to any valid color
                 />
               </Grid>
             </Grid>
@@ -176,9 +177,38 @@ const Marketplace = () => {
                     setCategoryId(val === '' ? undefined : Number(val));
                   }}
                 >
-                  <MenuItem value="">All</MenuItem>
+                  <MenuItem
+                    value=""
+                    sx={{
+                      '&:hover': {
+                        backgroundColor: 'primary.50', // adjust color as needed
+                      },
+                      '&.Mui-selected': {
+                        backgroundColor: 'primary.50', // selected color
+                      },
+                      '&.Mui-selected:hover': {
+                        backgroundColor: 'primary.50', // selected+hover color
+                      },
+                    }}
+                  >
+                    All
+                  </MenuItem>
                   {categories.map((cat, idx) => (
-                    <MenuItem key={cat} value={idx + 1}>
+                    <MenuItem
+                      key={cat}
+                      value={idx + 1}
+                      sx={{
+                        '&:hover': {
+                          backgroundColor: 'primary.50', // adjust color as needed
+                        },
+                        '&.Mui-selected': {
+                          backgroundColor: 'primary.50', // selected color
+                        },
+                        '&.Mui-selected:hover': {
+                          backgroundColor: 'primary.50', // selected+hover color
+                        },
+                      }}
+                    >
                       {cat}
                     </MenuItem>
                   ))}
