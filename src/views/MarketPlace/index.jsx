@@ -335,7 +335,7 @@ const Marketplace = () => {
           }}
         >
           <Grid container spacing={3}>
-            {loading && <Typography>Loading listings...</Typography>}
+            {loading && <Typography color="text.secondary">Loading listings...</Typography>}
             {error && <Typography color="error">{error}</Typography>}
             {!loading &&
               !error &&
