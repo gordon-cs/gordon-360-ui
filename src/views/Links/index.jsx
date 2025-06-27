@@ -167,6 +167,20 @@ const Links = () => {
                 <ListItemText primary="iAttended" />
               </Link>
             </ListItem>
+            <ListItem>
+              <ListItemIcon>
+                <img src={CashnetIcon} alt={'Cashnet Logo'} className={styles.icon_style} />
+              </ListItemIcon>
+              <Link
+                href="https://commerce.cashnet.com/cashnetg/static/epayment/gordonpay/login"
+                underline="hover"
+                className={`gc360_text_link`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <ListItemText primary="CashNet" />
+              </Link>
+            </ListItem>
           </List>
         </Typography>
       </CardContent>
