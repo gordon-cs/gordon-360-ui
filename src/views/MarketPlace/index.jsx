@@ -375,13 +375,13 @@ const Marketplace = () => {
               listings.map((item) => (
                 <Grid item xs={6} sm={6} md={3} lg={3} key={item.Id}>
                   <Card
-                    variant="outlined"
+                    variant="elevation"
                     className={styles.card}
                     onClick={() => handleCardClick(item)}
                     sx={{
                       cursor: 'pointer',
                       borderRadius: '10px',
-                      backgroundColor: item.StatusId === 2 ? 'neutral.dark' : 'transparent',
+                      backgroundColor: item.StatusId === 2 ? 'neutral.dark' : 'neutral.main',
                       position: 'relative',
                     }}
                   >

@@ -11,14 +11,20 @@ import {
   Box,
   IconButton,
   CircularProgress,
+  AppBar,
+  Toolbar,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import styles from '../../MarketPlace.module.scss';
 import { useEffect, useState } from 'react';
+import MarketPlacePopup from '../MarketPlacePopup';
 import marketplaceService from 'services/marketplace';
 
 const MyUploadsPopup = ({ open, onClose, backendURL }) => {
   const [myListings, setMyListings] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [popupOpen, setPopupOpen] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -33,16 +39,23 @@ const MyUploadsPopup = ({ open, onClose, backendURL }) => {
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
-      <DialogTitle>
-        My Uploads
-        <IconButton
-          aria-label="close"
-          onClick={onClose}
-          sx={{ position: 'absolute', right: 8, top: 8 }}
-        >
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
+      <AppBar position="static" sx={{ backgroundColor: 'primary.main', boxShadow: 'none' }}>
+        <Toolbar>
+          <Typography variant="h5">
+            <Box component="span" sx={{ fontWeight: 'bold', color: 'warning.main' }}>
+              Gordon
+            </Box>{' '}
+            Marketplace - My Uploads
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <IconButton
+        aria-label="close"
+        onClick={onClose}
+        sx={{ position: 'absolute', right: 8, top: 8 }}
+      >
+        <CloseIcon />
+      </IconButton>
 
       <DialogContent dividers>
         {loading ? (
@@ -56,10 +69,15 @@ const MyUploadsPopup = ({ open, onClose, backendURL }) => {
             {myListings.map((item) => (
               <Grid item xs={12} sm={6} md={4} key={item.Id}>
                 <Card
+                  onClick={() => {
+                    setSelectedItem(item);
+                    setPopupOpen(true);
+                  }}
+                  className={styles.card}
                   sx={{
                     borderRadius: '10px',
                     cursor: 'pointer',
-                    backgroundColor: item.StatusId === 2 ? 'neutral.dark' : 'background.paper',
+                    backgroundColor: item.StatusId === 2 ? 'neutral.dark' : 'neutral.main',
                     position: 'relative',
                   }}
                 >
@@ -106,6 +124,15 @@ const MyUploadsPopup = ({ open, onClose, backendURL }) => {
           </Grid>
         )}
       </DialogContent>
+      <MarketPlacePopup
+        open={popupOpen}
+        item={selectedItem}
+        onClose={() => {
+          setPopupOpen(false);
+          setSelectedItem(null);
+        }}
+        onStatusChange={() => {}} // you can optionally wire this up
+      />
     </Dialog>
   );
 };
