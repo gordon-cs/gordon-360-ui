@@ -12,7 +12,6 @@ import 'add-to-calendar-button';
 import { Day, format, nextDay } from 'date-fns';
 import { STORAGE_COLOR_PREFERENCE_KEY } from 'theme';
 import { CourseEvent, courseDayIds, scheduleCalendarResources } from 'services/schedule';
-import { Session } from 'services/session';
 import { AcademicTerm } from 'services/academicTerm';
 
 type Props = {

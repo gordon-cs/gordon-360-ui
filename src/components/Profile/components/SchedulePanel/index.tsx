@@ -15,10 +15,8 @@ import GordonScheduleCalendar from './components/ScheduleCalendar';
 import ScheduleDialog from './components/ScheduleDialog';
 import styles from './ScheduleHeader.module.css';
 import scheduleService, { CourseEvent, formatTermDescription, Schedule } from 'services/schedule';
-import sessionService from 'services/session';
 import { Profile } from 'services/user';
 import academicTermService from 'services/academicTerm';
-import { AuthError } from 'services/error';
 
 type Props = {
   profile: Profile;
