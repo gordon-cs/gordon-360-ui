@@ -18,7 +18,7 @@ import { InputAdornment } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import marketplaceService from 'services/marketplace';
 
-const ListingUploader = ({ open, onClose }) => {
+const ListingUploader = ({ open, onClose, isEdit = false, listing = null, onSubmit }) => {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
   const [selectedCondition, setSelectedCondition] = useState('');
@@ -36,15 +36,10 @@ const ListingUploader = ({ open, onClose }) => {
     !selectedCondition ||
     !productName.trim() ||
     !description.trim() ||
-    uploadedImages.length === 0;
+    (!isEdit && uploadedImages.length === 0);
 
   const handleSubmit = async () => {
     try {
-      console.log(uploadedImages.map((f) => ({ name: f.name, type: f.type })));
-
-      const imagesBase64 = await Promise.all(uploadedImages.map((file) => fileToBase64(file)));
-      console.log('Base64 images: ', imagesBase64);
-
       const selectedCategoryObj = categories.find((cat) => cat.CategoryName === selectedCategory);
       const selectedConditionObj = conditions.find(
         (cond) => cond.ConditionName === selectedCondition,
@@ -56,20 +51,28 @@ const ListingUploader = ({ open, onClose }) => {
         Price: price ? parseFloat(price) : 0,
         CategoryId: selectedCategoryObj ? selectedCategoryObj.Id : null,
         ConditionId: selectedConditionObj ? selectedConditionObj.Id : null,
-        ImagesBase64: imagesBase64,
+        ImagesBase64: [''],
       };
 
-      console.log('Submitting listing:', listingData);
+      if (!isEdit) {
+        // Add images only when creating
+        const imagesBase64 = await Promise.all(uploadedImages.map((file) => fileToBase64(file)));
+        listingData.ImagesBase64 = imagesBase64;
 
-      // Call the API now
-      const createdListing = await marketplaceService.createListing(listingData);
+        const createdListing = await marketplaceService.createListing(listingData);
+        console.log('Created listing:', createdListing);
+      } else {
+        const updatedListing = await marketplaceService.updateListing(listing.Id, listingData);
+        console.log('Updated listing:', updatedListing);
+      }
 
-      console.log('Listing created:', createdListing);
-
-      // Optionally close dialog or reset form here
       onClose();
     } catch (error) {
-      console.error('Error submitting listing:', error);
+      if (error?.errors) {
+        console.error('Validation errors:', error.errors);
+      } else {
+        console.error('Error submitting listing:', error);
+      }
     }
   };
 
@@ -100,6 +103,25 @@ const ListingUploader = ({ open, onClose }) => {
     loadData();
   }, []);
 
+  useEffect(() => {
+    if (isEdit && listing) {
+      setSelectedCategory(listing.CategoryName); // or find category name from ID
+      setSelectedCondition(listing.ConditionName); // or find condition name from ID
+      setProductName(listing.Name);
+      setPrice(listing.Price?.toString() || '');
+      setDescription(listing.Detail);
+      setUploadedImages([]); // clear images, since you want to disable editing images
+    } else {
+      // Clear form for create mode
+      setSelectedCategory('');
+      setSelectedCondition('');
+      setProductName('');
+      setPrice('');
+      setDescription('');
+      setUploadedImages([]);
+    }
+  }, [isEdit, listing]);
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <AppBar position="static" sx={{ backgroundColor: 'primary.main' }}>
@@ -115,7 +137,7 @@ const ListingUploader = ({ open, onClose }) => {
 
       <DialogContent sx={{ p: 4 }}>
         <Typography variant="h6" gutterBottom>
-          Create a New Listing
+          {isEdit ? 'Edit Listing' : 'Create a New Listing'}
         </Typography>
 
         {/* Categories */}
@@ -230,109 +252,112 @@ const ListingUploader = ({ open, onClose }) => {
           inputProps={{ maxLength: 1000 }}
           helperText={`${description.length}/1000`}
         />
+        {!isEdit && (
+          <>
+            {/* Upload Images Placeholder */}
+            {/* Hidden file input */}
+            {/* Hidden file input */}
+            <input
+              type="file"
+              accept="image/*,.heic,.heif"
+              multiple
+              style={{ display: 'none' }}
+              id="upload-images-input"
+              onChange={async (e) => {
+                const files = Array.from(e.target.files);
+                const processedFiles = await Promise.all(
+                  files.map(async (file) => {
+                    if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) {
+                      try {
+                        const convertedBlob = await heic2any({
+                          blob: file,
+                          toType: 'image/jpeg',
+                          quality: 0.9,
+                        });
 
-        {/* Upload Images Placeholder */}
-        {/* Hidden file input */}
-        {/* Hidden file input */}
-        <input
-          type="file"
-          accept="image/*,.heic,.heif"
-          multiple
-          style={{ display: 'none' }}
-          id="upload-images-input"
-          onChange={async (e) => {
-            const files = Array.from(e.target.files);
-            const processedFiles = await Promise.all(
-              files.map(async (file) => {
-                if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) {
-                  try {
-                    const convertedBlob = await heic2any({
-                      blob: file,
-                      toType: 'image/jpeg',
-                      quality: 0.9,
-                    });
+                        return new File([convertedBlob], file.name.replace(/\.heic$/i, '.jpeg'), {
+                          type: 'image/jpeg',
+                        });
+                      } catch (err) {
+                        console.error('HEIC conversion failed:', err);
+                        return null;
+                      }
+                    }
+                    return file;
+                  }),
+                );
 
-                    return new File([convertedBlob], file.name.replace(/\.heic$/i, '.jpeg'), {
-                      type: 'image/jpeg',
-                    });
-                  } catch (err) {
-                    console.error('HEIC conversion failed:', err);
-                    return null;
-                  }
-                }
-                return file;
-              }),
-            );
+                const validFiles = processedFiles.filter(Boolean);
+                setUploadedImages((prev) => [...prev, ...validFiles]);
+              }}
+            />
 
-            const validFiles = processedFiles.filter(Boolean);
-            setUploadedImages((prev) => [...prev, ...validFiles]);
-          }}
-        />
-
-        {/* Image boxes */}
-        <Box
-          sx={{
-            mt: 3,
-            display: 'flex',
-            gap: 2,
-            overflowX: 'auto', // Enable horizontal scrolling
-            maxWidth: 'calc(15em * 3 + 2 * 2rem)', // Width for 3 images plus gaps
-            paddingBottom: 1,
-          }}
-        >
-          {uploadedImages.length === 0 && (
+            {/* Image boxes */}
             <Box
               sx={{
-                width: '15em',
-                height: '15em',
-                borderRadius: 2,
-                backgroundColor: theme.palette.neutral.dark,
-                boxShadow: 1,
-                cursor: 'pointer',
-                overflow: 'hidden',
+                mt: 3,
                 display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                flexShrink: 0,
+                gap: 2,
+                overflowX: 'auto', // Enable horizontal scrolling
+                maxWidth: 'calc(15em * 3 + 2 * 2rem)', // Width for 3 images plus gaps
+                paddingBottom: 1,
               }}
-              onClick={() => document.getElementById('upload-images-input').click()}
             >
-              <Typography variant="body" color="text.secondary" align="center">
-                Upload Image
-                <br />
-                (jpg, jpeg, png, HEIC)
-              </Typography>
-            </Box>
-          )}
+              {uploadedImages.length === 0 && (
+                <Box
+                  sx={{
+                    width: '15em',
+                    height: '15em',
+                    borderRadius: 2,
+                    backgroundColor: theme.palette.neutral.dark,
+                    boxShadow: 1,
+                    cursor: 'pointer',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexShrink: 0,
+                  }}
+                  onClick={() => document.getElementById('upload-images-input').click()}
+                >
+                  <Typography variant="body" color="text.secondary" align="center">
+                    Upload Image
+                    <br />
+                    (jpg, jpeg, png, HEIC)
+                  </Typography>
+                </Box>
+              )}
 
-          {uploadedImages.map((file, index) => (
-            <Box
-              key={index}
-              sx={{
-                width: '15em',
-                height: '15em',
-                borderRadius: 2,
-                backgroundColor: theme.palette.neutral.main,
-                boxShadow: 1,
-                cursor: 'pointer',
-                overflow: 'hidden',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                flexShrink: 0, // Prevent shrinking so width stays fixed
-              }}
-              onClick={() => document.getElementById('upload-images-input').click()}
-            >
-              <Box
-                component="img"
-                src={URL.createObjectURL(file)}
-                alt={`uploaded-${index}`}
-                sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                onLoad={(e) => URL.revokeObjectURL(e.target.src)}
-              />
+              {uploadedImages.map((file, index) => (
+                <Box
+                  key={index}
+                  sx={{
+                    width: '15em',
+                    height: '15em',
+                    borderRadius: 2,
+                    backgroundColor: theme.palette.neutral.main,
+                    boxShadow: 1,
+                    cursor: 'pointer',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexShrink: 0, // Prevent shrinking so width stays fixed
+                  }}
+                  onClick={() => document.getElementById('upload-images-input').click()}
+                >
+                  <Box
+                    component="img"
+                    src={URL.createObjectURL(file)}
+                    alt={`uploaded-${index}`}
+                    sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    onLoad={(e) => URL.revokeObjectURL(e.target.src)}
+                  />
+                </Box>
+              ))}
             </Box>
-          ))}
-        </Box>
+          </>
+        )}
 
         <Button
           variant="contained"
@@ -341,7 +366,7 @@ const ListingUploader = ({ open, onClose }) => {
           disabled={isSubmitDisabled}
           onClick={handleSubmit}
         >
-          Submit
+          {isEdit ? 'Update' : 'Submit'}
         </Button>
       </DialogContent>
     </Dialog>

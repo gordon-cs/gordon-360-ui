@@ -19,6 +19,7 @@ import { msalInstance } from 'index';
 import styles from '../../MarketPlace.module.scss';
 import { AuthGroup } from 'services/auth';
 import { useAuthGroups, useNetworkStatus } from 'hooks';
+import ListingUploader from '../ListingUploader';
 
 const MarketPlacePopup = ({ open, item, onClose, onStatusChange }) => {
   const isOnline = useNetworkStatus();
@@ -29,6 +30,7 @@ const MarketPlacePopup = ({ open, item, onClose, onStatusChange }) => {
   const currentUsername = msalInstance.getActiveAccount()?.username;
   const currentUsernameShort = currentUsername?.split('@')[0];
   const isSiteAdmin = useAuthGroups(AuthGroup.SiteAdmin);
+  const [isEditOpen, setIsEditOpen] = useState(false);
 
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
 
@@ -38,6 +40,17 @@ const MarketPlacePopup = ({ open, item, onClose, onStatusChange }) => {
 
   const handleMenuClose = () => {
     setMenuAnchorEl(null);
+  };
+
+  // Handler to open the edit dialog
+  const openEditDialog = () => {
+    setIsEditOpen(true);
+    handleMenuClose();
+  };
+
+  // Handler to close the edit dialog
+  const closeEditDialog = () => {
+    setIsEditOpen(false);
   };
 
   const handleMenuSelect = (option) => {
@@ -54,6 +67,9 @@ const MarketPlacePopup = ({ open, item, onClose, onStatusChange }) => {
         break;
       case 'Report':
         handleReport();
+        break;
+      case 'Edit':
+        openEditDialog();
         break;
     }
     // TODO: Add your logic for each option here (Delete/Edit/Report/Mark as Sold)
@@ -207,228 +223,256 @@ Thank you
   console.log('item.PosterUsername:', item.PosterUsername);
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <AppBar position="static" sx={{ backgroundColor: 'primary.main', boxShadow: 'none' }}>
-        <Toolbar>
-          <Typography variant="h5">
-            <Box component="span" sx={{ fontWeight: 'bold', color: 'warning.main' }}>
-              Gordon
-            </Box>{' '}
-            Marketplace
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <DialogContent dividers>
-        <Grid container spacing={3}>
-          {/* Left - Image and Seller */}
-          <Grid item xs={12} md={6}>
-            {images.length > 1 ? (
-              <div className={styles.sliderWrapper}>
-                <Slider
-                  nextArrow={<NextArrow />}
-                  prevArrow={<PrevArrow />}
-                  dots={images.length <= 12}
-                  infinite
-                  speed={500}
-                  slidesToShow={1}
-                  slidesToScroll={1}
-                  swipeToSlide={true}
-                  accessibility={true}
-                >
-                  {images.map((img, index) => (
-                    <Box
-                      key={index}
-                      sx={{
-                        width: '100%',
-                        height: 0,
-                        paddingTop: '100%',
-                        position: 'relative',
-                        borderRadius: 2,
-                        backgroundColor: '#000',
-                      }}
-                    >
-                      <img
-                        src={img}
-                        alt={`${item.Name} - ${index + 1}`}
-                        style={{
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
+    <>
+      <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+        <AppBar position="static" sx={{ backgroundColor: 'primary.main', boxShadow: 'none' }}>
+          <Toolbar>
+            <Typography variant="h5">
+              <Box component="span" sx={{ fontWeight: 'bold', color: 'warning.main' }}>
+                Gordon
+              </Box>{' '}
+              Marketplace
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <DialogContent dividers>
+          <Grid container spacing={3}>
+            {/* Left - Image and Seller */}
+            <Grid item xs={12} md={6}>
+              {images.length > 1 ? (
+                <div className={styles.sliderWrapper}>
+                  <Slider
+                    nextArrow={<NextArrow />}
+                    prevArrow={<PrevArrow />}
+                    dots={images.length <= 12}
+                    infinite
+                    speed={500}
+                    slidesToShow={1}
+                    slidesToScroll={1}
+                    swipeToSlide={true}
+                    accessibility={true}
+                  >
+                    {images.map((img, index) => (
+                      <Box
+                        key={index}
+                        sx={{
                           width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                          borderRadius: 8,
+                          height: 0,
+                          paddingTop: '100%',
+                          position: 'relative',
+                          borderRadius: 2,
+                          backgroundColor: '#000',
                         }}
-                      />
-                    </Box>
-                  ))}
-                </Slider>
-              </div>
-            ) : (
+                      >
+                        <img
+                          src={img}
+                          alt={`${item.Name} - ${index + 1}`}
+                          style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                            borderRadius: 8,
+                          }}
+                        />
+                      </Box>
+                    ))}
+                  </Slider>
+                </div>
+              ) : (
+                <Box
+                  sx={{
+                    width: '100%',
+                    height: 0,
+                    paddingTop: '100%',
+                    position: 'relative',
+                    borderRadius: 2,
+                    backgroundColor: '#000',
+                  }}
+                >
+                  <img
+                    src={images[0]}
+                    alt={item.Name}
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      borderRadius: 8,
+                    }}
+                  />
+                </Box>
+              )}
               <Box
                 sx={{
-                  width: '100%',
-                  height: 0,
-                  paddingTop: '100%',
-                  position: 'relative',
-                  borderRadius: 2,
-                  backgroundColor: '#000',
-                }}
-              >
-                <img
-                  src={images[0]}
-                  alt={item.Name}
-                  style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    borderRadius: 8,
-                  }}
-                />
-              </Box>
-            )}
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                mt: 2,
-                cursor: 'pointer',
-                width: '50%',
-              }}
-              onClick={() => {
-                if (isOnline) {
-                  navigate(`/profile/${item.PosterUsername}`);
-                  onClose(); // optional: close dialog when navigating
-                }
-              }}
-            >
-              <img
-                src={profileImg}
-                alt={`${item.PosterUsername}'s profile`}
-                style={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: '50%',
-                  objectFit: 'cover',
-                  marginRight: 12,
+                  display: 'flex',
+                  alignItems: 'center',
+                  mt: 2,
                   cursor: 'pointer',
+                  width: '50%',
                 }}
                 onClick={() => {
                   if (isOnline) {
                     navigate(`/profile/${item.PosterUsername}`);
-                    onClose();
+                    onClose(); // optional: close dialog when navigating
                   }
                 }}
-              />
+              >
+                <img
+                  src={profileImg}
+                  alt={`${item.PosterUsername}'s profile`}
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    marginRight: 12,
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => {
+                    if (isOnline) {
+                      navigate(`/profile/${item.PosterUsername}`);
+                      onClose();
+                    }
+                  }}
+                />
 
-              <Typography fontWeight="bold">
-                {profileInfo
-                  ? `${profileInfo.NickName} ${profileInfo.LastName}`
-                  : item.PosterUsername}
-              </Typography>
-            </Box>
-          </Grid>
+                <Typography fontWeight="bold">
+                  {profileInfo
+                    ? `${profileInfo.NickName} ${profileInfo.LastName}`
+                    : item.PosterUsername}
+                </Typography>
+              </Box>
+            </Grid>
 
-          {/* Right - Product Info */}
-          <Grid item xs={12} md={6}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
-              <Typography variant="h6" fontWeight="bold">
-                {item.Name}
-              </Typography>
-              <Typography sx={{ cursor: 'pointer', fontSize: '1.5rem' }} onClick={handleMenuClick}>
-                ⋮
-              </Typography>
+            {/* Right - Product Info */}
+            <Grid item xs={12} md={6}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+                <Typography variant="h6" fontWeight="bold">
+                  {item.Name}
+                </Typography>
+                <Typography
+                  sx={{ cursor: 'pointer', fontSize: '1.5rem' }}
+                  onClick={handleMenuClick}
+                >
+                  ⋮
+                </Typography>
 
-              <Menu anchorEl={menuAnchorEl} open={Boolean(menuAnchorEl)} onClose={handleMenuClose}>
-                {currentUsernameShort === item.PosterUsername ? (
-                  <>
-                    <MenuItem onClick={() => handleMenuSelect('Edit')}>Edit</MenuItem>
-                    {item.StatusId === 2 ? (
-                      <MenuItem onClick={() => handleMenuSelect('Mark as Sold')}>
-                        Unmark as Sold
+                <Menu
+                  anchorEl={menuAnchorEl}
+                  open={Boolean(menuAnchorEl)}
+                  onClose={handleMenuClose}
+                >
+                  {currentUsernameShort === item.PosterUsername ? (
+                    <>
+                      <MenuItem onClick={() => handleMenuSelect('Edit')}>Edit</MenuItem>
+                      {item.StatusId === 2 ? (
+                        <MenuItem onClick={() => handleMenuSelect('Mark as Sold')}>
+                          Unmark as Sold
+                        </MenuItem>
+                      ) : (
+                        <MenuItem onClick={() => handleMenuSelect('Mark as Sold')}>
+                          Mark as Sold
+                        </MenuItem>
+                      )}
+                      <MenuItem onClick={() => handleMenuSelect('Delete')} sx={{ color: 'red' }}>
+                        Delete
                       </MenuItem>
-                    ) : (
-                      <MenuItem onClick={() => handleMenuSelect('Mark as Sold')}>
-                        Mark as Sold
+                      <MenuItem onClick={() => handleMenuSelect('Report')} sx={{ color: 'red' }}>
+                        Report
                       </MenuItem>
-                    )}
-                    <MenuItem onClick={() => handleMenuSelect('Delete')} sx={{ color: 'red' }}>
-                      Delete
-                    </MenuItem>
+                    </>
+                  ) : isSiteAdmin ? (
+                    <>
+                      <MenuItem onClick={() => handleMenuSelect('Delete')} sx={{ color: 'red' }}>
+                        Delete
+                      </MenuItem>
+                    </>
+                  ) : (
                     <MenuItem onClick={() => handleMenuSelect('Report')} sx={{ color: 'red' }}>
                       Report
                     </MenuItem>
-                  </>
-                ) : isSiteAdmin ? (
-                  <>
-                    <MenuItem onClick={() => handleMenuSelect('Delete')} sx={{ color: 'red' }}>
-                      Delete
-                    </MenuItem>
-                  </>
-                ) : (
-                  <MenuItem onClick={() => handleMenuSelect('Report')} sx={{ color: 'red' }}>
-                    Report
-                  </MenuItem>
-                )}
-              </Menu>
-            </Box>
+                  )}
+                </Menu>
+              </Box>
 
-            <Typography variant="h6" sx={{ my: 1 }}>
-              ${item.Price}
-            </Typography>
+              <Typography variant="h6" sx={{ my: 1 }}>
+                ${item.Price}
+              </Typography>
 
-            <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
-              {item.CategoryName}
-            </Typography>
+              <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
+                {item.CategoryName}
+              </Typography>
 
-            <Typography variant="subtitle2" fontStyle="italic" gutterBottom>
-              {item.ConditionName}
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{ mb: 3, mr: 3, whiteSpace: 'normal', wordBreak: 'break-word' }}
-            >
-              {item.Detail}
-            </Typography>
-            {currentUsernameShort === item.PosterUsername ? (
-              <Button
-                variant="contained"
-                sx={{ backgroundColor: 'warning.main' }}
-                fullWidth
-                onClick={() => handleMenuSelect('Mark as Sold')}
+              <Typography variant="subtitle2" fontStyle="italic" gutterBottom>
+                {item.ConditionName}
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{ mb: 3, mr: 3, whiteSpace: 'normal', wordBreak: 'break-word' }}
               >
-                {item.StatusId === 2 ? 'Unmark as Sold' : 'Mark as Sold'}
-              </Button>
-            ) : item.StatusId === 2 ? (
-              <Button
-                variant="contained"
-                sx={{ backgroundColor: 'primary.main' }}
-                fullWidth
-                disabled
-              >
-                Contact via Email
-              </Button>
-            ) : (
-              <a
-                href={`mailto:${item.PosterUsername}@gordon.edu?subject=${encodeURIComponent(
-                  'Hello from the App',
-                )}&body=${encodeURIComponent(
-                  `Hi there,\n\nI wanted to reach out regarding ${item.Name}. Is it still available for purchase?`,
-                )}`}
-                style={{ textDecoration: 'none', display: 'block' }}
-              >
-                <Button variant="contained" sx={{ backgroundColor: 'primary.main' }} fullWidth>
+                {item.Detail}
+              </Typography>
+              {currentUsernameShort === item.PosterUsername ? (
+                <Button
+                  variant="contained"
+                  sx={{ backgroundColor: 'warning.main' }}
+                  fullWidth
+                  onClick={() => handleMenuSelect('Mark as Sold')}
+                >
+                  {item.StatusId === 2 ? 'Unmark as Sold' : 'Mark as Sold'}
+                </Button>
+              ) : item.StatusId === 2 ? (
+                <Button
+                  variant="contained"
+                  sx={{ backgroundColor: 'primary.main' }}
+                  fullWidth
+                  disabled
+                >
                   Contact via Email
                 </Button>
-              </a>
-            )}
+              ) : (
+                <a
+                  href={`mailto:${item.PosterUsername}@gordon.edu?subject=${encodeURIComponent(
+                    'Hello from the App',
+                  )}&body=${encodeURIComponent(
+                    `Hi there,\n\nI wanted to reach out regarding ${item.Name}. Is it still available for purchase?`,
+                  )}`}
+                  style={{ textDecoration: 'none', display: 'block' }}
+                >
+                  <Button variant="contained" sx={{ backgroundColor: 'primary.main' }} fullWidth>
+                    Contact via Email
+                  </Button>
+                </a>
+              )}
+            </Grid>
           </Grid>
-        </Grid>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+      {item && (
+        <ListingUploader
+          open={isEditOpen}
+          onClose={closeEditDialog}
+          isEdit={true}
+          listing={item}
+          onSubmit={async (listingData) => {
+            try {
+              const updatedListing = await marketplaceService.updateListing(item.Id, listingData);
+              console.log('Updated listing:', updatedListing);
+              // Optionally update state or parent here
+              closeEditDialog();
+              onClose(); // close main popup if you want
+            } catch (error) {
+              console.error('Failed to update listing:', error);
+            }
+          }}
+        />
+      )}
+    </>
   );
 };
 
