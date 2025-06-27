@@ -46,6 +46,8 @@ const Marketplace = () => {
   const [sortBy, setSortBy] = useState('Date');
   const [desc, setDesc] = useState(false);
   const [page, setPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+
   const pageSize = 20;
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -88,8 +90,11 @@ const Marketplace = () => {
 
   useEffect(() => {
     setLoading(true);
-    marketplaceService
-      .getFilteredListings(
+
+    // Promise.all to fetch count and listings concurrently
+    Promise.all([
+      marketplaceService.getFilteredListingsCount(categoryId, statusId, minPrice, maxPrice, search),
+      marketplaceService.getFilteredListings(
         categoryId,
         statusId,
         minPrice,
@@ -99,9 +104,11 @@ const Marketplace = () => {
         desc,
         page,
         pageSize,
-      )
-      .then((data) => {
-        setListings(data);
+      ),
+    ])
+      .then(([count, listings]) => {
+        setTotalCount(count);
+        setListings(listings);
         setError(null);
       })
       .catch(() => {
@@ -432,7 +439,7 @@ const Marketplace = () => {
           {!loading && !error && (
             <Box display="flex" justifyContent="center" mt={3}>
               <Pagination
-                count={Math.ceil(100 / pageSize)}
+                count={Math.ceil(totalCount / pageSize)}
                 page={page}
                 onChange={(_, value) => setPage(value)}
                 color="primary"

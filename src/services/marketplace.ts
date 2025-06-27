@@ -1,6 +1,7 @@
 import { getToken } from 'services/auth';
 import http from './http';
 import userService from 'services/user';
+import { get } from 'lodash';
 
 export type MarketplaceCategory = { Id: number; Category: string };
 export type MarketplaceCondition = { Id: number; Condition: string };
@@ -156,6 +157,26 @@ const getFilteredListings = (
   return http.get<MarketplaceListing[]>(`/marketplace/filter${http.toQueryString(query)}`);
 };
 
+/**
+ * Get the number of listings
+ */
+const getFilteredListingsCount = (
+  categoryId?: number,
+  statusId?: number,
+  minPrice?: number,
+  maxPrice?: number,
+  search?: string,
+): Promise<number> => {
+  const query: Record<string, string> = {};
+  if (categoryId !== undefined) query.categoryId = categoryId.toString();
+  if (statusId !== undefined) query.statusId = statusId.toString();
+  if (minPrice !== undefined) query.minPrice = minPrice.toString();
+  if (maxPrice !== undefined) query.maxPrice = maxPrice.toString();
+  if (search !== undefined) query.search = search;
+
+  return http.get<number>(`/marketplace/count${http.toQueryString(query)}`);
+};
+
 const marketplaceService = {
   getAllListings,
   getListingById,
@@ -164,6 +185,7 @@ const marketplaceService = {
   deleteListing,
   changeListingStatus,
   getFilteredListings,
+  getFilteredListingsCount,
   getCategories,
   getConditions,
 };
