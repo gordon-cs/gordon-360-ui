@@ -74,6 +74,7 @@ const ListingUploader = ({ open, onClose, isEdit = false, listing = null, onSubm
         console.error('Error submitting listing:', error);
       }
     }
+    window.location.reload(); // Reload to reflect changes
   };
 
   const fileToBase64 = (file) => {
