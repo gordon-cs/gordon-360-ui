@@ -177,6 +177,28 @@ const getFilteredListingsCount = (
   return http.get<number>(`/marketplace/count${http.toQueryString(query)}`);
 };
 
+/**
+ * Get the listings posted by the current user.
+ */
+const getMyListings = async () => {
+  const token = await getToken();
+  if (!token) {
+    throw new Error('No access token found');
+  }
+
+  const response = await fetch(`/api/marketplace/mylistings`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch user listings');
+  }
+
+  return await response.json();
+};
+
 const marketplaceService = {
   getAllListings,
   getListingById,
@@ -188,6 +210,7 @@ const marketplaceService = {
   getFilteredListingsCount,
   getCategories,
   getConditions,
+  getMyListings,
 };
 
 export default marketplaceService;

@@ -25,6 +25,8 @@ import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useNavigate } from 'react-router-dom';
 import MarketPlacePopup from './components/MarketPlacePopup';
 import ListingUploader from './components/ListingUploader';
+import MyUploadsPopup from './components/MyUploadsPopup';
+import { msalInstance } from 'index';
 import marketplaceService from 'services/marketplace';
 
 const sorts = ['Date', 'Price', 'Title'];
@@ -32,6 +34,7 @@ const order = ['Ascending', 'Descending'];
 
 const Marketplace = () => {
   const [listings, setListings] = useState([]);
+  const [myUploadsOpen, setMyUploadsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [error, setError] = useState(null);
   const backendURL = import.meta.env.VITE_API_URL;
@@ -47,6 +50,8 @@ const Marketplace = () => {
   const [desc, setDesc] = useState(false);
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
+  const currentUsername = msalInstance.getActiveAccount()?.username;
+  const currentUsernameShort = currentUsername?.split('@')[0];
 
   const pageSize = 20;
 
@@ -340,6 +345,14 @@ const Marketplace = () => {
               >
                 New Listing
               </Button>
+
+              <Button
+                variant="contained"
+                sx={{ borderRadius: '10px', margin: '5px' }}
+                onClick={() => setMyUploadsOpen(true)}
+              >
+                My Uploads
+              </Button>
             </Box>
           </Box>
         </Box>
@@ -448,12 +461,20 @@ const Marketplace = () => {
           )}
         </Box>
       </Box>
+
       {/** Dialog for when a card is clicked */}
       <MarketPlacePopup
         open={dialogOpen}
         item={selectedItem}
         onClose={handleDialogClose}
         onStatusChange={updateListingStatus}
+      />
+
+      {/** Dialog for viewing and editing my uploads */}
+      <MyUploadsPopup
+        open={myUploadsOpen}
+        onClose={() => setMyUploadsOpen(false)}
+        backendURL={backendURL}
       />
 
       {/** Dialog for uploading a post */}
