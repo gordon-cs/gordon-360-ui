@@ -24,6 +24,7 @@ import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import CallIcon from '@mui/icons-material/Call';
 import ReportIcon from '@mui/icons-material/Report';
 import styles from '/src/views/Links/Links.module.scss';
+import CashnetIcon from '/src/views/Links/images/Cashnet.png';
 import { useUser } from 'hooks';
 
 const Links = () => {
