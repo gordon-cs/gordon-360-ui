@@ -25,14 +25,18 @@ type Props = {
 };
 
 const scheduleOpenKey = 'profile.schedule.isOpen';
+
 const GordonSchedulePanel = ({ profile, myProf }: Props) => {
   const [loading, setLoading] = useState(true);
   const [allSchedules, setAllSchedules] = useState<Schedule[]>([]);
   const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<CourseEvent | null>(null);
-  const [isScheduleOpen, setIsScheduleOpen] = useState<boolean>(
-    localStorage.getItem(scheduleOpenKey) !== 'false',
-  );
+  // Open by default unless user has stored preference
+  const [isScheduleOpen, setIsScheduleOpen] = useState<boolean>(() => {
+    const stored = localStorage.getItem(scheduleOpenKey);
+    return stored === null ? true : stored !== 'false';
+  });
+
   useEffect(() => {
     setLoading(true);
 
@@ -41,16 +45,49 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
       sessionService.getCurrent(),
     ])
       .then(([allSessionSchedules, currentSession]) => {
-        setAllSchedules(allSessionSchedules);
-        const defaultSchedule =
-          // If there is a schedule for the current session, make it d4fault
-          allSessionSchedules.find((s) => s.session.SessionCode === currentSession.SessionCode) ??
-          // Otherwise, use the most recent session
-          allSessionSchedules[0];
-        setSelectedSchedule(defaultSchedule);
+        // Sort schedules descending by start date (newest first)
+        const sortedSchedules = [...allSessionSchedules].sort(
+          (a, b) =>
+            new Date((b.session as any).SessionBeginDate).getTime() -
+            new Date((a.session as any).SessionBeginDate).getTime(),
+        );
+
+        setAllSchedules(sortedSchedules);
+
+        // Find current session schedule
+        const currentSchedule = sortedSchedules.find(
+          (s) => s.session.SessionCode.trim() === currentSession.SessionCode.trim(),
+        );
+        const hasCoursesInCurrent = (currentSchedule?.courses?.length ?? 0) > 0;
+
+        let defaultSchedule: Schedule | undefined;
+
+        if (hasCoursesInCurrent) {
+          // Show current session schedule if student has courses
+          defaultSchedule = currentSchedule;
+        } else {
+          // Otherwise, try to find next future session with courses
+          const currentStart = new Date(currentSession.SessionBeginDate).getTime();
+
+          const futureScheduleWithCourses = sortedSchedules.find(
+            (s) =>
+              new Date((s.session as any).SessionBeginDate).getTime() > currentStart &&
+              (s.courses?.length ?? 0) > 0,
+          );
+
+          if (futureScheduleWithCourses) {
+            defaultSchedule = futureScheduleWithCourses;
+          } else {
+            // Otherwise fallback: most recent schedule with courses
+            defaultSchedule = sortedSchedules.find((s) => (s.courses?.length ?? 0) > 0);
+          }
+        }
+
+        setSelectedSchedule(defaultSchedule ?? null);
         setLoading(false);
       })
       .catch((reason: AuthError) => {
+        console.error('Failed to fetch schedules:', reason);
         setLoading(false);
       });
   }, [profile.AD_Username]);
@@ -110,7 +147,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
                 </TextField>
               </Grid>
               <Grid lg={7}></Grid>
-              {selectedSchedule && (
+              {selectedSchedule ? (
                 <>
                   <Grid item className={styles.addCalendarInfoText}>
                     {myProf && (
@@ -126,6 +163,10 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
                     />
                   </Grid>
                 </>
+              ) : (
+                <Grid item xs={12}>
+                  <Typography color="error">No schedule available to display.</Typography>
+                </Grid>
               )}
             </Grid>
           </AccordionDetails>
