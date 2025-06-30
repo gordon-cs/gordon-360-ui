@@ -6,16 +6,22 @@ import { Participation } from './membership';
 import { Class } from './peopleSearch';
 import { Override } from './utils';
 
-type CLWCredits = {
-  current: number;
-  required: number;
+export type ProfileStringItem = {
+  value: string;
+  isPrivate: boolean;
 };
+
+// **** Reserved for future use ****
+// type ProfileNumberItem = {
+//   value: number;
+//   isPrivate: boolean;
+// };
 
 enum OnOffCampusStatus {
   'Off Campus' = 'O',
   Away = 'A',
   Remote = 'D',
-  'Private as requested.' = 'P',
+  'Private' = 'P',
   'On Campus' = '',
 }
 
@@ -25,19 +31,19 @@ const onOffCampusDescriptions = {
   O: 'Off Campus' as OnOffCampusDescription,
   A: 'Away' as OnOffCampusDescription,
   D: 'Remote' as OnOffCampusDescription,
-  P: 'Private as requested.' as OnOffCampusDescription,
+  P: 'Private' as OnOffCampusDescription,
   '': 'On Campus' as OnOffCampusDescription,
 };
 
 type BaseProfileInfo = {
   ID: string;
   Title: string;
-  FirstName: string;
-  MiddleName: string;
-  LastName: string;
-  Suffix: string;
-  MaidenName: string;
-  NickName: string;
+  FirstName: ProfileStringItem;
+  MiddleName: ProfileStringItem;
+  LastName: ProfileStringItem;
+  Suffix: ProfileStringItem;
+  MaidenName: ProfileStringItem;
+  NickName: ProfileStringItem;
   OnCampusBuilding: string;
   OnCampusRoom: string;
   OnCampusPhone: string;
@@ -45,22 +51,22 @@ type BaseProfileInfo = {
   OnCampusFax: string;
   PersonalEmail?: string;
   WorkEmail?: string;
-  aEmail?: string;
+  altEmail?: string;
   PreferredEmail?: string;
   doNotContact?: boolean;
   doNotMail?: boolean;
   WorkPhone?: string;
-  MobilePhone?: string;
+  MobilePhone?: ProfileStringItem;
   IsMobilePhonePrivate: number;
   PreferredPhone?: string;
   Mail_Location: string;
-  HomeStreet1: string;
-  HomeStreet2: string;
-  HomeCity: string;
-  HomeState: string;
-  HomePostalCode: string;
-  HomeCountry: string;
-  HomePhone: string;
+  HomeStreet1: ProfileStringItem;
+  HomeStreet2: ProfileStringItem;
+  HomeCity: ProfileStringItem;
+  HomeState: ProfileStringItem;
+  HomePostalCode: ProfileStringItem;
+  HomeCountry: ProfileStringItem;
+  HomePhone: ProfileStringItem;
   HomeFax: string;
   KeepPrivate: string;
   Barcode: string;
@@ -69,7 +75,7 @@ type BaseProfileInfo = {
   AD_Username: string;
   show_pic: number;
   preferred_photo: number;
-  Country: string;
+  Country: ProfileStringItem;
   BuildingDescription: string;
   Facebook: string;
   Twitter: string;
@@ -81,13 +87,13 @@ type BaseProfileInfo = {
   fullName?: string;
   CliftonStrengths: CliftonStrengths | null;
   Married?: string;
+  SpouseName: ProfileStringItem;
 };
 
 export type UnformattedFacStaffProfileInfo = BaseProfileInfo & {
   Dept: string;
   JobTitle: string;
   OnCampusDepartment: string;
-  SpouseName: string;
   Type: string;
   FirstHireDt: string;
   office_hours: string;
@@ -122,7 +128,7 @@ export type UnformattedStudentProfileInfo = BaseProfileInfo & {
   Minor1: string;
   Minor2: string;
   Minor3: string;
-  MobilePhone: string;
+  MobilePhone: ProfileStringItem;
   IsMobilePhonePrivate: number;
   Major1Description: string;
   Major2Description: string;
@@ -198,6 +204,11 @@ export type OfficeLocationQuery = {
   RoomNumber: string;
 };
 
+export type UserPrivacyQuery = {
+  Field: string[];
+  VisibilityGroup: string;
+};
+
 export function isStudent(profile: Profile): profile is StudentProfileInfo;
 export function isStudent(
   profile: UnformattedProfileInfo,
@@ -227,10 +238,10 @@ export function isAlumni(
 }
 
 function formatCountry(profile: UnformattedProfileInfo) {
-  if (profile?.Country?.includes(',')) {
-    const country = profile.Country;
+  if (profile?.Country?.value.includes(',')) {
+    const country = profile.Country.value;
     const commaIndex = country.indexOf(',');
-    profile.Country = `${country.slice(commaIndex + 2)} ${country.slice(0, commaIndex)}`;
+    profile.Country.value = `${country.slice(commaIndex + 2)} ${country.slice(0, commaIndex)}`;
   }
   return profile;
 }
@@ -269,6 +280,11 @@ const getAdvisors = (username: string): Promise<StudentAdvisorInfo[]> =>
 const getMailboxInformation = (): Promise<{ Combination: string }> =>
   http.get('profiles/mailbox-information/');
 
+const getVisibilityGroups = (): Promise<string[]> => http.get(`profiles/visibility_groups`);
+
+const getPrivacySetting = (username: string): Promise<string> =>
+  http.get(`profiles/${username}/privacy_settings/`);
+
 const getMailStops = (): Promise<string[]> => http.get(`profiles/mailstops`);
 
 const setMobilePhoneNumber = (value: number | string) =>
@@ -289,8 +305,8 @@ const updateOfficeHours = (value: string) => http.put(`profiles/office_hours`, v
 const setMobilePhonePrivacy = (makePrivate: boolean) =>
   http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N')); // 'Y' = private, 'N' = public
 
-const setHomePhonePrivacy = (makePrivate: boolean) =>
-  http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N')); // 'Y' = private, 'N' = public
+const setUserPrivacy = (userPrivacy: UserPrivacyQuery) =>
+  http.put(`profiles/user_privacy`, userPrivacy);
 
 const setImagePrivacy = (makePrivate: boolean) =>
   http.put('profiles/image_privacy/' + (makePrivate ? 'N' : 'Y')); // 'Y' = show image, 'N' = don't show image
@@ -312,7 +328,7 @@ const getProfileInfo = async (username: string = ''): Promise<Profile | undefine
 
   if (!profile) return undefined;
 
-  const fullName = `${profile?.FirstName} ${profile?.LastName}`;
+  const fullName = `${profile?.FirstName.value} ${profile?.LastName.value}`;
   const cliftonStrengths = await CliftonStrengthsService.getCliftonStrengths(profile.AD_Username);
 
   if (isStudent(profile)) {
@@ -406,8 +422,8 @@ const getGraduation = (username: string): Promise<Graduation> =>
 
 const userService = {
   setMobilePhonePrivacy,
+  setUserPrivacy,
   setPlannedGraduationYear,
-  setHomePhonePrivacy,
   setMobilePhoneNumber,
   updateMailStop,
   updateOfficeLocation,
@@ -420,6 +436,8 @@ const userService = {
   getAdvisors,
   getMailboxInformation,
   getMembershipHistory,
+  getVisibilityGroups,
+  getPrivacySetting,
   getGraduation,
   resetImage,
   postImage,

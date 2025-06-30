@@ -35,7 +35,7 @@ export const GordonNavAvatarRightCorner = ({ onClick }: Props) => {
       <Avatar className={styles.root} src={`data:image/jpg;base64,${image}`} sizes="70px" />
     ) : (
       <Avatar className={styles.root}>
-        {user.profile?.FirstName?.[0]} {user.profile?.LastName?.[0]}
+        {user.profile?.FirstName?.value[0]} {user.profile?.LastName?.value[0]}
       </Avatar>
     )
   ) : (
