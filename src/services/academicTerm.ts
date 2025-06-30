@@ -8,9 +8,9 @@ export type AcademicTerm = {
   Description: string;
 };
 
-export const getAllTerms = (): Promise<AcademicTerm[]> => http.get('/academicterm/allterms');
+export const getAllTerms = (): Promise<AcademicTerm[]> => http.get('academicterm/allterms');
 
-export const getCurrentTerm = (): Promise<AcademicTerm> => http.get('/academicterm/currentterm');
+export const getCurrentTerm = (): Promise<AcademicTerm> => http.get('academicterm/currentterm');
 
 const academicTermService = {
   getAllTerms,
