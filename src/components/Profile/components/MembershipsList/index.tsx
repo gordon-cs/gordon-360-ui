@@ -24,8 +24,7 @@ type Props = {
 
 /**
  * A List of memberships for display on the Profile and MyProfile views.
- *
- * @param {Object} props The component props
+ * @param {object} props The component props
  * @param {string} props.username Username of the profile being viewed
  * @param {boolean} props.myProf Whether this is shown in MyProfile or not
  * @param {Function} props.createSnackbar function to create a snackbar of whether an operation succeeded

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import styles from './GordonOffline.module.css';
 
 /**
- * @param {Object} props props
+ * @param {object} props props
  * @param {string} props.feature - Text representing the content the user tried to access
  * @returns {JSX.Element} A card with a message that the user must connect to view content
  */
