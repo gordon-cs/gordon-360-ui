@@ -293,3 +293,18 @@ button.rbc-input::-moz-focus-inner {
   border-bottom: 1px solid var(--mui-palette-neutral-dark);
   flex-shrink: 0;
 }
+
+.subterm {
+  max-width: 55% !important;
+  padding-left: 2px;
+  filter: brightness(145%);
+  left: auto !important;
+}
+
+.subterm1 {
+  left: 0%;
+}
+
+.subterm2 {
+  right: 0%;
+}
