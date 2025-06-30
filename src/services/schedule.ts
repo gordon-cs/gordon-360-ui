@@ -174,7 +174,7 @@ export function formatTermDescription(term: { YearCode: string; TermCode: string
                 ? 'Summer-Fall'
                 : term.TermCode;
 
-  return `${termName} ${year1.slice(2)}-${year2.slice(2)}`;
+  return `${termName} ${year1.slice(0)}-${year2.slice(2)} Academic Year`;
 }
 
 const scheduleService = {
