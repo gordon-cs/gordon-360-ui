@@ -31,11 +31,9 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
   const [allSchedules, setAllSchedules] = useState<Schedule[]>([]);
   const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<CourseEvent | null>(null);
-  // Open by default unless user has stored preference
-  const [isScheduleOpen, setIsScheduleOpen] = useState<boolean>(() => {
-    const stored = localStorage.getItem(scheduleOpenKey);
-    return stored === null ? true : stored !== 'false';
-  });
+  const [isScheduleOpen, setIsScheduleOpen] = useState<boolean>(
+    localStorage.getItem(scheduleOpenKey) !== 'false',
+  );
 
   useEffect(() => {
     setLoading(true);
@@ -45,45 +43,58 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
       sessionService.getCurrent(),
     ])
       .then(([allSessionSchedules, currentSession]) => {
-        // Sort schedules descending by start date (newest first)
+        // Sort schedules descending by SessionBeginDate (newest first)
         const sortedSchedules = [...allSessionSchedules].sort(
           (a, b) =>
-            new Date((b.session as any).SessionBeginDate).getTime() -
-            new Date((a.session as any).SessionBeginDate).getTime(),
+            new Date(b.session.SessionBeginDate).getTime() -
+            new Date(a.session.SessionBeginDate).getTime(),
         );
 
         setAllSchedules(sortedSchedules);
 
-        // Find current session schedule
+        const now = new Date();
+        const currentSessionEnd = new Date(currentSession.SessionEndDate);
+
+        // Find schedule for current session
         const currentSchedule = sortedSchedules.find(
           (s) => s.session.SessionCode.trim() === currentSession.SessionCode.trim(),
         );
+
         const hasCoursesInCurrent = (currentSchedule?.courses?.length ?? 0) > 0;
 
-        let defaultSchedule: Schedule | undefined;
+        let defaultSchedule: Schedule | null = null;
 
-        if (hasCoursesInCurrent) {
-          // Show current session schedule if student has courses
-          defaultSchedule = currentSchedule;
-        } else {
-          // Otherwise, try to find next future session with courses
-          const currentStart = new Date(currentSession.SessionBeginDate).getTime();
-
-          const futureScheduleWithCourses = sortedSchedules.find(
-            (s) =>
-              new Date((s.session as any).SessionBeginDate).getTime() > currentStart &&
-              (s.courses?.length ?? 0) > 0,
-          );
-
-          if (futureScheduleWithCourses) {
-            defaultSchedule = futureScheduleWithCourses;
+        if (now <= currentSessionEnd) {
+          // If current session is in progress
+          if (hasCoursesInCurrent) {
+            // Show current session schedule if student has courses
+            defaultSchedule = currentSchedule ?? null;
           } else {
-            // Otherwise fallback: most recent schedule with courses
-            defaultSchedule = sortedSchedules.find((s) => (s.courses?.length ?? 0) > 0);
+            // Otherwise show next term with courses if any
+            defaultSchedule =
+              sortedSchedules.find(
+                (s) =>
+                  new Date(s.session.SessionBeginDate) > currentSessionEnd &&
+                  (s.courses?.length ?? 0) > 0,
+              ) ?? null;
           }
+        } else {
+          // If no academic session in progress (current session ended)
+          // Show next term with courses if any
+          defaultSchedule =
+            sortedSchedules.find(
+              (s) =>
+                new Date(s.session.SessionBeginDate) > currentSessionEnd &&
+                (s.courses?.length ?? 0) > 0,
+            ) ?? null;
         }
 
-        setSelectedSchedule(defaultSchedule ?? null);
+        // If still no schedule found, fallback to most recent schedule with courses
+        if (!defaultSchedule) {
+          defaultSchedule = sortedSchedules.find((s) => (s.courses?.length ?? 0) > 0) ?? null;
+        }
+
+        setSelectedSchedule(defaultSchedule);
         setLoading(false);
       })
       .catch((reason: AuthError) => {
@@ -120,7 +131,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
             </Grid>
           </AccordionSummary>
         ) : (
-          <div></div>
+          <div />
         )}
         {allSchedules.length > 0 ? (
           <AccordionDetails>
@@ -171,14 +182,14 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
             </Grid>
           </AccordionDetails>
         ) : (
-          <div></div>
+          <div />
         )}
       </Accordion>
       {myProf && selectedCourse && selectedSchedule && (
         <ScheduleDialog
           onClose={() => setSelectedCourse(null)}
           course={selectedCourse}
-          session={selectedSchedule?.session}
+          session={selectedSchedule.session}
         />
       )}
     </>

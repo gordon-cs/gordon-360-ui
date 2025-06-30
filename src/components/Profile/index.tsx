@@ -72,12 +72,13 @@ const Profile = ({ profile, myProf }: Props) => {
         <Grid item xs={12} lg={10}>
           <Grid container spacing={2}>
             <OfficeInfoList profile={profile} myProf={myProf} />
-            {viewerIsPolice && <EmergencyInfoList username={profile.AD_Username} />}
+            {viewerIsPolice ? <EmergencyInfoList username={profile.AD_Username} /> : null}
           </Grid>
         </Grid>
       )}
 
       <Grid item xs={12} lg={10}>
+        {/* Pass profile and myProf as before */}
         <SchedulePanel profile={profile} myProf={myProf} />
       </Grid>
 
@@ -89,7 +90,7 @@ const Profile = ({ profile, myProf }: Props) => {
             isOnline={isOnline}
             createSnackbar={createSnackbar}
           />
-          {viewerIsPolice && <EmergencyInfoList username={profile.AD_Username} />}
+          {viewerIsPolice ? <EmergencyInfoList username={profile.AD_Username} /> : null}
         </Grid>
       </Grid>
 
