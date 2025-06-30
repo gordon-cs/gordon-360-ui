@@ -13,10 +13,12 @@ import {
   Checkbox,
   FormControlLabel,
   FormGroup,
+  IconButton,
 } from '@mui/material';
 import { InputAdornment } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import marketplaceService from 'services/marketplace';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 
 const ListingUploader = ({ open, onClose, isEdit = false, listing = null, onSubmit }) => {
   const theme = useTheme();
@@ -304,30 +306,68 @@ const ListingUploader = ({ open, onClose, isEdit = false, listing = null, onSubm
                 paddingBottom: 1,
               }}
             >
-              {uploadedImages.length === 0 && (
-                <Box
-                  sx={{
-                    width: '15em',
-                    height: '15em',
-                    borderRadius: 2,
-                    backgroundColor: theme.palette.neutral.dark,
-                    boxShadow: 1,
-                    cursor: 'pointer',
-                    overflow: 'hidden',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    flexShrink: 0,
-                  }}
-                  onClick={() => document.getElementById('upload-images-input').click()}
-                >
-                  <Typography variant="body" color="text.secondary" align="center">
-                    Upload Image
-                    <br />
-                    (jpg, jpeg, png, HEIC)
-                  </Typography>
-                </Box>
-              )}
+              <Box
+                sx={{
+                  width: '15em',
+                  height: '15em',
+                  borderRadius: 2,
+                  backgroundColor: theme.palette.neutral.dark,
+                  boxShadow: 1,
+                  cursor: 'pointer',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  flexShrink: 0,
+                  border: (theme) => `2px dashed ${theme.palette.text.secondary}`,
+                  transition: 'background 0.2s',
+                  '&.drag-over': {
+                    backgroundColor: theme.palette.primary.main,
+                  },
+                }}
+                onClick={() => document.getElementById('upload-images-input').click()}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  e.currentTarget.classList.add('drag-over');
+                }}
+                onDragLeave={(e) => {
+                  e.preventDefault();
+                  e.currentTarget.classList.remove('drag-over');
+                }}
+                onDrop={async (e) => {
+                  e.preventDefault();
+                  e.currentTarget.classList.remove('drag-over');
+                  const files = Array.from(e.dataTransfer.files);
+                  const processedFiles = await Promise.all(
+                    files.map(async (file) => {
+                      if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) {
+                        try {
+                          const convertedBlob = await heic2any({
+                            blob: file,
+                            toType: 'image/jpeg',
+                            quality: 0.9,
+                          });
+                          return new File([convertedBlob], file.name.replace(/\.heic$/i, '.jpeg'), {
+                            type: 'image/jpeg',
+                          });
+                        } catch (err) {
+                          console.error('HEIC conversion failed:', err);
+                          return null;
+                        }
+                      }
+                      return file;
+                    }),
+                  );
+                  const validFiles = processedFiles.filter(Boolean);
+                  setUploadedImages((prev) => [...prev, ...validFiles]);
+                }}
+              >
+                <Typography variant="body" color="text.secondary" align="center">
+                  Upload Image(s)
+                  <br />
+                  (jpg, jpeg, png, HEIC)
+                </Typography>
+              </Box>
 
               {uploadedImages.map((file, index) => (
                 <Box
@@ -340,12 +380,9 @@ const ListingUploader = ({ open, onClose, isEdit = false, listing = null, onSubm
                     boxShadow: 1,
                     cursor: 'pointer',
                     overflow: 'hidden',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    flexShrink: 0, // Prevent shrinking so width stays fixed
+                    position: 'relative', // Needed for absolute positioning of the delete button
+                    flexShrink: 0,
                   }}
-                  onClick={() => document.getElementById('upload-images-input').click()}
                 >
                   <Box
                     component="img"
@@ -354,6 +391,20 @@ const ListingUploader = ({ open, onClose, isEdit = false, listing = null, onSubm
                     sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     onLoad={(e) => URL.revokeObjectURL(e.target.src)}
                   />
+
+                  <IconButton
+                    size="small"
+                    sx={{
+                      position: 'absolute',
+                      top: -5,
+                      right: -5,
+                    }}
+                    onClick={() => {
+                      setUploadedImages((prev) => prev.filter((_, i) => i !== index));
+                    }}
+                  >
+                    <RemoveCircleIcon color="error" fontSize="medium" />
+                  </IconButton>
                 </Box>
               ))}
             </Box>
