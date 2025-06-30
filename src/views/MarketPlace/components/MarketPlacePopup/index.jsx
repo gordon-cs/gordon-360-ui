@@ -22,6 +22,7 @@ import styles from '../../MarketPlace.module.scss';
 import { AuthGroup } from 'services/auth';
 import { useAuthGroups, useNetworkStatus } from 'hooks';
 import ListingUploader from '../ListingUploader';
+import { toDate } from 'date-fns';
 
 const MarketPlacePopup = ({ open, item, onClose, onStatusChange }) => {
   const isOnline = useNetworkStatus();
@@ -320,7 +321,7 @@ Thank you
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
-                  mt: 2,
+                  mt: 4,
                   cursor: 'pointer',
                   width: '50%',
                 }}
@@ -364,6 +365,10 @@ Thank you
                 <Typography variant="h6" fontWeight="bold">
                   {item.Name}
                 </Typography>
+                <Typography variant="subtitle1" fontStyle="italic">
+                  {new Date(item.PostedAt).toDateString()}
+                </Typography>
+
                 <Typography
                   sx={{ cursor: 'pointer', fontSize: '1.5rem' }}
                   onClick={handleMenuClick}
