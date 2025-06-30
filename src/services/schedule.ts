@@ -168,9 +168,13 @@ export function formatTermDescription(term: { YearCode: string; TermCode: string
           ? 'Summer'
           : term.TermCode === 'JN'
             ? 'January'
-            : term.TermCode;
+            : term.TermCode === 'WS'
+              ? 'Winter-Spring'
+              : term.TermCode === 'SF'
+                ? 'Summer-Fall'
+                : term.TermCode;
 
-  return `${termName} ${year1.slice(2)}-${year2.slice(2)} Academic Year`;
+  return `${termName} ${year1.slice(2)}-${year2.slice(2)}`;
 }
 
 const scheduleService = {
