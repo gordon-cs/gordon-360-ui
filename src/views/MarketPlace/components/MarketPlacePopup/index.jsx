@@ -118,7 +118,7 @@ const MarketPlacePopup = ({ open, item, onClose, onStatusChange }) => {
     const body = `
 Hello Student Life,
 
-A marketplace post has been reported by a student as potentially inappropriate or against the college guidelines.
+A marketplace post has been reported by a user as potentially inappropriate or against the college guidelines.
 
 Reported Post Details:
 - Title: ${item.Name}

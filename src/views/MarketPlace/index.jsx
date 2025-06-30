@@ -47,7 +47,7 @@ const Marketplace = () => {
   const [minPrice, setMinPrice] = useState(undefined);
   const [maxPrice, setMaxPrice] = useState(undefined);
   const [sortBy, setSortBy] = useState('Date');
-  const [desc, setDesc] = useState(false);
+  const [desc, setDesc] = useState(true);
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const currentUsername = msalInstance.getActiveAccount()?.username;
