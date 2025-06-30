@@ -22,7 +22,7 @@ const LostAndFoundCard = () => {
               </Grid>
             </Link>
           }
-          className={`gc360_header ${styles.linkHeader}`}
+          className={`gc360_header ${styles.linkHeader} drag-handle`}
         />
         <CardContent>
           <Grid container direction="row" justifyContent="space-between">

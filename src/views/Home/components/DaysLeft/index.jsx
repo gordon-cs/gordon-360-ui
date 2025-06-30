@@ -107,7 +107,7 @@ const DaysLeft = () => {
   overlap with the  backContainer and make it seem like the color changes as the backContainer
   gets covered. */
   return (
-    <Grid align="center">
+    <Grid align="center" className="drag-handle">
       {daysLeftDialog !== '' ? (
         <div className={styles.backContainer}>
           {daysLeftDialog}

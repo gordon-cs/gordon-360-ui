@@ -144,7 +144,7 @@ const DiningBalance = () => {
           container
           justifyContent="space-around"
           spacing={0}
-          style={{ paddingTop: 5, paddingBottom: 10 }}
+          style={{ paddingTop: 5, paddingBottom: 10, height: '100%' }}
         >
           <Grid item>
             <Typography variant="body2" className={styles.label2}>
@@ -240,7 +240,7 @@ const DiningBalance = () => {
             </Grid>
           </Grid>
         }
-        className="gc360_header"
+        className="gc360_header drag-handle"
       />
       <CardContent>{content}</CardContent>
     </Card>
