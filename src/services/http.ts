@@ -22,7 +22,6 @@ const put = <TResponse>(
 
 /**
  * Post image data to the API
- *
  * @param endpoint url of the endpoint to post the image to
  * @param imageData base64 encoded data URI of the image to post
  * @param headers HTTP headers to include in the request
@@ -66,7 +65,6 @@ const apiBaseURL = getEnvVar('NODE_ENV') === 'development' ? '/' : getEnvVar('VI
 
 /**
  * Make a request to the API
- *
  * @param endpoint API endpoint to request, a URL relative to API base URL, ex: `activity/023487` (no leading slash)
  * @param method HTTP method to use
  * @param body Body of the request
@@ -90,7 +88,6 @@ const makeRequest = async <TResponse>(
 
 /**
  * Parse an HTTP response
- *
  * @param res the response to parse
  * @returns Resolves with the response body; Rejects on a non-2xx response code
  */
@@ -150,7 +147,6 @@ type QueryStringSerializable = QueryStringPrimitive | Array<QueryStringPrimitive
 
 /**
  * Convert an object into a URL query string.
- *
  * @param queryParams Object containing params to be serialized into a URL query string
  * @returns URL query string of the form `'?key1=value1&key2=value2'`, or an empty string if `queryParams` is `undefined`.
  */

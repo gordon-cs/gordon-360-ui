@@ -129,7 +129,7 @@ describe('<DiningBalance />', () => {
     render(<DiningBalance />);
     await waitFor(() => {
       const button = screen.getByRole('link', { name: /today's menu/i });
-      expect(button).toHaveAttribute('href', 'https://www.gordonmetz.com/');
+      expect(button).toHaveAttribute('href', 'https://www.nutritics.com/menu/ma4080');
     });
   });
 
