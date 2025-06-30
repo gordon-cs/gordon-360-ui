@@ -42,17 +42,17 @@ const MyUploadsPopup = ({ open, onClose, backendURL }) => {
       <AppBar position="static" sx={{ backgroundColor: 'primary.main', boxShadow: 'none' }}>
         <Toolbar>
           <Typography variant="h5">
+            <Box component="span">My</Box>{' '}
             <Box component="span" sx={{ fontWeight: 'bold', color: 'warning.main' }}>
-              Gordon
-            </Box>{' '}
-            Marketplace - My Uploads
+              Uploads
+            </Box>
           </Typography>
         </Toolbar>
       </AppBar>
       <IconButton
         aria-label="close"
         onClick={onClose}
-        sx={{ position: 'absolute', right: 8, top: 8 }}
+        sx={{ position: 'absolute', right: 8, top: 8, color: 'white' }}
       >
         <CloseIcon />
       </IconButton>

@@ -9,7 +9,9 @@ import {
   Button,
   Menu,
   MenuItem,
+  IconButton,
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getProfileImage, getProfileInfo } from 'services/marketplace';
@@ -235,6 +237,13 @@ Thank you
             </Typography>
           </Toolbar>
         </AppBar>
+        <IconButton
+          aria-label="close"
+          onClick={onClose}
+          sx={{ position: 'absolute', right: 8, top: 8, color: 'white' }}
+        >
+          <CloseIcon />
+        </IconButton>
         <DialogContent dividers>
           <Grid container spacing={3}>
             {/* Left - Image and Seller */}

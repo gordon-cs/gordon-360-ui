@@ -19,6 +19,7 @@ import { InputAdornment } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import marketplaceService from 'services/marketplace';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import CloseIcon from '@mui/icons-material/Close';
 
 const ListingUploader = ({ open, onClose, isEdit = false, listing = null, onSubmit }) => {
   const theme = useTheme();
@@ -137,6 +138,13 @@ const ListingUploader = ({ open, onClose, isEdit = false, listing = null, onSubm
           </Typography>
         </Toolbar>
       </AppBar>
+      <IconButton
+        aria-label="close"
+        onClick={onClose}
+        sx={{ position: 'absolute', right: 8, top: 8, color: 'white' }}
+      >
+        <CloseIcon />
+      </IconButton>
 
       <DialogContent sx={{ p: 4 }}>
         <Typography variant="h6" gutterBottom>
