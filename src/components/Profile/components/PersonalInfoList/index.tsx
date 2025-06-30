@@ -197,7 +197,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
         }
       }
     }
-  }, [isStudent, myProf, graduationInfo, profPlannedGradYear, createSnackbar]);
+  }, [isStudent, myProf, graduationInfo, setPlannedGradDate, profPlannedGradYear, createSnackbar]);
 
   const handleChangeCliftonStrengthsPrivacy = async () => {
     try {

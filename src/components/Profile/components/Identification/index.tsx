@@ -26,7 +26,6 @@ import 'cropperjs/dist/cropper.css';
 import { useUserActions } from 'hooks';
 import { useEffect, useRef, useState, ReactNode } from 'react';
 import Cropper, { ReactCropperElement } from 'react-cropper';
-import ZoomEvent from 'react-cropper';
 import Dropzone from 'react-dropzone';
 import { Link } from 'react-router-dom';
 import { Link as MuiLink } from '@mui/material';
