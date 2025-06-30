@@ -4,6 +4,7 @@ import {
   Typography,
   Dialog,
   DialogContent,
+  Divider,
   Grid,
   Box,
   Button,
@@ -248,7 +249,7 @@ Thank you
         <DialogContent dividers>
           <Grid container spacing={3}>
             {/* Left - Image and Seller */}
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={6} sx={{ position: 'relative' }}>
               {images.length > 1 ? (
                 <div className={styles.sliderWrapper}>
                   <Slider
@@ -317,11 +318,23 @@ Thank you
                   />
                 </Box>
               )}
+              <Divider
+                variant="fullWidth"
+                sx={{
+                  my: 4,
+                  borderColor: 'transparent',
+                }}
+              />
+
               <Box
                 sx={{
+                  position: 'absolute',
+                  bottom: 0,
+                  margin: 'auto',
                   display: 'flex',
                   alignItems: 'center',
                   mt: 4,
+                  mb: 0,
                   cursor: 'pointer',
                   width: '50%',
                 }}
