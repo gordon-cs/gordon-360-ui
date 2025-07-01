@@ -12,9 +12,15 @@ export const getAllTerms = (): Promise<AcademicTerm[]> => http.get('academicterm
 
 export const getCurrentTerm = (): Promise<AcademicTerm> => http.get('academicterm/currentterm');
 
+export const getUndergradTerms = async (): Promise<AcademicTerm[]> => {
+  const allTerms = await getAllTerms();
+  return allTerms.filter((term) => ['FA', 'SP', 'SU'].includes(term.TermCode));
+};
+
 const academicTermService = {
   getAllTerms,
   getCurrentTerm,
+  getUndergradTerms,
 };
 
 export default academicTermService;
