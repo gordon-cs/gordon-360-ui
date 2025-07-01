@@ -141,7 +141,6 @@ export const TIME_FILTERS = Object.freeze(['1 Week', '2 Weeks', '1 Month', '4 Mo
  * Make a closure over a time filter.
  *
  * The returned closure determines whether a given `event` falls within the time range
- *
  * @param timeFilter The time filter to use
  * @returns A function that matches a given event against `timeFilter`
  */
@@ -167,7 +166,6 @@ const makeMatchesTimeFilter =
  * Make a closure over a search string.
  *
  * The returned closure determines whether a given `event` matches the`search` string
- *
  * @param search The string to search for
  * @returns A function that matches a given event against `search`
  */
@@ -187,7 +185,6 @@ const makeMatchesSearch = (search: string) => {
  * Make a closure over a list of filters.
  *
  * The returned closure determines whether a given `event` matches any filter in `filters`
- *
  * @param filters The list of filters to match an event against
  * @returns A function that matches a given event against `filters`
  */

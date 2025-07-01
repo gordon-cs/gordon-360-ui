@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Card,
   CardContent,
@@ -224,17 +225,18 @@ const DiningBalance = () => {
               Dining Balance
             </Grid>
             <Grid item xs={5} align="right">
-              <Button
-                variant="contained"
-                color="secondary"
-                component={Link}
-                href="https://www.gordonmetz.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                align="center"
-              >
-                TODAY'S MENU
-              </Button>
+              <Box sx={{ textAlign: 'center' }}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  component={Link}
+                  href="https://www.nutritics.com/menu/ma4080"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  TODAY'S MENU
+                </Button>
+              </Box>
             </Grid>
           </Grid>
         }

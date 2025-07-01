@@ -11,7 +11,6 @@
 
 /**
  * This file handles the caching of all static remote files needed for an authenticated user offline
- *
  * @author Jahnuel Dorelus
  */
 
@@ -225,10 +224,10 @@ async function cacheUserFiles() {
 
 /**
  * Does a fetch of a link and attempts to cache it.
- * @param {String} link The URL of the fetch
+ * @param {string} link The URL of the fetch
  * @param {Headers} headers The headers needed for the request to have authentication
- * @param {Number} attemptsLeft Determines how many times a fetch should retry if it fails
- * @returns {Boolean} Determines if the fetch was successful
+ * @param {number} attemptsLeft Determines how many times a fetch should retry if it fails
+ * @returns {boolean} Determines if the fetch was successful
  */
 async function fetchUserFile(link, headers, attemptsLeft = 2) {
   // Attempts to do a fetch with the given link
@@ -320,8 +319,8 @@ async function removeUserCache() {
 /**
  * Saves the response's link by status number in order to have a list of links per
  * HTTP Status Code
- * @param {String} badLink The url of the bad response
- * @param {Number} statusNum The status number of the response
+ * @param {string} badLink The url of the bad response
+ * @param {number} statusNum The status number of the response
  */
 function saveBadResponseUserLink(badLink, statusNum) {
   // If the list for the response's status number is non-existent, the list is created
@@ -346,7 +345,7 @@ function saveBadResponseUserLink(badLink, statusNum) {
 
 /**
  * Saves the link of a canceled fetch
- * @param {String} link The url of the canceled fetch
+ * @param {string} link The url of the canceled fetch
  */
 function saveCanceledUserLink(link) {
   // Checks to make sure the link is not already in the list to prevent duplicates
@@ -355,7 +354,7 @@ function saveCanceledUserLink(link) {
 
 /**
  * Saves the link of a failed fetch
- * @param {String} link The url of the failed fetch
+ * @param {string} link The url of the failed fetch
  */
 function saveFailedUserLink(link) {
   // Checks to make sure the link is not already in the list to prevent duplicates
@@ -364,7 +363,7 @@ function saveFailedUserLink(link) {
 
 /**
  * Saves the link of a successful fetch
- * @param {String} link The url of the successful fetch
+ * @param {string} link The url of the successful fetch
  */
 function saveSuccessfulUserLink(link) {
   // Checks to make sure the link is not already in the list to prevent duplicates

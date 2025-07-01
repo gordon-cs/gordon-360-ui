@@ -21,20 +21,31 @@ type Props = {
   myProf: boolean;
 };
 
+type SnackbarState = {
+  message: string;
+  severity: string;
+  open: boolean;
+  link?: string;
+  linkText?: string; // Add the optional link property
+};
+
 const Profile = ({ profile, myProf }: Props) => {
-  const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
+  const [snackbar, setSnackbar] = useState<SnackbarState>({
+    message: '',
+    severity: '',
+    open: false,
+  });
+
   const isOnline = useNetworkStatus();
   const viewerIsPolice = useAuthGroups(AuthGroup.Police);
-  const [canReadStudentSchedules, setCanReadStudentSchedules] = useState<boolean>();
   const profileIsStudent = profile.PersonType?.includes('stu');
 
-  const createSnackbar = useCallback((message: string, severity: AlertColor) => {
-    setSnackbar({ message, severity, open: true });
-  }, []);
-
-  useEffect(() => {
-    scheduleService.getCanReadStudentSchedules().then(setCanReadStudentSchedules);
-  }, []);
+  const createSnackbar = useCallback(
+    (message: string, severity: AlertColor, link?: string, linkText?: string) => {
+      setSnackbar({ message, severity, open: true, link, linkText }); // Include the link property
+    },
+    [],
+  );
 
   return (
     <Grid container justifyContent="center" spacing={2}>
@@ -68,11 +79,9 @@ const Profile = ({ profile, myProf }: Props) => {
         </Grid>
       )}
 
-      {(myProf || !profileIsStudent || canReadStudentSchedules) && (
-        <Grid item xs={12} lg={10}>
-          <SchedulePanel profile={profile} myProf={myProf} />
-        </Grid>
-      )}
+      <Grid item xs={12} lg={10}>
+        <SchedulePanel profile={profile} myProf={myProf} />
+      </Grid>
 
       <Grid item xs={12} lg={5}>
         <Grid container spacing={2}>
@@ -100,6 +109,8 @@ const Profile = ({ profile, myProf }: Props) => {
         text={snackbar.message}
         severity={snackbar.severity as AlertColor}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+        link={snackbar.link}
+        linkText={snackbar.linkText} // Pass the link property to the snackbar
       />
     </Grid>
   );

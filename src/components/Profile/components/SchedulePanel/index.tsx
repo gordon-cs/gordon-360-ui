@@ -23,9 +23,9 @@ import GordonLoader from 'components/Loader';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
 import ScheduleDialog from './components/ScheduleDialog';
 import styles from './ScheduleHeader.module.css';
-import scheduleService, { CourseEvent, Schedule } from 'services/schedule';
-import sessionService from 'services/session';
+import scheduleService, { CourseEvent, formatTermDescription, Schedule } from 'services/schedule';
 import { Profile } from 'services/user';
+import academicTermService from 'services/academicTerm';
 import { Button } from '@mui/material';
 import { getFinalExamEvents, formatFinalExamEvent, FinalExamEvent } from 'services/event';
 
@@ -53,62 +53,22 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
     setLoading(true);
 
     Promise.all([
-      scheduleService.getAllSessionSchedules(profile.AD_Username),
-      sessionService.getCurrent(),
-      sessionService.getCurrentForFinalExams(),
-    ]).then(([allSessionSchedules, currentSession, currentFinalSession]) => {
-      setAllSchedules(allSessionSchedules);
-      setCurrentSessionCode(currentSession.SessionCode);
-      setCurrentFinalSessionCode(currentFinalSession.SessionCode);
+      scheduleService.getAllTermSchedules(profile.AD_Username),
+      academicTermService.getCurrentTerm(),
+    ]).then(([allTermSchedules, currentTerm]) => {
+      setAllSchedules(allTermSchedules);
       const defaultSchedule =
-        // If there is a schedule for the current session, make it d4fault
-        allSessionSchedules.find((s) => s.session.SessionCode === currentSessionCode) ??
-        // Otherwise, use the most recent session
-        allSessionSchedules[0];
+        // If there is a schedule for the current term, make it d4fault
+        allTermSchedules.find(
+          (s) =>
+            s.term.YearCode === currentTerm.YearCode && s.term.TermCode === currentTerm.TermCode,
+        ) ??
+        // Otherwise, use the most recent term
+        allTermSchedules[0];
       setSelectedSchedule(defaultSchedule);
       setLoading(false);
     });
   }, [profile.AD_Username]);
-
-  useEffect(() => {
-    if (!selectedSchedule || selectedSchedule.session.SessionCode !== currentFinalSessionCode) {
-      setFinalExams([]);
-      setFinalExamsLoading(false);
-      return;
-    }
-
-    setFinalExams([]);
-    setFinalExamsLoading(true);
-    getFinalExamEvents(profile.AD_Username)
-      .then((data) => {
-        const sessionStart = new Date(selectedSchedule.session.SessionBeginDate);
-        const sessionEnd = new Date(selectedSchedule.session.SessionEndDate);
-
-        const enrolledCourseCodes = selectedSchedule.courses.map((course) =>
-          course.title.replace(/\s+/g, ' ').trim().toUpperCase(),
-        );
-        const extractExamCode = (eventName: string) =>
-          eventName
-            .replace(/^EXAM:\s*/, '')
-            .replace(/\s+/g, ' ')
-            .trim()
-            .toUpperCase();
-
-        const filteredExams = data.map(formatFinalExamEvent).filter((exam) => {
-          const examDate = new Date(exam.StartDate);
-          const examCode = extractExamCode(exam.Event_Name);
-          return (
-            examDate >= sessionStart &&
-            examDate <= sessionEnd &&
-            enrolledCourseCodes.includes(examCode)
-          );
-        });
-
-        setFinalExams(filteredExams);
-      })
-      .catch(() => setFinalExams([]))
-      .finally(() => setFinalExamsLoading(false));
-  }, [selectedSchedule, profile.AD_Username, currentFinalSessionCode]);
 
   const toggleIsScheduleOpen = () => {
     setIsScheduleOpen((wasOpen) => {
@@ -150,22 +110,20 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
               <Grid item xs={12} lg={3}>
                 <TextField
                   label="Term"
-                  id="schedule-session"
-                  value={selectedSchedule?.session.SessionCode ?? ''}
+                  id="schedule-term"
+                  value={selectedSchedule?.term.BeginDate ?? ''}
                   onChange={(e) =>
                     setSelectedSchedule(
-                      allSchedules.find((s) => s.session.SessionCode === e.target.value) ?? null,
+                      allSchedules.find((s) => s.term.BeginDate === e.target.value) ?? null,
                     )
                   }
                   select
                 >
-                  {allSchedules.map(
-                    ({ session: { SessionDescription: description, SessionCode: code } }) => (
-                      <MenuItem value={code} key={code}>
-                        {description}
-                      </MenuItem>
-                    ),
-                  )}
+                  {allSchedules.map(({ term }) => (
+                    <MenuItem value={term.BeginDate} key={term.BeginDate}>
+                      {formatTermDescription(term)}
+                    </MenuItem>
+                  ))}
                 </TextField>
               </Grid>
               <Grid item style={{ minWidth: 180 }}>
@@ -208,7 +166,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
         <ScheduleDialog
           onClose={() => setSelectedCourse(null)}
           course={selectedCourse}
-          session={selectedSchedule?.session}
+          term={selectedSchedule?.term}
         />
       )}
       <Dialog open={finalExamOpen} onClose={() => setFinalExamOpen(false)} maxWidth="md" fullWidth>
