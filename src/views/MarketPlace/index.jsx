@@ -17,13 +17,18 @@ import {
   FormControl,
   FormControlLabel,
   Pagination,
+  IconButton,
 } from '@mui/material';
+import CategoryEditor from './components/CategoryEditor';
+import ConditionEditor from './components/ConditionEditor';
 import styles from './MarketPlace.module.scss';
 import MarketPlacePopup from './components/MarketPlacePopup';
 import ListingUploader from './components/ListingUploader';
 import MyUploadsPopup from './components/MyUploadsPopup';
 import marketplaceService from 'services/marketplace';
 import GordonSnackbar from 'components/Snackbar';
+import { AuthGroup } from 'services/auth';
+import { useAuthGroups, useNetworkStatus } from 'hooks';
 // import DATA from './dummyPosts/dummyPosts';
 
 const sorts = ['Date', 'Price', 'Title'];
@@ -51,6 +56,8 @@ const order = ['Ascending', 'Descending'];
  */
 
 const Marketplace = () => {
+  const [openCategoryEditor, setOpenCategoryEditor] = useState(false);
+  const [openConditionEditor, setOpenConditionEditor] = useState(false);
   const [listings, setListings] = useState([]);
   const [myUploadsOpen, setMyUploadsOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -71,6 +78,7 @@ const Marketplace = () => {
   const [uploaderOpen, setUploaderOpen] = useState(false);
   const [categories, setCategories] = useState([]);
   const [conditions, setConditions] = useState([]);
+  const isSiteAdmin = useAuthGroups(AuthGroup.SiteAdmin);
 
   const updateListingStatus = (id, newStatusId) => {
     setListings((prevListings) =>
@@ -365,7 +373,24 @@ const Marketplace = () => {
               >
                 New Listing
               </Button>
-
+              {isSiteAdmin && (
+                <>
+                  <Button
+                    variant="contained"
+                    sx={{ borderRadius: '10px', margin: '5px' }}
+                    onClick={() => setOpenCategoryEditor(true)}
+                  >
+                    Edit Categories
+                  </Button>
+                  <Button
+                    variant="contained"
+                    sx={{ borderRadius: '10px', margin: '5px' }}
+                    onClick={() => setOpenConditionEditor(true)}
+                  >
+                    Edit Conditions
+                  </Button>
+                </>
+              )}
               <Button
                 variant="contained"
                 sx={{ borderRadius: '10px', margin: '5px' }}
@@ -521,6 +546,24 @@ const Marketplace = () => {
         text={snackbar.message}
         severity={snackbar.severity}
         onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
+      />
+
+      {/** Dialog for Editing the Categories (SiteAdmin only) */}
+      <CategoryEditor
+        open={openCategoryEditor}
+        onClose={() => setOpenCategoryEditor(false)}
+        categories={categories}
+        setCategories={setCategories}
+        createSnackbar={createSnackbar}
+      />
+
+      {/** Dialog for Editing the Conditions (SiteAdmin only) */}
+      <ConditionEditor
+        open={openConditionEditor}
+        onClose={() => setOpenConditionEditor(false)}
+        conditions={conditions}
+        setConditions={setConditions}
+        createSnackbar={createSnackbar}
       />
     </Box>
   );

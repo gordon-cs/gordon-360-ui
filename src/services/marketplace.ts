@@ -69,6 +69,18 @@ export type MarketplaceListing = {
 };
 
 /**
+ * Add a new category (Admin only).
+ */
+const addCategory = (categoryName: string): Promise<MarketplaceCategory> =>
+  http.post<MarketplaceCategory>('/marketplace/categories', categoryName);
+
+/**
+ * Add a new condition (Admin only).
+ */
+const addCondition = (conditionName: string): Promise<MarketplaceCondition> =>
+  http.post<MarketplaceCondition>('/marketplace/conditions', conditionName);
+
+/**
  * Initial Marketplace Listing object for creating a new listing (without Id, StatusId, etc.).
  * ImagesBase64 is an array of base64-encoded image strings.
  */
@@ -211,6 +223,8 @@ const marketplaceService = {
   getCategories,
   getConditions,
   getMyListings,
+  addCategory,
+  addCondition,
 };
 
 export default marketplaceService;
