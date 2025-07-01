@@ -12,6 +12,13 @@ This document outlines a breakdown of test cases to cover features of Gordon360 
   - **Failure and recovery paths**
   - **Security implications (e.g., injection, privacy, access control)**
 
+
+## First few ones
+- [x] Enrollment check in
+- [x] App redirect
+- [x] Birthday Message
+- [x] Emergency Info
+
 ## Home  Page
 
 ### Dining Balance (done)
@@ -29,6 +36,7 @@ This document outlines a breakdown of test cases to cover features of Gordon360 
 - [ ] No results case.
 - [ ] Debounce logic and rapid typing behavior.
 
+### Days Left (Done)
 
 ## 🆔 ID Upload
 
@@ -97,8 +105,4 @@ Covering user-facing editable fields, data privacy, and UI logic:
 
 A lot to be tested
 
-## Other 
-- [x] Enrollment check in
-- [x] App redirect
-- [x] Birthday Message
-- [x] Emergency Info
+
