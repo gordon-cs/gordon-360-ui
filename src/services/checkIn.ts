@@ -21,16 +21,16 @@ type MinorHolds = {
 
 type Holds = MajorHolds & MinorHolds;
 
-type EmergencyContact = {
+export type EmergencyContact = {
   /** the sequence number of the contact, (1, 2, or 3) */
   SEQ_NUMBER: number;
   FirstName: string;
   LastName: string;
   Relationship: string;
-  HomePhone: number;
+  HomePhone: string;
   /** whether the home phone number is international */
   HomePhoneIN: boolean;
-  MobilePhone: number;
+  MobilePhone: string;
   /** whether the mobile phone number is international */
   MobilePhoneIN: boolean;
 };

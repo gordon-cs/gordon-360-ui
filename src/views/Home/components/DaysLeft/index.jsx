@@ -3,6 +3,7 @@ import session from 'services/session';
 import styles from './ProgressBar.module.css';
 import { Grid } from '@mui/material';
 import { differenceInCalendarDays } from 'date-fns';
+import React from 'react';
 
 /* DaysLeft calculates the start and end date of each term and the breaks in between.
 It uses the difference between term start and end dates to find the length of each term break.
@@ -37,6 +38,11 @@ const DaysLeft = () => {
       today.setHours(0, 0, 0, 0);
 
       const sessionList = await session.getAll();
+      if (!sessionList || !Array.isArray(sessionList)) {
+        setDaysLeftDialog('');
+        setTermProgress(0);
+        return;
+      }
 
       let nextSessionStart = null;
       let nextSessionName = null;
@@ -56,6 +62,8 @@ const DaysLeft = () => {
       for (let s of sessionList) {
         const sessionStart = new Date(s.SessionBeginDate);
         const sessionEnd = new Date(s.SessionEndDate);
+        sessionStart.setHours(0, 0, 0, 0);
+        sessionEnd.setHours(0, 0, 0, 0);
 
         const sessionName = s.SessionDescription.split(' ', 1)[0];
 
