@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-
 import {
   Box,
   AppBar,
@@ -20,17 +19,35 @@ import {
   Pagination,
 } from '@mui/material';
 import styles from './MarketPlace.module.scss';
-import DATA from './dummyPosts/dummyPosts';
-import useNetworkStatus from 'hooks/useNetworkStatus';
-import { useNavigate } from 'react-router-dom';
 import MarketPlacePopup from './components/MarketPlacePopup';
 import ListingUploader from './components/ListingUploader';
 import MyUploadsPopup from './components/MyUploadsPopup';
-import { msalInstance } from 'index';
 import marketplaceService from 'services/marketplace';
+// import DATA from './dummyPosts/dummyPosts';
 
 const sorts = ['Date', 'Price', 'Title'];
 const order = ['Ascending', 'Descending'];
+
+/**
+ * Marketplace component renders the main UI for browsing and managing marketplace listings.
+ *
+ * Features:
+ * - Displays all marketplace listings in a responsive grid layout.
+ * - Allows filtering listings by search term, category, price range, and status (e.g., for sale).
+ * - Provides sorting options (e.g., by date, price, or title) and sort order.
+ * - Includes pagination for navigating large sets of results.
+ * - Enables uploading new listings via a modal dialog.
+ * - Lets users view and manage their own uploads through a separate modal.
+ * - Opens a detailed popup when clicking on a listing card to view more information or update status.
+ *
+ * Uses:
+ * - `@mui/material` components for layout and UI.
+ * - `marketplaceService` for fetching and updating listing data.
+ * - Custom components: `MarketPlacePopup`, `ListingUploader`, `MyUploadsPopup`.
+ *
+ * @component
+ * @returns  The rendered Marketplace page.
+ */
 
 const Marketplace = () => {
   const [listings, setListings] = useState([]);
@@ -38,9 +55,7 @@ const Marketplace = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [error, setError] = useState(null);
   const backendURL = import.meta.env.VITE_API_URL;
-
   const [loading, setLoading] = useState(true);
-
   const [search, setSearch] = useState('');
   const [categoryId, setCategoryId] = useState(undefined); // number or undefined
   const [statusId, setStatusId] = useState(1); // e.g., 2 for Sold or undefined
@@ -50,11 +65,7 @@ const Marketplace = () => {
   const [desc, setDesc] = useState(true);
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
-  const currentUsername = msalInstance.getActiveAccount()?.username;
-  const currentUsernameShort = currentUsername?.split('@')[0];
-
   const pageSize = 20;
-
   const [dialogOpen, setDialogOpen] = useState(false);
   const [uploaderOpen, setUploaderOpen] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -77,9 +88,6 @@ const Marketplace = () => {
     setDialogOpen(false);
     setSelectedItem(null);
   };
-
-  const isOnline = useNetworkStatus();
-  const navigate = useNavigate();
 
   useEffect(() => {
     marketplaceService
@@ -209,14 +217,9 @@ const Marketplace = () => {
                   <MenuItem
                     value=""
                     sx={{
-                      '&:hover': {
-                        backgroundColor: 'primary.50', // adjust color as needed
-                      },
-                      '&.Mui-selected': {
-                        backgroundColor: 'primary.50', // selected color
-                      },
-                      '&.Mui-selected:hover': {
-                        backgroundColor: 'primary.50', // selected+hover color
+                      backgroundColor: 'transparent',
+                      '&:hover, &.Mui-selected, &.Mui-selected:hover': {
+                        backgroundColor: 'primary.50',
                       },
                     }}
                   >
@@ -227,14 +230,9 @@ const Marketplace = () => {
                       key={cat.Id}
                       value={cat.Id}
                       sx={{
-                        '&:hover': {
-                          backgroundColor: 'primary.50', // adjust color as needed
-                        },
-                        '&.Mui-selected': {
-                          backgroundColor: 'primary.50', // selected color
-                        },
-                        '&.Mui-selected:hover': {
-                          backgroundColor: 'primary.50', // selected+hover color
+                        backgroundColor: 'transparent',
+                        '&:hover, &.Mui-selected, &.Mui-selected:hover': {
+                          backgroundColor: 'primary.50',
                         },
                       }}
                     >
@@ -290,14 +288,9 @@ const Marketplace = () => {
                       key={sort}
                       value={sort}
                       sx={{
-                        '&:hover': {
-                          backgroundColor: 'primary.50', // adjust color as needed
-                        },
-                        '&.Mui-selected': {
-                          backgroundColor: 'primary.50', // selected color
-                        },
-                        '&.Mui-selected:hover': {
-                          backgroundColor: 'primary.50', // selected+hover color
+                        backgroundColor: 'transparent',
+                        '&:hover, &.Mui-selected, &.Mui-selected:hover': {
+                          backgroundColor: 'primary.50',
                         },
                       }}
                     >
@@ -321,14 +314,9 @@ const Marketplace = () => {
                       key={o}
                       value={o}
                       sx={{
-                        '&:hover': {
-                          backgroundColor: 'primary.50', // adjust color as needed
-                        },
-                        '&.Mui-selected': {
-                          backgroundColor: 'primary.50', // selected color
-                        },
-                        '&.Mui-selected:hover': {
-                          backgroundColor: 'primary.50', // selected+hover color
+                        backgroundColor: 'transparent',
+                        '&:hover, &.Mui-selected, &.Mui-selected:hover': {
+                          backgroundColor: 'primary.50',
                         },
                       }}
                     >
