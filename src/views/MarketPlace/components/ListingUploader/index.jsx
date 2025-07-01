@@ -54,21 +54,22 @@ const ListingUploader = ({ open, onClose, isEdit = false, listing = null, onSubm
         Price: price ? parseFloat(price) : 0,
         CategoryId: selectedCategoryObj ? selectedCategoryObj.Id : null,
         ConditionId: selectedConditionObj ? selectedConditionObj.Id : null,
-        ImagesBase64: [''],
       };
 
+      let resultListing;
+
       if (!isEdit) {
-        // Add images only when creating
         const imagesBase64 = await Promise.all(uploadedImages.map((file) => fileToBase64(file)));
         listingData.ImagesBase64 = imagesBase64;
 
-        const createdListing = await marketplaceService.createListing(listingData);
-        console.log('Created listing:', createdListing);
+        resultListing = await marketplaceService.createListing(listingData);
       } else {
-        const updatedListing = await marketplaceService.updateListing(listing.Id, listingData);
-        console.log('Updated listing:', updatedListing);
+        resultListing = await marketplaceService.updateListing(listing.Id, listingData);
       }
 
+      resultListing.CategoryName = selectedCategoryObj?.CategoryName ?? '';
+      resultListing.ConditionName = selectedConditionObj?.ConditionName ?? '';
+      onSubmit(resultListing); // <-- pass back the new or updated listing
       onClose();
     } catch (error) {
       if (error?.errors) {
@@ -77,7 +78,6 @@ const ListingUploader = ({ open, onClose, isEdit = false, listing = null, onSubm
         console.error('Error submitting listing:', error);
       }
     }
-    window.location.reload(); // Reload to reflect changes
   };
 
   const fileToBase64 = (file) => {

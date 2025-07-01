@@ -25,7 +25,7 @@ import { useAuthGroups, useNetworkStatus } from 'hooks';
 import ListingUploader from '../ListingUploader';
 import { toDate } from 'date-fns';
 
-const MarketPlacePopup = ({ open, item, onClose, onStatusChange }) => {
+const MarketPlacePopup = ({ open, item, onClose, onStatusChange, onUpdateListing, onDelete }) => {
   const isOnline = useNetworkStatus();
   const navigate = useNavigate();
   const [profileImg, setProfileImg] = useState(null);
@@ -87,10 +87,11 @@ const MarketPlacePopup = ({ open, item, onClose, onStatusChange }) => {
       onStatusChange(item.Id, 3);
       console.log('Item deleted successfully');
       onClose(); // Close the dialog after deletion
-      // Optionally trigger a refresh or notify parent about deletion here
+      if (onDelete) {
+        onDelete(); // Refresh listings
+      }
     } catch (error) {
       console.error('Failed to delete item:', error);
-      // Optionally show user feedback on error
     }
   };
 
@@ -490,9 +491,12 @@ Thank you
             try {
               const updatedListing = await marketplaceService.updateListing(item.Id, listingData);
               console.log('Updated listing:', updatedListing);
-              // Optionally update state or parent here
+              if (onUpdateListing) {
+                onUpdateListing(updatedListing);
+              }
               closeEditDialog();
-              onClose(); // close main popup if you want
+              // Optionally keep main popup open, or close it:
+              onClose();
             } catch (error) {
               console.error('Failed to update listing:', error);
             }

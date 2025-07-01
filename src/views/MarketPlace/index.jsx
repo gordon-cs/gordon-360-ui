@@ -79,6 +79,27 @@ const Marketplace = () => {
     );
   };
 
+  const handleUpdateListing = (updatedListing) => {
+    setListings((prevListings) =>
+      prevListings.map((listing) => (listing.Id === updatedListing.Id ? updatedListing : listing)),
+    );
+
+    if (selectedItem?.Id === updatedListing.Id) {
+      setSelectedItem(updatedListing);
+    }
+  };
+
+  const handleNewListing = (newListing) => {
+    // Add new listing to the current list, could be prepend or append as needed
+    setListings((prev) => [newListing, ...prev]);
+
+    // // Optionally update total count
+    // setTotalCount((prevCount) => prevCount + 1);
+
+    // Close uploader modal
+    setUploaderOpen(false);
+  };
+
   const handleCardClick = (item) => {
     setSelectedItem(item);
     setDialogOpen(true);
@@ -101,11 +122,9 @@ const Marketplace = () => {
       .catch(() => console.error('Failed to load conditions'));
   }, []);
 
-  useEffect(() => {
+  const fetchListings = () => {
     setLoading(true);
-
-    // Promise.all to fetch count and listings concurrently
-    Promise.all([
+    return Promise.all([
       marketplaceService.getFilteredListingsCount(categoryId, statusId, minPrice, maxPrice, search),
       marketplaceService.getFilteredListings(
         categoryId,
@@ -130,6 +149,10 @@ const Marketplace = () => {
       .finally(() => {
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    fetchListings();
   }, [categoryId, statusId, minPrice, maxPrice, search, sortBy, desc, page]);
 
   console.log('backendURL:', backendURL);
@@ -456,6 +479,13 @@ const Marketplace = () => {
         item={selectedItem}
         onClose={handleDialogClose}
         onStatusChange={updateListingStatus}
+        onUpdateListing={(updatedListing) => {
+          handleUpdateListing(updatedListing);
+          fetchListings(); // Refresh listings after update
+        }}
+        onDelete={() => {
+          fetchListings(); // Refresh listings after delete
+        }}
       />
 
       {/** Dialog for viewing and editing my uploads */}
@@ -466,7 +496,11 @@ const Marketplace = () => {
       />
 
       {/** Dialog for uploading a post */}
-      <ListingUploader open={uploaderOpen} onClose={() => setUploaderOpen(false)} />
+      <ListingUploader
+        open={uploaderOpen}
+        onClose={() => setUploaderOpen(false)}
+        onSubmit={handleNewListing}
+      />
     </Box>
   );
 };
