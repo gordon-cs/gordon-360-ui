@@ -20,22 +20,56 @@ import { useEffect, useState } from 'react';
 import MarketPlacePopup from '../MarketPlacePopup';
 import marketplaceService from 'services/marketplace';
 
-const MyUploadsPopup = ({ open, onClose, backendURL }) => {
+const MyUploadsPopup = ({ open, onClose, backendURL, createSnackbar, onUpdateListing }) => {
   const [myListings, setMyListings] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [popupOpen, setPopupOpen] = useState(false);
 
-  useEffect(() => {
-    if (!open) return;
-
+  const fetchMyListings = () => {
     setLoading(true);
     marketplaceService
       .getMyListings()
       .then(setMyListings)
       .catch(() => console.error('Failed to load user listings'))
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    if (!open) return;
+    fetchMyListings();
   }, [open]);
+
+  const handleUpdateListing = (updatedListing) => {
+    // Optionally update local state immediately
+    setMyListings((prevListings) =>
+      prevListings.map((listing) => (listing.Id === updatedListing.Id ? updatedListing : listing)),
+    );
+    // Refetch to ensure fresh data
+    fetchMyListings();
+
+    if (selectedItem?.Id === updatedListing.Id) {
+      setSelectedItem(updatedListing);
+    }
+    if (onUpdateListing) {
+      onUpdateListing(updatedListing);
+    }
+  };
+
+  const handleStatusChange = (id, newStatusId) => {
+    if (newStatusId === 3) {
+      // Assuming 3 means Deleted
+      setMyListings((prev) => prev.filter((listing) => listing.Id !== id));
+    } else {
+      setMyListings((prev) =>
+        prev.map((listing) =>
+          listing.Id === id ? { ...listing, StatusId: newStatusId } : listing,
+        ),
+      );
+    }
+  };
+
+  console.log('Rendering MyUploadsPopup with myListings:', myListings);
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
@@ -125,13 +159,16 @@ const MyUploadsPopup = ({ open, onClose, backendURL }) => {
         )}
       </DialogContent>
       <MarketPlacePopup
+        key={selectedItem?.Id} // This forces React to recreate the component when selectedItem changes
         open={popupOpen}
         item={selectedItem}
         onClose={() => {
           setPopupOpen(false);
           setSelectedItem(null);
         }}
-        onStatusChange={() => {}} // you can optionally wire this up
+        onStatusChange={handleStatusChange}
+        onUpdateListing={handleUpdateListing}
+        createSnackbar={createSnackbar}
       />
     </Dialog>
   );

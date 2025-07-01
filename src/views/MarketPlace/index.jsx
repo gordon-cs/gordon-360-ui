@@ -23,6 +23,7 @@ import MarketPlacePopup from './components/MarketPlacePopup';
 import ListingUploader from './components/ListingUploader';
 import MyUploadsPopup from './components/MyUploadsPopup';
 import marketplaceService from 'services/marketplace';
+import GordonSnackbar from 'components/Snackbar';
 // import DATA from './dummyPosts/dummyPosts';
 
 const sorts = ['Date', 'Price', 'Title'];
@@ -89,12 +90,19 @@ const Marketplace = () => {
     }
   };
 
+  const [snackbar, setSnackbar] = useState({
+    message: '',
+    severity: '',
+    open: false,
+  });
+
+  const createSnackbar = (message, severity) => {
+    setSnackbar({ message, severity, open: true });
+  };
+
   const handleNewListing = (newListing) => {
     // Add new listing to the current list, could be prepend or append as needed
     setListings((prev) => [newListing, ...prev]);
-
-    // // Optionally update total count
-    // setTotalCount((prevCount) => prevCount + 1);
 
     // Close uploader modal
     setUploaderOpen(false);
@@ -156,6 +164,7 @@ const Marketplace = () => {
   }, [categoryId, statusId, minPrice, maxPrice, search, sortBy, desc, page]);
 
   console.log('backendURL:', backendURL);
+  console.log('Props passed to ListingUploader:', { createSnackbar });
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -486,6 +495,7 @@ const Marketplace = () => {
         onDelete={() => {
           fetchListings(); // Refresh listings after delete
         }}
+        createSnackbar={createSnackbar}
       />
 
       {/** Dialog for viewing and editing my uploads */}
@@ -493,6 +503,8 @@ const Marketplace = () => {
         open={myUploadsOpen}
         onClose={() => setMyUploadsOpen(false)}
         backendURL={backendURL}
+        createSnackbar={createSnackbar}
+        onUpdateListing={handleUpdateListing}
       />
 
       {/** Dialog for uploading a post */}
@@ -500,6 +512,15 @@ const Marketplace = () => {
         open={uploaderOpen}
         onClose={() => setUploaderOpen(false)}
         onSubmit={handleNewListing}
+        createSnackbar={createSnackbar}
+      />
+
+      {/** Snackbar present for 360 */}
+      <GordonSnackbar
+        open={snackbar.open}
+        text={snackbar.message}
+        severity={snackbar.severity}
+        onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
       />
     </Box>
   );

@@ -12,6 +12,7 @@ import {
   MenuItem,
   IconButton,
 } from '@mui/material';
+import { useMemo } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -23,9 +24,16 @@ import styles from '../../MarketPlace.module.scss';
 import { AuthGroup } from 'services/auth';
 import { useAuthGroups, useNetworkStatus } from 'hooks';
 import ListingUploader from '../ListingUploader';
-import { toDate } from 'date-fns';
 
-const MarketPlacePopup = ({ open, item, onClose, onStatusChange, onUpdateListing, onDelete }) => {
+const MarketPlacePopup = ({
+  open,
+  item,
+  onClose,
+  onStatusChange,
+  onUpdateListing,
+  onDelete,
+  createSnackbar,
+}) => {
   const isOnline = useNetworkStatus();
   const navigate = useNavigate();
   const [profileImg, setProfileImg] = useState(null);
@@ -87,11 +95,13 @@ const MarketPlacePopup = ({ open, item, onClose, onStatusChange, onUpdateListing
       onStatusChange(item.Id, 3);
       console.log('Item deleted successfully');
       onClose(); // Close the dialog after deletion
+      createSnackbar('Listing deleted successfully!', 'success');
       if (onDelete) {
         onDelete(); // Refresh listings
       }
     } catch (error) {
       console.error('Failed to delete item:', error);
+      createSnackbar('Failed to delete item', 'error');
     }
   };
 
@@ -104,15 +114,18 @@ const MarketPlacePopup = ({ open, item, onClose, onStatusChange, onUpdateListing
         await marketplaceService.changeListingStatus(item.Id, 'For Sale');
         onStatusChange(item.Id, 1);
         console.log('Item marked as unsold successfully');
+        createSnackbar('Listing unmarked as sold', 'info');
       } else {
         await marketplaceService.changeListingStatus(item.Id, 'Sold');
         onStatusChange(item.Id, 2);
         console.log('Item marked as sold successfully');
+        createSnackbar('Listing marked as sold successfully!', 'success');
       }
 
       onClose(); // Close the dialog after status change
     } catch (error) {
       console.error('Failed to change item status:', error);
+      createSnackbar('Failed ot change listing status', 'error');
       // Optionally show user feedback on error
     }
   };
@@ -501,6 +514,7 @@ Thank you
               console.error('Failed to update listing:', error);
             }
           }}
+          createSnackbar={createSnackbar}
         />
       )}
     </>

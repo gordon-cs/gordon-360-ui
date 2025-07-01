@@ -21,7 +21,14 @@ import marketplaceService from 'services/marketplace';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import CloseIcon from '@mui/icons-material/Close';
 
-const ListingUploader = ({ open, onClose, isEdit = false, listing = null, onSubmit }) => {
+const ListingUploader = ({
+  open,
+  onClose,
+  isEdit = false,
+  listing = null,
+  onSubmit,
+  createSnackbar,
+}) => {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
   const [selectedCondition, setSelectedCondition] = useState('');
@@ -63,8 +70,10 @@ const ListingUploader = ({ open, onClose, isEdit = false, listing = null, onSubm
         listingData.ImagesBase64 = imagesBase64;
 
         resultListing = await marketplaceService.createListing(listingData);
+        createSnackbar('Listing created successfully!', 'success');
       } else {
         resultListing = await marketplaceService.updateListing(listing.Id, listingData);
+        createSnackbar('Listing updated successfully!', 'success');
       }
 
       resultListing.CategoryName = selectedCategoryObj?.CategoryName ?? '';
@@ -76,6 +85,7 @@ const ListingUploader = ({ open, onClose, isEdit = false, listing = null, onSubm
         console.error('Validation errors:', error.errors);
       } else {
         console.error('Error submitting listing:', error);
+        createSnackbar('Failed to submit listing. Please try again.', 'error');
       }
     }
   };
