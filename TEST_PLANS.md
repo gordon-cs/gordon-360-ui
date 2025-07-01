@@ -23,18 +23,18 @@ This document outlines a breakdown of test cases to cover features of Gordon360 
 
 ### Dining Balance (done)
 
-- [ ] Test for **expected balance values** (e.g., positive numbers, decimals).
-- [ ] Test for **zero balance** and **negative values**.
-- [ ] Handle **unexpected inputs or backend failures** (e.g., malformed response).
+- Test for **expected balance values** (e.g., positive numbers, decimals).
+- Test for **zero balance** and **negative values**.
+- Handle **unexpected inputs or backend failures** (e.g., malformed response).
 
 
 
 ### Quick Search (done)
 
-- [ ] Valid input returns accurate results.
-- [ ] Invalid or partial inputs return appropriate fallback.
-- [ ] No results case.
-- [ ] Debounce logic and rapid typing behavior.
+- Valid input returns accurate results.
+- Invalid or partial inputs return appropriate fallback.
+- No results case.
+- Debounce logic and rapid typing behavior.
 
 ### Days Left (Done)
 
