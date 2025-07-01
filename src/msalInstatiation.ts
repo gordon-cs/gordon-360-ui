@@ -6,4 +6,3 @@ import { msalConfig } from 'services/authConfig';
  * For more, visit: https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-react/docs/getting-started.md
  */
 export const msalInstance = new PublicClientApplication(msalConfig);
-console.warn(msalInstance);
