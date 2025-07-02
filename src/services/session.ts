@@ -17,6 +17,8 @@ const getAll = (): Promise<Session[]> =>
 
 const getCurrent = (): Promise<Session> => http.get('sessions/current');
 
+const getCurrentForFinalExams = (): Promise<Session> => http.get('sessions/currentFinals');
+
 const getDaysLeft = (): Promise<DaysLeft> => http.get('sessions/daysLeft');
 
 /**
@@ -69,6 +71,7 @@ const sessionService = {
   get,
   getAll,
   getCurrent,
+  getCurrentForFinalExams,
   getDaysLeft,
   decodeSessionCode,
   encodeSessionCode,
