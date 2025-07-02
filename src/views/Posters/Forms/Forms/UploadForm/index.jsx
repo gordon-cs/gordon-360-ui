@@ -22,7 +22,7 @@ import { useLocation } from 'react-router-dom';
 import styles from './UploadForm.module.scss';
 import { editPoster } from 'services/poster';
 
-const UploadForm = ({ onClose, onCropSubmit, poster }) => {
+const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess }) => {
   const isEditing = !!poster;
 
   const [priorityStatus, setPriorityStatus] = useState('');
@@ -173,37 +173,37 @@ const UploadForm = ({ onClose, onCropSubmit, poster }) => {
     };
   };
 
-  const handleSubmit = async () => {
-    try {
-      if (isEditing && poster?.ID) {
-        console.log('Calling editPoster with ID: ', poster.ID);
-        // Prepare partial update data based on your UpdatePoster type
-        const updatedData = {
-          Title: title,
-          Description: description,
-          ImagePath: croppedImage,
-          VisibleDate: startTime,
-          ExpirationDate: endTime,
-          Status: 1, // or whatever status you want here
-        };
-        console.log('Editing poster...', poster.ID, updatedData);
-        const updatedPoster = await editPoster(poster.ID, updatedData);
-        console.log('Poster updated:', updatedPoster);
-      } else {
-        console.log('Calling createPoster');
-        const newPoster = posterInfo();
-        console.log('Creating poster...', newPoster);
-        const createdPoster = await createPoster(newPoster);
-        console.log('Poster created:', createdPoster);
-      }
+  // const handleSubmit = async () => {
+  //   try {
+  //     if (isEditing && poster?.ID) {
+  //       console.log('Calling editPoster with ID: ', poster.ID);
+  //       // Prepare partial update data based on your UpdatePoster type
+  //       const updatedData = {
+  //         Title: title,
+  //         Description: description,
+  //         ImagePath: croppedImage,
+  //         VisibleDate: startTime,
+  //         ExpirationDate: endTime,
+  //         Status: 1, // or whatever status you want here
+  //       };
+  //       console.log('Editing poster...', poster.ID, updatedData);
+  //       const updatedPoster = await editPoster(poster.ID, updatedData);
+  //       console.log('Poster updated:', updatedPoster);
+  //     } else {
+  //       console.log('Calling createPoster');
+  //       const newPoster = posterInfo();
+  //       console.log('Creating poster...', newPoster);
+  //       const createdPoster = await createPoster(newPoster);
+  //       console.log('Poster created:', createdPoster);
+  //     }
 
-      setOpenPosterCheck(false);
-      setOpenCropPoster(false);
-      onClose();
-    } catch (error) {
-      console.error('Error submitting poster:', error);
-    }
-  };
+  //     setOpenPosterCheck(false);
+  //     setOpenCropPoster(false);
+  //     onClose();
+  //   } catch (error) {
+  //     console.error('Error submitting poster:', error);
+  //   }
+  // };
 
   const getTextFieldSX = (color) => ({
     '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
@@ -221,6 +221,7 @@ const UploadForm = ({ onClose, onCropSubmit, poster }) => {
             posterInfo={posterInfo()}
             isEditing={isEditing}
             posterId={poster?.ID}
+            onSubmitSuccess={onSubmitSuccess}
           />
         </DialogContent>
       </Dialog>

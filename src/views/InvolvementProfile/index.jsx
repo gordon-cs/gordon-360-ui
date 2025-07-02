@@ -288,11 +288,6 @@ const InvolvementProfile = () => {
         </Dialog>
         <Grid container spacing={2} justifyContent="center">
           <Grid item>
-            <Button variant="contained" color="primary" onClick={() => setOpenUploadForm(true)}>
-              Upload Poster
-            </Button>
-          </Grid>
-          <Grid item>
             <Button
               variant="contained"
               color="primary"

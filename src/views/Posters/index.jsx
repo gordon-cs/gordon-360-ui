@@ -23,11 +23,15 @@ import CropPoster from './Forms/Forms/CropPoster';
 import { AuthGroup, signOut } from 'services/auth';
 import { useAuthGroups, useNetworkStatus, useUser, useWindowSize } from 'hooks';
 import FileUploadedRoundIcon from '@mui/icons-material/FileUploadRounded';
+import GordonLoader from 'components/Loader';
+const LOADER_SIZE = 50;
 // import MemberListItem from './components/MemberListItem';
 
 const Posters = () => {
   const [openUploadForm, setOpenUploadForm] = useState(false);
+  const [loadingInvolvements, setLoadingInvolvements] = useState(true);
   const { profile } = useUser();
+  const [myUploadedPosterIds, setMyUploadedPosterIds] = useState(new Set());
   const [allInvolvements, setAllInvolvements] = useState([]);
   const [myInvolvements, setMyInvolvements] = useState([]);
   const [selectedSession, setSelectedSession] = useState('');
@@ -44,15 +48,18 @@ const Posters = () => {
   const isOnline = useNetworkStatus();
   const navigate = useNavigate();
 
-  const isMyClub = (ClubCode) =>
-    myInvolvements.some(
-      (inv) =>
-        inv.ActivityCode === ClubCode &&
-        ['MEMBR', 'LEAD', 'ADV', 'GUEST'].includes(inv.Participation),
+  const isMyClub = (ClubCode, posterID) => {
+    return (
+      myInvolvements.some(
+        (inv) =>
+          inv.ActivityCode === ClubCode &&
+          ['MEMBR', 'LEAD', 'ADV', 'GUEST'].includes(inv.Participation),
+      ) || myUploadedPosterIds.has(posterID)
     );
+  };
 
-  const pizzaSlice = allPosters.filter((item) => isMyClub(item.ClubCode));
-  const otherPosters = allPosters.filter((item) => !isMyClub(item.ClubCode));
+  const pizzaSlice = allPosters.filter((item) => isMyClub(item.ClubCode, item.ID));
+  const otherPosters = allPosters.filter((item) => !isMyClub(item.ClubCode, item.ID));
   const sessionFromURL = new URLSearchParams(location.search).get('session');
 
   useEffect(() => {
@@ -94,17 +101,21 @@ const Posters = () => {
 
   useEffect(() => {
     const updateInvolvements = async () => {
+      setLoadingInvolvements(true);
       setAllInvolvements(await involvementService.getAll(selectedSession));
+
       if (profile) {
-        setMyInvolvements(
-          await membershipService.get({
-            username: profile.AD_Username,
-            sessionCode: selectedSession,
-            participationTypes: ['MEMBR', 'LEAD', 'ADV', 'GUEST'],
-          }),
-        );
+        const memberships = await membershipService.get({
+          username: profile.AD_Username,
+          sessionCode: selectedSession,
+          participationTypes: ['MEMBR', 'LEAD', 'ADV', 'GUEST'],
+        });
+        setMyInvolvements(memberships);
       }
+
+      setLoadingInvolvements(false);
     };
+
     if (selectedSession) {
       updateInvolvements();
     }
@@ -144,6 +155,8 @@ const Posters = () => {
     return involvement ? involvement.Name : involvementCode;
   };
 
+  console.log('Rendering Posters list:', allPosters);
+
   return (
     <Grid container justifyContent="center" spacing={4}>
       <Dialog
@@ -167,9 +180,11 @@ const Posters = () => {
                   setPosterToEdit(null);
                 }}
                 onSubmitSuccess={(updatedPoster) => {
-                  // Update the posters list locally
+                  console.log('Updated poster received in Posters:', updatedPoster);
                   setAllPosters((prev) =>
-                    prev.map((p) => (p.ID === updatedPoster.ID ? updatedPoster : p)),
+                    prev.some((p) => p.ID === updatedPoster.ID)
+                      ? prev.map((p) => (p.ID === updatedPoster.ID ? updatedPoster : p))
+                      : [updatedPoster, ...prev],
                   );
                   setOpenEditDialog(false);
                   setPosterToEdit(null);
@@ -191,7 +206,22 @@ const Posters = () => {
           <Grid item xs={12} md={croppedImage ? 6 : 12}>
             <Card variant="outlined">
               <CardHeader title="Upload Poster" className="gc360_header" />
-              <UploadForm onClose={clearOnClose} onCropSubmit={handleCropSubmit} />
+              <UploadForm
+                onClose={clearOnClose}
+                onCropSubmit={handleCropSubmit}
+                onSubmitSuccess={(createdPoster) => {
+                  const normalizedPoster = {
+                    ...createdPoster,
+                    ClubCode: createdPoster.ACT_CDE,
+                    ID: createdPoster.ID || crypto.randomUUID(),
+                  };
+
+                  setAllPosters((prev) => [normalizedPoster, ...prev]);
+                  setMyUploadedPosterIds((prev) => new Set(prev).add(normalizedPoster.ID));
+                  setOpenUploadForm(false);
+                  setCroppedImage(null);
+                }}
+              />
             </Card>
           </Grid>
           <Dialog open={openCropPoster} onClose={() => setOpenCropPoster(false)}>
@@ -331,82 +361,86 @@ const Posters = () => {
             className="gc360_header"
           />
           <CardContent>
-            <Grid container direction="row" spacing={4}>
-              {pizzaSlice.map((item) => (
-                <Grid item xs={6} sm={4} md={3} lg={2.4} key={item.key}>
-                  <Card variant="outlined" className="poster-card">
-                    {item.Priority === 1 && (
-                      <Typography
-                        variant="h3"
-                        sx={{
-                          position: 'absolute',
-                          top: 8,
-                          right: 12,
-                          color: 'red',
-                          fontWeight: 'bold',
-                          fontSize: '3rem',
-                          zIndex: 3,
-                          userSelect: 'none',
-                          fontFamily: '"Orbitron", "Montserrat", "Roboto", sans-serif',
-                          textShadow: '2px 2px 8px #00000055',
+            {loadingInvolvements ? (
+              <GordonLoader size={LOADER_SIZE} />
+            ) : (
+              <Grid container direction="row" spacing={4}>
+                {pizzaSlice.map((item) => (
+                  <Grid item xs={6} sm={4} md={3} lg={2.4} key={item.ID}>
+                    <Card variant="outlined" className="poster-card">
+                      {item.Priority === 1 && (
+                        <Typography
+                          variant="h3"
+                          sx={{
+                            position: 'absolute',
+                            top: 8,
+                            right: 12,
+                            color: 'red',
+                            fontWeight: 'bold',
+                            fontSize: '3rem',
+                            zIndex: 3,
+                            userSelect: 'none',
+                            fontFamily: '"Orbitron", "Montserrat", "Roboto", sans-serif',
+                            textShadow: '2px 2px 8px #00000055',
+                          }}
+                        >
+                          !
+                        </Typography>
+                      )}
+                      <CardActionArea
+                        onClick={() => {
+                          if (isOnline) {
+                            const currentSessionCode =
+                              sessionService.encodeSessionCode(selectedSession);
+                            navigate(`/activity/${currentSessionCode}/${item.ClubCode}`);
+                          }
                         }}
                       >
-                        !
-                      </Typography>
-                    )}
-                    <CardActionArea
-                      onClick={() => {
-                        if (isOnline) {
-                          const currentSessionCode =
-                            sessionService.encodeSessionCode(selectedSession);
-                          navigate(`/activity/${currentSessionCode}/${item.ClubCode}`);
-                        }
-                      }}
-                    >
-                      <CardMedia
-                        loading="lazy"
-                        component="img"
-                        alt={item.Alt}
-                        src={item.ImagePath}
-                        title={item.Title}
-                      />
-                      <CardContent>
-                        <Typography className={'Poster Title'}>{item.Title}</Typography>
-                      </CardContent>
-                    </CardActionArea>
-                    {myInvolvements.some(
-                      (inv) =>
-                        (inv.ActivityCode === item.ClubCode &&
-                          (inv.Participation === Participation.Advisor ||
-                            inv.Participation === Participation.Leader)) ||
-                        isSiteAdmin,
-                    ) && (
-                      <div className="delete-button-wrapper">
-                        <Button
-                          variant="outlined"
-                          color="primary"
-                          onClick={() => {
-                            setPosterToEdit(item);
-                            setOpenEditDialog(true);
-                          }}
-                          className="delete-button"
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          variant="outlined"
-                          color="error"
-                          onClick={() => handleDeleteClick(item)}
-                          className="delete-button"
-                        >
-                          Delete
-                        </Button>
-                      </div>
-                    )}
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
+                        <CardMedia
+                          loading="lazy"
+                          component="img"
+                          alt={item.Alt}
+                          src={item.ImagePath}
+                          title={item.Title}
+                        />
+                        <CardContent>
+                          <Typography className={'Poster Title'}>{item.Title}</Typography>
+                        </CardContent>
+                      </CardActionArea>
+                      {myInvolvements.some(
+                        (inv) =>
+                          (inv.ActivityCode === item.ClubCode &&
+                            (inv.Participation === Participation.Advisor ||
+                              inv.Participation === Participation.Leader)) ||
+                          isSiteAdmin,
+                      ) && (
+                        <div className="delete-button-wrapper">
+                          <Button
+                            variant="outlined"
+                            color="primary"
+                            onClick={() => {
+                              setPosterToEdit(item);
+                              setOpenEditDialog(true);
+                            }}
+                            className="delete-button"
+                          >
+                            Edit
+                          </Button>
+                          <Button
+                            variant="outlined"
+                            color="error"
+                            onClick={() => handleDeleteClick(item)}
+                            className="delete-button"
+                          >
+                            Delete
+                          </Button>
+                        </div>
+                      )}
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+            )}
           </CardContent>
         </Card>
       </Grid>
@@ -416,68 +450,72 @@ const Posters = () => {
         <Card>
           <CardHeader title="Other Posters" className="gc360_header" />
           <CardContent>
-            <Grid container direction="row" spacing={4}>
-              {otherPosters.map((item) => (
-                <Grid item xs={6} sm={4} md={3} lg={2.4} key={item.key}>
-                  <Card variant="outlined" className="poster-card">
-                    {item.Priority === 1 && (
-                      <Typography
-                        variant="h3"
-                        sx={{
-                          position: 'absolute',
-                          top: 8,
-                          right: 12,
-                          color: 'red',
-                          fontWeight: 'bold',
-                          fontSize: '3rem',
-                          zIndex: 3,
-                          userSelect: 'none',
-                          fontFamily: '"Orbitron", "Montserrat", "Roboto", sans-serif',
-                          textShadow: '2px 2px 8px #00000055',
+            {loadingInvolvements ? (
+              <GordonLoader size={LOADER_SIZE} />
+            ) : (
+              <Grid container direction="row" spacing={4}>
+                {otherPosters.map((item) => (
+                  <Grid item xs={6} sm={4} md={3} lg={2.4} key={item.ID}>
+                    <Card variant="outlined" className="poster-card">
+                      {item.Priority === 1 && (
+                        <Typography
+                          variant="h3"
+                          sx={{
+                            position: 'absolute',
+                            top: 8,
+                            right: 12,
+                            color: 'red',
+                            fontWeight: 'bold',
+                            fontSize: '3rem',
+                            zIndex: 3,
+                            userSelect: 'none',
+                            fontFamily: '"Orbitron", "Montserrat", "Roboto", sans-serif',
+                            textShadow: '2px 2px 8px #00000055',
+                          }}
+                        >
+                          !
+                        </Typography>
+                      )}
+                      <CardActionArea
+                        onClick={() => {
+                          if (isOnline) {
+                            const currentSessionCode =
+                              sessionService.encodeSessionCode(selectedSession);
+                            navigate(`/activity/${currentSessionCode}/${item.ClubCode}`);
+                          }
                         }}
                       >
-                        !
-                      </Typography>
-                    )}
-                    <CardActionArea
-                      onClick={() => {
-                        if (isOnline) {
-                          const currentSessionCode =
-                            sessionService.encodeSessionCode(selectedSession);
-                          navigate(`/activity/${currentSessionCode}/${item.ClubCode}`);
-                        }
-                      }}
-                    >
-                      <CardMedia
-                        loading="lazy"
-                        component="img"
-                        alt={item.alt}
-                        src={item.ImagePath}
-                        title={item.Title}
-                      />
-                      <CardContent>
-                        <Typography className={'Poster Title'}>{item.Title}</Typography>
-                        <Typography variant="body2" color="textSecondary" className="poster-club">
-                          {getClubName(item.ClubCode)}
-                        </Typography>
-                      </CardContent>
-                    </CardActionArea>
-                    {myInvolvements.some((inv) => isSiteAdmin) && (
-                      <div className="delete-button-wrapper">
-                        <Button
-                          variant="outlined"
-                          color="error"
-                          onClick={() => handleDeleteClick(item)}
-                          className="delete-button"
-                        >
-                          Delete&nbsp;Poster
-                        </Button>
-                      </div>
-                    )}
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
+                        <CardMedia
+                          loading="lazy"
+                          component="img"
+                          alt={item.alt}
+                          src={item.ImagePath}
+                          title={item.Title}
+                        />
+                        <CardContent>
+                          <Typography className={'Poster Title'}>{item.Title}</Typography>
+                          <Typography variant="body2" color="textSecondary" className="poster-club">
+                            {getClubName(item.ClubCode)}
+                          </Typography>
+                        </CardContent>
+                      </CardActionArea>
+                      {myInvolvements.some((inv) => isSiteAdmin) && (
+                        <div className="delete-button-wrapper">
+                          <Button
+                            variant="outlined"
+                            color="error"
+                            onClick={() => handleDeleteClick(item)}
+                            className="delete-button"
+                          >
+                            Delete&nbsp;Poster
+                          </Button>
+                        </div>
+                      )}
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+            )}
           </CardContent>
         </Card>
       </Grid>

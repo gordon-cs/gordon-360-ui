@@ -11,8 +11,9 @@ import { Link as RouterLink } from 'react-router-dom';
 import { createPoster, editPoster } from 'services/poster';
 
 // Moves the poster information to the database, and, depending on the timing, allows the poster to be displayed on the posters page.
-const PosterCheck = ({ open, onClose, posterInfo, isEditing, posterId }) => {
-  const handleSubmit = async () => {
+const PosterCheck = ({ open, onClose, posterInfo, isEditing, posterId, onSubmitSuccess }) => {
+  const handleSubmit = async (event) => {
+    if (event) event.preventDefault();
     try {
       if (isEditing && posterId) {
         console.log('Calling editPoster with ID: ', posterId);
@@ -27,17 +28,17 @@ const PosterCheck = ({ open, onClose, posterInfo, isEditing, posterId }) => {
         };
         console.log('Editing poster...', posterId, updatedData);
         const updatedPoster = await editPoster(posterId, updatedData);
+        if (onSubmitSuccess) onSubmitSuccess(updatedPoster);
         console.log('Poster updated:', updatedPoster);
       } else {
         console.log('Calling createPoster');
         const newPoster = posterInfo;
         console.log('Creating poster...', newPoster);
         const createdPoster = await createPoster(newPoster);
+        if (onSubmitSuccess) onSubmitSuccess(createdPoster);
         console.log('Poster created:', createdPoster);
       }
-
       onClose();
-      window.location.reload();
     } catch (error) {
       console.error('Error submitting poster:', error);
     }

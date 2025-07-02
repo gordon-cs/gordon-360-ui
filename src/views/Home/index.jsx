@@ -24,9 +24,6 @@ const Home = () => {
       <div>
         <PosterSwiper />
         <Grid container justifyContent="center" spacing={2}>
-          {/* <Grid item xs={12} md={10}>
-            <PosterSwiper />
-          </Grid> */}
           <Grid item xs={12} md={10}>
             <DaysLeft />
           </Grid>
