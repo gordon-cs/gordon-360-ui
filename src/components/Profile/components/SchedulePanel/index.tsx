@@ -46,8 +46,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
   const [finalExamOpen, setFinalExamOpen] = useState(false);
   const [finalExams, setFinalExams] = useState<FinalExamEvent[]>([]);
   const [finalExamsLoading, setFinalExamsLoading] = useState(false);
-  const [currentSessionCode, setCurrentSessionCode] = useState<string | null>(null);
-  const [currentFinalSessionCode, setCurrentFinalSessionCode] = useState<string | null>(null);
+  const [currentFinalExamTerm, setCurrentFinalExamTerm] = useState<Schedule['term'] | null>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -55,8 +54,10 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
     Promise.all([
       scheduleService.getAllTermSchedules(profile.AD_Username),
       academicTermService.getCurrentTerm(),
-    ]).then(([allTermSchedules, currentTerm]) => {
+      academicTermService.getCurrentTermForFinalExams(),
+    ]).then(([allTermSchedules, currentTerm, finalExamTerm]) => {
       setAllSchedules(allTermSchedules);
+      setCurrentFinalExamTerm(finalExamTerm);
       const defaultSchedule =
         // If there is a schedule for the current term, make it d4fault
         allTermSchedules.find(
@@ -69,6 +70,51 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
       setLoading(false);
     });
   }, [profile.AD_Username]);
+
+  useEffect(() => {
+    if (
+      !selectedSchedule ||
+      !currentFinalExamTerm ||
+      selectedSchedule.term.YearCode !== currentFinalExamTerm.YearCode ||
+      selectedSchedule.term.TermCode !== currentFinalExamTerm.TermCode
+    ) {
+      setFinalExams([]);
+      setFinalExamsLoading(false);
+      return;
+    }
+
+    setFinalExams([]);
+    setFinalExamsLoading(true);
+
+    getFinalExamEvents(profile.AD_Username)
+      .then((data) => {
+        const termStart = new Date(selectedSchedule.term.BeginDate);
+        const termEnd = new Date(selectedSchedule.term.EndDate);
+
+        const enrolledCourseCodes = selectedSchedule.courses.map((course) =>
+          course.title.replace(/\s+/g, ' ').trim().toUpperCase(),
+        );
+
+        const extractExamCode = (eventName: string) =>
+          eventName
+            .replace(/^EXAM:\s*/, '')
+            .replace(/\s+/g, ' ')
+            .trim()
+            .toUpperCase();
+
+        const filteredExams = data.map(formatFinalExamEvent).filter((exam) => {
+          const examDate = new Date(exam.StartDate);
+          const examCode = extractExamCode(exam.Event_Name);
+          return (
+            examDate >= termStart && examDate <= termEnd && enrolledCourseCodes.includes(examCode)
+          );
+        });
+
+        setFinalExams(filteredExams);
+      })
+      .catch(() => setFinalExams([]))
+      .finally(() => setFinalExamsLoading(false));
+  }, [selectedSchedule, profile.AD_Username, currentFinalExamTerm]);
 
   const toggleIsScheduleOpen = () => {
     setIsScheduleOpen((wasOpen) => {
@@ -127,16 +173,19 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
                 </TextField>
               </Grid>
               <Grid item style={{ minWidth: 180 }}>
-                {selectedSchedule?.session.SessionCode === currentFinalSessionCode && (
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleShowFinalExams}
-                    fullWidth
-                  >
-                    Final Exam Schedule
-                  </Button>
-                )}
+                {selectedSchedule &&
+                  currentFinalExamTerm &&
+                  selectedSchedule.term.YearCode === currentFinalExamTerm.YearCode &&
+                  selectedSchedule.term.TermCode === currentFinalExamTerm.TermCode && (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleShowFinalExams}
+                      fullWidth
+                    >
+                      Final Exam Schedule
+                    </Button>
+                  )}
               </Grid>
               <Grid lg={7}></Grid>
               {selectedSchedule && (
