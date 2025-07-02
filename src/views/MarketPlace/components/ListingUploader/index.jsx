@@ -57,7 +57,7 @@ const ListingUploader = ({
 
       const listingData = {
         Name: productName.trim(),
-        Detail: description.trim(),
+        Detail: description,
         Price: price ? parseFloat(price) : 0,
         CategoryId: selectedCategoryObj ? selectedCategoryObj.Id : null,
         ConditionId: selectedConditionObj ? selectedConditionObj.Id : null,

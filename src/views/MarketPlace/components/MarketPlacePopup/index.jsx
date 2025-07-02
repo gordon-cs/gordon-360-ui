@@ -454,7 +454,7 @@ Thank you
               </Typography>
               <Typography
                 variant="body2"
-                sx={{ mb: 3, mr: 3, whiteSpace: 'normal', wordBreak: 'break-word' }}
+                sx={{ mb: 3, mr: 3, whiteSpace: 'pre-line', wordBreak: 'break-word' }}
               >
                 {item.Detail}
               </Typography>
