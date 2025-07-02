@@ -10,7 +10,8 @@ import {
 import { Link as RouterLink } from 'react-router-dom';
 import { createPoster, editPoster } from 'services/poster';
 
-// Moves the poster information to the database, and, depending on the timing, allows the poster to be displayed on the posters page.
+// Moves the poster information to the database, and, depending on the timing, allows the poster
+// to be displayed on the posters page.
 const PosterCheck = ({ open, onClose, posterInfo, isEditing, posterId, onSubmitSuccess }) => {
   const handleSubmit = async (event) => {
     if (event) event.preventDefault();
@@ -24,7 +25,7 @@ const PosterCheck = ({ open, onClose, posterInfo, isEditing, posterId, onSubmitS
           ImagePath: posterInfo.ImagePath,
           VisibleDate: posterInfo.VisibleDate,
           ExpirationDate: posterInfo.ExpirationDate,
-          Status: 1, // or whatever status you want here
+          Status: 1,
         };
         console.log('Editing poster...', posterId, updatedData);
         const updatedPoster = await editPoster(posterId, updatedData);
@@ -52,8 +53,13 @@ const PosterCheck = ({ open, onClose, posterInfo, isEditing, posterId, onSubmitS
           title={
             <Grid container direction="row" alignItems="center">
               <Grid item xs={7} align="left">
-                <DialogContentText fontWeight="bold" color="warning" paddingTop={2} align="center">
-                  Has your poster been approved?
+                <DialogContentText
+                  fontWeight="bold"
+                  color="warning.main"
+                  paddingTop={2}
+                  align="left"
+                >
+                  Advertising and Life & Conduct Agreement
                 </DialogContentText>
               </Grid>
             </Grid>
@@ -61,23 +67,14 @@ const PosterCheck = ({ open, onClose, posterInfo, isEditing, posterId, onSubmitS
           className="gc360_header"
         />
         <DialogContentText color="warning" padding={2} align="left">
-          For more information on advertising click here:
-          <MuiLink
-            component={RouterLink}
-            to="https://www.gordon.edu/studenthandbook/collegeevents"
-            target="_blank"
-            rel="noopener noreferrer"
-            sx={{ color: 'secondary.main', fontWeight: 'bold' }} //TODO: Change this to reflect whatever Chris Carlson tells me about
-          >
-            &nbsp;Advertising Guidelines
-          </MuiLink>
+          My poster complies with campus advertising and Life & Conduct policies.
         </DialogContentText>
         <DialogActions>
-          <Button onClick={onClose} variant="contained" color="primary">
-            No
+          <Button onClick={onClose} variant="outlined" color="error">
+            No, Don't Submit
           </Button>
-          <Button type="submit" variant="contained" color="primary">
-            Submit
+          <Button type="submit" variant="outlined" color="secondary">
+            Yes, Submit
           </Button>
         </DialogActions>
       </form>
