@@ -32,6 +32,7 @@ const ListingUploader = ({
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
   const [selectedCondition, setSelectedCondition] = useState('');
+  const [agreed, setAgreed] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [productName, setProductName] = useState('');
   const [price, setPrice] = useState('');
@@ -44,6 +45,7 @@ const ListingUploader = ({
   const isSubmitDisabled =
     !selectedCategory ||
     !selectedCondition ||
+    !agreed ||
     !productName.trim() ||
     !description.trim() ||
     (!isEdit && uploadedImages.length === 0);
@@ -428,6 +430,22 @@ const ListingUploader = ({
             </Box>
           </>
         )}
+        <Box>
+          <FormControlLabel
+            control={
+              <Checkbox
+                required
+                checked={agreed}
+                onChange={(e) => {
+                  setAgreed(e.target.checked);
+                  console.log('Agreed:', e.target.checked);
+                }}
+                name="handbookAgreement"
+              />
+            }
+            label="I confirm that this post complies with the Student Handbook."
+          />
+        </Box>
 
         <Button
           variant="contained"

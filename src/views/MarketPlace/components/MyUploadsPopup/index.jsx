@@ -99,7 +99,7 @@ const MyUploadsPopup = ({ open, onClose, backendURL, createSnackbar, onUpdateLis
         ) : myListings.length === 0 ? (
           <Typography color="text.secondary">You haven't uploaded any listings yet.</Typography>
         ) : (
-          <Grid container spacing={3}>
+          <Grid container spacing={3} sx={{ mt: 1 }}>
             {myListings.map((item) => (
               <Grid item xs={12} sm={6} md={4} key={item.Id}>
                 <Card

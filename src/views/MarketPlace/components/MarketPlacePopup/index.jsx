@@ -287,6 +287,7 @@ Thank you
                           position: 'relative',
                           borderRadius: 2,
                           backgroundColor: '#000',
+                          cursor: 'grab',
                         }}
                       >
                         <img
