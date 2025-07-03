@@ -172,7 +172,7 @@ const Posters = () => {
     return involvement ? involvement.Name : involvementCode;
   };
 
-  console.log('Rendering Posters list:', allPosters);
+  // Removed debug logging to avoid console noise in production
 
   return (
     <Grid container justifyContent="center" spacing={4}>
