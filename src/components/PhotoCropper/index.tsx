@@ -19,7 +19,6 @@ type PropTypes = {
   open: boolean;
   onClose: () => void;
   onSubmit: (dataUrl: string | undefined) => void;
-  aspectRatio?: number;
 };
 
 const enum UploadStep {
@@ -150,7 +149,7 @@ const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
     document.addEventListener('keydown', handleKeyPress);
 
     return () => document.removeEventListener('keydown', handleKeyPress);
-  }, []);
+  }, [cropperRef]);
 
   return (
     <>
@@ -177,7 +176,7 @@ const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
               onDropAccepted={onDropAccepted}
               onDropRejected={onDropRejected}
               accept={{
-                'image/*': ['.jpeg', ',jpg', '.png'],
+                'image/*': ['.jpeg', '.jpg', '.png'],
               }}
             >
               {({ getRootProps, getInputProps }) => (
@@ -189,21 +188,15 @@ const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
           ) : (
             <>
               <div
-                style={{
-                  width: maxCropPreviewWidth(),
-                  height: maxCropPreviewWidth() / DEFAULT_ASPECT_RATIO,
-                  border: '2px dashed green', // For visual debug
-                  margin: 'auto',
-                }}
+                className={styles.cropPreview}
+                data-width={maxCropPreviewWidth()}
+                data-height={maxCropPreviewWidth() / DEFAULT_ASPECT_RATIO}
               >
                 <Cropper
                   aspectRatio={DEFAULT_ASPECT_RATIO}
                   ref={cropperRef}
                   src={preview}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                  }}
+                  className={styles.cropper}
                   autoCropArea={1}
                   viewMode={3}
                   highlight={false}
