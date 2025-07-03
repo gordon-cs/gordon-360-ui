@@ -24,6 +24,7 @@ import styles from '../../MarketPlace.module.scss';
 import { AuthGroup } from 'services/auth';
 import { useAuthGroups, useNetworkStatus } from 'hooks';
 import ListingUploader from '../ListingUploader';
+import { useMediaQuery } from '@mui/material';
 
 const MarketPlacePopup = ({
   open,
@@ -43,6 +44,7 @@ const MarketPlacePopup = ({
   const currentUsernameShort = currentUsername?.split('@')[0];
   const isSiteAdmin = useAuthGroups(AuthGroup.SiteAdmin);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const isPhone = useMediaQuery('(max-width:600px)');
 
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
 
@@ -84,7 +86,6 @@ const MarketPlacePopup = ({
         openEditDialog();
         break;
     }
-    // TODO: Add your logic for each option here (Delete/Edit/Report/Mark as Sold)
     handleMenuClose();
   };
 
@@ -334,7 +335,6 @@ Thank you
                     />
                   </Box>
                 ))}
-
               <Divider
                 variant="fullWidth"
                 sx={{
@@ -358,7 +358,7 @@ Thank you
                 onClick={() => {
                   if (isOnline) {
                     navigate(`/profile/${item.PosterUsername}`);
-                    onClose(); // optional: close dialog when navigating
+                    onClose();
                   }
                 }}
               >
@@ -390,7 +390,7 @@ Thank you
             </Grid>
 
             {/* Right - Product Info */}
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={isPhone || images.length > 0 ? 6 : 12}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
                 <Typography variant="h6" fontWeight="bold">
                   {item.Name}
@@ -445,7 +445,7 @@ Thank you
               </Box>
 
               <Typography variant="h6" sx={{ my: 1 }}>
-                ${item.Price}
+                {item.Price === 0 ? 'Free' : `$${item.Price}`}
               </Typography>
 
               <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
@@ -457,12 +457,14 @@ Thank you
                   {item.ConditionName}
                 </Typography>
               )}
+              <Divider sx={{ my: 2 }} />
               <Typography
                 variant="body2"
                 sx={{ mb: 3, mr: 3, whiteSpace: 'pre-line', wordBreak: 'break-word' }}
               >
                 {item.Detail}
               </Typography>
+
               {currentUsernameShort === item.PosterUsername ? (
                 <Button
                   variant="contained"
