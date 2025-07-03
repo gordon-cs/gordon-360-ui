@@ -25,8 +25,6 @@ import { AuthGroup, signOut } from 'services/auth';
 import { useAuthGroups, useNetworkStatus, useUser, useWindowSize } from 'hooks';
 import FileUploadedRoundIcon from '@mui/icons-material/FileUploadRounded';
 import GordonLoader from 'components/Loader';
-import { create } from 'lodash';
-
 const LOADER_SIZE = 50;
 
 const Posters = () => {
