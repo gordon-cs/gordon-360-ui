@@ -423,7 +423,7 @@ const Posters = () => {
                           title={item.Title}
                         />
                         <CardContent>
-                          <Typography className={'Poster Title'}>{item.Title}</Typography>
+                          <Typography className={'poster-title'}>{item.Title}</Typography>
                         </CardContent>
                       </CardActionArea>
                       {myInvolvements.some(
