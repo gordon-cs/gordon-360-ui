@@ -29,6 +29,10 @@ import marketplaceService from 'services/marketplace';
 import GordonSnackbar from 'components/Snackbar';
 import { AuthGroup } from 'services/auth';
 import { useAuthGroups, useNetworkStatus } from 'hooks';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import GordonLogo from './images/gordoncollegelogo.jpg';
+
 // import DATA from './dummyPosts/dummyPosts';
 
 const sorts = ['Date', 'Price', 'Title'];
@@ -79,6 +83,8 @@ const Marketplace = () => {
   const [categories, setCategories] = useState([]);
   const [conditions, setConditions] = useState([]);
   const isSiteAdmin = useAuthGroups(AuthGroup.SiteAdmin);
+  const theme = useTheme();
+  const isPhone = useMediaQuery(theme.breakpoints.down('sm'));
 
   const updateListingStatus = (id, newStatusId) => {
     setListings((prevListings) =>
@@ -418,7 +424,7 @@ const Marketplace = () => {
             {!loading &&
               !error &&
               listings.map((item) => (
-                <Grid item xs={6} sm={6} md={3} lg={3} key={item.Id}>
+                <Grid item xs={12} sm={6} md={3} lg={3} key={item.Id}>
                   <Card
                     variant="elevation"
                     className={styles.card}
@@ -450,7 +456,7 @@ const Marketplace = () => {
                         SOLD
                       </Box>
                     )}
-                    {item.ImagePaths?.length > 0 && (
+                    {item.ImagePaths?.length > 0 ? (
                       <CardMedia
                         component="div"
                         image={`${backendURL}${item.ImagePaths[0]}`}
@@ -460,8 +466,23 @@ const Marketplace = () => {
                           paddingTop: '90%',
                           backgroundSize: 'cover',
                           backgroundPosition: 'center',
+                          display: { xs: 'block', sm: 'block' }, // visible on all devices
                         }}
                       />
+                    ) : (
+                      !isPhone && (
+                        <CardMedia
+                          component="div"
+                          image={GordonLogo}
+                          title="Placeholder"
+                          sx={{
+                            width: '100%',
+                            paddingTop: '90%',
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                          }}
+                        />
+                      )
                     )}
 
                     <CardContent>

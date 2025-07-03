@@ -19,12 +19,17 @@ import styles from '../../MarketPlace.module.scss';
 import { useEffect, useState } from 'react';
 import MarketPlacePopup from '../MarketPlacePopup';
 import marketplaceService from 'services/marketplace';
+import GordonLogo from '../../images/gordoncollegelogo.jpg';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const MyUploadsPopup = ({ open, onClose, backendURL, createSnackbar, onUpdateListing }) => {
   const [myListings, setMyListings] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [popupOpen, setPopupOpen] = useState(false);
+  const theme = useTheme();
+  const isPhone = useMediaQuery(theme.breakpoints.down('sm'));
 
   const fetchMyListings = () => {
     setLoading(true);
@@ -133,17 +138,33 @@ const MyUploadsPopup = ({ open, onClose, backendURL, createSnackbar, onUpdateLis
                       SOLD
                     </Box>
                   )}
-                  {item.ImagePaths?.length > 0 && (
+                  {item.ImagePaths?.length > 0 ? (
                     <CardMedia
                       component="div"
-                      image={`${backendURL}${item.ImagePaths?.[0]}`}
+                      image={`${backendURL}${item.ImagePaths[0]}`}
+                      title={item.Name}
                       sx={{
                         width: '100%',
                         paddingTop: '90%',
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
+                        display: { xs: 'block', sm: 'block' }, // visible on all devices
                       }}
                     />
+                  ) : (
+                    !isPhone && (
+                      <CardMedia
+                        component="div"
+                        image={GordonLogo}
+                        title="Placeholder"
+                        sx={{
+                          width: '100%',
+                          paddingTop: '90%',
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center',
+                        }}
+                      />
+                    )
                   )}
 
                   <CardContent>
