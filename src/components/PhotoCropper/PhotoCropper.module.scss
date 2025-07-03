@@ -1,7 +1,10 @@
 @import '../../vars';
 
 .dropzone {
-  transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
+  transition:
+    border-color 0.3s,
+    background-color 0.3s,
+    box-shadow 0.3s;
   height: 18rem;
   border-style: dashed;
   border-radius: 1rem;
@@ -22,4 +25,16 @@
   .dropzone {
     height: 10rem;
   }
+}
+
+.cropPreview {
+  border: 2px dashed green;
+  margin: auto;
+  width: var(--crop-preview-width, 100%);
+  height: var(--crop-preview-height, 100%);
+}
+
+.cropper {
+  width: 100%;
+  height: 100%;
 }

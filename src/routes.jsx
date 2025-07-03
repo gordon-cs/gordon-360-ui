@@ -21,6 +21,7 @@ import ProfileNotFound from './views/ProfileNotFound';
 import PublicProfile from './views/PublicProfile';
 import Timesheets from './views/Timesheets';
 import RecIM from './views/RecIM';
+import Posters from './views/Posters';
 import RoomRanges from 'views/ResLife/components/RDView/components/RoomRanges';
 import CampusSafety from './views/LostAndFound';
 
@@ -138,9 +139,15 @@ const routes = [
     element: <RecIM />,
   },
   {
+    name: 'Posters',
+    path: '/posters',
+    element: <Posters />,
+  },
+  {
     name: 'LostAndFound',
     path: '/lostandfound/*',
     element: <CampusSafety />,
+
   },
   {
     name: 'Page Not Found',
