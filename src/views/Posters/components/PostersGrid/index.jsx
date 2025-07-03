@@ -2,7 +2,7 @@ import { Grid, Typography, Card, CardActionArea, CardMedia, CardContent } from '
 
 const PostersGrid = ({ posters, sessionCode, noPostersText }) => {
   return (
-    <Grid container direction="row" spacing={4} className={'test1'}>
+    <Grid container direction="row" spacing={4}>
       {posters?.length > 0 ? (
         posters?.map((poster) => (
           <Grid item xs={6} sm={4} md={3} lg={2} key={poster.key}>
