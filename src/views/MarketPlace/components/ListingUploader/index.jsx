@@ -47,11 +47,12 @@ const ListingUploader = ({
 
   const isSubmitDisabled =
     !selectedCategory ||
-    !selectedCondition ||
     !agreed ||
     !productName.trim() ||
     !description.trim() ||
-    (!isEdit && uploadedImages.length === 0);
+    (selectedCategory !== 'Services' && !selectedCondition);
+
+  // !isEdit;
 
   const handleSubmit = async () => {
     try {
@@ -66,11 +67,11 @@ const ListingUploader = ({
         Detail: description,
         Price: price ? parseFloat(price) : 0,
         CategoryId: selectedCategoryObj ? selectedCategoryObj.Id : null,
-        ConditionId: selectedConditionObj ? selectedConditionObj.Id : null,
+        ConditionId: selectedConditionObj ? selectedConditionObj.Id : 1,
       };
 
       let resultListing;
-
+      console.log('Submitting listing data:', listingData);
       if (!isEdit) {
         const imagesBase64 = await Promise.all(uploadedImages.map((file) => fileToBase64(file)));
         listingData.ImagesBase64 = imagesBase64;

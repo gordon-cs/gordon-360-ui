@@ -133,21 +133,27 @@ const MyUploadsPopup = ({ open, onClose, backendURL, createSnackbar, onUpdateLis
                       SOLD
                     </Box>
                   )}
-                  <CardMedia
-                    component="div"
-                    image={`${backendURL}${item.ImagePaths?.[0]}`}
-                    sx={{
-                      width: '100%',
-                      paddingTop: '90%',
-                      backgroundSize: 'cover',
-                      backgroundPosition: 'center',
-                    }}
-                  />
+                  {item.ImagePaths?.length > 0 && (
+                    <CardMedia
+                      component="div"
+                      image={`${backendURL}${item.ImagePaths?.[0]}`}
+                      sx={{
+                        width: '100%',
+                        paddingTop: '90%',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                      }}
+                    />
+                  )}
+
                   <CardContent>
                     <Typography fontWeight="bold">{item.Name}</Typography>
                     <Typography variant="body2" fontStyle="italic">
-                      {item.ConditionName} • {item.CategoryName}
+                      {item.CategoryName !== 'Services'
+                        ? `${item.ConditionName} • ${item.CategoryName}`
+                        : item.CategoryName}
                     </Typography>
+
                     <Typography variant="body2">
                       {item.Price === 0 || item.Price === '' ? 'Free' : `$${item.Price}`}
                     </Typography>

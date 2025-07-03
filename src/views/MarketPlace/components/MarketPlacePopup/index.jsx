@@ -264,75 +264,77 @@ Thank you
           <Grid container spacing={3}>
             {/* Left - Image and Seller */}
             <Grid item xs={12} md={6} sx={{ position: 'relative' }}>
-              {images.length > 1 ? (
-                <div className={styles.sliderWrapper}>
-                  <Slider
-                    nextArrow={<NextArrow />}
-                    prevArrow={<PrevArrow />}
-                    dots={images.length <= 12}
-                    infinite
-                    speed={500}
-                    slidesToShow={1}
-                    slidesToScroll={1}
-                    swipeToSlide={true}
-                    accessibility={true}
-                  >
-                    {images.map((img, index) => (
-                      <Box
-                        key={index}
-                        sx={{
-                          width: '100%',
-                          height: 0,
-                          paddingTop: '100%',
-                          position: 'relative',
-                          borderRadius: 2,
-                          backgroundColor: '#000',
-                          cursor: 'grab',
-                        }}
-                      >
-                        <img
-                          src={img}
-                          alt={`${item.Name} - ${index + 1}`}
-                          style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
+              {images.length > 0 &&
+                (images.length > 1 ? (
+                  <div className={styles.sliderWrapper}>
+                    <Slider
+                      nextArrow={<NextArrow />}
+                      prevArrow={<PrevArrow />}
+                      dots={images.length <= 12}
+                      infinite
+                      speed={500}
+                      slidesToShow={1}
+                      slidesToScroll={1}
+                      swipeToSlide={true}
+                      accessibility={true}
+                    >
+                      {images.map((img, index) => (
+                        <Box
+                          key={index}
+                          sx={{
                             width: '100%',
-                            height: '100%',
-                            objectFit: 'cover',
-                            borderRadius: 8,
+                            height: 0,
+                            paddingTop: '100%',
+                            position: 'relative',
+                            borderRadius: 2,
+                            backgroundColor: '#000',
+                            cursor: 'grab',
                           }}
-                        />
-                      </Box>
-                    ))}
-                  </Slider>
-                </div>
-              ) : (
-                <Box
-                  sx={{
-                    width: '100%',
-                    height: 0,
-                    paddingTop: '100%',
-                    position: 'relative',
-                    borderRadius: 2,
-                    backgroundColor: '#000',
-                  }}
-                >
-                  <img
-                    src={images[0]}
-                    alt={item.Name}
-                    style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
+                        >
+                          <img
+                            src={img}
+                            alt={`${item.Name} - ${index + 1}`}
+                            style={{
+                              position: 'absolute',
+                              top: 0,
+                              left: 0,
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'cover',
+                              borderRadius: 8,
+                            }}
+                          />
+                        </Box>
+                      ))}
+                    </Slider>
+                  </div>
+                ) : (
+                  <Box
+                    sx={{
                       width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      borderRadius: 8,
+                      height: 0,
+                      paddingTop: '100%',
+                      position: 'relative',
+                      borderRadius: 2,
+                      backgroundColor: '#000',
                     }}
-                  />
-                </Box>
-              )}
+                  >
+                    <img
+                      src={images[0]}
+                      alt={item.Name}
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        borderRadius: 8,
+                      }}
+                    />
+                  </Box>
+                ))}
+
               <Divider
                 variant="fullWidth"
                 sx={{
@@ -450,9 +452,11 @@ Thank you
                 {item.CategoryName}
               </Typography>
 
-              <Typography variant="subtitle2" fontStyle="italic" gutterBottom>
-                {item.ConditionName}
-              </Typography>
+              {item.CategoryName !== 'Services' && (
+                <Typography variant="subtitle2" sx={{ fontStyle: 'italic' }}>
+                  {item.ConditionName}
+                </Typography>
+              )}
               <Typography
                 variant="body2"
                 sx={{ mb: 3, mr: 3, whiteSpace: 'pre-line', wordBreak: 'break-word' }}

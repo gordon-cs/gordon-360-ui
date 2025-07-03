@@ -450,17 +450,20 @@ const Marketplace = () => {
                         SOLD
                       </Box>
                     )}
-                    <CardMedia
-                      component="div"
-                      image={`${backendURL}${item.ImagePaths?.[0]}`}
-                      title={item.Name}
-                      sx={{
-                        width: '100%',
-                        paddingTop: '90%', // 1:1 aspect ratio
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                      }}
-                    />
+                    {item.ImagePaths?.length > 0 && (
+                      <CardMedia
+                        component="div"
+                        image={`${backendURL}${item.ImagePaths[0]}`}
+                        title={item.Name}
+                        sx={{
+                          width: '100%',
+                          paddingTop: '90%',
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center',
+                        }}
+                      />
+                    )}
+
                     <CardContent>
                       <Box display="flex" justifyContent="space-between" alignItems="flex-start">
                         {/* Left column */}
@@ -468,9 +471,11 @@ const Marketplace = () => {
                           <Typography variant="subtitle1" fontWeight="bold">
                             {item.Name}
                           </Typography>
-                          <Typography variant="subtitle2" sx={{ fontStyle: 'italic' }}>
-                            {item.ConditionName}
-                          </Typography>
+                          {item.CategoryName !== 'Services' && (
+                            <Typography variant="subtitle2" sx={{ fontStyle: 'italic' }}>
+                              {item.ConditionName}
+                            </Typography>
+                          )}
                           <Typography variant="body2">
                             {item.Price === 0 || item.Price === '' ? 'Free' : `$${item.Price}`}
                           </Typography>
