@@ -14,7 +14,6 @@ import Cropper, { ReactCropperElement } from 'react-cropper';
 import Dropzone from 'react-dropzone';
 import styles from './PhotoCropper.module.css';
 import SimpleSnackbar from 'components/Snackbar';
-import { AspectRatio } from '@mui/icons-material';
 
 type PropTypes = {
   open: boolean;
@@ -43,8 +42,6 @@ const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
     cropBoxDim: number | undefined;
     aspectRatio: number;
   }>({ cropBoxDim: undefined, aspectRatio: DEFAULT_ASPECT_RATIO });
-
-  const ratio = AspectRatio;
 
   const cropperRef = useRef<ReactCropperElement | null>(null);
   const [width, height] = useWindowSize();
