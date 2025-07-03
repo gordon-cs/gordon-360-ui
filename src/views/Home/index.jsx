@@ -32,8 +32,8 @@ const Home = () => {
         </Grid>
         <Grid item xs={12} md={5}>
           <Stack spacing={2}>
-            <LostAndFoundCard />
             <NewsCard />
+            <LostAndFoundCard />
           </Stack>
         </Grid>
       </Grid>
