@@ -19,7 +19,7 @@ const PostersGrid = ({ posters, sessionCode, noPostersText }) => {
                   title={poster.Title}
                 />
                 <CardContent>
-                  <Typography className={'test2'}>{poster.Title}</Typography>
+                  <Typography>{poster.Title}</Typography>
                 </CardContent>
               </CardActionArea>
             </Card>
