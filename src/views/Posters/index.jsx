@@ -507,7 +507,7 @@ const Posters = () => {
                         <CardMedia
                           loading="lazy"
                           component="img"
-                          alt={item.alt}
+                          alt={item.alt || 'Poster image'}
                           src={item.ImagePath}
                           title={item.Title}
                         />
