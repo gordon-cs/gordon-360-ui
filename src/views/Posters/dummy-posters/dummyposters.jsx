@@ -10,7 +10,7 @@ export const DATA = [
     title: 'Poster Title',
     image: TestPoster,
     alt: 'alt text for poster 1',
-    desc: 'this is a short descirption for poster 1',
+    desc: 'this is a short description for poster 1',
     org: null,
     uploader: 'hunter.simpson',
     status: 'unexpired',
