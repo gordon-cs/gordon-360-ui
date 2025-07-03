@@ -12,6 +12,7 @@ import {
   DialogContent,
 } from '@mui/material';
 import UploadForm from './Forms/Forms/UploadForm';
+import GordonSnackbar from 'components/Snackbar';
 import { Participation } from 'services/membership';
 import membershipService from 'services/membership';
 import involvementService from 'services/involvements';
@@ -24,8 +25,9 @@ import { AuthGroup, signOut } from 'services/auth';
 import { useAuthGroups, useNetworkStatus, useUser, useWindowSize } from 'hooks';
 import FileUploadedRoundIcon from '@mui/icons-material/FileUploadRounded';
 import GordonLoader from 'components/Loader';
+import { create } from 'lodash';
+
 const LOADER_SIZE = 50;
-// import MemberListItem from './components/MemberListItem';
 
 const Posters = () => {
   const [openUploadForm, setOpenUploadForm] = useState(false);
@@ -39,11 +41,27 @@ const Posters = () => {
   const location = useLocation();
   const [openCropPoster, setOpenCropPoster] = useState(false);
   const [allPosters, setAllPosters] = useState([]);
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false); // NEW
-  const [posterToDelete, setPosterToDelete] = useState(null); // NEW
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [posterToDelete, setPosterToDelete] = useState(null);
   const isSiteAdmin = useAuthGroups(AuthGroup.SiteAdmin);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [posterToEdit, setPosterToEdit] = useState(null);
+
+  const [snackbar, setSnackbar] = useState({
+    message: '',
+    severity: '',
+    open: false,
+  });
+
+  const createSnackbar = (message, severity, link, linkText) => {
+    setSnackbar({
+      message,
+      severity,
+      open: true,
+      link,
+      linkText,
+    });
+  };
 
   const isOnline = useNetworkStatus();
   const navigate = useNavigate();
@@ -142,6 +160,7 @@ const Posters = () => {
       setAllPosters((prev) => prev.filter((p) => p.ID !== posterToDelete.ID));
       setOpenDeleteDialog(false);
       setPosterToDelete(null);
+      createSnackbar('Poster deleted successfully', 'success');
     }
   };
 
@@ -175,6 +194,7 @@ const Posters = () => {
             {posterToEdit && (
               <UploadForm
                 poster={posterToEdit} // Pass the poster to pre-fill the form
+                createSnackbar={createSnackbar}
                 onClose={() => {
                   setOpenEditDialog(false);
                   setPosterToEdit(null);
@@ -209,6 +229,7 @@ const Posters = () => {
               <UploadForm
                 onClose={clearOnClose}
                 onCropSubmit={handleCropSubmit}
+                createSnackbar={createSnackbar}
                 onSubmitSuccess={(createdPoster) => {
                   const normalizedPoster = {
                     ...createdPoster,
@@ -519,6 +540,14 @@ const Posters = () => {
           </CardContent>
         </Card>
       </Grid>
+      <GordonSnackbar
+        open={snackbar.open}
+        text={snackbar.message}
+        severity={snackbar.severity}
+        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+        link={snackbar.link}
+        linkText={snackbar.linkText}
+      />
     </Grid>
   );
 };

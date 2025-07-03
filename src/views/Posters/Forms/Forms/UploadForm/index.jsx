@@ -20,7 +20,7 @@ import sessionService from 'services/session';
 import { useLocation } from 'react-router-dom';
 import styles from './UploadForm.module.scss';
 
-const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess }) => {
+const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess, createSnackbar }) => {
   const isEditing = !!poster;
 
   const [priorityStatus, setPriorityStatus] = useState('');
@@ -188,6 +188,7 @@ const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess }) => {
             isEditing={isEditing}
             posterId={poster?.ID}
             onSubmitSuccess={onSubmitSuccess}
+            createSnackbar={createSnackbar}
           />
         </DialogContent>
       </Dialog>

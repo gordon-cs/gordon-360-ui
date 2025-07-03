@@ -3,7 +3,15 @@ import { createPoster, editPoster } from 'services/poster';
 
 // Moves the poster information to the database, and, depending on the timing, allows the poster
 // to be displayed on the posters page.
-const PosterCheck = ({ open, onClose, posterInfo, isEditing, posterId, onSubmitSuccess }) => {
+const PosterCheck = ({
+  open,
+  onClose,
+  posterInfo,
+  isEditing,
+  posterId,
+  onSubmitSuccess,
+  createSnackbar,
+}) => {
   const handleSubmit = async (event) => {
     if (event) event.preventDefault();
     try {
@@ -22,6 +30,8 @@ const PosterCheck = ({ open, onClose, posterInfo, isEditing, posterId, onSubmitS
         const updatedPoster = await editPoster(posterId, updatedData);
         if (onSubmitSuccess) onSubmitSuccess(updatedPoster);
         console.log('Poster updated:', updatedPoster);
+        console.log('Calling createSnackbar after submit');
+        createSnackbar('Poster updated successfully', 'success');
       } else {
         console.log('Calling createPoster');
         const newPoster = posterInfo;
@@ -29,10 +39,12 @@ const PosterCheck = ({ open, onClose, posterInfo, isEditing, posterId, onSubmitS
         const createdPoster = await createPoster(newPoster);
         if (onSubmitSuccess) onSubmitSuccess(createdPoster);
         console.log('Poster created:', createdPoster);
+        createSnackbar('Poster created successfully', 'success');
       }
       onClose();
     } catch (error) {
       console.error('Error submitting poster:', error);
+      if (createSnackbar) createSnackbar('Error submitting poster', 'error');
     }
   };
 
