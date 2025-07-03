@@ -489,6 +489,7 @@ const Marketplace = () => {
                             maxWidth: '50%',
                             textAlign: 'right',
                             wordBreak: 'normal',
+                            display: { xs: 'none', sm: 'block' }, // hides on mobile
                           }}
                         >
                           {item.CategoryName}
