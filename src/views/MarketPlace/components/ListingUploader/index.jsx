@@ -145,6 +145,12 @@ const ListingUploader = ({
     }
   }, [isEdit, listing]);
 
+  useEffect(() => {
+    if (selectedCategory === 'Services') {
+      setSelectedCondition('');
+    }
+  }, [selectedCategory]);
+
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <AppBar position="static" sx={{ backgroundColor: 'primary.main' }}>
@@ -173,7 +179,7 @@ const ListingUploader = ({
         {/* Categories */}
         <Box sx={{ mb: 3, p: 2, backgroundColor: theme.palette.neutral.main, borderRadius: 2 }}>
           <Typography fontWeight="bold" gutterBottom>
-            Item Category:
+            Category:
           </Typography>
           <FormGroup row>
             {categories.map((cat) => (
@@ -220,6 +226,7 @@ const ListingUploader = ({
                         prev === cond.ConditionName ? '' : cond.ConditionName,
                       )
                     }
+                    disabled={selectedCategory === 'Services'} // <-- disable when Services is selected
                   />
                 }
                 label={cond.ConditionName}
@@ -227,6 +234,11 @@ const ListingUploader = ({
               />
             ))}
           </FormGroup>
+          {selectedCategory === 'Services' && (
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 1, fontStyle: 'italic' }}>
+              Condition not required for Services.
+            </Typography>
+          )}
         </Box>
 
         {/* Product Info */}
