@@ -1,13 +1,4 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContentText,
-  CardHeader,
-  Grid,
-  Link as MuiLink,
-} from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Button, Dialog, DialogActions, DialogContentText, CardHeader, Grid } from '@mui/material';
 import { createPoster, editPoster } from 'services/poster';
 
 // Moves the poster information to the database, and, depending on the timing, allows the poster

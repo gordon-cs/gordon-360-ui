@@ -10,7 +10,6 @@ import {
   Typography,
 } from '@mui/material';
 import membershipService, { Participation } from 'services/membership';
-import { createPoster } from 'services/poster';
 import CropPoster from '../CropPoster';
 import PosterCheck from '../ApprovedDialogue';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
@@ -20,7 +19,6 @@ import involvementService from 'services/involvements';
 import sessionService from 'services/session';
 import { useLocation } from 'react-router-dom';
 import styles from './UploadForm.module.scss';
-import { editPoster } from 'services/poster';
 
 const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess }) => {
   const isEditing = !!poster;
@@ -172,38 +170,6 @@ const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess }) => {
       Status: 1,
     };
   };
-
-  // const handleSubmit = async () => {
-  //   try {
-  //     if (isEditing && poster?.ID) {
-  //       console.log('Calling editPoster with ID: ', poster.ID);
-  //       // Prepare partial update data based on your UpdatePoster type
-  //       const updatedData = {
-  //         Title: title,
-  //         Description: description,
-  //         ImagePath: croppedImage,
-  //         VisibleDate: startTime,
-  //         ExpirationDate: endTime,
-  //         Status: 1, // or whatever status you want here
-  //       };
-  //       console.log('Editing poster...', poster.ID, updatedData);
-  //       const updatedPoster = await editPoster(poster.ID, updatedData);
-  //       console.log('Poster updated:', updatedPoster);
-  //     } else {
-  //       console.log('Calling createPoster');
-  //       const newPoster = posterInfo();
-  //       console.log('Creating poster...', newPoster);
-  //       const createdPoster = await createPoster(newPoster);
-  //       console.log('Poster created:', createdPoster);
-  //     }
-
-  //     setOpenPosterCheck(false);
-  //     setOpenCropPoster(false);
-  //     onClose();
-  //   } catch (error) {
-  //     console.error('Error submitting poster:', error);
-  //   }
-  // };
 
   const getTextFieldSX = (color) => ({
     '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
