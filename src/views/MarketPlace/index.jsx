@@ -472,7 +472,7 @@ const Marketplace = () => {
                             {item.ConditionName}
                           </Typography>
                           <Typography variant="body2">
-                            {item.Price === 0 || item.Price === '' ? 'Free' : `$ ${item.Price}`}
+                            {item.Price === 0 || item.Price === '' ? 'Free' : `$${item.Price}`}
                           </Typography>
                         </Box>
 

@@ -149,7 +149,7 @@ const MyUploadsPopup = ({ open, onClose, backendURL, createSnackbar, onUpdateLis
                       {item.ConditionName} • {item.CategoryName}
                     </Typography>
                     <Typography variant="body2">
-                      {item.Price === 0 || item.Price === '' ? 'Free' : `$ ${item.Price}`}
+                      {item.Price === 0 || item.Price === '' ? 'Free' : `$${item.Price}`}
                     </Typography>
                   </CardContent>
                 </Card>

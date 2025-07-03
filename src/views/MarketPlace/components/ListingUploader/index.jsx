@@ -20,6 +20,7 @@ import { useTheme } from '@mui/material/styles';
 import marketplaceService from 'services/marketplace';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import CloseIcon from '@mui/icons-material/Close';
+import GordonLoader from 'components/Loader';
 
 const ListingUploader = ({
   open,
@@ -30,6 +31,7 @@ const ListingUploader = ({
   createSnackbar,
 }) => {
   const theme = useTheme();
+  const [isUploadingImages, setIsUploadingImages] = useState(false);
   const isDark = theme.palette.mode === 'dark';
   const [selectedCondition, setSelectedCondition] = useState('');
   const [agreed, setAgreed] = useState(false);
@@ -41,6 +43,7 @@ const ListingUploader = ({
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [categories, setCategories] = useState([]);
   const [conditions, setConditions] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isSubmitDisabled =
     !selectedCategory ||
@@ -52,6 +55,7 @@ const ListingUploader = ({
 
   const handleSubmit = async () => {
     try {
+      setIsSubmitting(true);
       const selectedCategoryObj = categories.find((cat) => cat.CategoryName === selectedCategory);
       const selectedConditionObj = conditions.find(
         (cond) => cond.ConditionName === selectedCondition,
@@ -89,6 +93,8 @@ const ListingUploader = ({
         console.error('Error submitting listing:', error);
         createSnackbar('Failed to submit listing. Please try again.', 'error');
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -287,6 +293,7 @@ const ListingUploader = ({
               style={{ display: 'none' }}
               id="upload-images-input"
               onChange={async (e) => {
+                setIsUploadingImages(true);
                 const files = Array.from(e.target.files);
                 const processedFiles = await Promise.all(
                   files.map(async (file) => {
@@ -312,6 +319,7 @@ const ListingUploader = ({
 
                 const validFiles = processedFiles.filter(Boolean);
                 setUploadedImages((prev) => [...prev, ...validFiles]);
+                setIsUploadingImages(false);
               }}
             />
 
@@ -357,6 +365,7 @@ const ListingUploader = ({
                 onDrop={async (e) => {
                   e.preventDefault();
                   e.currentTarget.classList.remove('drag-over');
+                  setIsUploadingImages(true);
                   const files = Array.from(e.dataTransfer.files);
                   const processedFiles = await Promise.all(
                     files.map(async (file) => {
@@ -380,6 +389,7 @@ const ListingUploader = ({
                   );
                   const validFiles = processedFiles.filter(Boolean);
                   setUploadedImages((prev) => [...prev, ...validFiles]);
+                  setIsUploadingImages(false);
                 }}
               >
                 <Typography variant="body" color="text.secondary" align="center">
@@ -388,6 +398,20 @@ const ListingUploader = ({
                   (jpg, jpeg, png, HEIC)
                 </Typography>
               </Box>
+
+              {isUploadingImages && (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '15em',
+                    width: '100%',
+                  }}
+                >
+                  <GordonLoader />
+                </Box>
+              )}
 
               {uploadedImages.map((file, index) => (
                 <Box
@@ -398,7 +422,6 @@ const ListingUploader = ({
                     borderRadius: 2,
                     backgroundColor: theme.palette.neutral.main,
                     boxShadow: 1,
-                    cursor: 'pointer',
                     overflow: 'hidden',
                     position: 'relative', // Needed for absolute positioning of the delete button
                     flexShrink: 0,
@@ -447,15 +470,22 @@ const ListingUploader = ({
           />
         </Box>
 
-        <Button
-          variant="contained"
-          color="secondary"
-          sx={{ mt: 3 }}
-          disabled={isSubmitDisabled}
-          onClick={handleSubmit}
-        >
-          {isEdit ? 'Update' : 'Submit'}
-        </Button>
+        <Box sx={{ display: 'flex', alignItems: 'center', mt: 3 }}>
+          <Button
+            variant="contained"
+            color="secondary"
+            disabled={isSubmitDisabled || isSubmitting}
+            onClick={handleSubmit}
+          >
+            {isEdit ? 'Update' : 'Submit'}
+          </Button>
+
+          {isSubmitting && (
+            <Box sx={{ ml: 2, display: 'flex', alignItems: 'center' }}>
+              <GordonLoader size={24} /> {/* assuming GordonLoader supports a size prop */}
+            </Box>
+          )}
+        </Box>
       </DialogContent>
     </Dialog>
   );
