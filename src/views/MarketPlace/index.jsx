@@ -17,7 +17,6 @@ import {
   FormControl,
   FormControlLabel,
   Pagination,
-  IconButton,
 } from '@mui/material';
 import CategoryEditor from './components/CategoryEditor';
 import ConditionEditor from './components/ConditionEditor';
@@ -28,7 +27,7 @@ import MyUploadsPopup from './components/MyUploadsPopup';
 import marketplaceService from 'services/marketplace';
 import GordonSnackbar from 'components/Snackbar';
 import { AuthGroup } from 'services/auth';
-import { useAuthGroups, useNetworkStatus } from 'hooks';
+import { useAuthGroups } from 'hooks';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import GordonLogo from './images/gordoncollegelogo.jpg';
@@ -210,12 +209,27 @@ const Marketplace = () => {
             }}
           >
             <Toolbar>
-              <Typography variant="h5">
-                <Box component="span" sx={{ fontWeight: 'bold', color: 'warning.main' }}>
-                  Gordon
-                </Box>{' '}
-                Marketplace
-              </Typography>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  width: '100%',
+                }}
+              >
+                {/* Left Side */}
+                <Typography variant="h5">
+                  <Box component="span" sx={{ fontWeight: 'bold', color: 'warning.main' }}>
+                    Gordon
+                  </Box>{' '}
+                  Marketplace
+                </Typography>
+
+                {/* Right Side */}
+                <Button variant="outlined" sx={{ color: 'secondary.main' }}>
+                  Josh
+                </Button>
+              </Box>
             </Toolbar>
           </AppBar>
 
