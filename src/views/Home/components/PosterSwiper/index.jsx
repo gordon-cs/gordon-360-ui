@@ -39,9 +39,6 @@ const PosterSwiper = () => {
               keyboard={true} // takes keyboard input
               watchSlidesProgress={true}
               watchSlidesVisibility={true}
-              // onSwiper={(swiper) => {
-              //   swiperRef.current = swiper;
-              // }}
               onTransitionEnd={(swiper) => {
                 setTimeout(() => {
                   swiper.update();

@@ -164,7 +164,7 @@ const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess, createSnac
       ImagePath: croppedImage,
       VisibleDate: startTime,
       ExpirationDate: endTime,
-      UploaderADUSername: profile.AD_Username,
+      UploaderADUsername: profile.AD_Username,
       Priority: priorityStatus === 1 ? 1 : 0,
       Status: 1,
     };

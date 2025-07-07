@@ -74,7 +74,7 @@ const Posters = () => {
     );
   };
 
-  const pizzaSlice = allPosters.filter((item) => isMyClub(item.ClubCode, item.ID));
+  const myClubPosters = allPosters.filter((item) => isMyClub(item.ClubCode, item.ID));
   const otherPosters = allPosters.filter((item) => !isMyClub(item.ClubCode, item.ID));
   const sessionFromURL = new URLSearchParams(location.search).get('session');
 
@@ -384,7 +384,7 @@ const Posters = () => {
               <GordonLoader size={LOADER_SIZE} />
             ) : (
               <Grid container direction="row" spacing={4}>
-                {pizzaSlice.map((item) => (
+                {myClubPosters.map((item) => (
                   <Grid item xs={6} sm={4} md={3} lg={2.4} key={item.ID}>
                     <Card variant="outlined" className="poster-card">
                       {item.Priority === 1 && (

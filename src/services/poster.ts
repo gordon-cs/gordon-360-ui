@@ -1,8 +1,27 @@
 import http from './http';
-//import Date from
-// same type as in the view model
 
-//hang with not loading backend
+/**
+ * Poster Service and Types
+ *
+ * This file defines TypeScript types that represent the Poster view models used
+ * throughout the frontend, matching the structure expected by the backend API.
+ *
+ * - BasePoster: properties of a given poster
+ * - UploadPoster: data required when creating a new poster (same as BasePoster).
+ * - UpdatePoster: properties allowed to be updated for an existing poster.
+ * - Poster: full poster model including backend-generated fields like ID and Status.
+ * - CreatedPoster: represents posters returned after creation with additional status info.
+ *
+ * The file also exports functions for interacting with the backend Poster API endpoints,
+ * including creating, retrieving, updating, hiding, and deleting posters.
+ *
+ * Each function returns a Promise with the expected typed response, ensuring type safety
+ * when communicating with the backend.
+ *
+ * These types and functions should be kept in sync with the backend PosterViewModels and
+ * controller routes to maintain consistency across the application.
+ */
+
 // poster view model
 type BasePoster = {
   ACT_CDE: string;
@@ -11,7 +30,7 @@ type BasePoster = {
   ImagePath: string;
   VisibleDate?: string;
   ExpirationDate?: string;
-  UploaderADUSername: string;
+  UploaderADUsername: string;
   //Status: number;
 };
 
@@ -23,7 +42,7 @@ type UploadPoster = {
   ImagePath: string;
   VisibleDate?: string;
   ExpirationDate?: string;
-  UploaderADUSername: string;
+  UploaderADUsername: string;
   //Status: number;
 };
 
@@ -34,7 +53,7 @@ type UpdatePoster = {
   ImagePath: string;
   VisibleDate?: string;
   ExpirationDate?: string;
-  Status: number;
+  Status: number; // Determines if the poster is visible or not
 };
 
 type Poster = BasePoster & {
