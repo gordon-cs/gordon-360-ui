@@ -24,6 +24,7 @@ import LocalPoliceIcon from '@mui/icons-material/LocalPolice';
 import CallIcon from '@mui/icons-material/Call';
 import ReportIcon from '@mui/icons-material/Report';
 import styles from '/src/views/Links/Links.module.scss';
+import CashnetIcon from '/src/views/Links/images/Cashnet.png';
 import { useUser } from 'hooks';
 
 const Links = () => {
@@ -164,6 +165,20 @@ const Links = () => {
                 target="_blank"
               >
                 <ListItemText primary="iAttended" />
+              </Link>
+            </ListItem>
+            <ListItem>
+              <ListItemIcon>
+                <img src={CashnetIcon} alt={'Cashnet Logo'} className={styles.icon_style} />
+              </ListItemIcon>
+              <Link
+                href="https://commerce.cashnet.com/cashnetg/static/epayment/gordonpay/login"
+                underline="hover"
+                className={`gc360_text_link`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <ListItemText primary="CashNet" />
               </Link>
             </ListItem>
           </List>
