@@ -330,7 +330,7 @@ const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess, createSnac
             </TextField>
           )}
         </Grid>
-        {/* Add a check for site admin like Chris Carlson to be have access to priority screen*/}
+        {/* Restricts priority selection to site admins; implement role-based check */}
         {selectedClub === 'CEC' && (
           <Grid item xs={12} className={styles.gridItem}>
             <TextField
