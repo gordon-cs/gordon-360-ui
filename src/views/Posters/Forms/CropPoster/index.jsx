@@ -11,7 +11,7 @@ import { useState, useRef } from 'react';
 import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import Cropper from 'react-cropper';
-import defaultLogo from '../../../images/DefaultPoster.png';
+import defaultLogo from '../../images/DefaultPoster.png';
 import styles from './CropPoster.module.scss';
 import CheckBoxRoundedIcon from '@mui/icons-material/CheckBoxRounded';
 import ClearOutlinedIcon from '@mui/icons-material/ClearRounded';
