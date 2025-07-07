@@ -24,11 +24,6 @@ const config = ({ mode }) => {
           changeOrigin: true,
           secure: false,
         },
-        '/posters': {
-          target: process.env.VITE_API_URL, // same as your backend URL
-          changeOrigin: true,
-          secure: false,
-        },
       },
     },
   });

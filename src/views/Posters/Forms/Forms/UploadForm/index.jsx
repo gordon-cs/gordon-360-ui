@@ -7,7 +7,6 @@ import {
   Dialog,
   DialogContent,
   CardHeader,
-  Typography,
 } from '@mui/material';
 import membershipService, { Participation } from 'services/membership';
 import CropPoster from '../CropPoster';
@@ -166,7 +165,7 @@ const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess, createSnac
       VisibleDate: startTime,
       ExpirationDate: endTime,
       UploaderADUSername: profile.AD_Username,
-      Priority: priorityStatus == 1 ? 1 : 0,
+      Priority: priorityStatus === 1 ? 1 : 0,
       Status: 1,
     };
   };
@@ -332,7 +331,7 @@ const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess, createSnac
           )}
         </Grid>
         {/* Add a check for site admin like Chris Carlson to be have access to priority screen*/}
-        {selectedClub == 'CEC' && (
+        {selectedClub === 'CEC' && (
           <Grid item xs={12} className={styles.gridItem}>
             <TextField
               select
