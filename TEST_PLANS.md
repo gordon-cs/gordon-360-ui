@@ -90,13 +90,11 @@ Covering user-facing editable fields, data privacy, and UI logic:
 - [ ] Role-based visibility (student vs. admin).
 
 
-
 ## 📅 Events
 
 - [ ] Network error recovery.
 - [ ] Search and filter behavior.
 
----
 
 ## 🧑‍🤝‍🧑 People
 

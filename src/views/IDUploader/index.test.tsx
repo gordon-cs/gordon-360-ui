@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { act } from 'react';
 import { useIsAuthenticated } from '@azure/msal-react';
-import './matchMedia.mock';
+import 'matchMedia.mock';
 
 import { useUser, useUserActions, useWindowSize } from 'hooks';
 import user from 'services/user';

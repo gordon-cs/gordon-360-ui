@@ -23,6 +23,7 @@ import PhotoCropper from 'components/PhotoCropper';
 import GordonDialogBox from 'components/GordonDialogBox';
 import SimpleSnackbar from 'components/Snackbar';
 import GordonUnauthenticated from 'components/GordonUnauthenticated';
+import React from 'react';
 
 const postCroppedImage = async (croppedImage, username) => {
   let attemptNumber = 0;
