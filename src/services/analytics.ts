@@ -9,7 +9,6 @@ const onError = (description: string) => {
 
 /**
  * Track an event
- *
  * @param category Top level category for the event, e.g. 'User', 'Navigation', etc.
  * @param action Description of what happened in the event, e.g. 'Edited activity'
  * @param label More specific description of the action

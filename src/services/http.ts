@@ -21,7 +21,6 @@ const put = <TResponse>(
 
 /**
  * Post image data to the API
- *
  * @param endpoint url of the endpoint to post the image to
  * @param imageData base64 encoded data URI of the image to post
  * @param headers HTTP headers to include in the request
@@ -65,7 +64,6 @@ const apiBaseURL = import.meta.env.DEV ? '/' : (import.meta.env.VITE_API_URL as 
 
 /**
  * Make a request to the API
- *
  * @param endpoint API endpoint to request, a URL relative to API base URL, ex: `activity/023487` (no leading slash)
  * @param method HTTP method to use
  * @param body Body of the request
@@ -78,6 +76,7 @@ const makeRequest = async <TResponse>(
   body?: HttpRequestBody,
   headers?: Headers,
 ): Promise<TResponse> => {
+  console.log(`${method} request to endpoint ${endpoint}`);
   const response = await fetch(`${apiBaseURL}api/${endpoint}`, {
     method,
     body,
@@ -88,7 +87,6 @@ const makeRequest = async <TResponse>(
 
 /**
  * Parse an HTTP response
- *
  * @param res the response to parse
  * @returns Resolves with the response body; Rejects on a non-2xx response code
  */
@@ -112,12 +110,9 @@ export const parseResponse = async <TResponse>(res: Response): Promise<TResponse
 
 const handleAuthHeader = async (headers: Headers): Promise<Headers> => {
   if (isAuthenticated()) {
-    try {
-      const token = await getToken();
-      headers.append('Authorization', `Bearer ${token}`);
-    } catch (err) {
-      throw new Error('Token is not available');
-    }
+    console.log('Getting token');
+    const token = await getToken();
+    headers.append('Authorization', `Bearer ${token}`);
   }
   return headers;
 };
@@ -147,11 +142,10 @@ const dataURItoBlob = (dataURI: string) => {
 };
 
 type QueryStringPrimitive = string | number | boolean;
-type QueryStringSerializable = QueryStringPrimitive | Array<QueryStringPrimitive>;
+type QueryStringSerializable = QueryStringPrimitive | Array<QueryStringPrimitive> | undefined;
 
 /**
  * Convert an object into a URL query string.
- *
  * @param queryParams Object containing params to be serialized into a URL query string
  * @returns URL query string of the form `'?key1=value1&key2=value2'`, or an empty string if `queryParams` is `undefined`.
  */
@@ -167,6 +161,11 @@ const toQueryString = (
 
   // Add each property of `queryParams` object to the `urlSearchParams`
   Object.entries(queryParams).forEach(([key, value]) => {
+    // Do not serialize `undefined` values
+    if (value === undefined) {
+      return;
+    }
+
     if (Array.isArray(value)) {
       // If `value` is an array, append each element of the array to the searchParams
       // This is *most* standard way of encoding arrays in a query string, and the only way

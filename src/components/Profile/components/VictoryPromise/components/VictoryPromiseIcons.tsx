@@ -37,7 +37,13 @@ const VictoryPromiseIcon = ({
         </>
       }
     >
-      <svg xmlns="http://www.w3.org/2000/svg" width="102" height="109" className={styles.icon}>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="102"
+        height="109"
+        className={styles.icon}
+        aria-label={toTitleCase(category, '_')}
+      >
         <g>
           <IconComponent primary={primary} secondary={secondary} />
         </g>

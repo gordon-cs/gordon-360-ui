@@ -18,6 +18,7 @@ declare module '@mui/material/styles' {
 declare module '@mui/material' {
   interface ButtonPropsColorOverrides {
     neutral: any;
+    link: any;
   }
 }
 
@@ -28,6 +29,8 @@ const GordonBlue_opacity50 = '#01498382';
 
 // Secondary
 const ScottieCyan = '#00AEEF';
+// Slightly darker version of Scottie Cyan, for more subtle applications
+const ScottieCyanAlt = '#3394D1';
 const ScottieCyan_opacity75 = '#00AEEFBF';
 const ScottieCyan_opacity10 = '#00AEEF1A';
 
@@ -94,6 +97,7 @@ export const theme360 = extendTheme({
         secondary: {
           main: ScottieCyan,
           dark: ScottieCyan_opacity75,
+          light: ScottieCyanAlt,
           contrastText: Black,
           50: ScottieCyan_opacity10,
           100: '#B0E2F9',
@@ -189,6 +193,7 @@ export const theme360 = extendTheme({
         },
         secondary: {
           main: ScottieCyan,
+          light: ScottieCyanAlt,
           contrastText: Black,
           50: GordonBlue_opacity50,
           100: '#BBDDF0',
@@ -245,6 +250,60 @@ export const theme360 = extendTheme({
     },
   },
   components: {
+    MuiFilledInput: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          '&::after': {
+            borderColor: theme.palette.secondary.light, // Focused bottom border color
+          },
+        }),
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: theme.palette.secondary.light, // Focused border color
+          },
+        }),
+      },
+    },
+    MuiInputLabel: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          '&.Mui-focused': {
+            color: theme.vars.palette.secondary.light, // Focused label color, for better contrast in dark mode
+          },
+        }),
+      },
+    },
+    MuiFormLabel: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          '[data-mui-color-scheme="dark"] &.Mui-focused': {
+            color: theme.vars.palette.secondary.light, // Focused label color, for better contrast in dark mode
+          },
+        }),
+      },
+    },
+    MuiRadio: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          '[data-mui-color-scheme="dark"] &.Mui-checked': {
+            color: theme.vars.palette.secondary.light, // Checked input color, for better contrast in dark mode
+          },
+        }),
+      },
+    },
+    MuiCheckbox: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          '[data-mui-color-scheme="dark"] &.Mui-checked': {
+            color: theme.vars.palette.secondary.light, // Checked input color, for better contrast in dark mode
+          },
+        }),
+      },
+    },
     MuiButton: {
       styleOverrides: {
         outlinedPrimary: ({ theme }) => ({

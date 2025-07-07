@@ -9,6 +9,7 @@ const Help = () => {
         <Card className={styles.help}>
           <CardHeader
             className={styles.help_title}
+            id="jump-to"
             title="Jump To:"
             titleTypographyProps={{ variant: 'h4' }}
           />
@@ -164,6 +165,14 @@ const Help = () => {
                     , or the Registrar.
                   </li>
                 </Typography>
+                <Link
+                  className={`gc360_text_link`}
+                  style={{ padding: '0 1.5vw', display: 'block', marginTop: '10px' }}
+                  to="#jump-to"
+                  smooth
+                >
+                  Return to Top of Page
+                </Link>
               </CardContent>
             </Card>
 
@@ -205,6 +214,14 @@ const Help = () => {
                     Involvements.
                   </li>
                 </Typography>
+                <Link
+                  className={`gc360_text_link`}
+                  style={{ padding: '0 1.5vw', display: 'block', marginTop: '10px' }}
+                  to="#jump-to"
+                  smooth
+                >
+                  Return to Top of Page
+                </Link>
               </CardContent>
             </Card>
 
@@ -251,6 +268,14 @@ const Help = () => {
                     will fill where there is no Image loaded.
                   </li>
                 </Typography>
+                <Link
+                  className={`gc360_text_link`}
+                  style={{ padding: '0 1.5vw', display: 'block', marginTop: '10px' }}
+                  to="#jump-to"
+                  smooth
+                >
+                  Return to Top of Page
+                </Link>
               </CardContent>
             </Card>
 
@@ -270,6 +295,14 @@ const Help = () => {
                     peculiar behaviors.
                   </li>
                 </Typography>
+                <Link
+                  className={`gc360_text_link`}
+                  style={{ padding: '0 1.5vw', display: 'block', marginTop: '10px' }}
+                  to="#jump-to"
+                  smooth
+                >
+                  Return to Top of Page
+                </Link>
               </CardContent>
             </Card>
 
@@ -284,6 +317,14 @@ const Help = () => {
                   </li>
                   <li>Gordon 360 is not supported on Internet Explorer.</li>
                 </Typography>
+                <Link
+                  className={`gc360_text_link`}
+                  style={{ padding: '0 1.5vw', display: 'block', marginTop: '10px' }}
+                  to="#jump-to"
+                  smooth
+                >
+                  Return to Top of Page
+                </Link>
               </CardContent>
             </Card>
 
@@ -328,6 +369,14 @@ const Help = () => {
                     to Involvements to receive emails!
                   </li>
                 </Typography>
+                <Link
+                  className={`gc360_text_link`}
+                  style={{ padding: '0 1.5vw', display: 'block', marginTop: '10px' }}
+                  to="#jump-to"
+                  smooth
+                >
+                  Return to Top of Page
+                </Link>
               </CardContent>
             </Card>
           </CardContent>

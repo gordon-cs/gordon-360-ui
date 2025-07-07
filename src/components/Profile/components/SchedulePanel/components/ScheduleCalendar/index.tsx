@@ -1,9 +1,22 @@
-import { Calendar, luxonLocalizer } from 'react-big-calendar';
+import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import { CourseEvent, Schedule, scheduleCalendarResources } from 'services/schedule';
 import './ScheduleCalendar.css';
-import { DateTime } from 'luxon';
+import { format, getDay, startOfWeek } from 'date-fns';
+import { enUS } from 'date-fns/locale';
 
-const localizer = luxonLocalizer(DateTime, { firstDayOfWeek: 1 });
+const locales = {
+  'en-US': enUS,
+};
+
+const localizer = dateFnsLocalizer({
+  format,
+  startOfWeek,
+  getDay,
+  locales,
+});
+
+const firstQuadOfSemester = new Set(['Fall 1', 'Spring 1', 'Summer 1']);
+const secondQuadOfSemester = new Set(['Fall 2', 'Spring 2', 'Summer 2']);
 
 type Props = {
   schedule: Schedule;
@@ -25,12 +38,26 @@ const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
       : course.location.includes('null')
         ? (title = tempTitle)
         : (title = tempTitle + `\n${course.location}`);
+
     return { ...course, title };
   });
 
   return (
     <Calendar
       style={{ whiteSpace: 'pre-wrap' }}
+      eventPropGetter={(event: CourseEvent) => {
+        let subtermClassNames = ['subterm'];
+
+        if (firstQuadOfSemester.has(event.subtermCode || '')) {
+          subtermClassNames.push('subterm1');
+        } else if (secondQuadOfSemester.has(event.subtermCode || '')) {
+          subtermClassNames.push('subterm2');
+        } else {
+          return {};
+        }
+
+        return { className: subtermClassNames.join(' ') };
+      }}
       events={courseFormat}
       localizer={localizer}
       min={dayStart}
@@ -40,7 +67,7 @@ const GordonScheduleCalendar = ({ schedule, onSelectEvent }: Props) => {
       defaultView="day"
       resources={scheduleCalendarResources as unknown as object[]}
       formats={{
-        dayHeaderFormat: () => schedule.session.SessionDescription,
+        dayHeaderFormat: () => schedule.term.Description,
       }}
       onSelectEvent={onSelectEvent}
       onKeyPressEvent={(selectedEvent, keyPressEvent) => {

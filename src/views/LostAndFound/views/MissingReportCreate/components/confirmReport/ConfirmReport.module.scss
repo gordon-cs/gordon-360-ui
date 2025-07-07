@@ -1,0 +1,31 @@
+.confirmCard {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  background-color: var(--mui-palette-background-paper); // For card background color
+  color: var(--mui-palette-text-primary); // For text color
+}
+
+.header {
+  background-color: var(--mui-palette-primary-main); // GordonBlue theme color
+  color: var(--mui-palette-primary-contrastText); // Text color from primary theme
+}
+
+.reportDetails {
+  margin-top: 16px;
+  font-size: 1rem;
+  color: var(--mui-palette-text-primary); // Text color from theme
+}
+
+.button {
+  margin: 0.5em;
+  margin-top: 1em;
+}
+
+.breakWord {
+  word-wrap: break-word;
+}
+
+.description {
+  color: var(--mui-palette-text-secondary); // Optional secondary text color for descriptions
+}

@@ -10,7 +10,6 @@ import {
   Typography,
 } from '@mui/material';
 // @TODO CSSMODULES - outside directory
-import styles from '../../EnrollmentCheckIn.module.css';
 import { phoneMaskINTL, phoneMaskUS } from '../UpdatePhone';
 
 const EmergencyContactUpdate = ({
@@ -114,7 +113,7 @@ function createEmergencyContactFields(
       </Typography>
       <Grid container spacing={2} justifyContent="center">
         <Grid item>
-          <FormControl className={styles.emergencyContactForm}>
+          <FormControl>
             <InputLabel required={isRequiredContact} htmlFor={'FirstNameInput' + contactNum}>
               First Name
             </InputLabel>
@@ -127,7 +126,7 @@ function createEmergencyContactFields(
           </FormControl>
         </Grid>
         <Grid item>
-          <FormControl className={styles.emergencyContactForm}>
+          <FormControl>
             <InputLabel required={isRequiredContact} htmlFor={'LastNameInput' + contactNum}>
               Last Name
             </InputLabel>
@@ -141,7 +140,7 @@ function createEmergencyContactFields(
           </FormControl>
         </Grid>
         <Grid item>
-          <FormControl className={styles.emergencyContactForm}>
+          <FormControl>
             <InputLabel required={isRequiredContact} htmlFor="component-simple">
               Relationship
             </InputLabel>
@@ -155,7 +154,7 @@ function createEmergencyContactFields(
           </FormControl>
         </Grid>
         <Grid item>
-          <FormControl className={styles.emergencyContactForm}>
+          <FormControl>
             <InputLabel required={isPhoneRequired} htmlFor="component-simple">
               Home Phone
             </InputLabel>
@@ -181,7 +180,7 @@ function createEmergencyContactFields(
           </FormControl>
         </Grid>
         <Grid item>
-          <FormControl className={styles.emergencyContactForm}>
+          <FormControl>
             <InputLabel required={isPhoneRequired} htmlFor="component-simple">
               Mobile Phone
             </InputLabel>

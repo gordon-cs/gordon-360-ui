@@ -31,7 +31,6 @@ export default Activity;
  * Formats a list of sessions that the user was a member of this activity into a single string.
  * The string is a resume-like (e.g. 'MMM yyyy') series of intervals, where each interval is a
  * period of time representing consecutive semesters that the user was a member of the activity.
- *
  * @param sessionRecords - a list of sessions that user was a member of the same activity
  * @returns A string representing the duration of the user's membership based on the sessionRecords
  */

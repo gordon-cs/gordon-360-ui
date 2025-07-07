@@ -14,9 +14,9 @@ import GordonLoader from 'components/Loader';
 import GordonScheduleCalendar from './components/ScheduleCalendar';
 import ScheduleDialog from './components/ScheduleDialog';
 import styles from './ScheduleHeader.module.css';
-import scheduleService, { CourseEvent, Schedule } from 'services/schedule';
-import sessionService from 'services/session';
+import scheduleService, { CourseEvent, formatTermDescription, Schedule } from 'services/schedule';
 import { Profile } from 'services/user';
+import academicTermService from 'services/academicTerm';
 
 type Props = {
   profile: Profile;
@@ -36,19 +36,23 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
     setLoading(true);
 
     Promise.all([
-      scheduleService.getAllSessionSchedules(profile.AD_Username),
-      sessionService.getCurrent(),
-    ]).then(([allSessionSchedules, currentSession]) => {
-      setAllSchedules(allSessionSchedules);
+      scheduleService.getAllTermSchedules(profile.AD_Username),
+      academicTermService.getCurrentTerm(),
+    ]).then(([allTermSchedules, currentTerm]) => {
+      setAllSchedules(allTermSchedules);
       const defaultSchedule =
-        // If there is a schedule for the current session, make it d4fault
-        allSessionSchedules.find((s) => s.session.SessionCode === currentSession.SessionCode) ??
-        // Otherwise, use the most recent session
-        allSessionSchedules[0];
+        // If there is a schedule for the current term, make it d4fault
+        allTermSchedules.find(
+          (s) =>
+            s.term.YearCode === currentTerm.YearCode && s.term.TermCode === currentTerm.TermCode,
+        ) ??
+        // Otherwise, use the most recent term
+        allTermSchedules[0];
       setSelectedSchedule(defaultSchedule);
       setLoading(false);
     });
   }, [profile.AD_Username]);
+
   const toggleIsScheduleOpen = () => {
     setIsScheduleOpen((wasOpen) => {
       localStorage.setItem(scheduleOpenKey, String(!wasOpen));
@@ -72,9 +76,9 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
             id="schedule-header"
             className={`gc360_header ${styles.accordionHeader}`}
           >
-          <Grid container className={styles.header}>
-            <CardHeader title={'Course Schedule'} />
-          </Grid>
+            <Grid container className={styles.header}>
+              <CardHeader title={'Course Schedule'} />
+            </Grid>
           </AccordionSummary>
         ) : (
           <div></div>
@@ -85,22 +89,20 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
               <Grid item xs={12} lg={3}>
                 <TextField
                   label="Term"
-                  id="schedule-session"
-                  value={selectedSchedule?.session.SessionCode ?? ''}
+                  id="schedule-term"
+                  value={selectedSchedule?.term.BeginDate ?? ''}
                   onChange={(e) =>
                     setSelectedSchedule(
-                      allSchedules.find((s) => s.session.SessionCode === e.target.value) ?? null,
+                      allSchedules.find((s) => s.term.BeginDate === e.target.value) ?? null,
                     )
                   }
                   select
                 >
-                  {allSchedules.map(
-                    ({ session: { SessionDescription: description, SessionCode: code } }) => (
-                      <MenuItem value={code} key={code}>
-                        {description}
-                      </MenuItem>
-                    ),
-                  )}
+                  {allSchedules.map(({ term }) => (
+                    <MenuItem value={term.BeginDate} key={term.BeginDate}>
+                      {formatTermDescription(term)}
+                    </MenuItem>
+                  ))}
                 </TextField>
               </Grid>
               <Grid lg={7}></Grid>
@@ -131,7 +133,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
         <ScheduleDialog
           onClose={() => setSelectedCourse(null)}
           course={selectedCourse}
-          session={selectedSchedule?.session}
+          term={selectedSchedule?.term}
         />
       )}
     </>
