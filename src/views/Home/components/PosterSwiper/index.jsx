@@ -1,10 +1,9 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { useRef, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import 'swiper/css/effect-coverflow';
-import { useWindowSize } from 'hooks';
 import { getCurrentPosters } from 'services/poster';
 import { Autoplay, Pagination, Navigation, Keyboard, EffectCoverflow } from 'swiper/modules';
 import './PosterSwiper.scss';
@@ -14,7 +13,6 @@ import { Card, CardContent, CardMedia, Grid, Typography } from '@mui/material';
 // const swiperRef = useRef(null);
 
 const PosterSwiper = () => {
-  const size = useWindowSize();
   const [currentPosters, setCurrentPosters] = useState([]);
 
   useEffect(() => {
