@@ -103,7 +103,7 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
+    <Dialog open={open} onClose={onClose} scroll="paper" aria-labelledby="form-dialog-title">
       <CardHeader
         title={
           <Grid container direction="row" alignItems="center">
@@ -114,7 +114,10 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
         }
         className={styles.gc360_header}
       />
-      <DialogContent className={styles.dialogContent}>
+      <DialogContent
+        className={styles.dialogContent}
+        style={{ maxHeight: '80vh', overflowY: 'auto' }}
+      >
         <DialogContentText style={{ textAlign: 'center' }}>
           {createPhotoDialogBoxMessage()}
         </DialogContentText>
