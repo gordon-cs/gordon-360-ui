@@ -19,6 +19,7 @@ import {
   Pagination,
 } from '@mui/material';
 import CategoryEditor from './components/CategoryEditor';
+import { useNavigate } from 'react-router-dom';
 import ConditionEditor from './components/ConditionEditor';
 import styles from './MarketPlace.module.scss';
 import MarketPlacePopup from './components/MarketPlacePopup';
@@ -53,12 +54,11 @@ const order = ['Ascending', 'Descending'];
  * - `@mui/material` components for layout and UI.
  * - `marketplaceService` for fetching and updating listing data.
  * - Custom components: `MarketPlacePopup`, `ListingUploader`, `MyUploadsPopup`.
- *
- * @component
  * @returns  The rendered Marketplace page.
  */
 
 const Marketplace = () => {
+  const navigate = useNavigate();
   const [openCategoryEditor, setOpenCategoryEditor] = useState(false);
   const [openConditionEditor, setOpenConditionEditor] = useState(false);
   const [listings, setListings] = useState([]);
@@ -174,6 +174,7 @@ const Marketplace = () => {
 
   useEffect(() => {
     fetchListings();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryId, statusId, minPrice, maxPrice, search, sortBy, desc, page]);
 
   console.log('backendURL:', backendURL);
@@ -226,9 +227,15 @@ const Marketplace = () => {
                 </Typography>
 
                 {/* Right Side */}
-                <Button variant="outlined" sx={{ color: 'secondary.main' }}>
-                  Josh
-                </Button>
+                {isSiteAdmin && (
+                  <Button
+                    variant="outlined"
+                    sx={{ color: 'secondary.main', borderRadius: '10px', margin: '5px' }}
+                    onClick={() => navigate('/admin/marketplace-threads')}
+                  >
+                    All Listings
+                  </Button>
+                )}
               </Box>
             </Toolbar>
           </AppBar>

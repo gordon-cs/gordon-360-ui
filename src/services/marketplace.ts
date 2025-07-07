@@ -1,10 +1,51 @@
 import { getToken } from 'services/auth';
 import http from './http';
-import userService from 'services/user';
-import { get } from 'lodash';
 
 export type MarketplaceCategory = { Id: number; Category: string };
 export type MarketplaceCondition = { Id: number; Condition: string };
+
+export type AdminThreadFilterOptions = {
+  categoryId?: number;
+  statusId?: number;
+  minPrice?: number;
+  maxPrice?: number;
+  search?: string;
+  sortBy?: string;
+  desc?: boolean;
+  page?: number;
+  pageSize?: number;
+};
+
+const getAdminThreads = (options: AdminThreadFilterOptions): Promise<MarketplaceListing[]> => {
+  const query: Record<string, string> = {};
+  if (options.categoryId !== undefined) query.categoryId = options.categoryId.toString();
+  if (options.statusId !== undefined) query.statusId = options.statusId.toString();
+  if (options.minPrice !== undefined) query.minPrice = options.minPrice.toString();
+  if (options.maxPrice !== undefined) query.maxPrice = options.maxPrice.toString();
+  if (options.search !== undefined) query.search = options.search;
+  if (options.sortBy !== undefined) query.sortBy = options.sortBy;
+  if (options.desc !== undefined) query.desc = options.desc ? 'true' : 'false';
+  if (options.page !== undefined) query.page = options.page.toString();
+  if (options.pageSize !== undefined) query.pageSize = options.pageSize.toString();
+
+  return http.get<MarketplaceListing[]>(`marketplace/admin/threads${http.toQueryString(query)}`);
+};
+
+const getAdminThreadsCount = (
+  options: Omit<AdminThreadFilterOptions, 'sortBy' | 'desc' | 'page' | 'pageSize'>,
+): Promise<number> => {
+  const query: Record<string, string> = {};
+  if (options.categoryId !== undefined) query.categoryId = options.categoryId.toString();
+  if (options.statusId !== undefined) query.statusId = options.statusId.toString();
+  if (options.minPrice !== undefined) query.minPrice = options.minPrice.toString();
+  if (options.maxPrice !== undefined) query.maxPrice = options.maxPrice.toString();
+  if (options.search !== undefined) query.search = options.search;
+
+  return http.get<number>(`marketplace/admin/threads/count${http.toQueryString(query)}`);
+};
+
+const getThreadEditHistory = (threadId: number): Promise<MarketplaceListing[]> =>
+  http.get<MarketplaceListing[]>(`marketplace/admin/threads/${threadId}/history`);
 
 export const getProfileImage = async (username: string) => {
   const token = await getToken();
@@ -70,12 +111,16 @@ export type MarketplaceListing = {
 
 /**
  * Add a new category (Admin only).
+ * @param categoryName name of the category to be added
+ * @returns the category object created
  */
 const addCategory = (categoryName: string): Promise<MarketplaceCategory> =>
   http.post<MarketplaceCategory>('/marketplace/categories', categoryName);
 
 /**
  * Add a new condition (Admin only).
+ * @param conditionName name of the condition to be added
+ * @returns the condition object created
  */
 const addCondition = (conditionName: string): Promise<MarketplaceCondition> =>
   http.post<MarketplaceCondition>('/marketplace/conditions', conditionName);
@@ -101,12 +146,15 @@ const getConditions = (): Promise<MarketplaceCondition[]> =>
 
 /**
  * Get all marketplace listings.
+ * @returns an array of MarketplaceListing objects
  */
 const getAllListings = (): Promise<MarketplaceListing[]> =>
   http.get<MarketplaceListing[]>('/marketplace');
 
 /**
  * Get a specific listing by ID.
+ * @param listingId the ID of the listings to retrieve
+ * @returns the MarketplaceListing object
  */
 const getListingById = (listingId: number): Promise<MarketplaceListing> =>
   http.get<MarketplaceListing>(`/marketplace/${listingId}`);
@@ -114,12 +162,17 @@ const getListingById = (listingId: number): Promise<MarketplaceListing> =>
 /**
  * Create a new listing.
  * Accepts a listing object with ImagesBase64 (array of base64 strings).
+ * @param listing the listing data to create
+ * @returns the created MarketplaceListing object
  */
 const createListing = (listing: InitMarketplaceListing): Promise<MarketplaceListing> =>
   http.post<MarketplaceListing>('/marketplace', listing);
 
 /**
  * Update an existing listing.
+ * @param listingId the ID of the listing to update
+ * @param updatedListing the updated listing data (partial InitMarketplaceListing)
+ * @returns the updated MarketplaceListing object
  */
 const updateListing = (
   listingId: number,
@@ -129,12 +182,17 @@ const updateListing = (
 
 /**
  * Delete a listing (SiteAdmin only).
+ * @param listingId the ID of the listing to delete
+ * @returns a promise that resolves when the listing is deleted
  */
 const deleteListing = (listingId: number): Promise<void> =>
   http.del<void>(`/marketplace/${listingId}`);
 
 /**
  * Change the status of a listing.
+ * @param listingId the ID of the listing to change
+ * @param status the new status to set
+ * @returns the updated MarketplaceListing object
  */
 const changeListingStatus = (listingId: number, status: string): Promise<MarketplaceListing> =>
   http.put<MarketplaceListing>(`/marketplace/${listingId}/status`, status);
@@ -170,7 +228,13 @@ const getFilteredListings = (
 };
 
 /**
- * Get the number of listings
+ * Get the number of listings that match the given filters
+ * @param categoryId the category ID to filter by
+ * @param statusId the status ID to filter by
+ * @param minPrice the lowest price to filter by
+ * @param maxPrice the highest price to filter by
+ * @param search a search term to filter listings by name or detail
+ * @returns the listings that match the filters
  */
 const getFilteredListingsCount = (
   categoryId?: number,
@@ -191,6 +255,7 @@ const getFilteredListingsCount = (
 
 /**
  * Get the listings posted by the current user.
+ * @returns an array of MarketplaceListing objects
  */
 const getMyListings = async () => {
   const token = await getToken();
@@ -225,6 +290,9 @@ const marketplaceService = {
   getMyListings,
   addCategory,
   addCondition,
+  getAdminThreads,
+  getAdminThreadsCount,
+  getThreadEditHistory,
 };
 
 export default marketplaceService;
