@@ -12,7 +12,6 @@ import {
   MenuItem,
   IconButton,
 } from '@mui/material';
-import { useMemo } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -69,6 +68,7 @@ const MarketPlacePopup = ({
 
   const handleMenuSelect = (option) => {
     console.log('User selected:', option);
+    // eslint-disable-next-line default-case
     switch (option) {
       case 'Delete':
         handleDelete();
@@ -86,6 +86,7 @@ const MarketPlacePopup = ({
         openEditDialog();
         break;
     }
+
     handleMenuClose();
   };
 
@@ -507,19 +508,13 @@ Thank you
           onClose={closeEditDialog}
           isEdit={true}
           listing={item}
-          onSubmit={async (listingData) => {
-            try {
-              const updatedListing = await marketplaceService.updateListing(item.Id, listingData);
-              console.log('Updated listing:', updatedListing);
-              if (onUpdateListing) {
-                onUpdateListing(updatedListing);
-              }
-              closeEditDialog();
-              // Optionally keep main popup open, or close it:
-              onClose();
-            } catch (error) {
-              console.error('Failed to update listing:', error);
+          onSubmit={(updatedListing) => {
+            console.log('Received updated listing:', updatedListing);
+            if (onUpdateListing) {
+              onUpdateListing(updatedListing);
             }
+            closeEditDialog();
+            onClose();
           }}
           createSnackbar={createSnackbar}
         />

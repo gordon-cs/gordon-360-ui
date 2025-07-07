@@ -32,7 +32,6 @@ const ListingUploader = ({
 }) => {
   const theme = useTheme();
   const [isUploadingImages, setIsUploadingImages] = useState(false);
-  const isDark = theme.palette.mode === 'dark';
   const [selectedCondition, setSelectedCondition] = useState('');
   const [agreed, setAgreed] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -40,7 +39,6 @@ const ListingUploader = ({
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
   const [uploadedImages, setUploadedImages] = useState([]);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [categories, setCategories] = useState([]);
   const [conditions, setConditions] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -265,7 +263,7 @@ const ListingUploader = ({
                 const val = e.target.value;
                 if (val === '' || /^\d*\.?\d*$/.test(val)) {
                   if (val.includes('.')) {
-                    const [intPart, decPart] = val.split('.');
+                    const [, decPart] = val.split('.');
                     if (decPart.length > 2) return; // block input beyond 2 decimals
                   }
                   setPrice(val);
