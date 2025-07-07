@@ -67,8 +67,8 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
     const previewImageFile = fileList[0];
     const reader = new FileReader();
     reader.onload = () => {
-      var dataURL = reader.result.toString();
-      var i = new Image();
+      const dataURL = reader.result.toString();
+      let i = new Image();
       i.onload = async () => {
         if (i.width < 200 || i.height < 200) {
           clearPhotoDialogErrorTimeout();

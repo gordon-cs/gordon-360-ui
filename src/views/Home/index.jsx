@@ -1,9 +1,7 @@
 // @TODO CSSMODULES - moved to global styles until a better solution is found
-// import styles from './Home.module.css';
 import { Grid } from '@mui/material';
 import GordonLoader from 'components/Loader';
 import { useUser } from 'hooks';
-import Carousel from './components/Carousel';
 import DiningBalance from './components/DiningBalance';
 import GuestWelcome from './components/GuestWelcome';
 import NewsCard from './components/NewsCard';

@@ -51,6 +51,11 @@ const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess, createSnac
     }
   }, [poster]);
 
+  /**
+   * If no session is specified in the URL, load the current session.
+   * If the user has no involements in the current session, search forward
+   * through future sessions until one with invovlement is found, and select it
+   */
   useEffect(() => {
     const loadButton = async () => {
       if (sessionFromURL) {

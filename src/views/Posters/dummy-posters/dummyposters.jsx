@@ -4,6 +4,7 @@ import HamburgerPoster from 'views/Posters/images/HamburgerPoster.jpg';
 import MoviePoster from 'views/Posters/images/MoviePoster.jpg';
 import SportPoster from 'views/Posters/images/sport.jpg';
 
+// DATA used for strictly the frontend just in case the backend breaks
 export const DATA = [
   {
     key: '0',

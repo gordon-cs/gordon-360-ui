@@ -146,7 +146,7 @@ const Posters = () => {
     setCroppedImage(null);
   };
 
-  // NEW: Delete dialog logic
+  // Delete dialog logic
   const handleDeleteClick = (poster) => {
     setPosterToDelete(poster);
     setOpenDeleteDialog(true);
@@ -280,7 +280,7 @@ const Posters = () => {
         </Grid>
       </Dialog>
 
-      {/* NEW: Delete Confirmation Dialog */}
+      {/* Delete Confirmation Dialog */}
       <Dialog open={openDeleteDialog} onClose={handleCancelDelete}>
         <DialogContent>
           <Typography variant="h6">Are you sure you want to delete this poster?</Typography>
