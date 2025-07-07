@@ -11,7 +11,7 @@ import {
   Dialog,
   DialogContent,
 } from '@mui/material';
-import UploadForm from './Forms/Forms/UploadForm';
+import UploadForm from './Forms/UploadForm';
 import GordonSnackbar from 'components/Snackbar';
 import { Participation } from 'services/membership';
 import membershipService from 'services/membership';
@@ -20,7 +20,7 @@ import sessionService from 'services/session';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentPosters, hidePoster } from 'services/poster';
 import { useLocation } from 'react-router-dom';
-import CropPoster from './Forms/Forms/CropPoster';
+import CropPoster from './Forms/CropPoster';
 import { AuthGroup } from 'services/auth';
 import { useAuthGroups, useNetworkStatus, useUser } from 'hooks';
 import FileUploadedRoundIcon from '@mui/icons-material/FileUploadRounded';

@@ -32,8 +32,8 @@ import ContactListItem from './components/ContactListItem';
 import Membership from './components/Membership';
 import styles from './InvolvementProfile.module.css';
 import ClubPosters from './components/ClubPosters';
-import UploadForm from 'views/Posters/Forms/Forms/UploadForm';
-import CropPoster from 'views/Posters/Forms/Forms/CropPoster';
+import UploadForm from 'views/Posters/Forms/UploadForm';
+import CropPoster from 'views/Posters/Forms/CropPoster';
 
 const CROP_DIM = 320; // pixels
 
