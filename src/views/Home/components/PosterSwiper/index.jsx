@@ -10,8 +10,6 @@ import './PosterSwiper.scss';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardMedia, Grid, Typography } from '@mui/material';
 
-// const swiperRef = useRef(null);
-
 const PosterSwiper = () => {
   const [currentPosters, setCurrentPosters] = useState([]);
 

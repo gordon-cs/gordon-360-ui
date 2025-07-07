@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContentText, CardHeader, Grid } from '@mui/material';
 import { createPoster, editPoster } from 'services/poster';
 
@@ -12,8 +13,11 @@ const PosterCheck = ({
   onSubmitSuccess,
   createSnackbar,
 }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleSubmit = async (event) => {
     if (event) event.preventDefault();
+    setIsSubmitting(true);
     try {
       if (isEditing && posterId) {
         console.log('Calling editPoster with ID: ', posterId);
@@ -45,6 +49,8 @@ const PosterCheck = ({
     } catch (error) {
       console.error('Error submitting poster:', error);
       if (createSnackbar) createSnackbar('Error submitting poster', 'error');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -76,7 +82,7 @@ const PosterCheck = ({
           <Button onClick={onClose} variant="outlined" color="error">
             No, Don't Submit
           </Button>
-          <Button type="submit" variant="outlined" color="secondary">
+          <Button type="submit" variant="outlined" color="secondary" disabled={isSubmitting}>
             Yes, Submit
           </Button>
         </DialogActions>
