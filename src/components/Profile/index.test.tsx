@@ -1,3 +1,5 @@
+import 'matchMedia.mock';
+
 import { render, screen } from '@testing-library/react';
 import { useIsAuthenticated } from '@azure/msal-react';
 import Profile from '.';
@@ -43,6 +45,18 @@ describe('Profile Component (TypeScript)', () => {
     jest.spyOn(hooks, 'useNetworkStatus').mockReturnValue(true);
   });
 
+  test('renders when user is not authenticated', () => {
+    (useIsAuthenticated as jest.Mock).mockReturnValue(false);
+    jest.spyOn(hooks, 'useAuthGroups').mockReturnValue(false);
+    jest.spyOn(userService, 'isFacStaff').mockReturnValue(false);
+
+    render(<Profile profile={baseProfile} myProf={true} />);
+
+    // It should still render core components
+    expect(screen.getByTestId('Identification')).toBeInTheDocument();
+    expect(screen.getByTestId('SchedulePanel')).toBeInTheDocument();
+  });
+
   test('renders essential components for a student with myProf=true', () => {
     jest.spyOn(hooks, 'useAuthGroups').mockReturnValue(false);
     jest.spyOn(userService, 'isFacStaff').mockReturnValue(false);
@@ -66,6 +80,18 @@ describe('Profile Component (TypeScript)', () => {
     render(<Profile profile={baseProfile} myProf={true} />);
 
     expect(screen.getByTestId('OfficeInfoList')).toBeInTheDocument();
+  });
+
+  test('renders EmergencyInfoList in two places if user is police', () => {
+    jest
+      .spyOn(hooks, 'useAuthGroups')
+      .mockImplementation((group: AuthGroup) => group === AuthGroup.Police);
+    jest.spyOn(userService, 'isFacStaff').mockReturnValue(true);
+
+    render(<Profile profile={baseProfile} myProf={true} />);
+
+    const emergencyLists = screen.getAllByTestId('EmergencyInfoList');
+    expect(emergencyLists.length).toBe(2);
   });
 
   test('does not render VictoryPromise if not student or myProf=false', () => {
