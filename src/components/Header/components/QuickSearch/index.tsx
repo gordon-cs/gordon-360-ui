@@ -3,10 +3,9 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useNetworkStatus, useWindowSize } from 'hooks';
 import { Dispatch, HTMLAttributes, useReducer } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import quickSearchService from 'services/quickSearch';
+import quickSearchService, { SearchResult } from 'services/quickSearch';
 import styles from './QuickSearch.module.css';
 import { debounce } from 'lodash';
-import { SearchResult } from 'services/quickSearch';
 
 const MIN_QUERY_LENGTH = 2;
 const BREAKPOINT_WIDTH = 450;
@@ -52,12 +51,6 @@ type SearchFunction = (
   query: string,
 ) => Promise<[searchTime: number, searchResults: SearchResult[]]>;
 
-/**
- * Search for given query, if query is not updated before debounce timeout (400ms).
- *
- * Once results are fetched, update state with new results
- * and new highlight regex for the query used to fetch these results.
- */
 const performSearch = debounce(
   async (
     query: string,
@@ -102,12 +95,10 @@ const GordonQuickSearch = ({
   const navigate = useNavigate();
   const [width] = useWindowSize();
   const isOnline = useNetworkStatus();
-  const placeholder = !isOnline
-    ? 'Offline'
-    : customPlaceholderText ?? (width < BREAKPOINT_WIDTH ? 'People' : 'People Search');
+  // Displays what's in the text box
+  const placeholder = !isOnline ? 'Offline' : customPlaceholderText ?? 'Search';
 
   const handleInput = (_event: React.SyntheticEvent, value: string) => {
-    // remove special characters
     const query = value.replace(specialCharactersRegex, '');
 
     if (query.length >= MIN_QUERY_LENGTH) {
@@ -118,47 +109,61 @@ const GordonQuickSearch = ({
     }
   };
 
-  const handleSubmit = (_event: React.SyntheticEvent, person: SearchResult | null) => {
-    if (!person) return;
-    disableLink ? onSearchSubmit!(person) : navigate(`/profile/${person.UserName}`);
+  const handleSubmit = (_event: React.SyntheticEvent, result: SearchResult | null) => {
+    if (!result) return;
+
+    if (result.type === 'person') {
+      disableLink ? onSearchSubmit!(result) : navigate(`/profile/${result.UserName}`);
+    } else {
+      // For involvements: customize action if needed
+    }
   };
 
-  const renderOption = (params: HTMLAttributes<HTMLLIElement>, person: SearchResult) => {
-    // Bail if any required properties are missing
-    if (
-      state.loading ||
-      !state.highlightRegex ||
-      !person.UserName ||
-      !person.FirstName ||
-      !person.LastName
-    ) {
-      return null;
+  const renderOption = (params: HTMLAttributes<HTMLLIElement>, result: SearchResult) => {
+    if (state.loading || !state.highlightRegex) return null;
+
+    if (result.type === 'person') {
+      if (!result.UserName || !result.FirstName || !result.LastName) return null;
+
+      const linkProps = disableLink
+        ? { onClick: () => onSearchSubmit!(result) }
+        : {
+            component: Link,
+            to: `/profile/${result.UserName}`,
+          };
+
+      const { name, username } = getHighlightedDetails(result, state.highlightRegex);
+
+      return (
+        <MenuItem
+          {...params}
+          {...linkProps}
+          key={result.UserName}
+          className={styles.suggestion}
+          divider
+        >
+          <Typography variant="body2">{name}</Typography>
+          <Typography variant="caption" component="p">
+            {username}
+          </Typography>
+          {result.Involvements && result.Involvements.length > 0 && (
+            <Typography variant="caption" component="p" className={styles.involvements}>
+              {result.Involvements.join(', ')}
+            </Typography>
+          )}
+        </MenuItem>
+      );
     }
 
-    // on click, execute callback if link disabled, otherwise behave as link.
-    const linkProps = disableLink
-      ? { onClick: () => onSearchSubmit!(person) }
-      : {
-          component: Link,
-          to: `/profile/${person.UserName}`,
-        };
+    if (result.type === 'involvement') {
+      return (
+        <MenuItem {...params} key={result.name} className={styles.suggestion} divider>
+          <Typography variant="body2">{result.name}</Typography>
+        </MenuItem>
+      );
+    }
 
-    const { name, username } = getHighlightedDetails(person, state.highlightRegex);
-
-    return (
-      <MenuItem
-        {...params}
-        {...linkProps}
-        key={person.UserName}
-        className={styles.suggestion}
-        divider
-      >
-        <Typography variant="body2">{name}</Typography>
-        <Typography variant="caption" component="p">
-          {username}
-        </Typography>
-      </MenuItem>
-    );
+    return null;
   };
 
   return (
@@ -167,7 +172,15 @@ const GordonQuickSearch = ({
       loadingText="Loading..."
       noOptionsText="No results"
       options={state.searchResults}
-      isOptionEqualToValue={(option, value) => option.UserName === value.UserName}
+      isOptionEqualToValue={(option, value) => {
+        if (option.type === 'person' && value.type === 'person') {
+          return option.UserName === value.UserName;
+        }
+        if (option.type === 'involvement' && value.type === 'involvement') {
+          return option.name === value.name;
+        }
+        return false;
+      }}
       renderInput={({ InputProps, ...params }) => (
         <TextField
           type="search"
@@ -187,7 +200,11 @@ const GordonQuickSearch = ({
       onInputChange={handleInput}
       onChange={handleSubmit}
       renderOption={renderOption}
-      getOptionLabel={(option) => option.UserName}
+      getOptionLabel={(option) => {
+        if ('UserName' in option && option.UserName) return option.UserName;
+        if ('name' in option && option.name) return option.name;
+        return '';
+      }}
       filterOptions={(o) => o}
       autoComplete
       autoHighlight
@@ -197,18 +214,19 @@ const GordonQuickSearch = ({
   );
 };
 
-const getHighlightedDetails = (person: SearchResult, inputPartsRegex: RegExp) => {
+const getHighlightedDetails = (
+  person: Extract<SearchResult, { type: 'person' }>,
+  inputPartsRegex: RegExp,
+) => {
   const usernameParts = person.UserName.split('.');
 
   const name =
     person.FirstName +
-    // If having nickname that is unique, display that nickname
     (person.NickName && person.NickName !== person.FirstName && person.NickName !== usernameParts[0]
       ? ` (${person.NickName})`
       : '') +
     ' ' +
     person.LastName +
-    // If having maiden name that is unique, display that maiden name
     (person.MaidenName &&
     person.MaidenName !== person.LastName &&
     person.MaidenName !== usernameParts[1]
@@ -222,36 +240,18 @@ const getHighlightedDetails = (person: SearchResult, inputPartsRegex: RegExp) =>
 };
 
 const getHighlightedText = (text: string, inputRegex: RegExp) =>
-  // Split the text into parts that don't match the input regex, and parts that do.
-  // Even-numbered parts (0, 2, ...) will always be parts that don't match (but may be empty)
-  // e.g. 'abcabc'.split(/(ab)/) => ["", "ab", "c", "ab", "c"]
   text.split(inputRegex).map((part, index) =>
-    // Odd-numbered parts match the input regex
     index % 2 === 1 ? (
       <span className={styles.matched_text} key={index}>
         {part}
       </span>
     ) : (
-      <span>{part}</span>
+      <span key={index}>{part}</span>
     ),
   );
 
-/**
- * Match all characters in a string that are not:
- * - alphanumeric
- * - whitespace
- * - `'`
- * - `-`
- * - `.`
- */
 const specialCharactersRegex = /[^a-zA-Z0-9'\-.\s]/gm;
-/**
- * Match all instances of whitespace and `.` at the beginning and end of a string.
- */
 const startingAndEndingSpacesOrPeriodsRegex = /^[\s.]+|[\s.]+$/gm;
-/**
- * Match any one space or period in a string
- */
 const spaceOrPeriodRegex = / |\./;
 
 export default GordonQuickSearch;

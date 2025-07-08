@@ -1,20 +1,33 @@
 import http from './http';
 
-export type SearchResult = {
-  FirstName: string;
-  NickName: string;
-  LastName: string;
-  MaidenName: string;
-  UserName: string;
-};
+export type SearchResult =
+  | {
+      type: 'person';
+      UserName: string;
+      FirstName: string;
+      LastName: string;
+      NickName?: string;
+      MaidenName?: string;
+      Involvements?: string[];
+    }
+  | {
+      type: 'involvement';
+      name: string;
+    };
 
 const search = async (
   query: string,
 ): Promise<[searchTime: number, searchResults: SearchResult[]]> => {
   const searchStartTime = Date.now();
-  // Replace period or space with a slash: 'first.last' or 'first last' become 'first/last'
-  const searchQuery = query.toLowerCase().trim().replace(/\.|\s/g, '/');
-  const searchResults: SearchResult[] = await http.get(`accounts/search/${searchQuery}`);
+
+  // Send query as-is (trimmed), encode it properly in URL by http.get
+  const trimmedQuery = query.toLowerCase().trim();
+
+  // Call the backend "search" endpoint which returns both people and involvement results
+  const searchResults: SearchResult[] = await http.get(
+    `accounts/search/${encodeURIComponent(trimmedQuery)}`,
+  );
+
   return [searchStartTime, searchResults];
 };
 
