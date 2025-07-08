@@ -1,0 +1,67 @@
+@import '../../../../vars';
+//som sort of css problem
+
+.posterSwiperCardContent .MuiCardContent-root:last-child {
+  padding-bottom: 0 !important;
+}
+
+.css-1eytk4t-MuiPaper-root-MuiCard-root {
+  box-shadow: none !important;
+}
+
+.swiper {
+  margin: 0;
+  padding: 0;
+  padding-top: 2em;
+  padding-bottom: 2em;
+  border: none;
+  width: 100%;
+  height: 100%;
+  position: sticky;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--mui-palette-neutral-main);
+}
+
+.swiper-slide {
+  background-position: center;
+  background-size: cover;
+  width: 500px;
+  height: 600px;
+}
+
+.swiper-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  display: block;
+  aspect-ratio: 3 / 4; // Ensures all posters have the same aspect ratio
+}
+
+@media (max-width: $break-sm) {
+  .header {
+    font-size: rem;
+  }
+
+  .headerImg {
+    width: 5em;
+  }
+  .swiper-slide {
+    background-position: center;
+    background-size: cover;
+    // width: 90vw; // Make it almost full width of the viewport
+    width: 90vw;
+    overflow: visible !important;
+    height: 60vw; // Adjust height for a good aspect ratio
+    max-width: 98vw;
+    max-height: 80vw;
+  }
+}
+
+.swiper-slide-shadow-left,
+.swiper-slide-shadow-right,
+.swiper-slide-shadow-top,
+.swiper-slide-shadow-bottom {
+  background: rgba(0, 0, 0, 0.2); /* default shadow color */
+}

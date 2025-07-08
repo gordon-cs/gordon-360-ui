@@ -173,7 +173,7 @@ const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
               onDropAccepted={onDropAccepted}
               onDropRejected={onDropRejected}
               accept={{
-                'image/*': ['.jpeg', ',jpg', '.png'],
+                'image/*': ['.jpeg', '.jpg', '.png'],
               }}
             >
               {({ getRootProps, getInputProps }) => (
