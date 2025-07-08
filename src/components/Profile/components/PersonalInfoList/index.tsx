@@ -287,7 +287,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     ) : null;
 
   const homeCityStateCountry =
-    (profile.HomeCity && profile.HomeState) || profile.Country ? (
+    (hasUSAAddress && profile.HomeCity && profile.HomeState) ||
+    (!hasUSAAddress && profile.Country) ? (
       <ProfileInfoListItem
         title="Home:"
         contentText={
