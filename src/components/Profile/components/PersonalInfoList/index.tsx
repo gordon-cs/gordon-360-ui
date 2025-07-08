@@ -91,13 +91,12 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
 
   // The dbo.FacStaff and dbo.Student views both contain the column 'KeepPrivate' but they are
   // used differently.
-  //   - [DEPRECATED] For faculty and staff this value is either 1 (private) or 0 (public) and
-  //     had been set or unset by the user, first in Go.Gordon and then in 360.Gordon.  This
-  //     field will no longer be used.
+  //   - For faculty and staff this value is either 1 (private) or 0 (public) and had been set
+  //     or unset by the user, first in Go.Gordon and then in 360.Gordon.  Data from the
+  //     UserPrivacy_Settings table is consulted first, but if absent then this field is used
+  //     to determine the visibility of personal contact information (phone and address).
   //   - For students this value is either 'Y' (or 'P') to indicate the student's information
   //     should not be shared with other students but still available for faculty and staff.
-  //     The value can also be 'S' (for semi-private) to keep address information suppressed,
-  //     but it seems that is no longer used.
   // We must honor the KeepPrivate flag since it is possible that another office at Gordon may
   // set it.
   const hideStudent =
