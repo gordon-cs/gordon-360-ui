@@ -712,8 +712,9 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
                       }${hasMaidenName ? ` (${userProfile.MaidenName})` : ''}`}
                     </Typography>
 
-                    {/* Profile Name Edit Request Button */}
-                    {checkIsStudent(profile) &&
+                    {/* Profile Name Edit Request */}
+                    {myProf &&
+                      checkIsStudent(profile) &&
                       !checkIsFacStaff(profile) &&
                       !checkIsAlumni(profile) && (
                         <IconButton
