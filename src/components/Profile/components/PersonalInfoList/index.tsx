@@ -76,9 +76,9 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
   const [advisorsList, setAdvisorsList] = useState<AdvisorType[]>([]);
   const [showMailCombo, setShowMailCombo] = useState(false);
   const [graduationInfo, setGraduationInfo] = useState<Graduation | null>(null);
-  const isStudent = checkIsStudent(profile); //profile.PersonType.includes('stu');
-  const isFacStaff = checkIsFacStaff(profile); //profile.PersonType.includes('fac');
-  const isAlumni = checkIsAlumni(profile); //profile.PersonType.includes('alu');
+  const isStudent = checkIsStudent(profile);
+  const isFacStaff = checkIsFacStaff(profile);
+  const isAlumni = checkIsAlumni(profile);
   const [isViewerPolice, canViewSensitiveInfo, canViewAcademicInfo] = useAuthGroups(
     AuthGroup.Police,
     AuthGroup.SensitiveInfoView,
