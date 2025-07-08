@@ -28,8 +28,6 @@ const enum UploadStep {
 
 const CROP_DIM = 1200; // Minimum dimensions of cropped image in pixels
 
-const DEFAULT_ASPECT_RATIO = 2 / 16;
-
 const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
   const [preview, setPreview] = useState<string | null>(null);
   const [snackbar, setSnackbar] = useState<{
@@ -40,8 +38,7 @@ const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
   const [cropperData, setCropperData] = useState<{
     cropBoxDim: number | undefined;
     aspectRatio: number;
-  }>({ cropBoxDim: undefined, aspectRatio: DEFAULT_ASPECT_RATIO });
-
+  }>({ cropBoxDim: undefined, aspectRatio: 1 });
   const cropperRef = useRef<ReactCropperElement | null>(null);
   const [width, height] = useWindowSize();
 
@@ -100,7 +97,7 @@ const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
           const displayWidth = Math.min(newImage.width, maxWidth);
           const cropDim = (CROP_DIM * displayWidth) / newImage.width;
           setCropperData({
-            aspectRatio: DEFAULT_ASPECT_RATIO,
+            aspectRatio: newImage.width / newImage.height,
             cropBoxDim: cropDim,
           });
           setPreview(fileURL);
@@ -149,7 +146,7 @@ const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
     document.addEventListener('keydown', handleKeyPress);
 
     return () => document.removeEventListener('keydown', handleKeyPress);
-  }, [cropperRef]);
+  }, []);
 
   return (
     <>
@@ -167,7 +164,7 @@ const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
               <>
                 Use the arrow keys to move the crop box.
                 <br />
-                Use <kbd>+</kbd> or <kbd>-</kbd> to resize the image.
+                Use <code>+</code> or <code>-</code> to resize the image.
               </>
             )}
           </DialogContentText>
@@ -187,26 +184,23 @@ const PhotoCropper = ({ open, onClose, onSubmit }: PropTypes) => {
             </Dropzone>
           ) : (
             <>
-              <div
-                className={styles.cropPreview}
-                data-width={maxCropPreviewWidth()}
-                data-height={maxCropPreviewWidth() / DEFAULT_ASPECT_RATIO}
-              >
-                <Cropper
-                  aspectRatio={DEFAULT_ASPECT_RATIO}
-                  ref={cropperRef}
-                  src={preview}
-                  className={styles.cropper}
-                  autoCropArea={1}
-                  viewMode={3}
-                  highlight={false}
-                  background={false}
-                  zoomable={false}
-                  dragMode={'none'}
-                  minCropBoxWidth={cropperData.cropBoxDim}
-                  minCropBoxHeight={cropperData.cropBoxDim}
-                />
-              </div>
+              <Cropper
+                ref={cropperRef}
+                src={preview}
+                style={{
+                  maxWidth: maxCropPreviewWidth(),
+                  maxHeight: maxCropPreviewWidth() / cropperData.aspectRatio,
+                }}
+                autoCropArea={1}
+                viewMode={3}
+                aspectRatio={1}
+                highlight={false}
+                background={false}
+                zoomable={false}
+                dragMode={'none'}
+                minCropBoxWidth={cropperData.cropBoxDim}
+                minCropBoxHeight={cropperData.cropBoxDim}
+              />
               <Button variant="contained" onClick={() => setPreview(null)}>
                 Choose Another Image
               </Button>
