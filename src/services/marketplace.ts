@@ -1,4 +1,4 @@
-import { getToken } from 'services/auth';
+import { getToken } from './auth';
 import http from './http';
 
 export type MarketplaceCategory = { Id: number; Category: string };
