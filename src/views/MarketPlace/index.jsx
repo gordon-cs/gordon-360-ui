@@ -226,8 +226,13 @@ const Marketplace = () => {
                 {/* Right Side */}
                 {isSiteAdmin && (
                   <Button
-                    variant="outlined"
-                    sx={{ color: 'secondary.main', borderRadius: '10px', margin: '5px' }}
+                    variant="contained"
+                    sx={{
+                      backgroundColor: 'secondary.main',
+                      color: 'neutral.contrastText',
+                      borderRadius: '10px',
+                      margin: '5px',
+                    }}
                     onClick={() => navigate('/admin/marketplace-threads')}
                   >
                     All Listings
