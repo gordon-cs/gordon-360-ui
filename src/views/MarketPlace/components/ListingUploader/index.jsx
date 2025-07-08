@@ -453,7 +453,19 @@ const ListingUploader = ({
                 name="handbookAgreement"
               />
             }
-            label="I confirm that this post complies with the Student Handbook."
+            label={
+              <>
+                I confirm that this post complies with the{' '}
+                <a
+                  href="https://www.gordon.edu/life/residence-life-dining/student-handbook"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: theme.palette.secondary.main, textDecoration: 'underline' }}
+                >
+                  Student Handbook
+                </a>
+              </>
+            }
           />
         </Box>
 
