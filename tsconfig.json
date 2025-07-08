@@ -32,6 +32,7 @@
       "views/*": ["views/*"],
       "index": ["."],
       "app.global.css": ["."],
+      "matchMedia.mock": ["matchMedia.mock.ts"],
       "pwa": ["."],
       "theme": ["theme.ts"],
       "msalInstatiation": ["msalInstatiation.ts"],

@@ -7,18 +7,22 @@ import userService from 'services/user';
 import GordonConfetti from 'components/GordonConfetti';
 import useWindowSize from 'hooks/useWindowSize';
 
-// Mock all dependencies
+// Type-safe mocking
 jest.mock('@azure/msal-react', () => ({
   useIsAuthenticated: jest.fn(),
 }));
+
 jest.mock('services/user', () => ({
   isBirthdayToday: jest.fn(),
 }));
+
 jest.mock('components/GordonConfetti', () => jest.fn(() => <div data-testid="confetti" />));
+
 jest.mock('hooks/useWindowSize', () => ({
   __esModule: true,
   default: jest.fn(),
 }));
+
 jest.mock('./HBDBanner.png', () => 'HBDBanner.png');
 jest.mock('./HBDBannerLarge.png', () => 'HBDBannerLarge.png');
 
@@ -38,14 +42,12 @@ describe('BirthdayMessage', () => {
     (useIsAuthenticated as jest.Mock).mockReturnValue(false);
     (useWindowSize as jest.Mock).mockReturnValue([1300]);
 
-    let container;
+    let container: HTMLElement;
 
     await act(async () => {
-      ({ container } = render(<BirthdayMessage />)); // Assign inside act
+      ({ container } = render(<BirthdayMessage />));
+      expect(container.firstChild).toBeNull();
     });
-
-    // Now you can use `container` here
-    expect(container.firstChild).toBeNull();
   });
 
   it('renders nothing if authenticated but not user birthday', async () => {
@@ -69,18 +71,15 @@ describe('BirthdayMessage', () => {
       render(<BirthdayMessage />);
     });
 
-    // Wait for banner
     await waitFor(() => {
       expect(screen.getByAltText(/Happy Birthday Banner/i)).toBeInTheDocument();
     });
 
-    // Initial confetti should be inactive
     expect(GordonConfetti).toHaveBeenCalledWith(
       expect.objectContaining({ active: false }),
       expect.anything(),
     );
 
-    // Fast-forward 1000ms to trigger confetti
     await act(() => {
       jest.advanceTimersByTime(1000);
       return Promise.resolve();
@@ -91,7 +90,6 @@ describe('BirthdayMessage', () => {
       expect.anything(),
     );
 
-    // After 5000ms it turns off
     await act(() => {
       jest.advanceTimersByTime(5000);
       return Promise.resolve();
@@ -116,7 +114,6 @@ describe('BirthdayMessage', () => {
     const card = img.closest('div.MuiCard-root');
     expect(card).toBeTruthy();
 
-    // Confetti initially off
     expect(GordonConfetti).toHaveBeenCalledWith(
       expect.objectContaining({ active: false }),
       expect.anything(),
@@ -144,11 +141,10 @@ describe('BirthdayMessage', () => {
     });
 
     await act(() => {
-      jest.advanceTimersByTime(2000); // Should not trigger popConfetti
+      jest.advanceTimersByTime(2000);
       return Promise.resolve();
     });
 
-    // Confetti should still be inactive
     expect(GordonConfetti).toHaveBeenCalledWith(
       expect.objectContaining({ active: false }),
       expect.anything(),
