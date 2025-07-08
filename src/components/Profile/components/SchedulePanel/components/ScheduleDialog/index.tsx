@@ -12,24 +12,21 @@ import 'add-to-calendar-button';
 import { Day, format, nextDay } from 'date-fns';
 import { STORAGE_COLOR_PREFERENCE_KEY } from 'theme';
 import { CourseEvent, courseDayIds, scheduleCalendarResources } from 'services/schedule';
-import { Session } from 'services/session';
+import { AcademicTerm } from 'services/academicTerm';
 
 type Props = {
   course: CourseEvent;
-  session: Session;
+  term: AcademicTerm;
   onClose: () => void;
 };
 
-const ScheduleDialog = ({ course, session, onClose }: Props) => {
+const ScheduleDialog = ({ course, term, onClose }: Props) => {
   const addToCalendarProps = {
     name: course.title,
     iCalFileName: course.title,
     startDate: format(
       // nextDay counts from Sunday as 0, but courseDayIds start Monday as 0
-      nextDay(
-        new Date(session.SessionBeginDate),
-        (courseDayIds.indexOf(course.resourceId[0]) + 1) as Day,
-      ),
+      nextDay(new Date(term.BeginDate), (courseDayIds.indexOf(course.resourceId[0]) + 1) as Day),
       'yyyy-MM-dd',
     ),
     startTime: course.allDay ? null : format(course.start, 'HH:mm'),
@@ -59,8 +56,8 @@ const ScheduleDialog = ({ course, session, onClose }: Props) => {
             .map((resourceId) => scheduleCalendarResources.find((r) => r.id === resourceId)?.title)
             .join(', ')}
           <br />
-          Term Date: {format(new Date(session.SessionBeginDate), 'yyyy-MM-dd')} to
-          {format(new Date(session.SessionEndDate), ' yyyy-MM-dd')}
+          Term Date: {format(new Date(term.BeginDate), 'yyyy-MM-dd')} to
+          {format(new Date(term.EndDate), ' yyyy-MM-dd')}
         </DialogContentText>
         <br />
         <Divider variant="middle" />
@@ -81,7 +78,7 @@ const ScheduleDialog = ({ course, session, onClose }: Props) => {
             'RRULE:FREQ=WEEKLY;INTERVAL=1;WKST=MO;BYDAY=' +
             course.resourceId.join(',') +
             ';UNTIL=' +
-            format(new Date(session.SessionEndDate), "yyyyMMdd'T000000Z'")
+            format(new Date(term.EndDate), "yyyyMMdd'T000000Z'")
           }
         >
           {/* @ts-ignore */}

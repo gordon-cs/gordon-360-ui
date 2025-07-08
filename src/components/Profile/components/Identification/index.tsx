@@ -375,7 +375,6 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
 
   /**
    * Handles the acceptance of the user dropping an image in the Photo Updater Dialog Box
-   *
    * @param {*} fileList The image dropped in the Dropzone of the Photo Updater
    */
   function onDropAccepted(fileList: any) {
