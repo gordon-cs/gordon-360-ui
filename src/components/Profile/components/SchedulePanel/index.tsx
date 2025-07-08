@@ -27,7 +27,11 @@ import scheduleService, { CourseEvent, formatTermDescription, Schedule } from 's
 import { Profile } from 'services/user';
 import academicTermService from 'services/academicTerm';
 import { Button } from '@mui/material';
-import { getFinalExamEvents, formatFinalExamEvent, FinalExamEvent } from 'services/event';
+import {
+  getFinalExamEventsForUserByTerm,
+  formatFinalExamEvent,
+  FinalExamEvent,
+} from 'services/event';
 
 type Props = {
   profile: Profile;
@@ -46,7 +50,6 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
   const [finalExamOpen, setFinalExamOpen] = useState(false);
   const [finalExams, setFinalExams] = useState<FinalExamEvent[]>([]);
   const [finalExamsLoading, setFinalExamsLoading] = useState(false);
-  const [currentFinalExamTerm, setCurrentFinalExamTerm] = useState<Schedule['term'] | null>(null);
 
   useEffect(() => {
     setLoading(true);
@@ -54,67 +57,19 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
     Promise.all([
       scheduleService.getAllTermSchedules(profile.AD_Username),
       academicTermService.getCurrentTerm(),
-      academicTermService.getCurrentTermForFinalExams(),
-    ]).then(([allTermSchedules, currentTerm, finalExamTerm]) => {
+    ]).then(([allTermSchedules, currentTerm]) => {
       setAllSchedules(allTermSchedules);
-      setCurrentFinalExamTerm(finalExamTerm);
+
       const defaultSchedule =
-        // If there is a schedule for the current term, make it d4fault
         allTermSchedules.find(
           (s) =>
             s.term.YearCode === currentTerm.YearCode && s.term.TermCode === currentTerm.TermCode,
-        ) ??
-        // Otherwise, use the most recent term
-        allTermSchedules[0];
+        ) ?? allTermSchedules[0];
+
       setSelectedSchedule(defaultSchedule);
       setLoading(false);
     });
   }, [profile.AD_Username]);
-
-  useEffect(() => {
-    if (
-      !selectedSchedule ||
-      !currentFinalExamTerm ||
-      selectedSchedule.term.YearCode !== currentFinalExamTerm.YearCode ||
-      selectedSchedule.term.TermCode !== currentFinalExamTerm.TermCode
-    ) {
-      setFinalExams([]);
-      setFinalExamsLoading(false);
-      return;
-    }
-
-    setFinalExams([]);
-    setFinalExamsLoading(true);
-
-    getFinalExamEvents(profile.AD_Username)
-      .then((data) => {
-        const termStart = new Date(selectedSchedule.term.BeginDate);
-        const termEnd = new Date(selectedSchedule.term.EndDate);
-
-        const enrolledCourseCodes = selectedSchedule.courses.map((course) =>
-          course.title.replace(/\s+/g, ' ').trim().toUpperCase(),
-        );
-
-        const extractExamCode = (eventName: string) =>
-          eventName
-            .replace(/^EXAM:\s*/, '')
-            .replace(/\s+/g, ' ')
-            .trim()
-            .toUpperCase();
-
-        const filteredExams = data.map(formatFinalExamEvent).filter((exam) => {
-          const examDate = new Date(exam.StartDate);
-          const examCode = extractExamCode(exam.Event_Name);
-          return (
-            examDate >= termStart && examDate <= termEnd && enrolledCourseCodes.includes(examCode)
-          );
-        });
-
-        setFinalExams(filteredExams);
-      })
-      .catch(() => setFinalExams([]))
-      .finally(() => setFinalExamsLoading(false));
-  }, [selectedSchedule, profile.AD_Username, currentFinalExamTerm]);
 
   const toggleIsScheduleOpen = () => {
     setIsScheduleOpen((wasOpen) => {
@@ -124,7 +79,21 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
   };
 
   const handleShowFinalExams = () => {
+    if (!selectedSchedule) return;
+
     setFinalExamOpen(true);
+    setFinalExams([]);
+    setFinalExamsLoading(true);
+
+    const { BeginDate, EndDate, YearCode, TermCode } = selectedSchedule.term;
+
+    getFinalExamEventsForUserByTerm(profile.AD_Username, BeginDate, EndDate, YearCode, TermCode)
+      .then((data) => {
+        const formatted = data.map(formatFinalExamEvent);
+        setFinalExams(formatted);
+      })
+      .catch(() => setFinalExams([]))
+      .finally(() => setFinalExamsLoading(false));
   };
 
   return loading ? (
@@ -173,19 +142,16 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
                 </TextField>
               </Grid>
               <Grid item style={{ minWidth: 180 }}>
-                {selectedSchedule &&
-                  currentFinalExamTerm &&
-                  selectedSchedule.term.YearCode === currentFinalExamTerm.YearCode &&
-                  selectedSchedule.term.TermCode === currentFinalExamTerm.TermCode && (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={handleShowFinalExams}
-                      fullWidth
-                    >
-                      Final Exam Schedule
-                    </Button>
-                  )}
+                {selectedSchedule && (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleShowFinalExams}
+                    fullWidth
+                  >
+                    Final Exam Schedule
+                  </Button>
+                )}
               </Grid>
               <Grid lg={7}></Grid>
               {selectedSchedule && (

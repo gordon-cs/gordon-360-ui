@@ -80,8 +80,21 @@ const getFutureEvents = (allEvents: Event[]): Event[] => {
     .sort(compareByProperty('StartDate'));
 };
 
-export async function getFinalExamEvents(username: string): Promise<UnformattedEvent[]> {
-  return http.get<UnformattedEvent[]>(`events/finalexams/${username}`);
+export async function getFinalExamEventsForUserByTerm(
+  username: string,
+  termStart: string,
+  termEnd: string,
+  yearCode: string,
+  termCode: string,
+): Promise<UnformattedEvent[]> {
+  const params = new URLSearchParams({
+    termStart,
+    termEnd,
+    yearCode,
+    termCode,
+  });
+
+  return http.get<UnformattedEvent[]>(`events/finalexams/${username}?${params.toString()}`);
 }
 
 export function formatFinalExamEvent(event: UnformattedEvent): FinalExamEvent {
@@ -248,7 +261,7 @@ const eventService = {
   getFutureEvents,
   getFilteredEvents,
   getAllGuestEvents,
-  getFinalExamEvents,
+  getFinalExamEventsForUserByTerm,
 };
 
 export default eventService;
