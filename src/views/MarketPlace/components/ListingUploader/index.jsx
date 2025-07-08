@@ -461,7 +461,7 @@ const ListingUploader = ({
           <Button
             variant="contained"
             color="secondary"
-            disabled={isSubmitDisabled || isSubmitting}
+            disabled={isSubmitDisabled || isSubmitting || isUploadingImages}
             onClick={handleSubmit}
           >
             {isEdit ? 'Update' : 'Submit'}
