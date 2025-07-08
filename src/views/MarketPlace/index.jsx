@@ -177,9 +177,6 @@ const Marketplace = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [categoryId, statusId, minPrice, maxPrice, search, sortBy, desc, page]);
 
-  console.log('backendURL:', backendURL);
-  console.log('Props passed to ListingUploader:', { createSnackbar });
-
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
       <Box
@@ -263,7 +260,7 @@ const Marketplace = () => {
                     />
                   }
                   label="Filter Out Sold Items"
-                  sx={{ color: 'text.secondary' }} // change 'red' to any valid color
+                  sx={{ color: 'text.secondary' }}
                 />
               </Grid>
             </Grid>
@@ -319,9 +316,21 @@ const Marketplace = () => {
                       placeholder="Min Price"
                       fullWidth
                       value={minPrice ?? ''}
-                      onChange={(e) =>
-                        setMinPrice(e.target.value === '' ? undefined : Number(e.target.value))
-                      }
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === '' || /^\d*\.?\d*$/.test(val)) {
+                          if (val.includes('.')) {
+                            const [, decPart] = val.split('.');
+                            if (decPart.length > 2) return; // block input beyond 2 decimals
+                          }
+                          setMinPrice(e.target.value === '' ? undefined : Number(e.target.value));
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (['e', 'E', '+', '-'].includes(e.key)) {
+                          e.preventDefault();
+                        }
+                      }}
                     />
                   </Grid>
                   <Grid item xs={6}>
@@ -332,9 +341,21 @@ const Marketplace = () => {
                       placeholder="Max Price"
                       fullWidth
                       value={maxPrice ?? ''}
-                      onChange={(e) =>
-                        setMaxPrice(e.target.value === '' ? undefined : Number(e.target.value))
-                      }
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        if (val === '' || /^\d*\.?\d*$/.test(val)) {
+                          if (val.includes('.')) {
+                            const [, decPart] = val.split('.');
+                            if (decPart.length > 2) return; // block input beyond 2 decimals
+                          }
+                          setMaxPrice(e.target.value === '' ? undefined : Number(e.target.value));
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (['e', 'E', '+', '-'].includes(e.key)) {
+                          e.preventDefault();
+                        }
+                      }}
                     />
                   </Grid>
                 </Grid>

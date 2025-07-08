@@ -50,7 +50,25 @@ const ListingUploader = ({
     !description.trim() ||
     (selectedCategory !== 'Services' && !selectedCondition);
 
-  // !isEdit;
+  const processFile = async (file) => {
+    if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) {
+      try {
+        const convertedBlob = await heic2any({
+          blob: file,
+          toType: 'image/jpeg',
+          quality: 0.9,
+        });
+
+        return new File([convertedBlob], file.name.replace(/\.heic$/i, '.jpeg'), {
+          type: 'image/jpeg',
+        });
+      } catch (err) {
+        console.error('HEIC conversion failed:', err);
+        return null;
+      }
+    }
+    return file;
+  };
 
   const handleSubmit = async () => {
     try {
@@ -126,12 +144,12 @@ const ListingUploader = ({
 
   useEffect(() => {
     if (isEdit && listing) {
-      setSelectedCategory(listing.CategoryName); // or find category name from ID
-      setSelectedCondition(listing.ConditionName); // or find condition name from ID
+      setSelectedCategory(listing.CategoryName);
+      setSelectedCondition(listing.ConditionName);
       setProductName(listing.Name);
       setPrice(listing.Price?.toString() || '');
       setDescription(listing.Detail);
-      setUploadedImages([]); // clear images, since you want to disable editing images
+      setUploadedImages([]);
     } else {
       // Clear form for create mode
       setSelectedCategory('');
@@ -295,8 +313,6 @@ const ListingUploader = ({
         {!isEdit && (
           <>
             {/* Upload Images Placeholder */}
-            {/* Hidden file input */}
-            {/* Hidden file input */}
             <input
               type="file"
               accept="image/*,.heic,.heif"
@@ -306,28 +322,7 @@ const ListingUploader = ({
               onChange={async (e) => {
                 setIsUploadingImages(true);
                 const files = Array.from(e.target.files);
-                const processedFiles = await Promise.all(
-                  files.map(async (file) => {
-                    if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) {
-                      try {
-                        const convertedBlob = await heic2any({
-                          blob: file,
-                          toType: 'image/jpeg',
-                          quality: 0.9,
-                        });
-
-                        return new File([convertedBlob], file.name.replace(/\.heic$/i, '.jpeg'), {
-                          type: 'image/jpeg',
-                        });
-                      } catch (err) {
-                        console.error('HEIC conversion failed:', err);
-                        return null;
-                      }
-                    }
-                    return file;
-                  }),
-                );
-
+                const processedFiles = await Promise.all(files.map(processFile));
                 const validFiles = processedFiles.filter(Boolean);
                 setUploadedImages((prev) => [...prev, ...validFiles]);
                 setIsUploadingImages(false);
@@ -378,26 +373,7 @@ const ListingUploader = ({
                   e.currentTarget.classList.remove('drag-over');
                   setIsUploadingImages(true);
                   const files = Array.from(e.dataTransfer.files);
-                  const processedFiles = await Promise.all(
-                    files.map(async (file) => {
-                      if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) {
-                        try {
-                          const convertedBlob = await heic2any({
-                            blob: file,
-                            toType: 'image/jpeg',
-                            quality: 0.9,
-                          });
-                          return new File([convertedBlob], file.name.replace(/\.heic$/i, '.jpeg'), {
-                            type: 'image/jpeg',
-                          });
-                        } catch (err) {
-                          console.error('HEIC conversion failed:', err);
-                          return null;
-                        }
-                      }
-                      return file;
-                    }),
-                  );
+                  const processedFiles = await Promise.all(files.map(processFile));
                   const validFiles = processedFiles.filter(Boolean);
                   setUploadedImages((prev) => [...prev, ...validFiles]);
                   setIsUploadingImages(false);
@@ -493,7 +469,7 @@ const ListingUploader = ({
 
           {isSubmitting && (
             <Box sx={{ ml: 2, display: 'flex', alignItems: 'center' }}>
-              <GordonLoader size={24} /> {/* assuming GordonLoader supports a size prop */}
+              <GordonLoader size={24} />
             </Box>
           )}
         </Box>

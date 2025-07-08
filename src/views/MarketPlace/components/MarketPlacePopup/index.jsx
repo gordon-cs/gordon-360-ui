@@ -239,9 +239,6 @@ Thank you
     </Box>
   );
 
-  console.log('currentUsername:', currentUsername);
-  console.log('item.PosterUsername:', item.PosterUsername);
-
   return (
     <>
       <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
