@@ -19,7 +19,7 @@ const PosterSwiper = () => {
 
   return (
     <Grid sx={{ mb: 4 }}>
-      <Card sx={{ padding: 0 }}>
+      <Card sx={{ padding: 0, boxShadow: 'none' }}>
         <CardContent sx={{ padding: 0 }} class="posterSwiperCardContent">
           <div style={{ width: '100%', overflow: 'visible' }}>
             <Swiper
