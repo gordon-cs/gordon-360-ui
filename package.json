@@ -11,7 +11,6 @@
     "@mui/icons-material": "^5.15.10",
     "@mui/material": "^5.15.10",
     "@mui/x-date-pickers": "^6.19.4",
-    "@rollup/rollup-linux-x64-gnu": "^4.44.1",
     "add-to-calendar-button": "^2.5.10",
     "chart.js": "^4.4.3",
     "cropperjs": "^1.6.1",
@@ -37,6 +36,7 @@
     "react-router-hash-link": "^2.4.3",
     "react-to-print": "^2.15.1",
     "react-visibility-sensor": "^5.1.1",
+    "swiper": "^11.1.4",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
