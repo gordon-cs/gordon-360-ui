@@ -12,9 +12,12 @@ export const getAllTerms = (): Promise<AcademicTerm[]> => http.get('academicterm
 
 export const getCurrentTerm = (): Promise<AcademicTerm> => http.get('academicterm/currentterm');
 
+export const getDaysLeft = (): Promise<AcademicTerm> => http.get('academicterm/daysleft');
+
 const academicTermService = {
   getAllTerms,
   getCurrentTerm,
+  getDaysLeft,
 };
 
 export default academicTermService;
