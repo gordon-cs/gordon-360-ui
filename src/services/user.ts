@@ -7,14 +7,14 @@ import { Class } from './peopleSearch';
 import { Override } from './utils';
 
 export type ProfileStringItem = {
-  value: string;
-  isPrivate: boolean;
+  Value: string;
+  IsPrivate: boolean;
 };
 
 // **** Reserved for future use ****
 // type ProfileNumberItem = {
-//   value: number;
-//   isPrivate: boolean;
+//   Value: number;
+//   IsPrivate: boolean;
 // };
 
 enum OnOffCampusStatus {
@@ -67,7 +67,6 @@ type BaseProfileInfo = {
   HomePostalCode: ProfileStringItem;
   HomeCountry: ProfileStringItem;
   HomePhone: ProfileStringItem;
-  HomeFax: string;
   KeepPrivate: string;
   Barcode: string;
   Email: string;
@@ -238,10 +237,10 @@ export function isAlumni(
 }
 
 function formatCountry(profile: UnformattedProfileInfo) {
-  if (profile?.Country?.value.includes(',')) {
-    const country = profile.Country.value;
+  if (profile?.Country?.Value.includes(',')) {
+    const country = profile.Country.Value;
     const commaIndex = country.indexOf(',');
-    profile.Country.value = `${country.slice(commaIndex + 2)} ${country.slice(0, commaIndex)}`;
+    profile.Country.Value = `${country.slice(commaIndex + 2)} ${country.slice(0, commaIndex)}`;
   }
   return profile;
 }
@@ -328,7 +327,7 @@ const getProfileInfo = async (username: string = ''): Promise<Profile | undefine
 
   if (!profile) return undefined;
 
-  const fullName = `${profile?.FirstName.value} ${profile?.LastName.value}`;
+  const fullName = `${profile?.FirstName.Value} ${profile?.LastName.Value}`;
   const cliftonStrengths = await CliftonStrengthsService.getCliftonStrengths(profile.AD_Username);
 
   if (isStudent(profile)) {

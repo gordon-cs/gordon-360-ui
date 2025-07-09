@@ -89,6 +89,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     isStudent ? profile.PlannedGradYear : null,
   );
 
+  // Students with KeepPrivate flag set to 'Y' or 'P' are hidden
   // The dbo.FacStaff and dbo.Student views both contain the column 'KeepPrivate' but they are
   // used differently.
   //   - For faculty and staff this value is either 1 (private) or 0 (public) and had been set
@@ -106,27 +107,27 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
   const isCampusLocationPrivate = hideStudent;
 
   // Students' home phone is always private. FacStaff can choose to restrict their home phone
-  const isHomePhonePrivate = isStudent || (isFacStaff && profile.HomePhone?.isPrivate);
+  const isHomePhonePrivate = isStudent || (isFacStaff && profile.HomePhone?.IsPrivate);
 
   // Student and FacStaff can restrict access to mobile phone
-  const isMobilePhonePrivate = hideStudent || profile.MobilePhone?.isPrivate;
+  const isMobilePhonePrivate = hideStudent || profile.MobilePhone?.IsPrivate;
 
   // Students' street addresses will not be shown to other students but are shown to faculty
   // and staff.  Faculty and Staff have the ability to set who they allow to see their
   // street addresses
   const isStreetAddressPrivate =
-    isStudent || profile.HomeStreet1?.isPrivate || profile.HomeStreet2?.isPrivate;
+    isStudent || profile.HomeStreet1?.IsPrivate || profile.HomeStreet2?.IsPrivate;
 
   // City/State/Country will not be shown for students with the KeepPrivate flag set
   const isHomeCityCountryPrivate =
     hideStudent ||
-    profile.HomeCity?.isPrivate ||
-    profile.HomeState?.isPrivate ||
-    profile.HomeCountry?.isPrivate ||
-    profile.Country?.isPrivate;
+    profile.HomeCity?.IsPrivate ||
+    profile.HomeState?.IsPrivate ||
+    profile.HomeCountry?.IsPrivate ||
+    profile.Country?.IsPrivate;
 
   // Users may restrict name of spouse
-  const isSpousePrivate = profile.SpouseName?.isPrivate;
+  const isSpousePrivate = profile.SpouseName?.IsPrivate;
 
   // Students should not have the 'FacStaff' visibility option in privacy settings
   // In other words, for students, choosing Private is equivalent to FacStaff
@@ -217,10 +218,10 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
       title="Home Phone:"
       contentText={
         myProf ? (
-          <Grid className={styles.not_private}>{formatPhone(profile.HomePhone.value)}</Grid>
+          <Grid className={styles.not_private}>{formatPhone(profile.HomePhone.Value)}</Grid>
         ) : (
-          <a href={`tel:${profile.HomePhone.value}`} className="gc360_text_link">
-            {formatPhone(profile.HomePhone.value)}
+          <a href={`tel:${profile.HomePhone.Value}`} className="gc360_text_link">
+            {formatPhone(profile.HomePhone.Value)}
           </a>
         )
       }
@@ -240,12 +241,12 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
       contentText={
         myProf ? (
           <Grid container spacing={0} alignItems="center" className={styles.not_private}>
-            <Grid item>{formatPhone(profile.MobilePhone.value)}</Grid>
+            <Grid item>{formatPhone(profile.MobilePhone.Value)}</Grid>
             <Grid item>{isStudent ? <UpdatePhone /> : null}</Grid>
           </Grid>
         ) : (
-          <a href={`tel:${profile.MobilePhone.value}`} className="gc360_text_link">
-            {formatPhone(profile.MobilePhone.value)}
+          <a href={`tel:${profile.MobilePhone.Value}`} className="gc360_text_link">
+            {formatPhone(profile.MobilePhone.Value)}
           </a>
         )
       }
@@ -261,7 +262,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
   // is tied to individual profile items, if the user requests a change to their address privacy
   // setting then we need to change the privacy settings on multiple profile items.  Here we
   // construct a list of times that must be updated.
-  let hasUSAAddress = profile.Country?.value === 'United States of America' || !profile.Country;
+  let hasUSAAddress = profile.Country?.Value === 'United States of America' || !profile.Country;
   let homePrivacyFields = hasUSAAddress ? ['HomeCity', 'HomeState'] : ['Country', 'HomeCountry'];
   let streetPrivacyFields = ['HomeStreet1', 'HomeStreet2'];
 
@@ -271,8 +272,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
         title="Street Address:"
         contentText={
           <>
-            <span>{profile.HomeStreet1?.value}</span>
-            <span>{profile.HomeStreet2?.value}</span>
+            <span>{profile.HomeStreet1?.Value}</span>
+            <span>{profile.HomeStreet2?.Value}</span>
           </>
         }
         ContentIcon={
@@ -292,8 +293,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
         title="Home:"
         contentText={
           hasUSAAddress
-            ? `${profile.HomeCity?.value}, ${profile.HomeState?.value}`
-            : profile.Country?.value
+            ? `${profile.HomeCity?.Value}, ${profile.HomeState?.Value}`
+            : profile.Country?.Value
         }
         ContentIcon={
           myProf &&
@@ -675,7 +676,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     isFacStaff && profile.SpouseName ? (
       <ProfileInfoListItem
         title="Spouse:"
-        contentText={profile.SpouseName.value}
+        contentText={profile.SpouseName.Value}
         ContentIcon={
           isFacStaff &&
           myProf &&

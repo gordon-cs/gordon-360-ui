@@ -133,10 +133,10 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
       setIsImagePublic(profile.show_pic === 1);
 
       setHasNickname(
-        profile?.NickName?.value && profile.NickName.value !== profile.FirstName.value,
+        profile?.NickName?.Value && profile.NickName.Value !== profile.FirstName.Value,
       );
       setHasMaidenName(
-        profile?.MaidenName?.value && profile.MaidenName.value !== profile.LastName.value,
+        profile?.MaidenName?.Value && profile.MaidenName.Value !== profile.LastName.Value,
       );
     }
 
@@ -556,7 +556,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
     ? userProfile.Title.charAt(0).toUpperCase() +
       userProfile.Title.slice(1).toLowerCase() +
       '. ' +
-      userProfile.LastName.value
+      userProfile.LastName.Value
     : '';
 
   return (
@@ -568,15 +568,15 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
               title={`${
                 isAprilFools
                   ? profileTitleAprilFools
-                  : userProfile.NickName?.value
-                    ? userProfile.NickName?.value
-                    : userProfile.FirstName.value
+                  : userProfile.NickName?.Value
+                    ? userProfile.NickName?.Value
+                    : userProfile.FirstName.Value
               }'s Profile`}
             />
           ) : (
             <CardHeader
-              title={`${userProfile.NickName?.value ? userProfile.NickName.value : userProfile.FirstName.value} ${
-                userProfile.LastName.value
+              title={`${userProfile.NickName?.Value ? userProfile.NickName.Value : userProfile.FirstName.Value} ${
+                userProfile.LastName.Value
               }'s Profile`}
             />
           ))}
@@ -711,9 +711,9 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar }: Props) =>
                         userProfile.Title && userProfile.PersonType === 'fac'
                           ? `${userProfile.Title} `
                           : ''
-                      }${userProfile.FirstName.value}${hasNickname ? ` (${userProfile.NickName.value})` : ''} ${
-                        userProfile.LastName.value
-                      }${hasMaidenName ? ` (${userProfile.MaidenName.value})` : ''}`}
+                      }${userProfile.FirstName.Value}${hasNickname ? ` (${userProfile.NickName.Value})` : ''} ${
+                        userProfile.LastName.Value
+                      }${hasMaidenName ? ` (${userProfile.MaidenName.Value})` : ''}`}
                     </Typography>
 
                     {/* Profile Name Edit Request Button */}
