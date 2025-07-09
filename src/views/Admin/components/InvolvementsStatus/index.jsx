@@ -6,18 +6,21 @@ import InvolvementStatusListItem from './components/InvolvementStatusList/index'
 import { Typography, Card, CardHeader } from '@mui/material';
 import { NotFoundError } from 'services/error';
 import styles from './InvolvementsStatus.module.css';
+import academicTermService from 'services/academicTerm';
 
 const InvolvementStatusList = ({ status }) => {
   const [loading, setLoading] = useState(true);
   const [involvements, setInvolvements] = useState([]);
-  const [currentSession, setCurrentSession] = useState('');
+  const [currentTermCode, setCurrentTermCode] = useState('');
 
   useEffect(() => {
-    const loadSession = async () => {
-      const { SessionCode } = await session.getCurrent();
-      setCurrentSession(SessionCode);
+    const loadTerm = async () => {
+      const term = await academicTermService.getCurrentTerm();
+      if (term) {
+        setCurrentTermCode(`${term.YearCode}${term.TermCode}`);
+      }
     };
-    loadSession();
+    loadTerm();
   }, []);
 
   useEffect(() => {
@@ -51,7 +54,7 @@ const InvolvementStatusList = ({ status }) => {
           <InvolvementStatusListItem
             key={involvement.ActivityCode}
             involvement={involvement}
-            session={currentSession}
+            termCode={currentTermCode}
           />
         ))
       ) : (
