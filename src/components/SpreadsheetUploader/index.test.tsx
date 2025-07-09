@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import SpreadsheetUploader from './index';
-import { Description as SpreadsheetIcon } from '@mui/icons-material';
 
 // Mock dependencies
 jest.mock('services/logging', () => ({

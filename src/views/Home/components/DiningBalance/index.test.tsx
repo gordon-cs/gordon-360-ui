@@ -51,7 +51,7 @@ describe('<DiningBalance />', () => {
     render(<DiningBalance />);
     const balanceEl = await screen.findByText('$15');
     expect(balanceEl).toBeInTheDocument();
-    expect(balanceEl).toHaveStyle(`color: ${theme360.colorSchemes.light.palette.warning.main}`); // replace with actual warning.main color
+    expect(balanceEl).toHaveStyle(`color: ${theme360.colorSchemes.light.palette.warning.main}`);
   });
 
   it('renders balance with error color when balance is really low', async () => {

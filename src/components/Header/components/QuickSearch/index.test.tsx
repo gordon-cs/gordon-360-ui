@@ -2,6 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import GordonQuickSearch from '.';
 import { BrowserRouter } from 'react-router-dom';
 import { getHighlightedText, getHighlightedDetails } from '.';
+import { SearchResult } from 'services/quickSearch';
 import { act } from 'react';
 
 jest.mock('hooks', () => ({
