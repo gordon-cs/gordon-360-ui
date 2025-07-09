@@ -243,6 +243,7 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
               label="Marketplace"
               component={NavLink}
               to="/marketplace"
+              tabIndex={0}
             />
           )}
         </Tabs>
