@@ -174,10 +174,7 @@ Thank you
       // Fetch profile info
       userService
         .getInformalName(item.PosterUsername)
-        .then((profile) => {
-          setProfileInfo(
-            profile ? { NickName: profile.NickName, LastName: profile.LastName } : null,
-          );
+        .then(setProfileInfo);
         })
         .catch(() => setProfileInfo(null));
     }
