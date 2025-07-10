@@ -115,7 +115,7 @@ export type MarketplaceListing = {
  * @returns the category object created
  */
 const addCategory = (categoryName: string): Promise<MarketplaceCategory> =>
-  http.post<MarketplaceCategory>('/marketplace/categories', categoryName);
+  http.post<MarketplaceCategory>('marketplace/categories', categoryName);
 
 /**
  * Add a new condition (Admin only).
@@ -123,7 +123,7 @@ const addCategory = (categoryName: string): Promise<MarketplaceCategory> =>
  * @returns the condition object created
  */
 const addCondition = (conditionName: string): Promise<MarketplaceCondition> =>
-  http.post<MarketplaceCondition>('/marketplace/conditions', conditionName);
+  http.post<MarketplaceCondition>('marketplace/conditions', conditionName);
 
 /**
  * Initial Marketplace Listing object for creating a new listing (without Id, StatusId, etc.).
@@ -139,17 +139,17 @@ export type InitMarketplaceListing = {
 };
 
 const getCategories = (): Promise<MarketplaceCategory[]> =>
-  http.get<MarketplaceCategory[]>('/marketplace/categories');
+  http.get<MarketplaceCategory[]>('marketplace/categories');
 
 const getConditions = (): Promise<MarketplaceCondition[]> =>
-  http.get<MarketplaceCondition[]>('/marketplace/conditions');
+  http.get<MarketplaceCondition[]>('marketplace/conditions');
 
 /**
  * Get all marketplace listings.
  * @returns an array of MarketplaceListing objects
  */
 const getAllListings = (): Promise<MarketplaceListing[]> =>
-  http.get<MarketplaceListing[]>('/marketplace');
+  http.get<MarketplaceListing[]>('marketplace');
 
 /**
  * Get a specific listing by ID.
@@ -157,7 +157,7 @@ const getAllListings = (): Promise<MarketplaceListing[]> =>
  * @returns the MarketplaceListing object
  */
 const getListingById = (listingId: number): Promise<MarketplaceListing> =>
-  http.get<MarketplaceListing>(`/marketplace/${listingId}`);
+  http.get<MarketplaceListing>(`marketplace/${listingId}`);
 
 /**
  * Create a new listing.
@@ -166,7 +166,7 @@ const getListingById = (listingId: number): Promise<MarketplaceListing> =>
  * @returns the created MarketplaceListing object
  */
 const createListing = (listing: InitMarketplaceListing): Promise<MarketplaceListing> =>
-  http.post<MarketplaceListing>('/marketplace', listing);
+  http.post<MarketplaceListing>('marketplace', listing);
 
 /**
  * Update an existing listing.
@@ -178,7 +178,7 @@ const updateListing = (
   listingId: number,
   updatedListing: Partial<InitMarketplaceListing>,
 ): Promise<MarketplaceListing> =>
-  http.put<MarketplaceListing>(`/marketplace/${listingId}`, updatedListing);
+  http.put<MarketplaceListing>(`marketplace/${listingId}`, updatedListing);
 
 /**
  * Delete a listing (SiteAdmin only).
@@ -186,7 +186,7 @@ const updateListing = (
  * @returns a promise that resolves when the listing is deleted
  */
 const deleteListing = (listingId: number): Promise<void> =>
-  http.del<void>(`/marketplace/${listingId}`);
+  http.del<void>(`marketplace/${listingId}`);
 
 /**
  * Change the status of a listing.
@@ -195,7 +195,7 @@ const deleteListing = (listingId: number): Promise<void> =>
  * @returns the updated MarketplaceListing object
  */
 const changeListingStatus = (listingId: number, status: string): Promise<MarketplaceListing> =>
-  http.put<MarketplaceListing>(`/marketplace/${listingId}/status`, status);
+  http.put<MarketplaceListing>(`marketplace/${listingId}/status`, status);
 
 /**
  * Get filtered listings.
@@ -224,7 +224,7 @@ const getFilteredListings = (
   query.page = page.toString();
   query.pageSize = pageSize.toString();
 
-  return http.get<MarketplaceListing[]>(`/marketplace/filter${http.toQueryString(query)}`);
+  return http.get<MarketplaceListing[]>(`marketplace/filter${http.toQueryString(query)}`);
 };
 
 /**
@@ -250,7 +250,7 @@ const getFilteredListingsCount = (
   if (maxPrice !== undefined) query.maxPrice = maxPrice.toString();
   if (search !== undefined) query.search = search;
 
-  return http.get<number>(`/marketplace/count${http.toQueryString(query)}`);
+  return http.get<number>(`marketplace/count${http.toQueryString(query)}`);
 };
 
 /**
