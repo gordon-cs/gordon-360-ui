@@ -54,7 +54,7 @@ export const getProfileImage = async (username: string) => {
     throw new Error('No access token found');
   }
 
-  const response = await fetch(`/api/profiles/image/${username}`, {
+  const response = await fetch(`api/profiles/image/${username}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -74,7 +74,7 @@ export const getProfileInfo = async (username: string) => {
     throw new Error('No access token found');
   }
 
-  const response = await fetch(`/api/profiles/${username}`, {
+  const response = await fetch(`api/profiles/${username}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -263,7 +263,7 @@ const getMyListings = async () => {
     throw new Error('No access token found');
   }
 
-  const response = await fetch(`/api/marketplace/mylistings`, {
+  const response = await fetch(`api/marketplace/mylistings`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
