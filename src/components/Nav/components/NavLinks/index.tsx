@@ -4,7 +4,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import LinkIcon from '@mui/icons-material/InsertLink';
 import PeopleIcon from '@mui/icons-material/People';
-import { HolidayVillage } from '@mui/icons-material';
+import { HolidayVillage, StoreRounded } from '@mui/icons-material';
 import { Divider, List } from '@mui/material';
 import RecIMIcon from '@mui/icons-material/SportsFootball';
 import TranscriptIcon from '@mui/icons-material/Receipt';
@@ -173,6 +173,18 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
       />
     ) : null;
 
+  const marketplaceButton = !loading ? (
+    <GordonNavButton
+      unavailable={!isOnline ? 'offline' : !isAuthenticated ? 'unauthorized' : null}
+      openUnavailableDialog={setDialog}
+      onLinkClick={onLinkClick}
+      linkName={'MarketPlace'}
+      linkPath={'/marketplace'}
+      LinkIcon={StoreRounded}
+      divider={false}
+    />
+  ) : null;
+
   const paletteOptionsButton = (
     <GordonNavButton
       onLinkClick={() => {
@@ -241,6 +253,7 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
         {LinksButton}
         {recimButton}
         {housingButton}
+        {marketplaceButton}
       </List>
 
       <Divider />
