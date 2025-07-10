@@ -317,7 +317,7 @@ const getInformalName = async (username: string = ''): Promise<InformalName | un
   if (!profile) return undefined;
 
   return {
-    NickName: profile.NickName,
+    NickName: profile.NickName ?? profile.FirstName,
     LastName: profile.LastName,
   };
 };
