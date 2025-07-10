@@ -9,6 +9,8 @@ import {
   TablePagination,
   Paper,
   CircularProgress,
+  TextField,
+  Box,
 } from '@mui/material';
 import {
   Dialog,
@@ -25,15 +27,18 @@ const AdminMarketplaceThreads = () => {
   const [threads, setThreads] = useState([]);
   const [loading, setLoading] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
-  const [page, setPage] = useState(0); // MUI is 0-indexed
+  const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [editHistory, setEditHistory] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchTrigger, setSearchTrigger] = useState('');
 
   const handleThreadClick = async (thread) => {
-    setLoading(true); // Optionally show loading in modal
+    setLoading(true);
     try {
       const history = await marketplaceService.getThreadEditHistory(thread.ThreadId);
+      console.log('Edit history:', history);
       setEditHistory(history);
       setIsModalOpen(true);
     } catch (err) {
@@ -63,10 +68,90 @@ const AdminMarketplaceThreads = () => {
     fetchThreads();
   }, [page, rowsPerPage]);
 
+  useEffect(() => {
+    const trySearchById = async () => {
+      if (!searchTrigger) return;
+
+      setLoading(true);
+      try {
+        const targetId = parseInt(searchTrigger, 10);
+        if (isNaN(targetId)) {
+          alert('Invalid ID');
+          setLoading(false);
+          return;
+        }
+
+        const pageSize = 100;
+        let currentPage = 1;
+        let hasMore = true;
+
+        while (hasMore) {
+          const threadsPage = await marketplaceService.getAdminThreads({
+            page: currentPage,
+            pageSize,
+          });
+
+          // Track the highest edit ID seen on this page
+          let maxEditIdOnPage = 0;
+
+          for (const thread of threadsPage) {
+            const history = await marketplaceService.getThreadEditHistory(thread.ThreadId);
+            if (!history.length) continue;
+
+            for (const h of history) {
+              if (h.Id === targetId) {
+                setEditHistory(history);
+                setIsModalOpen(true);
+                setSearchQuery('');
+                setSearchTrigger('');
+                setLoading(false);
+                return;
+              }
+
+              if (h.Id > maxEditIdOnPage) {
+                maxEditIdOnPage = h.Id;
+              }
+            }
+          }
+
+          // Optimization: if max ID seen so far is less than target, we can stop
+          if (maxEditIdOnPage < targetId) {
+            hasMore = false;
+            break;
+          }
+
+          hasMore = threadsPage.length === pageSize;
+          currentPage++;
+        }
+
+        alert(`No thread history found with ID ${searchTrigger}`);
+      } catch (err) {
+        console.error('Error searching thread history:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    trySearchById();
+  }, [searchTrigger]);
+
   if (loading) return <CircularProgress />;
 
   return (
     <Paper>
+      <Box p={2}>
+        <TextField
+          label="Search ID Number"
+          variant="outlined"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              setSearchTrigger(searchQuery.trim());
+            }
+          }}
+        />
+      </Box>
       <Table>
         <TableHead>
           <TableRow>
@@ -139,6 +224,9 @@ const AdminMarketplaceThreads = () => {
                       </div>
                       <div>
                         <b>Description:</b> {version.Detail}
+                      </div>
+                      <div>
+                        <b>User:</b> {version.PosterUsername}
                       </div>
                     </>
                   }
