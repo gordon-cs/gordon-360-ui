@@ -65,12 +65,17 @@ export const compareByProperty =
  * @param separator the separator to split words on. defaults to a single space (`' '`)
  * @returns the string in title case, e.g. `Person First Name`
  */
-export const toTitleCase = (string: string, separator = ' ') =>
-  string
-    .toLowerCase()
-    .split(separator)
-    .map((word) => word.replace(word[0], word[0].toUpperCase()))
+export function toTitleCase(str: string) {
+  return str
+    .split('_')
+    .map((segment) =>
+      segment
+        .split('/')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join('/'),
+    )
     .join(' ');
+}
 
 /**
  * Create functions to serialize and deserialize an object of the given type to/from a query string.

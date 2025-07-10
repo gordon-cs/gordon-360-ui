@@ -42,6 +42,7 @@ import {
   FaUser as Person,
 } from 'react-icons/fa';
 import { BiMaleFemale as GenderIcon } from 'react-icons/bi';
+import { FaMagnifyingGlass as MagnifyingGlass } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
 import addressService from 'services/address';
 import { AuthGroup } from 'services/auth';
@@ -51,6 +52,7 @@ import styles from './SearchFieldList.module.css';
 import SearchField, { SelectOption } from './components/SearchField';
 import Slider from '@mui/material/Slider';
 import Switch from '@mui/material/Switch';
+import { debounce } from 'lodash';
 
 /**
  * A Regular Expression that matches any string with any alphanumeric character `[a-z][A-Z][0-9]`.
@@ -154,6 +156,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const [switchYearRange, setSwitchYearRange] = useState(true);
   const [involvements, setInvolvements] = useState<string[]>([]);
   const [gender, setGender] = useState<string[]>([]);
+  const [searchText, setSearchText] = useState('');
 
   /**
    * Default search params adjusted for the user's identity.
@@ -169,7 +172,33 @@ const SearchFieldList = ({ onSearch }: Props) => {
     [isAlumni, isFacStaff, isStudent],
   );
   const [searchParams, setSearchParams] = useState(initialSearchParams);
+  const debouncedFullNameUpdate = useMemo(
+    () =>
+      debounce((fullName: string) => {
+        const parts = fullName.trim().split(/\s+/);
 
+        let first_name = '';
+        let last_name = '';
+
+        if (parts.length === 1) {
+          // Try both ways: put the word in first_name only, leave last_name blank
+          first_name = parts[0];
+          last_name = '';
+        } else if (parts.length >= 2) {
+          first_name = parts[0];
+          last_name = parts.slice(1).join(' ');
+        }
+
+        setSearchParams((sp: PeopleSearchQuery) => ({
+          ...sp,
+          first_name,
+          last_name,
+        }));
+      }, 300),
+    [setSearchParams],
+  );
+
+  const [fullNameInput, setFullNameInput] = useState('');
   const [loading, setLoading] = useState(true);
   const [loadingSearch, setLoadingSearch] = useState(false);
 
@@ -181,32 +210,94 @@ const SearchFieldList = ({ onSearch }: Props) => {
   const canSearch = (params: PeopleSearchQuery) => {
     const { includeStudent, includeFacStaff, includeAlumni, ...criteria } = params;
 
-    // Must search some cohort of people
     const includesSomeone = includeStudent || includeFacStaff || includeAlumni;
 
-    // Must search for some non-empty criteria
-    const anySearchCriteria = Object.values(criteria).some((c) => containsLetterRegExp.test(c));
+    const anySearchCriteria =
+      Object.values(criteria).some((c) => containsLetterRegExp.test(c)) ||
+      containsLetterRegExp.test(fullNameInput) ||
+      containsLetterRegExp.test(searchText);
 
     return includesSomeone && anySearchCriteria;
   };
 
   const search = useCallback(
     async (params: PeopleSearchQuery) => {
-      if (canSearch(params)) {
-        setLoadingSearch(true);
+      if (!canSearch(params)) return;
 
-        await peopleSearchService.search(params).then(onSearch);
+      setLoadingSearch(true);
 
-        const newQueryString = serializeSearchParams(params);
-        // If search params are new since last search, add search to history
-        if (window.location.search !== newQueryString) {
-          navigate(newQueryString);
-        }
+      let results: SearchResult[] = [];
 
-        setLoadingSearch(false);
+      const rawQuery = searchText.trim().toLowerCase();
+      const hasSearchText = containsLetterRegExp.test(rawQuery);
+
+      const queryParts = rawQuery
+        .split(/\s+/) // split on one or more spaces
+        .filter((part) => part.length > 0);
+
+      if (fullNameInput && !params.last_name) {
+        // Perform full_name search
+        const words = fullNameInput.trim().split(/\s+/);
+        const first_name = words[0];
+        const last_name = words.length > 1 ? words.slice(1).join(' ') : '';
+
+        const [firstResults, lastResults] = await Promise.all([
+          peopleSearchService.search({ ...params, first_name, last_name }),
+          ...(words.length === 1
+            ? [peopleSearchService.search({ ...params, first_name: '', last_name: first_name })]
+            : []),
+        ]);
+
+        const all = [...firstResults, ...lastResults];
+        const deduped = Array.from(new Map(all.map((p) => [p.AD_Username, p])).values());
+        results = deduped;
+      } else {
+        // Regular search with given filters
+        results = await peopleSearchService.search(params);
       }
+
+      // Apply full-text filter if `searchText` is used
+      if (hasSearchText) {
+        results = results.filter((person) => {
+          const allFields = [
+            person.FirstName,
+            person.LastName,
+            person.NickName,
+            person.MaidenName,
+            'Title' in person ? person.Title : '',
+            'Department' in person ? person.Department : '',
+            'Major' in person ? person.Major : '',
+            'Minor' in person ? person.Minor : '',
+            'Involvement' in person ? person.Involvement : '',
+            'Hall' in person ? person.Hall : '',
+            'Class' in person ? person.Class : '',
+            'HomeCity' in person ? person.HomeCity : '',
+            'HomeState' in person ? person.HomeState : '',
+            'HomeCountry' in person ? person.HomeCountry : '',
+            'Keywords' in person && Array.isArray(person.Keywords) ? person.Keywords.join(' ') : '',
+          ];
+
+          const normalizedFields = allFields
+            .filter(Boolean)
+            .map((field) => (field as string).toLowerCase().replace(/\s+/g, ' '))
+            .join(' ');
+
+          return queryParts.every((part) =>
+            normalizedFields.includes(part.toLowerCase().replace(/\s+/g, ' ')),
+          );
+        });
+      }
+
+      onSearch(results);
+
+      const newQueryString = serializeSearchParams(params);
+      if (window.location.search !== newQueryString) {
+        navigate(newQueryString);
+      }
+
+      setLoadingSearch(false);
     },
-    [canSearch, searchParams, onSearch, navigate],
+    [canSearch, onSearch, navigate, searchText, fullNameInput],
   );
 
   useEffect(() => {
@@ -317,10 +408,46 @@ const SearchFieldList = ({ onSearch }: Props) => {
       }));
     }
   };
-
-  const handleEnterKeyPress = (event: KeyboardEvent<HTMLDivElement>) => {
+  const handleEnterKeyPress = async (event: KeyboardEvent<HTMLDivElement>) => {
     if (event.key === 'Enter') {
-      search(searchParams);
+      const inputValue = (event.target as HTMLInputElement).value.trim();
+      if (!inputValue) return;
+
+      const words = inputValue.split(/\s+/);
+      let allResults: SearchResult[] = [];
+
+      if (words.length >= 2) {
+        // Two or more words → treat first word as first_name, rest as last_name
+        const fullNameResults = await peopleSearchService.search({
+          ...searchParams,
+          first_name: words[0],
+          last_name: words.slice(1).join(' '),
+        });
+        allResults = fullNameResults;
+      } else {
+        // Only one word → search both first_name and last_name separately and combine
+        const word = words[0];
+        const firstNameResults = await peopleSearchService.search({
+          ...searchParams,
+          first_name: word,
+          last_name: '',
+        });
+
+        const lastNameResults = await peopleSearchService.search({
+          ...searchParams,
+          first_name: '',
+          last_name: word,
+        });
+
+        // Combine and dedupe
+        const uniqueMap = new Map<string, SearchResult>();
+        [...firstNameResults, ...lastNameResults].forEach((person) => {
+          uniqueMap.set(person.AD_Username, person);
+        });
+        allResults = Array.from(uniqueMap.values());
+      }
+
+      onSearch(allResults);
     }
   };
 
@@ -419,34 +546,26 @@ const SearchFieldList = ({ onSearch }: Props) => {
       <CardContent>
         {/* Search Section 1: General Info */}
         <Grid container spacing={2} direction="row" alignItems="center" justifyContent="center">
-          <Grid item xs={12} sm={6} onKeyDown={handleEnterKeyPress}>
+          <Grid item xs={12} onKeyDown={(e) => e.key === 'Enter' && search(searchParams)}>
             <SearchField
-              name="first_name"
-              value={searchParams.first_name}
-              updateValue={handleUpdate}
+              name="full_name"
+              value={fullNameInput}
+              updateValue={(e) => {
+                const fullName = e.target.value;
+                setFullNameInput(fullName);
+                // No need to debounce anymore
+              }}
               Icon={Person}
             />
           </Grid>
-
-          <Grid item xs={12} sm={6} onKeyDown={handleEnterKeyPress}>
+          <Grid item xs={12} onKeyDown={(e) => e.key === 'Enter' && search(searchParams)}>
             <SearchField
-              name="last_name"
-              value={searchParams.last_name}
-              updateValue={handleUpdate}
+              name="Search All Fields"
+              value={searchText}
+              updateValue={(e) => setSearchText(e.target.value)}
+              Icon={MagnifyingGlass}
             />
           </Grid>
-
-          <Grid item xs={12}>
-            <SearchField
-              name="residence_hall"
-              value={searchParams.residence_hall}
-              updateValue={handleUpdate}
-              options={halls.sort()}
-              Icon={FaBuilding}
-              select
-            />
-          </Grid>
-
           {isTodayAprilFools() ? (
             <Grid item xs={12}>
               <SearchField
@@ -501,6 +620,15 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     updateValue={handleUpdate}
                     options={minors.sort()}
                     Icon={FaBook}
+                    select
+                    disabled={!searchParams.includeStudent}
+                  />
+                  <SearchField
+                    name="residence_hall"
+                    value={searchParams.residence_hall}
+                    updateValue={handleUpdate}
+                    options={halls.sort()}
+                    Icon={FaBuilding}
                     select
                     disabled={!searchParams.includeStudent}
                   />
@@ -644,7 +772,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
                     Icon={Home}
                   />
                   <SearchField
-                    name="state"
+                    name="State/Provinces"
                     value={searchParams.state}
                     updateValue={handleUpdate}
                     options={states.sort(compareByProperty('label'))}
@@ -671,7 +799,11 @@ const SearchFieldList = ({ onSearch }: Props) => {
           <Button
             variant="contained"
             color="error"
-            onClick={() => setSearchParams(initialSearchParams)}
+            onClick={() => {
+              setSearchParams(initialSearchParams);
+              setFullNameInput('');
+              setSearchText('');
+            }}
           >
             CLEAR
           </Button>
@@ -683,7 +815,7 @@ const SearchFieldList = ({ onSearch }: Props) => {
               onClick={() => search(searchParams)}
               className={styles.search_field_list_search_width}
               variant="contained"
-              disabled={!canSearch}
+              disabled={!canSearch(searchParams)}
             >
               SEARCH
             </Button>

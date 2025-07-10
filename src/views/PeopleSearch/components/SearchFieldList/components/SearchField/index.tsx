@@ -76,7 +76,7 @@ const SearchField = ({
         <TextField
           id={name}
           name={name}
-          label={toTitleCase(name, '_')}
+          label={toTitleCase(name)}
           value={value}
           onChange={updateValue}
           fullWidth
