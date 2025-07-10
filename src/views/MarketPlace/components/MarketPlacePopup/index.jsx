@@ -15,7 +15,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getProfileImage, getProfileInfo } from 'services/marketplace';
+import userService from 'services/user';
 import Slider from 'react-slick';
 import marketplaceService from 'services/marketplace';
 import { msalInstance } from 'index';
@@ -159,7 +159,8 @@ Thank you
   useEffect(() => {
     if (item?.PosterUsername) {
       // Fetch profile image as before
-      getProfileImage(item.PosterUsername)
+      userService
+        .getImage(item.PosterUsername)
         .then((data) => {
           const img = data.pref
             ? `data:image/png;base64,${data.pref}`
@@ -172,9 +173,12 @@ Thank you
         .catch(() => setProfileImg(null));
 
       // Fetch profile info
-      getProfileInfo(item.PosterUsername)
-        .then((info) => {
-          setProfileInfo(info);
+      userService
+        .getInformalName(item.PosterUsername)
+        .then((profile) => {
+          setProfileInfo(
+            profile ? { NickName: profile.NickName, LastName: profile.LastName } : null,
+          );
         })
         .catch(() => setProfileInfo(null));
     }

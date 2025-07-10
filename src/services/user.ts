@@ -307,6 +307,21 @@ const isBirthdayToday = (): Promise<boolean> => {
   );
 };
 
+type InformalName = {
+  NickName: string;
+  LastName: string;
+};
+
+const getInformalName = async (username: string = ''): Promise<InformalName | undefined> => {
+  const profile = await getProfile(username);
+  if (!profile) return undefined;
+
+  return {
+    NickName: profile.NickName,
+    LastName: profile.LastName,
+  };
+};
+
 const getProfileInfo = async (username: string = ''): Promise<Profile | undefined> => {
   const profile = await getProfile(username).then(formatCountry).then(formatSocialMediaLinks);
 
@@ -417,6 +432,7 @@ const userService = {
   getImage,
   getDiningInfo,
   getProfileInfo,
+  getInformalName,
   getAdvisors,
   getMailboxInformation,
   getMembershipHistory,

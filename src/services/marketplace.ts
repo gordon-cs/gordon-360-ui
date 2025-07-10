@@ -1,4 +1,3 @@
-import { getToken } from './auth';
 import http from './http';
 
 export type MarketplaceCategory = { Id: number; Category: string };
@@ -46,51 +45,6 @@ const getAdminThreadsCount = (
 
 const getThreadEditHistory = (threadId: number): Promise<MarketplaceListing[]> =>
   http.get<MarketplaceListing[]>(`marketplace/admin/threads/${threadId}/history`);
-
-export const getProfileImage = async (username: string) => {
-  const token = await getToken();
-
-  if (!token) {
-    throw new Error('No access token found');
-  }
-
-  const response = await fetch(`api/profiles/image/${username}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch profile image');
-  }
-
-  return await response.json();
-};
-
-export const getProfileInfo = async (username: string) => {
-  const token = await getToken();
-
-  if (!token) {
-    throw new Error('No access token found');
-  }
-
-  const response = await fetch(`api/profiles/${username}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch profile info');
-  }
-
-  const data = await response.json();
-
-  return {
-    NickName: data.NickName,
-    LastName: data.LastName,
-  };
-};
 
 // Marketplace Listing object, representing the model of a listing for communication with the backend.
 export type MarketplaceListing = {
@@ -257,23 +211,8 @@ const getFilteredListingsCount = (
  * Get the listings posted by the current user.
  * @returns an array of MarketplaceListing objects
  */
-const getMyListings = async () => {
-  const token = await getToken();
-  if (!token) {
-    throw new Error('No access token found');
-  }
-
-  const response = await fetch(`api/marketplace/mylistings`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch user listings');
-  }
-
-  return await response.json();
+const getMyListings = (): Promise<MarketplaceListing[]> => {
+  return http.get<MarketplaceListing[]>('marketplace/mylistings');
 };
 
 const marketplaceService = {
