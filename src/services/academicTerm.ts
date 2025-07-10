@@ -8,11 +8,17 @@ export type AcademicTerm = {
   Description: string;
 };
 
+export type DaysLeftData = {
+  DaysLeft: number;
+  TotalDays: number;
+  TermLabel: string;
+};
+
 export const getAllTerms = (): Promise<AcademicTerm[]> => http.get('academicterm/allterms');
 
 export const getCurrentTerm = (): Promise<AcademicTerm> => http.get('academicterm/currentterm');
 
-export const getDaysLeft = (): Promise<AcademicTerm> => http.get('academicterm/daysleft');
+export const getDaysLeft = (): Promise<DaysLeftData> => http.get('academicterm/daysleft');
 
 const academicTermService = {
   getAllTerms,

@@ -4,43 +4,43 @@ import { Grid } from '@mui/material';
 import academicTermService from 'services/academicTerm';
 
 const DaysLeft = () => {
-  const [termProgress, setTermProgress] = useState(null);
-  const [daysLeft, setDaysLeft] = useState(null);
-  const [totalDays, setTotalDays] = useState(null);
-  const [termLabel, setTermLabel] = useState('');
+  const [daysLeftDialog, setDaysLeftDialog] = useState('');
+  const [termProgress, setTermProgress] = useState(0);
 
   useEffect(() => {
-    const fetchDaysLeft = async () => {
+    const load = async () => {
       try {
         const data = await academicTermService.getDaysLeft();
-        setDaysLeft(data.daysLeft);
-        setTotalDays(data.totalDays);
-        setTermLabel(data.termLabel);
 
-        const progress =
-          data.totalDays > 0
-            ? Math.round(((data.totalDays - data.daysLeft) / data.totalDays) * 100)
-            : null;
+        const daysLeft = data.DaysLeft;
+        const totalDays = data.TotalDays;
+        const termLabel = data.TermLabel;
+        const plural = daysLeft !== 1 ? 's' : '';
 
-        setTermProgress(progress);
-      } catch (error) {
-        console.error('Failed to fetch days left:', error);
+        let daysLeftDialog = null;
+
+        if (termLabel.startsWith('Break before ')) {
+          const nextTerm = termLabel.replace('Break before ', '').replace(/^\d{4}-\d{4}\s*/, '');
+          daysLeftDialog = `${daysLeft} day${plural} until ${nextTerm} term starts`;
+        } else {
+          const cleanLabel = termLabel.replace(/^\d{4}-\d{4}\s*/, '');
+          daysLeftDialog = `${daysLeft} day${plural} remaining in ${cleanLabel} term`;
+        }
+
+        setDaysLeftDialog(daysLeftDialog);
+
+        const termProgress =
+          totalDays > 0 ? Math.round(((totalDays - daysLeft) / totalDays) * 100) : 0;
+
+        setTermProgress(termProgress);
+      } catch (err) {
+        console.error('Error fetching days left:', err);
       }
     };
 
-    fetchDaysLeft();
+    load();
   }, []);
 
-  const daysLeftDialog = () => {
-    if (daysLeft == null || totalDays == null) return '';
-    const plural = daysLeft !== 1 ? 's' : '';
-    return `${daysLeft} day${plural} remaining in ${termLabel}`;
-  };
-
-  /* This won't display if daysLeftDialog is empty, specifically when on train because it doesn't
-  access the correct dates. The width of the front container is 10,000 / termProgress to correctly
-  overlap with the  backContainer and make it seem like the color changes as the backContainer
-  gets covered. */
   return (
     <Grid align="center">
       {daysLeftDialog !== '' ? (
