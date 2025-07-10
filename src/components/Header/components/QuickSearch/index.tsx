@@ -231,6 +231,9 @@ const GordonQuickSearch = ({
                 onClick={() => {
                   setCurrentQuery('');
                   dispatch({ type: 'RESET' });
+                  if (document.activeElement instanceof HTMLElement) {
+                    document.activeElement.blur(); 
+                  }
                   navigate('/people');
                 }}
               >
@@ -301,7 +304,7 @@ const getHighlightedText = (text: string, inputRegex: RegExp) =>
   );
 
 // Regex for invalid characters in search
-const specialCharactersRegex = /[^a-zA-Z0-9'\-\.\s]/gm;
+const specialCharactersRegex = /[^a-zA-Z0-9'.-\s]/gm;
 const startingAndEndingSpacesOrPeriodsRegex = /^[\s.]+|[\s.]+$/gm;
 const spaceOrPeriodRegex = / |\./;
 
