@@ -289,7 +289,7 @@ Thank you
                             paddingTop: '100%',
                             position: 'relative',
                             borderRadius: 2,
-                            backgroundColor: '#000',
+                            backgroundColor: 'contrastText.main',
                             cursor: 'grab',
                           }}
                         >
@@ -302,7 +302,7 @@ Thank you
                               left: 0,
                               width: '100%',
                               height: '100%',
-                              objectFit: 'cover',
+                              objectFit: 'contain',
                               borderRadius: 8,
                             }}
                           />
