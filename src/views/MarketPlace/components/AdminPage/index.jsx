@@ -70,6 +70,7 @@ const AdminMarketplaceThreads = () => {
       <Table>
         <TableHead>
           <TableRow>
+            <TableCell sx={{ fontWeight: 'bold' }}>ID</TableCell>
             <TableCell sx={{ fontWeight: 'bold' }}>Title</TableCell>
             <TableCell sx={{ fontWeight: 'bold' }}>Price</TableCell>
             <TableCell sx={{ fontWeight: 'bold' }}>Posted At</TableCell>
@@ -85,6 +86,7 @@ const AdminMarketplaceThreads = () => {
               onClick={() => handleThreadClick(thread)}
               style={{ cursor: 'pointer' }}
             >
+              <TableCell>{thread.ThreadId}</TableCell>
               <TableCell>{thread.Name}</TableCell>
               <TableCell>{thread.Price.toFixed(2)}</TableCell>
               <TableCell>{new Date(thread.PostedAt).toLocaleString()}</TableCell>
@@ -126,6 +128,9 @@ const AdminMarketplaceThreads = () => {
                   primary={`${version.Name} — $${version.Price.toFixed(2)} — ${new Date(version.PostedAt).toLocaleString()}`}
                   secondary={
                     <>
+                      <div>
+                        <b>ID: </b> {version.Id}
+                      </div>
                       <div>
                         <b>Category:</b> {version.CategoryName}
                       </div>

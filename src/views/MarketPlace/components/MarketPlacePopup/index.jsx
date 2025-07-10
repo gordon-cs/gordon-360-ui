@@ -133,7 +133,7 @@ const MarketPlacePopup = ({
   };
 
   const handleReport = () => {
-    const subject = `Reported Marketplace Listing - "${item.Name}" (ID: ${item.Id})`;
+    const subject = `Reported Gordon360 Marketplace Listing - "${item.Name}" (ID: ${item.Id})`;
 
     const body = `
 Hello Student Life,
