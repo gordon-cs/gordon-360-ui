@@ -1,7 +1,7 @@
 import http from './http';
 
-export type MarketplaceCategory = { Id: number; Category: string };
-export type MarketplaceCondition = { Id: number; Condition: string };
+export type MarketplaceCategory = { Id: number; CategoryName: string };
+export type MarketplaceCondition = { Id: number; ConditionName: string };
 
 export type AdminThreadFilterOptions = {
   categoryId?: number;
@@ -154,8 +154,17 @@ const changeListingStatus = (listingId: number, status: string): Promise<Marketp
 /**
  * Get filtered listings.
  * Now supports search, sortBy, and desc parameters.
+ * @param categoryId - the category ID to filter by
+ * @param statusId - the status ID to filter by
+ * @param minPrice - the lowest price to filter by
+ * @param maxPrice - the highest price to filter by
+ * @param search - a search term to filter listings by nqme or detail
+ * @param sortBy - the field to sort by
+ * @param desc - whether to sort in descending order
+ * @param page - the page number for pagination
+ * @param pageSize - the number of listings per page
+ * @returns the filtered listings as an array of MarketplaceListing objects
  */
-
 const getFilteredListings = (
   categoryId?: number,
   statusId?: number,

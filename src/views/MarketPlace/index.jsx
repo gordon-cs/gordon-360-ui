@@ -116,7 +116,6 @@ const Marketplace = () => {
   const handleNewListing = (newListing) => {
     // Add new listing to the current list, could be prepend or append as needed
     setListings((prev) => [newListing, ...prev]);
-
     // Close uploader modal
     setUploaderOpen(false);
   };
@@ -131,6 +130,16 @@ const Marketplace = () => {
     setSelectedItem(null);
   };
 
+  const handlePriceChange = (value, setter) => {
+    if (value === '' || /^\d*\.?\d*$/.test(value)) {
+      if (value.includes('.')) {
+        const [, decPart] = value.split('.');
+        if (decPart.length > 2) return; // block input beyond 2 decimals
+      }
+      setter(value === '' ? undefined : Number(value));
+    }
+  };
+
   useEffect(() => {
     marketplaceService
       .getCategories()
@@ -140,7 +149,10 @@ const Marketplace = () => {
     marketplaceService
       .getConditions()
       .then(setConditions)
-      .catch(() => console.error('Failed to load conditions'));
+      .catch(() => {
+        console.error('Failed to load conditions');
+        createSnackbar('Failed to load conditions. Please refresh the page.', 'error');
+      });
   }, []);
 
   const fetchListings = () => {
@@ -322,14 +334,7 @@ const Marketplace = () => {
                       fullWidth
                       value={minPrice ?? ''}
                       onChange={(e) => {
-                        const val = e.target.value;
-                        if (val === '' || /^\d*\.?\d*$/.test(val)) {
-                          if (val.includes('.')) {
-                            const [, decPart] = val.split('.');
-                            if (decPart.length > 2) return; // block input beyond 2 decimals
-                          }
-                          setMinPrice(e.target.value === '' ? undefined : Number(e.target.value));
-                        }
+                        handlePriceChange(e.target.value, setMinPrice);
                       }}
                       onKeyDown={(e) => {
                         if (['e', 'E', '+', '-'].includes(e.key)) {
@@ -347,14 +352,7 @@ const Marketplace = () => {
                       fullWidth
                       value={maxPrice ?? ''}
                       onChange={(e) => {
-                        const val = e.target.value;
-                        if (val === '' || /^\d*\.?\d*$/.test(val)) {
-                          if (val.includes('.')) {
-                            const [, decPart] = val.split('.');
-                            if (decPart.length > 2) return; // block input beyond 2 decimals
-                          }
-                          setMaxPrice(e.target.value === '' ? undefined : Number(e.target.value));
-                        }
+                        handlePriceChange(e.target.value, setMaxPrice);
                       }}
                       onKeyDown={(e) => {
                         if (['e', 'E', '+', '-'].includes(e.key)) {
@@ -506,7 +504,11 @@ const Marketplace = () => {
                     {item.ImagePaths?.length > 0 ? (
                       <CardMedia
                         component="div"
-                        image={`${backendURL}${item.ImagePaths[0]}`}
+                        image={
+                          backendURL && item.ImagePaths[0]
+                            ? `${backendURL}${item.ImagePaths[0]}`
+                            : GordonLogo
+                        }
                         title={item.Name}
                         sx={{
                           width: '100%',

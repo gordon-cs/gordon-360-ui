@@ -127,7 +127,7 @@ const MarketPlacePopup = ({
       onClose(); // Close the dialog after status change
     } catch (error) {
       console.error('Failed to change item status:', error);
-      createSnackbar('Failed ot change listing status', 'error');
+      createSnackbar('Failed to change listing status', 'error');
       // Optionally show user feedback on error
     }
   };
@@ -151,8 +151,7 @@ Please review the post at your earliest convenience.
 Thank you
 `.trim();
 
-    const mailtoLink = `mailto:StudentLife@gordon.edu?subject=${encodeURIComponent(subject)}
-    &body=${encodeURIComponent(body)}`;
+    const mailtoLink = `mailto:StudentLife@gordon.edu?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     window.location.href = mailtoLink;
   };
 

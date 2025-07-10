@@ -74,13 +74,6 @@ const AdminMarketplaceThreads = () => {
 
       setLoading(true);
       try {
-        const targetId = parseInt(searchTrigger, 10);
-        if (isNaN(targetId)) {
-          alert('Invalid ID');
-          setLoading(false);
-          return;
-        }
-
         const pageSize = 100;
         let currentPage = 1;
         let hasMore = true;
@@ -91,33 +84,17 @@ const AdminMarketplaceThreads = () => {
             pageSize,
           });
 
-          // Track the highest edit ID seen on this page
-          let maxEditIdOnPage = 0;
-
           for (const thread of threadsPage) {
             const history = await marketplaceService.getThreadEditHistory(thread.ThreadId);
-            if (!history.length) continue;
-
-            for (const h of history) {
-              if (h.Id === targetId) {
-                setEditHistory(history);
-                setIsModalOpen(true);
-                setSearchQuery('');
-                setSearchTrigger('');
-                setLoading(false);
-                return;
-              }
-
-              if (h.Id > maxEditIdOnPage) {
-                maxEditIdOnPage = h.Id;
-              }
+            const match = history.find((h) => h.Id.toString() === searchTrigger);
+            if (match) {
+              setEditHistory(history);
+              setIsModalOpen(true);
+              setSearchQuery('');
+              setSearchTrigger('');
+              setLoading(false);
+              return;
             }
-          }
-
-          // Optimization: if max ID seen so far is less than target, we can stop
-          if (maxEditIdOnPage < targetId) {
-            hasMore = false;
-            break;
           }
 
           hasMore = threadsPage.length === pageSize;
