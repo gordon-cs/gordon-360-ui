@@ -38,6 +38,16 @@ import GordonLogo from './images/gordoncollegelogo.jpg';
 const sorts = ['Date', 'Price', 'Title'];
 const order = ['Ascending', 'Descending'];
 
+const handlePriceChange = (value, setter) => {
+  if (value === '' || /^\d*\.?\d*$/.test(value)) {
+    if (value.includes('.')) {
+      const [, decPart] = value.split('.');
+      if (decPart.length > 2) return; // block input beyond 2 decimals
+    }
+    setter(value === '' ? undefined : Number(value));
+  }
+};
+
 /**
  * Marketplace component renders the main UI for browsing and managing marketplace listings.
  *
@@ -128,16 +138,6 @@ const Marketplace = () => {
   const handleDialogClose = () => {
     setDialogOpen(false);
     setSelectedItem(null);
-  };
-
-  const handlePriceChange = (value, setter) => {
-    if (value === '' || /^\d*\.?\d*$/.test(value)) {
-      if (value.includes('.')) {
-        const [, decPart] = value.split('.');
-        if (decPart.length > 2) return; // block input beyond 2 decimals
-      }
-      setter(value === '' ? undefined : Number(value));
-    }
   };
 
   useEffect(() => {

@@ -153,7 +153,6 @@ const routes = [
     name: 'LostAndFound',
     path: '/lostandfound/*',
     element: <CampusSafety />,
-
   },
   {
     name: 'Page Not Found',
@@ -161,6 +160,7 @@ const routes = [
     element: <Page404 />,
   },
   {
+    name: 'Admin Marketplace Threads',
     path: '/admin/marketplace-threads',
     element: <AdminMarketplaceThreads />,
   },

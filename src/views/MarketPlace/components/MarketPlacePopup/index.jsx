@@ -174,8 +174,7 @@ Thank you
       // Fetch profile info
       userService
         .getInformalName(item.PosterUsername)
-        .then(setProfileInfo);
-        })
+        .then(setProfileInfo)
         .catch(() => setProfileInfo(null));
     }
   }, [item?.PosterUsername]);

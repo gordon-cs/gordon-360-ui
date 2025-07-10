@@ -11,6 +11,7 @@ import {
   CircularProgress,
   TextField,
   Box,
+  Button,
 } from '@mui/material';
 import {
   Dialog,
@@ -117,17 +118,22 @@ const AdminMarketplaceThreads = () => {
   return (
     <Paper>
       <Box p={2}>
-        <TextField
-          label="Search ID Number"
-          variant="outlined"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              setSearchTrigger(searchQuery.trim());
-            }
-          }}
-        />
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <TextField
+            label="Search ID Number"
+            variant="outlined"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                setSearchTrigger(searchQuery.trim());
+              }
+            }}
+          />
+          <Button variant="contained" onClick={() => setSearchTrigger(searchQuery.trim())}>
+            Search
+          </Button>
+        </Box>
       </Box>
       <Table>
         <TableHead>
