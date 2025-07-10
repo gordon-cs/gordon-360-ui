@@ -234,6 +234,7 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
                 label="Res-Life"
                 component={NavLink}
                 to="/reslife"
+                tabIndex={0}
               />
             )}
           {!loading && (
