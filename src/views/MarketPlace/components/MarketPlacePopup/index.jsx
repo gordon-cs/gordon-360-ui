@@ -488,7 +488,7 @@ Thank you
               ) : (
                 <a
                   href={`mailto:${item.PosterUsername}@gordon.edu?subject=${encodeURIComponent(
-                    'Hello from the App',
+                    `Gordon Marketplace: Interest in ${item.Name}`,
                   )}&body=${encodeURIComponent(
                     `Hi there,\n\nI wanted to reach out regarding ${item.Name}. Is it still available for purchase?`,
                   )}`}
