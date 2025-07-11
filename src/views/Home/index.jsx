@@ -1,3 +1,4 @@
+// @TODO CSSMODULES - moved to global styles until a better solution is found
 import { Grid } from '@mui/material';
 import GordonLoader from 'components/Loader';
 import { useUser } from 'hooks';
@@ -6,6 +7,7 @@ import GuestWelcome from './components/GuestWelcome';
 import NewsCard from './components/NewsCard';
 import LostAndFoundCard from './components/LostAndFoundCard';
 import DaysLeft from './components/DaysLeft';
+import PosterSwiper from './components/PosterSwiper';
 import Stack from '@mui/material/Stack';
 import RegistrationDate from './components/RegistrationDate';
 
@@ -19,6 +21,7 @@ const Home = () => {
   } else {
     return (
       <div>
+        <PosterSwiper />
         <Grid container justifyContent="center" spacing={2}>
           <Grid item xs={12} md={10}>
             <DaysLeft />
