@@ -10,6 +10,7 @@ import NewsCard from './components/NewsCard';
 import LostAndFoundCard from './components/LostAndFoundCard';
 import DaysLeft from './components/DaysLeft';
 import Stack from '@mui/material/Stack';
+import DailyDigest from './components/DailyDigest';
 
 const Home = () => {
   const { profile, loading } = useUser();
@@ -32,6 +33,7 @@ const Home = () => {
         </Grid>
         <Grid item xs={12} md={5}>
           <Stack spacing={2}>
+            <DailyDigest />
             <NewsCard />
             <LostAndFoundCard />
           </Stack>

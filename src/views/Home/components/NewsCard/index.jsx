@@ -1,4 +1,14 @@
-import { Button, Card, CardContent, CardHeader, Grid, Typography } from '@mui/material';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  Typography,
+  Tabs,
+  Tab,
+  Box,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import newsService from 'services/news';
@@ -6,10 +16,16 @@ import NewsItem from 'views/News/components/NewsItem';
 
 const NewsCard = () => {
   const [news, setNews] = useState([]);
+  const [tab, setTab] = useState(0);
 
   useEffect(() => {
     newsService.getTodaysNews().then(setNews);
   }, []);
+
+  const handleTabChange = (event, newValue) => {
+    setTab(newValue);
+  };
+
   return (
     <Card>
       <CardHeader
@@ -27,16 +43,33 @@ const NewsCard = () => {
         }
         className="gc360_header"
       />
+      <Tabs value={tab} onChange={handleTabChange} indicatorColor="secondary" textColor="secondary">
+        <Tab label="News" />
+        <Tab label="Daily Digest" />
+      </Tabs>
       <CardContent>
-        {news.length > 0 ? (
-          news.map((item) => <NewsItem posting={item} key={item.SNID} size="single" />)
+        {tab === 0 ? (
+          news.length > 0 ? (
+            news.map((item) => <NewsItem posting={item} key={item.SNID} size="single" />)
+          ) : (
+            <Grid item>
+              <Typography variant="subtitle1">No News To Show</Typography>
+            </Grid>
+          )
         ) : (
-          <Grid item>
-            <Typography variant="subtitle1">No News To Show</Typography>
-          </Grid>
+          <Box sx={{ width: '100%', height: '70vh' }}>
+            <iframe
+              src="https://announce.gordon.edu/emails/history/"
+              title="Daily Digest"
+              width="100%"
+              height="100%"
+              style={{ border: 'none' }}
+            />
+          </Box>
         )}
       </CardContent>
     </Card>
   );
 };
+
 export default NewsCard;
