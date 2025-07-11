@@ -39,6 +39,7 @@ const Home = () => {
           </Stack>
         </Grid>
       </Grid>
+      </div>
     );
   }
 };
