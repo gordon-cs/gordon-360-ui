@@ -22,9 +22,15 @@ import {
   IconButton,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import GordonSnackbar from 'components/Snackbar';
 
 const AdminMarketplaceThreads = () => {
   const [threads, setThreads] = useState([]);
+  const [snackbar, setSnackbar] = useState({
+    message: '',
+    severity: 'info',
+    open: false,
+  });
 
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(0);
@@ -82,7 +88,11 @@ const AdminMarketplaceThreads = () => {
           setSearchQuery('');
           setSearchTrigger('');
         } else {
-          alert(`No thread found with ID ${searchTrigger}`);
+          setSnackbar({
+            message: `No thread found with ID ${searchTrigger}`,
+            severity: 'warning',
+            open: true,
+          });
         }
       } catch (err) {
         console.error('Error searching thread history:', err);
@@ -197,6 +207,12 @@ const AdminMarketplaceThreads = () => {
           </List>
         </DialogContent>
       </Dialog>
+      <GordonSnackbar
+        open={snackbar.open}
+        text={snackbar.message}
+        severity={snackbar.severity}
+        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+      />
     </Paper>
   );
 };
