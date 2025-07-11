@@ -25,7 +25,7 @@ const DaysLeft = () => {
         // We need to handle both cases to display the correct message in the daysLeftDialog.
         if (termLabel.startsWith('Break before ')) {
           const nextTerm = termLabel.replace('Break before ', '').replace(/^\d{4}-\d{4}\s*/, '');
-          daysLeftDialog = `${daysLeft} day${plural} until ${nextTerm} term starts`;
+          daysLeftDialog = `${daysLeft} day${plural} until start of ${nextTerm} term`;
         } else {
           const cleanLabel = termLabel.replace(/^\d{4}-\d{4}\s*/, '');
           daysLeftDialog = `${daysLeft} day${plural} remaining in ${cleanLabel} term`;
