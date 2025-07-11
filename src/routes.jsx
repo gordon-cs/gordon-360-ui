@@ -21,9 +21,11 @@ import ProfileNotFound from './views/ProfileNotFound';
 import PublicProfile from './views/PublicProfile';
 import Timesheets from './views/Timesheets';
 import RecIM from './views/RecIM';
+import Posters from './views/Posters';
 import RoomRanges from 'views/ResLife/components/RDView/components/RoomRanges';
 import CampusSafety from './views/LostAndFound';
-
+import Marketplace from './views/MarketPlace';
+import AdminMarketplaceThreads from 'views/MarketPlace/components/AdminPage';
 
 // Route order must be from most specific to least specific (i.e. `/user/:username` before `/user`)
 const routes = [
@@ -138,6 +140,16 @@ const routes = [
     element: <RecIM />,
   },
   {
+    name: 'Marketplace',
+    path: '/marketplace',
+    element: <Marketplace />,
+  },
+  {
+    name: 'Posters',
+    path: '/posters',
+    element: <Posters />,
+  },
+  {
     name: 'LostAndFound',
     path: '/lostandfound/*',
     element: <CampusSafety />,
@@ -146,6 +158,11 @@ const routes = [
     name: 'Page Not Found',
     path: '*',
     element: <Page404 />,
+  },
+  {
+    name: 'Admin Marketplace Threads',
+    path: '/admin/marketplace-threads',
+    element: <AdminMarketplaceThreads />,
   },
 ];
 

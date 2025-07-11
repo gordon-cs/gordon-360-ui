@@ -3,12 +3,17 @@ import {
   Card,
   CardContent,
   CardHeader,
+  CardMedia,
+  CardActionArea,
   DialogContentText,
   Grid,
   Link,
   List,
   TextField,
   Typography,
+  DialogContent,
+  Dialog,
+  Divider,
 } from '@mui/material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonOffline from 'components/GordonOffline';
@@ -26,6 +31,9 @@ import sessionService from 'services/session';
 import ContactListItem from './components/ContactListItem';
 import Membership from './components/Membership';
 import styles from './InvolvementProfile.module.css';
+import ClubPosters from './components/ClubPosters';
+import UploadForm from 'views/Posters/Forms/UploadForm';
+import CropPoster from 'views/Posters/Forms/CropPoster';
 
 const CROP_DIM = 320; // pixels
 
@@ -44,6 +52,7 @@ const InvolvementProfile = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const isSiteAdmin = useAuthGroups(AuthGroup.SiteAdmin);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isPosterDialogOpen, setIsPosterDialogOpen] = useState(false);
   const [isRemoveImageDialogOpen, setIsRemoveImageDialogOpen] = useState(false);
   const [emailList, setEmailList] = useState([]);
   const [cropperData, setCropperData] = useState({});
@@ -51,6 +60,9 @@ const InvolvementProfile = () => {
   const cropperRef = useRef();
   const { sessionCode, involvementCode } = useParams();
   const { profile, loading: loadingProfile } = useUser();
+  const [openUploadForm, setOpenUploadForm] = useState(false);
+  const [croppedImage, setCroppedImage] = useState(null);
+  const [openCropPoster, setOpenCropPoster] = useState(false);
 
   useEffect(() => {
     const loadPage = async () => {
@@ -87,7 +99,6 @@ const InvolvementProfile = () => {
     };
     loadPage();
   }, [involvementCode, isSiteAdmin, sessionCode, profile]);
-
   const onDropAccepted = (fileList) => {
     var previewImageFile = fileList[0];
     var reader = new FileReader();
@@ -197,7 +208,13 @@ const InvolvementProfile = () => {
       setPreview(null);
     }
   };
-
+  const handleCropSubmit = (imageData) => {
+    setCroppedImage(imageData);
+  };
+  const clearOnClose = (e) => {
+    setOpenUploadForm(false);
+    setCroppedImage(null);
+  };
   const parseEmailsFromList = (list) => {
     return list.map((e) => e.Email).join(',');
   };
@@ -218,12 +235,58 @@ const InvolvementProfile = () => {
       <GordonLoader />
     ) : isAdmin || isSiteAdmin ? (
       <Grid item>
-        <Grid container spacing={2} justifyContent="center">
-          <Grid item>
-            <Button variant="contained" color="primary" onClick={() => setIsEditDialogOpen(true)}>
-              Edit Involvement
-            </Button>
+        <Dialog
+          maxWidth="md"
+          fullWidth
+          open={openUploadForm}
+          onClose={() => setOpenUploadForm(false)}
+        >
+          <Grid bgcolor={'var(--mui-palette-neutral-light)'} container spacing={4}>
+            <Grid item xs={12} md={croppedImage ? 6 : 12}>
+              <Card variant="outlined">
+                <CardHeader title="Upload Poster" className="gc360_header" />
+                <UploadForm onClose={clearOnClose} onCropSubmit={handleCropSubmit} />
+              </Card>
+            </Grid>
+            <Dialog open={openCropPoster} onClose={() => setOpenCropPoster(false)}>
+              <CardHeader
+                title={
+                  <Grid container direction="row" alignItems="center">
+                    <Grid item xs={7} align="left">
+                      Upload Poster
+                    </Grid>
+                  </Grid>
+                }
+                className="gc360_header"
+              />
+              <DialogContent>
+                <CropPoster
+                  open={openCropPoster}
+                  onClose={() => setOpenCropPoster(false)}
+                  onSubmit={handleCropSubmit}
+                />
+              </DialogContent>
+            </Dialog>
+            {croppedImage && (
+              <Grid item xs={12} md={6}>
+                <Card variant="outlined">
+                  <CardHeader title="Preview" className="gc360_header" />
+                  <CardActionArea>
+                    <CardMedia
+                      onClick={() => setOpenCropPoster(true)}
+                      loading="lazy"
+                      component="img"
+                      alt="Cropped Image"
+                      src={croppedImage}
+                      title="Cropped Image"
+                    />
+                  </CardActionArea>
+                </Card>
+              </Grid>
+            )}
           </Grid>
+        </Dialog>
+        <Grid container spacing={2} justifyContent="center">
           <Grid item>
             <Button
               variant="contained"
@@ -234,8 +297,18 @@ const InvolvementProfile = () => {
               Email Members/Subscribers
             </Button>
           </Grid>
+          <Grid item>
+            <Button variant="contained" color="primary" onClick={() => setIsEditDialogOpen(true)}>
+              Edit Involvement
+            </Button>
+          </Grid>
         </Grid>
 
+        <GordonDialogBox
+          open={isPosterDialogOpen}
+          title={`Upload Poster for ${ActivityDescription}`}
+          buttonName="Submit"
+        ></GordonDialogBox>
         <GordonDialogBox
           open={isEditDialogOpen}
           title={`Edit ${ActivityDescription}`}
@@ -417,9 +490,23 @@ const InvolvementProfile = () => {
               <GordonLoader />
             ) : profile ? (
               <>
-                <hr width="101.5%"></hr>
+                <Grid item>
+                  <Divider sx={{ my: 0 }} />
+                </Grid>
+
+                <Grid item sx={{ display: 'block', width: '100%' }}>
+                  <ClubPosters
+                    clubName={ActivityDescription}
+                    clubCode={involvementCode}
+                    style={{ height: 'auto' }}
+                  />
+                </Grid>
 
                 <Grid item>
+                  <Divider sx={{ my: 0 }} />
+                </Grid>
+
+                <Grid item style={{ height: 'auto', position: 'relative' }}>
                   <Typography>
                     <strong>Group Contacts</strong>
                   </Typography>
