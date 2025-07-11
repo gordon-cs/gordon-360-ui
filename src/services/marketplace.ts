@@ -4,6 +4,7 @@ export type MarketplaceCategory = { Id: number; CategoryName: string };
 export type MarketplaceCondition = { Id: number; ConditionName: string };
 
 export type AdminThreadFilterOptions = {
+  id?: number;
   categoryId?: number;
   statusId?: number;
   minPrice?: number;
@@ -17,6 +18,8 @@ export type AdminThreadFilterOptions = {
 
 const getAdminThreads = (options: AdminThreadFilterOptions): Promise<MarketplaceListing[]> => {
   const query: Record<string, string> = {};
+  if (options.id !== undefined) query.id = options.id.toString();
+
   if (options.categoryId !== undefined) query.categoryId = options.categoryId.toString();
   if (options.statusId !== undefined) query.statusId = options.statusId.toString();
   if (options.minPrice !== undefined) query.minPrice = options.minPrice.toString();

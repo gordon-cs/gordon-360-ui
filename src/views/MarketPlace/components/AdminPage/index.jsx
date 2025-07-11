@@ -8,7 +8,6 @@ import {
   TableBody,
   TablePagination,
   Paper,
-  CircularProgress,
   TextField,
   Box,
   Button,
@@ -23,10 +22,16 @@ import {
   IconButton,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import GordonSnackbar from 'components/Snackbar';
 
 const AdminMarketplaceThreads = () => {
   const [threads, setThreads] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [snackbar, setSnackbar] = useState({
+    message: '',
+    severity: 'info',
+    open: false,
+  });
+
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
@@ -36,7 +41,6 @@ const AdminMarketplaceThreads = () => {
   const [searchTrigger, setSearchTrigger] = useState('');
 
   const handleThreadClick = async (thread) => {
-    setLoading(true);
     try {
       const history = await marketplaceService.getThreadEditHistory(thread.ThreadId);
       console.log('Edit history:', history);
@@ -45,13 +49,11 @@ const AdminMarketplaceThreads = () => {
     } catch (err) {
       console.error('Failed to fetch thread edit history:', err);
     } finally {
-      setLoading(false);
     }
   };
 
   useEffect(() => {
     const fetchThreads = async () => {
-      setLoading(true);
       try {
         const options = { page: page + 1, pageSize: rowsPerPage };
         const data = await marketplaceService.getAdminThreads(options);
@@ -62,7 +64,6 @@ const AdminMarketplaceThreads = () => {
       } catch (err) {
         console.error('Failed to fetch admin threads', err);
       } finally {
-        setLoading(false);
       }
     };
 
@@ -73,47 +74,34 @@ const AdminMarketplaceThreads = () => {
     const trySearchById = async () => {
       if (!searchTrigger) return;
 
-      setLoading(true);
       try {
-        const pageSize = 100;
-        let currentPage = 1;
-        let hasMore = true;
+        const results = await marketplaceService.getAdminThreads({
+          id: parseInt(searchTrigger),
+          page: 1,
+          pageSize: 1,
+        });
 
-        while (hasMore) {
-          const threadsPage = await marketplaceService.getAdminThreads({
-            page: currentPage,
-            pageSize,
+        if (results.length > 0) {
+          const history = await marketplaceService.getThreadEditHistory(results[0].ThreadId);
+          setEditHistory(history);
+          setIsModalOpen(true);
+          setSearchQuery('');
+          setSearchTrigger('');
+        } else {
+          setSnackbar({
+            message: `No thread found with ID ${searchTrigger}`,
+            severity: 'warning',
+            open: true,
           });
-
-          for (const thread of threadsPage) {
-            const history = await marketplaceService.getThreadEditHistory(thread.ThreadId);
-            const match = history.find((h) => h.Id.toString() === searchTrigger);
-            if (match) {
-              setEditHistory(history);
-              setIsModalOpen(true);
-              setSearchQuery('');
-              setSearchTrigger('');
-              setLoading(false);
-              return;
-            }
-          }
-
-          hasMore = threadsPage.length === pageSize;
-          currentPage++;
         }
-
-        alert(`No thread history found with ID ${searchTrigger}`);
       } catch (err) {
         console.error('Error searching thread history:', err);
       } finally {
-        setLoading(false);
       }
     };
 
     trySearchById();
   }, [searchTrigger]);
-
-  if (loading) return <CircularProgress />;
 
   return (
     <Paper>
@@ -219,6 +207,12 @@ const AdminMarketplaceThreads = () => {
           </List>
         </DialogContent>
       </Dialog>
+      <GordonSnackbar
+        open={snackbar.open}
+        text={snackbar.message}
+        severity={snackbar.severity}
+        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+      />
     </Paper>
   );
 };
