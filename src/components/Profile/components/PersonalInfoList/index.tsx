@@ -247,46 +247,48 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
       myProf={myProf}
     />
   ) : null;
+  const [mobilePhone, setMobilePhoneNumber] = useState(profile.MobilePhone);
+  useEffect(() => {
+    setMobilePhoneNumber(profile.MobilePhone);
+  }, [profile.MobilePhone]);
 
-  const mobilePhoneListItem = profile.MobilePhone ? (
-    <ProfileInfoListItem
-      title="Mobile Phone:"
-      contentText={
-        myProf ? (
-          <Grid container spacing={0} alignItems="center">
-            <Grid item>{formatPhone(profile.MobilePhone)}</Grid>
-            <Grid item>
-              <UpdatePhone />
-            </Grid>
-          </Grid>
-        ) : profile.MobilePhone === PRIVATE_INFO ? (
-          PRIVATE_INFO
-        ) : (
-          <a href={`tel:${profile.MobilePhone}`} className="gc360_text_link">
-            {formatPhone(profile.MobilePhone)}
-          </a>
-        )
-      }
-      ContentIcon={
-        myProf && (
-          <FormControlLabel
-            control={
-              <Switch
-                onChange={handleChangeMobilePhonePrivacy}
-                color="secondary"
-                checked={!isMobilePhonePrivate}
+  const mobilePhoneListItem =
+    (myProf || !isMobilePhonePrivate) && mobilePhone ? (
+      <ProfileInfoListItem
+        title="Mobile Phone:"
+        contentText={
+          <>
+            {myProf || !isMobilePhonePrivate ? formatPhone(mobilePhone) : 'Private'}
+            {myProf && (
+              <UpdatePhone
+                currentPhone={mobilePhone}
+                onUpdateSuccess={(newPhone) => {
+                  setMobilePhoneNumber(newPhone);
+                }}
               />
-            }
-            label={isMobilePhonePrivate ? 'Private' : 'Public'}
-            labelPlacement="bottom"
-            disabled={!isOnline}
-          />
-        )
-      }
-      privateInfo={isMobilePhonePrivate}
-      myProf={myProf}
-    />
-  ) : null;
+            )}
+          </>
+        }
+        ContentIcon={
+          myProf && (
+            <FormControlLabel
+              control={
+                <Switch
+                  onChange={handleChangeMobilePhonePrivacy}
+                  color="secondary"
+                  checked={!isMobilePhonePrivate}
+                />
+              }
+              label={isMobilePhonePrivate ? 'Private' : 'Public'}
+              labelPlacement="bottom"
+              disabled={!isOnline}
+            />
+          )
+        }
+        privateInfo={isMobilePhonePrivate}
+        myProf={myProf}
+      />
+    ) : null;
 
   let streetAddr = profile.HomeStreet2 ? <span>{profile.HomeStreet2},&nbsp;</span> : null;
 
