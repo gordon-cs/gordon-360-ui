@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import userService from 'services/user';
 import Slider from 'react-slick';
 import marketplaceService from 'services/marketplace';
@@ -44,6 +44,7 @@ const MarketPlacePopup = ({
   const isSiteAdmin = useAuthGroups(AuthGroup.SiteAdmin);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const isPhone = useMediaQuery('(max-width:600px)');
+  const sliderRef = useRef(null);
 
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
 
@@ -156,6 +157,21 @@ Thank you
   };
 
   useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (!open) return;
+
+      if (e.key === 'ArrowRight') {
+        sliderRef.current?.slickNext();
+      } else if (e.key === 'ArrowLeft') {
+        sliderRef.current?.slickPrev();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [open]);
+
+  useEffect(() => {
     if (item?.PosterUsername) {
       // Fetch profile image as before
       userService
@@ -266,6 +282,7 @@ Thank you
                 (images.length > 1 ? (
                   <div className={styles.sliderWrapper}>
                     <Slider
+                      ref={sliderRef}
                       nextArrow={<NextArrow />}
                       prevArrow={<PrevArrow />}
                       dots={images.length <= 12}
