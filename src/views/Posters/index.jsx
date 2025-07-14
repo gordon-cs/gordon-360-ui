@@ -518,7 +518,7 @@ const Posters = () => {
                           </Typography>
                         </CardContent>
                       </CardActionArea>
-                      {myInvolvements.some((inv) => isSiteAdmin) && (
+                      {isSiteAdmin && (
                         <div className="delete-button-wrapper">
                           <Button
                             variant="outlined"
