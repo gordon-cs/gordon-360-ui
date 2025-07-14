@@ -12,11 +12,10 @@ const RegistrationStart = () => {
     StartTime: string;
     EndTime: string;
     IsEligible: boolean;
-    IsClearedToRegister: boolean;
     HasHolds: boolean;
   } | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-
+  
   useEffect(() => {
     registrationService
       .getRegistrationPeriod()
@@ -33,8 +32,6 @@ const RegistrationStart = () => {
         setLoading(false);
       });
   }, []);
-
-  if (loading) return <GordonLoader />;
 
   const formattedStart = regInfo?.StartTime ? new Date(regInfo.StartTime).toLocaleString() : '';
   const formattedEnd = regInfo?.EndTime ? new Date(regInfo.EndTime).toLocaleString() : '';
@@ -103,12 +100,12 @@ const RegistrationStart = () => {
             {regInfo?.HasHolds && (
               <Typography variant="body2" align="center" color="error" sx={{ mt: 2 }}>
                 <Link
-                  to="https://my.gordon.edu/ICS/Finances/"
+                  to="https://my.gordon.edu/ICS/Academics_UG/"
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{ color: 'inherit', textDecoration: 'underline' }}
                 >
-                  You have one or more holds. Please contact the Registrar for assistance.
+                  You have one or more holds. Check Gordon Home to see which one.
                 </Link>
               </Typography>
             )}
