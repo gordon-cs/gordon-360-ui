@@ -21,7 +21,7 @@ export const DATA = [
     title: 'Poster 2 Title',
     image: DiscoPoster,
     alt: 'alt text for poster 2',
-    desc: 'this is a short descirption',
+    desc: 'this is a short description',
     org: 'CATHSTU',
     uploader: 'collin.williams',
     status: 'strike',
