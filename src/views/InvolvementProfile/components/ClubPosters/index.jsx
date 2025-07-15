@@ -7,6 +7,7 @@ import {
   Grid,
   Typography,
   Dialog,
+  Divider,
 } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { getCurrentPostersByActivityCode } from 'services/poster';
@@ -98,6 +99,7 @@ const ClubPosters = ({ clubName, clubCode }) => {
                         <Typography className={'Poster Title'} variant="h6" fontWeight="bold">
                           {item.Title}
                         </Typography>
+                        <Divider sx={{ my: 1 }} />
                         <Typography
                           className={'Poster Description'}
                           variant="body2"
@@ -144,6 +146,8 @@ const ClubPosters = ({ clubName, clubCode }) => {
               <Typography variant="h5" fontWeight="bold" textAlign={'center'}>
                 {selectedPoster.Title}
               </Typography>
+              <Divider sx={{ my: 1 }} />
+
               <Typography variant="body1" fontStyle="italic" textAlign={'center'}>
                 {selectedPoster.Description}
               </Typography>
