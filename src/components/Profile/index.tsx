@@ -5,7 +5,6 @@ import { useAuthGroups } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useCallback, useEffect, useState } from 'react';
 import { AuthGroup } from 'services/auth';
-import scheduleService from 'services/schedule';
 import user from 'services/user';
 import {
   EmergencyInfoList,
