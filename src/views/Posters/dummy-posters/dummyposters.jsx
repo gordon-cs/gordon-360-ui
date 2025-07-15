@@ -42,7 +42,7 @@ export const DATA = [
     title: 'Poster 4 Title',
     image: HamburgerPoster,
     alt: 'alt text for poster 4',
-    desc: 'this is a short descirption',
+    desc: 'this is a short description',
     org: null,
   },
   {
