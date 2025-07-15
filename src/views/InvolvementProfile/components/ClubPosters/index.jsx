@@ -122,7 +122,16 @@ const ClubPosters = ({ clubName, clubCode }) => {
         </CardContent>
       </Card>
       {selectedPoster && (
-        <Dialog open={open} onClose={handleClose} maxWidth="md">
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          maxWidth="md"
+          PaperProps={{
+            sx: {
+              paddingTop: '20px',
+            },
+          }}
+        >
           <Card>
             <CardMedia // Makes the poster bigger when clicked
               component="img"
