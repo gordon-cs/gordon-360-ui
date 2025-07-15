@@ -30,6 +30,11 @@
 
 .sliderWrapper {
   :global {
+    .slick-slide:focus,
+    .slick-slide div:focus {
+      outline: none !important;
+      border: none !important;
+    }
     // Active dot
     .slick-dots li.slick-active button:before {
       font-size: 12px;
