@@ -549,7 +549,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar, fetchProfil
     ? profile.Title.charAt(0).toUpperCase() +
       profile.Title.slice(1).toLowerCase() +
       '. ' +
-      userProfile.LastName.Value
+      profile.LastName.Value
     : '';
 
   return (
@@ -561,15 +561,15 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar, fetchProfil
               title={`${
                 isAprilFools
                   ? profileTitleAprilFools
-                  : userProfile.NickName?.Value
-                    ? userProfile.NickName?.Value
-                    : userProfile.FirstName.Value
+                  : profile.NickName?.Value
+                    ? profile.NickName?.Value
+                    : profile.FirstName.Value
               }'s Profile`}
             />
           ) : (
             <CardHeader
-              title={`${userProfile.NickName?.Value ? userProfile.NickName.Value : userProfile.FirstName.Value} ${
-                userProfile.LastName.Value
+              title={`${profile.NickName?.Value ? profile.NickName.Value : profile.FirstName.Value} ${
+                profile.LastName.Value
               }'s Profile`}
             />
           ))}
@@ -701,13 +701,10 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar, fetchProfil
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <Typography variant="h6" paragraph style={{ marginBottom: 0 }}>
                       {`${
-                        userProfile.Title && userProfile.PersonType === 'fac'
-                          ? `${userProfile.Title} `
-                          : ''
-                      }${userProfile.FirstName.Value}${hasNickname ? ` (${userProfile.NickName.Value})` : ''} ${
-                        userProfile.LastName.Value
-                      }${hasMaidenName ? ` (${userProfile.MaidenName.Value})` : ''}`}
-
+                        profile.Title && profile.PersonType === 'fac' ? `${profile.Title} ` : ''
+                      }${profile.FirstName.Value}${hasNickname ? ` (${profile.NickName.Value})` : ''} ${
+                        profile.LastName.Value
+                      }${hasMaidenName ? ` (${profile.MaidenName.Value})` : ''}`}
                     </Typography>
 
                     {/* Profile Name Edit Request */}
