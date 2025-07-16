@@ -68,7 +68,6 @@ const MarketPlacePopup = ({
   };
 
   const handleMenuSelect = (option) => {
-    console.log('User selected:', option);
     // eslint-disable-next-line default-case
     switch (option) {
       case 'Delete':
