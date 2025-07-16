@@ -3,6 +3,15 @@
   background-color: var(--mui-palette-neutral-light);
 }
 
+/* Remove blue overlay/focus ring on ImageGallery arrows */
+:global(.image-gallery-icon:hover),
+:global(.image-gallery-icon:focus),
+:global(.image-gallery-icon:active) {
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
+
 .card {
   transition:
     transform 0.4s cubic-bezier(0.3, 1.5, 0.5, 0.8),
