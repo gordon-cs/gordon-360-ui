@@ -9,7 +9,9 @@ import GordonIcon from '/src/views/Links/images/favicon.ico';
 import GOIcon from '/src/views/Links/images/GoGordonFavicon.ico';
 import MyGordonIcon from '/src/views/Links/images/MyGordonFavicon.ico';
 import CriterionIcon from '/src/views/Links/images/criterion.png';
+import MetzIcon from '/src/views/Links/images/Metzlogo.png';
 import HandshakeIcon from '/src/views/Links/images/handshake.png';
+import CycleTag from '/src/views/Links/images/cycletag.png';
 import FightingScotsIcon from '/src/views/Links/images/fightingscots.svg';
 import OutlookIcon from '/src/views/Links/images/outlook-icon1.png';
 import SchedulerIcon from '/src/views/Links/images/25-live-logo.jpg';
@@ -129,6 +131,19 @@ const Links = () => {
             </ListItem>
             <ListItem>
               <ListItemIcon>
+                <img src={MetzIcon} alt={'Metz Logo'} className={styles.icon_style} />
+              </ListItemIcon>
+              <Link
+                href="https://www.gordonmetz.com/"
+                underline="hover"
+                className={`gc360_text_link`}
+                target="_blank"
+              >
+                <ListItemText primary="Metz (Dining)" />
+              </Link>
+            </ListItem>
+            <ListItem>
+              <ListItemIcon>
                 <img src={HandshakeIcon} alt={'Handshake Logo'} className={styles.icon_style} />
               </ListItemIcon>
               <Link
@@ -164,6 +179,19 @@ const Links = () => {
                 target="_blank"
               >
                 <ListItemText primary="iAttended" />
+              </Link>
+            </ListItem>
+            <ListItem>
+              <ListItemIcon>
+                <img src={CycleTag} alt={'CycleTag Logo'} className={styles.icon_style} />
+              </ListItemIcon>
+              <Link
+                href="https://cycletag.net/"
+                underline="hover"
+                className={`gc360_text_link`}
+                target="_blank"
+              >
+                <ListItemText primary="CycleTag" />
               </Link>
             </ListItem>
           </List>

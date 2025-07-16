@@ -286,8 +286,10 @@ const getPrivacySetting = (username: string): Promise<string> =>
 
 const getMailStops = (): Promise<string[]> => http.get(`profiles/mailstops`);
 
-const setMobilePhoneNumber = (value: number | string) =>
-  http.put(`profiles/mobile_phone_number/${value}/`);
+const setMobilePhoneNumber = (value: number | string) => {
+  const cleaned = value.toString().replace(/\D/g, '');
+  return http.put(`profiles/mobile_phone_number/${cleaned}/`);
+};
 
 const setPlannedGraduationYear = (value: number | string) => {
   const body = { plannedGradYear: value };
@@ -320,6 +322,21 @@ const isBirthdayToday = (): Promise<boolean> => {
       birthdate.getDate() == new Date().getDate() &&
       birthdate.getFullYear() > 1800, // Birth in 1800 means no birthday in database
   );
+};
+
+type InformalName = {
+  NickName: string;
+  LastName: string;
+};
+
+const getInformalName = async (username: string = ''): Promise<InformalName | undefined> => {
+  const profile = await getProfile(username);
+  if (!profile) return undefined;
+
+  return {
+    NickName: profile.NickName ?? profile.FirstName,
+    LastName: profile.LastName,
+  };
 };
 
 const getProfileInfo = async (username: string = ''): Promise<Profile | undefined> => {
@@ -432,6 +449,7 @@ const userService = {
   getImage,
   getDiningInfo,
   getProfileInfo,
+  getInformalName,
   getAdvisors,
   getMailboxInformation,
   getMembershipHistory,

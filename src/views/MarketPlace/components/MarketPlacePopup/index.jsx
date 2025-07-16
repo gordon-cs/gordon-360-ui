@@ -15,7 +15,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getProfileImage, getProfileInfo } from 'services/marketplace';
+import userService from 'services/user';
 import Slider from 'react-slick';
 import marketplaceService from 'services/marketplace';
 import { msalInstance } from 'index';
@@ -67,7 +67,6 @@ const MarketPlacePopup = ({
   };
 
   const handleMenuSelect = (option) => {
-    console.log('User selected:', option);
     // eslint-disable-next-line default-case
     switch (option) {
       case 'Delete':
@@ -127,13 +126,13 @@ const MarketPlacePopup = ({
       onClose(); // Close the dialog after status change
     } catch (error) {
       console.error('Failed to change item status:', error);
-      createSnackbar('Failed ot change listing status', 'error');
+      createSnackbar('Failed to change listing status', 'error');
       // Optionally show user feedback on error
     }
   };
 
   const handleReport = () => {
-    const subject = `Reported Marketplace Listing - "${item.Name}" (ID: ${item.Id})`;
+    const subject = `Reported Gordon360 Marketplace Listing - "${item.Name}" (ID: ${item.Id})`;
 
     const body = `
 Hello Student Life,
@@ -151,15 +150,15 @@ Please review the post at your earliest convenience.
 Thank you
 `.trim();
 
-    const mailtoLink = `mailto:StudentLife@gordon.edu?subject=${encodeURIComponent(subject)}
-    &body=${encodeURIComponent(body)}`;
+    const mailtoLink = `mailto:StudentLife@gordon.edu?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     window.location.href = mailtoLink;
   };
 
   useEffect(() => {
     if (item?.PosterUsername) {
       // Fetch profile image as before
-      getProfileImage(item.PosterUsername)
+      userService
+        .getImage(item.PosterUsername)
         .then((data) => {
           const img = data.pref
             ? `data:image/png;base64,${data.pref}`
@@ -172,10 +171,9 @@ Thank you
         .catch(() => setProfileImg(null));
 
       // Fetch profile info
-      getProfileInfo(item.PosterUsername)
-        .then((info) => {
-          setProfileInfo(info);
-        })
+      userService
+        .getInformalName(item.PosterUsername)
+        .then(setProfileInfo)
         .catch(() => setProfileInfo(null));
     }
   }, [item?.PosterUsername]);
@@ -286,7 +284,7 @@ Thank you
                             paddingTop: '100%',
                             position: 'relative',
                             borderRadius: 2,
-                            backgroundColor: '#000',
+                            backgroundColor: 'contrastText.main',
                             cursor: 'grab',
                           }}
                         >
@@ -299,7 +297,7 @@ Thank you
                               left: 0,
                               width: '100%',
                               height: '100%',
-                              objectFit: 'cover',
+                              objectFit: 'contain',
                               borderRadius: 8,
                             }}
                           />
@@ -315,7 +313,7 @@ Thank you
                       paddingTop: '100%',
                       position: 'relative',
                       borderRadius: 2,
-                      backgroundColor: '#000',
+                      backgroundColor: 'contrastText.main',
                     }}
                   >
                     <img
@@ -327,7 +325,7 @@ Thank you
                         left: 0,
                         width: '100%',
                         height: '100%',
-                        objectFit: 'cover',
+                        objectFit: 'contain',
                         borderRadius: 8,
                       }}
                     />
@@ -484,7 +482,7 @@ Thank you
               ) : (
                 <a
                   href={`mailto:${item.PosterUsername}@gordon.edu?subject=${encodeURIComponent(
-                    'Hello from the App',
+                    `Gordon Marketplace: Interest in ${item.Name}`,
                   )}&body=${encodeURIComponent(
                     `Hi there,\n\nI wanted to reach out regarding ${item.Name}. Is it still available for purchase?`,
                   )}`}

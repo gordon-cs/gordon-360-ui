@@ -40,7 +40,6 @@ const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess, createSnac
 
   useEffect(() => {
     if (poster) {
-      console.log('Initializing form with poster:', poster);
       setPriorityStatus(poster.Priority === 1 ? 1 : 2); // based on your Priority logic
       setSelectedClub(poster.ClubCode);
       setStartTime(poster.VisibleDate);
@@ -273,11 +272,10 @@ const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess, createSnac
                 focused: styles.textFieldLabelFocused,
               },
             }}
-            InputProps={{
-              classes: {
-                root: styles.textFieldRootFocused,
-              },
+            inputProps={{
+              maxLength: 64,
             }}
+            helperText={`${title.length}/64`}
             sx={getTextFieldSX('var(--mui-palette-secondary-main)')}
           />
         </Grid>
@@ -297,11 +295,10 @@ const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess, createSnac
                 focused: styles.textFieldLabelFocused,
               },
             }}
-            InputProps={{
-              classes: {
-                root: styles.textFieldRootFocused,
-              },
+            inputProps={{
+              maxLength: 256,
             }}
+            helperText={`${description.length}/256`}
             sx={getTextFieldSX('var(--mui-palette-secondary-main)')}
           />
         </Grid>

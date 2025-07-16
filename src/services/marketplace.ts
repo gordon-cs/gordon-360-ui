@@ -1,10 +1,10 @@
-import { getToken } from './auth';
 import http from './http';
 
-export type MarketplaceCategory = { Id: number; Category: string };
-export type MarketplaceCondition = { Id: number; Condition: string };
+export type MarketplaceCategory = { Id: number; CategoryName: string };
+export type MarketplaceCondition = { Id: number; ConditionName: string };
 
 export type AdminThreadFilterOptions = {
+  id?: number;
   categoryId?: number;
   statusId?: number;
   minPrice?: number;
@@ -18,6 +18,8 @@ export type AdminThreadFilterOptions = {
 
 const getAdminThreads = (options: AdminThreadFilterOptions): Promise<MarketplaceListing[]> => {
   const query: Record<string, string> = {};
+  if (options.id !== undefined) query.id = options.id.toString();
+
   if (options.categoryId !== undefined) query.categoryId = options.categoryId.toString();
   if (options.statusId !== undefined) query.statusId = options.statusId.toString();
   if (options.minPrice !== undefined) query.minPrice = options.minPrice.toString();
@@ -46,51 +48,6 @@ const getAdminThreadsCount = (
 
 const getThreadEditHistory = (threadId: number): Promise<MarketplaceListing[]> =>
   http.get<MarketplaceListing[]>(`marketplace/admin/threads/${threadId}/history`);
-
-export const getProfileImage = async (username: string) => {
-  const token = await getToken();
-
-  if (!token) {
-    throw new Error('No access token found');
-  }
-
-  const response = await fetch(`/api/profiles/image/${username}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch profile image');
-  }
-
-  return await response.json();
-};
-
-export const getProfileInfo = async (username: string) => {
-  const token = await getToken();
-
-  if (!token) {
-    throw new Error('No access token found');
-  }
-
-  const response = await fetch(`/api/profiles/${username}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch profile info');
-  }
-
-  const data = await response.json();
-
-  return {
-    NickName: data.NickName,
-    LastName: data.LastName,
-  };
-};
 
 // Marketplace Listing object, representing the model of a listing for communication with the backend.
 export type MarketplaceListing = {
@@ -200,8 +157,17 @@ const changeListingStatus = (listingId: number, status: string): Promise<Marketp
 /**
  * Get filtered listings.
  * Now supports search, sortBy, and desc parameters.
+ * @param categoryId - the category ID to filter by
+ * @param statusId - the status ID to filter by
+ * @param minPrice - the lowest price to filter by
+ * @param maxPrice - the highest price to filter by
+ * @param search - a search term to filter listings by nqme or detail
+ * @param sortBy - the field to sort by
+ * @param desc - whether to sort in descending order
+ * @param page - the page number for pagination
+ * @param pageSize - the number of listings per page
+ * @returns the filtered listings as an array of MarketplaceListing objects
  */
-
 const getFilteredListings = (
   categoryId?: number,
   statusId?: number,
@@ -257,23 +223,8 @@ const getFilteredListingsCount = (
  * Get the listings posted by the current user.
  * @returns an array of MarketplaceListing objects
  */
-const getMyListings = async () => {
-  const token = await getToken();
-  if (!token) {
-    throw new Error('No access token found');
-  }
-
-  const response = await fetch(`/api/marketplace/mylistings`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch user listings');
-  }
-
-  return await response.json();
+const getMyListings = (): Promise<MarketplaceListing[]> => {
+  return http.get<MarketplaceListing[]>('marketplace/mylistings');
 };
 
 const marketplaceService = {

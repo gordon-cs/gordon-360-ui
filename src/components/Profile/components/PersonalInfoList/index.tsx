@@ -234,6 +234,10 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
       myProf={myProf}
     />
   ) : null;
+  const [mobilePhone, setMobilePhoneNumber] = useState(profile.MobilePhone);
+  useEffect(() => {
+    setMobilePhoneNumber(profile.MobilePhone);
+  }, [profile.MobilePhone]);
 
   const mobilePhoneListItem = profile.MobilePhone ? (
     <ProfileInfoListItem
