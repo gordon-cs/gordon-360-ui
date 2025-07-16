@@ -31,10 +31,6 @@
   transition: stroke 0.3s ease;
 }
 
-:global(.image-gallery-icon:hover polyline) {
-  stroke: var(--mui-palette-neutral-main) !important;
-}
-
 /* Card styling */
 .card {
   transition:
