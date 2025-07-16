@@ -16,7 +16,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import userService from 'services/user';
-// import Slider from 'react-slick';
 import ImageGallery from 'react-image-gallery';
 import marketplaceService from 'services/marketplace';
 import { msalInstance } from 'index';
