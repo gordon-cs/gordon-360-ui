@@ -6,13 +6,14 @@ import {
   People as PeopleIcon,
   Link as LinkIcon,
   HolidayVillage,
+  StoreRounded,
 } from '@mui/icons-material';
 import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Link } from '@mui/material';
 import RecIMIcon from '@mui/icons-material/SportsFootball';
 import GordonDialogBox from 'components/GordonDialogBox';
 import { useNetworkStatus } from 'hooks';
 import { useEffect, useState } from 'react';
-import { useNavigate, NavLink, useLocation, LinkProps as RouterLinkProps } from 'react-router-dom';
+import { useNavigate, NavLink, useLocation } from 'react-router-dom';
 import { authenticate } from 'services/auth';
 import { GordonNavAvatarRightCorner } from './components/NavAvatarRightCorner';
 import GordonQuickSearch from './components/QuickSearch';
@@ -38,6 +39,7 @@ const TabUrlPatterns = [
   /^\/links$/,
   /^\/recim$/,
   /^\/reslife$/,
+  /^\/marketplace$/,
 ];
 
 /**
@@ -181,7 +183,7 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
           >
             <MenuIcon className={styles.hamburger_menu_button_icon} />
           </IconButton>
-          <Link to="/" component={NavLink}>
+          <Link to="/" component={NavLink} className={styles.logo_link}>
             <picture>
               {/* pick a different image as the screen gets smaller.*/}
               <source srcSet={headerLogo72dpi} media="(min-width: 900px)" />
@@ -232,8 +234,19 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
                 label="Res-Life"
                 component={NavLink}
                 to="/reslife"
+                tabIndex={0}
               />
             )}
+          {!loading && (
+            <Tab
+              className={styles.tab}
+              icon={<StoreRounded />}
+              label="Marketplace"
+              component={NavLink}
+              to="/marketplace"
+              tabIndex={0}
+            />
+          )}
         </Tabs>
         <div className={styles.side_container}>
           <div className={styles.people_search_container}>

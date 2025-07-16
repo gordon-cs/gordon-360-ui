@@ -5,7 +5,7 @@ import { useAuthGroups } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import { useCallback, useEffect, useState } from 'react';
 import { AuthGroup } from 'services/auth';
-import scheduleService from 'services/schedule';
+import user from 'services/user';
 import {
   EmergencyInfoList,
   Identification,
@@ -15,6 +15,7 @@ import {
   SchedulePanel,
   VictoryPromise,
 } from './components';
+import { useLocation } from 'react-router-dom';
 
 type Props = {
   profile: profileType;
@@ -29,17 +30,18 @@ type SnackbarState = {
   linkText?: string; // Add the optional link property
 };
 
-const Profile = ({ profile, myProf }: Props) => {
+const Profile = ({ profile: propsProfile, myProf }: Props) => {
   const [snackbar, setSnackbar] = useState<SnackbarState>({
     message: '',
     severity: '',
     open: false,
   });
+  const [profile, setProfile] = useState<profileType>(propsProfile);
 
   const isOnline = useNetworkStatus();
   const viewerIsPolice = useAuthGroups(AuthGroup.Police);
-  const [canReadStudentSchedules, setCanReadStudentSchedules] = useState<boolean>();
   const profileIsStudent = profile.PersonType?.includes('stu');
+  const location = useLocation();
 
   const createSnackbar = useCallback(
     (message: string, severity: AlertColor, link?: string, linkText?: string) => {
@@ -48,9 +50,16 @@ const Profile = ({ profile, myProf }: Props) => {
     [],
   );
 
+  const fetchProfile = async () => {
+    const updatedProfile = await user.getProfileInfo(profile.AD_Username);
+    if (updatedProfile) setProfile(updatedProfile);
+  };
+
   useEffect(() => {
-    scheduleService.getCanReadStudentSchedules().then(setCanReadStudentSchedules);
-  }, []);
+    // Refetch profile whenever the location changes (i.e., user navigates back)
+    fetchProfile();
+    // eslint-disable-next-line
+  }, [location.pathname]);
 
   return (
     <Grid container justifyContent="center" spacing={2}>
@@ -65,6 +74,7 @@ const Profile = ({ profile, myProf }: Props) => {
           isOnline={isOnline}
           myProf={myProf}
           createSnackbar={createSnackbar}
+          fetchProfile={fetchProfile}
         />
       </Grid>
 
@@ -84,11 +94,9 @@ const Profile = ({ profile, myProf }: Props) => {
         </Grid>
       )}
 
-      {(myProf || !profileIsStudent || canReadStudentSchedules) && (
-        <Grid item xs={12} lg={10}>
-          <SchedulePanel profile={profile} myProf={myProf} />
-        </Grid>
-      )}
+      <Grid item xs={12} lg={10}>
+        <SchedulePanel profile={profile} myProf={myProf} />
+      </Grid>
 
       <Grid item xs={12} lg={5}>
         <Grid container spacing={2}>

@@ -13,6 +13,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import GordonHeader from './components/Header';
 import GordonNav from './components/Nav';
 import routes from './routes';
+import 'react-image-gallery/styles/css/image-gallery.css';
 
 const App = () => {
   useWatchSystemColorScheme();
