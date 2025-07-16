@@ -221,8 +221,7 @@ Thank you
                       originalAlt: `${item.Name} - ${index + 1}`,
                       thumbnailAlt: `${item.Name} thumbnail - ${index + 1}`,
                     }))}
-                    showBullets={images.length <= 12}
-                    showThumbnails={false}
+                    showThumbnails={true}
                     showPlayButton={false}
                     showFullscreenButton={false}
                     autoPlay={false}
