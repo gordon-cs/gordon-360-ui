@@ -36,7 +36,7 @@ const GordonNavAvatar = ({ onLinkClick }: Props) => {
       <Avatar className={`${styles.avatar}`} src={`data:image/jpg;base64,${image}`} />
     ) : (
       <Avatar className={`${styles.avatar} ${styles.placeholder}`}>
-        {profile.FirstName?.[0]} {profile.LastName?.[0]}
+        {profile.FirstName?.Value[0]} {profile.LastName?.Value[0]}
       </Avatar>
     )
   ) : (

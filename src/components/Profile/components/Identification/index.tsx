@@ -128,8 +128,12 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar, fetchProfil
         // Do nothing
       }
 
-      setHasNickname(profile?.NickName && profile.NickName !== profile.FirstName);
-      setHasMaidenName(profile?.MaidenName && profile?.LastName !== profile.MaidenName);
+      setHasNickname(
+        profile?.NickName?.Value && profile.NickName.Value !== profile.FirstName.Value,
+      );
+      setHasMaidenName(
+        profile?.MaidenName?.Value && profile.MaidenName.Value !== profile.LastName.Value,
+      );
     }
 
     loadUserProfile();
@@ -539,12 +543,13 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar, fetchProfil
   }
 
   const todaysDate = new Date();
+  // Jan=0, Feb=1, Mar=2, Apr=3, etc.
   const isAprilFools = todaysDate.getMonth() === 3 && todaysDate.getDate() === 1;
   const profileTitleAprilFools = profile?.Title
     ? profile.Title.charAt(0).toUpperCase() +
       profile.Title.slice(1).toLowerCase() +
       '. ' +
-      profile.LastName
+      userProfile.LastName.Value
     : '';
 
   return (
@@ -556,15 +561,15 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar, fetchProfil
               title={`${
                 isAprilFools
                   ? profileTitleAprilFools
-                  : profile.NickName
-                    ? profile.NickName
-                    : profile.FirstName
+                  : userProfile.NickName?.Value
+                    ? userProfile.NickName?.Value
+                    : userProfile.FirstName.Value
               }'s Profile`}
             />
           ) : (
             <CardHeader
-              title={`${profile.NickName ? profile.NickName : profile.FirstName} ${
-                profile.LastName
+              title={`${userProfile.NickName?.Value ? userProfile.NickName.Value : userProfile.FirstName.Value} ${
+                userProfile.LastName.Value
               }'s Profile`}
             />
           ))}
@@ -696,10 +701,13 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar, fetchProfil
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <Typography variant="h6" paragraph style={{ marginBottom: 0 }}>
                       {`${
-                        profile.Title && profile.PersonType === 'fac' ? `${profile.Title} ` : ''
-                      }${profile.FirstName}${hasNickname ? ` (${profile.NickName})` : ''} ${
-                        profile.LastName
-                      }${hasMaidenName ? ` (${profile.MaidenName})` : ''}`}
+                        userProfile.Title && userProfile.PersonType === 'fac'
+                          ? `${userProfile.Title} `
+                          : ''
+                      }${userProfile.FirstName.Value}${hasNickname ? ` (${userProfile.NickName.Value})` : ''} ${
+                        userProfile.LastName.Value
+                      }${hasMaidenName ? ` (${userProfile.MaidenName.Value})` : ''}`}
+
                     </Typography>
 
                     {/* Profile Name Edit Request */}

@@ -41,7 +41,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
     ]).then(([allTermSchedules, currentTerm]) => {
       setAllSchedules(allTermSchedules);
       const defaultSchedule =
-        // If there is a schedule for the current term, make it d4fault
+        // If there is a schedule for the current term, make it default
         allTermSchedules.find(
           (s) =>
             s.term.YearCode === currentTerm.YearCode && s.term.TermCode === currentTerm.TermCode,
@@ -67,7 +67,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
       <Accordion
         expanded={isScheduleOpen}
         onChange={toggleIsScheduleOpen}
-        TransitionProps={{ unmountOnExit: true }}
+        slotProps={{ transition: { unmountOnExit: true } }}
       >
         {allSchedules.length > 0 ? (
           <AccordionSummary

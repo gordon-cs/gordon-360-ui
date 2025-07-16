@@ -19,7 +19,7 @@ const standardDate = (date, includeTime, includeDayOfWeek) => {
   if (includeTime) formattedDate = format(date, 'MMM d h:mmaaa');
   else if (includeDayOfWeek) formattedDate = format(date, 'EEE MMM d');
   else formattedDate = format(date, 'MMM d');
-  
+
   return formattedDate;
 };
 

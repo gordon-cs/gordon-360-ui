@@ -119,7 +119,10 @@ strong {
         max-width: 285px;
       }
       &_dropzone {
-        transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
+        transition:
+          border-color 0.3s,
+          background-color 0.3s,
+          box-shadow 0.3s;
         width: 18rem;
         height: 18rem;
         display: flex;
