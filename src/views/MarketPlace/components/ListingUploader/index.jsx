@@ -77,7 +77,6 @@ const ListingUploader = ({
       };
 
       let resultListing;
-      console.log('Submitting listing data:', listingData);
       if (!isEdit) {
         const imagesBase64 = await Promise.all(uploadedImages.map((file) => fileToBase64(file)));
         listingData.ImagesBase64 = imagesBase64;

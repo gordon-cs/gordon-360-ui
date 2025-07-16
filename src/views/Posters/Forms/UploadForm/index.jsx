@@ -40,7 +40,6 @@ const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess, createSnac
 
   useEffect(() => {
     if (poster) {
-      console.log('Initializing form with poster:', poster);
       setPriorityStatus(poster.Priority === 1 ? 1 : 2); // based on your Priority logic
       setSelectedClub(poster.ClubCode);
       setStartTime(poster.VisibleDate);
