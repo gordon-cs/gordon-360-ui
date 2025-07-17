@@ -18,16 +18,34 @@ const NewsCard = () => {
             <Grid item xs={7} align="left">
               Today's Student News
             </Grid>
-            <Grid item xs={5} align="right">
-              <Button variant="contained" color="secondary" component={Link} to="/news">
-                All News
-              </Button>
-            </Grid>
+            <Grid item xs={5} align="right"></Grid>
           </Grid>
         }
         className="gc360_header"
       />
       <CardContent>
+        <Grid
+          container
+          alignItems="center"
+          justifyContent="space-between"
+          direction="row"
+          sx={{ mb: 2 }}
+        >
+          <Grid item>
+            <Button variant="contained" color="secondary" component={Link} to="/news">
+              All News
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              variant="contained"
+              color="secondary"
+              href="https://announce.gordon.edu/emails/history/"
+            >
+              Daily Digest
+            </Button>
+          </Grid>
+        </Grid>
         {news.length > 0 ? (
           news.map((item) => <NewsItem posting={item} key={item.SNID} size="single" />)
         ) : (

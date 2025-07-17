@@ -42,6 +42,18 @@ const Home = () => {
             </Stack>
           </Grid>
         </Grid>
+        <Grid item xs={12} md={10}>
+          <DaysLeft />
+        </Grid>
+        <Grid item xs={12} md={5}>
+          <DiningBalance />
+        </Grid>
+        <Grid item xs={12} md={5}>
+          <Stack spacing={2}>
+            <NewsCard />
+            <LostAndFoundCard />
+          </Stack>
+        </Grid>
       </div>
     );
   }
