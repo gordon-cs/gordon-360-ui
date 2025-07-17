@@ -74,8 +74,6 @@ const MyUploadsPopup = ({ open, onClose, backendURL, createSnackbar, onUpdateLis
     }
   };
 
-  console.log('Rendering MyUploadsPopup with myListings:', myListings);
-
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <AppBar position="static" sx={{ backgroundColor: 'primary.main', boxShadow: 'none' }}>
