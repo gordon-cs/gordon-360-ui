@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import heic2any from 'heic2any';
 import {
   Dialog,
   AppBar,
@@ -51,21 +50,12 @@ const ListingUploader = ({
     (selectedCategory !== 'Services' && !selectedCondition);
 
   const processFile = async (file) => {
-    if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) {
-      try {
-        const convertedBlob = await heic2any({
-          blob: file,
-          toType: 'image/jpeg',
-          quality: 0.9,
-        });
-
-        return new File([convertedBlob], file.name.replace(/\.heic$/i, '.jpeg'), {
-          type: 'image/jpeg',
-        });
-      } catch (err) {
-        console.error('HEIC conversion failed:', err);
-        return null;
-      }
+    const allowedExtensions = ['.jpg', '.jpeg', '.png'];
+    const name = file.name.toLowerCase();
+    const isValid = allowedExtensions.some((ext) => name.endsWith(ext));
+    if (!isValid) {
+      createSnackbar('Only JPG, JPEG, and PNG files are allowed.', 'error');
+      return null;
     }
     return file;
   };
@@ -87,7 +77,6 @@ const ListingUploader = ({
       };
 
       let resultListing;
-      console.log('Submitting listing data:', listingData);
       if (!isEdit) {
         const imagesBase64 = await Promise.all(uploadedImages.map((file) => fileToBase64(file)));
         listingData.ImagesBase64 = imagesBase64;
@@ -315,7 +304,7 @@ const ListingUploader = ({
             {/* Upload Images Placeholder */}
             <input
               type="file"
-              accept="image/*,.heic,.heif"
+              accept=".jpg, .jpeg, .png"
               multiple
               style={{ display: 'none' }}
               id="upload-images-input"
@@ -382,7 +371,7 @@ const ListingUploader = ({
                 <Typography variant="body" color="text.secondary" align="center">
                   Upload Image(s)
                   <br />
-                  (jpg, jpeg, png, HEIC)
+                  (jpg, jpeg, png)
                 </Typography>
               </Box>
 

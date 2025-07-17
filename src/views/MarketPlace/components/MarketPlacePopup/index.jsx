@@ -15,8 +15,8 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getProfileImage, getProfileInfo } from 'services/marketplace';
-import Slider from 'react-slick';
+import userService from 'services/user';
+import ImageGallery from 'react-image-gallery';
 import marketplaceService from 'services/marketplace';
 import { msalInstance } from 'index';
 import styles from '../../MarketPlace.module.scss';
@@ -46,6 +46,7 @@ const MarketPlacePopup = ({
   const isPhone = useMediaQuery('(max-width:600px)');
 
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleMenuClick = (event) => {
     setMenuAnchorEl(event.currentTarget);
@@ -67,7 +68,6 @@ const MarketPlacePopup = ({
   };
 
   const handleMenuSelect = (option) => {
-    console.log('User selected:', option);
     // eslint-disable-next-line default-case
     switch (option) {
       case 'Delete':
@@ -127,13 +127,13 @@ const MarketPlacePopup = ({
       onClose(); // Close the dialog after status change
     } catch (error) {
       console.error('Failed to change item status:', error);
-      createSnackbar('Failed ot change listing status', 'error');
+      createSnackbar('Failed to change listing status', 'error');
       // Optionally show user feedback on error
     }
   };
 
   const handleReport = () => {
-    const subject = `Reported Marketplace Listing - "${item.Name}" (ID: ${item.Id})`;
+    const subject = `Reported Gordon360 Marketplace Listing - "${item.Name}" (ID: ${item.Id})`;
 
     const body = `
 Hello Student Life,
@@ -151,15 +151,15 @@ Please review the post at your earliest convenience.
 Thank you
 `.trim();
 
-    const mailtoLink = `mailto:StudentLife@gordon.edu?subject=${encodeURIComponent(subject)}
-    &body=${encodeURIComponent(body)}`;
+    const mailtoLink = `mailto:StudentLife@gordon.edu?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     window.location.href = mailtoLink;
   };
 
   useEffect(() => {
     if (item?.PosterUsername) {
       // Fetch profile image as before
-      getProfileImage(item.PosterUsername)
+      userService
+        .getImage(item.PosterUsername)
         .then((data) => {
           const img = data.pref
             ? `data:image/png;base64,${data.pref}`
@@ -172,10 +172,9 @@ Thank you
         .catch(() => setProfileImg(null));
 
       // Fetch profile info
-      getProfileInfo(item.PosterUsername)
-        .then((info) => {
-          setProfileInfo(info);
-        })
+      userService
+        .getInformalName(item.PosterUsername)
+        .then(setProfileInfo)
         .catch(() => setProfileInfo(null));
     }
   }, [item?.PosterUsername]);
@@ -189,55 +188,6 @@ Thank you
   console.log('backendURL:', backendURL);
   console.log('raw ImagePaths:', item?.ImagePaths);
   console.log('full image URLs:', images);
-
-  const NextArrow = ({ onClick }) => (
-    <Box
-      onClick={onClick}
-      sx={{
-        width: 20,
-        height: 20,
-        borderRadius: '50%',
-        position: 'absolute',
-        top: '50%',
-        right: -20,
-        transform: 'translateY(-50%)',
-        cursor: 'pointer',
-        zIndex: 1,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: 'secondary.main',
-        fontSize: 50,
-        userSelect: 'none',
-      }}
-    >
-      ›
-    </Box>
-  );
-  const PrevArrow = ({ onClick }) => (
-    <Box
-      onClick={onClick}
-      sx={{
-        width: 20,
-        height: 20,
-        borderRadius: '50%',
-        position: 'absolute',
-        top: '50%',
-        left: -20,
-        transform: 'translateY(-50%)',
-        cursor: 'pointer',
-        zIndex: 1,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: 'secondary.main',
-        fontSize: 50,
-        userSelect: 'none',
-      }}
-    >
-      ‹
-    </Box>
-  );
 
   return (
     <>
@@ -263,76 +213,60 @@ Thank you
           <Grid container spacing={3}>
             {/* Left - Image and Seller */}
             <Grid item xs={12} md={6} sx={{ position: 'relative' }}>
-              {images.length > 0 &&
-                (images.length > 1 ? (
-                  <div className={styles.sliderWrapper}>
-                    <Slider
-                      nextArrow={<NextArrow />}
-                      prevArrow={<PrevArrow />}
-                      dots={images.length <= 12}
-                      infinite
-                      speed={500}
-                      slidesToShow={1}
-                      slidesToScroll={1}
-                      swipeToSlide={true}
-                      accessibility={true}
-                    >
-                      {images.map((img, index) => (
-                        <Box
-                          key={index}
-                          sx={{
+              {images.length > 0 && (
+                <div className={styles.sliderWrapper}>
+                  <ImageGallery
+                    items={images.map((img, index) => ({
+                      original: img,
+                      thumbnail: img,
+                      originalAlt: `${item.Name} - ${index + 1}`,
+                      thumbnailAlt: `${item.Name} thumbnail - ${index + 1}`,
+                    }))}
+                    showThumbnails={!isPhone && images.length > 1}
+                    renderCustomControls={
+                      isPhone
+                        ? () => (
+                            <div
+                              style={{
+                                position: 'absolute',
+                                bottom: 10,
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                                color: 'primary.contrastText',
+                                padding: '4px 8px',
+                                borderRadius: 4,
+                                fontSize: 14,
+                                textAlign: 'center',
+                                minWidth: 50,
+                              }}
+                            >
+                              {currentIndex + 1} / {images.length}
+                            </div>
+                          )
+                        : undefined
+                    }
+                    onSlide={setCurrentIndex}
+                    showPlayButton={false}
+                    showFullscreenButton={false}
+                    autoPlay={false}
+                    renderItem={(item) => (
+                      <div className="image-gallery-image">
+                        <img
+                          src={item.original}
+                          alt={item.originalAlt}
+                          style={{
                             width: '100%',
-                            height: 0,
-                            paddingTop: '100%',
-                            position: 'relative',
-                            borderRadius: 2,
-                            backgroundColor: '#000',
-                            cursor: 'grab',
+                            maxHeight: 400,
+                            minHeight: 400,
+                            objectFit: 'contain',
                           }}
-                        >
-                          <img
-                            src={img}
-                            alt={`${item.Name} - ${index + 1}`}
-                            style={{
-                              position: 'absolute',
-                              top: 0,
-                              left: 0,
-                              width: '100%',
-                              height: '100%',
-                              objectFit: 'cover',
-                              borderRadius: 8,
-                            }}
-                          />
-                        </Box>
-                      ))}
-                    </Slider>
-                  </div>
-                ) : (
-                  <Box
-                    sx={{
-                      width: '100%',
-                      height: 0,
-                      paddingTop: '100%',
-                      position: 'relative',
-                      borderRadius: 2,
-                      backgroundColor: '#000',
-                    }}
-                  >
-                    <img
-                      src={images[0]}
-                      alt={item.Name}
-                      style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        borderRadius: 8,
-                      }}
-                    />
-                  </Box>
-                ))}
+                        />
+                      </div>
+                    )}
+                  />
+                </div>
+              )}
+
               <Divider
                 variant="fullWidth"
                 sx={{
@@ -484,7 +418,7 @@ Thank you
               ) : (
                 <a
                   href={`mailto:${item.PosterUsername}@gordon.edu?subject=${encodeURIComponent(
-                    'Hello from the App',
+                    `Gordon Marketplace: Interest in ${item.Name}`,
                   )}&body=${encodeURIComponent(
                     `Hi there,\n\nI wanted to reach out regarding ${item.Name}. Is it still available for purchase?`,
                   )}`}

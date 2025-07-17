@@ -8,7 +8,9 @@ import {
   TableBody,
   TablePagination,
   Paper,
-  CircularProgress,
+  TextField,
+  Box,
+  Button,
 } from '@mui/material';
 import {
   Dialog,
@@ -20,32 +22,38 @@ import {
   IconButton,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import GordonSnackbar from 'components/Snackbar';
 
 const AdminMarketplaceThreads = () => {
   const [threads, setThreads] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [snackbar, setSnackbar] = useState({
+    message: '',
+    severity: 'info',
+    open: false,
+  });
+
   const [totalCount, setTotalCount] = useState(0);
-  const [page, setPage] = useState(0); // MUI is 0-indexed
+  const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [editHistory, setEditHistory] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchTrigger, setSearchTrigger] = useState('');
 
   const handleThreadClick = async (thread) => {
-    setLoading(true); // Optionally show loading in modal
     try {
       const history = await marketplaceService.getThreadEditHistory(thread.ThreadId);
+      console.log('Edit history:', history);
       setEditHistory(history);
       setIsModalOpen(true);
     } catch (err) {
       console.error('Failed to fetch thread edit history:', err);
     } finally {
-      setLoading(false);
     }
   };
 
   useEffect(() => {
     const fetchThreads = async () => {
-      setLoading(true);
       try {
         const options = { page: page + 1, pageSize: rowsPerPage };
         const data = await marketplaceService.getAdminThreads(options);
@@ -56,20 +64,69 @@ const AdminMarketplaceThreads = () => {
       } catch (err) {
         console.error('Failed to fetch admin threads', err);
       } finally {
-        setLoading(false);
       }
     };
 
     fetchThreads();
   }, [page, rowsPerPage]);
 
-  if (loading) return <CircularProgress />;
+  useEffect(() => {
+    const trySearchById = async () => {
+      if (!searchTrigger) return;
+
+      try {
+        const results = await marketplaceService.getAdminThreads({
+          id: parseInt(searchTrigger),
+          page: 1,
+          pageSize: 1,
+        });
+
+        if (results.length > 0) {
+          const history = await marketplaceService.getThreadEditHistory(results[0].ThreadId);
+          setEditHistory(history);
+          setIsModalOpen(true);
+          setSearchQuery('');
+          setSearchTrigger('');
+        } else {
+          setSnackbar({
+            message: `No thread found with ID ${searchTrigger}`,
+            severity: 'warning',
+            open: true,
+          });
+        }
+      } catch (err) {
+        console.error('Error searching thread history:', err);
+      } finally {
+      }
+    };
+
+    trySearchById();
+  }, [searchTrigger]);
 
   return (
     <Paper>
+      <Box p={2}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <TextField
+            label="Search ID Number"
+            variant="outlined"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                setSearchTrigger(searchQuery.trim());
+              }
+            }}
+          />
+          <Button variant="contained" onClick={() => setSearchTrigger(searchQuery.trim())}>
+            Search
+          </Button>
+        </Box>
+      </Box>
       <Table>
         <TableHead>
           <TableRow>
+            <TableCell sx={{ fontWeight: 'bold' }}>ID</TableCell>
             <TableCell sx={{ fontWeight: 'bold' }}>Title</TableCell>
             <TableCell sx={{ fontWeight: 'bold' }}>Price</TableCell>
             <TableCell sx={{ fontWeight: 'bold' }}>Posted At</TableCell>
@@ -85,6 +142,7 @@ const AdminMarketplaceThreads = () => {
               onClick={() => handleThreadClick(thread)}
               style={{ cursor: 'pointer' }}
             >
+              <TableCell>{thread.ThreadId}</TableCell>
               <TableCell>{thread.Name}</TableCell>
               <TableCell>{thread.Price.toFixed(2)}</TableCell>
               <TableCell>{new Date(thread.PostedAt).toLocaleString()}</TableCell>
@@ -127,6 +185,9 @@ const AdminMarketplaceThreads = () => {
                   secondary={
                     <>
                       <div>
+                        <b>ID: </b> {version.Id}
+                      </div>
+                      <div>
                         <b>Category:</b> {version.CategoryName}
                       </div>
                       <div>
@@ -134,6 +195,9 @@ const AdminMarketplaceThreads = () => {
                       </div>
                       <div>
                         <b>Description:</b> {version.Detail}
+                      </div>
+                      <div>
+                        <b>User:</b> {version.PosterUsername}
                       </div>
                     </>
                   }
@@ -143,6 +207,12 @@ const AdminMarketplaceThreads = () => {
           </List>
         </DialogContent>
       </Dialog>
+      <GordonSnackbar
+        open={snackbar.open}
+        text={snackbar.message}
+        severity={snackbar.severity}
+        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
+      />
     </Paper>
   );
 };
