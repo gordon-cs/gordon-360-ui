@@ -122,7 +122,7 @@ const PosterSwiper = () => {
                       variant="outlined"
                       sx={{
                         position: 'relative',
-                        boxShadow: 'none',
+                        boxShadow: '0 16px 30px -10px rgba(0, 0, 0, 0.5)',
                         border: 'none',
                         m: 0,
                         p: 0,
