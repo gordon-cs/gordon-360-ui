@@ -38,11 +38,6 @@ const DaysLeft = () => {
       today.setHours(0, 0, 0, 0);
 
       const sessionList = await session.getAll();
-      if (!sessionList || !Array.isArray(sessionList)) {
-        setDaysLeftDialog('');
-        setTermProgress(0);
-        return;
-      }
 
       let nextSessionStart = null;
       let nextSessionName = null;
