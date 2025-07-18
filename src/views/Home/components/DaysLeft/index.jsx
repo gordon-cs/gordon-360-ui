@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import styles from './ProgressBar.module.css';
 import { Grid } from '@mui/material';
 import academicTermService from 'services/academicTerm';
-import React from 'react';
 
 const DaysLeft = () => {
   const [daysLeftDialog, setDaysLeftDialog] = useState('');

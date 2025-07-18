@@ -186,7 +186,7 @@ const Links = () => {
                 <img src={CycleTag} alt={'CycleTag Logo'} className={styles.icon_style} />
               </ListItemIcon>
               <Link
-                href="https://cycletag.net/"
+                href="https://www.cycletag.net/"
                 underline="hover"
                 className={`gc360_text_link`}
                 target="_blank"
