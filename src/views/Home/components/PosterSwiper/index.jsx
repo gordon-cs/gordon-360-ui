@@ -28,9 +28,7 @@ const PosterSwiper = () => {
             pauseOnMouseEnter: true, // pause on hover
             disableOnInteraction: false,
           }}
-          pagination={{
-            clickable: true,
-          }}
+          pagination={currentPosters.length < 24 ? { clickable: true } : false}
           loop={false} // loop if more than 3 posters
           grabCursor={true}
           centeredSlides={true}
@@ -50,7 +48,7 @@ const PosterSwiper = () => {
               slidesPerView: 2, // 2 posters in view for tablets
             },
             1200: {
-              slidesPerView: 3, // 4 posters in view for small desktops
+              slidesPerView: 3, // 3 posters in view for small desktops
             },
             1500: {
               slidesPerView: 4, // 4 posters in view for larger desktops
@@ -122,7 +120,7 @@ const PosterSwiper = () => {
                       variant="outlined"
                       sx={{
                         position: 'relative',
-                        boxShadow: '0 16px 30px -10px rgba(0, 0, 0, 0.5)',
+                        boxShadow: '0 16px 10px -10px rgba(0, 0, 0, 0.5)',
                         border: 'none',
                         m: 0,
                         p: 0,
