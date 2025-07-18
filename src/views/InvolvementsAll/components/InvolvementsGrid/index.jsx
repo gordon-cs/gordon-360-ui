@@ -34,7 +34,6 @@ const InvolvementsGrid = ({
   return (
     <Grid container direction="row" spacing={4} className={styles.involvements_grid}>
       {involvements?.length > 0 ? (
-
         involvements?.map((activity) => {
           const role = getRole(activity, myInvolvements);
           return (

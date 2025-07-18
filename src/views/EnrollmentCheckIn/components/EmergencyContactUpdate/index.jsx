@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 // @TODO CSSMODULES - outside directory
 import { phoneMaskINTL, phoneMaskUS } from '../UpdatePhone';
+import React from 'react';
 
 const EmergencyContactUpdate = ({
   emergencyContact1,
