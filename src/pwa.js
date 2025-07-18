@@ -22,7 +22,7 @@ export default function register() {
         .register(
           `/sw.js?API=${encodeURIComponent(
             getEnvVar('VITE_API_URL'),
-          )}api&FONT=${encodeURIComponent(getEnvVar('ITE_FONT_URL'))}`,
+          )}api&FONT=${encodeURIComponent(getEnvVar('VITE_FONT_URL'))}`,
         )
         .then((reg) => {
           reg.onupdatefound = () => {
