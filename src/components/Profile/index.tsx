@@ -3,8 +3,7 @@ import GordonSnackbar from 'components/Snackbar';
 import { Profile as profileType, isFacStaff as checkIsFacStaff } from 'services/user';
 import { useAuthGroups } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import { useCallback, useState } from 'react';
-import { AuthGroup } from 'services/auth';
+import React, { useCallback, useState, useEffect } from 'react';
 import user from 'services/user';
 import {
   EmergencyInfoList,
