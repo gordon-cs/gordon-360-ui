@@ -3,14 +3,14 @@ import { useState, useEffect } from 'react';
 import userService from 'services/user';
 import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
 
-const UpdateUserPrivacy = (username, field, excludedVisibilityList = []) => {
+const UpdateUserPrivacy = ({ username, fieldList, excludedVisibilityList }) => {
   const [privacySettingList, setPrivacySettingList] = useState();
   const [groupList, setGroupList] = useState([]);
   const [visibleTo, setVisibleTo] = useState('Private'); // default private while loading
 
   const handlePrivacy = async (event) => {
     try {
-      await userService.setUserPrivacy({ Field: field, VisibilityGroup: event.target.value });
+      await userService.setUserPrivacy({ Field: fieldList, VisibilityGroup: event.target.value });
     } catch {}
   };
 
@@ -32,27 +32,33 @@ const UpdateUserPrivacy = (username, field, excludedVisibilityList = []) => {
 
   useEffect(() => {
     if (privacySettingList) {
-      setVisibleTo(privacySettingList.find((f) => f.Field === field[0])?.VisibilityGroup);
+      setVisibleTo(privacySettingList.find((f) => fieldList.includes(f.Field))?.VisibilityGroup);
     }
   }, [privacySettingList]);
 
+  console.log('******************* fieldList', fieldList);
+  console.log('******************* visibleTo', visibleTo);
+  console.log('******************* groupList', groupList);
+
   return (
-    <Grid>
-      <FormControl sx={{ m: 1, minWidth: 120 }}>
-        <SearchField
-          name="visibility"
-          value={visibleTo}
-          updateValue={(e) => {
-            setVisibleTo(e.target.value);
-            handlePrivacy(e);
-          }}
-          options={groupList}
-          defaultDisabled={true}
-          select
-          size={120}
-        />
-      </FormControl>
-    </Grid>
+    groupList.length > 0 && (
+      <Grid>
+        <FormControl sx={{ m: 1, minWidth: 120 }}>
+          <SearchField
+            name="visibility"
+            value={visibleTo}
+            updateValue={(e) => {
+              setVisibleTo(e.target.value);
+              handlePrivacy(e);
+            }}
+            options={groupList}
+            defaultDisabled={true} // don't display name in drop-down
+            select
+            size={120}
+          />
+        </FormControl>
+      </Grid>
+    )
   );
 };
 
