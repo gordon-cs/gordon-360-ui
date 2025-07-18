@@ -198,7 +198,6 @@ const Posters = () => {
                   setPosterToEdit(null);
                 }}
                 onSubmitSuccess={(updatedPoster) => {
-                  console.log('Updated poster received in Posters:', updatedPoster);
                   setAllPosters((prev) =>
                     prev.some((p) => p.ID === updatedPoster.ID)
                       ? prev.map((p) => (p.ID === updatedPoster.ID ? updatedPoster : p))
@@ -518,7 +517,7 @@ const Posters = () => {
                           </Typography>
                         </CardContent>
                       </CardActionArea>
-                      {myInvolvements.some((inv) => isSiteAdmin) && (
+                      {isSiteAdmin && (
                         <div className="delete-button-wrapper">
                           <Button
                             variant="outlined"

@@ -3,6 +3,37 @@
   background-color: var(--mui-palette-neutral-light);
 }
 
+/* Remove blue overlay/focus ring on ImageGallery arrows */
+:global(.image-gallery-icon:hover),
+:global(.image-gallery-icon:focus),
+:global(.image-gallery-icon:active) {
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
+
+/* SVG scaling */
+:global(.image-gallery-icon svg) {
+  transform: scale(0.3);
+  transform-origin: center !important;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+:global(.image-gallery-icon:hover svg) {
+  transform: scale(0.5) !important;
+}
+
+/* Polyline styling + color transition only */
+:global(.image-gallery-icon polyline) {
+  stroke: var(--mui-palette-neutral-contrastText) !important;
+  stroke-width: 2 !important;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  transition: stroke 0.3s ease;
+}
+
+/* Card styling */
 .card {
   transition:
     transform 0.4s cubic-bezier(0.3, 1.5, 0.5, 0.8),
@@ -11,41 +42,43 @@
   z-index: 1;
   position: relative;
 }
+
 .card:hover {
   transform: scale(1.07) translateY(-8px);
   box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3);
   z-index: 10;
 }
+
 .card:hover .poster-club {
   transition:
     transform 0.7s cubic-bezier(0.4, 2, 0.6, 1),
     opacity 0.7s;
   opacity: 1;
 }
+
 .poster-card:hover .delete-button {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
 }
 
+:global(.image-gallery-left-nav),
+:global(.image-gallery-right-nav) {
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 10 !important;
+}
+
+:global(.image-gallery-left-nav) {
+  left: -60px !important;
+}
+
+:global(.image-gallery-right-nav) {
+  right: -60px !important;
+}
+
 .sliderWrapper {
-  :global {
-    // Active dot
-    .slick-dots li.slick-active button:before {
-      font-size: 12px;
-      color: var(--mui-palette-secondary-main) !important;
-    }
-
-    // Inactive but hovered
-    .slick-dots li:not(.slick-active):hover button:before {
-      font-size: 12px;
-      color: var(--mui-palette-primary-main) !important;
-    }
-
-    // Inactive, non-hovered dots
-    .slick-dots li:not(.slick-active):not(:hover) button:before {
-      font-size: 12px;
-      color: var(--mui-palette-neutral-contrastText) !important;
-    }
-  }
+  position: relative;
+  padding: 0 30px; /* creates space on left/right for arrows */
+  overflow: visible !important;
 }
