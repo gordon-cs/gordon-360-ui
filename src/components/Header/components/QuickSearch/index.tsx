@@ -14,6 +14,7 @@ import quickSearchService from 'services/quickSearch';
 import styles from './QuickSearch.module.css';
 import { debounce } from 'lodash';
 import { SearchResult } from 'services/quickSearch';
+import React from 'react';
 
 const MIN_QUERY_LENGTH = 2;
 const BREAKPOINT_WIDTH = 450;
@@ -232,7 +233,7 @@ const GordonQuickSearch = ({
                   setCurrentQuery('');
                   dispatch({ type: 'RESET' });
                   if (document.activeElement instanceof HTMLElement) {
-                    document.activeElement.blur(); 
+                    document.activeElement.blur();
                   }
                   navigate('/people');
                 }}

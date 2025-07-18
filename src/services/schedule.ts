@@ -19,6 +19,8 @@ type DbCourse = {
   BEGIN_TIME?: string;
   /** A timespan of the format HH:mm:ss, stringified */
   END_TIME?: string;
+  START_DATE: string;
+  END_DATE: string;
   SUB_TERM_CDE?: string;
   Role: string;
 };

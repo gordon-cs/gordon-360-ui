@@ -85,7 +85,7 @@ const MissingItemList = () => {
   const [hasMore, setHasMore] = useState(true);
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  const createSnackbar = useCallback((message, severity) => {
+  const createSnackbar = useCallback((message: string, severity: any) => {
     setSnackbar({ message, severity, open: true });
   }, []);
 

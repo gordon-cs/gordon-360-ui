@@ -26,6 +26,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+.vite/
+.idea/
+
 # editor configurations
 .vscode/*
 !.vscode/settings.json

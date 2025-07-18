@@ -9,6 +9,7 @@ import styles from '/src/views/LostAndFound/views/Home/LostAndFound.module.scss'
 import GordonSnackbar from 'components/Snackbar';
 import { useUser } from 'hooks';
 import { formatDateString } from 'views/LostAndFound/components/Helpers';
+import { AlertColor } from '@mui/material/';
 
 const noReports = (
   <Grid item alignItems="center">
@@ -33,7 +34,7 @@ const ActiveReports = () => {
   const user = useUser();
   const navigate = useNavigate();
 
-  const createSnackbar = useCallback((message, severity) => {
+  const createSnackbar = useCallback((message: string, severity: any) => {
     setSnackbar({ message, severity, open: true });
   }, []);
 
