@@ -57,8 +57,6 @@ const DaysLeft = () => {
       for (let s of sessionList) {
         const sessionStart = new Date(s.SessionBeginDate);
         const sessionEnd = new Date(s.SessionEndDate);
-        sessionStart.setHours(0, 0, 0, 0);
-        sessionEnd.setHours(0, 0, 0, 0);
 
         const sessionName = s.SessionDescription.split(' ', 1)[0];
 
