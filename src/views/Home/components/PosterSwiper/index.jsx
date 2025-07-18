@@ -28,7 +28,7 @@ const PosterSwiper = () => {
             pauseOnMouseEnter: true, // pause on hover
             disableOnInteraction: false,
           }}
-          pagination={currentPosters.length < 24 ? { clickable: true } : false}
+          pagination={{ dynamicBullets: true, clickable: true }}
           loop={false} // loop if more than 3 posters
           grabCursor={true}
           centeredSlides={true}
