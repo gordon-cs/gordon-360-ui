@@ -9,6 +9,10 @@ import LostAndFoundCard from './components/LostAndFoundCard';
 import DaysLeft from './components/DaysLeft';
 import PosterSwiper from './components/PosterSwiper';
 import Stack from '@mui/material/Stack';
+import RegistrationDate from './components/RegistrationDate';
+import {
+  isStudent as checkIsStudent,
+} from 'services/user';
 
 const Home = () => {
   const { profile, loading } = useUser();
@@ -18,6 +22,8 @@ const Home = () => {
   } else if (!profile) {
     return <GuestWelcome />;
   } else {
+    const isStudent = checkIsStudent(profile);
+
     return (
       <div>
         <PosterSwiper />
@@ -32,6 +38,7 @@ const Home = () => {
             <Stack spacing={2}>
               <LostAndFoundCard />
               <NewsCard />
+              {isStudent && <RegistrationDate />}
             </Stack>
           </Grid>
         </Grid>
