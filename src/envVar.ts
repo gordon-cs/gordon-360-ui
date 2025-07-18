@@ -7,7 +7,6 @@ export const getEnvVar = (name: string): string | undefined => {
   // Use import.meta.env only if safe
   try {
     if (typeof import.meta !== 'undefined' && import.meta.env?.[name] !== undefined) {
-      console.log('value ', import.meta.env[name]);
       return import.meta.env[name];
     }
   } catch {
