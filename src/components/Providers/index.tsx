@@ -20,7 +20,7 @@ const Providers = ({
 }) => {
   useEffect(() => {
     // Only use analytics in production
-    if (getEnvVar('NODE_ENV') === 'production') {
+    if (getEnvVar('PROD') === 'production') {
       analytics.initialize();
     }
   }, []);

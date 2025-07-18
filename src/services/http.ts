@@ -61,7 +61,7 @@ const del = <TResponse>(
 ): Promise<TResponse> =>
   makeRequest(endpoint, 'delete', JSON.stringify(body), setContentTypeJSON(headers));
 
-const apiBaseURL = getEnvVar('NODE_ENV') === 'development' ? '/' : getEnvVar('VITE_API_URL')!;
+const apiBaseURL = getEnvVar('PROD') === 'development' ? '/' : getEnvVar('VITE_API_URL')!;
 
 /**
  * Make a request to the API

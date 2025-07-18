@@ -1,0 +1,249 @@
+[33mcommit 7daf6ea89e0eebd59b4e0bfdc23e41c33122ffc0[m[33m ([m[1;36mHEAD -> [m[1;32mdevelop[m[33m, [m[1;31morigin/s25-add-cycletag-link[m[33m, [m[1;32ms25-add-cycletag-link[m[33m)[m
+Author: Woobensky Pierre <woobensky.pierre@zechariah.gordon.edu>
+Date:   Fri Jul 11 11:33:04 2025 -0400
+
+    added CycleTag link in Links page
+
+[33mcommit 9101e0cd771451458bf0c7d5dac2f5de149eb98e[m
+Merge: 36e1b0595 67ac9c1a9
+Author: Jonathan Senning <jonathan.senning@gmail.com>
+Date:   Fri Jul 11 10:17:40 2025 -0400
+
+    Merge pull request #2732 from gordon-cs/s25-marketplace-admin
+    
+    Added API thread search by ID logic to Admin Page
+
+[33mcommit 67ac9c1a978bb9eff20284ffe79f0e4c44a82409[m
+Author: Joshua Miller <joshuamiller1@gmail.com>
+Date:   Fri Jul 11 09:45:41 2025 -0400
+
+    Changed Alert to snackbar
+
+[33mcommit 558c47dadec795846fe7f40b27f9e591257ac697[m
+Author: Joshua Miller <joshuamiller1@gmail.com>
+Date:   Fri Jul 11 09:16:24 2025 -0400
+
+    Added API thread search by ID logic to Admin Page
+
+[33mcommit 36e1b05951aa59cd0d2e7ae44b8a64a8954649ab[m
+Merge: 5f97073a7 652c86c9d
+Author: Jonathan Senning <jonathan.senning@gmail.com>
+Date:   Fri Jul 11 08:41:54 2025 -0400
+
+    Merge pull request #2730 from gordon-cs/s25-marketplace-fix-2
+    
+    A couple more fixes needed to make sure everything shows up
+
+[33mcommit 652c86c9df4b1751d3befe1ce802e3b34cde3773[m
+Author: Joshua Miller <joshuamiller1@gmail.com>
+Date:   Thu Jul 10 14:52:19 2025 -0400
+
+    Some fixes!
+
+[33mcommit 3a0ecec2a3b7ec0708f9b009124dee0405821723[m
+Author: Joshua Miller <joshuamiller1@gmail.com>
+Date:   Thu Jul 10 14:43:33 2025 -0400
+
+    Update src/views/MarketPlace/components/MarketPlacePopup/index.jsx
+    
+    Co-authored-by: Evan Platzer <evan.platzer@gordon.edu>
+
+[33mcommit 287f34d8b873b0238a14dc6a747c72ecfc7bf5d9[m
+Author: Joshua Miller <joshuamiller1@gmail.com>
+Date:   Thu Jul 10 14:39:45 2025 -0400
+
+    Able to see the full image in MarketPlacePopup
+
+[33mcommit bb102e09edb5a7e20a2ec3790a3e8d246a1b671c[m
+Author: Joshua Miller <joshuamiller1@gmail.com>
+Date:   Thu Jul 10 13:38:40 2025 -0400
+
+    Added changes to make things more succinct
+
+[33mcommit f23cd01568782ce1b93feb913e7b0541d03592fe[m
+Author: Joshua Miller <joshuamiller1@gmail.com>
+Date:   Thu Jul 10 13:18:34 2025 -0400
+
+    Allows Admin to search by ID
+
+[33mcommit e13fba403a1a3e359c829ed29090952db913554a[m
+Author: Joshua Miller <joshuamiller1@gmail.com>
+Date:   Thu Jul 10 11:47:01 2025 -0400
+
+    Made ID show up on Admin Page
+
+[33mcommit 2d8af6650d3b98ec11c5a96653947bec507e5f23[m
+Merge: 03d00b040 2813ef0c6
+Author: Joshua Miller <joshuamiller1@gmail.com>
+Date:   Thu Jul 10 11:37:45 2025 -0400
+
+    Merge remote-tracking branch 'origin/s25-marketplace-fix-2' into s25-marketplace-fix-2
+
+[33mcommit 03d00b040b66b0243e04a813fccec8f16aa5af11[m
+Author: Joshua Miller <joshuamiller1@gmail.com>
+Date:   Thu Jul 10 11:36:40 2025 -0400
+
+    Made the email better.
+
+[33mcommit 2813ef0c65e55ad5447942f00290be96386718b6[m
+Author: Joshua Miller <joshuamiller1@gmail.com>
+Date:   Thu Jul 10 11:12:57 2025 -0400
+
+    Update src/services/user.ts
+    
+    Co-authored-by: Evan Platzer <evan.platzer@gordon.edu>
+
+[33mcommit 57b17f79cd6c086205fd8bed9556f5ab005c6067[m
+Author: Joshua Miller <joshuamiller1@gmail.com>
+Date:   Thu Jul 10 10:56:25 2025 -0400
+
+    took out fetch from marketplace.ts and fixed unnecessary methods
+
+[33mcommit 429f87b22d20b9db451b43c343f422ee8cdec077[m
+Author: Joshua Miller <joshuamiller1@gmail.com>
+Date:   Thu Jul 10 10:17:57 2025 -0400
+
+    A couple more fixes needed to make sure everything shows up
+
+[33mcommit 5f97073a7e6480f6315d930bbd393cd5025d277c[m
+Merge: 838743c54 1068fa568
+Author: Jonathan Senning <jonathan.senning@gmail.com>
+Date:   Thu Jul 10 10:09:27 2025 -0400
+
+    Merge pull request #2729 from gordon-cs/s25-marketplace-fix
+    
+    Fixed a problem with the api and ui connection
+
+[33mcommit 1068fa5683fde0c13fb1327b84011a96af73c48e[m
+Author: Joshua Miller <joshuamiller1@gmail.com>
+Date:   Thu Jul 10 10:05:11 2025 -0400
+
+    Fixed a problem with the api and ui connection
+
+[33mcommit 838743c54cae5aa2abe1aa05813d3b7bb2d89fee[m
+Merge: 892ccd8dc 47e32b21d
+Author: Russ Tuck <russ.tuck@gordon.edu>
+Date:   Thu Jul 10 09:38:04 2025 -0400
+
+    Merge pull request #2713 from gordon-cs/s25-marketplace
+    
+    S25 marketplace
+
+[33mcommit 47e32b21d42b7f94069d5d412e54a7869c4680d3[m
+Merge: 220e02c19 892ccd8dc
+Author: Russ Tuck <russ.tuck@gordon.edu>
+Date:   Thu Jul 10 09:34:16 2025 -0400
+
+    Merge branch 'develop' into s25-marketplace
+
+[33mcommit 892ccd8dc82297e2b5cde47e7ac9d0ec5656cffc[m
+Merge: d86dbe8c1 47672732c
+Author: Russ Tuck <russ.tuck@gordon.edu>
+Date:   Wed Jul 9 15:10:48 2025 -0400
+
+    Merge pull request #2728 from gordon-cs/s25-Res-Life-Tab
+    
+    Res-Life-Tabbing Works!!
+
+[33mcommit 220e02c1936bb58bc04fc53fab16ba824860e09a[m[33m ([m[1;31morigin/s25-marketplace[m[33m)[m
+Merge: 6de04130f d86dbe8c1
+Author: Joshua Miller <joshuamiller1@gmail.com>
+Date:   Wed Jul 9 09:18:08 2025 -0400
+
+    Merge branch 'develop' into s25-marketplace
+
+[33mcommit 6de04130f52cc67f72ecf80184b122f4eb6d8f66[m
+Author: Joshua Miller <joshuamiller1@gmail.com>
+Date:   Wed Jul 9 09:17:37 2025 -0400
+
+    Makes Marketplace Tab tabbable
+
+[33mcommit 47672732c0cffa0b486de2329dbfbbc3f3c71fff[m[33m ([m[1;31morigin/s25-Res-Life-Tab[m[33m)[m
+Merge: 3e6202d54 d86dbe8c1
+Author: Joshua Miller <joshuamiller1@gmail.com>
+Date:   Wed Jul 9 09:15:11 2025 -0400
+
+    Merge branch 'develop' into s25-Res-Life-Tab
+
+[33mcommit 3e6202d54802f9f0c17270844574634a8a879f10[m
+Author: Joshua Miller <joshuamiller1@gmail.com>
+Date:   Wed Jul 9 08:48:53 2025 -0400
+
+    Res-Life-Tabbing Works!!
+
+[33mcommit d86dbe8c1f035d563bf480f78a3da6da9231f0ee[m
+Merge: 8bfdcf6ca f2bd591d8
+Author: Russ Tuck <russ.tuck@gordon.edu>
+Date:   Tue Jul 8 16:28:33 2025 -0400
+
+    Merge pull request #2726 from gordon-cs/s25-posters-train-fix
+    
+    Fixed the box shadow that appears in train
+
+[33mcommit f2bd591d8aa96ed37c0e5fff5f985beaaaa41d18[m
+Author: Joshua Miller <joshuamiller1@gmail.com>
+Date:   Tue Jul 8 16:18:34 2025 -0400
+
+    Fixed the box shadow that appears in train
+
+[33mcommit 8bfdcf6ca7067b1900f0b0ee7174fc690aa80a8a[m[33m ([m[1;31morigin/Res-Life-Tab[m[33m)[m
+Merge: 0d97e1cba 252a40307
+Author: Jonathan Senning <jonathan.senning@gmail.com>
+Date:   Tue Jul 8 15:23:51 2025 -0400
+
+    Merge pull request #2724 from gordon-cs/s25-1329-accent-characters-for-peoples-names
+    
+    Make name change feature private-only
+
+[33mcommit c33ea2c3dc24b3493457c002072e880021ec5b67[m
+Author: Joshua Miller <joshuamiller1@gmail.com>
+Date:   Tue Jul 8 13:54:04 2025 -0400
+
+    Student Handbook link
+
+[33mcommit cdd35a26191dd2ee6d81e6eb5f962e067b0b7646[m
+Author: Joshua Miller <joshuamiller1@gmail.com>
+Date:   Tue Jul 8 13:36:29 2025 -0400
+
+    CHanged the logic to prevent bad submit
+
+[33mcommit 1153a331ab2639852127b92ea3b8a79c97d419ab[m
+Merge: 58cc30e3f 0d97e1cba
+Author: Joshua Miller <joshuamiller1@gmail.com>
+Date:   Tue Jul 8 11:32:37 2025 -0400
+
+    Merge branch 'develop' into s25-marketplace
+
+[33mcommit 58cc30e3f12c0524bc3674ba5e66ce6c87e63ec8[m
+Author: Joshua Miller <joshuamiller1@gmail.com>
+Date:   Tue Jul 8 10:17:16 2025 -0400
+
+    Changed Button design
+
+[33mcommit 91df26cc3d704f46e654f153513cd9e0dbbd0f68[m
+Author: Joshua Miller <joshuamiller1@gmail.com>
+Date:   Tue Jul 8 10:02:23 2025 -0400
+
+    Changes requested by Ben
+
+[33mcommit 252a4030721369538405c0790dee6192811de624[m
+Merge: 43733106e 0d97e1cba
+Author: Andrey Belyshev <156957573+abelyshev22@users.noreply.github.com>
+Date:   Tue Jul 8 09:59:48 2025 -0400
+
+    Merge branch 'develop' into s25-1329-accent-characters-for-peoples-names
+
+[33mcommit 43733106e9623f0fa4cd00fa6b6df677f983bf1a[m
+Author: Andrey Belyshev <andrey.belyshev@gordon.edu>
+Date:   Tue Jul 8 09:48:46 2025 -0400
+
+    made it so name change feature is private only
+
+[33mcommit 0d97e1cbac2839a8a5d70c366cba42be936ad8a1[m
+Merge: df9e56957 519e8ef08
+Author: Russ Tuck <russ.tuck@gordon.edu>
+Date:   Tue Jul 8 09:28:47 2025 -0400
+
+    Merge pull request #2723 from gordon-cs/s25-PhotoCropper-fix
+    
+    

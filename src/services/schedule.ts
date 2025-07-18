@@ -1,6 +1,6 @@
 import http from './http';
 import { parse } from 'date-fns';
-import { Session } from './session';
+import { AcademicTerm } from './academicTerm';
 
 type DbCourse = {
   Username: string;
@@ -19,15 +19,18 @@ type DbCourse = {
   BEGIN_TIME?: string;
   /** A timespan of the format HH:mm:ss, stringified */
   END_TIME?: string;
+  START_DATE: string;
+  END_DATE: string;
   SUB_TERM_CDE?: string;
   Role: string;
 };
 
 type DbSchedule = {
-  SessionBeginDate: string;
-  SessionCode: string;
-  SessionDescription: string;
-  SessionEndDate: string;
+  YearCode: string;
+  TermCode: string;
+  TermDescription: string;
+  TermBeginDate: string;
+  TermEndDate: string;
   AllCourses: DbCourse[];
 };
 
@@ -51,7 +54,7 @@ export const courseDayIds = [
 ] as const satisfies readonly CourseDayID[];
 
 export type Schedule = {
-  session: Session;
+  term: AcademicTerm;
   courses: CourseEvent[];
 };
 
@@ -71,13 +74,25 @@ export type CourseEvent = {
 
 const getCanReadStudentSchedules = (): Promise<boolean> => http.get(`schedule/canreadstudent/`);
 
-const getAllSessionSchedules = async (username: string): Promise<Schedule[]> => {
-  const dbSchedules = await http.get<DbSchedule[]>(`schedule/${username}/allcourses`);
+const getAllTermSchedules = async (username: string): Promise<Schedule[]> => {
+  const dbSchedules = await http.get<DbSchedule[]>(`schedule/${username}/allcourses-by-term`);
 
-  return dbSchedules.map(({ AllCourses, ...session }) => ({
-    session,
-    courses: formatCoursesFromDb(AllCourses),
-  }));
+  const schedules = dbSchedules.map(
+    ({ YearCode, TermCode, TermDescription, TermBeginDate, TermEndDate, AllCourses }) => ({
+      term: {
+        YearCode,
+        TermCode,
+        Description: TermDescription,
+        BeginDate: TermBeginDate,
+        EndDate: TermEndDate,
+      },
+      courses: formatCoursesFromDb(AllCourses),
+    }),
+  );
+
+  return schedules.sort(
+    (a, b) => new Date(b.term.BeginDate).getTime() - new Date(a.term.BeginDate).getTime(),
+  );
 };
 
 function formatCoursesFromDb(courses: DbCourse[]): CourseEvent[] {
@@ -142,9 +157,31 @@ function getMeetingDays(course: DbCourse): CourseDayID[] {
   return dayArray;
 }
 
+export function formatTermDescription(term: { YearCode: string; TermCode: string }): string {
+  const year1 = term.YearCode;
+  const year2 = String(Number(term.YearCode) + 1);
+
+  const termName =
+    term.TermCode === 'FA'
+      ? 'Fall'
+      : term.TermCode === 'SP'
+        ? 'Spring'
+        : term.TermCode === 'SU'
+          ? 'Summer'
+          : term.TermCode === 'JN'
+            ? 'January'
+            : term.TermCode === 'WS'
+              ? 'Winter-Spring'
+              : term.TermCode === 'SF'
+                ? 'Summer-Fall'
+                : term.TermCode;
+
+  return `${termName} ${year1.slice(0)}-${year2.slice(2)} Academic Year`;
+}
+
 const scheduleService = {
   getCanReadStudentSchedules,
-  getAllSessionSchedules,
+  getAllTermSchedules,
 };
 
 export default scheduleService;

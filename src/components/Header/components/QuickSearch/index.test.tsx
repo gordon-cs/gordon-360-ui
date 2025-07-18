@@ -1,7 +1,6 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import GordonQuickSearch from '.';
 import { BrowserRouter } from 'react-router-dom';
-import { getHighlightedText, getHighlightedDetails } from '.';
 import { SearchResult } from 'services/quickSearch';
 import { act } from 'react';
 
@@ -81,30 +80,5 @@ describe('GordonQuickSearch', () => {
     });
 
     expect(await screen.findByText('No results')).toBeInTheDocument();
-  });
-});
-
-describe('getHighlightedDetails', () => {
-  it('returns highlighted name and username parts', () => {
-    const person: SearchResult = {
-      FirstName: 'John',
-      LastName: 'Doe',
-      NickName: 'Johnny',
-      MaidenName: 'Smith',
-      UserName: 'john.doe',
-    };
-    const regex = /john|smith/i;
-    const { name, username } = getHighlightedDetails(person, regex);
-
-    expect(name).toBeDefined();
-    expect(username).toBeDefined();
-  });
-});
-
-describe('getHighlightedText', () => {
-  it('highlights matched substrings', () => {
-    const parts = getHighlightedText('hello john smith', /(john|smith)/i);
-    const highlighted = parts.filter((part: any) => part.props?.className);
-    expect(highlighted).toHaveLength(2);
   });
 });
