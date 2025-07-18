@@ -7,8 +7,6 @@ import Dropzone from 'react-dropzone';
 import { read, utils } from 'xlsx';
 import styles from './SpreadsheetUploader.module.css';
 import errorLogService from 'services/logging';
-import '@testing-library/jest-dom';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 
 const acceptedTypes = [
   'application/vnd.ms-excel',
