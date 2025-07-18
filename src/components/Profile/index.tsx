@@ -3,7 +3,7 @@ import GordonSnackbar from 'components/Snackbar';
 import { Profile as profileType, isFacStaff as checkIsFacStaff } from 'services/user';
 import { useAuthGroups } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { AuthGroup } from 'services/auth';
 import user from 'services/user';
 import {
@@ -27,7 +27,7 @@ type SnackbarState = {
   severity: string;
   open: boolean;
   link?: string;
-  linkText?: string; // Add the optional link property
+  linkText?: string;
 };
 
 const Profile = ({ profile: propsProfile, myProf }: Props) => {
@@ -45,7 +45,7 @@ const Profile = ({ profile: propsProfile, myProf }: Props) => {
 
   const createSnackbar = useCallback(
     (message: string, severity: AlertColor, link?: string, linkText?: string) => {
-      setSnackbar({ message, severity, open: true, link, linkText }); // Include the link property
+      setSnackbar({ message, severity, open: true, link, linkText });
     },
     [],
   );
@@ -88,8 +88,7 @@ const Profile = ({ profile: propsProfile, myProf }: Props) => {
         <Grid item xs={12} lg={10}>
           <Grid container spacing={2}>
             <OfficeInfoList profile={profile} myProf={myProf} />
-
-            {viewerIsPolice ? <EmergencyInfoList username={profile.AD_Username} /> : null}
+            {viewerIsPolice && <EmergencyInfoList username={profile.AD_Username} />}
           </Grid>
         </Grid>
       )}
@@ -106,7 +105,7 @@ const Profile = ({ profile: propsProfile, myProf }: Props) => {
             isOnline={isOnline}
             createSnackbar={createSnackbar}
           />
-          {viewerIsPolice ? <EmergencyInfoList username={profile.AD_Username} /> : null}
+          {viewerIsPolice && <EmergencyInfoList username={profile.AD_Username} />}
         </Grid>
       </Grid>
 
@@ -125,7 +124,7 @@ const Profile = ({ profile: propsProfile, myProf }: Props) => {
         severity={snackbar.severity as AlertColor}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
         link={snackbar.link}
-        linkText={snackbar.linkText} // Pass the link property to the snackbar
+        linkText={snackbar.linkText}
       />
     </Grid>
   );
