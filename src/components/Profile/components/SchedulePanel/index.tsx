@@ -35,62 +35,59 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
   );
 
   useEffect(() => {
-    setLoading(true);
+    const loadSchedules = async () => {
+      setLoading(true);
+      try {
+        const [allTermSchedules, currentTerm] = await Promise.all([
+          scheduleService.getAllTermSchedules(profile.AD_Username),
+          academicTermService.getCurrentTerm(),
+        ]);
 
-    Promise.all([
-      scheduleService.getAllTermSchedules(profile.AD_Username),
-      academicTermService.getCurrentTerm(),
-    ])
-      .then(([allTermSchedules, currentTerm]) => {
         const sortedSchedules = [...allTermSchedules].sort(
           (a, b) => new Date(b.term.BeginDate).getTime() - new Date(a.term.BeginDate).getTime(),
         );
-
         setAllSchedules(sortedSchedules);
 
         const now = new Date();
-        const currentTermStart = new Date(currentTerm.BeginDate);
-        const currentTermEnd = new Date(currentTerm.EndDate);
+        const currentStart = new Date(currentTerm.BeginDate);
+        const currentEnd = new Date(currentTerm.EndDate);
 
         const currentSchedule = sortedSchedules.find(
           (s) =>
-            s.term.YearCode === currentTerm.YearCode && s.term.TermCode === currentTerm.TermCode,
+            s.term.YearCode === currentTerm.YearCode &&
+            s.term.TermCode === currentTerm.TermCode &&
+            (s.courses?.length ?? 0) > 0,
         );
 
-        const hasCoursesInCurrent = (currentSchedule?.courses?.length ?? 0) > 0;
+        const futureWithCourses = sortedSchedules.find(
+          (s) => new Date(s.term.BeginDate) > currentEnd && (s.courses?.length ?? 0) > 0,
+        );
 
-        let defaultSchedule: Schedule | null = null;
+        const anyWithCourses = sortedSchedules.find((s) => (s.courses?.length ?? 0) > 0);
 
-        if (now >= currentTermStart && now <= currentTermEnd && hasCoursesInCurrent) {
-          defaultSchedule = currentSchedule ?? null;
-        } else {
-          defaultSchedule =
-            sortedSchedules.find(
-              (s) => new Date(s.term.BeginDate) > currentTermEnd && (s.courses?.length ?? 0) > 0,
-            ) ??
-            sortedSchedules.find((s) => (s.courses?.length ?? 0) > 0) ??
-            null;
-        }
-
+        const defaultSchedule = currentSchedule || futureWithCourses || anyWithCourses || null;
         setSelectedSchedule(defaultSchedule);
+      } catch (err) {
+        console.error('Failed to load schedule or current term:', err);
+      } finally {
         setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Failed to load schedule or current term', err);
-        setLoading(false);
-      });
+      }
+    };
+
+    loadSchedules();
   }, [profile.AD_Username]);
 
   const toggleIsScheduleOpen = () => {
-    setIsScheduleOpen((wasOpen) => {
-      localStorage.setItem(scheduleOpenKey, String(!wasOpen));
-      return !wasOpen;
+    setIsScheduleOpen((prev) => {
+      const next = !prev;
+      localStorage.setItem(scheduleOpenKey, String(next));
+      return next;
     });
   };
 
-  return loading ? (
-    <GordonLoader />
-  ) : (
+  if (loading) return <GordonLoader />;
+
+  return (
     <>
       <Accordion
         expanded={isScheduleOpen}
@@ -112,7 +109,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
           <div />
         )}
 
-        {allSchedules.length > 0 ? (
+        {allSchedules.length > 0 && (
           <AccordionDetails>
             <Grid container justifyContent="center" spacing={4}>
               <Grid item xs={12} lg={3}>
@@ -134,13 +131,14 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
                   ))}
                 </TextField>
               </Grid>
-              <Grid lg={7}></Grid>
+
+              <Grid lg={7} />
 
               {selectedSchedule ? (
                 <>
                   {myProf && (
                     <Grid item className={styles.addCalendarInfoText}>
-                      <Typography color="secondary" className={styles.addCalendarInfoText}>
+                      <Typography color="secondary">
                         Click on Course to add Schedule to Personal Calendar
                       </Typography>
                     </Grid>
@@ -159,8 +157,6 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
               )}
             </Grid>
           </AccordionDetails>
-        ) : (
-          <div />
         )}
       </Accordion>
 
