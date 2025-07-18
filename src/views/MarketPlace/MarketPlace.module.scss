@@ -8,6 +8,8 @@
 :global(.image-gallery-icon:focus),
 :global(.image-gallery-icon:active) {
   outline: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
 }
 
 /* SVG scaling */
@@ -58,4 +60,25 @@
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
+}
+
+:global(.image-gallery-left-nav),
+:global(.image-gallery-right-nav) {
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 10 !important;
+}
+
+:global(.image-gallery-left-nav) {
+  left: -60px !important;
+}
+
+:global(.image-gallery-right-nav) {
+  right: -60px !important;
+}
+
+.sliderWrapper {
+  position: relative;
+  padding: 0 30px; /* creates space on left/right for arrows */
+  overflow: visible !important;
 }

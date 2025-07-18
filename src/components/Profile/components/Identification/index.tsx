@@ -814,7 +814,7 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar, fetchProfil
                             <Box component="li" sx={{ mb: 1 }}>
                               You can contact the registrar via this email:{' '}
                               <MuiLink
-                                href="mailto:registrar@gordon.edu"
+                                href={`mailto:registrar@gordon.edu?subject=${encodeURIComponent('Name Change Request')}`}
                                 className={styles.gc360_text_link}
                                 underline="hover"
                               >
