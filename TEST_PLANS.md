@@ -12,6 +12,12 @@ This document outlines a breakdown of test cases to cover features of Gordon360 
   - **Failure and recovery paths**
   - **Security implications (e.g., injection, privacy, access control)**
 
+### Test Branches
+- s25-create-tests (initial setup) 
+- s25-homepage-tests (branched out of s25-create-tests)
+- s25-id-upload-test (still inprogress)
+- s25-profile-tests (also in progress: need to create tests for each profile widget panel)
+
 
 ## First few ones
 - [x] Enrollment check in
