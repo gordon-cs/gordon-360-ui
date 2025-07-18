@@ -8,6 +8,15 @@ import {
   CardHeader,
   Typography,
   TextField,
+  Dialog,
+  DialogContent,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  DialogActions,
+  Box,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import GordonLoader from 'components/Loader';
@@ -17,6 +26,12 @@ import styles from './ScheduleHeader.module.css';
 import scheduleService, { CourseEvent, formatTermDescription, Schedule } from 'services/schedule';
 import { Profile } from 'services/user';
 import academicTermService from 'services/academicTerm';
+import { Button } from '@mui/material';
+import {
+  getFinalExamEventsForUserByTerm,
+  formatFinalExamEvent,
+  FinalExamEvent,
+} from 'services/event';
 
 type Props = {
   profile: Profile;
@@ -32,6 +47,10 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
   const [isScheduleOpen, setIsScheduleOpen] = useState<boolean>(
     localStorage.getItem(scheduleOpenKey) !== 'false',
   );
+  const [finalExamOpen, setFinalExamOpen] = useState(false);
+  const [finalExams, setFinalExams] = useState<FinalExamEvent[]>([]);
+  const [finalExamsLoading, setFinalExamsLoading] = useState(false);
+
   useEffect(() => {
     setLoading(true);
 
@@ -40,14 +59,13 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
       academicTermService.getCurrentTerm(),
     ]).then(([allTermSchedules, currentTerm]) => {
       setAllSchedules(allTermSchedules);
+
       const defaultSchedule =
-        // If there is a schedule for the current term, make it d4fault
         allTermSchedules.find(
           (s) =>
             s.term.YearCode === currentTerm.YearCode && s.term.TermCode === currentTerm.TermCode,
-        ) ??
-        // Otherwise, use the most recent term
-        allTermSchedules[0];
+        ) ?? allTermSchedules[0];
+
       setSelectedSchedule(defaultSchedule);
       setLoading(false);
     });
@@ -58,6 +76,24 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
       localStorage.setItem(scheduleOpenKey, String(!wasOpen));
       return !wasOpen;
     });
+  };
+
+  const handleShowFinalExams = () => {
+    if (!selectedSchedule) return;
+
+    setFinalExamOpen(true);
+    setFinalExams([]);
+    setFinalExamsLoading(true);
+
+    const { BeginDate, EndDate, YearCode, TermCode } = selectedSchedule.term;
+
+    getFinalExamEventsForUserByTerm(profile.AD_Username, BeginDate, EndDate, YearCode, TermCode)
+      .then((data) => {
+        const formatted = data.map(formatFinalExamEvent);
+        setFinalExams(formatted);
+      })
+      .catch(() => setFinalExams([]))
+      .finally(() => setFinalExamsLoading(false));
   };
 
   return loading ? (
@@ -105,6 +141,18 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
                   ))}
                 </TextField>
               </Grid>
+              <Grid item style={{ minWidth: 180 }}>
+                {selectedSchedule && (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleShowFinalExams}
+                    fullWidth
+                  >
+                    Final Exam Schedule
+                  </Button>
+                )}
+              </Grid>
               <Grid lg={7}></Grid>
               {selectedSchedule && (
                 <>
@@ -136,6 +184,52 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
           term={selectedSchedule?.term}
         />
       )}
+      <Dialog open={finalExamOpen} onClose={() => setFinalExamOpen(false)} maxWidth="md" fullWidth>
+        <Box sx={{ bgcolor: 'primary.main', color: 'primary.contrastText', px: 3, py: 2 }}>
+          <Typography variant="h6">Final Exam Schedule</Typography>
+        </Box>
+        <DialogContent>
+          {finalExamsLoading ? (
+            <Box display="flex" justifyContent="center" alignItems="center" minHeight={200}>
+              <GordonLoader />
+            </Box>
+          ) : (
+            <Table>
+              <TableHead>
+                <TableRow sx={{ backgroundColor: 'info.light' }}>
+                  <TableCell sx={{ fontWeight: 'bold' }}>Course</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold' }}>Date</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold' }}>Time</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold' }}>Location</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {finalExams.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={4} align="center">
+                      No final exams found for this term.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  finalExams.map((exam, idx) => (
+                    <TableRow key={idx}>
+                      <TableCell>{exam.Event_Name}</TableCell>
+                      <TableCell>{exam.date}</TableCell>
+                      <TableCell>{exam.time}</TableCell>
+                      <TableCell>{exam.Location}</TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setFinalExamOpen(false)} color="primary" variant="outlined">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

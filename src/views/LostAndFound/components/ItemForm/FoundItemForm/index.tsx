@@ -92,7 +92,7 @@ const FoundItemForm = ({ formType }: { formType: string }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [snackbar, setSnackbar] = useState({ message: '', severity: undefined, open: false });
 
-  const createSnackbar = useCallback((message, severity) => {
+  const createSnackbar = useCallback((message: string, severity: any) => {
     setSnackbar({ message, severity, open: true });
   }, []);
 

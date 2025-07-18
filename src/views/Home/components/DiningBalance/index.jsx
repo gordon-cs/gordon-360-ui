@@ -17,6 +17,7 @@ import session from 'services/session';
 import user from 'services/user';
 import styles from '../Doughnut.module.css';
 import { theme360 } from 'theme';
+import React from 'react';
 
 const lowBalance = 20; //dollars
 const reallyLowBalance = 10; //dollars

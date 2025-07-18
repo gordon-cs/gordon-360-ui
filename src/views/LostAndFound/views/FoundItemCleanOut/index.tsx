@@ -68,7 +68,7 @@ const FoundItemCleanOut = () => {
     setShowConfirm(true);
   };
 
-  const createSnackbar = useCallback((message: string, severity) => {
+  const createSnackbar = useCallback((message: string, severity: any) => {
     setSnackbar({ message, severity, open: true });
   }, []);
 

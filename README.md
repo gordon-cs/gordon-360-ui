@@ -8,6 +8,7 @@ The frontend of [Gordon 360](https://360.gordon.edu). This project is the user i
 
 - [Contributing](#contributing)
 - [History](#history)
+- [Test Documentation](/TEST.md)
 
 ## Contributing
 

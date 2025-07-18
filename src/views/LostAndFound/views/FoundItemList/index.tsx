@@ -67,7 +67,7 @@ const FoundItemList = () => {
   const location = useLocation();
   const isMobile = useMediaQuery('(max-width:900px)');
 
-  const createSnackbar = useCallback((message: string, severity) => {
+  const createSnackbar = useCallback((message: string, severity: any) => {
     setSnackbar({ message, severity, open: true });
   }, []);
 

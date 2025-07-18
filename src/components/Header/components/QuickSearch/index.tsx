@@ -1,12 +1,20 @@
-import { InputAdornment, MenuItem, TextField, Typography, Autocomplete } from '@mui/material';
+import {
+  InputAdornment,
+  MenuItem,
+  TextField,
+  Typography,
+  Autocomplete,
+  Tooltip,
+} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useNetworkStatus, useWindowSize } from 'hooks';
-import { Dispatch, HTMLAttributes, useReducer } from 'react';
+import { Dispatch, HTMLAttributes, useEffect, useReducer, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import quickSearchService from 'services/quickSearch';
 import styles from './QuickSearch.module.css';
 import { debounce } from 'lodash';
 import { SearchResult } from 'services/quickSearch';
+import React from 'react';
 
 const MIN_QUERY_LENGTH = 2;
 const BREAKPOINT_WIDTH = 450;
@@ -18,6 +26,7 @@ const default_state = {
   highlightRegex: null,
 } as const satisfies State;
 
+// State type definition
 type State = {
   loading: boolean;
   searchTime: number;
@@ -25,11 +34,13 @@ type State = {
   highlightRegex: RegExp | null;
 };
 
+// Action types for the reducer
 type Action =
   | { type: 'INPUT' }
   | { type: 'LOAD'; payload: Omit<State, 'loading'> }
   | { type: 'RESET' };
 
+// Reducer to manage loading and search result state
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'INPUT':
@@ -48,16 +59,12 @@ const reducer = (state: State, action: Action): State => {
   }
 };
 
+// Search function type
 type SearchFunction = (
   query: string,
 ) => Promise<[searchTime: number, searchResults: SearchResult[]]>;
 
-/**
- * Search for given query, if query is not updated before debounce timeout (400ms).
- *
- * Once results are fetched, update state with new results
- * and new highlight regex for the query used to fetch these results.
- */
+// Perform search after debounce, and dispatch results
 const performSearch = debounce(
   async (
     query: string,
@@ -73,24 +80,15 @@ const performSearch = debounce(
 
     const [searchTime, searchResults] = await resultsPromise;
 
-    dispatch({ type: 'LOAD', payload: { searchTime, searchResults, highlightRegex } });
+    dispatch({
+      type: 'LOAD',
+      payload: { searchTime, searchResults, highlightRegex },
+    });
   },
   400,
 );
 
-type Props =
-  | {
-      disableLink?: true;
-      customPlaceholderText?: string;
-      onSearchSubmit?: (person: SearchResult) => void;
-      searchFunction?: SearchFunction;
-    }
-  | {
-      disableLink?: false;
-      customPlaceholderText?: undefined;
-      onSearchSubmit?: undefined;
-      searchFunction?: SearchFunction;
-    };
+// Props accepted by the component
 
 const GordonQuickSearch = ({
   searchFunction,
@@ -99,6 +97,8 @@ const GordonQuickSearch = ({
   onSearchSubmit,
 }: Props) => {
   const [state, dispatch] = useReducer(reducer, default_state);
+  const [currentQuery, setCurrentQuery] = useState('');
+  const [arrowSimulatedForQuery, setArrowSimulatedForQuery] = useState<string | null>(null);
   const navigate = useNavigate();
   const [width] = useWindowSize();
   const isOnline = useNetworkStatus();
@@ -106,9 +106,11 @@ const GordonQuickSearch = ({
     ? 'Offline'
     : customPlaceholderText ?? (width < BREAKPOINT_WIDTH ? 'People' : 'People Search');
 
+  // Handle search input change
   const handleInput = (_event: React.SyntheticEvent, value: string) => {
-    // remove special characters
     const query = value.replace(specialCharactersRegex, '');
+    setCurrentQuery(query);
+    setArrowSimulatedForQuery(null);
 
     if (query.length >= MIN_QUERY_LENGTH) {
       dispatch({ type: 'INPUT' });
@@ -118,13 +120,50 @@ const GordonQuickSearch = ({
     }
   };
 
-  const handleSubmit = (_event: React.SyntheticEvent, person: SearchResult | null) => {
+  // Ensures that when searching the first option is highlighted
+  useEffect(() => {
+    if (
+      state.searchResults.length > 0 &&
+      currentQuery.length >= MIN_QUERY_LENGTH &&
+      arrowSimulatedForQuery !== currentQuery
+    ) {
+      const input = document.querySelector<HTMLInputElement>('input[placeholder]');
+      if (input) {
+        const simulateKey = (key: string) => {
+          const event = new KeyboardEvent('keydown', {
+            bubbles: true,
+            cancelable: true,
+            key,
+            code: key,
+          });
+          input.dispatchEvent(event);
+        };
+        simulateKey('ArrowDown');
+        simulateKey('ArrowUp');
+        setArrowSimulatedForQuery(currentQuery);
+      }
+    }
+  }, [state.searchResults, currentQuery, arrowSimulatedForQuery]);
+
+  // Handle selection of a result or advanced search
+  const handleSubmit = (
+    event: React.SyntheticEvent | KeyboardEvent,
+    person: SearchResult | null,
+  ) => {
     if (!person) return;
+
+    if (person.UserName === '__ADVANCED__') {
+      setCurrentQuery('');
+      dispatch({ type: 'RESET' });
+      navigate('/people');
+      return;
+    }
+
     disableLink ? onSearchSubmit!(person) : navigate(`/profile/${person.UserName}`);
   };
 
+  // Render a single search result
   const renderOption = (params: HTMLAttributes<HTMLLIElement>, person: SearchResult) => {
-    // Bail if any required properties are missing
     if (
       state.loading ||
       !state.highlightRegex ||
@@ -135,7 +174,6 @@ const GordonQuickSearch = ({
       return null;
     }
 
-    // on click, execute callback if link disabled, otherwise behave as link.
     const linkProps = disableLink
       ? { onClick: () => onSearchSubmit!(person) }
       : {
@@ -166,14 +204,57 @@ const GordonQuickSearch = ({
       loading={state.loading}
       loadingText="Loading..."
       noOptionsText="No results"
-      options={state.searchResults}
-      isOptionEqualToValue={(option, value) => option.UserName === value.UserName}
-      renderInput={({ InputProps, ...params }) => (
+      options={
+        currentQuery && state.searchResults.length > 0
+          ? [...state.searchResults, { UserName: '__ADVANCED__' } as SearchResult]
+          : state.searchResults
+      }
+      isOptionEqualToValue={(option, value) => option.UserName === value?.UserName}
+      autoHighlight={true}
+      autoSelect={false}
+      value={null}
+      onChange={(event, newValue) => {
+        handleSubmit(event, newValue);
+      }}
+      onInputChange={handleInput}
+      filterOptions={(options) => options}
+      blurOnSelect
+      forcePopupIcon={false}
+      getOptionLabel={(option) =>
+        option.UserName === '__ADVANCED__' ? `Advanced Search` : option.UserName
+      }
+      renderOption={(props, option) => {
+        if (option.UserName === '__ADVANCED__') {
+          return (
+            <Tooltip title="Can't find who you're looking for? Try our Advanced Search.">
+              <MenuItem
+                {...props}
+                onClick={() => {
+                  setCurrentQuery('');
+                  dispatch({ type: 'RESET' });
+                  if (document.activeElement instanceof HTMLElement) {
+                    document.activeElement.blur();
+                  }
+                  navigate('/people');
+                }}
+              >
+                <Typography variant="body2">Advanced Search</Typography>
+              </MenuItem>
+            </Tooltip>
+          );
+        }
+
+        return renderOption(props, option);
+      }}
+      renderInput={({ InputProps, inputProps, ...params }) => (
         <TextField
           type="search"
           placeholder={placeholder}
           className={styles.root}
           {...params}
+          inputProps={{
+            ...inputProps,
+          }}
           InputProps={{
             ...InputProps,
             startAdornment: (
@@ -184,31 +265,21 @@ const GordonQuickSearch = ({
           }}
         />
       )}
-      onInputChange={handleInput}
-      onChange={handleSubmit}
-      renderOption={renderOption}
-      getOptionLabel={(option) => option.UserName}
-      filterOptions={(o) => o}
-      autoComplete
-      autoHighlight
-      blurOnSelect
-      forcePopupIcon={false}
     />
   );
 };
 
+// Helper: highlight matched portions of names
 const getHighlightedDetails = (person: SearchResult, inputPartsRegex: RegExp) => {
   const usernameParts = person.UserName.split('.');
 
   const name =
     person.FirstName +
-    // If having nickname that is unique, display that nickname
     (person.NickName && person.NickName !== person.FirstName && person.NickName !== usernameParts[0]
       ? ` (${person.NickName})`
       : '') +
     ' ' +
     person.LastName +
-    // If having maiden name that is unique, display that maiden name
     (person.MaidenName &&
     person.MaidenName !== person.LastName &&
     person.MaidenName !== usernameParts[1]
@@ -221,37 +292,35 @@ const getHighlightedDetails = (person: SearchResult, inputPartsRegex: RegExp) =>
   };
 };
 
+// Helper: wraps matching parts of text in span
 const getHighlightedText = (text: string, inputRegex: RegExp) =>
-  // Split the text into parts that don't match the input regex, and parts that do.
-  // Even-numbered parts (0, 2, ...) will always be parts that don't match (but may be empty)
-  // e.g. 'abcabc'.split(/(ab)/) => ["", "ab", "c", "ab", "c"]
   text.split(inputRegex).map((part, index) =>
-    // Odd-numbered parts match the input regex
     index % 2 === 1 ? (
       <span className={styles.matched_text} key={index}>
         {part}
       </span>
     ) : (
-      <span>{part}</span>
+      <span key={index}>{part}</span>
     ),
   );
 
-/**
- * Match all characters in a string that are not:
- * - alphanumeric
- * - whitespace
- * - `'`
- * - `-`
- * - `.`
- */
-const specialCharactersRegex = /[^a-zA-Z0-9'\-.\s]/gm;
-/**
- * Match all instances of whitespace and `.` at the beginning and end of a string.
- */
+// Regex for invalid characters in search
+const specialCharactersRegex = /[^a-zA-Z0-9'.-\s]/gm;
 const startingAndEndingSpacesOrPeriodsRegex = /^[\s.]+|[\s.]+$/gm;
-/**
- * Match any one space or period in a string
- */
 const spaceOrPeriodRegex = / |\./;
 
 export default GordonQuickSearch;
+
+type Props =
+  | {
+      disableLink?: true;
+      customPlaceholderText?: string;
+      onSearchSubmit?: (person: SearchResult) => void;
+      searchFunction?: SearchFunction;
+    }
+  | {
+      disableLink?: false;
+      customPlaceholderText?: undefined;
+      onSearchSubmit?: undefined;
+      searchFunction?: SearchFunction;
+    };
