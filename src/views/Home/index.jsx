@@ -10,9 +10,7 @@ import DaysLeft from './components/DaysLeft';
 import PosterSwiper from './components/PosterSwiper';
 import Stack from '@mui/material/Stack';
 import RegistrationDate from './components/RegistrationDate';
-import {
-  isStudent as checkIsStudent,
-} from 'services/user';
+import { isStudent as checkIsStudent } from 'services/user';
 
 const Home = () => {
   const { profile, loading } = useUser();

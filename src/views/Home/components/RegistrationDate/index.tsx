@@ -15,7 +15,7 @@ const RegistrationStart = () => {
     HasHolds: boolean;
   } | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
-  
+
   useEffect(() => {
     registrationService
       .getRegistrationPeriod()

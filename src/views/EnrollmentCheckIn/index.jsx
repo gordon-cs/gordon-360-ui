@@ -12,6 +12,7 @@ import CompletedCheckIn from './components/CompletedCheckIn';
 import ConfirmCheckIn from './components/ConfirmCheckIn';
 import PrivacyAgreement from './components/PrivacyAgreement';
 // import RaceEthnicity from './components/RaceEthnicity';
+import React from 'react';
 
 const steps = [
   'Main Form',
@@ -175,7 +176,7 @@ const EnrollmentCheckIn = () => {
 
   window.onpopstate = function (event) {
     if (event.state !== null) {
-      setActiveStep(event.state.state.step);
+      setActiveStep(event.state.usr.step);
     }
   };
 
