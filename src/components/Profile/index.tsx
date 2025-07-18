@@ -4,6 +4,7 @@ import { Profile as profileType, isFacStaff as checkIsFacStaff } from 'services/
 import { useAuthGroups } from 'hooks';
 import useNetworkStatus from 'hooks/useNetworkStatus';
 import React, { useCallback, useState, useEffect } from 'react';
+import { AuthGroup } from 'services/auth';
 import user from 'services/user';
 import {
   EmergencyInfoList,
