@@ -18,7 +18,7 @@ import { useEffect, useState } from 'react';
 import userService from 'services/user';
 import ImageGallery from 'react-image-gallery';
 import marketplaceService from 'services/marketplace';
-import { msalInstance } from 'index';
+import { msalInstance } from 'msalInstantiation';
 import styles from '../../MarketPlace.module.scss';
 import { AuthGroup } from 'services/auth';
 import { useAuthGroups, useNetworkStatus } from 'hooks';
@@ -46,6 +46,7 @@ const MarketPlacePopup = ({
   const isPhone = useMediaQuery('(max-width:600px)');
 
   const [menuAnchorEl, setMenuAnchorEl] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleMenuClick = (event) => {
     setMenuAnchorEl(event.currentTarget);
@@ -221,7 +222,30 @@ Thank you
                       originalAlt: `${item.Name} - ${index + 1}`,
                       thumbnailAlt: `${item.Name} thumbnail - ${index + 1}`,
                     }))}
-                    showThumbnails={true}
+                    showThumbnails={!isPhone && images.length > 1}
+                    renderCustomControls={
+                      isPhone
+                        ? () => (
+                            <div
+                              style={{
+                                position: 'absolute',
+                                bottom: 10,
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                                color: 'primary.contrastText',
+                                padding: '4px 8px',
+                                borderRadius: 4,
+                                fontSize: 14,
+                                textAlign: 'center',
+                                minWidth: 50,
+                              }}
+                            >
+                              {currentIndex + 1} / {images.length}
+                            </div>
+                          )
+                        : undefined
+                    }
+                    onSlide={setCurrentIndex}
                     showPlayButton={false}
                     showFullscreenButton={false}
                     autoPlay={false}

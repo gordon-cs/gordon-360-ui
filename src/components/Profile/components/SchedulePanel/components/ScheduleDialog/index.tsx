@@ -38,7 +38,6 @@ const ScheduleDialog = ({ course, term, onClose }: Props) => {
     Timezone: 'currentBrowser',
     listStyle: 'modal',
   };
-
   return (
     <Dialog open={Boolean(course)} fullWidth={true} maxWidth="xs">
       <DialogTitle>{course.title}</DialogTitle>
@@ -58,6 +57,9 @@ const ScheduleDialog = ({ course, term, onClose }: Props) => {
           <br />
           Term Date: {format(new Date(term.BeginDate), 'yyyy-MM-dd')} to
           {format(new Date(term.EndDate), ' yyyy-MM-dd')}
+          <br />
+          Class Date: {course.startDate ? format(course.startDate, 'yyyy-MM-dd') : 'N/A'} to{' '}
+          {course.endDate ? format(course.endDate, 'yyyy-MM-dd') : 'N/A'}
         </DialogContentText>
         <br />
         <Divider variant="middle" />
