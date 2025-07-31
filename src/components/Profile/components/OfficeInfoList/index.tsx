@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, Grid, List, Typography } from '@mui/material';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import styles from './OfficeInfoList.module.css';
+import { useAuthGroups } from 'hooks';
+import { AuthGroup } from 'services/auth';
 import UpdateOffice from './UpdateOfficeLocationDialog';
 import UpdateOfficeHours from './UpdateOfficeHoursDialog';
 import UpdateMail from './UpdateMailDestinationDialog';
@@ -18,6 +20,7 @@ type Props = {
     office_hours: string;
     Mail_Location: string;
     Mail_Description: string;
+    AD_Username: string;
   };
 };
 
@@ -32,8 +35,10 @@ const OfficeInfoList = ({
     office_hours,
     Mail_Location,
     Mail_Description,
+    AD_Username,
   },
 }: Props) => {
+  const isOfficeAdmin = useAuthGroups(AuthGroup.OfficeAdmin);
   const [profOfficeHours, setProfOfficeHours] = useState(office_hours);
   const [profMailLocation, setProfMailLocation] = useState(Mail_Location);
 
@@ -100,6 +105,22 @@ const OfficeInfoList = ({
           </Grid>
           <Grid item>
             <UpdateOffice />
+          </Grid>
+        </Grid>
+      }
+    />
+  ) : isOfficeAdmin ? (
+    <ProfileInfoListItem
+      title="Room:"
+      contentText={
+        <Grid container spacing={0} alignItems="center">
+          <Grid item>
+            {BuildingDescription || OnCampusRoom
+              ? `${BuildingDescription}, ${OnCampusRoom}`
+              : 'No office location set'}
+          </Grid>
+          <Grid item>
+            <UpdateOffice username={AD_Username} />
           </Grid>
         </Grid>
       }
