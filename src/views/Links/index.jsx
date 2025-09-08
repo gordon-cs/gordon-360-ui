@@ -417,7 +417,7 @@ const Links = () => {
                 <PsychologyIcon className={styles.icon_style} />
               </ListItemIcon>
               <Link
-                href="https://counseling.gordon.edu/TitaniumWeb/WCMenu.aspx"
+                href="https://counseling.gordon.edu/TitaniumWeb/CSCW"
                 underline="hover"
                 className={`gc360_text_link`}
                 target="_blank"
