@@ -283,8 +283,13 @@ const setPlannedGraduationYear = (value: number | string) => {
 
 const updateMailStop = (value: string) => http.put(`profiles/mailstop`, value);
 
-const updateOfficeLocation = (OfficeLocation: OfficeLocationQuery) =>
-  http.put(`profiles/office_location`, OfficeLocation);
+const updateOfficeLocation = (officeLocation: OfficeLocationQuery, username?: string) => {
+  let url = 'profiles/office_location';
+  if (username) {
+    url += `?username=${encodeURIComponent(username)}`;
+  }
+  return http.put(url, officeLocation);
+};
 
 const updateOfficeHours = (value: string) => http.put(`profiles/office_hours`, value);
 

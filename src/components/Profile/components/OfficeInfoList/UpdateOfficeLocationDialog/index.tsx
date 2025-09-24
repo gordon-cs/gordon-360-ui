@@ -11,7 +11,11 @@ type Building = {
   Description: string;
 };
 
-const UpdateOffice = () => {
+type Props = {
+  username?: string;
+};
+
+const UpdateOffice = ({ username }: Props) => {
   const [open, setOpen] = useState(false);
   const [room, setRoom] = useState('');
   const [building, setBuilding] = useState('');
@@ -24,7 +28,10 @@ const UpdateOffice = () => {
 
   const handleSubmit = async () => {
     try {
-      await userService.updateOfficeLocation({ BuildingCode: building, RoomNumber: room });
+      await userService.updateOfficeLocation(
+        { BuildingCode: building, RoomNumber: room },
+        username,
+      );
       setSnackbar({
         message: 'Your office location will update within a couple hours.',
         severity: 'success',
