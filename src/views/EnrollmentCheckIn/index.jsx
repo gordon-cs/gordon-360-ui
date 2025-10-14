@@ -122,24 +122,30 @@ const EnrollmentCheckIn = () => {
           if (contacts[0]) {
             setEmergencyContact1(contacts[0]);
             setEmergencyContactINTL1({
-              HomePhoneIN: contacts[0].HomePhone.startsWith('+'),
-              MobilePhoneIN: contacts[0].MobilePhone.startsWith('+'),
+              HomePhoneIN:
+                contacts[0].HomePhone.startsWith('+') || contacts[0].HomePhone.length > 10,
+              MobilePhoneIN:
+                contacts[0].MobilePhone.startsWith('+') || contacts[0].HomePhone.length > 10,
             });
           }
 
           if (contacts[1]) {
             setEmergencyContact2(contacts[1]);
             setEmergencyContactINTL2({
-              HomePhoneIN: contacts[1].HomePhone.startsWith('+'),
-              MobilePhoneIN: contacts[1].MobilePhone.startsWith('+'),
+              HomePhoneIN:
+                contacts[1].HomePhone.startsWith('+') || contacts[1].HomePhone.length > 10,
+              MobilePhoneIN:
+                contacts[1].MobilePhone.startsWith('+') || contacts[1].HomePhone.length > 10,
             });
           }
 
           if (contacts[2]) {
             setEmergencyContact3(contacts[2]);
             setEmergencyContactINTL3({
-              HomePhoneIN: contacts[2].HomePhone.startsWith('+'),
-              MobilePhoneIN: contacts[2].MobilePhone.startsWith('+'),
+              HomePhoneIN:
+                contacts[2].HomePhone.startsWith('+') || contacts[2].HomePhone.length > 10,
+              MobilePhoneIN:
+                contacts[2].MobilePhone.startsWith('+') || contacts[2].HomePhone.length > 10,
             });
           }
           if (profile.MobilePhone) {
