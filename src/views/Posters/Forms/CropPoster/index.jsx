@@ -86,7 +86,7 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
   };
   const onDropRejected = async () => {
     clearPhotoDialogErrorTimeout();
-    setPhotoDialogError('Sorry, invalid image file! Only PNG, JPEG, and PDF posters are accepted.');
+    setPhotoDialogError('Sorry, invalid image file! Only PNG and JPEG posters are accepted.');
   };
 
   // Creates the message for the dialog box based on the state
@@ -134,7 +134,6 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
               accept={{
                 'image/jpeg': [],
                 'image/png': [],
-                'application/pdf': [],
               }}
               onDropAccepted={onDropAccepted}
               onDropRejected={onDropRejected}
