@@ -229,12 +229,12 @@ const Links = () => {
                 <NotificationsNoneOutlinedIcon className={styles.icon_style} />
               </ListItemIcon>
               <Link
-                href="https://stories.gordon.edu/"
+                href="https://www.gordon.edu/stories"
                 underline="hover"
                 className={`gc360_text_link`}
                 target="_blank"
               >
-                <ListItemText primary="The Bell" />
+                <ListItemText primary="Gordon News & Stories" />
               </Link>
             </ListItem>
             <ListItem>
