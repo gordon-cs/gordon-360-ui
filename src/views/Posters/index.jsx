@@ -25,6 +25,7 @@ import { AuthGroup } from 'services/auth';
 import { useAuthGroups, useNetworkStatus, useUser } from 'hooks';
 import FileUploadedRoundIcon from '@mui/icons-material/FileUploadRounded';
 import GordonLoader from 'components/Loader';
+import { useMsal } from '@azure/msal-react';
 const LOADER_SIZE = 50;
 
 const Posters = () => {
@@ -44,6 +45,9 @@ const Posters = () => {
   const isSiteAdmin = useAuthGroups(AuthGroup.SiteAdmin);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [posterToEdit, setPosterToEdit] = useState(null);
+  const { accounts } = useMsal();
+  const currentUsername = accounts.length > 0 ? accounts[0].username : null;
+  const currentUsernameShort = currentUsername?.split('@')[0];
 
   const [snackbar, setSnackbar] = useState({
     message: '',
@@ -80,11 +84,11 @@ const Posters = () => {
 
   useEffect(() => {
     const loadPosters = async () => {
-      const posters = await getCurrentPosters();
+      const posters = await getCurrentPosters(currentUsernameShort);
       setAllPosters(posters);
     };
     loadPosters();
-  }, []);
+  }, [currentUsernameShort]);
 
   useEffect(() => {
     const loadButton = async () => {
