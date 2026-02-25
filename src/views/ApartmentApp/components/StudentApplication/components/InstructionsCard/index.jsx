@@ -44,49 +44,78 @@ const InstructionsCard = () => {
         className={styles.apartment_card_header}
       />
       <CardContent className={styles.apartment_instructions}>
-        <Typography variant="h4">Review the following notices before applying</Typography>
+        <Typography variant="h4">Apartment Application Process 2026-2027</Typography>
         <Typography variant="body1" paragraph>
           Apartments provide an alternative to the traditional residence hall setting and offer a
           unique community experience. To be eligible to live in an apartment, students must be at
           least 20 years old <strong>or</strong> have junior or senior academic standing as of Sept.
-          1, {thisYear}. Students who were on disciplinary probation at any time during the{' '}
-          {thisYear - 1}-{thisYear} academic year must also receive approval from the Care and
-          Conduct Coordinator, Porter Sprigg, to be eligible to apply for an apartment. Each
-          applicant must be registered as a full-time student by{' '}
-          {format(ApplicationProcessDates.registrationDeadline, 'MMMM do, y')}.
+          1, {thisYear}.
         </Typography>
-        <Typography variant="body1" paragraph>
-          Each group of students desiring to live in a Tavilla or Bromley apartment or in The
-          Village must submit an application. Students can apply in groups of 4 to live near one
-          another in The Village.
-        </Typography>
-        <Typography variant="body1" paragraph>
-          Full-time and part-time students are allowed to apply for an apartment, but extra points
-          will be awarded to full-time students.
-        </Typography>
-        <Typography variant="body1" paragraph>
-          Students fulfilling academic program requirements through student teaching or a full-time
-          internship will qualify for the full-time, off-campus program credit. It is the
-          responsibility of applicants to claim this credit on the application.
-        </Typography>
-        <Typography variant="h5">Applications must be for a full apartment</Typography>
-        <Typography variant="body1" paragraph>
-          If applying for a six-person apartment, there must be six people on the application who
-          will be here for the <strong className={styles.over_emphasized}>fall semester</strong>{' '}
-          (four people on a four-person application, etc.). Applications with an incorrect number of
-          applicants will not be considered.
-        </Typography>
+        <Typography variant="h5">Application Dates</Typography>
+        <ul>
+          <li>
+            Applications are open as of{' '}
+            {format(ApplicationProcessDates.applicationAvailableAt, "b 'on' MMMM do")}
+          </li>
+          <li>
+            Applications close at{' '}
+            <b>{format(ApplicationProcessDates.applicationSubmissionDeadline, "b 'on' MMMM do")}</b>
+          </li>
+          <li>
+            <b>
+              You will be notified of your application status and next steps by{' '}
+              {format(ApplicationProcessDates.approvalNotificationBy, 'MMMM do')}
+            </b>
+          </li>
+        </ul>
+        <Typography variant="h5">Application & Qualifications</Typography>
+        <ul>
+          <li>
+            <b>Each group of students</b> desiring to live in a Tavilla or Bromley apartment or in
+            The Village as a group must submit an application.{' '}
+            <i>
+              Please note: Students can apply in groups of 4 to live near one another in The
+              Village. Students interested living in The Village without a group are still eligible
+              to apply for The Village through the non-apartment housing process.
+            </i>
+          </li>
+          <li>
+            <b>Full-time and part-time students</b>are allowed to apply for an apartment, but extra
+            points will be awarded to full-time students.
+            <ul>
+              <li>
+                Students fulfilling academic program requirements through student teaching or a
+                full-time internship will qualify for the full-time, off-campus program credit. It
+                is the responsibility of applicants to claim this credit on the application.
+              </li>
+            </ul>
+          </li>
+          <li>
+            <b>
+              You must apply with the correct number of people for the type of apartment you are
+              applying to:
+            </b>{' '}
+            If applying for a six-person apartment, there must be six people on the application who
+            will be here for the{' '}
+            <b>
+              <u>fall semester</u>
+            </b>{' '}
+            (four people on a four-person application, etc.).{' '}
+            <u>Applications with an incorrect number of applicants will not be considered.</u>
+          </li>
+        </ul>
+
         <Typography variant="h5">An Application is Not a Guarantee!</Typography>
         <Typography variant="body1" paragraph>
           Due to the large number of applications typically received for apartments, not all
           applications will be awarded an apartment. If you do not receive an apartment, you will
           need to secure housing through the housing lottery.
         </Typography>
-        <Typography variant="h5">How are apartments awarded?</Typography>
+        <Typography variant="h5">Point-Scale</Typography>
         <Typography variant="body1" paragraph>
-          Apartments are awarded in priority order, based first on point total for each type of
-          apartment (4-person, 6-person, etc.) and then on application submission time. Each
-          individual on an application will have points given/taken away using the following scale:
+          <b>How are apartments awarded?</b> Apartments are awarded in order of point total for each
+          type of apartment (4-person, 6-person, etc.) along with submission time. Each individual
+          on an application will have points given/taken away using the following scale:
         </Typography>
         <Grid container justifyContent="center" spacing={3}>
           <Grid item xs={11} lg={9}>
@@ -118,6 +147,27 @@ const InstructionsCard = () => {
           You will need to enter the General Housing Selection process and let the Housing Office
           know if you would prefer to live in a double/triple/quad and who you would like to be your
           roommate(s). Further information about specifics will be communicated in that email.
+        </Typography>
+        <Typography variant="h5">Further Info</Typography>
+        <Typography variant="body1">
+          For an FAQ and the latest updates, check the{' '}
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            className="gc360_text_link"
+            href="https://gordon.instructure.com/courses/13668/pages/apartment-application-process-2026-2027?module_item_id=695026"
+          >
+            Apartment Application Process 2026-2027 page in Canvas
+          </a>
+          .<br /> Questions? Email{' '}
+          <a
+            className="gc360_text_link"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="mailto:Housing@gordon.edu"
+          >
+            Housing@gordon.edu
+          </a>
         </Typography>
       </CardContent>
     </Card>
