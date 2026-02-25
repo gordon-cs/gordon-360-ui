@@ -33,22 +33,13 @@ const Agreements = ({ deleting, onChange }) => {
     const newCheckboxes = [
       {
         checked: false,
-        label: 'Each individual on the application has agreed to be on the application',
+        label:
+          'Each individual on the application has agreed to be on the application. We understand that if someone on this application has not agreed to be on the application, our application will be disqualified',
       },
       {
         checked: false,
         label:
-          'We understand that if someone on this application has not agreed to be on the application, our application will be disqualified',
-      },
-      {
-        checked: false,
-        label:
-          'Each individual on this application appears ONLY on this application and not on any other applications',
-      },
-      {
-        checked: false,
-        label:
-          "We understand that if an individual on this application also appears on another group's application, our application could be disqualified",
+          "Each individual on this application appears ONLY on this application and not on any other applications. We understand that if an individual on this application also appears on another group's application, our application could be disqualified",
       },
       {
         checked: false,
@@ -58,21 +49,12 @@ const Agreements = ({ deleting, onChange }) => {
       },
       {
         checked: false,
-        label: `Each individual on this application intends to register for classes by ${format(ApplicationProcessDates.approvalNotificationBy, 'MMMM do, y')}`,
-      },
-      {
-        checked: false,
-        label: `We understand that if any member of our application fails to register for classes by ${format(ApplicationProcessDates.approvalNotificationBy, 'MMMM do, y')}, our application could be disqualified`,
+        label: `Each individual on this application intends to register for classes by ${format(ApplicationProcessDates.registrationDeadline, 'MMMM do, y')}. We understand that if any member of our application fails to register for classes by ${format(ApplicationProcessDates.registrationDeadline, 'MMMM do, y')}, our application could be disqualified`,
       },
       {
         checked: false,
         label:
-          'Each individual on this application has submitted or is working with Student Financial Services to submit their housing deposit',
-      },
-      {
-        checked: false,
-        label:
-          "We understand that if any member of our application has not submitted their housing deposits by the date of this application's submission, our application could be disqualified",
+          "Each individual on this application has submitted or is working with Student Financial Services to submit their housing deposit. We understand that if any member of our application has not submitted their housing deposits by the date of this application's submission, our application could be disqualified",
       },
       {
         checked: false,
@@ -84,25 +66,11 @@ const Agreements = ({ deleting, onChange }) => {
               href="https://gordoncollegestudent-ma.safecolleges.com/login"
             >
               our awareness education modules in Vector Solutions
-            </a>{' '}
+            </a>
+            . We understand that we will not be eligible to apply for housing if our awareness
+            education modules are incomplete
           </>
         ),
-      },
-      {
-        checked: false,
-        label:
-          'We understand that we will not be eligible to apply for housing if our awareness education modules are incomplete',
-      },
-
-      {
-        checked: false,
-        label:
-          'We have read and understand all of the information and guidelines listed in the Instructions section',
-      },
-      {
-        checked: false,
-        label:
-          'We certify that all information provided on this application is accurate, to the best of our knowledge',
       },
       {
         checked: false,
@@ -118,6 +86,16 @@ const Agreements = ({ deleting, onChange }) => {
         checked: false,
         label:
           'We agree to host other students in our apartment during the winter break recess, in accordance with the policy outlined in the student handbook',
+      },
+      {
+        checked: false,
+        label:
+          'We have read and understand all of the information and guidelines listed in the Instructions section',
+      },
+      {
+        checked: false,
+        label:
+          'We certify that all information provided on this application is accurate, to the best of our knowledge',
       },
     ];
 
