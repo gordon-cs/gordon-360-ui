@@ -53,22 +53,22 @@ const Agreements = ({ deleting, onChange }) => {
       },
       {
         checked: false,
-        label:
-          "Each individual on this application has submitted or is working with Student Financial Services to submit their housing deposit. We understand that if any member of our application has not submitted their housing deposits by the date of this application's submission, our application could be disqualified",
+        label: `Each individual on this application will submit their housing deposit by ${format(ApplicationProcessDates.housingDepositDueDate, 'MMMM do, y')}. We understand that if any member of our application has not submitted their housing deposits by ${format(ApplicationProcessDates.housingDepositDueDate, 'MMMM do, y')}, our application could be disqualified`,
       },
       {
         checked: false,
         label: (
           <>
-            We have completed{' '}
+            We will complete{' '}
             <a
               className="gc360_text_link"
               href="https://gordoncollegestudent-ma.safecolleges.com/login"
             >
               our awareness education modules in Vector Solutions
-            </a>
-            . We understand that we will not be eligible to apply for housing if our awareness
-            education modules are incomplete
+            </a>{' '}
+            by {format(ApplicationProcessDates.housingDepositDueDate, 'MMMM do, y')}. We understand
+            that we will not be eligible to apply for housing if our awareness education modules are
+            not completed by {format(ApplicationProcessDates.housingDepositDueDate, 'MMMM do, y')}.
           </>
         ),
       },
