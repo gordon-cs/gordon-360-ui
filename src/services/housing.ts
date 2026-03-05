@@ -59,6 +59,7 @@ export const ApplicationProcessDates = {
   registrationDeadline: new Date(2026, 3, 17),
   applicationAvailableAt: new Date(2026, 2, 5, 12, 0, 0),
   applicationSubmissionDeadline: new Date(2026, 2, 12, 12, 0, 0),
+  housingDepositDueDate: new Date(2026, 2, 25),
   approvalNotificationBy: new Date(2026, 2, 26),
 };
 
