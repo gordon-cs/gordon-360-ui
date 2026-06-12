@@ -2,7 +2,7 @@ import { Paper, Stack, Typography } from '@mui/material';
 import { Description as SpreadsheetIcon } from '@mui/icons-material';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonSnackbar from 'components/Snackbar';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import Dropzone from 'react-dropzone';
 import { read, utils } from 'xlsx';
 import styles from './SpreadsheetUploader.module.css';
@@ -144,7 +144,8 @@ const SpreadsheetUploader = ({
                 {requiredColumns.map((columnName) =>
                   row[columnName as keyof typeof row] ? (
                     <Typography variant="body2">
-                      <b>{columnName}:</b> {displayCell(row[columnName as keyof typeof row])}
+                      <b>{columnName}:</b>{' '}
+                      {displayCell(row[columnName as keyof typeof row]) as ReactNode}
                     </Typography>
                   ) : null,
                 )}

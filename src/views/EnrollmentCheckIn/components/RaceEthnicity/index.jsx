@@ -8,6 +8,7 @@ import {
   Grid,
   Typography,
 } from '@mui/material';
+import React from 'react';
 
 const RaceEthnicity = ({ demographic, handleChangeDemographic, handleCheckDemographic }) => {
   return (

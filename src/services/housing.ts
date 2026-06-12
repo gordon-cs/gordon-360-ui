@@ -55,10 +55,17 @@ type ApplicationDetails = UnformattedApplicationDetails & {
   FirstHall: string;
 };
 
-const getApartmentSelectionDate = async (): Promise<string> => {
-  return 'Apr. 14';
-  // return await http.get('housing/apartment/selection-date); // Not yet implemented in the API
+export const ApplicationProcessDates = {
+  registrationDeadline: new Date(2026, 3, 17),
+  applicationAvailableAt: new Date(2026, 2, 5, 12, 0, 0),
+  applicationSubmissionDeadline: new Date(2026, 2, 12, 12, 0, 0),
+  housingDepositDueDate: new Date(2026, 2, 25),
+  approvalNotificationBy: new Date(2026, 2, 26),
 };
+
+// const getApartmentApplicationProcessDates = async (): Promise<Date> => {
+// return await http.get('housing/apartment/selection-date); // Not yet implemented in the API
+// };
 
 const getApartmentHalls = (): Promise<ApartmentHall[]> => http.get('housing/halls/apartments');
 
@@ -163,7 +170,6 @@ const submitApplication = (applicationID: number): Promise<boolean> =>
   http.put(`housing/apartment/applications/${applicationID}/submit`);
 
 const housingService = {
-  getApartmentSelectionDate,
   getApartmentHalls,
   getCurrentApplicationID,
   saveApartmentApplication,

@@ -23,6 +23,11 @@ export type Event = UnformattedEvent & {
   location: string;
 };
 
+export type FinalExamEvent = UnformattedEvent & {
+  date: string;
+  time: string;
+};
+
 const shortTimeFormatter = new Intl.DateTimeFormat('en-US', { timeStyle: 'short' });
 const shortDateFormatter = new Intl.DateTimeFormat('en-US', { dateStyle: 'short' });
 
@@ -74,6 +79,34 @@ const getFutureEvents = (allEvents: Event[]): Event[] => {
     .filter((e) => new Date(e.StartDate).getTime() > now)
     .sort(compareByProperty('StartDate'));
 };
+
+export async function getFinalExamEventsForUserByTerm(
+  username: string,
+  termStart: string,
+  termEnd: string,
+  yearCode: string,
+  termCode: string,
+): Promise<UnformattedEvent[]> {
+  const params = new URLSearchParams({
+    termStart,
+    termEnd,
+    yearCode,
+    termCode,
+  });
+
+  return http.get<UnformattedEvent[]>(`events/finalexams/${username}?${params.toString()}`);
+}
+
+export function formatFinalExamEvent(event: UnformattedEvent): FinalExamEvent {
+  return {
+    ...event,
+    date: new Date(event.StartDate).toLocaleDateString(),
+    time:
+      new Date(event.StartDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) +
+      ' - ' +
+      new Date(event.EndDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+  };
+}
 
 export const EVENT_FILTERS = Object.freeze([
   'CLW Credits',
@@ -228,6 +261,7 @@ const eventService = {
   getFutureEvents,
   getFilteredEvents,
   getAllGuestEvents,
+  getFinalExamEventsForUserByTerm,
 };
 
 export default eventService;

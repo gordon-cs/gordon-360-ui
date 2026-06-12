@@ -1,5 +1,6 @@
 import { getToken, isAuthenticated } from './auth';
 import { createError } from './error';
+import { getEnvVar } from 'envVar';
 
 type HttpRequestBody =
   | string
@@ -60,7 +61,7 @@ const del = <TResponse>(
 ): Promise<TResponse> =>
   makeRequest(endpoint, 'delete', JSON.stringify(body), setContentTypeJSON(headers));
 
-const apiBaseURL = import.meta.env.DEV ? '/' : (import.meta.env.VITE_API_URL as string);
+const apiBaseURL = getEnvVar('PROD') === 'development' ? '/' : getEnvVar('VITE_API_URL')!;
 
 /**
  * Make a request to the API

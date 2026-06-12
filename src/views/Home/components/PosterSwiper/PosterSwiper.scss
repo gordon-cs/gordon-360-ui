@@ -42,10 +42,9 @@
   .swiper-slide {
     background-position: center;
     background-size: cover;
-    // width: 90vw; // Make it almost full width of the viewport
     width: 90vw;
     overflow: visible !important;
-    height: 60vw; // Adjust height for a good aspect ratio
+    height: 60vw;
     max-width: 98vw;
     max-height: 80vw;
   }
@@ -55,5 +54,23 @@
 .swiper-slide-shadow-right,
 .swiper-slide-shadow-top,
 .swiper-slide-shadow-bottom {
-  background: rgba(0, 0, 0, 0.2); /* default shadow color */
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.mySwiper {
+  .swiper-pagination-bullet {
+    background-color: #706f6f;
+    opacity: 0.7;
+    width: 8px;
+    height: 8px;
+    margin: 0 6px;
+    transition: all 0.3s ease;
+  }
+
+  .swiper-pagination-bullet-active {
+    background-color: var(--mui-palette-secondary-700);
+    opacity: 1;
+    width: 10px;
+    height: 10px;
+  }
 }

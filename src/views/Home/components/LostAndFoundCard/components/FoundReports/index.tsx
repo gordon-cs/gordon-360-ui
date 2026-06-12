@@ -17,7 +17,7 @@ const FoundReports = () => {
   const navigate = useNavigate();
   const isMobile = useMediaQuery('(max-width:375px)');
 
-  const createSnackbar = useCallback((message, severity) => {
+  const createSnackbar = useCallback((message: string, severity: any) => {
     setSnackbar({ message, severity, open: true });
   }, []);
 

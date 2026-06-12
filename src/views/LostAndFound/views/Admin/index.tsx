@@ -110,7 +110,7 @@ const LostAndFoundAdmin = () => {
     }
   });
 
-  const createSnackbar = useCallback((message, severity) => {
+  const createSnackbar = useCallback((message: string, severity: any) => {
     setSnackbar({ message, severity, open: true });
   }, []);
 

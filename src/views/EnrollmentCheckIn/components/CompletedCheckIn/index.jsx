@@ -3,6 +3,7 @@ import { useUser } from 'hooks';
 import { Link } from 'react-router-dom';
 // @TODO CSSMODULES - outside directory
 import styles from './CompletedCheckIn.module.css';
+import React from 'react';
 
 const CompletedCheckIn = () => {
   const { profile } = useUser();
