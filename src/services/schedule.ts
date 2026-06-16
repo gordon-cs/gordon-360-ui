@@ -19,7 +19,7 @@ type DbCourse = {
   BEGIN_TIME?: string;
   /** A timespan of the format HH:mm:ss, stringified */
   END_TIME?: string;
-  START_DATE: string;
+  BEGIN_DATE: string;
   END_DATE: string;
   SUB_TERM_CDE?: string;
   Role: string;
@@ -67,8 +67,10 @@ export type CourseEvent = {
   title: string;
   location: string;
   subtermCode?: string;
-  start: Date;
-  end: Date;
+  start: Date; // used for time
+  end: Date; // used for time
+  startDate?: Date; // used for the date of the first class
+  endDate?: Date; // used for the date of the last class
   allDay?: boolean;
 };
 
@@ -107,8 +109,9 @@ function formatCoursesFromDb(courses: DbCourse[]): CourseEvent[] {
       title: course.CRS_CDE.trim(),
       location: course.BLDG_CDE + '\u00A0' + course.ROOM_CDE,
       subtermCode: course.SUB_TERM_CDE,
+      startDate: course.BEGIN_DATE ? new Date(course.BEGIN_DATE) : undefined,
+      endDate: course.END_DATE ? new Date(course.END_DATE) : undefined,
     };
-
     if (course.ROOM_CDE === 'ASY') {
       return {
         ...sharedDetails,

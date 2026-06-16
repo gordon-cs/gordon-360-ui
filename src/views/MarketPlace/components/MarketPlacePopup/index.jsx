@@ -18,7 +18,7 @@ import { useEffect, useState } from 'react';
 import userService from 'services/user';
 import ImageGallery from 'react-image-gallery';
 import marketplaceService from 'services/marketplace';
-import { msalInstance } from 'msalInstatiation';
+import { msalInstance } from 'msalInstantiation';
 import styles from '../../MarketPlace.module.scss';
 import { AuthGroup } from 'services/auth';
 import { useAuthGroups, useNetworkStatus } from 'hooks';

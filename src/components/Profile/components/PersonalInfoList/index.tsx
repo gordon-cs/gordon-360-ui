@@ -252,43 +252,42 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     setMobilePhoneNumber(profile.MobilePhone);
   }, [profile.MobilePhone]);
 
-  const mobilePhoneListItem =
-    (myProf || !isMobilePhonePrivate) && mobilePhone ? (
-      <ProfileInfoListItem
-        title="Mobile Phone:"
-        contentText={
-          <>
-            {myProf || !isMobilePhonePrivate ? formatPhone(mobilePhone) : 'Private'}
-            {myProf && (
-              <UpdatePhone
-                currentPhone={mobilePhone}
-                onUpdateSuccess={(newPhone) => {
-                  setMobilePhoneNumber(newPhone);
-                }}
-              />
-            )}
-          </>
-        }
-        ContentIcon={
-          myProf && (
-            <FormControlLabel
-              control={
-                <Switch
-                  onChange={handleChangeMobilePhonePrivacy}
-                  color="secondary"
-                  checked={!isMobilePhonePrivate}
-                />
-              }
-              label={isMobilePhonePrivate ? 'Private' : 'Public'}
-              labelPlacement="bottom"
-              disabled={!isOnline}
+  const mobilePhoneListItem = mobilePhone ? (
+    <ProfileInfoListItem
+      title="Mobile Phone:"
+      contentText={
+        <>
+          {mobilePhone === PRIVATE_INFO ? mobilePhone : formatPhone(mobilePhone)}
+          {myProf && (
+            <UpdatePhone
+              currentPhone={mobilePhone}
+              onUpdateSuccess={(newPhone) => {
+                setMobilePhoneNumber(newPhone);
+              }}
             />
-          )
-        }
-        privateInfo={isMobilePhonePrivate}
-        myProf={myProf}
-      />
-    ) : null;
+          )}
+        </>
+      }
+      ContentIcon={
+        myProf && (
+          <FormControlLabel
+            control={
+              <Switch
+                onChange={handleChangeMobilePhonePrivacy}
+                color="secondary"
+                checked={!isMobilePhonePrivate}
+              />
+            }
+            label={isMobilePhonePrivate ? 'Private' : 'Public'}
+            labelPlacement="bottom"
+            disabled={!isOnline}
+          />
+        )
+      }
+      privateInfo={isMobilePhonePrivate}
+      myProf={myProf}
+    />
+  ) : null;
 
   let streetAddr = profile.HomeStreet2 ? <span>{profile.HomeStreet2},&nbsp;</span> : null;
 

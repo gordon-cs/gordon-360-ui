@@ -236,7 +236,7 @@ Updated path configuration since src was set as root, but this doesn't apply in 
     "matchMedia.mock": ["matchMedia.mock.ts"],
     "pwa": ["."],
     "theme": ["theme.ts"],
-    "msalInstatiation": ["msalInstatiation.ts"],
+    "msalInstantiation": ["msalInstantiation.ts"],
     "./app": ["./"],
     "./app.global.css": ["./"]
   }
