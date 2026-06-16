@@ -276,7 +276,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
   // Users have the ability to restrict access to their home address information.  Since privacy
   // is tied to individual profile items, if the user requests a change to their address privacy
   // setting then we need to change the privacy settings on multiple profile items.  Here we
-  // construct a list of times that must be updated.
+  // construct a list of items that must be updated.
   let hasUSAAddress = profile.Country?.Value === 'United States of America' || !profile.Country;
   let homePrivacyFields = hasUSAAddress ? ['HomeCity', 'HomeState'] : ['Country', 'HomeCountry'];
   let streetPrivacyFields = ['HomeStreet1', 'HomeStreet2'];
