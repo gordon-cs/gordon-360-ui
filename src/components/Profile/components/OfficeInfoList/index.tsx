@@ -41,6 +41,7 @@ const OfficeInfoList = ({
   const isOfficeAdmin = useAuthGroups(AuthGroup.OfficeAdmin);
   const [profOfficeHours, setProfOfficeHours] = useState(office_hours);
   const [profMailLocation, setProfMailLocation] = useState(Mail_Location);
+  const [profMailDescription, setProfMailDescription] = useState(Mail_Description);
 
   // Only display on FacStaff profiles
   if (!PersonType?.includes('fac')) {
@@ -127,7 +128,7 @@ const OfficeInfoList = ({
                 {profMailLocation ? profMailLocation : 'Add mail location here'}
                 {Mail_Description && (
                   <GordonTooltip title={''} enterTouchDelay={50} leaveTouchDelay={2000}>
-                    <>{Mail_Description}</>
+                    <>{profMailDescription}</>
                   </GordonTooltip>
                 )}
               </Typography>
@@ -135,6 +136,7 @@ const OfficeInfoList = ({
             <Grid item>
               <UpdateMail
                 changeMailLocation={setProfMailLocation}
+                changeMailDescription={setProfMailDescription}
                 username={isOfficeAdmin ? AD_Username : undefined}
               />
             </Grid>

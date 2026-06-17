@@ -281,7 +281,6 @@ const setPlannedGraduationYear = (value: number | string) => {
   http.put(`profiles/plannedGradYear`, body);
 };
 
-// const updateMailStop = (value: string) => http.put(`profiles/mailstop`, value);
 const updateMailStop = (mailStop: string, username?: string) => {
   let url = 'profiles/mailstop';
   if (username) {
