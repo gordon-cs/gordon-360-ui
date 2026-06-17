@@ -74,85 +74,76 @@ const OfficeInfoList = ({
     />
   ) : null;
 
-  const officeHours = myProf ? (
-    <ProfileInfoListItem
-      title="Office Hours:"
-      contentText={
-        <Grid container spacing={0} alignItems="center">
-          <Grid item>{profOfficeHours ? profOfficeHours : 'Add office hours here'}</Grid>
-          <Grid item>
-            <UpdateOfficeHours
-              officeHours={profOfficeHours}
-              changeOfficeHours={setProfOfficeHours}
-            />
+  const officeHours =
+    myProf || isOfficeAdmin ? (
+      <ProfileInfoListItem
+        title="Office Hours:"
+        contentText={
+          <Grid container spacing={0} alignItems="center">
+            <Grid item>{profOfficeHours ? profOfficeHours : 'Add office hours here'}</Grid>
+            <Grid item>
+              <UpdateOfficeHours
+                officeHours={profOfficeHours}
+                changeOfficeHours={setProfOfficeHours}
+                username={isOfficeAdmin ? AD_Username : undefined}
+              />
+            </Grid>
           </Grid>
-        </Grid>
-      }
-    />
-  ) : profOfficeHours ? (
-    <ProfileInfoListItem title="Office Hours:" contentText={profOfficeHours} />
-  ) : null;
+        }
+      />
+    ) : profOfficeHours ? (
+      <ProfileInfoListItem title="Office Hours:" contentText={profOfficeHours} />
+    ) : null;
 
-  const room = myProf ? (
-    <ProfileInfoListItem
-      title="Room:"
-      contentText={
-        <Grid container spacing={0} alignItems="center">
-          <Grid item>
-            {BuildingDescription || OnCampusRoom
-              ? `${BuildingDescription}, ${OnCampusRoom}`
-              : 'Add your office location here'}
+  const room =
+    myProf || isOfficeAdmin ? (
+      <ProfileInfoListItem
+        title="Room:"
+        contentText={
+          <Grid container spacing={0} alignItems="center">
+            <Grid item>
+              {BuildingDescription || OnCampusRoom
+                ? `${OnCampusRoom} ${BuildingDescription}`
+                : 'Add office location here'}
+            </Grid>
+            <Grid item>
+              <UpdateOffice username={isOfficeAdmin ? AD_Username : undefined} />
+            </Grid>
           </Grid>
-          <Grid item>
-            <UpdateOffice />
-          </Grid>
-        </Grid>
-      }
-    />
-  ) : isOfficeAdmin ? (
-    <ProfileInfoListItem
-      title="Room:"
-      contentText={
-        <Grid container spacing={0} alignItems="center">
-          <Grid item>
-            {BuildingDescription || OnCampusRoom
-              ? `${BuildingDescription}, ${OnCampusRoom}`
-              : 'No office location set'}
-          </Grid>
-          <Grid item>
-            <UpdateOffice username={AD_Username} />
-          </Grid>
-        </Grid>
-      }
-    />
-  ) : BuildingDescription || OnCampusRoom ? (
-    <ProfileInfoListItem title="Room:" contentText={`${BuildingDescription}, ${OnCampusRoom}`} />
-  ) : null;
+        }
+      />
+    ) : BuildingDescription || OnCampusRoom ? (
+      <ProfileInfoListItem title="Room:" contentText={`${OnCampusRoom} ${BuildingDescription}`} />
+    ) : null;
 
-  const mailstop = myProf ? (
-    <ProfileInfoListItem
-      title="Mailstop:"
-      contentText={
-        <Grid container spacing={0} alignItems="center">
-          <Grid item>
-            <Typography>
-              {profMailLocation ? profMailLocation : 'Add your mail location here'}
-              {Mail_Description && (
-                <GordonTooltip title={''} enterTouchDelay={50} leaveTouchDelay={2000}>
-                  <>{Mail_Description}</>
-                </GordonTooltip>
-              )}
-            </Typography>
+  const mailstop =
+    myProf || isOfficeAdmin ? (
+      <ProfileInfoListItem
+        title="Mailstop:"
+        contentText={
+          <Grid container spacing={0} alignItems="center">
+            <Grid item>
+              <Typography>
+                {profMailLocation ? profMailLocation : 'Add mail location here'}
+                {Mail_Description && (
+                  <GordonTooltip title={''} enterTouchDelay={50} leaveTouchDelay={2000}>
+                    <>{Mail_Description}</>
+                  </GordonTooltip>
+                )}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <UpdateMail
+                changeMailLocation={setProfMailLocation}
+                username={isOfficeAdmin ? AD_Username : undefined}
+              />
+            </Grid>
           </Grid>
-          <Grid item>
-            <UpdateMail changeMailLocation={setProfMailLocation} />
-          </Grid>
-        </Grid>
-      }
-    />
-  ) : profMailLocation ? (
-    <ProfileInfoListItem title="Mailstop:" contentText={profMailLocation} />
-  ) : null;
+        }
+      />
+    ) : profMailLocation ? (
+      <ProfileInfoListItem title="Mailstop:" contentText={profMailLocation} />
+    ) : null;
 
   return (
     <Grid item xs={12} lg={12}>
