@@ -404,10 +404,10 @@ const FoundItemForm = ({ formType }: { formType: string }) => {
       try {
         const userInfo = await userService.getProfileInfo();
         setUser({
-          firstName: userInfo?.FirstName.value || '',
-          lastName: userInfo?.LastName.value || '',
+          firstName: userInfo?.FirstName.Value || '',
+          lastName: userInfo?.LastName.Value || '',
           emailAddr: userInfo?.Email || '',
-          phoneNumber: userInfo?.MobilePhone?.value || '',
+          phoneNumber: userInfo?.MobilePhone?.Value || '',
           AD_Username: userInfo?.AD_Username || '',
           ID: userInfo?.ID || '',
         });
