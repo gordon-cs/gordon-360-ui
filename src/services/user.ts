@@ -286,7 +286,7 @@ const updateMailStop = (mailStop: string, username?: string) => {
   if (username) {
     url += `?username=${encodeURIComponent(username)}`;
   }
-  return http.put(url, mailStop);
+  return http.put<{ MailLocation: string; MailDescription: string }>(url, mailStop);
 };
 
 const updateOfficeLocation = (officeLocation: OfficeLocationQuery, username?: string) => {
