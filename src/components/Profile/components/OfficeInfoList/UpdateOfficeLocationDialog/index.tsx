@@ -32,11 +32,6 @@ const UpdateOffice = ({ username }: Props) => {
         { BuildingCode: building, RoomNumber: room },
         username,
       );
-      setSnackbar({
-        message: 'Your office location will update within a couple hours.',
-        severity: 'success',
-        open: true,
-      });
     } catch {
       setSnackbar({
         message: 'Office location failed to update. Please contact CTS.',
