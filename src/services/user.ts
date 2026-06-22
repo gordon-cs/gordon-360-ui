@@ -281,12 +281,29 @@ const setPlannedGraduationYear = (value: number | string) => {
   http.put(`profiles/plannedGradYear`, body);
 };
 
-const updateMailStop = (value: string) => http.put(`profiles/mailstop`, value);
+const updateMailStop = (mailStop: string, username?: string) => {
+  let url = 'profiles/mailstop';
+  if (username) {
+    url += `?username=${encodeURIComponent(username)}`;
+  }
+  return http.put<{ MailLocation: string; MailDescription: string }>(url, mailStop);
+};
 
-const updateOfficeLocation = (OfficeLocation: OfficeLocationQuery) =>
-  http.put(`profiles/office_location`, OfficeLocation);
+const updateOfficeLocation = (officeLocation: OfficeLocationQuery, username?: string) => {
+  let url = 'profiles/office_location';
+  if (username) {
+    url += `?username=${encodeURIComponent(username)}`;
+  }
+  return http.put<{ OnCampusBuilding: string; OnCampusRoom: string }>(url, officeLocation);
+};
 
-const updateOfficeHours = (value: string) => http.put(`profiles/office_hours`, value);
+const updateOfficeHours = (officeHours: string, username?: string) => {
+  let url = 'profiles/office_hours';
+  if (username) {
+    url += `?username=${encodeURIComponent(username)}`;
+  }
+  return http.put<string>(url, officeHours);
+};
 
 const setMobilePhonePrivacy = (makePrivate: boolean) =>
   http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N')); // 'Y' = private, 'N' = public
