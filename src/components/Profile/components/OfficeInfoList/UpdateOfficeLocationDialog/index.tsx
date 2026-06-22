@@ -11,7 +11,7 @@ type Building = {
   Description: string;
 };
 
-const UpdateOffice = (Props: {
+const UpdateOffice = (props: {
   username?: string;
   changeBuilding: (building: string) => void;
   changeRoom: (room: string) => void;
@@ -28,12 +28,12 @@ const UpdateOffice = (Props: {
 
   const handleSubmit = async () => {
     try {
-      await userService.updateOfficeLocation(
+      const response = await userService.updateOfficeLocation(
         { BuildingCode: building, RoomNumber: room },
-        Props.username,
+        props.username,
       );
-      Props.changeBuilding(building);
-      Props.changeRoom(room);
+      props.changeBuilding(response.OnCampusBuilding);
+      props.changeRoom(response.OnCampusRoom);
     } catch {
       setSnackbar({
         message: 'Office location failed to update. Please contact CTS.',

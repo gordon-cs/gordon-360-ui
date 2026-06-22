@@ -294,7 +294,7 @@ const updateOfficeLocation = (officeLocation: OfficeLocationQuery, username?: st
   if (username) {
     url += `?username=${encodeURIComponent(username)}`;
   }
-  return http.put(url, officeLocation);
+  return http.put<{ OnCampusBuilding: string; OnCampusRoom: string }>(url, officeLocation);
 };
 
 const updateOfficeHours = (officeHours: string, username?: string) => {
@@ -302,7 +302,7 @@ const updateOfficeHours = (officeHours: string, username?: string) => {
   if (username) {
     url += `?username=${encodeURIComponent(username)}`;
   }
-  return http.put(url, officeHours);
+  return http.put<string>(url, officeHours);
 };
 
 const setMobilePhonePrivacy = (makePrivate: boolean) =>

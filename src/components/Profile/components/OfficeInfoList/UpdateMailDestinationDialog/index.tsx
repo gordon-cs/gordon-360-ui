@@ -19,7 +19,7 @@ const UpdateMail = (props: {
   const handleSubmit = async () => {
     try {
       const response = await userService.updateMailStop(mailStop, props.username);
-      props.changeMailLocation(mailStop);
+      props.changeMailLocation(response.MailLocation);
       props.changeMailDescription(response.MailDescription);
     } catch {
       setSnackbar({
