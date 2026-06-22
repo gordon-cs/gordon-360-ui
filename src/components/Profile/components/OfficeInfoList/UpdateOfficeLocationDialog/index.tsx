@@ -11,11 +11,11 @@ type Building = {
   Description: string;
 };
 
-type Props = {
+const UpdateOffice = (Props: {
   username?: string;
-};
-
-const UpdateOffice = ({ username }: Props) => {
+  changeBuilding: (building: string) => void;
+  changeRoom: (room: string) => void;
+}) => {
   const [open, setOpen] = useState(false);
   const [room, setRoom] = useState('');
   const [building, setBuilding] = useState('');
@@ -30,8 +30,10 @@ const UpdateOffice = ({ username }: Props) => {
     try {
       await userService.updateOfficeLocation(
         { BuildingCode: building, RoomNumber: room },
-        username,
+        Props.username,
       );
+      Props.changeBuilding(building);
+      Props.changeRoom(room);
     } catch {
       setSnackbar({
         message: 'Office location failed to update. Please contact CTS.',

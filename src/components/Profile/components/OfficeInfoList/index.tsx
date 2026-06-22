@@ -42,6 +42,8 @@ const OfficeInfoList = ({
   const [profOfficeHours, setProfOfficeHours] = useState(office_hours);
   const [profMailLocation, setProfMailLocation] = useState(Mail_Location);
   const [profMailDescription, setProfMailDescription] = useState(Mail_Description);
+  const [profBuildingDescription, setProfBuildingDescription] = useState(BuildingDescription);
+  const [profRoom, setProfRoom] = useState(OnCampusRoom);
 
   // Only display on FacStaff profiles
   if (!PersonType?.includes('fac')) {
@@ -103,12 +105,16 @@ const OfficeInfoList = ({
         contentText={
           <Grid container spacing={0} alignItems="center">
             <Grid item>
-              {BuildingDescription || OnCampusRoom
-                ? `${OnCampusRoom} ${BuildingDescription}`
+              {profBuildingDescription || profRoom
+                ? `${profRoom} ${profBuildingDescription}`
                 : 'Add office location here'}
             </Grid>
             <Grid item>
-              <UpdateOffice username={isOfficeAdmin ? AD_Username : undefined} />
+              <UpdateOffice
+                username={isOfficeAdmin ? AD_Username : undefined}
+                changeBuilding={setProfBuildingDescription}
+                changeRoom={setProfRoom}
+              />
             </Grid>
           </Grid>
         }
