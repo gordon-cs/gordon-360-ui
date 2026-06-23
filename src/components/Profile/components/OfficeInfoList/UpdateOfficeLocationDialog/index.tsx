@@ -32,7 +32,7 @@ const UpdateOffice = (props: {
         { BuildingCode: building, RoomNumber: room },
         props.username,
       );
-      props.changeBuilding(response.OnCampusBuilding);
+      props.changeBuilding(response.BuildingDescription);
       props.changeRoom(response.OnCampusRoom);
     } catch {
       setSnackbar({
