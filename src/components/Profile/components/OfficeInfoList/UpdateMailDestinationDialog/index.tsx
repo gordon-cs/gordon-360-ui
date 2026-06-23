@@ -19,8 +19,8 @@ const UpdateMail = (props: {
   const handleSubmit = async () => {
     try {
       const response = await userService.updateMailStop(mailStop, props.username);
-      props.changeMailLocation(response.MailLocation);
-      props.changeMailDescription(response.MailDescription);
+      props.changeMailLocation(response.Mail_Location);
+      props.changeMailDescription(response.Mail_Description);
     } catch {
       setSnackbar({
         message: 'Mail destination failed to update. Please contact CTS.',

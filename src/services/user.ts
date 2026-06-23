@@ -286,7 +286,7 @@ const updateMailStop = (mailStop: string, username?: string) => {
   if (username) {
     url += `?username=${encodeURIComponent(username)}`;
   }
-  return http.put<{ MailLocation: string; MailDescription: string }>(url, mailStop);
+  return http.put<{ Mail_Location: string; Mail_Description: string }>(url, mailStop);
 };
 
 const updateOfficeLocation = (officeLocation: OfficeLocationQuery, username?: string) => {
@@ -294,7 +294,7 @@ const updateOfficeLocation = (officeLocation: OfficeLocationQuery, username?: st
   if (username) {
     url += `?username=${encodeURIComponent(username)}`;
   }
-  return http.put<{ OnCampusBuilding: string; OnCampusRoom: string }>(url, officeLocation);
+  return http.put<{ BuildingDescription: string; OnCampusRoom: string }>(url, officeLocation);
 };
 
 const updateOfficeHours = (officeHours: string, username?: string) => {
