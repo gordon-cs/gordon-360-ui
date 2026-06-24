@@ -143,8 +143,9 @@ const OfficeInfoList = ({
             </Grid>
             <Grid item>
               <UpdateMail
-                changeMailLocation={setProfMailLocation}
-                changeMailDescription={setProfMailDescription}
+                defaultMailstop={profMailLocation}
+                setDefaultMailstop={setProfMailLocation}
+                setDefaultMailDescription={setProfMailDescription}
                 username={isOfficeAdmin ? AD_Username : undefined}
               />
             </Grid>
