@@ -112,8 +112,10 @@ const OfficeInfoList = ({
             <Grid item>
               <UpdateOffice
                 username={isOfficeAdmin ? AD_Username : undefined}
-                changeBuilding={setProfBuildingDescription}
-                changeRoom={setProfRoom}
+                defaultBuildingDescription={profBuildingDescription}
+                setDefaultBuildingDescription={setProfBuildingDescription}
+                defaultRoom={profRoom}
+                setDefaultRoom={setProfRoom}
               />
             </Grid>
           </Grid>

@@ -13,27 +13,44 @@ type Building = {
 
 const UpdateOffice = (props: {
   username?: string;
-  changeBuilding: (building: string) => void;
-  changeRoom: (room: string) => void;
+  defaultBuildingDescription: string;
+  setDefaultBuildingDescription: (building: string) => void;
+  defaultRoom: string;
+  setDefaultRoom: (room: string) => void;
 }) => {
   const [open, setOpen] = useState(false);
-  const [room, setRoom] = useState('');
-  const [building, setBuilding] = useState('');
+
+  const [room, setRoom] = useState(props.defaultRoom);
   const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
   const [buildings, setBuildings] = useState<Building[]>([]);
+  const [building, setBuilding] = useState<Building>({
+    Description: '',
+    Code: '',
+  });
 
   useEffect(() => {
     peopleSearchService.getBuildings().then(setBuildings);
   }, []);
 
+  useEffect(() => {
+    setRoom(props.defaultRoom);
+
+    setBuilding(
+      buildings.find((building) => building.Description === props.defaultBuildingDescription) ?? {
+        Description: '',
+        Code: '',
+      },
+    );
+  }, [buildings, props.defaultBuildingDescription, props.defaultRoom]);
+
   const handleSubmit = async () => {
     try {
       const response = await userService.updateOfficeLocation(
-        { BuildingCode: building, RoomNumber: room },
+        { BuildingCode: building.Code, RoomNumber: room },
         props.username,
       );
-      props.changeBuilding(response.BuildingDescription);
-      props.changeRoom(response.OnCampusRoom);
+      props.setDefaultBuildingDescription(response.BuildingDescription);
+      props.setDefaultRoom(response.OnCampusRoom);
     } catch {
       setSnackbar({
         message: 'Office location failed to update. Please contact CTS.',
@@ -65,7 +82,8 @@ const UpdateOffice = (props: {
             options={buildings}
             renderInput={(params) => <TextField {...params} label="Building" />}
             getOptionLabel={(option) => option.Description}
-            onChange={(_event, value) => setBuilding(value!.Code)}
+            onChange={(_event, value) => setBuilding(value!)}
+            value={building}
           />
           <TextField
             label="Room"
