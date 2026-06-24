@@ -7,20 +7,21 @@ import userService from 'services/user';
 import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
 
 const UpdateMail = (props: {
-  changeMailLocation: (mailStop: string) => void;
-  changeMailDescription: (desc: string) => void;
+  defaultMailstop: string;
+  setDefaultMailstop: (mailStop: string) => void;
+  setDefaultMailDescription: (desc: string) => void;
   username?: string;
 }) => {
   const [open, setOpen] = useState(false);
-  const [mailStop, setMailStop] = useState('');
+  const [mailStop, setMailStop] = useState(props.defaultMailstop);
   const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
   const [mailStops, setMailStops] = useState<string[]>([]);
 
   const handleSubmit = async () => {
     try {
       const response = await userService.updateMailStop(mailStop, props.username);
-      props.changeMailLocation(response.Mail_Location);
-      props.changeMailDescription(response.Mail_Description);
+      props.setDefaultMailstop(response.Mail_Location);
+      props.setDefaultMailDescription(response.Mail_Description);
     } catch {
       setSnackbar({
         message: 'Mail destination failed to update. Please contact CTS.',
