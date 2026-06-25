@@ -237,7 +237,7 @@ export function isAlumni(
 }
 
 function formatCountry(profile: UnformattedProfileInfo) {
-  if (profile?.Country?.Value.includes(',')) {
+  if (profile?.Country?.Value?.includes(',')) {
     const country = profile.Country.Value;
     const commaIndex = country.indexOf(',');
     profile.Country.Value = `${country.slice(commaIndex + 2)} ${country.slice(0, commaIndex)}`;
