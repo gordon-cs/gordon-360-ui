@@ -65,7 +65,6 @@ const UpdateUserPrivacy = ({
             options={groupList}
             defaultDisabled={true} // don't display name in drop-down
             select
-            size={120}
           />
         </FormControl>
       </Grid>
