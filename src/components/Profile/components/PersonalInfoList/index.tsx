@@ -131,7 +131,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
 
   // Students should not have the 'FacStaff' visibility option in privacy settings
   // In other words, for students, choosing Private is equivalent to FacStaff
-  const excludedVisibilityList: string[] = isStudent ? ['FacStaff'] : [];
+  const excludedVisibilityList: Set<string> | null = isStudent ? new Set(['FacStaff']) : null;
 
   // Get the user's mailbox combination when they are viewing their own profile
   useEffect(() => {
@@ -232,6 +232,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
             username={profile.AD_Username}
             fieldList={['HomePhone']}
             excludedVisibilityList={excludedVisibilityList}
+            createSnackbar={createSnackbar}
           />
         )
       }
@@ -265,6 +266,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
             username={profile.AD_Username}
             fieldList={['MobilePhone']}
             excludedVisibilityList={excludedVisibilityList}
+            createSnackbar={createSnackbar}
           />
         )
       }
@@ -298,6 +300,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
               username={profile.AD_Username}
               fieldList={streetPrivacyFields}
               excludedVisibilityList={excludedVisibilityList}
+              createSnackbar={createSnackbar}
             />
           )
         }
@@ -322,6 +325,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
               username={profile.AD_Username}
               fieldList={homePrivacyFields}
               excludedVisibilityList={excludedVisibilityList}
+              createSnackbar={createSnackbar}
             />
           )
         }
@@ -709,6 +713,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
               username={profile.AD_Username}
               fieldList={['SpouseName']}
               excludedVisibilityList={excludedVisibilityList}
+              createSnackbar={createSnackbar}
             />
           )
         }

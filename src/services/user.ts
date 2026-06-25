@@ -208,6 +208,11 @@ export type UserPrivacyQuery = {
   VisibilityGroup: string;
 };
 
+export type UserPrivacySetting = {
+  Field: string;
+  VisibilityGroup: string;
+};
+
 export function isStudent(profile: Profile): profile is StudentProfileInfo;
 export function isStudent(
   profile: UnformattedProfileInfo,
@@ -281,7 +286,7 @@ const getMailboxInformation = (): Promise<{ Combination: string }> =>
 
 const getVisibilityGroups = (): Promise<string[]> => http.get(`profiles/visibility_groups`);
 
-const getPrivacySetting = (username: string): Promise<string> =>
+const getPrivacySetting = (username: string): Promise<UserPrivacySetting[]> =>
   http.get(`profiles/${username}/privacy_settings/`);
 
 const getMailStops = (): Promise<string[]> => http.get(`profiles/mailstops`);
