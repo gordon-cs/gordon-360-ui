@@ -17,7 +17,7 @@ const UpdateUserPrivacy = ({
   createSnackbar,
 }: Props) => {
   const [groupList, setGroupList] = useState<string[]>([]);
-  const [visibleTo, setVisibleTo] = useState<string>('Private'); // default private while loading
+  const [visibleTo, setVisibleTo] = useState<string>(''); // Empty if not previouslly set
 
   const handlePrivacy = async (
     event: React.ChangeEvent<HTMLInputElement>,
