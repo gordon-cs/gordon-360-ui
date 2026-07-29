@@ -6,22 +6,16 @@ import { Participation } from './membership';
 import { Class } from './peopleSearch';
 import { Override } from './utils';
 
-export type ProfileStringItem = {
-  Value: string;
-  IsPrivate: boolean;
+type CLWCredits = {
+  current: number;
+  required: number;
 };
-
-// **** Reserved for future use ****
-// type ProfileNumberItem = {
-//   Value: number;
-//   IsPrivate: boolean;
-// };
 
 enum OnOffCampusStatus {
   'Off Campus' = 'O',
   Away = 'A',
   Remote = 'D',
-  'Private' = 'P',
+  'Private as requested.' = 'P',
   'On Campus' = '',
 }
 
@@ -31,19 +25,19 @@ const onOffCampusDescriptions = {
   O: 'Off Campus' as OnOffCampusDescription,
   A: 'Away' as OnOffCampusDescription,
   D: 'Remote' as OnOffCampusDescription,
-  P: 'Private' as OnOffCampusDescription,
+  P: 'Private as requested.' as OnOffCampusDescription,
   '': 'On Campus' as OnOffCampusDescription,
 };
 
 type BaseProfileInfo = {
   ID: string;
   Title: string;
-  FirstName: ProfileStringItem;
-  MiddleName: ProfileStringItem;
-  LastName: ProfileStringItem;
-  Suffix: ProfileStringItem;
-  MaidenName: ProfileStringItem;
-  NickName: ProfileStringItem;
+  FirstName: string;
+  MiddleName: string;
+  LastName: string;
+  Suffix: string;
+  MaidenName: string;
+  NickName: string;
   OnCampusBuilding: string;
   OnCampusRoom: string;
   OnCampusPhone: string;
@@ -51,22 +45,23 @@ type BaseProfileInfo = {
   OnCampusFax: string;
   PersonalEmail?: string;
   WorkEmail?: string;
-  altEmail?: string;
+  aEmail?: string;
   PreferredEmail?: string;
   doNotContact?: boolean;
   doNotMail?: boolean;
   WorkPhone?: string;
-  MobilePhone?: ProfileStringItem;
+  MobilePhone?: string;
   IsMobilePhonePrivate: number;
   PreferredPhone?: string;
   Mail_Location: string;
-  HomeStreet1: ProfileStringItem;
-  HomeStreet2: ProfileStringItem;
-  HomeCity: ProfileStringItem;
-  HomeState: ProfileStringItem;
-  HomePostalCode: ProfileStringItem;
-  HomeCountry: ProfileStringItem;
-  HomePhone: ProfileStringItem;
+  HomeStreet1: string;
+  HomeStreet2: string;
+  HomeCity: string;
+  HomeState: string;
+  HomePostalCode: string;
+  HomeCountry: string;
+  HomePhone: string;
+  HomeFax: string;
   KeepPrivate: string;
   Barcode: string;
   Email: string;
@@ -74,7 +69,7 @@ type BaseProfileInfo = {
   AD_Username: string;
   show_pic: number;
   preferred_photo: number;
-  Country: ProfileStringItem;
+  Country: string;
   BuildingDescription: string;
   Facebook: string;
   Twitter: string;
@@ -86,13 +81,13 @@ type BaseProfileInfo = {
   fullName?: string;
   CliftonStrengths: CliftonStrengths | null;
   Married?: string;
-  SpouseName: ProfileStringItem;
 };
 
 export type UnformattedFacStaffProfileInfo = BaseProfileInfo & {
   Dept: string;
   JobTitle: string;
   OnCampusDepartment: string;
+  SpouseName: string;
   Type: string;
   FirstHireDt: string;
   office_hours: string;
@@ -127,7 +122,7 @@ export type UnformattedStudentProfileInfo = BaseProfileInfo & {
   Minor1: string;
   Minor2: string;
   Minor3: string;
-  MobilePhone: ProfileStringItem;
+  MobilePhone: string;
   IsMobilePhonePrivate: number;
   Major1Description: string;
   Major2Description: string;
@@ -203,16 +198,6 @@ export type OfficeLocationQuery = {
   RoomNumber: string;
 };
 
-export type UserPrivacyQuery = {
-  Field: string[];
-  VisibilityGroup: string;
-};
-
-export type UserPrivacySetting = {
-  Field: string;
-  VisibilityGroup: string;
-};
-
 export function isStudent(profile: Profile): profile is StudentProfileInfo;
 export function isStudent(
   profile: UnformattedProfileInfo,
@@ -242,10 +227,10 @@ export function isAlumni(
 }
 
 function formatCountry(profile: UnformattedProfileInfo) {
-  if (profile?.Country?.Value?.includes(',')) {
-    const country = profile.Country.Value;
+  if (profile?.Country?.includes(',')) {
+    const country = profile.Country;
     const commaIndex = country.indexOf(',');
-    profile.Country.Value = `${country.slice(commaIndex + 2)} ${country.slice(0, commaIndex)}`;
+    profile.Country = `${country.slice(commaIndex + 2)} ${country.slice(0, commaIndex)}`;
   }
   return profile;
 }
@@ -284,11 +269,6 @@ const getAdvisors = (username: string): Promise<StudentAdvisorInfo[]> =>
 const getMailboxInformation = (): Promise<{ Combination: string }> =>
   http.get('profiles/mailbox-information/');
 
-const getVisibilityGroups = (): Promise<string[]> => http.get(`profiles/visibility_groups`);
-
-const getPrivacySetting = (username: string): Promise<UserPrivacySetting[]> =>
-  http.get(`profiles/${username}/privacy_settings/`);
-
 const getMailStops = (): Promise<string[]> => http.get(`profiles/mailstops`);
 
 const setMobilePhoneNumber = (value: number | string) => {
@@ -301,35 +281,18 @@ const setPlannedGraduationYear = (value: number | string) => {
   http.put(`profiles/plannedGradYear`, body);
 };
 
-const updateMailStop = (mailStop: string, username?: string) => {
-  let url = 'profiles/mailstop';
-  if (username) {
-    url += `?username=${encodeURIComponent(username)}`;
-  }
-  return http.put<{ Mail_Location: string; Mail_Description: string }>(url, mailStop);
-};
+const updateMailStop = (value: string) => http.put(`profiles/mailstop`, value);
 
-const updateOfficeLocation = (officeLocation: OfficeLocationQuery, username?: string) => {
-  let url = 'profiles/office_location';
-  if (username) {
-    url += `?username=${encodeURIComponent(username)}`;
-  }
-  return http.put<{ BuildingDescription: string; OnCampusRoom: string }>(url, officeLocation);
-};
+const updateOfficeLocation = (OfficeLocation: OfficeLocationQuery) =>
+  http.put(`profiles/office_location`, OfficeLocation);
 
-const updateOfficeHours = (officeHours: string, username?: string) => {
-  let url = 'profiles/office_hours';
-  if (username) {
-    url += `?username=${encodeURIComponent(username)}`;
-  }
-  return http.put<string>(url, officeHours);
-};
+const updateOfficeHours = (value: string) => http.put(`profiles/office_hours`, value);
 
 const setMobilePhonePrivacy = (makePrivate: boolean) =>
   http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N')); // 'Y' = private, 'N' = public
 
-const setUserPrivacy = (userPrivacy: UserPrivacyQuery) =>
-  http.put(`profiles/user_privacy`, userPrivacy);
+const setHomePhonePrivacy = (makePrivate: boolean) =>
+  http.put('profiles/mobile_privacy/' + (makePrivate ? 'Y' : 'N')); // 'Y' = private, 'N' = public
 
 const setImagePrivacy = (makePrivate: boolean) =>
   http.put('profiles/image_privacy/' + (makePrivate ? 'N' : 'Y')); // 'Y' = show image, 'N' = don't show image
@@ -356,8 +319,8 @@ const getInformalName = async (username: string = ''): Promise<InformalName | un
   if (!profile) return undefined;
 
   return {
-    NickName: profile.NickName.Value ?? profile.FirstName.Value,
-    LastName: profile.LastName.Value,
+    NickName: profile.NickName ?? profile.FirstName,
+    LastName: profile.LastName,
   };
 };
 
@@ -366,7 +329,7 @@ const getProfileInfo = async (username: string = ''): Promise<Profile | undefine
 
   if (!profile) return undefined;
 
-  const fullName = `${profile?.FirstName.Value} ${profile?.LastName.Value}`;
+  const fullName = `${profile?.FirstName} ${profile?.LastName}`;
   const cliftonStrengths = await CliftonStrengthsService.getCliftonStrengths(profile.AD_Username);
 
   if (isStudent(profile)) {
@@ -460,8 +423,8 @@ const getGraduation = (username: string): Promise<Graduation> =>
 
 const userService = {
   setMobilePhonePrivacy,
-  setUserPrivacy,
   setPlannedGraduationYear,
+  setHomePhonePrivacy,
   setMobilePhoneNumber,
   updateMailStop,
   updateOfficeLocation,
@@ -475,8 +438,6 @@ const userService = {
   getAdvisors,
   getMailboxInformation,
   getMembershipHistory,
-  getVisibilityGroups,
-  getPrivacySetting,
   getGraduation,
   resetImage,
   postImage,

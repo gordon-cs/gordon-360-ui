@@ -494,7 +494,7 @@ const StatusManager = () => {
           <Card>
             <CardContent>
               <Typography variant="h5" fontWeight="bold" gutterBottom>
-                {profile?.FirstName.Value || 'User'}'s Status List
+                {profile?.FirstName || 'User'}'s Status List
               </Typography>
 
               <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>

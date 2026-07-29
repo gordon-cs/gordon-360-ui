@@ -51,8 +51,7 @@ const Profile = ({ profile: propsProfile, myProf }: Props) => {
   );
 
   const fetchProfile = async () => {
-    let username = myProf ? '' : propsProfile.AD_Username;
-    const updatedProfile = await user.getProfileInfo(username);
+    const updatedProfile = await user.getProfileInfo(profile.AD_Username);
     if (updatedProfile) setProfile(updatedProfile);
   };
 

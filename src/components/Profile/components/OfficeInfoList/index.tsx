@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, Grid, List, Typography } from '@mui/material';
 import ProfileInfoListItem from '../ProfileInfoListItem';
 import styles from './OfficeInfoList.module.css';
-import { useAuthGroups } from 'hooks';
-import { AuthGroup } from 'services/auth';
 import UpdateOffice from './UpdateOfficeLocationDialog';
 import UpdateOfficeHours from './UpdateOfficeHoursDialog';
 import UpdateMail from './UpdateMailDestinationDialog';
@@ -20,7 +18,6 @@ type Props = {
     office_hours: string;
     Mail_Location: string;
     Mail_Description: string;
-    AD_Username: string;
   };
 };
 
@@ -35,15 +32,10 @@ const OfficeInfoList = ({
     office_hours,
     Mail_Location,
     Mail_Description,
-    AD_Username,
   },
 }: Props) => {
-  const isOfficeAdmin = useAuthGroups(AuthGroup.OfficeAdmin);
   const [profOfficeHours, setProfOfficeHours] = useState(office_hours);
   const [profMailLocation, setProfMailLocation] = useState(Mail_Location);
-  const [profMailDescription, setProfMailDescription] = useState(Mail_Description);
-  const [profBuildingDescription, setProfBuildingDescription] = useState(BuildingDescription);
-  const [profRoom, setProfRoom] = useState(OnCampusRoom);
 
   // Only display on FacStaff profiles
   if (!PersonType?.includes('fac')) {
@@ -77,84 +69,69 @@ const OfficeInfoList = ({
     />
   ) : null;
 
-  const officeHours =
-    myProf || isOfficeAdmin ? (
-      <ProfileInfoListItem
-        title="Office Hours:"
-        contentText={
-          <Grid container spacing={0} alignItems="center">
-            <Grid item>{profOfficeHours ? profOfficeHours : 'Add office hours here'}</Grid>
-            <Grid item>
-              <UpdateOfficeHours
-                officeHours={profOfficeHours}
-                changeOfficeHours={setProfOfficeHours}
-                username={isOfficeAdmin ? AD_Username : undefined}
-              />
-            </Grid>
+  const officeHours = myProf ? (
+    <ProfileInfoListItem
+      title="Office Hours:"
+      contentText={
+        <Grid container spacing={0} alignItems="center">
+          <Grid item>{profOfficeHours ? profOfficeHours : 'Add office hours here'}</Grid>
+          <Grid item>
+            <UpdateOfficeHours
+              officeHours={profOfficeHours}
+              changeOfficeHours={setProfOfficeHours}
+            />
           </Grid>
-        }
-      />
-    ) : profOfficeHours ? (
-      <ProfileInfoListItem title="Office Hours:" contentText={profOfficeHours} />
-    ) : null;
+        </Grid>
+      }
+    />
+  ) : profOfficeHours ? (
+    <ProfileInfoListItem title="Office Hours:" contentText={profOfficeHours} />
+  ) : null;
 
-  const room =
-    myProf || isOfficeAdmin ? (
-      <ProfileInfoListItem
-        title="Room:"
-        contentText={
-          <Grid container spacing={0} alignItems="center">
-            <Grid item>
-              {profBuildingDescription || profRoom
-                ? `${profRoom} ${profBuildingDescription}`
-                : 'Add office location here'}
-            </Grid>
-            <Grid item>
-              <UpdateOffice
-                username={isOfficeAdmin ? AD_Username : undefined}
-                defaultBuildingDescription={profBuildingDescription}
-                setDefaultBuildingDescription={setProfBuildingDescription}
-                defaultRoom={profRoom}
-                setDefaultRoom={setProfRoom}
-              />
-            </Grid>
+  const room = myProf ? (
+    <ProfileInfoListItem
+      title="Room:"
+      contentText={
+        <Grid container spacing={0} alignItems="center">
+          <Grid item>
+            {BuildingDescription || OnCampusRoom
+              ? `${BuildingDescription}, ${OnCampusRoom}`
+              : 'Add your office location here'}
           </Grid>
-        }
-      />
-    ) : BuildingDescription || OnCampusRoom ? (
-      <ProfileInfoListItem title="Room:" contentText={`${OnCampusRoom} ${BuildingDescription}`} />
-    ) : null;
+          <Grid item>
+            <UpdateOffice />
+          </Grid>
+        </Grid>
+      }
+    />
+  ) : BuildingDescription || OnCampusRoom ? (
+    <ProfileInfoListItem title="Room:" contentText={`${BuildingDescription}, ${OnCampusRoom}`} />
+  ) : null;
 
-  const mailstop =
-    myProf || isOfficeAdmin ? (
-      <ProfileInfoListItem
-        title="Mailstop:"
-        contentText={
-          <Grid container spacing={0} alignItems="center">
-            <Grid item>
-              <Typography>
-                {profMailLocation ? profMailLocation : 'Add mail location here'}
-                {Mail_Description && (
-                  <GordonTooltip title={''} enterTouchDelay={50} leaveTouchDelay={2000}>
-                    <>{profMailDescription}</>
-                  </GordonTooltip>
-                )}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <UpdateMail
-                defaultMailstop={profMailLocation}
-                setDefaultMailstop={setProfMailLocation}
-                setDefaultMailDescription={setProfMailDescription}
-                username={isOfficeAdmin ? AD_Username : undefined}
-              />
-            </Grid>
+  const mailstop = myProf ? (
+    <ProfileInfoListItem
+      title="Mailstop:"
+      contentText={
+        <Grid container spacing={0} alignItems="center">
+          <Grid item>
+            <Typography>
+              {profMailLocation ? profMailLocation : 'Add your mail location here'}
+              {Mail_Description && (
+                <GordonTooltip title={''} enterTouchDelay={50} leaveTouchDelay={2000}>
+                  <>{Mail_Description}</>
+                </GordonTooltip>
+              )}
+            </Typography>
           </Grid>
-        }
-      />
-    ) : profMailLocation ? (
-      <ProfileInfoListItem title="Mailstop:" contentText={profMailLocation} />
-    ) : null;
+          <Grid item>
+            <UpdateMail changeMailLocation={setProfMailLocation} />
+          </Grid>
+        </Grid>
+      }
+    />
+  ) : profMailLocation ? (
+    <ProfileInfoListItem title="Mailstop:" contentText={profMailLocation} />
+  ) : null;
 
   return (
     <Grid item xs={12} lg={12}>

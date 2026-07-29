@@ -6,22 +6,16 @@ import { useState, useEffect } from 'react';
 import userService from 'services/user';
 import SearchField from 'views/PeopleSearch/components/SearchFieldList/components/SearchField';
 
-const UpdateMail = (props: {
-  defaultMailstop: string;
-  setDefaultMailstop: (mailStop: string) => void;
-  setDefaultMailDescription: (desc: string) => void;
-  username?: string;
-}) => {
+const UpdateMail = (props: { changeMailLocation: (mailStop: string) => void }) => {
   const [open, setOpen] = useState(false);
-  const [mailStop, setMailStop] = useState(props.defaultMailstop);
+  const [mailStop, setMailStop] = useState('');
   const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
   const [mailStops, setMailStops] = useState<string[]>([]);
 
   const handleSubmit = async () => {
     try {
-      const response = await userService.updateMailStop(mailStop, props.username);
-      props.setDefaultMailstop(response.Mail_Location);
-      props.setDefaultMailDescription(response.Mail_Description);
+      await userService.updateMailStop(mailStop);
+      props.changeMailLocation(mailStop);
     } catch {
       setSnackbar({
         message: 'Mail destination failed to update. Please contact CTS.',
