@@ -131,10 +131,10 @@ const FoundItemFormCreate = () => {
     const fetchUserData = async () => {
       try {
         setUser({
-          firstName: profile?.FirstName.Value || '',
-          lastName: profile?.LastName.Value || '',
+          firstName: profile?.FirstName || '',
+          lastName: profile?.LastName || '',
           emailAddr: profile?.Email || '',
-          phoneNumber: profile?.MobilePhone?.Value || '',
+          phoneNumber: profile?.MobilePhone || '',
           AD_Username: profile?.AD_Username || '',
         });
       } catch (error) {

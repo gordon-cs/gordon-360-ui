@@ -38,8 +38,9 @@ import CliftonStrengthsService from 'services/cliftonStrengths';
 import SLock from './Salsbury.png';
 import DPLock from './DandP.png';
 import DDLock from './DandD.png';
-import UpdateUserPrivacy from './UpdateUserPrivacyDropDownMenu';
 import { differenceInYears, parse } from 'date-fns'; // date utility functions
+
+const PRIVATE_INFO = 'Private as requested.';
 
 const parseDateString = (dateString: string): string => {
   if (!dateString) return 'Unknown';
@@ -49,8 +50,6 @@ const parseDateString = (dateString: string): string => {
 const formatPhone = (phone: string) => {
   if (phone?.length === 10) {
     return `(${phone?.slice(0, 3)}) ${phone?.slice(3, 6)}-${phone?.slice(6)}`;
-  } else if (phone?.length === 11 && phone[0] === '1') {
-    return `(${phone?.slice(1, 4)}) ${phone?.slice(4, 7)}-${phone?.slice(7)}`;
   } else {
     return phone;
   }
@@ -68,6 +67,9 @@ const parseGraduationDate = (whenGraduated: string) => {
 };
 
 const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) => {
+  const [isMobilePhonePrivate, setIsMobilePhonePrivate] = useState(
+    Boolean(profile.IsMobilePhonePrivate && profile.MobilePhone !== PRIVATE_INFO),
+  );
   const [isCliftonStrengthsPrivate, setIsCliftonStrengthsPrivate] = useState(
     profile.CliftonStrengths?.Private,
   );
@@ -76,9 +78,9 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
   const [advisorsList, setAdvisorsList] = useState<AdvisorType[]>([]);
   const [showMailCombo, setShowMailCombo] = useState(false);
   const [graduationInfo, setGraduationInfo] = useState<Graduation | null>(null);
-  const isStudent = checkIsStudent(profile);
-  const isFacStaff = checkIsFacStaff(profile);
-  const isAlumni = checkIsAlumni(profile);
+  const isStudent = profile.PersonType?.includes('stu');
+  const isFacStaff = profile.PersonType?.includes('fac');
+  const isAlumni = profile.PersonType?.includes('alu');
   const [isViewerPolice, canViewSensitiveInfo, canViewAcademicInfo] = useAuthGroups(
     AuthGroup.Police,
     AuthGroup.SensitiveInfoView,
@@ -86,52 +88,42 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
   );
   const [isJoinDialogOpen, setIsJoinDialogOpen] = useState(false);
   const [profPlannedGradYear, setProfPlannedGradYear] = useState(
-    isStudent ? profile.PlannedGradYear : null,
+    checkIsStudent(profile) ? profile.PlannedGradYear : null,
   );
 
-  // Students with KeepPrivate flag set to 'Y' or 'P' are hidden
-  // The dbo.FacStaff and dbo.Student views both contain the column 'KeepPrivate' but they are
-  // used differently.
-  //   - For faculty and staff this value is either 1 (private) or 0 (public) and had been set
-  //     or unset by the user, first in Go.Gordon and then in 360.Gordon.  Data from the
-  //     UserPrivacy_Settings table is consulted first, but if absent then this field is used
-  //     to determine the visibility of personal contact information (phone and address).
-  //   - For students this value is either 'Y' (or 'P') to indicate the student's information
-  //     should not be shared with other students but still available for faculty and staff.
-  // We must honor the KeepPrivate flag since it is possible that another office at Gordon may
-  // set it.
-  const hideStudent =
-    isStudent && Boolean(profile.KeepPrivate === 'Y' || profile.KeepPrivate === 'P');
+  // KeepPrivate has different values for Students and FacStaff.
+  // Students: null for public, 'S' for semi-private (visible to other students, some info redacted)
+  //    or 'P' for Private (not visible to other students)
+  // FacStaff: '0' for public, '1' for private.
+  const keepPrivate = Boolean(
+    profile.KeepPrivate === '1' || profile.KeepPrivate === 'S' || profile.KeepPrivate === 'P',
+  );
+
+  /**
+   * The following 'is[info]Private' variables represent whether info shown to the user is private
+   * and will be hidden from students.
+   *
+   * FacStaff have a privileged view and will see private info for students and FacStaff.
+   * Students can only see their own private info.
+   *
+   * Some info is private by default and only shown on the personal profile
+   * Additionally, some info is private only for "private users", designated by the KeepPrivate flag
+   */
 
   // Students' on-campus location is public unless the student is marked as private
-  const isCampusLocationPrivate = hideStudent;
+  const isCampusLocationPrivate =
+    checkIsStudent(profile) && keepPrivate && profile.OnOffCampus !== PRIVATE_INFO;
 
-  // Students' home phone is always private. FacStaff can choose to restrict their home phone
-  const isHomePhonePrivate = isStudent || (isFacStaff && profile.HomePhone?.IsPrivate);
+  // Students' home phone is always private. FacStaffs' home phone is private for private users
+  const [isHomePhonePrivate, setIsHomePhonePrivate] = useState(isStudent || keepPrivate);
 
-  // Student and FacStaff can restrict access to mobile phone
-  const isMobilePhonePrivate = hideStudent || profile.MobilePhone?.IsPrivate;
+  // Street address info is always private, and City/State/Country info is private for private users
+  const isAddressPrivate =
+    (keepPrivate && profile.HomeCity !== PRIVATE_INFO) || profile.HomeStreet2;
 
-  // Students' street addresses will not be shown to other students but are shown to faculty
-  // and staff.  Faculty and Staff have the ability to set who they allow to see their
-  // street addresses
-  const isStreetAddressPrivate =
-    isStudent || profile.HomeStreet1?.IsPrivate || profile.HomeStreet2?.IsPrivate;
-
-  // City/State/Country will not be shown for students with the KeepPrivate flag set
-  const isHomeCityCountryPrivate =
-    hideStudent ||
-    profile.HomeCity?.IsPrivate ||
-    profile.HomeState?.IsPrivate ||
-    profile.HomeCountry?.IsPrivate ||
-    profile.Country?.IsPrivate;
-
-  // Users may restrict name of spouse
-  const isSpousePrivate = profile.SpouseName?.IsPrivate;
-
-  // Students should not have the 'FacStaff' visibility option in privacy settings
-  // In other words, for students, choosing Private is equivalent to FacStaff
-  const excludedVisibilityList: Set<string> | null = isStudent ? new Set(['FacStaff']) : null;
+  // FacStaff spouses are private for private users
+  const isSpousePrivate =
+    checkIsFacStaff(profile) && keepPrivate && profile.SpouseName !== PRIVATE_INFO;
 
   // Get the user's mailbox combination when they are viewing their own profile
   useEffect(() => {
@@ -157,12 +149,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
         userService
           .getGraduation(profile.AD_Username)
           .then(setGraduationInfo)
-          .catch(() =>
-            createSnackbar(
-              'Failed to fetch graduation information: Please contact the Registrar',
-              'error',
-            ),
-          );
+          .catch(() => createSnackbar('Failed to fetch graduation information', 'error'));
       }
     }
     loadPersonalInfo();
@@ -199,6 +186,37 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     }
   }, [isStudent, myProf, graduationInfo, profPlannedGradYear, createSnackbar]);
 
+  const handleChangeMobilePhonePrivacy = async () => {
+    try {
+      await userService.setMobilePhonePrivacy(!isMobilePhonePrivate);
+      setIsMobilePhonePrivate(!isMobilePhonePrivate);
+
+      createSnackbar(
+        isMobilePhonePrivate ? 'Mobile Phone Visible' : 'Mobile Phone Hidden',
+        'success',
+      );
+    } catch {
+      createSnackbar('Privacy Change Failed', 'error');
+    }
+  };
+
+  const handleChangeHomePhonePrivacy = async () => {
+    try {
+      // this user service currently sets mobile_privacy to true or false - same as setMobilePhonePrivacy, which is NOT optimal or sensical. See user.ts
+      await userService.setHomePhonePrivacy(!isHomePhonePrivate);
+      setIsHomePhonePrivate(!isHomePhonePrivate);
+
+      createSnackbar(
+        isHomePhonePrivate
+          ? 'Personal Info Visible (This change may take several minutes)'
+          : 'Personal Info Hidden (This change may take several minutes)',
+        'success',
+      );
+    } catch {
+      createSnackbar('Privacy Change Failed', 'error');
+    }
+  };
+
   const handleChangeCliftonStrengthsPrivacy = async () => {
     try {
       const newPrivacy = await CliftonStrengthsService.togglePrivacy();
@@ -218,22 +236,11 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
       title="Home Phone:"
       contentText={
         myProf ? (
-          <Grid className={styles.not_private}>{formatPhone(profile.HomePhone.Value)}</Grid>
+          formatPhone(profile.HomePhone)
         ) : (
-          <a href={`tel:${profile.HomePhone.Value}`} className="gc360_text_link">
-            {formatPhone(profile.HomePhone.Value)}
+          <a href={`tel:${profile.HomePhone}`} className="gc360_text_link">
+            {formatPhone(profile.HomePhone)}
           </a>
-        )
-      }
-      ContentIcon={
-        myProf &&
-        !isStudent && (
-          <UpdateUserPrivacy
-            username={profile.AD_Username}
-            fieldList={['HomePhone']}
-            excludedVisibilityList={excludedVisibilityList}
-            createSnackbar={createSnackbar}
-          />
         )
       }
       privateInfo={isHomePhonePrivate}
@@ -245,28 +252,35 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     setMobilePhoneNumber(profile.MobilePhone);
   }, [profile.MobilePhone]);
 
-  const mobilePhoneListItem = profile.MobilePhone ? (
+  const mobilePhoneListItem = mobilePhone ? (
     <ProfileInfoListItem
       title="Mobile Phone:"
       contentText={
-        myProf ? (
-          <Grid container spacing={0} alignItems="center" className={styles.not_private}>
-            <Grid item>{formatPhone(profile.MobilePhone.Value)}</Grid>
-            <Grid item>{isStudent ? <UpdatePhone /> : null}</Grid>
-          </Grid>
-        ) : (
-          <a href={`tel:${profile.MobilePhone.Value}`} className="gc360_text_link">
-            {formatPhone(profile.MobilePhone.Value)}
-          </a>
-        )
+        <>
+          {mobilePhone === PRIVATE_INFO ? mobilePhone : formatPhone(mobilePhone)}
+          {myProf && (
+            <UpdatePhone
+              currentPhone={mobilePhone}
+              onUpdateSuccess={(newPhone) => {
+                setMobilePhoneNumber(newPhone);
+              }}
+            />
+          )}
+        </>
       }
       ContentIcon={
         myProf && (
-          <UpdateUserPrivacy
-            username={profile.AD_Username}
-            fieldList={['MobilePhone']}
-            excludedVisibilityList={excludedVisibilityList}
-            createSnackbar={createSnackbar}
+          <FormControlLabel
+            control={
+              <Switch
+                onChange={handleChangeMobilePhonePrivacy}
+                color="secondary"
+                checked={!isMobilePhonePrivate}
+              />
+            }
+            label={isMobilePhonePrivate ? 'Private' : 'Public'}
+            labelPlacement="bottom"
+            disabled={!isOnline}
           />
         )
       }
@@ -275,67 +289,30 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     />
   ) : null;
 
-  // Users have the ability to restrict access to their home address information.  Since privacy
-  // is tied to individual profile items, if the user requests a change to their address privacy
-  // setting then we need to change the privacy settings on multiple profile items.  Here we
-  // construct a list of items that must be updated.
-  let hasUSAAddress = profile.Country?.Value === 'United States of America' || !profile.Country;
-  let homePrivacyFields = hasUSAAddress ? ['HomeCity', 'HomeState'] : ['Country', 'HomeCountry'];
-  let streetPrivacyFields = ['HomeStreet1', 'HomeStreet2'];
+  let streetAddr = profile.HomeStreet2 ? <span>{profile.HomeStreet2},&nbsp;</span> : null;
 
-  const streetAddress =
-    profile.HomeStreet1 || profile.HomeStreet2 ? (
-      <ProfileInfoListItem
-        title="Street Address:"
-        contentText={
-          <>
-            <span>{profile.HomeStreet1?.Value}</span>
-            <span>{profile.HomeStreet2?.Value}</span>
-          </>
-        }
-        ContentIcon={
-          myProf &&
-          !isStudent && (
-            <UpdateUserPrivacy
-              username={profile.AD_Username}
-              fieldList={streetPrivacyFields}
-              excludedVisibilityList={excludedVisibilityList}
-              createSnackbar={createSnackbar}
-            />
-          )
-        }
-        privateInfo={isStreetAddressPrivate}
-        myProf={myProf}
-      />
-    ) : null;
-
-  const homeCityStateCountry =
-    (hasUSAAddress && profile.HomeCity && profile.HomeState) ||
-    (!hasUSAAddress && profile.Country) ? (
-      <ProfileInfoListItem
-        title="Home:"
-        contentText={
-          hasUSAAddress
-            ? `${profile.HomeCity?.Value}, ${profile.HomeState?.Value}`
-            : profile.Country?.Value
-        }
-        ContentIcon={
-          myProf && (
-            <UpdateUserPrivacy
-              username={profile.AD_Username}
-              fieldList={homePrivacyFields}
-              excludedVisibilityList={excludedVisibilityList}
-              createSnackbar={createSnackbar}
-            />
-          )
-        }
-        privateInfo={isHomeCityCountryPrivate}
-        myProf={myProf}
-      />
-    ) : null;
+  const home = (
+    <ProfileInfoListItem
+      title="Home:"
+      contentText={
+        <>
+          {streetAddr}
+          <span className={keepPrivate ? undefined : styles.not_private}>
+            {profile.HomeCity === PRIVATE_INFO
+              ? PRIVATE_INFO
+              : profile.Country === 'United States of America' || !profile.Country
+                ? `${profile.HomeCity}, ${profile.HomeState}`
+                : profile.Country}
+          </span>
+        </>
+      }
+      privateInfo={isAddressPrivate}
+      myProf={myProf}
+    />
+  );
 
   const minors =
-    isStudent && profile.Minors?.length > 0 ? (
+    checkIsStudent(profile) && profile.Minors?.length > 0 ? (
       <ProfileInfoListItem
         title={profile.Minors?.length > 1 ? 'Minors:' : 'Minor:'}
         contentText={profile.Minors?.join(', ')}
@@ -343,31 +320,30 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     ) : null;
 
   const majors =
-    isFacStaff || (isAlumni && !profile.Majors?.length) ? null : (
+    checkIsFacStaff(profile) || (checkIsAlumni(profile) && !profile.Majors?.length) ? null : (
       <ProfileInfoListItem
         title={profile.Majors?.length > 1 ? 'Majors:' : 'Major:'}
         contentText={!profile.Majors?.length ? 'Deciding' : profile.Majors?.join(', ')}
       />
     );
 
-  const hireDate =
-    isFacStaff && profile.FirstHireDt ? (
-      <ProfileInfoListItem
-        title={'Employee Since:'}
-        contentText={parseDateString(profile.FirstHireDt)}
-      />
-    ) : null;
+  const hireDate = checkIsFacStaff(profile) ? (
+    <ProfileInfoListItem
+      title={'First Year Employed at Gordon College:'}
+      contentText={parseDateString(profile.FirstHireDt)}
+    />
+  ) : null;
 
   const matriculationDate =
-    isStudent && profile.Entrance_Date && (myProf || canViewAcademicInfo) ? (
+    checkIsStudent(profile) && (myProf || canViewAcademicInfo) ? (
       <ProfileInfoListItem
-        title={'Student Since:'}
+        title={'First Year at Gordon College:'}
         contentText={parseDateString(profile.Entrance_Date)}
       />
     ) : null;
 
   const plannedGraduationYear =
-    myProf && isStudent ? (
+    myProf && checkIsStudent(profile) ? (
       <ProfileInfoListItem
         title={'Planned Graduation Year:'}
         contentText={
@@ -383,7 +359,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
           </Grid>
         }
       />
-    ) : profPlannedGradYear && isStudent ? (
+    ) : profPlannedGradYear && checkIsStudent(profile) ? (
       <ProfileInfoListItem
         title={'Planned Graduation Year:'}
         contentText={profile.PlannedGradYear}
@@ -413,7 +389,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
   };
 
   const gradYearAndMajor = () => {
-    if (isAlumni) {
+    if (checkIsAlumni(profile)) {
       let text = profile.PreferredClassYear;
       if (profile.Major1Description !== '') {
         text += ' | ' + profile.Major1Description;
@@ -425,7 +401,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     }
   };
 
-  const graduationYear = isAlumni && (
+  const graduationYear = checkIsAlumni(profile) && (
     <ProfileInfoListItem title={profile.College + ' Alum:'} contentText={gradYearAndMajor()} />
   );
 
@@ -482,6 +458,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
             control={
               <Switch
                 onChange={handleChangeCliftonStrengthsPrivacy}
+                color="secondary"
                 checked={!isCliftonStrengthsPrivate}
               />
             }
@@ -520,7 +497,13 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
             <Grid container item xs={5} alignItems="center">
               <Typography>{'Mailbox:'}</Typography>
             </Grid>
-            <Grid container item xs={myProf && mailCombo ? 2.5 : 5} alignItems="center">
+            <Grid
+              container
+              item
+              xs={myProf && mailCombo ? 2.5 : 5}
+              lg={myProf && mailCombo ? 2.4 : 5}
+              alignItems="center"
+            >
               <Typography>{`#${profile.Mail_Location}`}</Typography>
             </Grid>
             {myProf && mailCombo && (
@@ -552,7 +535,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
                 </Grid>
                 <Button
                   variant="contained"
-                  color="primary"
+                  color="secondary"
                   onClick={() => setIsJoinDialogOpen(true)}
                 >
                   Instructions
@@ -568,7 +551,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
                   <Grid container>
                     <Typography sx={{ fontSize: '0.8rem' }}>
                       <Link
-                        className={styles.salsbury_link}
+                        className={`gc360_text_link ${styles.salsbury_link}`}
                         href="https://m.youtube.com/shorts/FxE5PPS94sc"
                         underline="always"
                         target="_blank"
@@ -593,7 +576,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
                       <br />
                       <br />
                       <Link
-                        className={styles.dp_link}
+                        className={`gc360_text_link ${styles.dp_link}`}
                         href="https://m.youtube.com/shorts/47402r3FqSs"
                         underline="always"
                         target="_blank"
@@ -621,7 +604,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
                       <br />
                       <br />
                       <Link
-                        className={styles.dd_link}
+                        className={`gc360_text_link ${styles.dd_link}`}
                         href="https://m.youtube.com/shorts/0VuTFs1Iwnw"
                         underline="always"
                         target="_blank"
@@ -657,19 +640,21 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     ) : null;
 
   const campusDormInfo =
-    isStudent && profile.OnOffCampus && !(profile.BuildingDescription || profile.Hall) ? (
+    checkIsStudent(profile) &&
+    profile.OnOffCampus &&
+    !(profile.BuildingDescription || profile.Hall) ? (
       <ProfileInfoListItem
         title="Dormitory:"
         contentText={profile.OnOffCampus}
         privateInfo={isCampusLocationPrivate}
         myProf={myProf}
       />
-    ) : isStudent ? (
+    ) : checkIsStudent(profile) ? (
       <ProfileInfoListItem
         title="Dormitory:"
         contentText={
           <>
-            <span className={styles.not_private}>
+            <span className={keepPrivate ? undefined : styles.not_private}>
               {profile.BuildingDescription ?? profile.Hall}
             </span>
 
@@ -702,23 +687,11 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     ) : null;
 
   const spouse =
-    isFacStaff && profile.SpouseName ? (
+    checkIsFacStaff(profile) && profile.SpouseName ? (
       <ProfileInfoListItem
         title="Spouse:"
-        contentText={profile.SpouseName.Value}
-        ContentIcon={
-          isFacStaff &&
-          myProf && (
-            <UpdateUserPrivacy
-              username={profile.AD_Username}
-              fieldList={['SpouseName']}
-              excludedVisibilityList={excludedVisibilityList}
-              createSnackbar={createSnackbar}
-            />
-          )
-        }
-        privateInfo={isSpousePrivate}
-        myProf={myProf}
+        contentText={profile.SpouseName}
+        privateInfo={(keepPrivate && myProf) || isSpousePrivate}
       />
     ) : null;
 
@@ -737,11 +710,22 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
         <Typography>NOTE:</Typography>
         <ul>
           <li>
-            <Typography>Private and shaded information is visible to authorized users.</Typography>
+            <Typography>Shaded areas are visible only to you.</Typography>
           </li>
           <li>
             <Typography>
-              To update your On Campus Address, please contact{' '}
+              To add/update your mail forwarding address, fill out this{' '}
+              <a
+                href="https://forms.office.com/r/98eR7TUXg6"
+                className={`gc360_text_link ${styles.note_link}`}
+              >
+                Forward Request Form.
+              </a>
+            </Typography>
+          </li>
+          <li>
+            <Typography>
+              To update your On-Campus Address, please contact{' '}
               <a
                 href="mailto: housing@gordon.edu"
                 className={`gc360_text_link ${styles.note_link}`}
@@ -798,66 +782,69 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
       </div>
     ) : null);
 
-  const disclaimer = !myProf ? (
-    isCliftonStrengthsPrivate ||
-    isHomePhonePrivate ||
-    isMobilePhonePrivate ||
-    isCampusLocationPrivate ||
-    isStreetAddressPrivate ||
-    isHomeCityCountryPrivate ||
-    isSpousePrivate ? (
+  const disclaimer =
+    !myProf &&
+    (isHomePhonePrivate ||
+      isAddressPrivate ||
+      isMobilePhonePrivate ||
+      isCampusLocationPrivate ||
+      isSpousePrivate) ? (
       <Typography align="left" className={styles.disclaimer}>
-        Visible only to authorized personnel
+        Private by request, visible only to faculty and staff
       </Typography>
-    ) : null
-  ) : null;
+    ) : null;
 
   const graduationDetails =
-    (myProf || canViewAcademicInfo) && graduationInfo && isStudent ? (
+    (myProf || canViewAcademicInfo) && checkIsStudent(profile) ? (
       <ProfileInfoListItem
         title="Graduation Information:"
         contentText={
-          graduationInfo.GraduationFlag !== null ? (
-            // If the intent to graduate form has been submitted
-            <Typography>
-              <b>Flagged Graduation Date:</b> {graduationInfo.WhenGraduated || 'Not Set'}
-            </Typography>
+          graduationInfo ? (
+            graduationInfo.GraduationFlag !== null ? (
+              // If the intent to graduate form has been submitted
+              <Typography>
+                <b>Flagged Graduation Date:</b> {graduationInfo.WhenGraduated || 'Not Set'}
+              </Typography>
+            ) : (
+              // If the intent to graduate form has not been submitted
+              (() => {
+                if (setPlannedGradDate()) {
+                  return (
+                    <Typography>
+                      <b>Warning: </b>
+                      {myProf ? (
+                        <>
+                          {profPlannedGradYear
+                            ? `Please submit the Graduation Application 8-12 months before May ${profPlannedGradYear}.`
+                            : graduationInfo.WhenGraduated
+                              ? `Please submit the Graduation Application 8-12 months before ${graduationInfo.WhenGraduated}.`
+                              : 'Please submit the Graduation Application as soon as possible.'}
+                          <a
+                            href="https://my.gordon.edu"
+                            className={`gc360_text_link ${styles.note_link}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <> my.gordon.edu</>
+                          </a>
+                        </>
+                      ) : (
+                        'The student has not yet submitted their Graduation Application.'
+                      )}
+                    </Typography>
+                  );
+                } else {
+                  return (
+                    <Typography>
+                      <b>Expected Graduation Date:</b> {graduationInfo.WhenGraduated || 'Not Set'}
+                    </Typography>
+                  );
+                }
+              })()
+            )
           ) : (
-            // If the intent to graduate form has not been submitted
-            (() => {
-              if (setPlannedGradDate()) {
-                return (
-                  <Typography>
-                    <b>Warning: </b>
-                    {myProf ? (
-                      <>
-                        {profPlannedGradYear
-                          ? `Please submit the Graduation Application 8-12 months before May ${profPlannedGradYear}.`
-                          : graduationInfo.WhenGraduated
-                            ? `Please submit the Graduation Application 8-12 months before ${graduationInfo.WhenGraduated}.`
-                            : 'Please submit the Graduation Application as soon as possible.'}
-                        <a
-                          href="https://my.gordon.edu"
-                          className={`gc360_text_link ${styles.note_link}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <> my.gordon.edu</>
-                        </a>
-                      </>
-                    ) : (
-                      'The student has not yet submitted their Graduation Application.'
-                    )}
-                  </Typography>
-                );
-              } else {
-                return (
-                  <Typography>
-                    <b>Expected Graduation Date:</b> {graduationInfo.WhenGraduated || 'Not Set'}
-                  </Typography>
-                );
-              }
-            })()
+            // If no graduation information is available
+            'No graduation information available.'
           )
         }
         privateInfo
@@ -881,17 +868,34 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
           <Grid container className={styles.header}>
             <CardHeader title="Personal Information" />
           </Grid>
+          <Grid item xs={4}>
+            {/* visible only for fac/staff on their profile */}
+            {/* isHomePhonePrivate is a misleading name for determining if personal information should be shown */}
+            {isFacStaff && myProf ? (
+              <FormControlLabel
+                control={
+                  <Switch
+                    onChange={handleChangeHomePhonePrivacy}
+                    color="secondary"
+                    checked={!isHomePhonePrivate}
+                  />
+                }
+                label={isHomePhonePrivate ? 'Private' : 'Public'}
+                labelPlacement="end"
+                disabled={!isOnline}
+              />
+            ) : null}
+          </Grid>
         </Grid>
         <CardContent>
+          {updateAlumniInfoButton}
           <List>
-            {updateAlumniInfoButton}
-            {graduationYear}
-            {gordonID}
             {majors}
             {minors}
             {hireDate}
             {matriculationDate}
             {plannedGraduationYear}
+            {graduationYear}
             {graduationDetails}
             {cliftonStrengths}
             {advisors}
@@ -899,8 +903,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
             {mail}
             {mobilePhoneListItem}
             {homePhoneListItem}
-            {streetAddress}
-            {homeCityStateCountry}
+            {gordonID}
+            {home}
             {spouse}
             {note}
             {disclaimer}

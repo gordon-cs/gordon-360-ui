@@ -11,46 +11,25 @@ type Building = {
   Description: string;
 };
 
-const UpdateOffice = (props: {
-  username?: string;
-  defaultBuildingDescription: string;
-  setDefaultBuildingDescription: (building: string) => void;
-  defaultRoom: string;
-  setDefaultRoom: (room: string) => void;
-}) => {
+const UpdateOffice = () => {
   const [open, setOpen] = useState(false);
-
-  const [room, setRoom] = useState(props.defaultRoom);
+  const [room, setRoom] = useState('');
+  const [building, setBuilding] = useState('');
   const [snackbar, setSnackbar] = useState({ message: '', severity: '', open: false });
   const [buildings, setBuildings] = useState<Building[]>([]);
-  const [building, setBuilding] = useState<Building>({
-    Description: '',
-    Code: '',
-  });
 
   useEffect(() => {
     peopleSearchService.getBuildings().then(setBuildings);
   }, []);
 
-  useEffect(() => {
-    setRoom(props.defaultRoom);
-
-    setBuilding(
-      buildings.find((building) => building.Description === props.defaultBuildingDescription) ?? {
-        Description: '',
-        Code: '',
-      },
-    );
-  }, [buildings, props.defaultBuildingDescription, props.defaultRoom]);
-
   const handleSubmit = async () => {
     try {
-      const response = await userService.updateOfficeLocation(
-        { BuildingCode: building.Code, RoomNumber: room },
-        props.username,
-      );
-      props.setDefaultBuildingDescription(response.BuildingDescription);
-      props.setDefaultRoom(response.OnCampusRoom);
+      await userService.updateOfficeLocation({ BuildingCode: building, RoomNumber: room });
+      setSnackbar({
+        message: 'Your office location will update within a couple hours.',
+        severity: 'success',
+        open: true,
+      });
     } catch {
       setSnackbar({
         message: 'Office location failed to update. Please contact CTS.',
@@ -82,8 +61,7 @@ const UpdateOffice = (props: {
             options={buildings}
             renderInput={(params) => <TextField {...params} label="Building" />}
             getOptionLabel={(option) => option.Description}
-            onChange={(_event, value) => setBuilding(value!)}
-            value={building}
+            onChange={(_event, value) => setBuilding(value!.Code)}
           />
           <TextField
             label="Room"

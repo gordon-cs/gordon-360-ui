@@ -103,7 +103,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
       <Accordion
         expanded={isScheduleOpen}
         onChange={toggleIsScheduleOpen}
-        slotProps={{ transition: { unmountOnExit: true } }}
+        TransitionProps={{ unmountOnExit: true }}
       >
         {allSchedules.length > 0 ? (
           <AccordionSummary

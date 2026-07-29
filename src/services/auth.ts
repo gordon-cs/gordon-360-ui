@@ -114,7 +114,6 @@ export enum AuthGroup {
   LostAndFoundAdmin = '360-LostAndFoundAdmins-SG',
   LostAndFoundKiosk = '360-LostAndFoundAssist-SG',
   LostAndFoundDevelopers = '360-LostAndFound-Developers-SG',
-  OfficeAdmin = '360-OfficeAdmin-SG',
 }
 
 export {

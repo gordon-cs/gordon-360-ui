@@ -11,7 +11,7 @@ const CompletedCheckIn = () => {
     <Grid container alignItems="center" justifyContent="center" direction="column">
       <Grid item xs={8}>
         <Typography variant="h5" gutterBottom align="center" className={styles.congrats_note}>
-          Congratulations {profile.FirstName.Value} on completing Enrollment Checkin!
+          Congratulations {profile.FirstName} on completing Enrollment Checkin!
         </Typography>
         <br />
         <Typography variant="body1" align="center" gutterBottom>
