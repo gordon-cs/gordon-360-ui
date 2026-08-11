@@ -2,15 +2,6 @@ import { getToken, isAuthenticated } from './auth';
 import { createError } from './error';
 import { getEnvVar } from 'envVar';
 
-type HttpRequestBody =
-  | string
-  | FormData
-  | URLSearchParams
-  | Blob
-  | File
-  | ArrayBuffer
-  | ArrayBufferView;
-
 const get = <TResponse>(endpoint: string): Promise<TResponse> => makeRequest(endpoint, 'get');
 
 const put = <TResponse>(
@@ -74,7 +65,7 @@ const apiBaseURL = getEnvVar('PROD') === 'development' ? '/' : getEnvVar('VITE_A
 const makeRequest = async <TResponse>(
   endpoint: string,
   method: string,
-  body?: HttpRequestBody,
+  body?: BodyInit,
   headers?: Headers,
 ): Promise<TResponse> => {
   console.log(`${method} request to endpoint ${endpoint}`);
