@@ -11,7 +11,6 @@ import {
   CardContent,
   Typography,
   Grid,
-  Box,
   FormControlLabel,
 } from '@mui/material';
 import { addTask, updateTask, fetchTasks, removeTask } from 'services/residentLife/RD_TaskList';
@@ -19,11 +18,13 @@ import { useColorScheme } from '@mui/material/styles';
 import SimpleSnackbar from 'components/Snackbar';
 import { useNavigate } from 'react-router';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { getAllHalls } from 'services/residentLife/halls';
 
 const TaskList = () => {
   const { mode } = useColorScheme();
-  const [tasks, setTasks] = useState([]);
+  const [allHalls, setAllHalls] = useState([]);
   const [selectedHall, setSelectedHall] = useState('');
+  const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
   const navigate = useNavigate();
@@ -54,6 +55,16 @@ const TaskList = () => {
     Start_Date: '',
     End_Date: '',
   });
+
+  useEffect(() => {
+    getAllHalls()
+      .then(setAllHalls)
+      .catch((error) => {
+        console.error('Error loading halls: ' + error);
+        setSnackbar('There was a problem loading halls: ' + error, 'error');
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   // UseEffect - Immediately runs `loadTasks`
   useEffect(() => {
@@ -227,21 +238,6 @@ const TaskList = () => {
     setEditing(false);
   };
 
-  const hallDisplayNames = {
-    BRO: 'Bromley',
-    FER: 'Ferrin',
-    WIL: 'Wilson',
-    EVN: 'Evans',
-    CHA: 'Chase',
-    TAV: 'Tavilla',
-    NYL: 'Nyland',
-    FUL: 'Fulton',
-    GRA: 'Grace',
-    MCI: 'MacInnis',
-    CON: 'Conrad',
-    RID: 'Rider',
-  };
-
   return (
     <>
       <Grid container spacing={3} justifyContent="center">
@@ -278,18 +274,9 @@ const TaskList = () => {
           </Typography>
           <FormControl fullWidth>
             <Select value={selectedHall} onChange={(e) => setSelectedHall(e.target.value)}>
-              <MenuItem value="BRO">Bromley</MenuItem>
-              <MenuItem value="FER">Ferrin</MenuItem>
-              <MenuItem value="EVN">Evans</MenuItem>
-              <MenuItem value="WIL">Wilson</MenuItem>
-              <MenuItem value="CHA">Chase</MenuItem>
-              <MenuItem value="TAV">Tavilla</MenuItem>
-              <MenuItem value="FUL">Fulton</MenuItem>
-              <MenuItem value="NYL">Nyland</MenuItem>
-              <MenuItem value="GRA">Grace</MenuItem>
-              <MenuItem value="MCI">MacInnis</MenuItem>
-              <MenuItem value="CON">Conrad</MenuItem>
-              <MenuItem value="RID">Rider</MenuItem>
+              {allHalls.map((hall) => (
+                <MenuItem value={hall.BuildingCode}>{hall.Name}</MenuItem>
+              ))}
             </Select>
           </FormControl>
         </Grid>
@@ -422,7 +409,8 @@ const TaskList = () => {
           <Card>
             <CardContent>
               <Typography variant="h5" fontWeight="bold" gutterBottom>
-                Task List ({hallDisplayNames[selectedHall] || selectedHall})
+                Task List (
+                {allHalls.find((hall) => hall.BuildingCode === selectedHall)?.Name || selectedHall})
               </Typography>
               {loading ? (
                 <Typography color="textSecondary">Loading tasks...</Typography>

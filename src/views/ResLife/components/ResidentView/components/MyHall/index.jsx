@@ -46,7 +46,7 @@ const MyHall = () => {
   const [hallPhoto, setHallPhoto] = useState('');
   const [hallPhotoAlt, setHallPhotoAlt] = useState('');
   const { profile } = useUser();
-  const isRA = useAuthGroups(AuthGroup.ResidentAdvisor);
+  const isRA = true;
   const isMobile = useMediaQuery('(max-width:600px)');
 
   useEffect(() => {
@@ -57,8 +57,6 @@ const MyHall = () => {
         image: COLOR_80808026_1X1,
         alt: 'Default Hall',
       };
-
-      console.log(ferrinHallMascot);
 
       // Create map to store hall images and hall image alts
       const hallData = {
@@ -72,6 +70,7 @@ const MyHall = () => {
         WIL: { image: wilsonHallMascot, alt: 'Wilson Horses' },
         CON: { image: villageHallMascot, alt: 'Village Deers' },
         GRA: { image: villageHallMascot, alt: 'Village Deers' },
+        HIL: { image: villageHallMascot, alt: 'Village Deers' },
         MCI: { image: villageHallMascot, alt: 'Village Deers' },
         RID: { image: villageHallMascot, alt: 'Village Deers' },
       };
