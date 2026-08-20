@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   List,
   ListItem,
@@ -33,20 +33,40 @@ import GordonLoader from 'components/Loader';
 const RoomRanges = () => {
   const { mode } = useColorScheme();
   const [isLoading, setIsLoading] = useState(false);
+
   const [allHalls, setAllHalls] = useState([]);
   const [selectedHall, setSelectedHall] = useState(null);
+
   const [roomStart, setRoomStart] = useState('');
   const [roomEnd, setRoomEnd] = useState('');
+
   const [allRoomRanges, setAllRoomRanges] = useState([]);
-  const [filteredRoomRanges, setFilteredRoomRanges] = useState([]);
+  const filteredRoomRanges = useMemo(
+    () => (selectedHall ? allRoomRanges.filter((range) => range.Hall_ID === selectedHall) : []),
+    [allRoomRanges, selectedHall],
+  );
   const [selectedRoomRange, setSelectedRoomRange] = useState(null);
+
   const [allRAs, setAllRAs] = useState([]);
-  const [filteredRAs, setFilteredRAs] = useState([]);
+  const filteredRAs = useMemo(
+    () => (selectedHall ? allRAs.filter((person) => person.BLDG_Code === selectedHall) : []),
+    [selectedHall, allRAs],
+  );
   const [selectedRA, setSelectedRA] = useState(null);
+
   const [assignments, setAssignments] = useState([]);
-  const [filteredAssignments, setFilteredAssignments] = useState([]);
+  const filteredAssignments = useMemo(
+    () =>
+      selectedHall ? assignments.filter((assignment) => assignment.Hall_ID === selectedHall) : [],
+    [selectedHall, assignments],
+  );
+
   const [unassignedRooms, setUnassignedRooms] = useState([]);
-  const [filteredUnassigned, setFilteredUnassigned] = useState([]);
+  const filteredUnassignedRoomRanges = useMemo(
+    () =>
+      selectedHall ? unassignedRooms.filter((room) => room.Building_Code === selectedHall) : [],
+    [selectedHall, unassignedRooms],
+  );
   const navigate = useNavigate();
 
   const [snackbar, setSnackbar] = useState({
@@ -84,79 +104,48 @@ const RoomRanges = () => {
       fetchMissingRooms()
         .then(setUnassignedRooms)
         .catch((error) => console.error('Error fetching missing rooms:', error)),
+
+      raList()
+        .then(setAllRAs)
+        .catch((error) => console.error('Error fetching RAs:', error)),
     ]).then(() => setIsLoading(false));
   }, [createSnackbar]);
-
-  // Update filtered data when building changes
-  useEffect(() => {
-    if (selectedHall) {
-      const filteredRanges = allRoomRanges.filter((range) => range.Hall_ID === selectedHall);
-      setFilteredRoomRanges(filteredRanges);
-
-      const filteredRAs = allRAs.filter((person) => person.BLDG_Code === selectedHall);
-      setFilteredRAs(filteredRAs);
-
-      const filteredUnassigendrooms = unassignedRooms.filter(
-        (room) => room.Building_Code === selectedHall,
-      );
-      setFilteredUnassigned(filteredUnassigendrooms);
-
-      const filteredAssign = assignments.filter(
-        (assignment) => assignment.Hall_ID === selectedHall,
-      );
-      setFilteredAssignments(filteredAssign);
-    } else {
-      setFilteredRoomRanges([]);
-      setFilteredRAs([]);
-      setFilteredAssignments([]);
-    }
-  }, [selectedHall, allRoomRanges, allRAs, assignments, unassignedRooms]);
 
   const clearRoomInputs = () => {
     setRoomStart('');
     setRoomEnd('');
   };
 
-  const fetchRaList = (building) => {
-    console.log('Selected Building:', building);
-    raList()
-      .then((response) => {
-        const buildingCodes = response.filter((code) => code.BLDG_Code === building);
-        setAllRAs(response ? buildingCodes : []);
-        console.log('RA List:', response);
-      })
-      .catch((error) => console.error('Error fetching RAs:', error));
-  };
-
   const onClickAddRoomRange = () => {
     if (selectedHall && roomStart && roomEnd) {
       const body = { Hall_ID: selectedHall, Room_Start: roomStart, Room_End: roomEnd };
       addRoomRange(body)
-        .then(() => {
-          clearRoomInputs();
-          fetchRoomRanges()
-            .then((response) => setAllRoomRanges(response))
-            .catch((error) => console.error('Error fetching room ranges:', error));
-        })
+        .then(fetchRoomRanges)
+        .then(setAllRoomRanges)
+        .then(fetchMissingRooms)
+        .then(setUnassignedRooms)
+        .then(clearRoomInputs)
         .catch((error) => {
           console.error('Error adding room range:', error);
           createSnackbar('Error adding room range: ' + error, 'error');
         });
-    }
+    } else
+      createSnackbar(
+        'Select a building and room range start and end to add a room range',
+        'warning',
+      );
   };
 
   const onClickRemoveRoomRange = (rangeId) => {
     removeRoomRange(rangeId)
-      .then(() => {
-        fetchRoomRanges()
-          .then((response) => setAllRoomRanges(response))
-          .catch((error) => console.error('Error fetching room ranges:', error));
-        // Reload assignment list
-        fetchAssignmentList() //reload assignemnt list as a assignment could be removed as well by this action
-          .then((response) => setAssignments(response))
-          .catch((error) => console.error('Error fetching assignments:', error));
-        setSelectedRoomRange(null);
-      })
+      .then(fetchRoomRanges)
+      .then(setAllRoomRanges)
+      .then(fetchMissingRooms)
+      .then(setUnassignedRooms)
+      // reload assignment list as an assignment could be removed as well by this action
+      .then(fetchAssignmentList)
+      .then(setAssignments)
+      .then(() => setSelectedRoomRange(null))
       .catch((error) => {
         console.error('Error removing room range:', error);
         createSnackbar('Error removing room range: ' + error, 'error');
@@ -165,18 +154,15 @@ const RoomRanges = () => {
 
   const onClickAssignPerson = () => {
     if (selectedRA && selectedRoomRange) {
-      const newRange = {
+      assignPersonToRange({
         Range_ID: selectedRoomRange,
         RA_ID: selectedRA,
-      };
-
-      assignPersonToRange(newRange)
+      })
+        .then(fetchAssignmentList)
+        .then(setAssignments)
         .then(() => {
           setSelectedRA(null);
           setSelectedRoomRange(null);
-          fetchAssignmentList()
-            .then((response) => setAssignments(response))
-            .catch((error) => console.error('Error fetching assignments:', error));
         })
         .catch((error) => {
           console.error('Error assigning person to range:', error);
@@ -187,11 +173,8 @@ const RoomRanges = () => {
 
   const onClickRemoveAssignment = (rangeId) => {
     removeAssignment(rangeId)
-      .then(() => {
-        fetchAssignmentList()
-          .then((response) => setAssignments(response))
-          .catch((error) => console.error('Error fetching assignments:', error));
-      })
+      .then(fetchAssignmentList)
+      .then(setAssignments)
       .catch((error) => {
         console.error('Error removing assignment:', error);
         createSnackbar('Error removing assignment: ' + error, 'error');
@@ -243,10 +226,7 @@ const RoomRanges = () => {
               <Select
                 label="Select building"
                 value={selectedHall ?? ''}
-                onChange={(e) => {
-                  setSelectedHall(e.target.value);
-                  fetchRaList(e.target.value);
-                }}
+                onChange={(e) => setSelectedHall(e.target.value)}
                 fullWidth
                 margin="normal"
               >
@@ -442,8 +422,8 @@ const RoomRanges = () => {
               The rooms below do not fall under any of the current room ranges.
             </Typography>
             <List>
-              {filteredUnassigned.length > 0 ? (
-                filteredUnassigned.map((room) => (
+              {filteredUnassignedRoomRanges.length > 0 ? (
+                filteredUnassignedRoomRanges.map((room) => (
                   <ListItem key={room.Room_Number}>
                     <Box>{room.Room_Name}</Box>
                   </ListItem>
