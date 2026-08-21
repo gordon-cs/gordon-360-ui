@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   List,
   ListItem,
@@ -27,23 +27,46 @@ import { useColorScheme } from '@mui/material/styles';
 import SimpleSnackbar from 'components/Snackbar';
 import { useNavigate } from 'react-router';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { getAllHalls } from 'services/residentLife/halls';
+import GordonLoader from 'components/Loader';
 
 const RoomRanges = () => {
   const { mode } = useColorScheme();
-  const [building, setBuilding] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [allHalls, setAllHalls] = useState([]);
+  const [selectedHall, setSelectedHall] = useState(null);
+
   const [roomStart, setRoomStart] = useState('');
   const [roomEnd, setRoomEnd] = useState('');
-  const [roomRanges, setRoomRanges] = useState([]);
+
+  const [allRoomRanges, setAllRoomRanges] = useState([]);
+  const filteredRoomRanges = useMemo(
+    () => (selectedHall ? allRoomRanges.filter((range) => range.Hall_ID === selectedHall) : []),
+    [allRoomRanges, selectedHall],
+  );
   const [selectedRoomRange, setSelectedRoomRange] = useState(null);
-  const [showList, setShowList] = useState(false);
-  const [people, setPeople] = useState([]);
-  const [selectedPerson, setSelectedPerson] = useState(null);
+
+  const [allRAs, setAllRAs] = useState([]);
+  const filteredRAs = useMemo(
+    () => (selectedHall ? allRAs.filter((person) => person.BLDG_Code === selectedHall) : []),
+    [selectedHall, allRAs],
+  );
+  const [selectedRA, setSelectedRA] = useState(null);
+
   const [assignments, setAssignments] = useState([]);
-  const [filteredRoomRanges, setFilteredRoomRanges] = useState([]);
-  const [filteredAssignments, setFilteredAssignments] = useState([]);
-  const [filteredPeople, setFilteredPeople] = useState([]);
+  const filteredAssignments = useMemo(
+    () =>
+      selectedHall ? assignments.filter((assignment) => assignment.Hall_ID === selectedHall) : [],
+    [selectedHall, assignments],
+  );
+
   const [unassignedRooms, setUnassignedRooms] = useState([]);
-  const [filteredUnassigned, setFilteredUnassigned] = useState([]);
+  const filteredUnassignedRoomRanges = useMemo(
+    () =>
+      selectedHall ? unassignedRooms.filter((room) => room.Building_Code === selectedHall) : [],
+    [selectedHall, unassignedRooms],
+  );
   const navigate = useNavigate();
 
   const [snackbar, setSnackbar] = useState({
@@ -62,95 +85,67 @@ const RoomRanges = () => {
 
   // Fetch data when the page loads
   useEffect(() => {
-    setTimeout(() => setShowList(true), 1000);
+    Promise.all([
+      getAllHalls()
+        .then(setAllHalls)
+        .catch((err) => {
+          console.error(`Error fetching halls: ${err}`);
+          createSnackbar('Could not load halls.', 'error');
+        }),
 
-    fetchRoomRanges()
-      .then((response) => {
-        setRoomRanges(response);
-        console.log('Room Ranges:', response);
-      })
-      .catch((error) => console.error('Error fetching room ranges:', error));
+      fetchRoomRanges()
+        .then(setAllRoomRanges)
+        .catch((error) => console.error('Error fetching room ranges:', error)),
 
-    fetchAssignmentList()
-      .then((response) => {
-        console.log('Assignments:', response);
-        setAssignments(response);
-      })
-      .catch((error) => console.error('Error fetching assignments:', error));
+      fetchAssignmentList()
+        .then(setAssignments)
+        .catch((error) => console.error('Error fetching assignments:', error)),
 
-    fetchMissingRooms()
-      .then((response) => setUnassignedRooms(response))
-      .catch((error) => console.error('Error fetching missing rooms:', error));
-  }, []);
+      fetchMissingRooms()
+        .then(setUnassignedRooms)
+        .catch((error) => console.error('Error fetching missing rooms:', error)),
 
-  // Update filtered data when building changes
-  useEffect(() => {
-    if (building) {
-      const filteredRanges = roomRanges.filter((range) => range.Hall_ID === building);
-      setFilteredRoomRanges(filteredRanges);
-
-      const filteredRAs = people.filter((person) => person.BLDG_Code === building);
-      setFilteredPeople(filteredRAs);
-
-      const filteredUnassigendrooms = unassignedRooms.filter(
-        (room) => room.Building_Code === building,
-      );
-      setFilteredUnassigned(filteredUnassigendrooms);
-
-      const filteredAssign = assignments.filter((assignment) => assignment.Hall_ID === building);
-      setFilteredAssignments(filteredAssign);
-    } else {
-      setFilteredRoomRanges([]);
-      setFilteredPeople([]);
-      setFilteredAssignments([]);
-    }
-  }, [building, roomRanges, people, assignments]);
+      raList()
+        .then(setAllRAs)
+        .catch((error) => console.error('Error fetching RAs:', error)),
+    ]).then(() => setIsLoading(false));
+  }, [createSnackbar]);
 
   const clearRoomInputs = () => {
     setRoomStart('');
     setRoomEnd('');
   };
 
-  const fetchRaList = (building) => {
-    console.log('Selected Building:', building);
-    raList()
-      .then((response) => {
-        const buildingCodes = response.filter((code) => code.BLDG_Code === building);
-        setPeople(response ? buildingCodes : []);
-        console.log('RA List:', response);
-      })
-      .catch((error) => console.error('Error fetching RAs:', error));
-  };
-
   const onClickAddRoomRange = () => {
-    if (building && roomStart && roomEnd) {
-      const body = { Hall_ID: building, Room_Start: roomStart, Room_End: roomEnd };
+    if (selectedHall && roomStart && roomEnd) {
+      const body = { Hall_ID: selectedHall, Room_Start: roomStart, Room_End: roomEnd };
       addRoomRange(body)
-        .then(() => {
-          clearRoomInputs();
-          fetchRoomRanges()
-            .then((response) => setRoomRanges(response))
-            .catch((error) => console.error('Error fetching room ranges:', error));
-        })
+        .then(fetchRoomRanges)
+        .then(setAllRoomRanges)
+        .then(fetchMissingRooms)
+        .then(setUnassignedRooms)
+        .then(clearRoomInputs)
         .catch((error) => {
           console.error('Error adding room range:', error);
           createSnackbar('Error adding room range: ' + error, 'error');
         });
-    }
+    } else
+      createSnackbar(
+        'Select a building and room range start and end to add a room range',
+        'warning',
+      );
   };
 
   const onClickRemoveRoomRange = (rangeId) => {
     removeRoomRange(rangeId)
-      .then(() => {
-        fetchRoomRanges()
-          .then((response) => setRoomRanges(response))
-          .catch((error) => console.error('Error fetching room ranges:', error));
-        // Reload assignment list
-        fetchAssignmentList() //reload assignemnt list as a assignment could be removed as well by this action
-          .then((response) => setAssignments(response))
-          .catch((error) => console.error('Error fetching assignments:', error));
-        setSelectedRoomRange(null);
-      })
+      .then(fetchRoomRanges)
+      .then(setAllRoomRanges)
+      .then(fetchMissingRooms)
+      .then(setUnassignedRooms)
+      // reload assignment list as an assignment could be removed as well by this action
+      .then(fetchAssignmentList)
+      .then(setAssignments)
+      .then(() => setSelectedRoomRange(null))
       .catch((error) => {
         console.error('Error removing room range:', error);
         createSnackbar('Error removing room range: ' + error, 'error');
@@ -158,19 +153,16 @@ const RoomRanges = () => {
   };
 
   const onClickAssignPerson = () => {
-    if (selectedPerson && selectedRoomRange) {
-      const newRange = {
+    if (selectedRA && selectedRoomRange) {
+      assignPersonToRange({
         Range_ID: selectedRoomRange,
-        RA_ID: selectedPerson,
-      };
-
-      assignPersonToRange(newRange)
+        RA_ID: selectedRA,
+      })
+        .then(fetchAssignmentList)
+        .then(setAssignments)
         .then(() => {
-          setSelectedPerson(null);
+          setSelectedRA(null);
           setSelectedRoomRange(null);
-          fetchAssignmentList()
-            .then((response) => setAssignments(response))
-            .catch((error) => console.error('Error fetching assignments:', error));
         })
         .catch((error) => {
           console.error('Error assigning person to range:', error);
@@ -181,16 +173,17 @@ const RoomRanges = () => {
 
   const onClickRemoveAssignment = (rangeId) => {
     removeAssignment(rangeId)
-      .then(() => {
-        fetchAssignmentList()
-          .then((response) => setAssignments(response))
-          .catch((error) => console.error('Error fetching assignments:', error));
-      })
+      .then(fetchAssignmentList)
+      .then(setAssignments)
       .catch((error) => {
         console.error('Error removing assignment:', error);
         createSnackbar('Error removing assignment: ' + error, 'error');
       });
   };
+
+  if (isLoading) {
+    return <GordonLoader />;
+  }
 
   return (
     <>
@@ -232,26 +225,14 @@ const RoomRanges = () => {
               <InputLabel id="Building">Building</InputLabel>
               <Select
                 label="Select building"
-                value={building}
-                onChange={(e) => {
-                  setBuilding(e.target.value);
-                  fetchRaList(e.target.value);
-                }}
+                value={selectedHall ?? ''}
+                onChange={(e) => setSelectedHall(e.target.value)}
                 fullWidth
                 margin="normal"
               >
-                <MenuItem value="BRO">Bromley</MenuItem>
-                <MenuItem value="FER">Ferrin</MenuItem>
-                <MenuItem value="EVN">Evans</MenuItem>
-                <MenuItem value="WIL">Wilson</MenuItem>
-                <MenuItem value="CHA">Chase</MenuItem>
-                <MenuItem value="TAV">Tavilla</MenuItem>
-                <MenuItem value="FUL">Fulton</MenuItem>
-                <MenuItem value="NYL">Nyland</MenuItem>
-                <MenuItem value="GRA">Grace</MenuItem>
-                <MenuItem value="MCI">MacInnis</MenuItem>
-                <MenuItem value="CON">Conrad</MenuItem>
-                <MenuItem value="RID">Rider</MenuItem>
+                {allHalls.map(({ Name, BuildingCode }) => (
+                  <MenuItem value={BuildingCode}>{Name}</MenuItem>
+                ))}
               </Select>
             </FormControl>
           </CardContent>
@@ -299,51 +280,49 @@ const RoomRanges = () => {
           <CardContent>
             <Typography variant="h6">Room Ranges</Typography>
             <List>
-              {showList ? (
-                filteredRoomRanges.length > 0 ? (
-                  filteredRoomRanges.map((range) => (
-                    <ListItem
-                      key={range.Range_ID}
-                      onClick={() => setSelectedRoomRange(range.Range_ID)}
-                      sx={{
-                        cursor: 'pointer',
-                        backgroundColor:
-                          selectedRoomRange === range.Range_ID ? 'primary.main' : 'transparent',
-                        '&:hover': {
-                          textDecoration: 'none',
-                          backgroundColor: 'primary.main',
-                          color: 'white',
-                          '@media (hover: none)': {
-                            backgroundColor: 'transparent',
-                            color: 'inherit',
-                          },
+              {isLoading ? (
+                <ListItem>Loading room ranges...</ListItem>
+              ) : filteredRoomRanges.length > 0 ? (
+                filteredRoomRanges.map((range) => (
+                  <ListItem
+                    key={range.Range_ID}
+                    onClick={() => setSelectedRoomRange(range.Range_ID)}
+                    sx={{
+                      cursor: 'pointer',
+                      backgroundColor:
+                        selectedRoomRange === range.Range_ID ? 'primary.main' : 'transparent',
+                      '&:hover': {
+                        textDecoration: 'none',
+                        backgroundColor: 'primary.main',
+                        color: 'white',
+                        '@media (hover: none)': {
+                          backgroundColor: 'transparent',
+                          color: 'inherit',
                         },
+                      },
+                    }}
+                  >
+                    <Box>
+                      {range.Hall_ID}: {range.Room_Start} - {range.Room_End}
+                    </Box>
+                    <Button
+                      variant="outlined"
+                      color="secondary"
+                      size="small"
+                      sx={{ ml: 1 }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onClickRemoveRoomRange(range.Range_ID);
                       }}
                     >
-                      <Box>
-                        {range.Hall_ID}: {range.Room_Start} - {range.Room_End}
-                      </Box>
-                      <Button
-                        variant="outlined"
-                        color="secondary"
-                        size="small"
-                        sx={{ ml: 1 }}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onClickRemoveRoomRange(range.Range_ID);
-                        }}
-                      >
-                        Remove
-                      </Button>
-                    </ListItem>
-                  ))
-                ) : (
-                  <ListItem style={{ color: '#9cb0b6' }}>
-                    Please select a building to see the list of Room Ranges.
+                      Remove
+                    </Button>
                   </ListItem>
-                )
+                ))
               ) : (
-                <ListItem>Loading room ranges...</ListItem>
+                <ListItem style={{ color: '#9cb0b6' }}>
+                  Please select a building to see the list of Room Ranges.
+                </ListItem>
               )}
             </List>
           </CardContent>
@@ -354,21 +333,20 @@ const RoomRanges = () => {
           <CardContent>
             <Typography variant="h6">Assign Person</Typography>
             <List>
-              {filteredPeople.length > 0 ? (
+              {filteredRAs.length > 0 ? (
                 <>
                   <Typography variant="body1" gutterBottom style={{ color: '#9cb0b6' }}>
                     Select a room range and a person, then click "Assign Person" to add them to the
                     room assignments list below.
                   </Typography>
-                  {filteredPeople.map((person) => (
+                  {filteredRAs.map((person) => (
                     <ListItem
                       key={person.ID}
-                      onClick={() => setSelectedPerson(person.ID)}
+                      onClick={() => setSelectedRA(person.ID)}
                       sx={{
                         cursor: 'pointer',
-                        backgroundColor:
-                          selectedPerson === person.ID ? 'primary.main' : 'transparent',
-                        color: selectedPerson === person.ID ? 'white' : 'inherit',
+                        backgroundColor: selectedRA === person.ID ? 'primary.main' : 'transparent',
+                        color: selectedRA === person.ID ? 'white' : 'inherit',
                         '&:hover': {
                           textDecoration: 'none',
                           backgroundColor: 'primary.main',
@@ -444,8 +422,8 @@ const RoomRanges = () => {
               The rooms below do not fall under any of the current room ranges.
             </Typography>
             <List>
-              {filteredUnassigned.length > 0 ? (
-                filteredUnassigned.map((room) => (
+              {filteredUnassignedRoomRanges.length > 0 ? (
+                filteredUnassignedRoomRanges.map((room) => (
                   <ListItem key={room.Room_Number}>
                     <Box>{room.Room_Name}</Box>
                   </ListItem>

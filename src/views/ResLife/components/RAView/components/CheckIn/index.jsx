@@ -8,7 +8,7 @@ import {
   Grid,
   Typography,
 } from '@mui/material';
-import { React, useCallback, useEffect, useState } from 'react';
+import { React, useCallback, useEffect, useMemo, useState } from 'react';
 import SimpleSnackbar from 'components/Snackbar';
 import GordonDialogBox from 'components/GordonDialogBox';
 import {
@@ -17,16 +17,32 @@ import {
   getRACurrentHalls,
 } from 'services/residentLife/RA_Checkin';
 import { useUser } from 'hooks';
+import { getAllHalls } from 'services/residentLife/halls';
+
+// TODO: Define the village buildings in the database and use that definition
+const VillageBuildingCodes = Object.freeze(['CON', 'GRA', 'RID', 'MCI', 'HIL']);
 
 const CheckIn = () => {
   const [isCheckedIn, setCheckedIn] = useState(false);
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
   const { profile } = useUser();
-  const [hallName, setHallName] = useState('');
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
+
   const [checkedInHalls, setCheckedInHalls] = useState([]);
+
+  const [hallState, setHallState] = useState({});
+
+  const selectedHalls = useMemo(
+    () =>
+      Object.values(hallState).filter(
+        (hall) =>
+          hall.isChecked &&
+          hall.BuildingCode !== 'village' &&
+          !checkedInHalls.includes(hall.BuildingCode),
+      ),
+    [hallState, checkedInHalls],
+  );
 
   const createSnackbar = useCallback((message, severity) => {
     setSnackbar({ message, severity, open: true });
@@ -35,88 +51,55 @@ const CheckIn = () => {
   // Fetch check-in status and initialize hall data
   useEffect(() => {
     const fetchData = async () => {
-      if (profile?.ID) {
-        try {
-          const isChecked = await checkIfCheckedIn(profile.ID);
-          setCheckedIn(isChecked);
+      try {
+        const halls = await getAllHalls();
+        halls.forEach((hall) => (hall.isChecked = false));
+        const hallState = Object.fromEntries(halls.map((hall) => [hall.BuildingCode, hall]));
+        // Append The Village to halls
+        hallState.village = { Name: 'The Village', BuildingCode: 'village', isChecked: false };
 
-          // if RA is checked in
-          if (isChecked) {
-            const currentHalls = await getRACurrentHalls(profile.AD_Username);
-            setHallState((prevState) => {
-              const updatedState = { ...prevState };
-              currentHalls.forEach((hall) => {
-                updatedState[hall] = true;
-              });
-              return updatedState;
+        const isChecked = await checkIfCheckedIn(profile.ID);
+        setCheckedIn(isChecked);
+
+        const currentHalls = await getRACurrentHalls(profile.AD_Username);
+        setCheckedInHalls(currentHalls);
+
+        // if RA is checked in
+        if (isChecked) {
+          currentHalls.forEach((currentlyCheckedHallCode) => {
+            halls[currentlyCheckedHallCode].isChecked = true;
+          });
+          setHallState((prevState) => {
+            const updatedState = { ...prevState };
+            currentHalls.forEach((currentlyCheckedHallCode) => {
+              updatedState[currentlyCheckedHallCode] = true;
             });
-          } else if (profile.hall) {
-            setHallState((prevState) => ({
-              ...prevState,
-              [profile.hall]: true,
-              village: ['CON', 'GRA', 'RID', 'MCI'].includes(profile.hall),
-            }));
+            return updatedState;
+          });
+        } else if (profile.hall) {
+          halls[profile.hall].isChecked = true;
+          if (VillageBuildingCodes.includes(profile.hall)) {
+            halls.village.isChecked = true;
           }
-        } catch (error) {
-          console.error('Error fetching data:', error);
+
+          setHallState((prevState) => ({
+            ...prevState,
+            [profile.hall]: true,
+            village: VillageBuildingCodes.includes(profile.hall),
+          }));
         }
+
+        setHallState(hallState);
+      } catch (error) {
+        console.error('Error fetching data:', error);
       }
     };
+
     fetchData();
-  }, [profile?.ID]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (profile?.ID) {
-        try {
-          const halls = await getRACurrentHalls(profile.AD_Username);
-          setCheckedInHalls(halls);
-        } catch (error) {
-          console.error('Error fetching checked-in halls:', error);
-        }
-      }
-    };
-    fetchData();
-  }, [profile?.ID]);
-
-  const hallCodeToNameMap = {
-    BRO: 'Bromley',
-    CHA: 'Chase',
-    EVN: 'Evans',
-    FER: 'Ferrin',
-    FUL: 'Fulton',
-    NYL: 'Nyland',
-    TAV: 'Tavilla',
-    WIL: 'Wilson',
-    CON: 'Conrad',
-    GRA: 'Grace',
-    RID: 'Rider',
-    MCI: 'MacInnis',
-    village: 'The Village',
-  };
-
-  const handleConfirm = () => {
-    setConfirmOpen(true);
-
-    let tempName = '';
-
-    for (let hall in hallState) {
-      if (hallState[hall] && hall !== 'village' && !checkedInHalls.includes(hall)) {
-        // Map hall codes to names using the mapping object
-        const hallName = hallCodeToNameMap[hall];
-        tempName = tempName ? `${tempName}, ${hallName}` : hallName;
-      }
-    }
-
-    setHallName(tempName);
-  };
+  }, [profile]);
 
   const handleSubmit = async () => {
-    const selectedHallCodes = Object.keys(hallState).filter(
-      (hall) => hallState[hall] && hall !== 'village' && !checkedInHalls.includes(hall),
-    ); //exclude village for checkin
-
-    if (!profile?.ID || selectedHallCodes.length === 0) {
+    if (!profile?.ID || selectedHalls.length === 0) {
       createSnackbar(
         'Please select a hall and ensure profile information is loaded before checking in.',
         'warning',
@@ -125,62 +108,33 @@ const CheckIn = () => {
     }
 
     try {
-      await submitCheckIn(profile.ID, selectedHallCodes);
+      await submitCheckIn(
+        profile.ID,
+        selectedHalls.map((hall) => hall.BuildingCode),
+      );
       setCheckedIn(true);
       setConfirmOpen(false);
       setOpen(false);
-      createSnackbar(`Successfully checked into ${hallName}`, 'success');
+      createSnackbar(
+        `Successfully checked into ${selectedHalls.map((hall) => hall.Name).join(', ')}`,
+        'success',
+      );
     } catch (error) {
       console.error('Error checking in:', error);
       createSnackbar('Failed to check in. Please try again.', 'error');
     }
   };
 
-  const [hallState, setHallState] = useState({
-    BRO: false,
-    CHA: false,
-    EVN: false,
-    FER: false,
-    FUL: false,
-    NYL: false,
-    TAV: false,
-    WIL: false,
-    village: false,
-  });
-
-  // set halls that are checked in to be checked off
-  useEffect(() => {
-    var check = false;
-    for (let hall in hallState) {
-      if (hallState[hall]) {
-        check = true;
-        break;
-      }
-    }
-    setIsChecked(check);
-  }, [hallState]);
-
-  const { BRO, CHA, EVN, FER, FUL, NYL, TAV, WIL, village } = hallState;
-
   const handleHallChecked = (event) => {
     const { name, checked } = event.target;
 
     setHallState((prevState) => {
-      const updatedState = { ...prevState, [name]: checked };
+      const updatedState = { ...prevState, [name]: { ...prevState[name], isChecked: checked } };
 
-      //when village checked mark needed halls
-      if (name === 'village' && checked) {
-        updatedState.CON = true;
-        updatedState.GRA = true;
-        updatedState.RID = true;
-        updatedState.MCI = true;
-      }
-
-      if (name === 'village' && !checked) {
-        updatedState.CON = false;
-        updatedState.GRA = false;
-        updatedState.RID = false;
-        updatedState.MCI = false;
+      if (name === 'village') {
+        VillageBuildingCodes.forEach((villageBuildingCode) => {
+          updatedState[villageBuildingCode].isChecked = checked;
+        });
       }
 
       return updatedState;
@@ -199,7 +153,7 @@ const CheckIn = () => {
             onClose={() => setOpen(false)}
             title={'Choose Which Hall to Check Into'}
             buttonName="Check In"
-            buttonClicked={handleConfirm}
+            buttonClicked={() => setConfirmOpen(true)}
             cancelButtonName="CANCEL"
             cancelButtonClicked={() => setOpen(false)}
           >
@@ -207,87 +161,20 @@ const CheckIn = () => {
               <FormControl required={true}>
                 <FormLabel error>Select a Hall</FormLabel>
                 <FormGroup>
-                  <FormControlLabel
-                    key="BRO"
-                    checked={BRO}
-                    disabled={checkedInHalls?.includes('BRO')}
-                    control={<Checkbox />}
-                    onChange={handleHallChecked}
-                    label="Bromley"
-                    name="BRO"
-                  />
-                  <FormControlLabel
-                    key="CHA"
-                    checked={CHA}
-                    disabled={checkedInHalls?.includes('CHA')}
-                    control={<Checkbox />}
-                    onChange={handleHallChecked}
-                    label="Chase"
-                    name="CHA"
-                  />
-                  <FormControlLabel
-                    key="EVN"
-                    checked={EVN}
-                    disabled={checkedInHalls?.includes('EVN')}
-                    control={<Checkbox />}
-                    onChange={handleHallChecked}
-                    label="Evans"
-                    name="EVN"
-                  />
-                  <FormControlLabel
-                    key="FER"
-                    checked={FER}
-                    disabled={checkedInHalls?.includes('FER')}
-                    control={<Checkbox />}
-                    onChange={handleHallChecked}
-                    label="Ferrin"
-                    name="FER"
-                  />
-                  <FormControlLabel
-                    key="FUL"
-                    checked={FUL}
-                    disabled={checkedInHalls?.includes('FUL')}
-                    control={<Checkbox />}
-                    onChange={handleHallChecked}
-                    label="Fulton"
-                    name="FUL"
-                  />
-                  <FormControlLabel
-                    key="NYL"
-                    checked={NYL}
-                    disabled={checkedInHalls?.includes('NYL')}
-                    control={<Checkbox />}
-                    onChange={handleHallChecked}
-                    label="Nyland"
-                    name="NYL"
-                  />
-                  <FormControlLabel
-                    key="TAV"
-                    checked={TAV}
-                    disabled={checkedInHalls?.includes('TAV')}
-                    control={<Checkbox />}
-                    onChange={handleHallChecked}
-                    label="Tavilla"
-                    name="TAV"
-                  />
-                  <FormControlLabel
-                    key="WIL"
-                    checked={WIL}
-                    disabled={checkedInHalls?.includes('WIL')}
-                    control={<Checkbox />}
-                    onChange={handleHallChecked}
-                    label="Wilson"
-                    name="WIL"
-                  />
-                  <FormControlLabel
-                    key="village"
-                    checked={village}
-                    disabled={checkedInHalls?.includes('village')}
-                    control={<Checkbox />}
-                    onChange={handleHallChecked}
-                    label="The Village"
-                    name="village"
-                  />
+                  {Object.values(hallState)
+                    //Exclude village buildings, since village RAs check in for the whole village at once
+                    .filter((hall) => !VillageBuildingCodes.includes(hall.BuildingCode))
+                    .map((hall) => (
+                      <FormControlLabel
+                        key={hall.BuildingCode}
+                        checked={hall.isChecked}
+                        disabled={checkedInHalls?.includes(hall.BuildingCode)}
+                        control={<Checkbox />}
+                        onChange={handleHallChecked}
+                        label={hall.Name}
+                        name={hall.BuildingCode}
+                      />
+                    ))}
                 </FormGroup>
               </FormControl>
             </Grid>
@@ -305,8 +192,9 @@ const CheckIn = () => {
           >
             <Grid item>
               <Typography>
-                NOTE: You are checking into {hallName || 'Unknown Hall'} to be on duty. Is this what
-                you meant to do?
+                NOTE: You are checking into{' '}
+                {selectedHalls.map((hall) => hall.Name).join(', ') || 'Unknown Hall'} to be on duty.
+                Is this what you meant to do?
               </Typography>
             </Grid>
           </GordonDialogBox>

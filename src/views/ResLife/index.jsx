@@ -15,6 +15,7 @@ import RoomRanges from 'views/ResLife/components/RDView/components/RoomRanges';
 import TaskList from 'views/ResLife/components/RDView/components/TaskList';
 import RDOnCallForm from 'views/ResLife/components/RDView/components/RDOnCallForm';
 import StatusManager from 'views/ResLife/components/RAView/components/StatusManager';
+import GordonUnauthenticated from 'components/GordonUnauthenticated';
 
 const Housing = () => {
   const [HousingAccess, setCanAccessHousing] = useState(false);
@@ -85,6 +86,8 @@ const Housing = () => {
             <ResidentView />
           ) : hasStandardAccess ? (
             <StaffView />
+          ) : !isAuthenticated ? (
+            <GordonUnauthenticated feature="Residence Life" />
           ) : (
             <Page404 />
           )

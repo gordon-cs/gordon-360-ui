@@ -62,13 +62,12 @@ const TaskList = () => {
       try {
         const halls = await getRACurrentHalls(profile.AD_Username);
         setHallList(halls);
-        console.log(halls);
       } catch (error) {
         console.log('Error fetching halls', error);
       }
     };
     fetchCheckedInHalls();
-  }, []);
+  }, [profile.AD_Username]);
 
   useEffect(() => {
     const fetchTaskList = async () => {
