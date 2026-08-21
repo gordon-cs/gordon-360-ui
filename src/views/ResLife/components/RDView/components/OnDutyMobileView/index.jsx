@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   FormControl,
   InputLabel,
@@ -12,19 +12,7 @@ import {
 import { styled } from '@mui/material/styles';
 import { fetchOnDutyData } from 'services/residentLife/RA_OnCall';
 import ScottieMascot from 'views/ResLife/ScottieMascot.png';
-
-// Hardcoded list of all halls
-const ALL_HALLS = [
-  { name: 'Bromley', id: 'BRO' },
-  { name: 'Chase', id: 'CHA' },
-  { name: 'Evans', id: 'EVN' },
-  { name: 'Ferrin', id: 'FER' },
-  { name: 'Fulton', id: 'FUL' },
-  { name: 'Nyland', id: 'NYL' },
-  { name: 'Tavilla', id: 'TAV' },
-  { name: 'Wilson', id: 'WIL' },
-  { name: 'The Village', id: 'village' },
-];
+import { getAllHalls } from 'services/residentLife/halls';
 
 // building codes associated with the village
 const VILLAGE_IDS = ['GRA', 'RID', 'MCI', 'CON'];
@@ -47,56 +35,53 @@ const formatPhoneNumber = (phoneNumber) => {
 };
 
 const OnDutyMobile = () => {
-  const [value, setValue] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [hallDetails, setHallDetails] = useState(null);
-  const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [allHalls, setAllHalls] = useState([]);
+  const [selectedHall, setSelectedHall] = useState('');
+  const [allHallDuty, setAllHallDuty] = useState([]);
+  const selectedHallDuty = useMemo(
+    () => allHallDuty?.find((hall) => hall.Hall_ID === selectedHall) || null,
+    [selectedHall, allHallDuty],
+  );
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const data = await fetchOnDutyData();
+      const [halls, onDutyAllHalls] = await Promise.all([getAllHalls(), fetchOnDutyData()]);
 
-        // take any on call data from api response that has a village dorm and consolidate
-        const villageData = data.filter((hall) => VILLAGE_IDS.includes(hall.Hall_ID));
-        const otherHalls = data.filter((hall) => !VILLAGE_IDS.includes(hall.Hall_ID));
-        // village ra will be the same for all entries take data from first
-        if (villageData.length > 0) {
-          const consolidatedVillage = {
-            Hall_ID: 'village',
-            Hall_Name: 'The Village',
-            RA_Photo: villageData[0].RA_Photo,
-            RA_Name: villageData[0].RA_Name,
-            RA_UserName: villageData[0].RA_UserName,
-            Preferred_Contact: villageData[0].Preferred_Contact,
-            Check_In_Time: villageData[0].Check_In_Time,
-            RD_Name: villageData[0].RD_Name,
-            RD_UserName: villageData[0].RD_UserName,
-          };
-          setRows([...otherHalls, consolidatedVillage]); // pull info from village and remaining halls
-        } else {
-          setRows(data);
-        }
-      } catch {
-        setRows([]);
+      setAllHalls(
+        halls
+          .filter((hall) => !VILLAGE_IDS.includes(hall.BuildingCode))
+          .concat({ Name: 'The Village', BuildingCode: 'village' }),
+      );
+
+      const villageOnDuty = onDutyAllHalls.find((hall) => VILLAGE_IDS.includes(hall.Hall_ID));
+
+      if (villageOnDuty) {
+        const consolidatedVillage = {
+          Hall_ID: 'village',
+          Hall_Name: 'The Village',
+          RA_Photo: villageOnDuty.RA_Photo,
+          RA_Name: villageOnDuty.RA_Name,
+          RA_UserName: villageOnDuty.RA_UserName,
+          Preferred_Contact: villageOnDuty.Preferred_Contact,
+          Check_In_Time: villageOnDuty.Check_In_Time,
+          RD_Name: villageOnDuty.RD_Name,
+          RD_UserName: villageOnDuty.RD_UserName,
+        };
+
+        const notVillageOnDuty = onDutyAllHalls.filter(
+          (hall) => !VILLAGE_IDS.includes(hall.Hall_ID),
+        );
+
+        setAllHallDuty([...notVillageOnDuty, consolidatedVillage]); // pull info from village and remaining halls
+      } else {
+        setAllHallDuty(onDutyAllHalls);
       }
+      setLoading(false);
     };
 
     fetchData();
   }, []);
-
-  // Update hall details when a hall is selected
-  useEffect(() => {
-    if (!value) return;
-    setLoading(true);
-    const selectedHall = rows.find((hall) => hall.Hall_ID === value) || null;
-    setHallDetails(selectedHall);
-    setLoading(false);
-  }, [value, rows]);
-
-  const handleChange = (event) => {
-    setValue(event.target.value);
-  };
 
   return (
     <FormControl fullWidth>
@@ -104,16 +89,16 @@ const OnDutyMobile = () => {
       <Select
         labelId="select-label"
         id="select"
-        value={value}
+        value={selectedHall}
         label="Select a Hall"
-        onChange={handleChange}
+        onChange={(e) => setSelectedHall(e.target.value)}
       >
-        {ALL_HALLS.map(
+        {allHalls.map(
           (
             hall, //populate list with all halls
           ) => (
-            <MenuItem key={hall.id} value={hall.id}>
-              {hall.name}
+            <MenuItem key={hall.BuildingCode} value={hall.BuildingCode}>
+              {hall.Name}
             </MenuItem>
           ),
         )}
@@ -124,7 +109,7 @@ const OnDutyMobile = () => {
           <CircularProgress />
         </Box>
       ) : (
-        value && (
+        selectedHall && (
           <Box
             sx={{
               textAlign: 'center',
@@ -134,16 +119,16 @@ const OnDutyMobile = () => {
               borderRadius: 2,
             }}
           >
-            {hallDetails?.RA_Name ? (
+            {selectedHallDuty?.RA_Name ? (
               <>
                 <a
-                  href={DEFAULT_PROFILE_URL + hallDetails.RA_UserName || '#'}
+                  href={DEFAULT_PROFILE_URL + selectedHallDuty.RA_UserName || '#'}
                   target="_self"
                   rel=""
                 >
                   <Avatar
-                    src={hallDetails.RA_Photo || 'https://placehold.jp/150x150.png'}
-                    alt={hallDetails.RA_Name || 'No RA'}
+                    src={selectedHallDuty.RA_Photo || 'https://placehold.jp/150x150.png'}
+                    alt={selectedHallDuty.RA_Name || 'No RA'}
                     sx={{
                       width: { xs: 80, sm: 80, md: 90, lg: 90 },
                       height: { xs: 80, sm: 80, md: 90, lg: 90 },
@@ -154,7 +139,7 @@ const OnDutyMobile = () => {
                   />
                 </a>
                 <Typography variant="h6">
-                  <strong>{hallDetails.Hall_Name}</strong>
+                  <strong>{selectedHallDuty.Hall_Name}</strong>
                 </Typography>
 
                 {/* RA Name  */}
@@ -162,20 +147,20 @@ const OnDutyMobile = () => {
                   <strong>On-Duty: </strong>
 
                   <StyledLink
-                    href={DEFAULT_PROFILE_URL + hallDetails.RA_UserName || '#'}
+                    href={DEFAULT_PROFILE_URL + selectedHallDuty.RA_UserName || '#'}
                     className="gc360_text_link"
                     target="_self"
                     rel=""
                   >
-                    {hallDetails.RA_Name}{' '}
+                    {selectedHallDuty.RA_Name}{' '}
                   </StyledLink>
                 </Typography>
 
                 <Typography>
                   <strong>Contact:</strong>{' '}
-                  {hallDetails.Preferred_Contact?.includes('http') ? (
+                  {selectedHallDuty.Preferred_Contact?.includes('http') ? (
                     <StyledLink
-                      href={hallDetails.Preferred_Contact}
+                      href={selectedHallDuty.Preferred_Contact}
                       underline="hover"
                       className="gc360_text_link"
                       target="_self"
@@ -183,12 +168,12 @@ const OnDutyMobile = () => {
                     >
                       Teams
                     </StyledLink>
-                  ) : hallDetails.Preferred_Contact ? (
+                  ) : selectedHallDuty.Preferred_Contact ? (
                     <StyledLink
-                      href={`tel:${hallDetails.Preferred_Contact}`}
+                      href={`tel:${selectedHallDuty.Preferred_Contact}`}
                       className="gc360_text_link"
                     >
-                      {formatPhoneNumber(hallDetails.Preferred_Contact)}
+                      {formatPhoneNumber(selectedHallDuty.Preferred_Contact)}
                     </StyledLink>
                   ) : (
                     <StyledLink className="gc360_text_link">No Contact Info</StyledLink>
@@ -197,8 +182,8 @@ const OnDutyMobile = () => {
 
                 <Typography>
                   <strong>Check-In Time:</strong>{' '}
-                  {hallDetails.Check_In_Time
-                    ? new Date(hallDetails.Check_In_Time).toLocaleTimeString([], {
+                  {selectedHallDuty.Check_In_Time
+                    ? new Date(selectedHallDuty.Check_In_Time).toLocaleTimeString([], {
                         hour: '2-digit',
                         minute: '2-digit',
                       })
@@ -208,12 +193,12 @@ const OnDutyMobile = () => {
                 <Typography>
                   <strong>Hall RD:</strong>{' '}
                   <StyledLink
-                    href={DEFAULT_PROFILE_URL + hallDetails.RD_UserName}
+                    href={DEFAULT_PROFILE_URL + selectedHallDuty.RD_UserName}
                     className="gc360_text_link"
                     target="_self"
                     rel=""
                   >
-                    {hallDetails.RD_Name || 'No RD Info'}{' '}
+                    {selectedHallDuty.RD_Name || 'No RD Info'}{' '}
                   </StyledLink>
                 </Typography>
               </>
