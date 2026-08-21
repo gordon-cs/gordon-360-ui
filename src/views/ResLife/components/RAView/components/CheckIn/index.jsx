@@ -51,6 +51,10 @@ const CheckIn = () => {
   // Fetch check-in status and initialize hall data
   useEffect(() => {
     const fetchData = async () => {
+      if (!profile) {
+        return;
+      }
+
       try {
         const halls = await getAllHalls();
         halls.forEach((hall) => (hall.isChecked = false));
