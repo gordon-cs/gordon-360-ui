@@ -11,19 +11,11 @@ import {
 import { React, useCallback, useEffect, useMemo, useState } from 'react';
 import SimpleSnackbar from 'components/Snackbar';
 import GordonDialogBox from 'components/GordonDialogBox';
-import {
-  checkIfCheckedIn,
-  submitCheckIn,
-  getRACurrentHalls,
-} from 'services/residentLife/RA_Checkin';
+import { submitCheckIn, getRACurrentHalls } from 'services/residentLife/RA_Checkin';
 import { useUser } from 'hooks';
 import { getAllHalls } from 'services/residentLife/halls';
 
-// TODO: Define the village buildings in the database and use that definition
-const VillageBuildingCodes = Object.freeze(['CON', 'GRA', 'RID', 'MCI', 'HIL']);
-
 const CheckIn = () => {
-  const [isCheckedIn, setCheckedIn] = useState(false);
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const { profile } = useUser();
@@ -36,10 +28,7 @@ const CheckIn = () => {
   const selectedHalls = useMemo(
     () =>
       Object.values(hallState).filter(
-        (hall) =>
-          hall.isChecked &&
-          hall.BuildingCode !== 'village' &&
-          !checkedInHalls.includes(hall.BuildingCode),
+        (hall) => hall.isChecked && !checkedInHalls.includes(hall.BuildingCode),
       ),
     [hallState, checkedInHalls],
   );
@@ -59,38 +48,17 @@ const CheckIn = () => {
         const halls = await getAllHalls();
         halls.forEach((hall) => (hall.isChecked = false));
         const hallState = Object.fromEntries(halls.map((hall) => [hall.BuildingCode, hall]));
-        // Append The Village to halls
-        hallState.village = { Name: 'The Village', BuildingCode: 'village', isChecked: false };
-
-        const isChecked = await checkIfCheckedIn(profile.ID);
-        setCheckedIn(isChecked);
 
         const currentHalls = await getRACurrentHalls(profile.AD_Username);
         setCheckedInHalls(currentHalls);
 
         // if RA is checked in
-        if (isChecked) {
+        if (currentHalls.length > 0) {
           currentHalls.forEach((currentlyCheckedHallCode) => {
             halls[currentlyCheckedHallCode].isChecked = true;
           });
-          setHallState((prevState) => {
-            const updatedState = { ...prevState };
-            currentHalls.forEach((currentlyCheckedHallCode) => {
-              updatedState[currentlyCheckedHallCode] = true;
-            });
-            return updatedState;
-          });
         } else if (profile.hall) {
           halls[profile.hall].isChecked = true;
-          if (VillageBuildingCodes.includes(profile.hall)) {
-            halls.village.isChecked = true;
-          }
-
-          setHallState((prevState) => ({
-            ...prevState,
-            [profile.hall]: true,
-            village: VillageBuildingCodes.includes(profile.hall),
-          }));
         }
 
         setHallState(hallState);
@@ -116,7 +84,7 @@ const CheckIn = () => {
         profile.ID,
         selectedHalls.map((hall) => hall.BuildingCode),
       );
-      setCheckedIn(true);
+      await getRACurrentHalls(profile.AD_Username).then(setCheckedInHalls);
       setConfirmOpen(false);
       setOpen(false);
       createSnackbar(
@@ -132,24 +100,17 @@ const CheckIn = () => {
   const handleHallChecked = (event) => {
     const { name, checked } = event.target;
 
-    setHallState((prevState) => {
-      const updatedState = { ...prevState, [name]: { ...prevState[name], isChecked: checked } };
-
-      if (name === 'village') {
-        VillageBuildingCodes.forEach((villageBuildingCode) => {
-          updatedState[villageBuildingCode].isChecked = checked;
-        });
-      }
-
-      return updatedState;
-    });
+    setHallState((prevState) => ({
+      ...prevState,
+      [name]: { ...prevState[name], isChecked: checked },
+    }));
   };
 
   return (
     <Grid container item justifyContent="center" alignItems="center">
       <Grid item xs={12} md={12}>
         <Button variant="contained" fullWidth={true} onClick={() => setOpen(true)}>
-          {isCheckedIn ? 'check in to extra Halls' : 'Check In To Your Shift'}
+          {checkedInHalls?.length > 0 ? 'check in to extra Halls' : 'Check In To Your Shift'}
         </Button>
         <Grid item xs={12} md={4} padding={1}>
           <GordonDialogBox
@@ -167,7 +128,7 @@ const CheckIn = () => {
                 <FormGroup>
                   {Object.values(hallState)
                     //Exclude village buildings, since village RAs check in for the whole village at once
-                    .filter((hall) => !VillageBuildingCodes.includes(hall.BuildingCode))
+                    // .filter((hall) => !VillageBuildingCodes.includes(hall.BuildingCode))
                     .map((hall) => (
                       <FormControlLabel
                         key={hall.BuildingCode}
