@@ -34,7 +34,6 @@ const TaskList = () => {
   const [checkedList, setCheckedList] = useState([]);
   const [disabledList, setDisabledList] = useState([]);
   const [snackbar, setSnackbar] = useState({ message: '', severity: null, open: false });
-  const [hallList, setHallList] = useState([]);
   const [confirmTask, setConfirmTask] = useState(null);
   const [confirmIncompleteTask, setConfirmIncompleteTask] = useState(null);
   const [selectedDescription, setSelectedDescription] = useState(null);
@@ -45,50 +44,32 @@ const TaskList = () => {
 
   useEffect(() => {
     const fetchIsCheckdIn = async () => {
-      if (profile?.ID) {
-        try {
-          const isChecked = await checkIfCheckedIn(profile.ID);
-          setCheckedIn(isChecked);
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        }
+      if (!profile) {
+        return;
       }
-    };
-    fetchIsCheckdIn();
-  }, [profile?.ID]);
-
-  useEffect(() => {
-    const fetchCheckedInHalls = async () => {
+      try {
+        const isChecked = await checkIfCheckedIn(profile.ID);
+        setCheckedIn(isChecked);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
       try {
         const halls = await getRACurrentHalls(profile.AD_Username);
-        setHallList(halls);
-      } catch (error) {
-        console.log('Error fetching halls', error);
-      }
-    };
-    fetchCheckedInHalls();
-  }, [profile.AD_Username]);
-
-  useEffect(() => {
-    const fetchTaskList = async () => {
-      try {
-        const updatedTasks = [];
-        // fetch tasks for each hall that RA is checked into
-        for (const hall of hallList) {
-          const tasks = await getTasksForHall(hall);
-          updatedTasks.push({ Hall_ID: hall, tasks });
+        if (halls.length > 0) {
+          const updatedTasks = [];
+          // fetch tasks for each hall that RA is checked into
+          for (const hall of halls) {
+            const tasks = await getTasksForHall(hall);
+            updatedTasks.push({ Hall_ID: hall, tasks });
+          }
+          setTaskList(updatedTasks);
         }
-        setTaskList(updatedTasks);
       } catch (error) {
         console.log('Error fetching tasks', error);
       }
     };
-
-    // only if RA is checked into at least one hall
-    if (hallList.length > 0) {
-      fetchTaskList();
-    }
-  }, [hallList]);
+    fetchIsCheckdIn();
+  }, [profile]);
 
   // confirmation to complete task
   const handleConfirm = async () => {
