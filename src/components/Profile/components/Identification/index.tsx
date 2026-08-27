@@ -128,8 +128,12 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar, fetchProfil
         // Do nothing
       }
 
-      setHasNickname(profile?.NickName && profile.NickName !== profile.FirstName);
-      setHasMaidenName(profile?.MaidenName && profile?.LastName !== profile.MaidenName);
+      setHasNickname(
+        profile?.NickName?.Value && profile.NickName.Value !== profile.FirstName.Value,
+      );
+      setHasMaidenName(
+        profile?.MaidenName?.Value && profile.MaidenName.Value !== profile.LastName.Value,
+      );
     }
 
     loadUserProfile();
@@ -539,12 +543,13 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar, fetchProfil
   }
 
   const todaysDate = new Date();
+  // Jan=0, Feb=1, Mar=2, Apr=3, etc.
   const isAprilFools = todaysDate.getMonth() === 3 && todaysDate.getDate() === 1;
   const profileTitleAprilFools = profile?.Title
     ? profile.Title.charAt(0).toUpperCase() +
       profile.Title.slice(1).toLowerCase() +
       '. ' +
-      profile.LastName
+      profile.LastName.Value
     : '';
 
   return (
@@ -556,15 +561,15 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar, fetchProfil
               title={`${
                 isAprilFools
                   ? profileTitleAprilFools
-                  : profile.NickName
-                    ? profile.NickName
-                    : profile.FirstName
+                  : profile.NickName?.Value
+                    ? profile.NickName?.Value
+                    : profile.FirstName.Value
               }'s Profile`}
             />
           ) : (
             <CardHeader
-              title={`${profile.NickName ? profile.NickName : profile.FirstName} ${
-                profile.LastName
+              title={`${profile.NickName?.Value ? profile.NickName.Value : profile.FirstName.Value} ${
+                profile.LastName.Value
               }'s Profile`}
             />
           ))}
@@ -697,9 +702,9 @@ const Identification = ({ profile, myProf, isOnline, createSnackbar, fetchProfil
                     <Typography variant="h6" paragraph style={{ marginBottom: 0 }}>
                       {`${
                         profile.Title && profile.PersonType === 'fac' ? `${profile.Title} ` : ''
-                      }${profile.FirstName}${hasNickname ? ` (${profile.NickName})` : ''} ${
-                        profile.LastName
-                      }${hasMaidenName ? ` (${profile.MaidenName})` : ''}`}
+                      }${profile.FirstName.Value}${hasNickname ? ` (${profile.NickName.Value})` : ''} ${
+                        profile.LastName.Value
+                      }${hasMaidenName ? ` (${profile.MaidenName.Value})` : ''}`}
                     </Typography>
 
                     {/* Profile Name Edit Request */}
