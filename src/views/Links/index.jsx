@@ -8,7 +8,7 @@ import CanvasIcon from '/src/views/Links/images/Canvas.ico';
 import GordonIcon from '/src/views/Links/images/favicon.ico';
 import GOIcon from '/src/views/Links/images/GoGordonFavicon.ico';
 import MyGordonIcon from '/src/views/Links/images/MyGordonFavicon.ico';
-import CriterionIcon from '/src/views/Links/images/criterion.png';
+import SageIcon from '/src/views/Links/images/sage.ico';
 import MetzIcon from '/src/views/Links/images/Metzlogo.png';
 import HandshakeIcon from '/src/views/Links/images/handshake.png';
 import CycleTag from '/src/views/Links/images/cycletag.png';
@@ -118,15 +118,15 @@ const Links = () => {
           <List>
             <ListItem>
               <ListItemIcon>
-                <img src={CriterionIcon} alt={'Criterion Logo'} className={styles.icon_style} />
+                <img src={SageIcon} alt={'Sage Logo'} className={styles.icon_style} />
               </ListItemIcon>
               <Link
-                href="https://gordon.criterionhcm.com/"
+                href="https://gordon.sagehcm.com/"
                 underline="hover"
                 className={`gc360_text_link`}
                 target="_blank"
               >
-                <ListItemText primary="Criterion (Timesheets)" />
+                <ListItemText primary="Sage (Timesheets)" secondary="formerly Criterion" />
               </Link>
             </ListItem>
             <ListItem>

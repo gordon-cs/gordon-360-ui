@@ -465,7 +465,7 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
             {' '}
             No strengths to show.{' '}
             <Link
-              href="https://gordon.gallup.com/signin/default.aspx"
+              href="https://www.gallup.com/cliftonstrengths/en/home.aspx"
               underline="hover"
               target="_blank"
               className={'gc360_text_link'}
