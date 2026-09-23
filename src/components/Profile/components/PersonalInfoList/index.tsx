@@ -462,17 +462,17 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
           </Typography>
         ) : (
           <Typography>
-            {' '}
-            No strengths to show.{' '}
+            No strengths found. Contact{' '}
             <Link
-              href="https://www.gallup.com/cliftonstrengths/en/home.aspx"
-              underline="hover"
               target="_blank"
-              className={'gc360_text_link'}
+              underline="hover"
               rel="noopener noreferrer"
+              className="gc360_text_link"
+              href="mailto:Orientation@gordon.edu?subject=My Clifton Strengths"
             >
-              Take the test
+              Orientation@gordon.edu
             </Link>{' '}
+            for help finding your Clifton Strengths.
           </Typography>
         )
       }
@@ -727,8 +727,8 @@ const PersonalInfoList = ({ myProf, profile, isOnline, createSnackbar }: Props) 
     (isFacStaff ? (
       <Typography align="left" className={styles.note}>
         Faculty/Staff: To update your personal info, please go to{' '}
-        <a href="https://gordon.criterionhcm.com/" className={`gc360_text_link`}>
-          Criterion
+        <a href="https://gordon.sagehcm.com/" className={`gc360_text_link`}>
+          Sage (formerly Criterion)
         </a>{' '}
         and look under "Personal Info" tab.
       </Typography>
