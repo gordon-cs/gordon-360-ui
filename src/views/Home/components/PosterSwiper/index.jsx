@@ -9,13 +9,18 @@ import { Autoplay, Pagination, Navigation, Keyboard, EffectCoverflow } from 'swi
 import './PosterSwiper.scss';
 import { Link } from 'react-router-dom';
 import { Card, CardMedia, Grid, Typography } from '@mui/material';
+import { useMsal } from '@azure/msal-react';
 
 const PosterSwiper = () => {
+  const { accounts } = useMsal();
+  const currentUsername = accounts.length > 0 ? accounts[0].username : null;
+  const currentUsernameShort = currentUsername?.split('@')[0];
+  console.log('currentUsername: ', currentUsername);
   const [currentPosters, setCurrentPosters] = useState([]);
 
   useEffect(() => {
-    getCurrentPosters().then(setCurrentPosters);
-  }, []);
+    getCurrentPosters(currentUsernameShort).then(setCurrentPosters);
+  }, [currentUsernameShort]);
 
   return (
     <Grid sx={{ mb: 4 }}>

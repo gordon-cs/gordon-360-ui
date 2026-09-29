@@ -76,7 +76,8 @@ const createPoster = (newPoster: UploadPoster): Promise<CreatedPoster> =>
 
 const getPosters = (): Promise<Poster[]> => http.get(`posters/all`);
 
-const getCurrentPosters = (): Promise<Poster[]> => http.get(`posters`);
+const getCurrentPosters = (username: string): Promise<Poster[]> =>
+  http.get(`posters/current/${username}`);
 
 const getCurrentPostersByActivityCode = (activityCode: string): Promise<Poster[]> =>
   http.get(`posters/activity/${activityCode}`);
