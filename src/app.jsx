@@ -18,6 +18,7 @@ import 'react-image-gallery/styles/css/image-gallery.css';
 const App = () => {
   useWatchSystemColorScheme();
   const location = useLocation();
+  const isHiddenPostersPage = location.pathname === '/hiddenposters';
   const mainRef = useRef(null);
 
   useEffect(() => {
@@ -43,10 +44,15 @@ const App = () => {
 
   return (
     <ErrorBoundary>
-      <GordonHeader onDrawerToggle={onDrawerToggle} />
-      <GordonNav onDrawerToggle={onDrawerToggle} drawerOpen={drawerOpen} />
-      <main className={styles.app_main} ref={mainRef}>
-        <BirthdayMessage />
+      {!isHiddenPostersPage && <GordonHeader onDrawerToggle={onDrawerToggle} />}
+      {!isHiddenPostersPage && (
+        <GordonNav onDrawerToggle={onDrawerToggle} drawerOpen={drawerOpen} />
+      )}
+      <main
+        className={`${styles.app_main} ${isHiddenPostersPage ? styles.app_main_fullscreen : ''}`}
+        ref={mainRef}
+      >
+        {!isHiddenPostersPage && <BirthdayMessage />}
         <AppRedirect />
         <Routes>
           {routes.map((route) => (
