@@ -10,12 +10,45 @@ import './PosterSwiper.scss';
 import { Link } from 'react-router-dom';
 import { Card, CardMedia, Grid, Typography } from '@mui/material';
 
-const PosterSwiper = () => {
+const PosterSwiper = ({ showManagementLinks = true, postersOverride }) => {
   const [currentPosters, setCurrentPosters] = useState([]);
 
   useEffect(() => {
+    if (postersOverride !== undefined) {
+      setCurrentPosters(postersOverride);
+      return;
+    }
+
     getCurrentPosters().then(setCurrentPosters);
-  }, []);
+  }, [postersOverride]);
+
+  const noPostersContent = (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '40px 0',
+        width: '100%',
+      }}
+    >
+      <Typography
+        variant="body1"
+        color="warning.main"
+        sx={{
+          textAlign: 'center',
+          fontFamily: '"Orbitron", "Montserrat", "Roboto", sans-serif',
+          letterSpacing: '2px',
+          fontWeight: 700,
+          fontSize: '1.3rem',
+        }}
+      >
+        {showManagementLinks
+          ? 'No posters available. Click to add yours!'
+          : 'No posters available.'}
+      </Typography>
+    </div>
+  );
 
   return (
     <Grid sx={{ mb: 4 }}>
@@ -74,37 +107,60 @@ const PosterSwiper = () => {
                 alignItems: 'center',
               }}
             >
-              <Link to="/posters" style={{ textDecoration: 'none', width: '100%' }}>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: '40px 0',
-                    width: '100%',
-                  }}
-                >
-                  <Typography
-                    variant="body1"
-                    color="warning.main"
-                    sx={{
-                      textAlign: 'center',
-                      fontFamily: '"Orbitron", "Montserrat", "Roboto", sans-serif',
-                      letterSpacing: '2px',
-                      fontWeight: 700,
-                      fontSize: '1.3rem',
-                    }}
-                  >
-                    No posters available. Click to add yours!
-                  </Typography>
-                </div>
-              </Link>
+              {showManagementLinks ? (
+                <Link to="/posters" style={{ textDecoration: 'none', width: '100%' }}>
+                  {noPostersContent}
+                </Link>
+              ) : (
+                noPostersContent
+              )}
             </SwiperSlide>
           ) : (
-            currentPosters.map(
-              (
-                item, // Map through the posters and create a slide for each
-              ) => (
+            currentPosters.map((item) => {
+              const posterCard = (
+                <Card
+                  variant="outlined"
+                  sx={{
+                    position: 'relative',
+                    boxShadow: '0 16px 10px -10px rgba(0, 0, 0, 0.5)',
+                    border: 'none',
+                    m: 0,
+                    p: 0,
+                  }}
+                >
+                  {item.Priority === 1 && (
+                    <Typography
+                      variant="h3"
+                      sx={{
+                        position: 'absolute',
+                        top: 8,
+                        right: 12,
+                        color: 'red',
+                        fontWeight: 'bold',
+                        fontSize: '5rem',
+                        zIndex: 3,
+                        userSelect: 'none',
+                        fontFamily: '"Orbitron", "Montserrat", "Roboto", sans-serif',
+                        textShadow: '2px 2px 8px #00000055',
+                      }}
+                    >
+                      !
+                    </Typography>
+                  )}
+                  <CardMedia
+                    loading="lazy"
+                    component="img"
+                    src={item.ImagePath}
+                    title={item.Title}
+                    sx={{
+                      height: 300,
+                      objectFit: 'cover',
+                    }}
+                  />
+                </Card>
+              );
+
+              return (
                 <SwiperSlide
                   key={item.ID}
                   style={{
@@ -112,55 +168,19 @@ const PosterSwiper = () => {
                     justifyContent: 'space-around',
                   }}
                 >
-                  <Link
-                    to={`/posters`}
-                    style={{ textDecoration: 'none', display: 'block', height: '100%' }}
-                  >
-                    <Card
-                      variant="outlined"
-                      sx={{
-                        position: 'relative',
-                        boxShadow: '0 16px 10px -10px rgba(0, 0, 0, 0.5)',
-                        border: 'none',
-                        m: 0,
-                        p: 0,
-                      }}
+                  {showManagementLinks ? (
+                    <Link
+                      to="/posters"
+                      style={{ textDecoration: 'none', display: 'block', height: '100%' }}
                     >
-                      {/* Priority Marker */}
-                      {item.Priority === 1 && ( // Add the exclamation mark if the poster is a priority
-                        <Typography
-                          variant="h3"
-                          sx={{
-                            position: 'absolute',
-                            top: 8,
-                            right: 12,
-                            color: 'red',
-                            fontWeight: 'bold',
-                            fontSize: '5rem',
-                            zIndex: 3,
-                            userSelect: 'none',
-                            fontFamily: '"Orbitron", "Montserrat", "Roboto", sans-serif',
-                            textShadow: '2px 2px 8px #00000055',
-                          }}
-                        >
-                          !
-                        </Typography>
-                      )}
-                      <CardMedia
-                        loading="lazy"
-                        component="img"
-                        src={item.ImagePath} // Image path for the poster
-                        title={item.Title} // Title for the poster
-                        sx={{
-                          height: 300,
-                          objectFit: 'cover',
-                        }}
-                      />
-                    </Card>
-                  </Link>
+                      {posterCard}
+                    </Link>
+                  ) : (
+                    posterCard
+                  )}
                 </SwiperSlide>
-              ),
-            )
+              );
+            })
           )}
         </Swiper>
       </div>
