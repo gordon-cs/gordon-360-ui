@@ -12,22 +12,34 @@ import { isMobile } from 'react-device-detect';
 import Dropzone from 'react-dropzone';
 import Cropper from 'react-cropper';
 import defaultLogo from '../../images/DefaultPoster.png';
+import tvSlideUploadGuide from '../../images/How to Upload a TV Poster.png';
 import styles from './CropPoster.module.scss';
 import CheckBoxRoundedIcon from '@mui/icons-material/CheckBoxRounded';
 import ClearOutlinedIcon from '@mui/icons-material/ClearRounded';
 import IconButton from '@mui/material/IconButton';
 import UndoIcon from '@mui/icons-material/Undo';
 
-const CROPPER_WIDTH = 1056;
-const CROPPER_HEIGHT = 1632;
-const ASPECT_RATIO = 3 / 4;
+const POSTER_WIDTH = 1056;
+const POSTER_HEIGHT = 1632;
+const TV_SLIDE_WIDTH = 1920;
+const TV_SLIDE_HEIGHT = 1080;
 
-const CropPoster = ({ open, onClose, onSubmit }) => {
+const CropPoster = ({
+  open,
+  onClose,
+  onSubmit,
+  orientation = 'portrait',
+  title = 'Upload Poster',
+}) => {
   const [cropperImageData, setCropperImageData] = useState(null);
   const [photoDialogError, setPhotoDialogError] = useState(null);
   const [photoDialogErrorTimeout, setPhotoDialogErrorTimeout] = useState(null);
   const [showCropper, setShowCropper] = useState(false);
   const cropperRef = useRef(null);
+  const isLandscape = orientation === 'landscape';
+  const cropperWidth = isLandscape ? TV_SLIDE_WIDTH : POSTER_WIDTH;
+  const cropperHeight = isLandscape ? TV_SLIDE_HEIGHT : POSTER_HEIGHT;
+  const aspectRatio = cropperWidth / cropperHeight;
 
   // Cancels the cropper and closes the dialog
   const handleCloseCancel = () => {
@@ -39,7 +51,7 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
   const handleCloseSubmit = () => {
     if (cropperRef.current) {
       const croppedImage = cropperRef.current.cropper
-        .getCroppedCanvas({ width: CROPPER_WIDTH, height: CROPPER_HEIGHT })
+        .getCroppedCanvas({ width: cropperWidth, height: cropperHeight })
         .toDataURL();
       onSubmit(croppedImage);
       handleCloseCancel();
@@ -103,12 +115,19 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} scroll="paper" aria-labelledby="form-dialog-title">
+    <Dialog
+      open={open}
+      onClose={onClose}
+      scroll="paper"
+      aria-labelledby="form-dialog-title"
+      maxWidth={isLandscape ? 'lg' : 'sm'}
+      fullWidth
+    >
       <CardHeader
         title={
           <Grid container direction="row" alignItems="center">
             <Grid item xs={12} align="center">
-              Upload Poster
+              {title}
             </Grid>
           </Grid>
         }
@@ -116,7 +135,7 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
       />
       <DialogContent
         className={styles.dialogContent}
-        style={{ maxHeight: '80vh', overflowY: 'auto' }}
+        style={{ maxHeight: isLandscape ? '85vh' : '80vh', overflowY: 'auto' }}
       >
         <DialogContentText style={{ textAlign: 'center' }}>
           {createPhotoDialogBoxMessage()}
@@ -145,7 +164,11 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
                   style={{ display: 'flex', justifyContent: 'center' }}
                 >
                   <input {...getInputProps()} />
-                  <img src={defaultLogo} alt="Poster" className={styles.dropzoneImage} />
+                  <img
+                    src={isLandscape ? tvSlideUploadGuide : defaultLogo}
+                    alt={isLandscape ? 'How to upload a TV poster' : 'Poster'}
+                    className={`${styles.dropzoneImage} ${isLandscape ? styles.tvSlideGuide : ''}`}
+                  />
                 </div>
               )}
             </Dropzone>
@@ -164,7 +187,7 @@ const CropPoster = ({ open, onClose, onSubmit }) => {
                 src={cropperImageData}
                 className={styles.cropperContainer}
                 style={{ width: '100%', height: '100%' }}
-                aspectRatio={ASPECT_RATIO}
+                aspectRatio={aspectRatio}
                 guides={true}
                 zoomable={false}
                 scalable
