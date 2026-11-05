@@ -1,5 +1,5 @@
 import HorizontalPosterCarousel from './HorizontalPosterCarousel';
-import horizontalTestImage from 'views/Posters/images/Horizontal-3.png';
+import horizontalTestImage from 'views/Posters/images/How to Upload a TV Poster.png';
 
 // This route is a public, direct-link version of the poster carousel.
 // It reuses the live poster feed but removes the normal app chrome so the posters can
