@@ -8,6 +8,7 @@ import userService from 'services/user';
 const UpdateOfficeHours = (props: {
   officeHours: string;
   changeOfficeHours: (hours: string) => void;
+  username?: string;
 }) => {
   const [open, setOpen] = useState(false);
   const [hours, setHours] = useState(props.officeHours);
@@ -16,8 +17,8 @@ const UpdateOfficeHours = (props: {
 
   const handleSubmit = async () => {
     try {
-      await userService.updateOfficeHours(hours);
-      props.changeOfficeHours(hours);
+      let response = await userService.updateOfficeHours(hours, props.username);
+      props.changeOfficeHours(response);
     } catch {
       setSnackbar({
         message: 'Office hours failed to update. Please contact CTS.',

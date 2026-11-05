@@ -22,6 +22,7 @@ import PublicProfile from './views/PublicProfile';
 import Timesheets from './views/Timesheets';
 import RecIM from './views/RecIM';
 import Posters from './views/Posters';
+import HiddenPosters from './views/HiddenPosters';
 import RoomRanges from 'views/ResLife/components/RDView/components/RoomRanges';
 import CampusSafety from './views/LostAndFound';
 import Marketplace from './views/MarketPlace';
@@ -148,6 +149,12 @@ const routes = [
     name: 'Posters',
     path: '/posters',
     element: <Posters />,
+  },
+  {
+    name: 'Hidden Posters',
+    // Public direct-access route for the poster carousel without any login/navigation chrome.
+    path: '/hiddenposters',
+    element: <HiddenPosters />,
   },
   {
     name: 'LostAndFound',

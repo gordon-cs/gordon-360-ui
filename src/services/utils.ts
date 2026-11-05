@@ -61,6 +61,7 @@ export const compareByProperty =
 /**
  * Transform a string of any case into a title case string.
  * The string is split into words on the separator, and each word is capitalized.
+ * Empty words (from an empty string or repeated, leading, or trailing separators) are preserved.
  * @param string a string to convert to Title Case, e.g. 'person first name'
  * @param separator the separator to split words on. defaults to a single space (`' '`)
  * @returns the string in title case, e.g. `Person First Name`
@@ -69,7 +70,7 @@ export const toTitleCase = (string: string, separator = ' ') =>
   string
     .toLowerCase()
     .split(separator)
-    .map((word) => word.replace(word[0], word[0].toUpperCase()))
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 
 /**

@@ -150,8 +150,8 @@ const EnrollmentCheckIn = () => {
           }
           if (profile.MobilePhone) {
             setPhoneInfo({
-              PersonalPhone: profile.MobilePhone,
-              MakePrivate: Boolean(profile.IsMobilePhonePrivate),
+              PersonalPhone: profile.MobilePhone?.Value,
+              MakePrivate: Boolean(profile.IsMobilePhonePrivate) || profile.MobilePhone?.IsPrivate,
               NoPhone: false,
               SMSOptedIn: undefined,
             });

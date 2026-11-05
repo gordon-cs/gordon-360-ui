@@ -110,7 +110,8 @@
 
 .greenMenuButton:hover {
   background-color: var(--mui-palette-neutral-100);
-  box-shadow: inset -2px -2px var(--mui-palette-success-main),
+  box-shadow:
+    inset -2px -2px var(--mui-palette-success-main),
     inset 2px 2px var(--mui-palette-success-main);
   transition: all 0.2s ease-in-out;
 }
