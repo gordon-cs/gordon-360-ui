@@ -21,8 +21,6 @@ import sessionService from 'services/session';
 import { useLocation } from 'react-router-dom';
 import styles from './UploadForm.module.scss';
 
-const DIGITAL_SIGNAGE_LOCATIONS = ['Jenks', 'Olsen', 'Lane', 'Phillips', 'Bennett'];
-
 const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess, createSnackbar }) => {
   const isEditing = !!poster;
 
@@ -420,7 +418,6 @@ const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess, createSnac
           {!isEditing && (
             <div className={styles.digitalSignage}>
               <h3>Campus Digital Signage</h3>
-              <p>TV screens: {DIGITAL_SIGNAGE_LOCATIONS.join(', ')}</p>
               <FormControlLabel
                 control={
                   <Switch
