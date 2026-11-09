@@ -7,6 +7,7 @@ import {
   Link as LinkIcon,
   HolidayVillage,
   StoreRounded,
+  Image as ImageIcon,
 } from '@mui/icons-material';
 import { AppBar, Button, IconButton, Tab, Tabs, Toolbar, Link } from '@mui/material';
 import RecIMIcon from '@mui/icons-material/SportsFootball';
@@ -40,6 +41,7 @@ const TabUrlPatterns = [
   /^\/recim$/,
   /^\/reslife$/,
   /^\/marketplace$/,
+  /^\/poster$/,
 ];
 
 /**
@@ -198,7 +200,7 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
           indicatorColor="secondary"
           className={styles.center_container}
           centered
-          value={tabIndex}
+          value={tabIndex === -1 ? false : tabIndex}
         >
           <Tab
             className={styles.tab}
@@ -247,6 +249,14 @@ const GordonHeader = ({ onDrawerToggle }: Props) => {
               tabIndex={0}
             />
           )}
+          <Tab
+            className={styles.tab}
+            icon={<ImageIcon />}
+            label="Poster"
+            component={NavLink}
+            to="/posters"
+            tabIndex={0}
+          />
         </Tabs>
         <div className={styles.side_container}>
           <div className={styles.people_search_container}>

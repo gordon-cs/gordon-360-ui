@@ -7,6 +7,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import { HolidayVillage, StoreRounded } from '@mui/icons-material';
 import { Divider, List } from '@mui/material';
 import RecIMIcon from '@mui/icons-material/SportsFootball';
+import ImageIcon from '@mui/icons-material/Image';
 import TranscriptIcon from '@mui/icons-material/Receipt';
 import GordonDialogBox from 'components/GordonDialogBox';
 import GordonNavButton from 'components/NavButton';
@@ -185,6 +186,16 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
     />
   ) : null;
 
+  const postersButton = (
+    <GordonNavButton
+      onLinkClick={onLinkClick}
+      linkName={'Posters'}
+      linkPath={'/posters'}
+      LinkIcon={ImageIcon}
+      divider={false}
+    />
+  );
+
   const paletteOptionsButton = (
     <GordonNavButton
       onLinkClick={() => {
@@ -254,6 +265,7 @@ const GordonNavLinks = ({ onLinkClick }: Props) => {
         {recimButton}
         {housingButton}
         {marketplaceButton}
+        {postersButton}
       </List>
 
       <Divider />
