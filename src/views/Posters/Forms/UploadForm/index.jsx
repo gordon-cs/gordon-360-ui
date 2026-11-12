@@ -7,6 +7,8 @@ import {
   Dialog,
   DialogContent,
   CardHeader,
+  FormControlLabel,
+  Switch,
 } from '@mui/material';
 import membershipService, { Participation } from 'services/membership';
 import CropPoster from '../CropPoster';
@@ -25,6 +27,7 @@ const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess, createSnac
   const [priorityStatus, setPriorityStatus] = useState('');
   const [selectedClub, setSelectedClub] = useState('');
   const [openCropPoster, setOpenCropPoster] = useState(false);
+  const [openTvSlideCropper, setOpenTvSlideCropper] = useState(false);
   const [openPosterCheck, setOpenPosterCheck] = useState(false);
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
@@ -37,6 +40,8 @@ const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess, createSnac
   const location = useLocation();
   const sessionFromURL = new URLSearchParams(location.search).get('session');
   const [croppedImage, setCroppedImage] = useState(null);
+  const [tvSlideImage, setTvSlideImage] = useState(null);
+  const [includeDigitalSignage, setIncludeDigitalSignage] = useState(false);
 
   useEffect(() => {
     if (poster) {
@@ -89,10 +94,14 @@ const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess, createSnac
   }, [sessionFromURL]);
 
   const handleCropSubmit = (imageData) => {
-    console.log('New cropped image data:', imageData);
     setCroppedImage(imageData);
     setOpenCropPoster(false);
     onCropSubmit?.(imageData);
+  };
+
+  const handleTvSlideCropSubmit = (imageData) => {
+    setTvSlideImage(imageData);
+    setOpenTvSlideCropper(false);
   };
 
   useEffect(() => {
@@ -120,8 +129,8 @@ const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess, createSnac
         endTime &&
         title &&
         description &&
-        selectedClub &&
         imageIsValid &&
+        (!includeDigitalSignage || Boolean(tvSlideImage)) &&
         (selectedClub !== 'CEC' || priorityStatus);
 
       console.log('Form validity check:', {
@@ -131,6 +140,8 @@ const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess, createSnac
         description,
         selectedClub,
         croppedImage,
+        tvSlideImage,
+        includeDigitalSignage,
         imageIsValid,
         priorityStatus,
         isEditing,
@@ -148,6 +159,8 @@ const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess, createSnac
     description,
     selectedClub,
     croppedImage,
+    tvSlideImage,
+    includeDigitalSignage,
     priorityStatus,
     isEditing,
     poster,
@@ -174,6 +187,11 @@ const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess, createSnac
     };
   };
 
+  const tvSlidePosterInfo = () => ({
+    ...posterInfo(),
+    ImagePath: tvSlideImage,
+  });
+
   const getTextFieldSX = (color) => ({
     '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
       borderColor: 'var(--mui-palette-link-main)',
@@ -188,12 +206,22 @@ const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess, createSnac
             open={openPosterCheck}
             onClose={() => setOpenPosterCheck(false)}
             posterInfo={posterInfo()}
+            tvSlidePosterInfo={includeDigitalSignage ? tvSlidePosterInfo() : undefined}
             isEditing={isEditing}
             posterId={poster?.ID}
             onSubmitSuccess={onSubmitSuccess}
             createSnackbar={createSnackbar}
           />
         </DialogContent>
+      </Dialog>
+      <Dialog open={openTvSlideCropper} onClose={() => setOpenTvSlideCropper(false)}>
+        <CropPoster
+          open={openTvSlideCropper}
+          onClose={() => setOpenTvSlideCropper(false)}
+          onSubmit={handleTvSlideCropSubmit}
+          orientation="landscape"
+          title="Upload TV Slide"
+        />
       </Dialog>
       <Dialog open={openCropPoster} onClose={() => setOpenCropPoster(false)}>
         <CardHeader
@@ -311,7 +339,6 @@ const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess, createSnac
               onChange={handleClubChange}
               variant="outlined"
               fullWidth
-              required
               InputLabelProps={{
                 classes: {
                   focused: styles.textFieldLabelFocused,
@@ -385,6 +412,44 @@ const UploadForm = ({ onClose, onCropSubmit, poster, onSubmitSuccess, createSnac
               <ChangeCircleRoundedIcon />
               &nbsp;Change Poster
             </Button>
+          )}
+        </Grid>
+        <Grid item xs={12} className={styles.gridItem}>
+          {!isEditing && (
+            <div className={styles.digitalSignage}>
+              <h3>Campus Digital Signage</h3>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={includeDigitalSignage}
+                    onChange={(event) => setIncludeDigitalSignage(event.target.checked)}
+                  />
+                }
+                label="Also submit a landscape TV slide?"
+              />
+              {includeDigitalSignage && !tvSlideImage && (
+                <Button
+                  type="button"
+                  variant="outlined"
+                  className={styles.uploadPosterButton}
+                  onClick={() => setOpenTvSlideCropper(true)}
+                >
+                  <AddCircleRoundedIcon />
+                  &nbsp;Upload TV Slide
+                </Button>
+              )}
+              {includeDigitalSignage && tvSlideImage && (
+                <Button
+                  type="button"
+                  variant="outlined"
+                  className={styles.uploadPosterButton}
+                  onClick={() => setOpenTvSlideCropper(true)}
+                >
+                  <ChangeCircleRoundedIcon />
+                  &nbsp;Change TV Slide
+                </Button>
+              )}
+            </div>
           )}
         </Grid>
         <Grid item xs={6} className={styles.gridItem}>

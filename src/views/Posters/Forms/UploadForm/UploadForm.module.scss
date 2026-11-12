@@ -39,6 +39,17 @@ input[type='datetime-local']::-webkit-calendar-picker-indicator {
   width: 100%;
 }
 
+.digitalSignage {
+  h3,
+  p {
+    margin: 0 0 8px;
+  }
+}
+
+.backendNote {
+  font-style: italic;
+}
+
 .gridItem {
   background-color: var(--mui-palette-neutral-light);
   padding: 16px;

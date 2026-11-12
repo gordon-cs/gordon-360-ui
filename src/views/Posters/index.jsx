@@ -359,7 +359,7 @@ const Posters = () => {
                   (inv) =>
                     inv.Participation === Participation.Advisor ||
                     inv.Participation === Participation.Leader,
-                ) && (
+                ) ? (
                   <Grid item xs={5} align="right">
                     <Button
                       variant="contained"
@@ -373,7 +373,7 @@ const Posters = () => {
                       )}
                     </Button>
                   </Grid>
-                )}
+                ) : null}
               </Grid>
             }
             className="gc360_header"
