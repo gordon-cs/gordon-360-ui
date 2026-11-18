@@ -2,7 +2,7 @@ import { useMsal } from '@azure/msal-react';
 import AppRedirect from 'components/AppRedirect';
 import BirthdayMessage from 'components/BirthdayMessage';
 import { useWatchSystemColorScheme } from 'hooks';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { CustomNavigationClient } from 'services/NavigationClient';
@@ -14,6 +14,7 @@ import GordonHeader from './components/Header';
 import GordonNav from './components/Nav';
 import routes from './routes';
 import 'react-image-gallery/styles/css/image-gallery.css';
+import GordonLoader from 'components/Loader';
 
 const App = () => {
   useWatchSystemColorScheme();
@@ -48,11 +49,13 @@ const App = () => {
       <main className={styles.app_main} ref={mainRef}>
         <BirthdayMessage />
         <AppRedirect />
-        <Routes>
-          {routes.map((route) => (
-            <Route key={route.path} path={route.path} element={route.element} />
-          ))}
-        </Routes>
+        <Suspense fallback={<GordonLoader />}>
+          <Routes>
+            {routes.map((route) => (
+              <Route key={route.path} path={route.path} element={route.element} />
+            ))}
+          </Routes>
+        </Suspense>
       </main>
     </ErrorBoundary>
   );
