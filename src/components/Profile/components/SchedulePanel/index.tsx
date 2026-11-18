@@ -17,6 +17,7 @@ import {
   TableBody,
   DialogActions,
   Box,
+  Button,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import GordonLoader from 'components/Loader';
@@ -26,7 +27,6 @@ import styles from './ScheduleHeader.module.css';
 import scheduleService, { CourseEvent, formatTermDescription, Schedule } from 'services/schedule';
 import { Profile } from 'services/user';
 import academicTermService from 'services/academicTerm';
-import { Button } from '@mui/material';
 import {
   getFinalExamEventsForUserByTerm,
   formatFinalExamEvent,
@@ -39,6 +39,7 @@ type Props = {
 };
 
 const scheduleOpenKey = 'profile.schedule.isOpen';
+
 const GordonSchedulePanel = ({ profile, myProf }: Props) => {
   const [loading, setLoading] = useState(true);
   const [allSchedules, setAllSchedules] = useState<Schedule[]>([]);
@@ -47,34 +48,59 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
   const [isScheduleOpen, setIsScheduleOpen] = useState<boolean>(
     localStorage.getItem(scheduleOpenKey) !== 'false',
   );
+
   const [finalExamOpen, setFinalExamOpen] = useState(false);
   const [finalExams, setFinalExams] = useState<FinalExamEvent[]>([]);
   const [finalExamsLoading, setFinalExamsLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
+    const loadSchedules = async () => {
+      setLoading(true);
+      try {
+        const [allTermSchedules, currentTerm] = await Promise.all([
+          scheduleService.getAllTermSchedules(profile.AD_Username),
+          academicTermService.getCurrentTerm(),
+        ]);
 
-    Promise.all([
-      scheduleService.getAllTermSchedules(profile.AD_Username),
-      academicTermService.getCurrentTerm(),
-    ]).then(([allTermSchedules, currentTerm]) => {
-      setAllSchedules(allTermSchedules);
+        const sortedSchedules = [...allTermSchedules].sort(
+          (a, b) => new Date(b.term.BeginDate).getTime() - new Date(a.term.BeginDate).getTime(),
+        );
+        setAllSchedules(sortedSchedules);
 
-      const defaultSchedule =
-        allTermSchedules.find(
+        const now = new Date();
+        const currentStart = new Date(currentTerm.BeginDate);
+        const currentEnd = new Date(currentTerm.EndDate);
+
+        const currentSchedule = sortedSchedules.find(
           (s) =>
-            s.term.YearCode === currentTerm.YearCode && s.term.TermCode === currentTerm.TermCode,
-        ) ?? allTermSchedules[0];
+            s.term.YearCode === currentTerm.YearCode &&
+            s.term.TermCode === currentTerm.TermCode &&
+            (s.courses?.length ?? 0) > 0,
+        );
 
-      setSelectedSchedule(defaultSchedule);
-      setLoading(false);
-    });
+        const futureWithCourses = sortedSchedules.find(
+          (s) => new Date(s.term.BeginDate) > currentEnd && (s.courses?.length ?? 0) > 0,
+        );
+
+        const anyWithCourses = sortedSchedules.find((s) => (s.courses?.length ?? 0) > 0);
+
+        const defaultSchedule = currentSchedule || futureWithCourses || anyWithCourses || null;
+        setSelectedSchedule(defaultSchedule);
+      } catch (err) {
+        console.error('Failed to load schedule or current term:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadSchedules();
   }, [profile.AD_Username]);
 
   const toggleIsScheduleOpen = () => {
-    setIsScheduleOpen((wasOpen) => {
-      localStorage.setItem(scheduleOpenKey, String(!wasOpen));
-      return !wasOpen;
+    setIsScheduleOpen((prev) => {
+      const next = !prev;
+      localStorage.setItem(scheduleOpenKey, String(next));
+      return next;
     });
   };
 
@@ -96,9 +122,9 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
       .finally(() => setFinalExamsLoading(false));
   };
 
-  return loading ? (
-    <GordonLoader />
-  ) : (
+  if (loading) return <GordonLoader />;
+
+  return (
     <>
       <Accordion
         expanded={isScheduleOpen}
@@ -113,13 +139,14 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
             className={`gc360_header ${styles.accordionHeader}`}
           >
             <Grid container className={styles.header}>
-              <CardHeader title={'Course Schedule'} />
+              <CardHeader title="Course Schedule" />
             </Grid>
           </AccordionSummary>
         ) : (
-          <div></div>
+          <div />
         )}
-        {allSchedules.length > 0 ? (
+
+        {allSchedules.length > 0 && (
           <AccordionDetails>
             <Grid container justifyContent="center" spacing={4}>
               <Grid item xs={12} lg={3}>
@@ -141,6 +168,7 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
                   ))}
                 </TextField>
               </Grid>
+
               <Grid item style={{ minWidth: 180 }}>
                 {selectedSchedule && (
                   <Button
@@ -153,16 +181,18 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
                   </Button>
                 )}
               </Grid>
-              <Grid lg={7}></Grid>
-              {selectedSchedule && (
+
+              <Grid lg={7} />
+
+              {selectedSchedule ? (
                 <>
-                  <Grid item className={styles.addCalendarInfoText}>
-                    {myProf && (
-                      <Typography className={styles.addCalendarInfoText}>
+                  {myProf && (
+                    <Grid item className={styles.addCalendarInfoText}>
+                      <Typography color="secondary">
                         Click on Course to add Schedule to Personal Calendar
                       </Typography>
-                    )}
-                  </Grid>
+                    </Grid>
+                  )}
                   <Grid item xs={12} lg={10}>
                     <GordonScheduleCalendar
                       schedule={selectedSchedule}
@@ -170,20 +200,24 @@ const GordonSchedulePanel = ({ profile, myProf }: Props) => {
                     />
                   </Grid>
                 </>
+              ) : (
+                <Grid item xs={12}>
+                  <Typography color="error">No schedule available to display.</Typography>
+                </Grid>
               )}
             </Grid>
           </AccordionDetails>
-        ) : (
-          <div></div>
         )}
       </Accordion>
+
       {myProf && selectedCourse && selectedSchedule && (
         <ScheduleDialog
           onClose={() => setSelectedCourse(null)}
           course={selectedCourse}
-          term={selectedSchedule?.term}
+          term={selectedSchedule.term}
         />
       )}
+
       <Dialog open={finalExamOpen} onClose={() => setFinalExamOpen(false)} maxWidth="md" fullWidth>
         <Box sx={{ bgcolor: 'primary.main', color: 'primary.contrastText', px: 3, py: 2 }}>
           <Typography variant="h6">Final Exam Schedule</Typography>
