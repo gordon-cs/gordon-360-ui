@@ -9,6 +9,9 @@ on:
       - develop
       - master
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
