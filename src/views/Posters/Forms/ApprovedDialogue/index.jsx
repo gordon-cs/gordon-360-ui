@@ -8,6 +8,7 @@ const PosterCheck = ({
   open,
   onClose,
   posterInfo,
+  tvSlidePosterInfo,
   isEditing,
   posterId,
   onSubmitSuccess,
@@ -42,8 +43,18 @@ const PosterCheck = ({
         console.log('Creating poster...', newPoster);
         const createdPoster = await createPoster(newPoster);
         if (onSubmitSuccess) onSubmitSuccess(createdPoster);
-        console.log('Poster created:', createdPoster);
-        createSnackbar('Poster created successfully', 'success');
+        if (tvSlidePosterInfo) {
+          try {
+            const createdTvSlide = await createPoster(tvSlidePosterInfo);
+            if (onSubmitSuccess) onSubmitSuccess(createdTvSlide);
+            createSnackbar('Poster and TV slide submitted successfully', 'success');
+          } catch (error) {
+            console.error('Error submitting TV slide:', error);
+            createSnackbar('Poster submitted, but the TV slide could not be submitted.', 'error');
+          }
+        } else {
+          createSnackbar('Poster created successfully', 'success');
+        }
       }
       onClose();
     } catch (error) {

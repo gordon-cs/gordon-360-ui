@@ -1,0 +1,44 @@
+.horizontal-poster-carousel {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: #000;
+
+  .swiper-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background: #000;
+  }
+
+  .swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .swiper-pagination-bullet {
+    background: #fff;
+    opacity: 0.65;
+  }
+
+  .swiper-pagination-bullet-active {
+    opacity: 1;
+  }
+}
+
+.horizontal-poster-message {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  background: #000;
+  color: #fff;
+  font-size: clamp(1.25rem, 3vw, 2.5rem);
+}
