@@ -205,7 +205,7 @@ const FoundItemForm = ({ formType }: { formType: string }) => {
       await lostAndFoundService.updateFoundReportStatus(formData.recordID, 'PickedUp');
       await lostAndFoundService.updateFoundReportStatus(formData.recordID, 'pickedUp');
       const foundItem = await lostAndFoundService.getFoundItem(formData.recordID);
-      if (foundItem.matchingMissingID !== undefined) {
+      if (foundItem.matchingMissingID) {
         await lostAndFoundService.updateReportStatus(
           parseInt(foundItem.matchingMissingID || ''),
           'pickedup',
